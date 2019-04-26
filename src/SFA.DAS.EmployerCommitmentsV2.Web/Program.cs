@@ -14,6 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureDasAppConfiguration()
                 .UseKestrel(o => o.AddServerHeader = false)
                 .UseStructureMap()
                 .UseStartup<AspNetStartup>();
