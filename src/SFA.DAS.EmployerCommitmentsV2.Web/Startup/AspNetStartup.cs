@@ -13,7 +13,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseHttpsRedirection()
+            app.UseDasErrorPages()
+                .UseHttpsRedirection()
                 .UseDasHsts()
                 .UseStaticFiles()
                 .UseCookiePolicy()
