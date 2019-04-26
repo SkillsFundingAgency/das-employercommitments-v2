@@ -1,0 +1,46 @@
+version: "2.2"
+
+services:
+  azurite:
+    image: mcr.microsoft.com/azurestorage-azurite:2.6.7
+    container_name: azurite
+    volumes:
+      - azurite:/opt/azurite/data
+    ports:
+      - 10000:10000
+      - 10001:10001
+      - 10002:10002
+    networks:
+      - das
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    networks:
+      - das
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: sqlserver
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: P@ssw0rd
+      MSSQL_PID: Developer
+    volumes:
+      - sqlserver:/opt/sqlserver/data
+    ports:
+      - '1433:1433'
+    networks:
+      - das
+
+volumes:
+  azurite:
+    driver: local
+  sqlserver:
+    driver: local
+
+networks:
+  das:
+    driver: bridge
