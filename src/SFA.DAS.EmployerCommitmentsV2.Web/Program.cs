@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using SFA.DAS.EmployerCommitmentsV2.Web.Startup;
+using StructureMap.AspNetCore;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web
 {
@@ -14,6 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web
         private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseKestrel(o => o.AddServerHeader = false)
+                .UseStructureMap()
                 .UseStartup<AspNetStartup>();
     }
 }

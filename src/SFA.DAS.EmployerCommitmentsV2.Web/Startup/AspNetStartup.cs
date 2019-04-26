@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution;
+using StructureMap;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
 {
@@ -9,6 +11,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         {
             services.AddDasCookiePolicy()
                 .AddDasMvc();
+        }
+
+        public void ConfigureContainer(Registry registry)
+        {
+            IoC.Initialize(registry);
         }
 
         public void Configure(IApplicationBuilder app)
