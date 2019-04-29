@@ -9,6 +9,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution
         public ConfigurationRegistry()
         {
             AddConfiguration<AccountIdHashingConfiguration>(ConfigurationKeys.AccountIdHashingConfiguration);
+            AddConfiguration<AuthenticationConfiguration>(ConfigurationKeys.AuthenticationConfiguration);
             AddConfiguration<PublicAccountIdHashingConfiguration>(ConfigurationKeys.PublicAccountIdHashingConfiguration);
             AddConfiguration<PublicAccountLegalEntityIdHashingConfiguration>(ConfigurationKeys.PublicAccountLegalEntityIdHashingConfiguration);
         }

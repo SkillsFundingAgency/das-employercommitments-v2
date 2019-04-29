@@ -8,7 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         public static IServiceCollection AddDasMvc(this IServiceCollection services)
         {
             services
-                .AddMvc()
+                .AddMvc(o => o.RequireAuthenticatedUser())
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
