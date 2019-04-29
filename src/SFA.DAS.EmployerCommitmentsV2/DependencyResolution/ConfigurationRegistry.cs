@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using StructureMap;
 
@@ -10,6 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution
         {
             AddConfiguration<AccountIdHashingConfiguration>(ConfigurationKeys.AccountIdHashingConfiguration);
             AddConfiguration<AuthenticationConfiguration>(ConfigurationKeys.AuthenticationConfiguration);
+            AddConfiguration<CommitmentsClientApiConfiguration>(ConfigurationKeys.CommitmentsApiClientConfiguration);
             AddConfiguration<PublicAccountIdHashingConfiguration>(ConfigurationKeys.PublicAccountIdHashingConfiguration);
             AddConfiguration<PublicAccountLegalEntityIdHashingConfiguration>(ConfigurationKeys.PublicAccountLegalEntityIdHashingConfiguration);
         }

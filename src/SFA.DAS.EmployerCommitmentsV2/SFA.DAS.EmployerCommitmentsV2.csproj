@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.2.4" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="2.1.1095" />
     <PackageReference Include="StructureMap" Version="4.7.0" />
   </ItemGroup>
 
