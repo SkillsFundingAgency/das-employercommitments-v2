@@ -13,10 +13,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.HealthChecks
 {
     public class CommitmentsApiHealthCheck : IHealthCheck
     {
-        private readonly IServiceProvider _apiClient;
+        private readonly ICommitmentsApiClient _apiClient;
         private readonly ILogger<CommitmentsApiHealthCheck> _logger;
 
-        public CommitmentsApiHealthCheck(IServiceProvider apiClient, ILogger<CommitmentsApiHealthCheck> logger)
+        public CommitmentsApiHealthCheck(ICommitmentsApiClient apiClient, ILogger<CommitmentsApiHealthCheck> logger)
         {
             _apiClient = apiClient;
             _logger = logger;
@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.HealthChecks
             {
                 var stopwatch = Stopwatch.StartNew();
 
-                await ((ICommitmentsApiClient)_apiClient.GetService(typeof(ICommitmentsApiClient))).HealthCheck();
+                await _apiClient.HealthCheck();
 
                 stopwatch.Stop();
 
