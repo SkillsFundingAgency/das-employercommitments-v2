@@ -15,9 +15,6 @@ variables:
 
 pool:
   name: 'Continuous Integration 02 - SSD - 160ACU'
-  demands: 
-  - msbuild
-  - visualstudio
 
 steps:
 - task: gittools.gitversion.gitversion-task.GitVersion@4
@@ -31,12 +28,11 @@ steps:
     command: restore
     projects: '**/*.sln'
 
-- task: VSBuild@1
-  displayName: 'Build Solution'
+- task: DotNetCoreCLI@2
+  displayName: 'Build'
   inputs:
-    solution: '**/*.sln'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)/publish"'
-    configuration: '$(BuildConfiguration)'
+    projects: 'src/**/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --no-restore'
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish Website'
