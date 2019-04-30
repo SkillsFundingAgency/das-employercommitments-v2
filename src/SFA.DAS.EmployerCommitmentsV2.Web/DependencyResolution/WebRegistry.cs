@@ -3,9 +3,9 @@ using StructureMap;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
 {
-    public class DefaultRegistry : Registry
+    public class WebRegistry : Registry
     {
-        public DefaultRegistry()
+        public WebRegistry()
         {
             For<ICommitmentsApiClientFactory>().Use<CommitmentsApiClientFactory>();
         }

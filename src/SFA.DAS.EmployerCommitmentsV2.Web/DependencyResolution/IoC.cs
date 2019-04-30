@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
         {
             registry.IncludeRegistry<CommitmentsApiClientRegistry>();
             registry.IncludeRegistry<ConfigurationRegistry>();
-            registry.IncludeRegistry<DefaultRegistry>();
+            registry.IncludeRegistry<WebRegistry>();
         }
     }
 }
