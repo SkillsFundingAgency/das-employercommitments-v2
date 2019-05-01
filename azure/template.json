@@ -1,0 +1,211 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environmentName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the environment."
+            }
+        },
+        "serviceName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the service."
+            }
+        },
+        "sharedResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the shared resource group."
+            }
+        },
+        "aspSize": {
+            "type": "string",
+            "defaultValue": "1",
+            "metadata": {
+                "description": "The size of the App Service Plan."
+            }
+        },
+        "aspInstances": {
+            "type": "int",
+            "defaultValue": 1,
+            "metadata": {
+                "description": "The instance count of the App Service Plan."
+            }
+        },
+        "customHostName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The DNS hostname for the service."
+            }
+        },
+        "loggingRedisConnectionString": {
+            "type": "string",
+            "metadata": {
+                "description": "The connection string for the Redis logging cache."
+            }
+        },
+        "keyVaultCertificateName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the certificate stored in the shared keyvault."
+            }
+        },
+        "keyVaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the shared keyvault."
+            }
+        },
+        "keyVaultResourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "The resource group name of the shared keyvault."
+            }
+        }
+    },
+    "variables": {
+        "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
+        "resourceNamePrefix": "[toLower(concat('das-', parameters('environmentName'),'-', parameters('serviceName')))]",
+        "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
+        "appServicePlanName": "[concat(variables('resourceNamePrefix'), '-asp')]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2017-05-10",
+            "name": "app-service-plan",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-plan.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appServicePlanName": {
+                        "value": "[variables('appServicePlanName')]"
+                    },
+                    "aspSize": {
+                        "value": "[parameters('aspSize')]"
+                    },
+                    "aspInstances": {
+                        "value": "[parameters('aspInstances')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "app-service-certificate",
+            "resourceGroup": "[parameters('sharedResourceGroup')]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-certificate.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "keyVaultCertificateName": {
+                        "value": "[parameters('keyVaultCertificateName')]"
+                    },
+                    "keyVaultName": {
+                        "value": "[parameters('keyVaultName')]"
+                    },
+                    "keyVaultResourceGroup": {
+                        "value": "[parameters('keyVaultResourceGroupName')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "application-insights",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'application-insights.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appInsightsName": {
+                        "value": "[variables('appServiceName')]"
+                    },
+                    "attachedService": {
+                        "value": "[variables('appServiceName')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "app-service",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appServiceName": {
+                        "value": "[variables('appServiceName')]"
+                    },
+                    "appServicePlanName": {
+                        "value": "[variables('appServicePlanName')]"
+                    },
+                    "appServicePlanResourceGroup": {
+                        "value": "[resourceGroup().name]"
+                    },
+                    "appServiceAppSettings": {
+                        "value": [
+                            {
+                                "name": "EnvironmentName",
+                                "value": "[parameters('environmentName')]"
+                            },
+                            {
+                                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                "value": "[reference('application-insights').outputs.InstrumentationKey.value]"
+                            },
+                            {
+                                "name": "ASPNETCORE_ENVIRONMENT",
+                                "value": "[toUpper(parameters('environmentName'))]"
+                            },
+                            {
+                                "name": "WEBSITE_LOAD_CERTIFICATES",
+                                "value": "[reference('app-service-certificate').outputs.certificateThumbprint.value]"
+                            }
+                        ]
+                    },
+                    "appServiceConnectionStrings": {
+                        "value": [
+                            {
+                                "name": "Redis",
+                                "connectionString": "[parameters('loggingRedisConnectionString')]",
+                                "type": "Custom"
+                            }
+                        ]
+                    },
+                    "customHostName": {
+                        "value": "[parameters('customHostName')]"
+                    },
+                    "certificateThumbprint": {
+                        "value": "[if(greater(length(parameters('customHostname')), 0), reference('app-service-certificate').outputs.certificateThumbprint.value, '')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "app-service-plan"
+            ]
+        }
+    ],
+    "outputs": {
+        "AppServiceName": {
+            "type": "string",
+            "value": "[variables('appServiceName')]"
+        }
+    }
+}
