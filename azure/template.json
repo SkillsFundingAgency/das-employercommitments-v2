@@ -2,22 +2,28 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "environmentName": {
+        "environmentFullName": {
             "type": "string",
             "metadata": {
                 "description": "The name of the environment."
+            }
+        },
+        "resourceEnvironmentName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the resource environment."
+            }
+        },
+        "configurationStorageConnectionString": {
+            "type": "string",
+            "metadata": {
+                "description": "The connection string to connect to the table configuration storage account."
             }
         },
         "serviceName": {
             "type": "string",
             "metadata": {
                 "description": "The name of the service."
-            }
-        },
-        "sharedResourceGroup": {
-            "type": "string",
-            "metadata": {
-                "description": "The name of the shared resource group."
             }
         },
         "aspSize": {
@@ -68,7 +74,7 @@
     },
     "variables": {
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
-        "resourceNamePrefix": "[toLower(concat('das-', parameters('environmentName'),'-', parameters('serviceName')))]",
+        "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
         "appServicePlanName": "[concat(variables('resourceNamePrefix'), '-asp')]"
     },
@@ -97,9 +103,9 @@
             }
         },
         {
+            "condition": "[greater(length(parameters('customHostName')), 0)]",
             "apiVersion": "2017-05-10",
             "name": "app-service-certificate",
-            "resourceGroup": "[parameters('sharedResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -164,7 +170,11 @@
                         "value": [
                             {
                                 "name": "EnvironmentName",
-                                "value": "[parameters('environmentName')]"
+                                "value": "[parameters('environmentFullName')]"
+                            },
+                            {
+                                "name": "ConfigurationStorageConnectionString",
+                                "value": "[parameters('configurationStorageConnectionString')]"
                             },
                             {
                                 "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -172,7 +182,7 @@
                             },
                             {
                                 "name": "ASPNETCORE_ENVIRONMENT",
-                                "value": "[toUpper(parameters('environmentName'))]"
+                                "value": "[toUpper(parameters('environmentFullName'))]"
                             },
                             {
                                 "name": "WEBSITE_LOAD_CERTIFICATES",
