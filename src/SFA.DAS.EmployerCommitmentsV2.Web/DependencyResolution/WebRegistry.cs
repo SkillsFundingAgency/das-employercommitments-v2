@@ -1,5 +1,4 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
-using StructureMap;
+﻿using StructureMap;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
 {
@@ -7,7 +6,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
     {
         public WebRegistry()
         {
-            For<ICommitmentsApiClientFactory>().Use<CommitmentsApiClientFactory>();
         }
     }
 }
