@@ -183,10 +183,6 @@
                             {
                                 "name": "ASPNETCORE_ENVIRONMENT",
                                 "value": "[toUpper(parameters('environmentFullName'))]"
-                            },
-                            {
-                                "name": "WEBSITE_LOAD_CERTIFICATES",
-                                "value": "[reference('app-service-certificate').outputs.certificateThumbprint.value]"
                             }
                         ]
                     },
@@ -203,7 +199,7 @@
                         "value": "[parameters('customHostName')]"
                     },
                     "certificateThumbprint": {
-                        "value": "[if(greater(length(parameters('customHostname')), 0), reference('app-service-certificate').outputs.certificateThumbprint.value, '')]"
+                        "value": "[if(greater(length(parameters('customHostname')), 0), reference('app-service-certificate', '2018-11-01').outputs.certificateThumbprint.value, '')]"
                     }
                 }
             },
