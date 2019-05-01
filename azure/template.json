@@ -15,7 +15,7 @@
             }
         },
         "configurationStorageConnectionString": {
-            "type": "string",
+            "type": "securestring",
             "metadata": {
                 "description": "The connection string to connect to the table configuration storage account."
             }
@@ -48,7 +48,7 @@
             }
         },
         "loggingRedisConnectionString": {
-            "type": "string",
+            "type": "securestring",
             "metadata": {
                 "description": "The connection string for the Redis logging cache."
             }
