@@ -35,6 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .UseDasHsts()
                 .UseStaticFiles()
                 .UseDasHealthChecks()
+                .UseAuthentication()
                 .UseCookiePolicy()
                 .UseMvc();
         }
