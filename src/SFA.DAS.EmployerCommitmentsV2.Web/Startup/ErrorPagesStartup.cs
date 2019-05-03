@@ -16,10 +16,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
             }
             else
             {
-                app.UseExceptionHandler("/error.html");
+                app.UseExceptionHandler("/error")
+                    .UseStatusCodePagesWithReExecute("/error", "?statuscode={0}");
             }
 
-            return app.UseStatusCodePagesWithReExecute("/{0}.html");
+            return app;
         }
     }
 }
