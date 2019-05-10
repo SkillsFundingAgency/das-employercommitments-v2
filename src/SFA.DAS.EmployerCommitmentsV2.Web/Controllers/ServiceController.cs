@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 
@@ -18,7 +17,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme, new AuthenticationProperties { RedirectUri = "/" });
         }
         
-        [AllowAnonymous]
         [Route("signoutcleanup")]
         public void SignOutCleanup()
         {
