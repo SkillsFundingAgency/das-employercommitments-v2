@@ -4,10 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
@@ -63,14 +60,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 });
             
             return services;
-        }
-        
-        public static void RequireAuthenticatedUser(this MvcOptions mvcOptions)
-        {
-            var authorizationPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-            var authorizeFilter = new AuthorizeFilter(authorizationPolicy);
-            
-            mvcOptions.Filters.Add(authorizeFilter);
         }
     }
 }
