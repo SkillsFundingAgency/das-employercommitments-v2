@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 })
                 .AddCookie(o =>
                 {
-                    o.AccessDeniedPath = "/403.html";
+                    o.AccessDeniedPath = "/error?statuscode=403";
                     o.Cookie.Name = CookieNames.Authentication;
                     o.Cookie.SameSite = SameSiteMode.None;
                     o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
