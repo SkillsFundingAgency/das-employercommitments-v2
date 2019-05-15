@@ -4,9 +4,6 @@
 
 1. Install [.NET Core].
 2. Install [Docker].
-3. Install [Node].
-4. Install [Npm].
-5. Install [Gulp].
 
 ### Windows
 
@@ -18,9 +15,6 @@ Run the following PowerShell commands in the `tools` directory, [Choclatey] will
 > choco install docker-desktop
 > & "$Env:PROGRAMFILES\Docker\Docker\Docker for Windows.exe"
 > docker-compose up -d
-> choco install nodejs
-> npm install -g npm
-> npm install -g gulp
 ```
 
 ### macOS
@@ -34,9 +28,6 @@ $ brew cask install dotnet-sdk
 $ brew cask install docker
 $ open -a docker
 $ docker-compose up -d
-$ brew install nodejs
-$ npm install -g npm
-$ npm install -g gulp
 ```
 
 ## Setup
@@ -54,14 +45,6 @@ $ npm install -g gulp
 * Follow the instructions to import the config from the directory that you cloned the `das-employer-config` repository to.
 
 > The two repositories above are private. If the links appear to be dead, make sure that you're logged into GitHub with an account that has access to these i.e. that you are part of the Skills Funding Agency Team organization.
-
-### Add packages
-
-Run in the `src/SFA.DAS.EmployerCommitmentsV2.Web` directory:
-
-```powershell
-> npm install
-```
 
 ### Add certificates
 
