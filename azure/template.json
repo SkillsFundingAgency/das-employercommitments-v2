@@ -53,6 +53,13 @@
                 "description": "The connection string for the Redis logging cache."
             }
         },
+        "appServiceAllowedIPs": {
+            "type": "array",
+            "defaultValue": [],
+            "metadata": {
+                "description": "An array of IPs that are permitted to access the app service."
+            }
+        },
         "keyVaultCertificateName": {
             "type": "string",
             "metadata": {
@@ -200,6 +207,9 @@
                     },
                     "certificateThumbprint": {
                         "value": "[if(greater(length(parameters('customHostname')), 0), reference('app-service-certificate', '2018-11-01').outputs.certificateThumbprint.value, '')]"
+                    },
+                    "ipSecurityRestrictions": {
+                        "value": "[parameters('appServiceAllowedIPs')]"
                     }
                 }
             },
