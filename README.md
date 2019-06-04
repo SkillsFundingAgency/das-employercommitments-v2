@@ -1,5 +1,12 @@
 # SFA.DAS.EmployerCommitmentsV2
 
+## Getting Started
+
+* Clone das-employercommitmentsv2 repo
+* Obtain cloud config
+* Run Storage Emulator
+* Start (run under kestrel)
+
 ## Requirements
 
 1. Install [.NET Core].
