@@ -7,6 +7,7 @@ using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
@@ -27,7 +28,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
         }
 
         [Test]
-        public void GetAuthorizationContext_WhenAccountIdExistsAndIsValid_ThenShouldReturnAuthorizationContextWithAccountIdAndPartyId()
+        public void GetAuthorizationContext_WhenAccountIdExistsAndIsValid_ThenShouldReturnAuthorizationContextWithAccountId()
         {
             _fixture.SetUserRef(Guid.NewGuid()).SetValidAccountId();
 
@@ -35,18 +36,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
 
             Assert.IsNotNull(authorizationContext);
             Assert.AreEqual(_fixture.AccountId, authorizationContext.Get<long?>("AccountId"));
-            Assert.AreEqual(_fixture.AccountId, authorizationContext.Get<long?>("PartyId"));
         }
 
         [Test]
-        public void GetAuthorizationContext_WhenAccountIdDoesNotExist_ThenShouldReturnAuthorizationContextWithoutAccountId()
+        public void GetAuthorizationContext_WhenAccountIdDoesNotExist_ThenShouldThrowKeyNotFoundException()
         {
             _fixture.SetUserRef(Guid.NewGuid());
 
             var authorizationContext = _fixture.GetAuthorizationContext();
 
             Assert.IsNotNull(authorizationContext);
-            Assert.IsNull(authorizationContext.Get<long?>("AccountId"));
+            Assert.Throws<KeyNotFoundException>(() => authorizationContext.Get<long?>("AccountId"));
         }
 
         [Test]
@@ -58,31 +58,33 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
         }
 
         [Test]
-        public void GetAuthorizationContext_WhenCohortIdExistsAndIsValid_ThenShouldReturnAuthorizationContextWithCohortId()
+        public void GetAuthorizationContext_WhenCohortIdAndAccountIdExistAndAreValid_ThenShouldReturnAuthorizationContextWithCohortIdAndPartyId()
         {
-            _fixture.SetValidCohortId();
+            _fixture.SetValidAccountId().SetValidCohortId();
 
             var authorizationContext = _fixture.GetAuthorizationContext();
 
             Assert.IsNotNull(authorizationContext);
             Assert.AreEqual(_fixture.CohortId, authorizationContext.Get<long?>("CohortId"));
+            Assert.AreEqual(Party.Employer, authorizationContext.Get<Party?>("Party"));
+            Assert.AreEqual(_fixture.AccountId, authorizationContext.Get<long?>("PartyId"));
         }
 
         [Test]
-        public void GetAuthorizationContext_WhenCohortIdExistsAndIsInvalid_ThenShouldThrowUnauthorizedAccessException()
+        public void GetAuthorizationContext_WhenAccountIdExistsAndIsValidAndCohortIdExistsAndIsInvalid_ThenShouldThrowUnauthorizedAccessException()
         {
-            _fixture.SetInvalidCohortId();
+            _fixture.SetValidAccountId().SetInvalidCohortId();
 
             Assert.Throws<UnauthorizedAccessException>(() => _fixture.GetAuthorizationContext());
         }
 
         [Test]
-        public void GetAuthorizationContext_WhenCohortIdDoesNotExist_ThenShouldReturnAuthorizationContextWithoutCohortId()
+        public void GetAuthorizationContext_WhenCohortIdDoesNotExist_ThenShouldThrowKeyNotFoundException()
         {
             var authorizationContext = _fixture.GetAuthorizationContext();
 
             Assert.IsNotNull(authorizationContext);
-            Assert.IsNull(authorizationContext.Get<long?>("CohortId"));
+            Assert.Throws<KeyNotFoundException>(() => authorizationContext.Get<long?>("CohortId"));
         }
 
         [Test]
@@ -97,12 +99,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
         }
 
         [Test]
-        public void GetAuthorizationContext_WhenUserIsNotAuthenticated_ThenShouldReturnAuthorizationContextWithoutUserRef()
+        public void GetAuthorizationContext_WhenUserIsNotAuthenticated_ThenShouldThrowKeyNotFoundException()
         {
             var authorizationContext = _fixture.GetAuthorizationContext();
 
             Assert.IsNotNull(authorizationContext);
-            Assert.IsNull(authorizationContext.Get<Guid?>("UserRef"));
+            Assert.Throws<KeyNotFoundException>(() => authorizationContext.Get<Guid?>("UserRef"));
         }
 
         [Test]
@@ -135,6 +137,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
         public string CohortReference { get; set; }
         public Guid? UserRef { get; set; }
         public string UserRefClaimValue { get; set; }
+        public RouteData RouteData { get; set; }
 
         public AuthorizationContextProviderTestsFixture()
         {
@@ -147,6 +150,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
             HttpContextAccessor.Setup(c => c.HttpContext.Request.Query).Returns(new QueryCollection());
             HttpContextAccessor.Setup(c => c.HttpContext.Request.Form).Returns(new FormCollection(new Dictionary<string, StringValues>()));
             UserRef = Guid.NewGuid();
+            RouteData = new RouteData();
 
             AuthorizationContextProvider = new AuthorizationContextProvider(HttpContextAccessor.Object, EncodingService.Object, AuthenticationService.Object);
         }
@@ -161,12 +165,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
             AccountHashedId = "ABC";
             AccountId = 123;
 
-            var routeData = new RouteData();
+            //var routeData = new RouteData();
             var accountId = AccountId;
 
-            routeData.Values[RouteValueKeys.AccountHashedId] = AccountHashedId;
+            RouteData.Values[RouteValueKeys.AccountHashedId] = AccountHashedId;
 
-            RoutingFeature.Setup(f => f.RouteData).Returns(routeData);
+            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
             EncodingService.Setup(h => h.TryDecode(AccountHashedId, EncodingType.AccountId, out accountId)).Returns(true);
 
             return this;
@@ -176,12 +180,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
         {
             AccountHashedId = "AAA";
 
-            var routeData = new RouteData();
+            //var routeData = new RouteData();
             var accountLegalEntityId = 0L;
 
-            routeData.Values[RouteValueKeys.AccountHashedId] = AccountHashedId;
+            RouteData.Values[RouteValueKeys.AccountHashedId] = AccountHashedId;
 
-            RoutingFeature.Setup(f => f.RouteData).Returns(routeData);
+            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
             EncodingService.Setup(h => h.TryDecode(AccountHashedId, EncodingType.PublicAccountLegalEntityId, out accountLegalEntityId)).Returns(false);
 
             return this;
@@ -192,12 +196,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
             CohortReference = "CDE";
             CohortId = 345;
 
-            var routeData = new RouteData();
+            //var routeData = new RouteData();
             var cohortId = CohortId;
 
-            routeData.Values[RouteValueKeys.CohortReference] = CohortReference;
+            RouteData.Values[RouteValueKeys.CohortReference] = CohortReference;
 
-            RoutingFeature.Setup(f => f.RouteData).Returns(routeData);
+            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
             EncodingService.Setup(h => h.TryDecode(CohortReference, EncodingType.CohortReference, out cohortId)).Returns(true);
 
             return this;
@@ -207,16 +211,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
         {
             CohortReference = "BBB";
 
-            var routeData = new RouteData();
+            //var routeData = new RouteData();
             var cohortId = CohortId;
 
-            routeData.Values[RouteValueKeys.CohortReference] = CohortReference;
+            RouteData.Values[RouteValueKeys.CohortReference] = CohortReference;
 
-            RoutingFeature.Setup(f => f.RouteData).Returns(routeData);
+            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
             EncodingService.Setup(h => h.TryDecode(CohortReference, EncodingType.CohortReference, out cohortId)).Returns(false);
 
             return this;
         }
+
 
         public AuthorizationContextProviderTestsFixture SetUserRef(Guid? userRef)
         {

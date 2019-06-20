@@ -55,6 +55,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Stubs
         private async Task<IList<UserDto>> GetUsers(long accountId, CancellationToken cancellationToken)
         {
             var response = await _httpClient.GetAsync($"accounts/{accountId}/users", cancellationToken).ConfigureAwait(false);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new List<UserDto>();
+            }
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var items = JsonConvert.DeserializeObject<List<UserDto>>(content);
             return items;

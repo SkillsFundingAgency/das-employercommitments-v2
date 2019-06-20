@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore.Update;
 using SFA.DAS.Authorization;
 using SFA.DAS.Authorization.CommitmentPermissions;
 using SFA.DAS.Authorization.EmployerUserRoles;
@@ -31,8 +32,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
             var cohortId = GetCohortId();
             var userRef = GetUserRef();
 
-            authorizationContext.AddEmployerUserRoleValues(accountId, userRef);
-            authorizationContext.AddCommitmentPermissionValues(cohortId, Party.Employer, accountId);
+            if (accountId.HasValue && userRef.HasValue)
+            {
+                authorizationContext.AddEmployerUserRoleValues(accountId.Value, userRef.Value);
+            }
+
+            if (accountId.HasValue && cohortId.HasValue)
+            {
+                authorizationContext.AddCommitmentPermissionValues(cohortId.Value, Party.Employer, accountId.Value);
+            }
 
             return authorizationContext;
         }
