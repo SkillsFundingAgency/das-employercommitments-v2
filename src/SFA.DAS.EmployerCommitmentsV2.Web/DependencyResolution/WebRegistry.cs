@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using SFA.DAS.EmployerAccounts.Api.Client;
+using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Services.Stubs;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using StructureMap;
@@ -12,13 +13,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
         public WebRegistry()
         {
             For<IAuthenticationService>().Use<AuthenticationService>();
-            For<IEmployerAccountsApiClient>().Use<StubEmployerAccountsApiClient>();
-            //Toggle<IEmployerAccountsApiClient, StubEmployerAccountsApiClient>("UseStubEmployerAccountsApiClient");
-        }
-
-        private void Toggle<TPluginType, TConcreteType>(string configurationKey) where TConcreteType : TPluginType
-        {
-            For<TPluginType>().InterceptWith(new FuncInterceptor<TPluginType>((c, o) => c.GetInstance<IConfiguration>().GetValue<bool>(configurationKey) ? c.GetInstance<TConcreteType>() : o));
+            For<IEmployerAccountsApiClient>().InterceptWith(new FuncInterceptor<IEmployerAccountsApiClient>(
+                (c, o) => c.GetInstance<EmployerCommitmentsV2Configuration>().UseStubEmployerAccountsApiClient ? c.GetInstance<StubEmployerAccountsApiClient>() : o));
         }
     }
 }
