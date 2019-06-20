@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.Authorization.Mvc;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
 {
@@ -7,7 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
     {
         public static IServiceCollection AddDasMvc(this IServiceCollection services)
         {
-            services.AddMvc()
+            services.AddMvc(o=>o.AddAuthorization())
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
