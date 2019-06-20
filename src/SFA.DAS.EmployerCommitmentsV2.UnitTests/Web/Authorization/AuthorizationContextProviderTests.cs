@@ -247,30 +247,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
 
             return this;
         }
-
-
-        //public AuthorizationContextProviderTestsFixture SetInvalidUkprn()
-        //{
-        //    UkprnClaimValue = "BBB";
-
-        //    var ukprnClaimValue = UkprnClaimValue;
-
-        //    AuthenticationService.Setup(a => a.IsUserAuthenticated()).Returns(true);
-        //    AuthenticationService.Setup(a => a.TryGetUserClaimValue(ProviderClaims.Ukprn, out ukprnClaimValue)).Returns(true);
-
-        //    return this;
-        //}
-
-        //public AuthorizationContextProviderTestsFixture SetValidUserEmail()
-        //{
-        //    UserEmail = "foo@bar.com";
-
-        //    var userEmailClaimValue = UserEmail;
-
-        //    AuthenticationService.Setup(a => a.IsUserAuthenticated()).Returns(true);
-        //    AuthenticationService.Setup(a => a.TryGetUserClaimValue(ProviderClaims.Email, out userEmailClaimValue)).Returns(true);
-
-        //    return this;
-        //}
     }
 }
