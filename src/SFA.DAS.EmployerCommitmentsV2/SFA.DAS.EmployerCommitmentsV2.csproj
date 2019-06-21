@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.2.4" />
+    <PackageReference Include="SFA.DAS.Authorization.CommitmentPermissions" Version="5.3.1" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="2.1.1305" />
     <PackageReference Include="SFA.DAS.EmployerAccounts.Api.Client" Version="1.6.1021" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.1" />

@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Authorization;
+﻿using SFA.DAS.Authorization.ModelBinding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Requests
 {

@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using SFA.DAS.Authorization;
-using SFA.DAS.Authorization.CommitmentPermissions;
-using SFA.DAS.Authorization.EmployerUserRoles;
+using SFA.DAS.Authorization.CommitmentPermissions.Context;
+using SFA.DAS.Authorization.Context;
+using SFA.DAS.Authorization.EmployerUserRoles.Context;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
@@ -15,13 +15,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEncodingService _encodingService;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IUserService _userService;
 
-        public AuthorizationContextProvider(IHttpContextAccessor httpContextAccessor, IEncodingService encodingService, IAuthenticationService authenticationService)
+        public AuthorizationContextProvider(IHttpContextAccessor httpContextAccessor, IEncodingService encodingService, IUserService userService)
         {
             _httpContextAccessor = httpContextAccessor;
             _encodingService = encodingService;
-            _authenticationService = authenticationService;
+            _userService = userService;
         }
 
         public IAuthorizationContext GetAuthorizationContext()
@@ -66,12 +66,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
 
         private Guid? GetUserRef()
         {
-            if (!_authenticationService.IsUserAuthenticated())
+            if (!_userService.IsUserAuthenticated())
             {
                 return null;
             }
 
-            if (!_authenticationService.TryGetUserClaimValue(EmployeeClaims.Id, out var idClaimValue))
+            if (!_userService.TryGetUserClaimValue(EmployeeClaims.Id, out var idClaimValue))
             {
                 throw new UnauthorizedAccessException();
             }

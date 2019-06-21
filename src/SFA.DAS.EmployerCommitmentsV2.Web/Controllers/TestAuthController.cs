@@ -1,30 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Authorization.CommitmentPermissions;
-using SFA.DAS.Authorization.EmployerUserRoles;
-using SFA.DAS.Authorization.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Authorization.CommitmentPermissions.Options;
+using SFA.DAS.Authorization.EmployerUserRoles.Options;
+using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
+    [Authorize]
     [Route("test")]
     public class TestAuthController : Controller
     {
         [Route("account/{AccountHashedId}/cohort/{CohortReference}")]
         [DasAuthorize(CommitmentOperation.AccessCohort)]
-        public IActionResult Index(TestRequest request)
+        public IActionResult AccessTest(TestRequest request)
         {
-            return View();
+            return View("Index");
         }
 
         [Route("account/{AccountHashedId}")]
-        [DasAuthorize(EmployerUserRole.Any)]
-        public IActionResult Index2(TestRequest request)
+        [DasAuthorize(EmployerUserRole.Owner)]
+        public IActionResult RoleTest(TestRequest request)
         {
             return View("Index");
         }
 
         [Route("noaccount")]
-        public IActionResult Index3()
+        public IActionResult UnauthenticatedTest()
         {
             return View("Index");
         }

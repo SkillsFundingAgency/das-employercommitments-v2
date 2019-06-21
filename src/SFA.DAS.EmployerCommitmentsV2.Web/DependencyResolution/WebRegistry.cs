@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using SFA.DAS.EmployerAccounts.Api.Client;
+﻿using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Services.Stubs;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
@@ -12,7 +11,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
     {
         public WebRegistry()
         {
-            For<IAuthenticationService>().Use<AuthenticationService>();
+            For<IUserService>().Use<UserService>();
+            For<StubEmployerAccountsApiClient>().Use<StubEmployerAccountsApiClient>().Singleton();
             For<IEmployerAccountsApiClient>().InterceptWith(new FuncInterceptor<IEmployerAccountsApiClient>(
                 (c, o) => c.GetInstance<EmployerCommitmentsV2Configuration>().UseStubEmployerAccountsApiClient ? c.GetInstance<StubEmployerAccountsApiClient>() : o));
         }

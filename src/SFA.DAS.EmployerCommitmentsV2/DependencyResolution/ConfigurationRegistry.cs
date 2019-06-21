@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using SFA.DAS.Authorization.CommitmentPermissions.Configuration;
 using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.Encoding;
@@ -13,6 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution
             AddConfiguration<AccountIdHashingConfiguration>(ConfigurationKeys.AccountIdHashingConfiguration);
             AddConfiguration<AuthenticationConfiguration>(ConfigurationKeys.AuthenticationConfiguration);
             AddConfiguration<CommitmentsClientApiConfiguration>(ConfigurationKeys.CommitmentsApiClientConfiguration);
+            AddConfiguration<CommitmentPermissionsApiClientConfiguration>(ConfigurationKeys.CommitmentsApiClientConfiguration);
             AddConfiguration<EmployerCommitmentsV2Configuration>(ConfigurationKeys.EmployerCommitmentsV2);
             AddConfiguration<EncodingConfig>(ConfigurationKeys.Encoding);
             AddConfiguration<PublicAccountIdHashingConfiguration>(ConfigurationKeys.PublicAccountIdHashingConfiguration);

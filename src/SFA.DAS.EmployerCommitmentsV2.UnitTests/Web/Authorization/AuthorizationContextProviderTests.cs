@@ -7,6 +7,7 @@ using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization;
+using SFA.DAS.Authorization.Context;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
@@ -128,7 +129,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
     {
         public IAuthorizationContextProvider AuthorizationContextProvider { get; set; }
         public Mock<IHttpContextAccessor> HttpContextAccessor { get; set; }
-        public Mock<IAuthenticationService> AuthenticationService { get; set; }
+        public Mock<IUserService> AuthenticationService { get; set; }
         public Mock<IRoutingFeature> RoutingFeature { get; set; }
         public Mock<IEncodingService> EncodingService { get; set; }
         public string AccountHashedId { get; set; }
@@ -141,7 +142,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
 
         public AuthorizationContextProviderTestsFixture()
         {
-            AuthenticationService = new Mock<IAuthenticationService>();
+            AuthenticationService = new Mock<IUserService>();
             HttpContextAccessor = new Mock<IHttpContextAccessor>();
             RoutingFeature = new Mock<IRoutingFeature>();
             EncodingService = new Mock<IEncodingService>();
