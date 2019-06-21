@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
@@ -7,7 +6,6 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    [Authorize]
     [Route("test")]
     public class TestAuthController : Controller
     {
@@ -30,7 +28,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             return View("Index");
         }
-
-
     }
 }

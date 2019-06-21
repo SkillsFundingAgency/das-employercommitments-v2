@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
@@ -129,7 +128,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
     {
         public IAuthorizationContextProvider AuthorizationContextProvider { get; set; }
         public Mock<IHttpContextAccessor> HttpContextAccessor { get; set; }
-        public Mock<IUserService> AuthenticationService { get; set; }
+        public Mock<IUserService> UserService { get; set; }
         public Mock<IRoutingFeature> RoutingFeature { get; set; }
         public Mock<IEncodingService> EncodingService { get; set; }
         public string AccountHashedId { get; set; }
@@ -142,7 +141,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
 
         public AuthorizationContextProviderTestsFixture()
         {
-            AuthenticationService = new Mock<IUserService>();
+            UserService = new Mock<IUserService>();
             HttpContextAccessor = new Mock<IHttpContextAccessor>();
             RoutingFeature = new Mock<IRoutingFeature>();
             EncodingService = new Mock<IEncodingService>();
@@ -153,7 +152,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
             UserRef = Guid.NewGuid();
             RouteData = new RouteData();
 
-            AuthorizationContextProvider = new AuthorizationContextProvider(HttpContextAccessor.Object, EncodingService.Object, AuthenticationService.Object);
+            AuthorizationContextProvider = new AuthorizationContextProvider(HttpContextAccessor.Object, EncodingService.Object, UserService.Object);
         }
 
         public IAuthorizationContext GetAuthorizationContext()
@@ -223,7 +222,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
             return this;
         }
 
-
         public AuthorizationContextProviderTestsFixture SetUserRef(Guid? userRef)
         {
             UserRef = userRef;
@@ -231,8 +229,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
 
             var userIdClaimValue = UserRefClaimValue;
 
-            AuthenticationService.Setup(a => a.IsUserAuthenticated()).Returns(true);
-            AuthenticationService.Setup(a => a.TryGetUserClaimValue(EmployeeClaims.Id, out userIdClaimValue)).Returns(true);
+            UserService.Setup(a => a.IsUserAuthenticated()).Returns(true);
+            UserService.Setup(a => a.TryGetUserClaimValue(EmployeeClaims.Id, out userIdClaimValue)).Returns(true);
 
             return this;
         }
@@ -243,8 +241,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
 
             var userIdClaimValue = UserRefClaimValue;
 
-            AuthenticationService.Setup(a => a.IsUserAuthenticated()).Returns(true);
-            AuthenticationService.Setup(a => a.TryGetUserClaimValue(EmployeeClaims.Id, out userIdClaimValue)).Returns(true);
+            UserService.Setup(a => a.IsUserAuthenticated()).Returns(true);
+            UserService.Setup(a => a.TryGetUserClaimValue(EmployeeClaims.Id, out userIdClaimValue)).Returns(true);
 
             return this;
         }

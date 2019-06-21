@@ -37,6 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         public void Configure(IApplicationBuilder app)
         {
             app.UseDasErrorPages()
+                .UseUnauthorizedAccessExceptionHandler()
                 .UseHttpsRedirection()
                 .UseDasHsts()
                 .UseStaticFiles()
@@ -44,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .UseAuthentication()
                 .UseCookiePolicy()
                 .UseMvc()
-                .UseUnauthorizedAccessExceptionHandler();
+                ;
         }
     }
 }
