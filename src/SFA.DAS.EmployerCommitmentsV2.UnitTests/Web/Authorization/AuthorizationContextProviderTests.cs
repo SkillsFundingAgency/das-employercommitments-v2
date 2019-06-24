@@ -128,7 +128,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
     {
         public IAuthorizationContextProvider AuthorizationContextProvider { get; set; }
         public Mock<IHttpContextAccessor> HttpContextAccessor { get; set; }
-        public Mock<IUserService> UserService { get; set; }
+        public Mock<IAuthenticationService> UserService { get; set; }
         public Mock<IRoutingFeature> RoutingFeature { get; set; }
         public Mock<IEncodingService> EncodingService { get; set; }
         public string AccountHashedId { get; set; }
@@ -141,7 +141,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
 
         public AuthorizationContextProviderTestsFixture()
         {
-            UserService = new Mock<IUserService>();
+            UserService = new Mock<IAuthenticationService>();
             HttpContextAccessor = new Mock<IHttpContextAccessor>();
             RoutingFeature = new Mock<IRoutingFeature>();
             EncodingService = new Mock<IEncodingService>();

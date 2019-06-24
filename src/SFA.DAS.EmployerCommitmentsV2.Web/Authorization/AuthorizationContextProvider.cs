@@ -15,13 +15,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEncodingService _encodingService;
-        private readonly IUserService _userService;
+        private readonly IAuthenticationService _authenticationService;
 
-        public AuthorizationContextProvider(IHttpContextAccessor httpContextAccessor, IEncodingService encodingService, IUserService userService)
+        public AuthorizationContextProvider(IHttpContextAccessor httpContextAccessor, IEncodingService encodingService, IAuthenticationService authenticationService)
         {
             _httpContextAccessor = httpContextAccessor;
             _encodingService = encodingService;
-            _userService = userService;
+            _authenticationService = authenticationService;
         }
 
         public IAuthorizationContext GetAuthorizationContext()
@@ -66,12 +66,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
 
         private Guid? GetUserRef()
         {
-            if (!_userService.IsUserAuthenticated())
+            if (!_authenticationService.IsUserAuthenticated())
             {
                 return null;
             }
 
-            if (!_userService.TryGetUserClaimValue(EmployeeClaims.Id, out var idClaimValue))
+            if (!_authenticationService.TryGetUserClaimValue(EmployeeClaims.Id, out var idClaimValue))
             {
                 throw new UnauthorizedAccessException();
             }

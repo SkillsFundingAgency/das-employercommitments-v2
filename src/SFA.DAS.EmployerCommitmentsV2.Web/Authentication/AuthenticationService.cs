@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Authentication
 {
-    public class UserService : IUserService
+    public class AuthenticationService : IAuthenticationService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(IHttpContextAccessor httpContextAccessor)
+        public AuthenticationService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
