@@ -27,6 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .AddDasMvc()
                 .AddDasEmployerAuthentication(_configuration)
                 .AddDasAuthorization();
+                .AddMemoryCache();
         }
 
         public void ConfigureContainer(Registry registry)

@@ -1,0 +1,43 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipViewModel
+
+@{
+ViewData["Title"] = "Apprenticeships";
+}<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+        <h1 class="govuk-heading-xl">Edit apprentice details</h1>
+        <div class="govuk-inset-text">
+            <p class="govuk-body">You can only receive payments for this apprentice if:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>all the fields have been completed - either by yourself or the employer</li>
+                <li>the data matches the individualised learner record (ILR) data you send us</li>
+            </ul>
+        </div>
+
+        <dl class="das-definition-list">
+            <dt class="das-definition-list__title">Employer</dt>
+            <dd class="das-definition-list__definition">@Model.Employer</dd>
+        </dl>
+        <form id="addApprenticeship" novalidate method="post" action="@Url.Action("EditDraftApprenticeship")">
+            @Html.AntiForgeryToken()
+            <partial name="DraftApprenticeship" for="@Model" />
+            <button type="submit" class="govuk-button">Save</button>
+            <div>
+                <a class="govuk-body govuk-link" href="">Cancel</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@*
+@section  Scripts
+{
+<script src="/libs/accessible-autocomplete/accessible-autocomplete.min.js"></script>
+<script>
+    accessibleAutocomplete.enhanceSelectElement({
+    selectElement: document.querySelector('#CourseCode')
+    })
+</script>
+}
+*@

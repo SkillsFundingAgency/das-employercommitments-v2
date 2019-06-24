@@ -19,6 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution
             AddConfiguration<EncodingConfig>(ConfigurationKeys.Encoding);
             AddConfiguration<PublicAccountIdHashingConfiguration>(ConfigurationKeys.PublicAccountIdHashingConfiguration);
             AddConfiguration<PublicAccountLegalEntityIdHashingConfiguration>(ConfigurationKeys.PublicAccountLegalEntityIdHashingConfiguration);
+            AddConfiguration<EncodingConfig>(ConfigurationKeys.Encoding);
         }
 
         private void AddConfiguration<T>(string key) where T : class

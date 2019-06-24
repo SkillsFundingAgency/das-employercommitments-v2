@@ -2,6 +2,7 @@
 {
     public static class ConfigurationKeys
     {
+        public const string Encoding = "SFA.DAS.Encoding";
         public static readonly string AccountIdHashingConfiguration = $"{EmployerCommitmentsV2}:AccountIdHashingConfiguration";
         public static readonly string AuthenticationConfiguration = $"{EmployerCommitmentsV2}:AuthenticationConfiguration";
         public static readonly string CommitmentsApiClientConfiguration = $"{EmployerCommitmentsV2}:CommitmentsApiClientConfiguration";
