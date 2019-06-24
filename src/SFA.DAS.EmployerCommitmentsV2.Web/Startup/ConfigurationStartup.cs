@@ -10,9 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         {
             return hostBuilder.ConfigureAppConfiguration(c => c
                 .AddAzureTableStorage(ConfigurationKeys.EmployerCommitmentsV2)
-                .AddAzureTableStorage(ConfigurationKeys.Encoding)
-                .AddAzureTableStorage(ConfigurationKeys.EmployerAccountsApiClient)
-                .AddAzureTableStorage(ConfigurationKeys.EmployerAccountsReadStore));
+                .AddAzureTableStorage(ConfigurationKeys.Encoding));
         }
     }
 }

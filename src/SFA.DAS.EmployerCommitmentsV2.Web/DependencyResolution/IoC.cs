@@ -10,7 +10,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
     {
         public static void Initialize(Registry registry)
         {
-            registry.IncludeRegistry<AutoConfigurationRegistry>();
             registry.IncludeRegistry<CommitmentsApiClientRegistry>();
             registry.IncludeRegistry<ConfigurationRegistry>();
             registry.IncludeRegistry<EncodingRegistry>();
