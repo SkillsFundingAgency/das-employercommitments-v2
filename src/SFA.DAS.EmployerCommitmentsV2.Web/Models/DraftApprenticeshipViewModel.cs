@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.Commitments.Shared.Models;
-using SFA.DAS.Commitments.Shared.Models.ApprenticeshipCourse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models
 {
@@ -30,10 +27,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models
         public long? CohortId { get; set; }
 
         public Guid? ReservationId { get; set; }
-
-        [Display(Name = "Employer")]
-        [MaxLength(100)]
-        public string Employer { get; set; }
 
         [Display(Name = "First Name")]
         public string FirstName { get; set; }

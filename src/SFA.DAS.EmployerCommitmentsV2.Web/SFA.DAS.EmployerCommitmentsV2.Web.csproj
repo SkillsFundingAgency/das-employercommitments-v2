@@ -55,12 +55,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="SFA.DAS.Commitments.Shared">
-      <HintPath>..\..\..\das-providercommitments\src\SFA.DAS.ProviderCommitments\SFA.DAS.Commitments.Shared\bin\Debug\netstandard2.0\SFA.DAS.Commitments.Shared.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Extensions\" />
   </ItemGroup>
 

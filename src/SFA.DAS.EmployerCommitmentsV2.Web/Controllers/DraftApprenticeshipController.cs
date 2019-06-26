@@ -76,7 +76,6 @@ namespace SFA.DAS.ProviderCommitments.Web.Controllers
             try
             {
                 await _employerCommitmentsService.AddDraftApprenticeshipToCohort(model.CohortId.Value, request);
-                var cohortDetailsUrl = $"{model.ProviderId}/apprentices/{model.CohortReference}/Details";
                 return Redirect("add");
             }
             catch (CommitmentsApiModelException ex)
@@ -91,8 +90,6 @@ namespace SFA.DAS.ProviderCommitments.Web.Controllers
         {
             var cohortDetail = await _employerCommitmentsService.GetCohortDetail(model.CohortId.Value);
             var courses = await GetCourses(cohortDetail);
-
-            model.Employer = cohortDetail.LegalEntityName;
             model.Courses = courses;
         }
 
@@ -100,7 +97,7 @@ namespace SFA.DAS.ProviderCommitments.Web.Controllers
         {
             if (cohortDetails.IsFundedByTransfer)
             {
-                return _trainingProgrammeApiClient.GetFrameworkTrainingProgrammes();
+                return _trainingProgrammeApiClient.GetStandardTrainingProgrammes();
             }
 
             return _trainingProgrammeApiClient.GetAllTrainingProgrammes();
