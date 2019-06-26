@@ -1,4 +1,4 @@
-﻿using SFA.DAS.ProviderUrlHelper;
+﻿using SFA.DAS.EmployerUrlHelper;
 using StructureMap;
 
 namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution

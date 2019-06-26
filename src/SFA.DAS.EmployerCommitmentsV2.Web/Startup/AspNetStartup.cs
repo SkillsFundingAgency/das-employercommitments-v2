@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.CommitmentPermissions.DependencyResolution;
@@ -7,6 +8,7 @@ using SFA.DAS.Authorization.Mvc;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution;
+using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 using StructureMap;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup

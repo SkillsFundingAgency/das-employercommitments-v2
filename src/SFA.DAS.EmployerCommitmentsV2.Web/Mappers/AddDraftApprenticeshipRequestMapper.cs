@@ -4,12 +4,13 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {
-    public class AddDraftApprenticeshipRequestMapper : IMapper<AddDraftApprenticeshipViewModel, AddDraftApprenticeshipRequest>
+    public class AddDraftApprenticeshipRequestMapper : IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest>
     {
-        public AddDraftApprenticeshipRequest Map(AddDraftApprenticeshipViewModel source)
+        public CreateCohortRequest Map(AddDraftApprenticeshipViewModel source)
         {
-            return new AddDraftApprenticeshipRequest
+            return new CreateCohortRequest
             {
+                AccountLegalEntityId = source.AccountLegalEntityId,
                 ProviderId = source.ProviderId,
                 ReservationId = source.ReservationId,
                 FirstName = source.FirstName,

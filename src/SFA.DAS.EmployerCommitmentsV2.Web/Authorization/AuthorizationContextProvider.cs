@@ -31,15 +31,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
             var cohortId = GetCohortId();
             var userRef = GetUserRef();
 
-            if (cohortId.HasValue)
-            {
-                authorizationContext.Set("CohortId", cohortId.Value);
-            }
-
-            if (accountId.HasValue)
-            {
-                authorizationContext.Set("AccountId", accountId.Value);
-            }
+            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, accountId,  AuthorizationKeys.AccountId);
+            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, cohortId, AuthorizationKeys.CohortId);
+            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetAccountLegalEntityHashedId(), AuthorizationKeys.AccountLegalEntityId);
 
             if (accountId.HasValue && userRef.HasValue)
             {
@@ -54,6 +48,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
             return authorizationContext;
         }
 
+        private void CopyRouteValueToAuthorizationContextIfAvailable<T>(IAuthorizationContext ctx, T? value, string name) where T : struct
+        {
+            if (value.HasValue)
+            {
+                ctx.Set(name, value.Value);
+            }
+        }
+
         private long? GetAccountId()
         {
             return GetAndDecodeValueIfExists(RouteValueKeys.AccountHashedId, EncodingType.AccountId);
@@ -62,6 +64,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
         private long? GetCohortId()
         {
             return GetAndDecodeValueIfExists(RouteValueKeys.CohortReference, EncodingType.CohortReference);
+        }
+
+        private long? GetAccountLegalEntityHashedId()
+        {
+            return GetAndDecodeValueIfExists(RouteValueKeys.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId);
         }
 
         private Guid? GetUserRef()
