@@ -26,7 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .AddDasHealthChecks()
                 .AddDasMvc()
                 .AddDasEmployerAuthentication(_configuration)
-                .AddDasAuthorization();
+                .AddDasAuthorization()
                 .AddMemoryCache();
         }
 
