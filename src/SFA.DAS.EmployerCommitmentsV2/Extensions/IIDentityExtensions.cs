@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
-using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+namespace SFA.DAS.EmployerCommitmentsV2.Extensions
 {
     public static class IIdentityExtensions
     {

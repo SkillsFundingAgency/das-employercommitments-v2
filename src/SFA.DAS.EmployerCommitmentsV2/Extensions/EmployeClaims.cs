@@ -2,10 +2,13 @@
 {
     public static class EmployeClaims
     {
-        public static readonly string Upn = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn";
-        public static readonly string DisplayName = "http://schemas.portal.com/displayname";
-        public static readonly string Name = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
-        public static readonly string Email = "http://schemas.portal.com/mail";
-        public static readonly string Ukprn = "http://schemas.portal.com/ukprn";
+        public const string Subject = "sub"; // same value as Upn (i.e. user id)
+        public const string IdentifyingParty = "idp";
+        public const string Upn = "http://das/employer/identity/claims/id";
+        public const string EmailAddress = "http://das/employer/identity/claims/email_address";
+        public const string GivenName = "http://das/employer/identity/claims/given_name";
+        public const string FamilyName = "http://das/employer/identity/claims/family_name";
+        public const string DisplayName = "http://das/employer/identity/claims/display_name";
+        public const string RequiresVerification = "http://das/employer/identity/claims/requires_verification";
     }
 }
