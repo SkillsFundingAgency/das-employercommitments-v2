@@ -60,7 +60,7 @@
     <label asp-for="CourseCode" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
     <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
     @Html.ValidationMessageFor(m => m.CourseCode, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.CourseCode) })
-    <select class="govuk-select govuk-!-width-three-quarters" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "Id", "Title"))" aria-describedby="course-name-hint">
+    <select class="govuk-select govuk-!-width-three-quarters" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "Id", "ExtendedTitle"))" aria-describedby="course-name-hint">
         <option value="">Please select an option</option>
     </select>
 </div>
