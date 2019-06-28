@@ -26,7 +26,7 @@
             Date of birth
         </legend>
         <span id="dob-hint" class="govuk-hint">
-            For example, 08 12 2001
+            For example, 31 3 1980
         </span>
         @Html.ValidationMessageFor(m => m.DateOfBirth, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DateOfBirth) })
         <div class="govuk-date-input">
@@ -92,7 +92,7 @@
 <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.EndDate, "govuk-form-group--error")">
     <fieldset class="govuk-fieldset" aria-describedby="finish-date-hint" role="group">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-            Projected finish date
+            Planned training end date
         </legend>
         <span id="finish-date-hint" class="govuk-hint">
             For example, 09 2019
