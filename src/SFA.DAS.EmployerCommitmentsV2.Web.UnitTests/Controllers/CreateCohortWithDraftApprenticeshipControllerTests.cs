@@ -6,6 +6,7 @@ using NUnit.Framework;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -138,6 +139,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
 
         public CreateCohortWithDraftApprenticeshipRequest GetRequest { get; private set; }
         public AddDraftApprenticeshipViewModel PostRequest { get; private set; }
+        
+        public Mock<CommitmentsApiClient> CommitmentsApiClientMock { get; }
+        public CommitmentsApiClient CommitmentsApiClient => CommitmentsApiClientMock.Object;
 
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures ForGetRequest()
         {
@@ -195,7 +199,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
                 CommitmentsService, 
                 RequestMapper, 
                 LinkGenerator, 
-                TrainingProgrammeApiClient);
+                TrainingProgrammeApiClient,
+                CommitmentsApiClient);
 
             if (_setModelToInvalid)
             {

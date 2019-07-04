@@ -8,6 +8,7 @@ using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Extensions;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.Commitments.Shared.Models;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.EmployerCommitmentsV2.Extensions;
@@ -25,17 +26,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest> _createCohortRequestMapper;
         private readonly ILinkGenerator _linkGenerator;
         private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
+        private readonly ICommitmentsApiClient _commitmentsApiClient;
 
         public CreateCohortWithDraftApprenticeshipController(
             ICommitmentsService employerCommitmentsService,
             IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest> createCohortRequestMapper,
             ILinkGenerator linkGenerator,
-            ITrainingProgrammeApiClient trainingProgrammeApiClient)
+            ITrainingProgrammeApiClient trainingProgrammeApiClient,
+            ICommitmentsApiClient commitmentsApiClient)
         {
             _employerCommitmentsService = employerCommitmentsService;
             _createCohortRequestMapper = createCohortRequestMapper;
             _linkGenerator = linkGenerator;
             _trainingProgrammeApiClient = trainingProgrammeApiClient;
+            _commitmentsApiClient = commitmentsApiClient;
         }
 
         [HttpGet]
@@ -52,11 +56,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 AccountLegalEntityId = request.AccountLegalEntityId,
                 StartDate = new MonthYearModel(request.StartMonthYear),
                 ReservationId = request.ReservationId,
-                CourseCode = request.CourseCode
+                CourseCode = request.CourseCode,
+                ProviderId = (int)request.ProviderId
             };
 
-            await AddLegalEntityAndCoursesToModel(model);
-
+            await AddCoursesAndProviderNameToModel(model);
+            
             return View(model);
         }
 
@@ -66,7 +71,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                await AddLegalEntityAndCoursesToModel(model);
+                await AddCoursesAndProviderNameToModel(model);
                 return View(model);
             }
 
@@ -82,20 +87,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             catch (CommitmentsApiModelException ex)
             {
                 ModelState.AddModelExceptionErrors(ex);
-                await AddLegalEntityAndCoursesToModel(model);
+                await AddCoursesAndProviderNameToModel(model);
                 return View(model);
             }
         }
 
-        private async Task AddLegalEntityAndCoursesToModel(DraftApprenticeshipViewModel model)
+        private async Task AddCoursesAndProviderNameToModel(DraftApprenticeshipViewModel model)
         {
             var courses = await GetCourses();
             model.Courses = courses;
+
+            var providerName = await GetProviderName(model.ProviderId);
+            model.ProviderName = providerName;
         }
 
         private Task<IReadOnlyList<ITrainingProgramme>> GetCourses()
         {
             return _trainingProgrammeApiClient.GetAllTrainingProgrammes();
+        }
+
+        private async Task<string> GetProviderName(long providerId)
+        {
+            var blah = await _commitmentsApiClient.GetProvider(providerId);
+            return blah.Name;
         }
     }
 }
