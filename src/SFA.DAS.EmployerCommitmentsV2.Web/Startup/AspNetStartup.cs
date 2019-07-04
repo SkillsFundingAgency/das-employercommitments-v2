@@ -9,6 +9,7 @@ using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
+using SFA.DAS.EmployerUrlHelper;
 using StructureMap;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
@@ -29,7 +30,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .AddDasMvc()
                 .AddDasEmployerAuthentication(_configuration)
                 .AddDasAuthorization()
-                .AddMemoryCache();
+                .AddMemoryCache()
+                .AddEmployerUrlHelper(_configuration);
         }
 
         public void ConfigureContainer(Registry registry)
