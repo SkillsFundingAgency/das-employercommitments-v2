@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var editModel = await _commitmentsService.GetDraftApprenticeshipForCohort(10005077, request.CohortId, request.DraftApprenticeshipId);
             var model = _editDraftApprenticeshipDetailsToViewModelMapper.Map(editModel);
 
-            await AddCoursesToModel(model);
+            await AddProviderNameAndCoursesToModel(model);
 
             return View(model);
         }
@@ -60,7 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                await AddCoursesToModel(model);
+                await AddProviderNameAndCoursesToModel(model);
                 return View(model);
             }
 
@@ -75,15 +75,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             catch (CommitmentsApiModelException ex)
             {
                 ModelState.AddModelExceptionErrors(ex);
-                await AddCoursesToModel(model);
+                await AddProviderNameAndCoursesToModel(model);
                 return View(model);
             }
         }
 
-        private async Task AddCoursesToModel(DraftApprenticeshipViewModel model)
+        private async Task AddProviderNameAndCoursesToModel(EditDraftApprenticeshipViewModel model)
         {
-            var courses = await GetCourses();
-            model.Courses = courses;
+            var cohortTask = _commitmentsService.GetCohortDetail(model.CohortId.Value);
+            var coursesTask = GetCourses();
+
+            await Task.WhenAll(cohortTask, coursesTask);
+
+            model.ProviderName = cohortTask.Result?.LegalEntityName + " provider????";
+            model.Courses = coursesTask.Result;
         }
 
         private Task<IReadOnlyList<ITrainingProgramme>> GetCourses()

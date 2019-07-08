@@ -23,6 +23,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models
         }
 
         public int ProviderId { get; set; }
+        public string ProviderName { get; set; }
+
         public string CohortReference { get; set; }
         public long? CohortId { get; set; }
 
