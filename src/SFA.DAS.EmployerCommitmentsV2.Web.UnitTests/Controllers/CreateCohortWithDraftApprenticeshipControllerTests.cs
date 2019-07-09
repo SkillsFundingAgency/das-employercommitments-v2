@@ -38,7 +38,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         public async Task GetAddDraftApprenticeship_ValidModel_ShouldReturnViewModel()
         {
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
-                                .ForGetRequest();
+                .ForGetRequest()
+                .WithTrainingProvider();
 
             var result = await fixtures.CheckGet();
 
@@ -51,7 +52,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         public async Task GetAddDraftApprenticeship_WithValidModel_ShouldSeeAllCourses()
         {
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
-                .ForGetRequest();
+                .ForGetRequest()
+                .WithTrainingProvider();
 
             await fixtures.CheckGet();
 
@@ -66,9 +68,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
                 .ForGetRequest()
                 .WithTrainingProvider();
-
-            fixtures.GetRequest.ProviderId = 1;
-
+            
             var result = await fixtures.CheckGet();
 
             var model = result.VerifyReturnsViewModel().WithModel<AddDraftApprenticeshipViewModel>();
@@ -97,7 +97,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         {
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
                 .ForPostRequest()
-                .WithInvalidModel();
+                .WithInvalidModel()
+                .WithTrainingProvider();
 
             var result = await fixtures.CheckPost();
 
@@ -110,7 +111,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
                 .ForPostRequest()
                 .WithInvalidModel()
-                .WithCourses("001", "002");
+                .WithCourses("001", "002")
+                .WithTrainingProvider();
 
             var result = await fixtures.CheckPost();
 
@@ -126,7 +128,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
                 .ForPostRequest()
                 .WithCreatedCohort("ABC123", 123)
-                .WithReviewCohortLink("someurl");
+                .WithReviewCohortLink("someurl")
+                .WithTrainingProvider();
 
             await fixtures.CheckPost();
 
@@ -166,13 +169,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
 
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures ForGetRequest()
         {
-            GetRequest = new CreateCohortWithDraftApprenticeshipRequest();
+            GetRequest = new CreateCohortWithDraftApprenticeshipRequest {ProviderId = 1};
             return this;
         }
 
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures ForPostRequest()
         {
             PostRequest = new AddDraftApprenticeshipViewModel();
+            PostRequest.ProviderId = 1;
             return this;
         }
 
