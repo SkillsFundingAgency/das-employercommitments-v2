@@ -108,8 +108,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         private async Task<string> GetProviderName(long providerId)
         {
-            var blah = await _commitmentsApiClient.GetProvider(providerId);
-            return blah.Name;
+            var provider = await _commitmentsApiClient.GetProvider(providerId);
+            return provider.Name;
         }
     }
 }

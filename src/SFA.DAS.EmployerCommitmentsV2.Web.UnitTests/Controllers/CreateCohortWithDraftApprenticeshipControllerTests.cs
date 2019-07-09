@@ -1,11 +1,14 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
+using SFA.DAS.Apprenticeships.Api.Types.Providers;
 using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.Commitments.Shared.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
@@ -55,6 +58,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             fixtures.TrainingProgrammeApiClientMock.Verify(tp => tp.GetStandardTrainingProgrammes(), Times.Never);
             fixtures.TrainingProgrammeApiClientMock.Verify(tp => tp.GetFrameworkTrainingProgrammes(), Times.Never);
             fixtures.TrainingProgrammeApiClientMock.Verify(tp => tp.GetAllTrainingProgrammes(), Times.Once);
+        }
+
+        [Test]
+        public async Task GetAddDraftApprenticeship_WithValidModel_ShouldSeeATrainingProvider()
+        {
+            var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
+                .ForGetRequest()
+                .WithTrainingProvider();
+
+            fixtures.GetRequest.ProviderId = 1;
+
+            var result = await fixtures.CheckGet();
+
+            var model = result.VerifyReturnsViewModel().WithModel<AddDraftApprenticeshipViewModel>();
+
+            Assert.AreEqual(model.ProviderName, "Name");
+            Assert.AreEqual(model.ProviderId, 1);
         }
 
         [Test]
@@ -124,6 +144,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             RequestMapper = new AddDraftApprenticeshipRequestMapper();
             LinkGeneratorMock = new Mock<ILinkGenerator>();
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
+            CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
         }
 
         public Mock<ICommitmentsService> CommitmentsServiceMock { get; } 
@@ -140,8 +161,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         public CreateCohortWithDraftApprenticeshipRequest GetRequest { get; private set; }
         public AddDraftApprenticeshipViewModel PostRequest { get; private set; }
         
-        public Mock<CommitmentsApiClient> CommitmentsApiClientMock { get; }
-        public CommitmentsApiClient CommitmentsApiClient => CommitmentsApiClientMock.Object;
+        public Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }
+        public ICommitmentsApiClient CommitmentsApiClient => CommitmentsApiClientMock.Object;
 
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures ForGetRequest()
         {
@@ -189,6 +210,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
                     trainingProgramMock.Setup(tpm => tpm.Id).Returns(cc);
                     return trainingProgramMock.Object;
                 }).ToList());
+
+            return this;
+        }
+
+        public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithTrainingProvider()
+        {
+            var response = new GetProviderResponse {Name = "Name", ProviderId = 1};
+
+            CommitmentsApiClientMock.Setup(p => p.GetProvider(1, CancellationToken.None))
+                .ReturnsAsync(response);
 
             return this;
         }

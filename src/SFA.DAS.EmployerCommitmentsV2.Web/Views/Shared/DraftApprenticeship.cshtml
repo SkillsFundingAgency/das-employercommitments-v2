@@ -6,6 +6,16 @@
 <div class="govuk-form-group">
     <fieldset class="govuk-fieldset">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+            Training provider
+        </legend>
+        <div>
+            <span class="govuk-hint">@Model.ProviderName</span>
+        </div>
+    </fieldset>
+</div>
+<div class="govuk-form-group">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
             Apprentice name
         </legend>
         <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.FirstName, "govuk-form-group--error")">
