@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.7.0" />
     <PackageReference Include="Moq" Version="4.10.1" />
     <PackageReference Include="nunit" Version="3.11.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="SFA.DAS.Commitments.Shared" Version="0.1.21-cv-185-createcom0011" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="2.1.1507" />
+    <PackageReference Include="SFA.DAS.Testing.AutoFixture" Version="3.0.121" />
   </ItemGroup>
 
   <ItemGroup>
