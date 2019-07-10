@@ -1,16 +1,6 @@
-﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCohort
-@model SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCohort.RouteModel
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCohort.RouteModel
 @{
     ViewData["Title"] = "Apprenticeships";
-
-    var routeData = new Dictionary<string, string>
-    {
-        {nameof(RouteModel.AccountId), Model.AccountId },
-        {nameof(RouteModel.ReservationId), Model.ReservationId },
-        {nameof(RouteModel.EmployerAccountLegalEntityPublicHashedId), Model.EmployerAccountLegalEntityPublicHashedId },
-        {nameof(RouteModel.StartMonthYear), Model.StartMonthYear },
-        {nameof(RouteModel.CourseCode), Model.CourseCode }
-    };
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -28,7 +18,7 @@
             <li>make sure the PAYE scheme that each apprentice is paid through is in your account - <a href="#">view PAYE schemes in this account</a></li>
         </ul>
         
-        <a asp-action="SelectProvider" asp-all-route-data="@routeData" role="button" draggable="false" class="govuk-button govuk-button--start">
+        <a asp-action="SelectProvider" asp-all-route-data="@Model.ToDictionary()" role="button" draggable="false" class="govuk-button govuk-button--start">
             Start now
         </a>
     </div>
