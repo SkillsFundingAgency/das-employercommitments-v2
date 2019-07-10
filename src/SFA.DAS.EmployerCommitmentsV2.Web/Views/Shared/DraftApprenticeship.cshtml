@@ -136,13 +136,16 @@
 <div class="govuk-character-count" data-module="character-count" data-maxlength="20">
     <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Reference, "govuk-form-group--error")">
         <label asp-for="Reference" class="govuk-label govuk-!-font-weight-bold">Reference (optional)</label>
+        <span class="govuk-hint">
+            Add a reference, such as employee number or location - this won't be seen by the training provider
+        </span>
         @Html.ValidationMessageFor(m => m.Reference, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Reference) })
 
         <input maxlength="20" asp-for="Reference" class="govuk-input govuk-!-width-three-quarters js-character-count" />
     </div>
 </div>
 
-<div class="govuk-inset-text das-inset-text--filled">
+<div class="govuk-inset-text">
     <h3 class="govuk-heading-s">End-point assessments</h3>
     <p>If you have chosen an apprenticeship standard, we'll ask you to confirm the <a class="govuk-link" href="https://www.gov.uk/government/publications/using-the-register-of-apprentice-assessment-organisations" target="_blank" title="Opens in a new window">apprentice assessment organisation</a> for this apprentice. We'll do this before the end of the apprenticeship.</p>
     <p>Apprenticeship frameworks have different assessment arrangements and don't need end-point assessments.</p>
