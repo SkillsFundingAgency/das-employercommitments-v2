@@ -80,20 +80,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
         }
 
-        private async Task AddProviderNameAndCoursesToModel(EditDraftApprenticeshipViewModel model)
+        private async Task AddProviderNameAndCoursesToModel(DraftApprenticeshipViewModel model)
         {
-            var cohortTask = _commitmentsService.GetCohortDetail(model.CohortId.Value);
-            var coursesTask = GetCourses();
+            var cohort = await _commitmentsService.GetCohortDetail(model.CohortId.Value);
+            var courses = await GetCourses(!cohort.IsFundedByTransfer);
 
-            await Task.WhenAll(cohortTask, coursesTask);
-
-            model.ProviderName = cohortTask.Result?.LegalEntityName + " provider????";
-            model.Courses = coursesTask.Result;
+            model.ProviderName = cohort.LegalEntityName + " provider????";
+            model.Courses = courses;
         }
 
-        private Task<IReadOnlyList<ITrainingProgramme>> GetCourses()
+        private Task<IReadOnlyList<ITrainingProgramme>> GetCourses(bool includeFrameworks)
         {
-            return _trainingProgrammeApiClient.GetAllTrainingProgrammes();
+            if (includeFrameworks)
+            {
+                return _trainingProgrammeApiClient.GetAllTrainingProgrammes();
+            }
+            return _trainingProgrammeApiClient.GetStandardTrainingProgrammes();
         }
     }
 }
