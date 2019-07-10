@@ -6,9 +6,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     [Route("{accountId}/unapproved/add")]
     public class AddDraftApprenticeshipToNewCohortController : Controller
     {
-        public IActionResult Index(IndexViewModel viewModel)
+        public IActionResult Index(RouteModel routeModel)
         {
-            return View(viewModel);
+            return View(routeModel);
+        }
+
+        [Route("select-provider")]
+        public IActionResult SelectProvider(RouteModel routeModel)
+        {
+            return null;
         }
     }
 }

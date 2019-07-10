@@ -1,21 +1,34 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCohort.IndexViewModel
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCohort
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCohort.RouteModel
 @{
     ViewData["Title"] = "Apprenticeships";
+
+    var routeData = new Dictionary<string, string>
+    {
+        {nameof(RouteModel.AccountId), Model.AccountId },
+        {nameof(RouteModel.ReservationId), Model.ReservationId },
+        {nameof(RouteModel.EmployerAccountLegalEntityPublicHashedId), Model.EmployerAccountLegalEntityPublicHashedId },
+        {nameof(RouteModel.StartMonthYear), Model.StartMonthYear },
+        {nameof(RouteModel.CourseCode), Model.CourseCode }
+    };
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl">Add an apprentice</h1>
 
-        <p class="govuk-body">asdf</p>
+        <p class="govuk-body">Add details of one or more apprentices to your account, and authorise payments to their training provider.</p>
         
         <h2 class="govuk-heading-l">Before you start</h2>
         
         <p class="govuk-body">You must:</p>
-        <ul class="govuk-list govuk-list--bullet">
+        <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
             <li>know the names of your apprentices</li>
+            <li>know your training provider's UK Provider Reference Number (UKPRN) -your training provider can tell you this</li>
+            <li>make sure the organisation that's named on the contract you have with your training provider is in your account - <a href="#">view organisations in this account</a></li>
+            <li>make sure the PAYE scheme that each apprentice is paid through is in your account - <a href="#">view PAYE schemes in this account</a></li>
         </ul>
         
-        <a href="#" role="button" draggable="false" class="govuk-button govuk-button--start">
+        <a asp-action="SelectProvider" asp-all-route-data="@routeData" role="button" draggable="false" class="govuk-button govuk-button--start">
             Start now
         </a>
     </div>

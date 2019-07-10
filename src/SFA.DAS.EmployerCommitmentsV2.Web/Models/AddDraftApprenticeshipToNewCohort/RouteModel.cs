@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCohort
 {
-    public class IndexViewModel
+    public class RouteModel
     {
         [FromRoute]
         public string AccountId { get; set; }
