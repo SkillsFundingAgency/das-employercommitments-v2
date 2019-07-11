@@ -1,53 +1,48 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
+using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
     [DasAuthorize(EmployerUserRole.Owner)]
-    [Route("{accountId}/unapproved/add")]
+    [Route("{accountHashedId}/unapproved/add")]
     public class CreateCohortController : Controller
     {
+        private readonly IMapper<IndexRequest, IndexViewModel> _mapper;
+
+        public CreateCohortController(
+            IMapper<IndexRequest, IndexViewModel> mapper)
+        {
+            _mapper = mapper;
+        }
+
         public IActionResult Index(IndexRequest indexRequest)
         {
-            return View(indexRequest);
+            var viewModel = _mapper.Map(indexRequest);
+            //todo: get urls for viewmodel
+            return View(viewModel);
         }
 
         [Route("select-provider")]
         public IActionResult SelectProvider(SelectProviderRequest request)
         {
-            var vm = new SelectProviderViewModel
-            {
-                AccountId = request.AccountId,
-                CourseCode =  request.CourseCode,
-                EmployerAccountLegalEntityPublicHashedId = request.EmployerAccountLegalEntityPublicHashedId,
-                ReservationId = request.ReservationId,
-                StartMonthYear = request.StartMonthYear
-            };
+            var viewModel = new SelectProviderViewModel();//todo: from mapper
 
-            return View(vm);
+            return View(viewModel);
         }
 
         [Route("select-provider")]
         [HttpPost]
         public IActionResult SelectProvider(SelectProviderViewModel request)
         {
-            //hit api
+            //todo:hit api
 
-            var r = new ConfirmProviderRequest
-            {
-                AccountId = request.AccountId,
-                CourseCode = request.CourseCode,
-                EmployerAccountLegalEntityPublicHashedId = request.EmployerAccountLegalEntityPublicHashedId,
-                ProviderId = request.ProviderId,
-                ReservationId = request.ReservationId,
-                StartMonthYear = request.StartMonthYear,
-            };
+            var confirmProviderRequest = new ConfirmProviderRequest();//todo: from mapper
 
-            return RedirectToAction("ConfirmProvider", r);
+            return RedirectToAction("ConfirmProvider", confirmProviderRequest);
         }
-
 
         [Route("confirm-provider")]
         [HttpGet]
@@ -55,7 +50,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             return View(request);
         }
-
-
     }
 }
