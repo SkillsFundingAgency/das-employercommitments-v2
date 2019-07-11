@@ -3,6 +3,7 @@ using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
+using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -10,18 +11,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     [Route("{accountHashedId}/unapproved/add")]
     public class CreateCohortController : Controller
     {
-        private readonly IMapper<IndexRequest, IndexViewModel> _mapper;
+        private readonly IMapper<IndexRequest, IndexViewModel> _indexViewModelMapper;
+        private readonly ILinkGenerator _linkGenerator;
 
         public CreateCohortController(
-            IMapper<IndexRequest, IndexViewModel> mapper)
+            IMapper<IndexRequest, IndexViewModel> indexViewModelMapper,
+            ILinkGenerator linkGenerator)
         {
-            _mapper = mapper;
+            _indexViewModelMapper = indexViewModelMapper;
+            _linkGenerator = linkGenerator;
         }
 
-        public IActionResult Index(IndexRequest indexRequest)
+        public IActionResult Index(IndexRequest request)
         {
-            var viewModel = _mapper.Map(indexRequest);
-            //todo: get urls for viewmodel
+            var viewModel = _indexViewModelMapper.Map(request);
+
+            viewModel.OrganisationsLink = _linkGenerator.YourOrganisationsAndAgreements(request.AccountHashedId);
+            viewModel.PayeSchemesLink = _linkGenerator.PayeSchemes(request.AccountHashedId);
+
             return View(viewModel);
         }
 
