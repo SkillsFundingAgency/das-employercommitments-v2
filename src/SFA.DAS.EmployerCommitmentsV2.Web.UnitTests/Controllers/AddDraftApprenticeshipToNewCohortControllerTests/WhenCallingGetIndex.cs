@@ -11,13 +11,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.AddDraftAppren
     {
         [Test, MoqAutoData]
         public void Then_Returns_View(
-            RouteModel routeModel,
-            AddDraftApprenticeshipToNewCohortController controller)
+            StartRequest startRequest,
+            CreateCohortController controller)
         {
-            var result = controller.Index(routeModel) as ViewResult;
+            var result = controller.Index(startRequest) as ViewResult;
 
             result.ViewName.Should().BeNull();
-            result.Model.Should().Be(routeModel);
+            result.Model.Should().Be(startRequest);
         }
     }
 }

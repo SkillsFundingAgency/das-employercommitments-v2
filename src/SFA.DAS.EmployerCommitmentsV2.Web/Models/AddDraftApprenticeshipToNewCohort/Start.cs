@@ -3,20 +3,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCohort
 {
-    public class RouteModel
+    public class StartRequest
     {
         [FromRoute]
         public string AccountId { get; set; }
-        [FromQuery]
+        
         public string ReservationId { get; set; }
-        [FromQuery]
+        
         public string EmployerAccountLegalEntityPublicHashedId { get; set; }
-        [FromQuery]
+        
         public string StartMonthYear { get; set; }
-        [FromQuery]
+        
         public string CourseCode { get; set; }
 
-        public Dictionary<string, string> ToDictionary()
+        public virtual Dictionary<string, string> ToDictionary()
         {
             var dictionary = new Dictionary<string, string>
             {
@@ -33,5 +33,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCo
 
             return dictionary;
         }
+
     }
+
+    public class SelectProviderRequest : StartRequest
+    {
+
+
+    }
+
+    public class ConfirmProviderRequest : SelectProviderRequest
+    {
+        public long ProviderId { get; set; }
+
+        public override Dictionary<string, string> ToDictionary()
+        {
+            var result = base.ToDictionary();
+
+            result.Add("ProviderId", ProviderId.ToString());
+
+            return result;
+        }
+    }
+
+
+
 }
