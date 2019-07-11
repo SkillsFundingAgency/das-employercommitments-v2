@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCohort
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
 {
-    public class StartRequest
+    public class IndexRequest
     {
         [FromRoute]
         public string AccountId { get; set; }
@@ -35,27 +35,4 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCo
         }
 
     }
-
-    public class SelectProviderRequest : StartRequest
-    {
-
-
-    }
-
-    public class ConfirmProviderRequest : SelectProviderRequest
-    {
-        public long ProviderId { get; set; }
-
-        public override Dictionary<string, string> ToDictionary()
-        {
-            var result = base.ToDictionary();
-
-            result.Add("ProviderId", ProviderId.ToString());
-
-            return result;
-        }
-    }
-
-
-
 }

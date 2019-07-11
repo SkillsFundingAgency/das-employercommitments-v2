@@ -2,22 +2,22 @@
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.AddDraftApprenticeshipToNewCohortControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortControllerTests
 {
     public class WhenCallingGetIndex
     {
         [Test, MoqAutoData]
         public void Then_Returns_View(
-            StartRequest startRequest,
+            IndexRequest indexRequest,
             CreateCohortController controller)
         {
-            var result = controller.Index(startRequest) as ViewResult;
+            var result = controller.Index(indexRequest) as ViewResult;
 
             result.ViewName.Should().BeNull();
-            result.Model.Should().Be(startRequest);
+            result.Model.Should().Be(indexRequest);
         }
     }
 }

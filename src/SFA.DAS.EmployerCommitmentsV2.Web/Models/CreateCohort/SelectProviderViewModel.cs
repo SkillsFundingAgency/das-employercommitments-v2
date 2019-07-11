@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCohort
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
 {
     public class SelectProviderViewModel
     {
-       
         public string AccountId { get; set; }
        
         public string ReservationId { get; set; }
@@ -19,6 +13,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCo
         public string CourseCode { get; set; }
 
         public long ProviderId { get; set; }
-
     }
 }

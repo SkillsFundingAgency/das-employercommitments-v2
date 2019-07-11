@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipToNewCohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -9,9 +9,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     [Route("{accountId}/unapproved/add")]
     public class CreateCohortController : Controller
     {
-        public IActionResult Index(StartRequest startRequest)
+        public IActionResult Index(IndexRequest indexRequest)
         {
-            return View(startRequest);
+            return View(indexRequest);
         }
 
         [Route("select-provider")]
