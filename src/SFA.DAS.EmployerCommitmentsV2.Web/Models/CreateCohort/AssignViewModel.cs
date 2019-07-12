@@ -2,5 +2,6 @@
 {
     public class AssignViewModel
     {
+        public string AccountHashedId { get; set; }
     }
 }
