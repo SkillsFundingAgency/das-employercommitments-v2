@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var editModel = await _commitmentsService.GetDraftApprenticeshipForCohort(10005077, request.CohortId, request.DraftApprenticeshipId);
+            var editModel = await _commitmentsService.GetDraftApprenticeshipForCohort(request.CohortId, request.DraftApprenticeshipId);
             var model = _editDraftApprenticeshipDetailsToViewModelMapper.Map(editModel);
 
             await AddProviderNameAndCoursesToModel(model);
@@ -85,7 +85,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var cohort = await _commitmentsService.GetCohortDetail(model.CohortId.Value);
             var courses = await GetCourses(!cohort.IsFundedByTransfer);
 
-            model.ProviderName = cohort.LegalEntityName + " provider????";
+            model.ProviderName = cohort.ProviderName;
             model.Courses = courses;
         }
 

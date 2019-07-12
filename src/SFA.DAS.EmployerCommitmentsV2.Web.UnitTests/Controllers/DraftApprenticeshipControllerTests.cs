@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             var result = await fixtures.Sut.EditDraftApprenticeship(new EditDraftApprenticeshipRequest { CohortId = fixtures.CohortId, DraftApprenticeshipId = fixtures.DraftApprenticeshipId});
 
             fixtures.CommitmentsServiceMock.Verify(x => x.GetCohortDetail(fixtures.CohortId));
-            fixtures.CommitmentsServiceMock.Verify(x => x.GetDraftApprenticeshipForCohort(It.IsAny<int>(), fixtures.CohortId, fixtures.DraftApprenticeshipId));
+            fixtures.CommitmentsServiceMock.Verify(x => x.GetDraftApprenticeshipForCohort(fixtures.CohortId, fixtures.DraftApprenticeshipId));
             result.VerifyReturnsViewModel().WithModel<EditDraftApprenticeshipViewModel>();
         }
 
@@ -60,7 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             var result = await fixtures.Sut.EditDraftApprenticeship(new EditDraftApprenticeshipRequest { CohortId = fixtures.CohortId, DraftApprenticeshipId = fixtures.DraftApprenticeshipId });
 
             var model = result.VerifyReturnsViewModel().WithModel<EditDraftApprenticeshipViewModel>();
-            //Assert.AreEqual("ProviderName", model.ProviderName);
+            Assert.AreEqual("ProviderName", model.ProviderName);
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             Assert.AreEqual("First", model.FirstName);
             Assert.AreEqual("Last", model.LastName);
             Assert.AreEqual(2, model.Courses.Count);
-            //Assert.AreEqual("ProviderName", model.ProviderName);
+            Assert.AreEqual("ProviderName", model.ProviderName);
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             LinkGeneratorMock = new Mock<ILinkGenerator>();
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
 
-            CohortDetails = new CohortDetails { CohortId = CohortId, HashedCohortId = CohortReference, IsFundedByTransfer = false };
+            CohortDetails = new CohortDetails { CohortId = CohortId, HashedCohortId = CohortReference, IsFundedByTransfer = false, ProviderName = "ProviderName"};
             EditDraftApprenticeshipDetails = new EditDraftApprenticeshipDetails { CohortId = CohortId, CohortReference = CohortReference, DraftApprenticeshipId = DraftApprenticeshipId, DraftApprenticeshipHashedId = DraftApprenticeshipHashedId};
 
             Sut = new DraftApprenticeshipController(CommitmentsServiceMock.Object,
@@ -142,7 +142,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             var returnValue = details ?? EditDraftApprenticeshipDetails;
 
             CommitmentsServiceMock
-                .Setup(cs => cs.GetDraftApprenticeshipForCohort(It.IsAny<int>(), It.IsAny<long>(), It.IsAny<long>()))
+                .Setup(cs => cs.GetDraftApprenticeshipForCohort(It.IsAny<long>(), It.IsAny<long>()))
                 .ReturnsAsync(returnValue);
 
             return this;
