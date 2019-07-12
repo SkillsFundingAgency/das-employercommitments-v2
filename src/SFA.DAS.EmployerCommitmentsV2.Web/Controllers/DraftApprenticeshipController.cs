@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
@@ -12,9 +11,9 @@ using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.EmployerCommitmentsV2.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
-using SFA.DAS.ProviderUrlHelper;
+using SFA.DAS.EmployerUrlHelper;
 
-namespace SFA.DAS.ProviderCommitments.Web.Controllers
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
     
     [Route("accounts/{hashedAccountId}/apprentices/")]

@@ -1,5 +1,4 @@
-﻿using SFA.DAS.ProviderUrlHelper;
-using StructureMap;
+﻿using StructureMap;
 
 namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution
 {
@@ -13,8 +12,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution
                     scan.AssembliesFromApplicationBaseDirectory(a => a.GetName().Name.StartsWith("SFA.DAS.EmployerCommitmentsV2"));
                     scan.RegisterConcreteTypesAgainstTheFirstInterface();
                 });
-
-            For<ILinkGenerator>().Use<LinkGenerator>().Singleton();
         }
     }
 }
