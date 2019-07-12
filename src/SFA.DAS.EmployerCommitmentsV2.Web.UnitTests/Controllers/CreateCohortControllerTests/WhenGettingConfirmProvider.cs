@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
@@ -14,7 +11,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.AddDraftApprenticeshipToNewCohortControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortControllerTests
 {
     public class WhenGettingConfirmProvider
     {
@@ -62,7 +59,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.AddDraftAppren
             [Frozen]Mock<IMediator> mediator,
             CreateCohortController controller)
         {
-            //var result = await controller.ConfirmProvider(confirmProviderRequest) as BadRequestResult;
+            controller.ModelState.AddModelError(nameof(confirmProviderRequest.ProviderId),"ProviderId is not valid");
+
+            var result = await controller.ConfirmProvider(confirmProviderRequest) as BadRequestObjectResult;
+
+            result.Should().NotBeNull();
         }
     }
 }
