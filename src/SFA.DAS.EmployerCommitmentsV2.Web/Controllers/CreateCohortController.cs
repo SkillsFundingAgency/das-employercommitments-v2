@@ -12,13 +12,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     public class CreateCohortController : Controller
     {
         private readonly IMapper<IndexRequest, IndexViewModel> _indexViewModelMapper;
+        private readonly IMapper<AssignRequest, AssignViewModel> _assignViewModelMapper;
         private readonly ILinkGenerator _linkGenerator;
 
         public CreateCohortController(
             IMapper<IndexRequest, IndexViewModel> indexViewModelMapper,
+            IMapper<AssignRequest, AssignViewModel> assignViewModelMapper,
             ILinkGenerator linkGenerator)
         {
             _indexViewModelMapper = indexViewModelMapper;
+            _assignViewModelMapper = assignViewModelMapper;
             _linkGenerator = linkGenerator;
         }
 
@@ -56,6 +59,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public IActionResult ConfirmProvider(ConfirmProviderRequest request)
         {
             return View(request);
+        }
+
+        [Route("assign")]
+        public IActionResult Assign(AssignRequest request)
+        {
+            var viewModel = _assignViewModelMapper.Map(request);
+
+            return View(viewModel);
         }
     }
 }
