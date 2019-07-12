@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Application.Queries.Providers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
 
@@ -13,13 +16,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     {
         private readonly IMapper<IndexRequest, IndexViewModel> _indexViewModelMapper;
         private readonly ILinkGenerator _linkGenerator;
+        private readonly IMediator _mediator;
 
         public CreateCohortController(
             IMapper<IndexRequest, IndexViewModel> indexViewModelMapper,
-            ILinkGenerator linkGenerator)
+            ILinkGenerator linkGenerator,
+            IMediator mediator)
         {
             _indexViewModelMapper = indexViewModelMapper;
             _linkGenerator = linkGenerator;
+            _mediator = mediator;
         }
 
         public IActionResult Index(IndexRequest request)
@@ -53,9 +59,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("confirm-provider")]
         [HttpGet]
-        public IActionResult ConfirmProvider(ConfirmProviderRequest request)
+        public async Task<IActionResult> ConfirmProvider(ConfirmProviderRequest request)
         {
-            return View(request);
+            var response = await _mediator.Send(new GetProviderRequest{UkPrn = request.ProviderId});
+
+            var model = new ConfirmProviderViewModel
+            {
+                ProviderId = response.ProviderId,
+                ProviderName = response.ProviderName
+            };
+
+            return View(model);
+        }
+        [Route("confirm-provider")]
+        [HttpPost]
+        public IActionResult ConfirmProvider(ConfirmProviderViewModel request)
+        {
+            return RedirectToRoute("");
         }
     }
 }

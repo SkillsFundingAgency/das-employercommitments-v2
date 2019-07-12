@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\**" />
+    <EmbeddedResource Remove="Pages\**" />
+    <None Remove="Pages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.6.0" />
     <PackageReference Include="MediatR" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -26,10 +32,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.EmployerCommitmentsV2.Web\SFA.DAS.EmployerCommitmentsV2.Web.csproj" />
     <ProjectReference Include="..\SFA.DAS.EmployerCommitmentsV2\SFA.DAS.EmployerCommitmentsV2.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\AddDraftApprenticeshipToNewCohort\" />
   </ItemGroup>
 
 </Project>
