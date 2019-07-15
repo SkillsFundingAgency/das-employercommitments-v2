@@ -57,5 +57,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 
             viewModel.CourseCode.Should().Be(request.CourseCode);
         }
+
+        [Test, AutoData]
+        public void Then_Maps_UkPrn(
+            AssignRequest request,
+            AssignViewModelMapper mapper)
+        {
+            var viewModel = mapper.Map(request);
+
+            viewModel.UkPrn.Should().Be(request.UkPrn);
+        }
     }
 }

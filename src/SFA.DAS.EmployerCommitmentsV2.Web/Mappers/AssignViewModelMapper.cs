@@ -13,7 +13,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
                 EmployerAccountLegalEntityPublicHashedId = request.EmployerAccountLegalEntityPublicHashedId,
                 ReservationId = request.ReservationId,
                 StartMonthYear = request.StartMonthYear,
-                CourseCode = request.CourseCode
+                CourseCode = request.CourseCode,
+                UkPrn = request.UkPrn
             };
         }
     }
