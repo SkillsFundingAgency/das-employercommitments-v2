@@ -9,7 +9,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
         {
             return new AssignViewModel
             {
-                AccountHashedId = request.AccountHashedId
+                AccountHashedId = request.AccountHashedId,
+                EmployerAccountLegalEntityPublicHashedId = request.EmployerAccountLegalEntityPublicHashedId,
+                ReservationId = request.ReservationId,
+                StartMonthYear = request.StartMonthYear,
+                CourseCode = request.CourseCode
             };
         }
     }
