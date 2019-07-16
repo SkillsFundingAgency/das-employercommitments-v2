@@ -8,6 +8,8 @@ using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.Commitments.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
+using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
 using SFA.DAS.EmployerUrlHelper;
@@ -46,12 +48,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var editModel = await _commitmentsService.GetDraftApprenticeshipForCohort(request.CohortId, request.DraftApprenticeshipId);
-            var model = _editDraftApprenticeshipDetailsToViewModelMapper.Map(editModel);
+            try
+            {
+                var editModel =
+                    await _commitmentsService.GetDraftApprenticeshipForCohort(request.CohortId,
+                        request.DraftApprenticeshipId);
+                var model = _editDraftApprenticeshipDetailsToViewModelMapper.Map(editModel);
 
-            await AddProviderNameAndCoursesToModel(model);
+                await AddProviderNameAndCoursesToModel(model);
 
-            return View(model);
+                return View(model);
+            }
+            catch (CohortEmployerUpdateDeniedException)
+            {
+                return Redirect(_linkGenerator.CohortDetails(request.AccountHashedId, request.CohortReference));
+            }
+
         }
 
         [HttpPost]
@@ -80,9 +92,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
         }
 
+        private async Task<CohortDetails> GetCohortDetails(long cohortId)
+        {
+            var cohort = await _commitmentsService.GetCohortDetail(cohortId);
+
+            if (cohort.WithParty != Party.Employer)
+                throw new CohortEmployerUpdateDeniedException($"Cohort {cohort} is not with the Employer");
+
+            return cohort;
+        }
+
         private async Task AddProviderNameAndCoursesToModel(DraftApprenticeshipViewModel model)
         {
-            var cohort = await _commitmentsService.GetCohortDetail(model.CohortId.Value);
+            var cohort = await GetCohortDetails(model.CohortId.Value);
             var courses = await GetCourses(!cohort.IsFundedByTransfer);
 
             model.ProviderName = cohort.ProviderName;
