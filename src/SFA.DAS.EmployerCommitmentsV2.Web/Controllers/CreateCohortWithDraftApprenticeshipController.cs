@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
+using SFA.DAS.Authorization.CommitmentPermissions.Options;
+using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Extensions;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.Commitments.Shared.Models;
@@ -12,34 +13,34 @@ using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.EmployerCommitmentsV2.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
-using SFA.DAS.ProviderUrlHelper;
+using SFA.DAS.EmployerUrlHelper;
 
-namespace SFA.DAS.ProviderCommitments.Web.Controllers
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    
-    [Route("accounts/{hashedAccountId}/apprentices/")]
-    public class DraftApprenticeshipController : Controller
+    [Route("{AccountHashedId}/organisations/{AccountLegalEntityHashedId}/unapproved/")]
+    [DasAuthorize()]
+    public class CreateCohortWithDraftApprenticeshipController : Controller
     {
         private readonly ICommitmentsService _employerCommitmentsService;
-        private readonly IMapper<AddDraftApprenticeshipViewModel, AddDraftApprenticeshipRequest> _addDraftApprenticeshipToCohortRequestMapper;
-        private readonly ILinkGenerator _urlHelper;
+        private readonly IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest> _createCohortRequestMapper;
+        private readonly ILinkGenerator _linkGenerator;
         private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
 
-        public DraftApprenticeshipController(
+        public CreateCohortWithDraftApprenticeshipController(
             ICommitmentsService employerCommitmentsService,
-            IMapper<AddDraftApprenticeshipViewModel, AddDraftApprenticeshipRequest> addDraftApprenticeshipToCohortRequestMapper,
-            ILinkGenerator urlHelper,
+            IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest> createCohortRequestMapper,
+            ILinkGenerator linkGenerator,
             ITrainingProgrammeApiClient trainingProgrammeApiClient)
         {
             _employerCommitmentsService = employerCommitmentsService;
-            _addDraftApprenticeshipToCohortRequestMapper = addDraftApprenticeshipToCohortRequestMapper;
-            _urlHelper = urlHelper;
+            _createCohortRequestMapper = createCohortRequestMapper;
+            _linkGenerator = linkGenerator;
             _trainingProgrammeApiClient = trainingProgrammeApiClient;
         }
 
         [HttpGet]
         [Route("add")]
-        public async Task<IActionResult> AddDraftApprenticeship(ReservationsAddDraftApprenticeshipRequest request)
+        public async Task<IActionResult> AddDraftApprenticeship(CreateCohortWithDraftApprenticeshipRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -48,8 +49,7 @@ namespace SFA.DAS.ProviderCommitments.Web.Controllers
 
             var model = new AddDraftApprenticeshipViewModel
             {
-                CohortReference = request.CohortReference,
-                CohortId = request.CohortId,
+                AccountLegalEntityId = request.AccountLegalEntityId,
                 StartDate = new MonthYearModel(request.StartMonthYear),
                 ReservationId = request.ReservationId,
                 CourseCode = request.CourseCode
@@ -70,13 +70,14 @@ namespace SFA.DAS.ProviderCommitments.Web.Controllers
                 return View(model);
             }
 
-            var request = _addDraftApprenticeshipToCohortRequestMapper.Map(model);
+            var request = _createCohortRequestMapper.Map(model);
             request.UserId = User.Upn();
-
+            
             try
             {
-                await _employerCommitmentsService.AddDraftApprenticeshipToCohort(model.CohortId.Value, request);
-                return Redirect("add");
+                var newCohort = await _employerCommitmentsService.CreateCohort(request);
+                var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, newCohort.CohortReference);
+                return Redirect(reviewYourCohort);
             }
             catch (CommitmentsApiModelException ex)
             {
@@ -88,18 +89,12 @@ namespace SFA.DAS.ProviderCommitments.Web.Controllers
 
         private async Task AddLegalEntityAndCoursesToModel(DraftApprenticeshipViewModel model)
         {
-            var cohortDetail = await _employerCommitmentsService.GetCohortDetail(model.CohortId.Value);
-            var courses = await GetCourses(cohortDetail);
+            var courses = await GetCourses();
             model.Courses = courses;
         }
 
-        private Task<IReadOnlyList<ITrainingProgramme>> GetCourses(CohortDetails cohortDetails)
+        private Task<IReadOnlyList<ITrainingProgramme>> GetCourses()
         {
-            if (cohortDetails.IsFundedByTransfer)
-            {
-                return _trainingProgrammeApiClient.GetStandardTrainingProgrammes();
-            }
-
             return _trainingProgrammeApiClient.GetAllTrainingProgrammes();
         }
     }

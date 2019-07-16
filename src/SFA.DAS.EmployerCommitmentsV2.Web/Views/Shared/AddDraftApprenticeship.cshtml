@@ -15,7 +15,8 @@
 
         <form id="addApprenticeship" novalidate method="post" action="@Url.Action("AddDraftApprenticeship")">
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(x => x.EmployerAccountLegalEntityPublicHashedId)
+            @Html.HiddenFor(x => x.CohortReference)
+            @Html.HiddenFor(x => x.ProviderId)
 
             <partial name="DraftApprenticeship" for="@Model" />
 

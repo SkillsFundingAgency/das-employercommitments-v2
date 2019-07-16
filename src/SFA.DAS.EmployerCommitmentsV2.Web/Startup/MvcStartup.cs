@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.Mvc.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
 {
@@ -10,7 +12,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         {
             services.AddMvc(o=>o.AddAuthorization())
                 .AddControllersAsServices()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddDraftApprenticeshipViewModelValidator>());
 
             return services;
         }
