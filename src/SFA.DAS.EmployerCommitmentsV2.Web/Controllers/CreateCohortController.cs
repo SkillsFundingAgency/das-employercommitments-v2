@@ -7,7 +7,7 @@ using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    [DasAuthorize(EmployerUserRole.Owner)]
+    [DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
     [Route("{accountHashedId}/unapproved/add")]
     public class CreateCohortController : Controller
     {
