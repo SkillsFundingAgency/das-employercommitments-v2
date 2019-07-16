@@ -61,9 +61,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
             catch (CohortEmployerUpdateDeniedException)
             {
-                return Redirect(_linkGenerator.CohortDetails(request.AccountHashedId, request.CohortReference));
+                return Redirect(_linkGenerator.ViewApprentice(request.AccountHashedId, request.CohortReference, request.DraftApprenticeshipHashedId));
             }
-
         }
 
         [HttpPost]
