@@ -98,5 +98,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     return RedirectToAction("Error", "Error");
             }
         }
+
+        [Route("apprentice")]
+        public IActionResult Apprentice(ApprenticeRequest request)
+        {
+            return View();
+        }
+
+        [Route("message")]
+        public IActionResult Message(MessageRequest request)
+        {
+            return View();
+        }
     }
 }
