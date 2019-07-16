@@ -27,6 +27,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         public IActionResult Index(IndexRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Error", "Error");
+            }
+
             var viewModel = _indexViewModelMapper.Map(request);
 
             viewModel.OrganisationsLink = _linkGenerator.YourOrganisationsAndAgreements(request.AccountHashedId);
