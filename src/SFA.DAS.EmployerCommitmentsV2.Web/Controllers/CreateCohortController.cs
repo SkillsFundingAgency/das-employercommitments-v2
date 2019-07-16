@@ -68,5 +68,35 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             return View(viewModel);
         }
+
+        [Route("assign")]
+        [HttpPost]
+        public IActionResult Assign(AssignViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var routeValues = new
+            {
+                model.AccountHashedId,
+                model.EmployerAccountLegalEntityPublicHashedId,
+                model.ReservationId,
+                model.StartMonthYear,
+                model.CourseCode,
+                model.UkPrn
+            };
+
+            switch (model.WhoIsAddingApprentices)
+            {
+                case WhoIsAddingApprentices.Employer:
+                    return RedirectToAction("Apprentice", routeValues);
+                case WhoIsAddingApprentices.Provider:
+                    return RedirectToAction("Message", routeValues);
+                default:
+                    return RedirectToAction("Error", "Error");
+            }
+        }
     }
 }
