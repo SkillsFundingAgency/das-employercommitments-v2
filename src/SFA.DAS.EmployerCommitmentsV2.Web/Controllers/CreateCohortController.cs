@@ -69,6 +69,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("assign")]
         public IActionResult Assign(AssignRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Error", "Error");
+            }
+
             var viewModel = _assignViewModelMapper.Map(request);
 
             return View(viewModel);
