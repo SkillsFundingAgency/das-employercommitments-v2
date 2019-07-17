@@ -2,11 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.Authorization.CommitmentPermissions.DependencyResolution;
-using SFA.DAS.Authorization.DependencyResolution;
-using SFA.DAS.Authorization.Mvc;
 using SFA.DAS.Authorization.Mvc.Extensions;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 using SFA.DAS.EmployerUrlHelper;
@@ -29,9 +25,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .AddDasHealthChecks()
                 .AddDasMvc()
                 .AddDasEmployerAuthentication(_configuration)
+                .AddEmployerUrlHelper(_configuration)
                 .AddDasAuthorization()
-                .AddMemoryCache()
-                .AddEmployerUrlHelper(_configuration);
+                .AddMemoryCache();
         }
 
         public void ConfigureContainer(Registry registry)

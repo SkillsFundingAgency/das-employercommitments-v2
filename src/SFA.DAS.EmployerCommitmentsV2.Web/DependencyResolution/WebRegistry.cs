@@ -17,6 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
             For<StubEmployerAccountsApiClient>().Use<StubEmployerAccountsApiClient>().Singleton();
             For<IEmployerAccountsApiClient>().InterceptWith(new FuncInterceptor<IEmployerAccountsApiClient>(
                 (c, o) => c.GetInstance<EmployerCommitmentsV2Configuration>().UseStubEmployerAccountsApiClient ? c.GetInstance<StubEmployerAccountsApiClient>() : o));
+            For<ILinkGenerator>().Use<LinkGenerator>();
         }
     }
 }
