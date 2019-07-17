@@ -1,0 +1,20 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort.SelectProviderViewModel
+@{
+    ViewData["Title"] = "Apprenticeships";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Select Provider</h1>
+
+        <form method="post">
+            <partial name="_SelectProviderHiddenPartial" model="@Model" />
+            
+            <span>UKPRN: </span><input type="text" name="providerId"/>
+
+            <button type="submit" class="govuk-button">Search</button>
+
+        </form>
+
+
+    </div>
+</div>
