@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
 
@@ -13,13 +15,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     {
         private readonly IMapper<IndexRequest, IndexViewModel> _indexViewModelMapper;
         private readonly ILinkGenerator _linkGenerator;
+        private readonly ICommitmentsApiClient _commitmentsApiClient;
 
         public CreateCohortController(
             IMapper<IndexRequest, IndexViewModel> indexViewModelMapper,
-            ILinkGenerator linkGenerator)
+            ILinkGenerator linkGenerator, 
+            ICommitmentsApiClient commitmentsApiClient)
         {
             _indexViewModelMapper = indexViewModelMapper;
             _linkGenerator = linkGenerator;
+            _commitmentsApiClient = commitmentsApiClient;
         }
 
         public IActionResult Index(IndexRequest request)
@@ -42,9 +47,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("select-provider")]
         [HttpPost]
-        public IActionResult SelectProvider(SelectProviderViewModel request)
+        public async Task<IActionResult> SelectProvider(SelectProviderViewModel request)
         {
-            //todo:hit api
+            if (!ModelState.IsValid)
+            {
+                return View("SelectProvider", request);
+            }
+
+            var providerResponse = await _commitmentsApiClient.GetProvider(request.ProviderId);
 
             var confirmProviderRequest = new ConfirmProviderRequest();//todo: from mapper
 
