@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
@@ -19,6 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IMapper<IndexRequest, IndexViewModel> _indexViewModelMapper;
         private readonly IMapper<SelectProviderRequest, SelectProviderViewModel> _selectProviderViewModelMapper;
         private readonly IMapper<SelectProviderViewModel, ConfirmProviderRequest> _confirmProviderRequestMapper;
+        private readonly IValidator<SelectProviderViewModel> _selectProviderViewModelValidator;
         private readonly ILinkGenerator _linkGenerator;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
 
@@ -26,12 +28,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             IMapper<IndexRequest, IndexViewModel> indexViewModelMapper,
             IMapper<SelectProviderRequest, SelectProviderViewModel> selectProviderViewModelMapper,
             IMapper<SelectProviderViewModel, ConfirmProviderRequest> confirmProviderRequestMapper,
+            IValidator<SelectProviderViewModel> selectProviderViewModelValidator,
             ILinkGenerator linkGenerator, 
             ICommitmentsApiClient commitmentsApiClient)
         {
             _indexViewModelMapper = indexViewModelMapper;
             _selectProviderViewModelMapper = selectProviderViewModelMapper;
             _confirmProviderRequestMapper = confirmProviderRequestMapper;
+            _selectProviderViewModelValidator = selectProviderViewModelValidator;
             _linkGenerator = linkGenerator;
             _commitmentsApiClient = commitmentsApiClient;
         }
@@ -58,7 +62,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SelectProvider(SelectProviderViewModel request)
         {
-            if (!ModelState.IsValid)
+            var validationResult = _selectProviderViewModelValidator.Validate(request);
+
+            if (!validationResult.IsValid)
             {
                 return View(request);
             }
