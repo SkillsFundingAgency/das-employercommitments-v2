@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.Http;
 using StructureMap.Query;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
@@ -29,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             IMapper<SelectProviderRequest, SelectProviderViewModel> selectProviderViewModelMapper,
             IMapper<SelectProviderViewModel, ConfirmProviderRequest> confirmProviderRequestMapper,
             IValidator<SelectProviderViewModel> selectProviderViewModelValidator,
-            ILinkGenerator linkGenerator, 
+            ILinkGenerator linkGenerator,
             ICommitmentsApiClient commitmentsApiClient)
         {
             _indexViewModelMapper = indexViewModelMapper;
@@ -62,27 +64,32 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SelectProvider(SelectProviderViewModel request)
         {
-            var validationResult = _selectProviderViewModelValidator.Validate(request);
-
-            if (!validationResult.IsValid)
-            {
-                return View(request);
-            }
-
             GetProviderResponse providerResponse;
             try
             {
+                var validationResult = _selectProviderViewModelValidator.Validate(request);
+
+                if (!validationResult.IsValid)
+                {
+                    return View(request);
+                }
+
                 providerResponse = await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
+                
+                var confirmProviderRequest = _confirmProviderRequestMapper.Map(request);
+
+                return RedirectToAction("ConfirmProvider", confirmProviderRequest);
             }
-            catch (Exception)
+            catch (RestHttpClientException e)
             {
-                ModelState.AddModelError(nameof(providerResponse.ProviderId), "Check UK Provider Reference Number");
-                return View(request);
+                if (e.StatusCode == HttpStatusCode.NotFound)
+                {
+                    ModelState.AddModelError(nameof(providerResponse.ProviderId), "Check UK Provider Reference Number");
+                    return View(request);
+                }
             }
 
-            var confirmProviderRequest = _confirmProviderRequestMapper.Map(request);
-
-            return RedirectToAction("ConfirmProvider", confirmProviderRequest);
+            return View(request);
         }
 
         [Route("confirm-provider")]
