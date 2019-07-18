@@ -1,6 +1,5 @@
 ﻿using AutoFixture.NUnit3;
 using NUnit.Framework;
-using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.Testing.AutoFixture;

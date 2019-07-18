@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
 
             var result = controller.SelectProvider(request) as ViewResult;
 
-            Assert.AreEqual(null, result.ViewName);
+            Assert.Null(result.ViewName);
             Assert.AreSame(viewModel, result.Model);
         }
     }
