@@ -9,7 +9,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
         {
             RuleFor(x => x.ProviderId)
                 .Must(BeALongGreaterThanZero)
-                .WithMessage("Check Uk Provider Reference Number");
+                .WithMessage("Check UK Provider Reference Number");
             RuleFor(x => x.EmployerAccountLegalEntityPublicHashedId)
                 .NotNull()
                 .NotEmpty();
