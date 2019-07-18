@@ -66,7 +66,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             GetProviderResponse providerResponse;
             try
             {
-                providerResponse = await _commitmentsApiClient.GetProvider(request.ProviderId);
+                providerResponse = await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
             }
             catch (Exception)
             {

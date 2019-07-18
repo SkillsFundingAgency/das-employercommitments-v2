@@ -9,6 +9,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
         public string EmployerAccountLegalEntityPublicHashedId { get; set; }
         public string StartMonthYear { get; set; }
         public string CourseCode { get; set; }
-        public long ProviderId { get; set; }
+        public string ProviderId { get; set; }
     }
 }

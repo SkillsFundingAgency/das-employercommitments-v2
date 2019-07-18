@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.Testing.AutoFixture;
@@ -14,8 +11,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public void ThenMapsReservationId(
             SelectProviderViewModel viewModel,
+            long providerId,
             ConfirmProviderRequestMapper mapper)
         {
+            viewModel.ProviderId = providerId.ToString();
+
             var result = mapper.Map(viewModel);
 
             Assert.AreEqual(viewModel.ReservationId,result.ReservationId);
@@ -24,8 +24,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public void ThenMapsCourseCode(
             SelectProviderViewModel viewModel,
+            long providerId,
             ConfirmProviderRequestMapper mapper)
         {
+            viewModel.ProviderId = providerId.ToString();
+
             var result = mapper.Map(viewModel);
 
             Assert.AreEqual(viewModel.CourseCode, result.CourseCode);
@@ -34,8 +37,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public void ThenMapsAccountHashedId(
             SelectProviderViewModel viewModel,
+            long providerId,
             ConfirmProviderRequestMapper mapper)
         {
+            viewModel.ProviderId = providerId.ToString();
+
             var result = mapper.Map(viewModel);
 
             Assert.AreEqual(viewModel.AccountHashedId, result.AccountHashedId);
@@ -44,8 +50,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public void ThenMapsEmployerAccountLegalEntityPublicHashedId(
             SelectProviderViewModel viewModel,
+            long providerId,
             ConfirmProviderRequestMapper mapper)
         {
+            viewModel.ProviderId = providerId.ToString();
+
             var result = mapper.Map(viewModel);
 
             Assert.AreEqual(viewModel.EmployerAccountLegalEntityPublicHashedId, result.EmployerAccountLegalEntityPublicHashedId);
@@ -54,8 +63,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public void ThenMapsStartMonthYear(
             SelectProviderViewModel viewModel,
+            long providerId,
             ConfirmProviderRequestMapper mapper)
         {
+            viewModel.ProviderId = providerId.ToString();
+
             var result = mapper.Map(viewModel);
 
             Assert.AreEqual(viewModel.StartMonthYear, result.StartMonthYear);
@@ -64,11 +76,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public void ThenMapsProviderId(
             SelectProviderViewModel viewModel,
+            long providerId,
             ConfirmProviderRequestMapper mapper)
         {
+            viewModel.ProviderId = providerId.ToString();
+
             var result = mapper.Map(viewModel);
 
-            Assert.AreEqual(viewModel.ProviderId, result.ProviderId);
+            Assert.AreEqual(providerId, result.ProviderId);
         }
     }
 }

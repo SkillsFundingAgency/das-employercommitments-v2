@@ -19,23 +19,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             [Frozen] Mock<IMapper<SelectProviderRequest, SelectProviderViewModel>> mockMapper,
             CreateCohortController controller)
         {
-            mockMapper.Setup(x => x.Map(request)).Returns(viewModel);
-
             controller.SelectProvider(request);
 
             mockMapper.Verify(x => x.Map(It.IsAny<SelectProviderRequest>()), Times.Once);
         }
 
         [Test, MoqAutoData]
-        public void ThenReturnsView(SelectProviderRequest request, CreateCohortController controller)
+        public void ThenReturnsView(
+            SelectProviderRequest request,
+            SelectProviderViewModel viewModel,
+            [Frozen] Mock<IMapper<SelectProviderRequest, SelectProviderViewModel>> mockMapper,
+            CreateCohortController controller)
         {
-            var viewName = "SelectProvider";
+            mockMapper
+                .Setup(mapper => mapper.Map(request))
+                .Returns(viewModel);
 
             var result = controller.SelectProvider(request) as ViewResult;
 
-            Assert.NotNull(result);
-            Assert.AreEqual(viewName, result.ViewName);
-
+            Assert.AreEqual(null, result.ViewName);
+            Assert.AreSame(viewModel, result.Model);
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Formatters.Xml;
-using SFA.DAS.Commitments.Shared.Interfaces;
+﻿using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
@@ -17,7 +12,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
                 AccountHashedId = source.AccountHashedId,
                 CourseCode = source.CourseCode,
                 EmployerAccountLegalEntityPublicHashedId = source.EmployerAccountLegalEntityPublicHashedId,
-                ProviderId = source.ProviderId,
+                ProviderId = long.Parse(source.ProviderId),
                 ReservationId = source.ReservationId,
                 StartMonthYear = source.StartMonthYear
             };
