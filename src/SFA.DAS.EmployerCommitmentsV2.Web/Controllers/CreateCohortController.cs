@@ -1,11 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
+using StructureMap.Query;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -14,15 +17,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     public class CreateCohortController : Controller
     {
         private readonly IMapper<IndexRequest, IndexViewModel> _indexViewModelMapper;
+        private readonly IMapper<SelectProviderRequest, SelectProviderViewModel> _selectProviderViewModelMapper;
+        private readonly IMapper<SelectProviderViewModel, ConfirmProviderRequest> _confirmProviderRequestMapper;
         private readonly ILinkGenerator _linkGenerator;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
 
         public CreateCohortController(
             IMapper<IndexRequest, IndexViewModel> indexViewModelMapper,
+            IMapper<SelectProviderRequest, SelectProviderViewModel> selectProviderViewModelMapper,
+            IMapper<SelectProviderViewModel, ConfirmProviderRequest> confirmProviderRequestMapper,
             ILinkGenerator linkGenerator, 
             ICommitmentsApiClient commitmentsApiClient)
         {
             _indexViewModelMapper = indexViewModelMapper;
+            _selectProviderViewModelMapper = selectProviderViewModelMapper;
+            _confirmProviderRequestMapper = confirmProviderRequestMapper;
             _linkGenerator = linkGenerator;
             _commitmentsApiClient = commitmentsApiClient;
         }
@@ -40,7 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("select-provider")]
         public IActionResult SelectProvider(SelectProviderRequest request)
         {
-            var viewModel = new SelectProviderViewModel();//todo: from mapper
+            var viewModel = _selectProviderViewModelMapper.Map(request);
 
             return View(viewModel);
         }
@@ -51,12 +60,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("SelectProvider", request);
+                return View(request);
             }
 
-            var providerResponse = await _commitmentsApiClient.GetProvider(request.ProviderId);
+            GetProviderResponse providerResponse;
+            try
+            {
+                providerResponse = await _commitmentsApiClient.GetProvider(request.ProviderId);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(nameof(providerResponse.ProviderId), "Check UK Provider Reference Number");
+                return View(request);
+            }
 
-            var confirmProviderRequest = new ConfirmProviderRequest();//todo: from mapper
+            var confirmProviderRequest = _confirmProviderRequestMapper.Map(request);
 
             return RedirectToAction("ConfirmProvider", confirmProviderRequest);
         }
