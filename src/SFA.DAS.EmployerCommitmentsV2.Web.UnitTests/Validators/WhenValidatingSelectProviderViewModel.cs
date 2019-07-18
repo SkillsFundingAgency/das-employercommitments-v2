@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 using SFA.DAS.Testing.AutoFixture;
@@ -7,11 +8,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
     public class WhenValidatingSelectProviderViewModel
-    {
-        // check null
-        // check non numeric
-        // less than 1
-        // greater than 1
+    { 
+        [Test, MoqAutoData]
+        public void AndTheProviderIdIsNull_ThenReturnsInvalid(
+            SelectProviderViewModel viewModel,
+            SelectProviderViewModelValidator validator)
+        {
+            viewModel.ProviderId = null;
+            var result = validator.Validate(viewModel);
+
+            Assert.False(result.IsValid);
+        }
+
+        [Test, MoqAutoData]
+        public void AndTheProviderIdIsNonNumeric_ThenReturnsInvalid(
+            SelectProviderViewModel viewModel,
+            SelectProviderViewModelValidator validator)
+        {
+            viewModel.ProviderId = "abcdefghijklmnopqrstuvwxyz*!£$%^&*()_+¬`=-][#';/.,}{~@:?><";
+            var result = validator.Validate(viewModel);
+
+            Assert.False(result.IsValid);
+        }
 
         [Test, MoqAutoData]
         public void AndTheProviderIdIsDefault_ThenReturnsInvalid(
@@ -24,6 +42,42 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 
             Assert.False(result.IsValid);
 
+        }
+
+        [Test, MoqAutoData]
+        public void AndTheProviderIdIsLessThanOne_ThenReturnsInvalid(
+            SelectProviderViewModel viewModel,
+            long providerId,
+            SelectProviderViewModelValidator validator)
+        {
+            viewModel.ProviderId = $"-{Convert.ToString(providerId)}";
+            var result = validator.Validate(viewModel);
+
+            Assert.False(result.IsValid);
+        }
+
+        [Test, MoqAutoData]
+        public void AndTheProviderIdIsAboveLongMaxValue_ThenReturnsInvalid(
+            SelectProviderViewModel viewModel,
+            SelectProviderViewModelValidator validator)
+        {
+            viewModel.ProviderId = Double.MaxValue.ToString() ;
+            var result = validator.Validate(viewModel);
+
+            Assert.False(result.IsValid);
+        }
+
+        [Test, MoqAutoData]
+        public void AndTheProviderIdIsGreaterThanOne_ThenReturnsValid(
+            SelectProviderViewModel viewModel,
+            long providerId,
+            SelectProviderViewModelValidator validator)
+        {
+            viewModel.ProviderId = Convert.ToString(providerId);
+
+            var result = validator.Validate(viewModel);
+
+            Assert.True(result.IsValid);
         }
 
         [Test, MoqAutoData]
