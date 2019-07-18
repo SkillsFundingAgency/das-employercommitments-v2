@@ -5,6 +5,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Requests
 {
     public class CreateCohortWithDraftApprenticeshipRequest : IAuthorizationContextModel
     {
+        public long AccountId { get; set; }
         public Guid? ReservationId { get; set; }
         public long ProviderId { get; set; }
         public long AccountLegalEntityId { get; set; }

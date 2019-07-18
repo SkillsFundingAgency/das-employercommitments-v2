@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
 
             CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, accountId,  AuthorizationKeys.AccountId);
             CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, cohortId, AuthorizationKeys.CohortId);
-            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetAccountLegalEntityHashedId(), AuthorizationKeys.AccountLegalEntityId);
+            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetPublicAccountLegalEntityHashedId(), AuthorizationKeys.AccountLegalEntityId);
 
             if (accountId.HasValue && userRef.HasValue)
             {
@@ -66,9 +66,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
             return GetAndDecodeValueIfExists(RouteValueKeys.CohortReference, EncodingType.CohortReference);
         }
 
-        private long? GetAccountLegalEntityHashedId()
+        private long? GetPublicAccountLegalEntityHashedId()
         {
-            return GetAndDecodeValueIfExists(RouteValueKeys.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId);
+            return GetAndDecodeValueIfExists(RouteValueKeys.PublicAccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId);
         }
 
         private Guid? GetUserRef()

@@ -13,7 +13,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
             services.AddMvc(o=>o.AddAuthorization())
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddDraftApprenticeshipViewModelValidator>());
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateCohortWithDraftApprenticeshipRequestValidator>())
+                ;
 
             return services;
         }

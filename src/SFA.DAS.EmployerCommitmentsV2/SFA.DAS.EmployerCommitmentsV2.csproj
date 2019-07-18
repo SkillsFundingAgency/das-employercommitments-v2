@@ -20,7 +20,7 @@
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="2.1.1527" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Types" Version="2.1.1527" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.1" />
-    <PackageReference Include="StructureMap" Version="4.7.0" />
+    <PackageReference Include="StructureMap" Version="4.7.1" />
   </ItemGroup>
 
   <ItemGroup>

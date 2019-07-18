@@ -4,6 +4,6 @@
     {
         public const string AccountHashedId = "AccountHashedId";
         public const string CohortReference = "cohortReference";
-        public const string AccountLegalEntityHashedId = "AccountLegalEntityHashedId";
+        public const string PublicAccountLegalEntityHashedId = "PublicAccountLegalEntityHashedId";
     }
 }
