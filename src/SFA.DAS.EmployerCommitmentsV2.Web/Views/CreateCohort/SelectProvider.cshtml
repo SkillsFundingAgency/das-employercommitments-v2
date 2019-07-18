@@ -7,12 +7,14 @@
 
         <partial name="_ValidationSummary" />
 
-        <h1 class="govuk-heading-xl">Select Provider</h1>
+        <h1 class="govuk-heading-xl">Add training provider details</h1>
 
         <form method="post" asp-action="SelectProvider">
+            
+            <partial name="_SelectProviderHiddenPartial"/>
 
             <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
-                <label class="govuk-heading-s " for="provider-search">
+                <label class="govuk-heading-s " for="error-message-ProviderId">
                     UK Provider Reference Number
                 </label>
 
@@ -22,7 +24,7 @@
                         <span class="govuk-visually-hidden">Error:</span> Number not recognised. Check the number you've entered is correct or contact your training provider for help.
                     </span>
                 }
-                <input class="govuk-input @(ViewData.ModelState.IsValid ? "" : "govuk-input--error")" id="provider-search" name="providerId" type="text">
+                <input class="govuk-input @(ViewData.ModelState.IsValid ? "" : "govuk-input--error")" id="error-message-ProviderId" name="ProviderId" type="text">
             </div>
 
             <details class="govuk-details">
@@ -32,7 +34,7 @@
                     </span>
                 </summary>
                 <div class="govuk-details__text">
-                    A UK Provider reference Number (UKPRN) is a unique, 8-digit number that identifies a training provider. Your training provider can tell you their UKPRN.
+                    A UK Provider Reference Number (UKPRN) is a unique, 8-digit number that identifies a training provider. Your training provider can tell you their UKPRN.
                 </div>
             </details>
             <button type="submit" class="govuk-button" tabindex="1">
