@@ -15,15 +15,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     public class CreateCohortController : Controller
     {
         private readonly IMapper<IndexRequest, IndexViewModel> _indexViewModelMapper;
+        private readonly IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> _confirmProviderViewModelMapper;
         private readonly ILinkGenerator _linkGenerator;
         private readonly IMediator _mediator;
 
         public CreateCohortController(
             IMapper<IndexRequest, IndexViewModel> indexViewModelMapper,
+            IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> confirmProviderViewModelMapper,
             ILinkGenerator linkGenerator,
             IMediator mediator)
         {
             _indexViewModelMapper = indexViewModelMapper;
+            _confirmProviderViewModelMapper = confirmProviderViewModelMapper;
             _linkGenerator = linkGenerator;
             _mediator = mediator;
         }
@@ -61,16 +64,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ConfirmProvider(ConfirmProviderRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Error", "Error");
+            }
+
             var response = await _mediator.Send(new GetProviderRequest{UkPrn = request.ProviderId});
 
-            var model = new ConfirmProviderViewModel
-            {
-                ProviderId = response.ProviderId,
-                ProviderName = response.ProviderName
-            };
+            var model = _confirmProviderViewModelMapper.Map(request);
+            model.ProviderId = response.ProviderId;
+            model.ProviderName = response.ProviderName;
 
             return View(model);
         }
+
         [Route("confirm-provider")]
         [HttpPost]
         public IActionResult ConfirmProvider(ConfirmProviderViewModel request)
