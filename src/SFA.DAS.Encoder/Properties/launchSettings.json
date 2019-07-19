@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "SFA.DAS.Encoder": {
-      "commandName": "Project",
-      "commandLineArgs": "decode -v PLVXKM -w"
-    }
-  }
-}
