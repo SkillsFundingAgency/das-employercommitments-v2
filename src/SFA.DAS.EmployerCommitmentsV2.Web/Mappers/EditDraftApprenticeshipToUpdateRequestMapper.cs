@@ -1,11 +1,16 @@
 ﻿using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {
-    public class EditDraftApprenticeshipToUpdateRequestMapper : IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipRequest>
+    public class EditDraftApprenticeshipToUpdateRequestMapper : SaveDataMapper<CreateCohortRequest>, IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipRequest>
     {
+        public EditDraftApprenticeshipToUpdateRequestMapper(IAuthenticationService authenticationService) : base(authenticationService)
+        {
+        }
+
         public UpdateDraftApprenticeshipRequest Map(EditDraftApprenticeshipViewModel source) =>
             new UpdateDraftApprenticeshipRequest
             {
@@ -18,7 +23,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
                 Cost = source.Cost,
                 StartDate = source.StartDate.Date,
                 EndDate = source.EndDate.Date,
-                Reference = source.Reference
+                Reference = source.Reference,
+                UserInfo = GetUserInfo()
             };
     }
 }

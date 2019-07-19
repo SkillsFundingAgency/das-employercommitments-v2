@@ -8,6 +8,7 @@ using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
@@ -120,11 +121,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures()
         {
             CommitmentsServiceMock = new Mock<ICommitmentsService>();
-            RequestMapper = new AddDraftApprenticeshipRequestMapper();
+            AuthenticationServiceMock = new Mock<IAuthenticationService>();
+            RequestMapper = new AddDraftApprenticeshipRequestMapper(AuthenticationServiceMock.Object);
             LinkGeneratorMock = new Mock<ILinkGenerator>();
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
         }
 
+        public Mock<IAuthenticationService> AuthenticationServiceMock { get; } 
         public Mock<ICommitmentsService> CommitmentsServiceMock { get; } 
         public ICommitmentsService CommitmentsService => CommitmentsServiceMock.Object;
 
