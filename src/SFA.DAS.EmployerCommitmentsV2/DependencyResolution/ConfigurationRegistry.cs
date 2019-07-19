@@ -16,7 +16,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution
             AddConfiguration<CommitmentsClientApiConfiguration>(ConfigurationKeys.CommitmentsApiClientConfiguration);
             AddConfiguration<CommitmentPermissionsApiClientConfiguration>(ConfigurationKeys.CommitmentsApiClientConfiguration);
             AddConfiguration<EmployerCommitmentsV2Configuration>(ConfigurationKeys.EmployerCommitmentsV2);
-            AddConfiguration<EncodingConfig>(ConfigurationKeys.Encoding);
             AddConfiguration<PublicAccountIdHashingConfiguration>(ConfigurationKeys.PublicAccountIdHashingConfiguration);
             AddConfiguration<PublicAccountLegalEntityIdHashingConfiguration>(ConfigurationKeys.PublicAccountLegalEntityIdHashingConfiguration);
             AddConfiguration<EncodingConfig>(ConfigurationKeys.Encoding);

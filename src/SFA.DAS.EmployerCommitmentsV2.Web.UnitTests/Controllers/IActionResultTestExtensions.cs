@@ -49,10 +49,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests
             return result;
         }
 
-        public static ViewResult WithModel<TExpectedModel>(this ViewResult result)
+        public static TExpectedModel WithModel<TExpectedModel>(this ViewResult result) where TExpectedModel : class
         {
             Assert.IsInstanceOf<TExpectedModel>(result.Model);
-            return result;
+            return result.Model as TExpectedModel;
         }
     }
 }
