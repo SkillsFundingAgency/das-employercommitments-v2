@@ -1,4 +1,6 @@
-﻿using CommandLine;
+﻿using System;
+using System.Net;
+using CommandLine;
 using Microsoft.Extensions.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Encoder.CommandLines;
@@ -24,15 +26,18 @@ namespace SFA.DAS.Encoder
                     Console.Write("The command line is incorrect:");
                     foreach (Error error in parserResult)
                     {
-                        Console.Write((object)error.Tag);
+                        Console.Write(error.Tag);
                     }
                 });
         }
 
         private static void Run<TArgs, TCommand>(TArgs args) 
-                where TArgs : class 
+                where TArgs : CommandLineBase 
                 where TCommand : ICommand
         {
+            SetEnvironmentName(args);
+            SetConnectionString(args);
+
             var container = IoC.InitializeIoC(c =>
             {
                 c.For<IConfiguration>().Use(ctx => SetupConfiguration());
@@ -52,6 +57,27 @@ namespace SFA.DAS.Encoder
                 .Build();
 
             return config;
+        }
+
+        private static void SetEnvironmentName(CommandLineBase args)
+        {
+            SetEnvironmentVariableIfNotNull("APPSETTING_EnvironmentName", args.EnvironmentName);
+        }
+
+        private static void SetConnectionString(CommandLineBase args)
+        {
+            SetEnvironmentVariableIfNotNull("APPSETTING_ConfigurationStorageConnectionString", args.ConnectionString);
+        }
+
+        private static void SetEnvironmentVariableIfNotNull(string name, string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return;
+            }
+
+            Console.Write($"Setting {name}", value);
+            Environment.SetEnvironmentVariable(name, value);
         }
     }
 }
