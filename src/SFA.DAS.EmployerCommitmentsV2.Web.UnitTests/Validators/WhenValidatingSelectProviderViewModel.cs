@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
@@ -29,19 +30,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var result = validator.Validate(viewModel);
 
             Assert.False(result.IsValid);
-        }
-
-        [Test, MoqAutoData]
-        public void AndTheProviderIdIsDefault_ThenReturnsInvalid(
-            SelectProviderViewModel viewModel,
-            SelectProviderViewModelValidator validator)
-        {
-            viewModel.ProviderId = "0";
-
-            var result = validator.Validate(viewModel);
-
-            Assert.False(result.IsValid);
-
         }
 
         [Test, MoqAutoData]
@@ -78,6 +66,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var result = validator.Validate(viewModel);
 
             Assert.True(result.IsValid);
+        }
+
+        [Test, MoqAutoData]
+        public void AndProviderIdIsInvalid_ThenCorrectValidationMessageShown(
+            SelectProviderViewModel viewModel,
+            string invalidId,
+            SelectProviderViewModelValidator validator)
+        {
+            var expectedMessage = "Check UK Provider Reference Number";
+            viewModel.ProviderId = invalidId;
+
+            var result = validator.Validate(viewModel);
+
+            Assert.False(result.IsValid);
+            Assert.True(result.Errors.Any(x => x.ErrorMessage == expectedMessage));
         }
 
         [Test, MoqAutoData]

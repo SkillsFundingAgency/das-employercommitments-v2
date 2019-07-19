@@ -1,7 +1,11 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
+using Castle.Core.Logging;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
@@ -23,6 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IValidator<SelectProviderViewModel> _selectProviderViewModelValidator;
         private readonly ILinkGenerator _linkGenerator;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly ILogger<CreateCohortController> _logger;
 
         public CreateCohortController(
             IMapper<IndexRequest, IndexViewModel> indexViewModelMapper,
@@ -30,7 +35,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             IMapper<SelectProviderViewModel, ConfirmProviderRequest> confirmProviderRequestMapper,
             IValidator<SelectProviderViewModel> selectProviderViewModelValidator,
             ILinkGenerator linkGenerator,
-            ICommitmentsApiClient commitmentsApiClient)
+            ICommitmentsApiClient commitmentsApiClient,
+            ILogger<CreateCohortController> logger)
         {
             _indexViewModelMapper = indexViewModelMapper;
             _selectProviderViewModelMapper = selectProviderViewModelMapper;
@@ -38,6 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             _selectProviderViewModelValidator = selectProviderViewModelValidator;
             _linkGenerator = linkGenerator;
             _commitmentsApiClient = commitmentsApiClient;
+            _logger = logger;
         }
 
         public IActionResult Index(IndexRequest request)
@@ -73,21 +80,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 }
 
                 providerResponse = await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
-                
+
                 var confirmProviderRequest = _confirmProviderRequestMapper.Map(request);
 
                 return RedirectToAction("ConfirmProvider", confirmProviderRequest);
             }
-            catch (RestHttpClientException e)
+            catch (RestHttpClientException ex)
             {
-                if (e.StatusCode == HttpStatusCode.NotFound)
+                if (ex.StatusCode == HttpStatusCode.NotFound)
                 {
                     ModelState.AddModelError(nameof(providerResponse.ProviderId), "Check UK Provider Reference Number");
                     return View(request);
                 }
+                    _logger.LogError($"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.StatusCode)}='{ex.StatusCode}', {nameof(ex.ReasonPhrase)}='{ex.ReasonPhrase}'");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
             }
 
-            return View(request);
+            return View("~/Views/Error/Error.cshtml");
         }
 
         [Route("confirm-provider")]
