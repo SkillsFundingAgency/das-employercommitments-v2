@@ -12,10 +12,6 @@
             <p class="govuk-body">You'll only be able to authorise payments for this apprentice once all the fields have been completed - either by yourself or your training provider</p>
         </div>
 
-        <dl class="das-definition-list">
-            <dt class="das-definition-list__title">Provider</dt>
-            <dd class="das-definition-list__definition">@Model.ProviderName</dd>
-        </dl>
         <form id="addApprenticeship" novalidate method="post" action="@Url.Action("EditDraftApprenticeship")">
             @Html.AntiForgeryToken()
             <partial name="DraftApprenticeship" for="@Model" />

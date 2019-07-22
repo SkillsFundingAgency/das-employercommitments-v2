@@ -1,11 +1,15 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
+using SFA.DAS.Apprenticeships.Api.Types.Providers;
 using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.Commitments.Shared.Services;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
@@ -35,7 +39,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         public async Task GetAddDraftApprenticeship_ValidModel_ShouldReturnViewModel()
         {
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
-                                .ForGetRequest();
+                .ForGetRequest()
+                .WithTrainingProvider();
 
             var result = await fixtures.CheckGet();
 
@@ -48,13 +53,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         public async Task GetAddDraftApprenticeship_WithValidModel_ShouldSeeAllCourses()
         {
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
-                .ForGetRequest();
+                .ForGetRequest()
+                .WithTrainingProvider();
 
             await fixtures.CheckGet();
 
             fixtures.TrainingProgrammeApiClientMock.Verify(tp => tp.GetStandardTrainingProgrammes(), Times.Never);
             fixtures.TrainingProgrammeApiClientMock.Verify(tp => tp.GetFrameworkTrainingProgrammes(), Times.Never);
             fixtures.TrainingProgrammeApiClientMock.Verify(tp => tp.GetAllTrainingProgrammes(), Times.Once);
+        }
+
+        [Test]
+        public async Task GetAddDraftApprenticeship_WithValidModel_ShouldSeeATrainingProvider()
+        {
+            var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
+                .ForGetRequest()
+                .WithTrainingProvider();
+            
+            var result = await fixtures.CheckGet();
+
+            var model = result.VerifyReturnsViewModel().WithModel<AddDraftApprenticeshipViewModel>();
+
+            Assert.AreEqual(model.ProviderName, "Name");
+            Assert.AreEqual(model.ProviderId, 1);
         }
 
         [Test]
@@ -77,7 +98,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         {
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
                 .ForPostRequest()
-                .WithInvalidModel();
+                .WithInvalidModel()
+                .WithTrainingProvider();
 
             var result = await fixtures.CheckPost();
 
@@ -90,7 +112,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
                 .ForPostRequest()
                 .WithInvalidModel()
-                .WithCourses("001", "002");
+                .WithCourses("001", "002")
+                .WithTrainingProvider();
 
             var result = await fixtures.CheckPost();
 
@@ -106,7 +129,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
                 .ForPostRequest()
                 .WithCreatedCohort("ABC123", 123)
-                .WithReviewCohortLink("someurl");
+                .WithReviewCohortLink("someurl")
+                .WithTrainingProvider();
 
             await fixtures.CheckPost();
 
@@ -125,6 +149,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             RequestMapper = new AddDraftApprenticeshipRequestMapper(AuthenticationServiceMock.Object);
             LinkGeneratorMock = new Mock<ILinkGenerator>();
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
+            CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
         }
 
         public Mock<IAuthenticationService> AuthenticationServiceMock { get; } 
@@ -141,16 +166,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
 
         public CreateCohortWithDraftApprenticeshipRequest GetRequest { get; private set; }
         public AddDraftApprenticeshipViewModel PostRequest { get; private set; }
+        
+        public Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }
+        public ICommitmentsApiClient CommitmentsApiClient => CommitmentsApiClientMock.Object;
 
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures ForGetRequest()
         {
-            GetRequest = new CreateCohortWithDraftApprenticeshipRequest();
+            GetRequest = new CreateCohortWithDraftApprenticeshipRequest {ProviderId = 1};
             return this;
         }
 
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures ForPostRequest()
         {
             PostRequest = new AddDraftApprenticeshipViewModel();
+            PostRequest.ProviderId = 1;
             return this;
         }
 
@@ -192,13 +221,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             return this;
         }
 
+        public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithTrainingProvider()
+        {
+            var response = new GetProviderResponse {Name = "Name", ProviderId = 1};
+
+            CommitmentsApiClientMock.Setup(p => p.GetProvider(1, CancellationToken.None))
+                .ReturnsAsync(response);
+
+            return this;
+        }
+
         public CreateCohortWithDraftApprenticeshipController CreateController()
         {
             var controller = new CreateCohortWithDraftApprenticeshipController(
                 CommitmentsService, 
                 RequestMapper, 
                 LinkGenerator, 
-                TrainingProgrammeApiClient);
+                TrainingProgrammeApiClient,
+                CommitmentsApiClient);
 
             if (_setModelToInvalid)
             {
