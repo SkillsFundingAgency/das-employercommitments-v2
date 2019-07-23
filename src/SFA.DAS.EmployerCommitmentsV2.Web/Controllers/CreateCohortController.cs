@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using Castle.Core.Logging;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
@@ -67,7 +66,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SelectProvider(SelectProviderViewModel request)
         {
-            GetProviderResponse providerResponse;
             try
             {
                 var validationResult = _selectProviderViewModelValidator.Validate(request);
@@ -77,7 +75,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     return View(request);
                 }
 
-                providerResponse = await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
+                await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
 
                 var confirmProviderRequest = _confirmProviderRequestMapper.Map(request);
 
@@ -87,7 +85,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 if (ex.StatusCode == HttpStatusCode.NotFound)
                 {
-                    ModelState.AddModelError(nameof(providerResponse.ProviderId), "Check UK Provider Reference Number");
+                    ModelState.AddModelError(nameof(request.ProviderId), "Check UK Provider Reference Number");
                     return View(request);
                 }
                     _logger.LogError($"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.StatusCode)}='{ex.StatusCode}', {nameof(ex.ReasonPhrase)}='{ex.ReasonPhrase}'");
@@ -102,20 +100,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("confirm-provider")]
         [HttpGet]
-        public IActionResult ConfirmProvider(ConfirmProviderRequest request)
+        public async Task<IActionResult> ConfirmProvider(ConfirmProviderRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Error", "Error");
             }
+            await _commitmentsApiClient.GetProvider(request.ProviderId);
+            //var response = await _mediator.Send(new GetProviderRequest{UkPrn = request.ProviderId});
 
-            var response = await _mediator.Send(new GetProviderRequest{UkPrn = request.ProviderId});
+            //var model = _confirmProviderViewModelMapper.Map(request);
+            //model.ProviderId = response.ProviderId;
+            //model.ProviderName = response.ProviderName;
 
-            var model = _confirmProviderViewModelMapper.Map(request);
-            model.ProviderId = response.ProviderId;
-            model.ProviderName = response.ProviderName;
-
-            return View(model);
+            return View();
         }
 
         [Route("confirm-provider")]
