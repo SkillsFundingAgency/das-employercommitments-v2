@@ -41,7 +41,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
 
             fixtures.CommitmentsServiceMock.Verify(x => x.GetCohortDetail(fixtures.CohortId));
             fixtures.CommitmentsServiceMock.Verify(x => x.GetDraftApprenticeshipForCohort(fixtures.CohortId, fixtures.DraftApprenticeshipId));
-            result.VerifyReturnsViewModel().WithModel<EditDraftApprenticeshipViewModel>();
+            
+            var model = result.VerifyReturnsViewModel().WithModel<EditDraftApprenticeshipViewModel>();
+            
+            Assert.AreEqual(fixtures.AccountHashedId, model.AccountHashedId);
+            Assert.AreEqual("ProviderName", model.ProviderName);
         }
 
         [Test]
@@ -56,17 +60,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         }
 
         [Test]
-        public async Task GetEditDraftApprenticeship_ValidModel_ShouldReturnViewModelWithProviderName()
-        {
-            var fixtures = new DraftApprenticeshipControllerTestFixtures().WithCourses().WithDraftApprenticeship().WithCohort();
-
-            var result = await fixtures.Sut.EditDraftApprenticeship(fixtures.EditDraftApprenticeshipRequest);
-
-            var model = result.VerifyReturnsViewModel().WithModel<EditDraftApprenticeshipViewModel>();
-            Assert.AreEqual("ProviderName", model.ProviderName);
-        }
-
-        [Test]
         public async Task GetEditDraftApprenticeship_ValidModelButCohortIsWithProvider_ShouldRedirectUserToViewDetails()
         {
             var fixtures = new DraftApprenticeshipControllerTestFixtures().WithCourses().WithDraftApprenticeship();
@@ -76,7 +69,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
 
             var redirect = result.VerifyReturnsRedirect();
             Assert.AreEqual("XYZ", redirect.Url);
-            fixtures.LinkGeneratorMock.Verify(x=>x.ViewApprentice(fixtures.AccountHashedId, fixtures.CohortReference, fixtures.DraftApprenticeshipHashedId));
+            fixtures.LinkGeneratorMock.Verify(x=>x.CommitmentsLink($"accounts/{fixtures.AccountHashedId}/apprentices/{fixtures.CohortReference}/apprenticeships/{fixtures.DraftApprenticeshipHashedId}/view"));
         }
 
         [Test]
@@ -176,7 +169,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         public DraftApprenticeshipControllerTestFixtures WithCohortLink(string url)
         {
             LinkGeneratorMock
-                .Setup(lg => lg.CohortDetails(It.IsAny<string>(), It.IsAny<string>()))
+                .Setup(lg => lg.CommitmentsLink(It.IsAny<string>()))
                 .Returns(url);
 
             return this;
@@ -185,7 +178,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         public DraftApprenticeshipControllerTestFixtures WithViewApprenticeLink(string url)
         {
             LinkGeneratorMock
-                .Setup(lg => lg.ViewApprentice(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Setup(lg => lg.CommitmentsLink(It.IsAny<string>()))
                 .Returns(url);
 
             return this;

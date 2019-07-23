@@ -81,7 +81,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             try
             {
                 var newCohort = await _employerCommitmentsService.CreateCohort(request);
-                var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, newCohort.CohortReference);
+                var reviewYourCohort = _linkGenerator.CommitmentsLink($"accounts/{model.AccountHashedId}/apprentices/{newCohort.CohortReference}/details");
                 return Redirect(reviewYourCohort);
             }
             catch (CommitmentsApiModelException ex)

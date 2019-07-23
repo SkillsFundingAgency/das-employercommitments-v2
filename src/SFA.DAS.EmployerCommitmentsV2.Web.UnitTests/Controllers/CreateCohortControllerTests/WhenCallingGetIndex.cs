@@ -27,10 +27,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
                 .Setup(mapper => mapper.Map(request))
                 .Returns(viewModel);
             mockLinkGenerator
-                .Setup(generator => generator.YourOrganisationsAndAgreements(request.AccountHashedId))
+                .Setup(generator => generator.AccountsLink($"accounts/{request.AccountHashedId}/agreements"))
                 .Returns(organisationsLink);
             mockLinkGenerator
-                .Setup(generator => generator.PayeSchemes(request.AccountHashedId))
+                .Setup(generator => generator.AccountsLink($"accounts/{request.AccountHashedId}/schemes"))
                 .Returns(schemesLink);
 
             var result = controller.Index(request) as ViewResult;

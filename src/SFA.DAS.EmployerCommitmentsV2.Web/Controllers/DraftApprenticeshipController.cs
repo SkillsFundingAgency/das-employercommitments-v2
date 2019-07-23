@@ -55,13 +55,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                         request.DraftApprenticeshipId);
                 var model = _editDraftApprenticeshipDetailsToViewModelMapper.Map(editModel);
 
+                model.AccountHashedId = request.AccountHashedId;
+                
                 await AddProviderNameAndCoursesToModel(model);
 
                 return View(model);
             }
             catch (CohortEmployerUpdateDeniedException)
             {
-                return Redirect(_linkGenerator.ViewApprentice(request.AccountHashedId, request.CohortReference, request.DraftApprenticeshipHashedId));
+                return Redirect(_linkGenerator.CommitmentsLink($"accounts/{request.AccountHashedId}/apprentices/{request.CohortReference}/apprenticeships/{request.DraftApprenticeshipHashedId}/view"));
             }
         }
 
@@ -80,7 +82,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 var updateRequest = _updateDraftApprenticeshipRequestMapper.Map(model);
                 await _commitmentsService.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
 
-                var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);
+                var reviewYourCohort = _linkGenerator.CommitmentsLink($"accounts/{model.AccountHashedId}/apprentices/{model.CohortReference}/details");
                 return Redirect(reviewYourCohort);
             }
             catch (CommitmentsApiModelException ex)

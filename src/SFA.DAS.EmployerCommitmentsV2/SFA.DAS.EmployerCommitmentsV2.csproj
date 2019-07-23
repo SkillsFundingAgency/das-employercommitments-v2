@@ -15,7 +15,7 @@
     <PackageReference Include="SFA.DAS.Apprenticeships.Api.Client" Version="0.11.203" />
     <PackageReference Include="SFA.DAS.Authorization" Version="5.3.5" />
     <PackageReference Include="SFA.DAS.EmployerAccounts.Api.Client" Version="1.6.1021" />
-    <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="1.0.1" />
+    <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.6" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.1" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="3.0.60" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Types" Version="3.0.60" />

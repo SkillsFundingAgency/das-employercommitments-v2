@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution;
-using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.EmployerUrlHelper.DependencyResolution;
 using StructureMap;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
@@ -25,8 +23,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .AddDasHealthChecks()
                 .AddDasMvc()
                 .AddDasEmployerAuthentication(_configuration)
-                .AddEmployerUrlHelper(_configuration)
                 .AddDasAuthorization()
+                .AddEmployerUrlHelper()
                 .AddMemoryCache();
         }
 
@@ -45,8 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .UseDasHealthChecks()
                 .UseAuthentication()
                 .UseCookiePolicy()
-                .UseMvc()
-                ;
+                .UseMvc();
         }
     }
 }
