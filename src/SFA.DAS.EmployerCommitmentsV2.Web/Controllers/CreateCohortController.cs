@@ -1,12 +1,17 @@
-﻿using System.Threading.Tasks;
-using MediatR;
+﻿using System;
+using System.Net;
+using System.Threading.Tasks;
+using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
-using SFA.DAS.EmployerCommitmentsV2.Application.Queries.Providers;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -15,20 +20,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     public class CreateCohortController : Controller
     {
         private readonly IMapper<IndexRequest, IndexViewModel> _indexViewModelMapper;
-        private readonly IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> _confirmProviderViewModelMapper;
+        private readonly IMapper<SelectProviderRequest, SelectProviderViewModel> _selectProviderViewModelMapper;
+        private readonly IMapper<SelectProviderViewModel, ConfirmProviderRequest> _confirmProviderRequestMapper;
+        private readonly IValidator<SelectProviderViewModel> _selectProviderViewModelValidator;
         private readonly ILinkGenerator _linkGenerator;
-        private readonly IMediator _mediator;
+        private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly ILogger<CreateCohortController> _logger;
 
         public CreateCohortController(
             IMapper<IndexRequest, IndexViewModel> indexViewModelMapper,
-            IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> confirmProviderViewModelMapper,
+            IMapper<SelectProviderRequest, SelectProviderViewModel> selectProviderViewModelMapper,
+            IMapper<SelectProviderViewModel, ConfirmProviderRequest> confirmProviderRequestMapper,
+            IValidator<SelectProviderViewModel> selectProviderViewModelValidator,
             ILinkGenerator linkGenerator,
-            IMediator mediator)
+            ICommitmentsApiClient commitmentsApiClient,
+            ILogger<CreateCohortController> logger)
         {
             _indexViewModelMapper = indexViewModelMapper;
-            _confirmProviderViewModelMapper = confirmProviderViewModelMapper;
+            _selectProviderViewModelMapper = selectProviderViewModelMapper;
+            _confirmProviderRequestMapper = confirmProviderRequestMapper;
+            _selectProviderViewModelValidator = selectProviderViewModelValidator;
             _linkGenerator = linkGenerator;
-            _mediator = mediator;
+            _commitmentsApiClient = commitmentsApiClient;
+            _logger = logger;
         }
 
         public IActionResult Index(IndexRequest request)
@@ -44,25 +58,51 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("select-provider")]
         public IActionResult SelectProvider(SelectProviderRequest request)
         {
-            var viewModel = new SelectProviderViewModel();//todo: from mapper
+            var viewModel = _selectProviderViewModelMapper.Map(request);
 
             return View(viewModel);
         }
 
         [Route("select-provider")]
         [HttpPost]
-        public IActionResult SelectProvider(SelectProviderViewModel request)
+        public async Task<IActionResult> SelectProvider(SelectProviderViewModel request)
         {
-            //todo:hit api
+            GetProviderResponse providerResponse;
+            try
+            {
+                var validationResult = _selectProviderViewModelValidator.Validate(request);
 
-            var confirmProviderRequest = new ConfirmProviderRequest();//todo: from mapper
+                if (!validationResult.IsValid)
+                {
+                    return View(request);
+                }
 
-            return RedirectToAction("ConfirmProvider", confirmProviderRequest);
+                providerResponse = await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
+
+                var confirmProviderRequest = _confirmProviderRequestMapper.Map(request);
+
+                return RedirectToAction("ConfirmProvider", confirmProviderRequest);
+            }
+            catch (RestHttpClientException ex)
+            {
+                if (ex.StatusCode == HttpStatusCode.NotFound)
+                {
+                    ModelState.AddModelError(nameof(providerResponse.ProviderId), "Check UK Provider Reference Number");
+                    return View(request);
+                }
+                    _logger.LogError($"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.StatusCode)}='{ex.StatusCode}', {nameof(ex.ReasonPhrase)}='{ex.ReasonPhrase}'");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
+            }
+
+            return View("~/Views/Error/Error.cshtml");
         }
 
         [Route("confirm-provider")]
         [HttpGet]
-        public async Task<IActionResult> ConfirmProvider(ConfirmProviderRequest request)
+        public IActionResult ConfirmProvider(ConfirmProviderRequest request)
         {
             if (!ModelState.IsValid)
             {
