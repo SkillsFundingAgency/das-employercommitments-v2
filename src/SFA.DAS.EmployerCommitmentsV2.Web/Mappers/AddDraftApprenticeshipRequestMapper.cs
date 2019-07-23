@@ -5,11 +5,8 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {
-    public class AddDraftApprenticeshipRequestMapper : SaveDataMapper<CreateCohortRequest>, IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest>
+    public class AddDraftApprenticeshipRequestMapper : IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest>
     {
-        public AddDraftApprenticeshipRequestMapper(IAuthenticationService authenticationService):base(authenticationService)
-        {
-        }
         public CreateCohortRequest Map(AddDraftApprenticeshipViewModel source)
         {
             return new CreateCohortRequest
@@ -25,8 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
                 Cost = source.Cost,
                 StartDate = source.StartDate.Date,
                 EndDate = source.EndDate.Date,
-                OriginatorReference = source.Reference,
-                UserInfo = GetUserInfo()
+                OriginatorReference = source.Reference
             };
         }
     }

@@ -10,7 +10,6 @@ using SFA.DAS.Commitments.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
@@ -129,9 +128,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         public DraftApprenticeshipControllerTestFixtures()
         {
             CommitmentsServiceMock = new Mock<ICommitmentsService>();
-            AuthenticationServiceMock = new Mock<IAuthenticationService>();
             ToViewModelMapper = new EditDraftApprenticeshipDetailsToViewModelMapper();
-            ToApiRequestMapper = new EditDraftApprenticeshipToUpdateRequestMapper(AuthenticationServiceMock.Object);
+            ToApiRequestMapper = new EditDraftApprenticeshipToUpdateRequestMapper();
             LinkGeneratorMock = new Mock<ILinkGenerator>();
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
 
@@ -160,7 +158,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         }
 
         public Mock<ICommitmentsService> CommitmentsServiceMock { get; }
-        public Mock<IAuthenticationService> AuthenticationServiceMock { get; }
         public IMapper<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel> ToViewModelMapper;
         public IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipRequest> ToApiRequestMapper;
         public Mock<ILinkGenerator> LinkGeneratorMock { get; }

@@ -1,9 +1,7 @@
 ﻿using System;
 using AutoFixture;
-using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 
@@ -15,7 +13,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         private EditDraftApprenticeshipToUpdateRequestMapper _mapper;
         private EditDraftApprenticeshipViewModel _source;
         private Func<UpdateDraftApprenticeshipRequest> _act;
-        public Mock<IAuthenticationService> AuthenticationServiceMock;
 
         [SetUp]
         public void Arrange()
@@ -25,9 +22,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
             var birthDate = fixture.Create<DateTime?>();
             var startDate = fixture.Create<DateTime?>();
             var endDate = fixture.Create<DateTime?>();
-            AuthenticationServiceMock = new Mock<IAuthenticationService>();
 
-            _mapper = new EditDraftApprenticeshipToUpdateRequestMapper(AuthenticationServiceMock.Object);
+            _mapper = new EditDraftApprenticeshipToUpdateRequestMapper();
 
             _source = fixture.Build<EditDraftApprenticeshipViewModel>()
                 .With(x => x.BirthDay, birthDate?.Day)
@@ -106,31 +102,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
             var result = _act();
             Assert.AreEqual(_source.Reference, result.Reference);
         }
-
-        [Test]
-        public void AndWhenUserIsNotAuthenticated_ThenUserInfoIsNull()
-        {
-            AuthenticationServiceMock.Setup(x => x.IsUserAuthenticated()).Returns(false);
-            var result = _act();
-
-            Assert.IsNull(result.UserInfo);
-        }
-
-        [Test]
-        public void AndWhenUserIsAuthenticated_ThenUserInfoMatchesAuthenticationService()
-        {
-            AuthenticationServiceMock.Setup(x => x.IsUserAuthenticated()).Returns(true);
-            AuthenticationServiceMock.Setup(x => x.UserId).Returns("Id");
-            AuthenticationServiceMock.Setup(x => x.UserName).Returns("Name");
-            AuthenticationServiceMock.Setup(x => x.UserEmail).Returns("Email");
-
-            var result = _act();
-
-            Assert.IsNotNull(result.UserInfo);
-            Assert.AreEqual("Id", result.UserInfo.UserId);
-            Assert.AreEqual("Name", result.UserInfo.UserDisplayName);
-            Assert.AreEqual("Email", result.UserInfo.UserEmail);
-        }
-
     }
 }
