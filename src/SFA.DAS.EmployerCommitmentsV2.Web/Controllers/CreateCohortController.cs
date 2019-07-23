@@ -88,14 +88,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     ModelState.AddModelError(nameof(request.ProviderId), "Check UK Provider Reference Number");
                     return View(request);
                 }
-                    _logger.LogError($"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.StatusCode)}='{ex.StatusCode}', {nameof(ex.ReasonPhrase)}='{ex.ReasonPhrase}'");
+                _logger.LogError($"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.StatusCode)}='{ex.StatusCode}', {nameof(ex.ReasonPhrase)}='{ex.ReasonPhrase}'");
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
             }
 
-            return View("~/Views/Error/Error.cshtml");
+            return RedirectToAction("Error","Error");
         }
 
         [Route("confirm-provider")]
