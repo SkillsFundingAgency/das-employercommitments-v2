@@ -91,17 +91,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             HttpResponseMessage error,
             CreateCohortController controller)
         {
-            var viewName = "~/Views/Error/Error.cshtml";
             error.StatusCode = HttpStatusCode.NetworkAuthenticationRequired;
             viewModel.ProviderId = providerId.ToString();
             mockApiClient
                 .Setup(x => x.GetProvider(providerId, CancellationToken.None))
                 .ThrowsAsync(new RestHttpClientException(error, error.ReasonPhrase));
 
-            var result = await controller.SelectProvider(viewModel) as ViewResult;
+            var result = await controller.SelectProvider(viewModel) as RedirectToActionResult;
 
             Assert.NotNull(result);
-            Assert.AreEqual(viewName,result.ViewName);
+            Assert.AreEqual("Error",result.ActionName);
+            Assert.AreEqual("Error",result.ControllerName);
         }
 
 

@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using Castle.Core.Logging;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
@@ -69,7 +66,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SelectProvider(SelectProviderViewModel request)
         {
-            GetProviderResponse providerResponse;
             try
             {
                 var validationResult = _selectProviderViewModelValidator.Validate(request);
@@ -79,7 +75,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     return View(request);
                 }
 
-                providerResponse = await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
+                await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
 
                 var confirmProviderRequest = _confirmProviderRequestMapper.Map(request);
 
@@ -89,17 +85,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 if (ex.StatusCode == HttpStatusCode.NotFound)
                 {
-                    ModelState.AddModelError(nameof(providerResponse.ProviderId), "Check UK Provider Reference Number");
+                    ModelState.AddModelError(nameof(request.ProviderId), "Check UK Provider Reference Number");
                     return View(request);
                 }
-                    _logger.LogError($"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.StatusCode)}='{ex.StatusCode}', {nameof(ex.ReasonPhrase)}='{ex.ReasonPhrase}'");
+                _logger.LogError($"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.StatusCode)}='{ex.StatusCode}', {nameof(ex.ReasonPhrase)}='{ex.ReasonPhrase}'");
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
             }
 
-            return View("~/Views/Error/Error.cshtml");
+            return RedirectToAction("Error","Error");
         }
 
         [Route("confirm-provider")]
