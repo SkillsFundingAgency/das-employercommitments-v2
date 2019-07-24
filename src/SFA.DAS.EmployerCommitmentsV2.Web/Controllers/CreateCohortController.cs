@@ -8,6 +8,7 @@ using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
@@ -21,6 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IMapper<IndexRequest, IndexViewModel> _indexViewModelMapper;
         private readonly IMapper<SelectProviderRequest, SelectProviderViewModel> _selectProviderViewModelMapper;
         private readonly IMapper<SelectProviderViewModel, ConfirmProviderRequest> _confirmProviderRequestMapper;
+        private readonly IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> _confirmProviderViewModelMapper;
         private readonly IValidator<SelectProviderViewModel> _selectProviderViewModelValidator;
         private readonly ILinkGenerator _linkGenerator;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
@@ -30,6 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             IMapper<IndexRequest, IndexViewModel> indexViewModelMapper,
             IMapper<SelectProviderRequest, SelectProviderViewModel> selectProviderViewModelMapper,
             IMapper<SelectProviderViewModel, ConfirmProviderRequest> confirmProviderRequestMapper,
+            IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> confirmProviderViewModelMapper,
             IValidator<SelectProviderViewModel> selectProviderViewModelValidator,
             ILinkGenerator linkGenerator,
             ICommitmentsApiClient commitmentsApiClient,
@@ -38,6 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             _indexViewModelMapper = indexViewModelMapper;
             _selectProviderViewModelMapper = selectProviderViewModelMapper;
             _confirmProviderRequestMapper = confirmProviderRequestMapper;
+            _confirmProviderViewModelMapper = confirmProviderViewModelMapper;
             _selectProviderViewModelValidator = selectProviderViewModelValidator;
             _linkGenerator = linkGenerator;
             _commitmentsApiClient = commitmentsApiClient;
@@ -106,14 +110,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 return RedirectToAction("Error", "Error");
             }
-            await _commitmentsApiClient.GetProvider(request.ProviderId);
-            //var response = await _mediator.Send(new GetProviderRequest{UkPrn = request.ProviderId});
-
-            //var model = _confirmProviderViewModelMapper.Map(request);
-            //model.ProviderId = response.ProviderId;
-            //model.ProviderName = response.ProviderName;
-
-            return View();
+            var response = await _commitmentsApiClient.GetProvider(request.ProviderId);
+            
+            var model = _confirmProviderViewModelMapper.Map(request);
+            model.ProviderId = response.ProviderId;
+            model.ProviderName = response.Name;
+            
+            return View(model);
         }
 
         [Route("confirm-provider")]

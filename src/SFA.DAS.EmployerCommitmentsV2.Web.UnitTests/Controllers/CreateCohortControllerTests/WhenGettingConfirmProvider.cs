@@ -6,7 +6,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.EmployerCommitmentsV2.Application.Queries.Providers;
+using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.Testing.AutoFixture;
@@ -20,11 +22,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             int ukPrn,
             ConfirmProviderRequest confirmProviderRequest,
             GetProviderResponse getProviderResponse,
-            [Frozen]Mock<IMediator> mediator,
+            [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             CreateCohortController controller)
         {
             confirmProviderRequest.ProviderId = ukPrn;
-            mediator.Setup(x => x.Send(It.Is<GetProviderRequest>(c => c.UkPrn.Equals(ukPrn)), It.IsAny<CancellationToken>()))
+            mockApiClient
+                .Setup(x => x.GetProvider(ukPrn, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(getProviderResponse);
 
             var result = await controller.ConfirmProvider(confirmProviderRequest) as ViewResult;
@@ -37,18 +40,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             int ukPrn,
             ConfirmProviderRequest confirmProviderRequest,
             GetProviderResponse getProviderResponse,
-            [Frozen]Mock<IMediator> mediator,
+            ConfirmProviderViewModel viewModel,
+            [Frozen] Mock<IMapper<ConfirmProviderRequest, ConfirmProviderViewModel>> mapper,
+            [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             CreateCohortController controller)
         {
             confirmProviderRequest.ProviderId = ukPrn;
-            mediator.Setup(x => x.Send(It.Is<GetProviderRequest>(c => c.UkPrn.Equals(ukPrn)),It.IsAny<CancellationToken>()))
+            mockApiClient
+                .Setup(x => x.GetProvider(ukPrn, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(getProviderResponse);
+            mapper.Setup(c => c.Map(confirmProviderRequest))
+                .Returns(viewModel);
 
             var result = await controller.ConfirmProvider(confirmProviderRequest) as ViewResult;
 
             var actualModel = result.Model as ConfirmProviderViewModel;
             actualModel.ProviderId.Should().Be(getProviderResponse.ProviderId);
-            actualModel.ProviderName.Should().Be(getProviderResponse.ProviderName);
+            actualModel.ProviderName.Should().Be(getProviderResponse.Name);
         }
 
         [Test, MoqAutoData]
@@ -61,9 +69,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
         {
             controller.ModelState.AddModelError(nameof(confirmProviderRequest.ProviderId),"ProviderId is not valid");
 
-            var result = await controller.ConfirmProvider(confirmProviderRequest) as BadRequestObjectResult;
+            var result = await controller.ConfirmProvider(confirmProviderRequest) as RedirectToActionResult;
 
             result.Should().NotBeNull();
+            result.ControllerName.Should().Be("Error");
+            result.ActionName.Should().Be("Error");
         }
     }
 }
