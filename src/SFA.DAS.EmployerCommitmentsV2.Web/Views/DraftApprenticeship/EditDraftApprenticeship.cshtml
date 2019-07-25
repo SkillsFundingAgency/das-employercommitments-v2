@@ -17,7 +17,7 @@
             @Html.AntiForgeryToken()
             <partial name="DraftApprenticeship" for="@Model" />
             <button type="submit" class="govuk-button">Save</button>
-            <a class="govuk-button govuk-button--warning das-float-right" href="@LinkGenerator.CommitmentsLink($"commitments/accounts/{Model.AccountHashedId}/apprentices/{Model.CohortReference}/apprenticeships/{Model.DraftApprenticeshipHashedId}/delete")">Delete</a>
+            <a class="govuk-button govuk-button--warning das-float-right" href="@LinkGenerator.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/{Model.CohortReference}/apprenticeships/{Model.DraftApprenticeshipHashedId}/delete")">Delete</a>
             @*<p class="govuk-body  govuk-!-margin-bottom-0">
                 <a class="govuk-body govuk-link" href="@Url.ProviderApprenticeshipServiceLink($"{Model.ProviderId}/apprentices/{Model.CohortReference}/details")">Cancel</a>
             </p>*@
