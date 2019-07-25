@@ -11,7 +11,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.HealthChecks;
 using SFA.DAS.Http;
 using SFA.DAS.Testing;
 
-namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.HealthChecks
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.HealthChecks
 {
     [TestFixture]
     [Parallelizable]
