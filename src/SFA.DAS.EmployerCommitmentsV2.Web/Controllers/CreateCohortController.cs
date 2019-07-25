@@ -23,7 +23,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IMapper<SelectProviderRequest, SelectProviderViewModel> _selectProviderViewModelMapper;
         private readonly IMapper<SelectProviderViewModel, ConfirmProviderRequest> _confirmProviderRequestMapper;
         private readonly IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> _confirmProviderViewModelMapper;
+        private readonly IMapper<ConfirmProviderViewModel, SelectProviderViewModel> _selectProviderFromConfirmMapper;
         private readonly IValidator<SelectProviderViewModel> _selectProviderViewModelValidator;
+        private readonly IValidator<ConfirmProviderViewModel> _confirmProviderViewModelValidator;
         private readonly ILinkGenerator _linkGenerator;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly ILogger<CreateCohortController> _logger;
@@ -33,7 +35,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             IMapper<SelectProviderRequest, SelectProviderViewModel> selectProviderViewModelMapper,
             IMapper<SelectProviderViewModel, ConfirmProviderRequest> confirmProviderRequestMapper,
             IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> confirmProviderViewModelMapper,
+            IMapper<ConfirmProviderViewModel, SelectProviderViewModel> selectProviderFromConfirmMapper,
             IValidator<SelectProviderViewModel> selectProviderViewModelValidator,
+            IValidator<ConfirmProviderViewModel> confirmProviderViewModelValidator,
             ILinkGenerator linkGenerator,
             ICommitmentsApiClient commitmentsApiClient,
             ILogger<CreateCohortController> logger)
@@ -42,7 +46,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             _selectProviderViewModelMapper = selectProviderViewModelMapper;
             _confirmProviderRequestMapper = confirmProviderRequestMapper;
             _confirmProviderViewModelMapper = confirmProviderViewModelMapper;
+            _selectProviderFromConfirmMapper = selectProviderFromConfirmMapper;
             _selectProviderViewModelValidator = selectProviderViewModelValidator;
+            _confirmProviderViewModelValidator = confirmProviderViewModelValidator;
             _linkGenerator = linkGenerator;
             _commitmentsApiClient = commitmentsApiClient;
             _logger = logger;
@@ -92,14 +98,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     ModelState.AddModelError(nameof(request.ProviderId), "Check UK Provider Reference Number");
                     return View(request);
                 }
-                _logger.LogError($"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.StatusCode)}='{ex.StatusCode}', {nameof(ex.ReasonPhrase)}='{ex.ReasonPhrase}'");
+
+                _logger.LogError(
+                    $"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.StatusCode)}='{ex.StatusCode}', {nameof(ex.ReasonPhrase)}='{ex.ReasonPhrase}'");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
+                _logger.LogError(
+                    $"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
             }
 
-            return RedirectToAction("Error","Error");
+            return RedirectToAction("Error", "Error");
         }
 
         [Route("confirm-provider")]
@@ -110,12 +119,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 return RedirectToAction("Error", "Error");
             }
+
             var response = await _commitmentsApiClient.GetProvider(request.ProviderId);
-            
+
             var model = _confirmProviderViewModelMapper.Map(request);
             model.ProviderId = response.ProviderId;
             model.ProviderName = response.Name;
-            
+
             return View(model);
         }
 
@@ -123,7 +133,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public IActionResult ConfirmProvider(ConfirmProviderViewModel request)
         {
-            return RedirectToRoute("");
+            var validationResult = _confirmProviderViewModelValidator.Validate(request);
+
+            if (!validationResult.IsValid)
+            {
+                return View(request);
+            }
+
+            if (request.UseThisProvider.Value)
+            {
+                return RedirectToAction("assign");
+            }
+
+            var returnModel = _selectProviderFromConfirmMapper.Map(request);
+
+            return RedirectToAction("SelectProvider", returnModel);
         }
+
     }
 }
