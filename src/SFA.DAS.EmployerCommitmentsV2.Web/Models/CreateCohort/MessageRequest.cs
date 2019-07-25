@@ -1,8 +1,7 @@
-﻿using SFA.DAS.Authorization.ModelBinding;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
 {
-    public class MessageRequest : IAuthorizationContextModel
+    // Todo These names match the CV-193 base branch, but the names should match the ECV2 naming conventions 
+    public class MessageRequest
     {
         public string AccountHashedId { get; set; }
         public string EmployerAccountLegalEntityPublicHashedId { get; set; }

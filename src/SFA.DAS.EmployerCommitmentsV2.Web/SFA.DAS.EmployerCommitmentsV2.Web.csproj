@@ -30,8 +30,8 @@
     <PackageReference Include="SFA.DAS.Authorization" Version="5.3.5" />
     <PackageReference Include="SFA.DAS.Apprenticeships.Api.Client" Version="0.11.203" />
     <PackageReference Include="SFA.DAS.Commitments.Shared" Version="0.1.28-cv-190-updatesha0002" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="2.1.1532" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Types" Version="2.1.1532" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="3.0.75" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Types" Version="3.0.75" />
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.77" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="0.1.0" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.1" />
