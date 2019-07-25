@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -64,7 +63,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             int ukPrn,
             ConfirmProviderRequest confirmProviderRequest,
             GetProviderResponse getProviderResponse,
-            [Frozen]Mock<IMediator> mediator,
             CreateCohortController controller)
         {
             controller.ModelState.AddModelError(nameof(confirmProviderRequest.ProviderId),"ProviderId is not valid");

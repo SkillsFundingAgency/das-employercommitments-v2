@@ -1,5 +1,4 @@
-﻿using MediatR;
-using SFA.DAS.EmployerAccounts.Api.Client;
+﻿using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Services.Stubs;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
@@ -18,13 +17,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
             For<IEmployerAccountsApiClient>().InterceptWith(new FuncInterceptor<IEmployerAccountsApiClient>(
                 (c, o) => c.GetInstance<EmployerCommitmentsV2Configuration>().UseStubEmployerAccountsApiClient ? c.GetInstance<StubEmployerAccountsApiClient>() : o));
             For<ILinkGenerator>().Use<LinkGenerator>();
-            Scan(scanner =>
-            {
-                scanner.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<,>));
-                scanner.ConnectImplementationsToTypesClosing(typeof(INotificationHandler<>));
-            });
-            For<ServiceFactory>().Use<ServiceFactory>(ctx => ctx.GetInstance);
-            For<IMediator>().Use<Mediator>();
         }
     }
 }
