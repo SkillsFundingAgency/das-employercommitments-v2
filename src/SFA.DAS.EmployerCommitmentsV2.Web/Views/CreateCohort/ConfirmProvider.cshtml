@@ -13,8 +13,11 @@
         
         <p class="govuk-body-l">UK Provider Reference Number <strong>'@Model.ProviderId'</strong> matches:</p>
         
-        <h2 class="govuk-heading-l">@Model.ProviderName</h2>
-        <span class="govuk-caption-l">UKPRN: @Model.ProviderId</span>
+        <h2 class="govuk-heading-l govuk-!-margin-bottom-0">@Model.ProviderName</h2>
+        <dl class="das-definition-list das-definition-list--inline  das-definition-list--muted govuk-!-margin-bottom-7">
+            <dt class="das-definition-list__title">UKPRN</dt>
+            <dd class="das-definition-list__definition">@Model.ProviderId</dd>
+        </dl>
 
         <form method="post" asp-controller="CreateCohort" asp-action="ConfirmProvider">
             <partial name="_ConfirmProviderHiddenPartial" model="@Model" />
