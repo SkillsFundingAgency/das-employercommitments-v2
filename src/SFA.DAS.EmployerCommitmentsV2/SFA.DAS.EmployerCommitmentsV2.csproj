@@ -10,15 +10,13 @@
     <PackageReference Include="MediatR" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.2.4" />
-    <PackageReference Include="SFA.DAS.Commitments.Shared" Version="0.1.28-cv-190-updatesha0002" />
     <PackageReference Include="SFA.DAS.Authorization.CommitmentPermissions" Version="5.3.5" />
     <PackageReference Include="SFA.DAS.Apprenticeships.Api.Client" Version="0.11.203" />
     <PackageReference Include="SFA.DAS.Authorization" Version="5.3.5" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="4.1.4" />
+    <PackageReference Include="SFA.DAS.Commitments.Shared" Version="0.1.28-cv-190-updatesha0002" />
     <PackageReference Include="SFA.DAS.EmployerAccounts.Api.Client" Version="1.6.1021" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="0.1.0" />
-    <PackageReference Include="SFA.DAS.Encoding" Version="1.1.1" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="2.1.1532" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Types" Version="2.1.1532" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.1" />
     <PackageReference Include="StructureMap" Version="4.7.0" />
   </ItemGroup>
