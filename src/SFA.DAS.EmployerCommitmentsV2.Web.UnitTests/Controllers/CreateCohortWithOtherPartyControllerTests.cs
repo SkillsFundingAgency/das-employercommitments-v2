@@ -16,7 +16,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
 {
     [TestFixture]
-    [Parallelizable(ParallelScope.Children)]
+    [Parallelizable]
     public class CreateCohortWithOtherPartyControllerTests
     {
         private CreateCohortWithOtherPartyControllerTestFixture _fixture;
