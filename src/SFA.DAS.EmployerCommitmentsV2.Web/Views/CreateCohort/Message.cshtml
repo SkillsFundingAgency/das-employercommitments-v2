@@ -1,4 +1,4 @@
-﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
 @model MessageViewModel
 
 @{
@@ -8,10 +8,9 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl">Message for your training provider</h1>
-
         <p class="govuk-body-l">Let <b>@Model.ProviderId</b> know what you'd like them to do next.</p>
-        
         <form method="post" asp-controller="CreateCohort" asp-action="Message">
+            
             @Html.HiddenFor(x => x.AccountLegalEntityHashedId)
             @Html.HiddenFor(x => x.ReservationId)
             @Html.HiddenFor(x => x.CourseCode)
@@ -19,14 +18,8 @@
             @Html.HiddenFor(x => x.ProviderId)
 
             <div class="govuk-form-group  @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
-                <fieldset class="govuk-fieldset">
-                    <div class="form-error-group form-group">
-                        <label class="form-label strong" for="Message">Message (optional)</label>
-                        <textarea class="form-control form-control-3-4" id="Message" name="Message"
-                          cols="40" rows="10"
-                          aria-required="true"></textarea>
-                    </div>
-                </fieldset>
+                <label class="govuk-label govuk-!-font-weight-bold" for="Message">Message (optional)</label>
+                <textarea class="govuk-textarea" id="Message" name="Message" cols="40" rows="10"></textarea>
             </div>
 
             <button type="submit" class="govuk-button">Send</button>
