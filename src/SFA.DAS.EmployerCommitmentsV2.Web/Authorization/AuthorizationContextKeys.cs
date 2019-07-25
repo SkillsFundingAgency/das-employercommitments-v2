@@ -1,6 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
 {
-    public static class AuthorizationKeys
+    public static class AuthorizationContextKeys
     {
         public const string AccountId = "AccountId";
         public const string CohortId = "CohortId";

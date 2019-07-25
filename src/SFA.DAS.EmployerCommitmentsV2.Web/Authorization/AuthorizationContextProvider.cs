@@ -31,9 +31,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
             var cohortId = GetCohortId();
             var userRef = GetUserRef();
 
-            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, accountId,  AuthorizationKeys.AccountId);
-            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, cohortId, AuthorizationKeys.CohortId);
-            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetAccountLegalEntityHashedId(), AuthorizationKeys.AccountLegalEntityId);
+            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, accountId,  AuthorizationContextKeys.AccountId);
+            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, cohortId, AuthorizationContextKeys.CohortId);
+            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetAccountLegalEntityHashedId(), AuthorizationContextKeys.AccountLegalEntityId);
 
             if (accountId.HasValue && userRef.HasValue)
             {
