@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Extensions;
@@ -56,8 +57,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             try
             {
                 var request = _createCohortWithOtherPartyMapper.Map(model);
-                await _commitmentsApiClient.CreateCohort(request);
-                return RedirectToAction("Finished", new {model.AccountHashedId});
+                var response = await _commitmentsApiClient.CreateCohort(request);
+                return RedirectToAction("Finished", new { model.AccountHashedId, response.CohortReference });
             }
             catch (CommitmentsApiModelException ex)
             {
@@ -66,11 +67,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 return View(model);
             }
         }
-
+        
+        [DasAuthorize(CommitmentOperation.AccessCohort)]
+        [HttpGet]
         [Route("finished")]
-        public IActionResult Finished()
+        public async Task<IActionResult> Finished(FinishedRequest request)
         {
-            return View();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            var response = await _commitmentsApiClient.GetCohort(request.CohortId);
+            
+            return View(new FinishedViewModel
+            {
+                CohortReference = request.CohortReference,
+                LegalEntityName = response.LegalEntityName,
+                ProviderName = response.ProviderName,
+                Message = response.LatestMessageCreatedByEmployer
+            });
         }
 
         private async Task<string> GetProviderName(long providerId)

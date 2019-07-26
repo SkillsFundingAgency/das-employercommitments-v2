@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Shared.Interfaces;
@@ -60,9 +61,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         }
 
         [Test, AutoData]
-        public async Task PostMessage_WithValidRequest_ShouldAddCohortAndReturnRedirectResult(MessageViewModel model)
+        public async Task PostMessage_WithValidRequest_ShouldAddCohortAndReturnRedirectResult(MessageViewModel model, CreateCohortResponse createCohortResponse)
         {
-            _fixture.WithProviderName("ProviderName");
+            _fixture.WithProviderName("ProviderName").SetCreateCohortResponse(createCohortResponse);
 
             var result = await _fixture.Sut.Message(model);
 
@@ -71,6 +72,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
 
             var redirect = result.VerifyReturnsRedirectToActionResult();
             Assert.AreEqual(redirect.ActionName, "Finished");
+            Assert.AreEqual(redirect.RouteValues["AccountHashedId"], model.AccountHashedId);
+            Assert.AreEqual(redirect.RouteValues["CohortReference"], createCohortResponse.CohortReference);
         }
 
         [Test, AutoData]
@@ -90,6 +93,30 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
 
             var result = await _fixture.Sut.Message(model);
             result.VerifyReturnsViewModel().WithModel<MessageViewModel>();
+        }
+
+        [Test, AutoData]
+        public async Task GetFinished_ValidModel_ShouldReturnFinishedViewModelWithMappedValues(FinishedRequest request, GetCohortResponse getCohortResponse)
+        {
+            _fixture.SetGetCohortResponse(getCohortResponse);
+
+            var response = await _fixture.Sut.Finished(request);
+            var model = response.VerifyReturnsViewModel().WithModel<FinishedViewModel>();
+            
+            Assert.AreEqual(model.CohortReference, request.CohortReference);
+            Assert.AreEqual(model.LegalEntityName, getCohortResponse.LegalEntityName);
+            Assert.AreEqual(model.ProviderName, getCohortResponse.ProviderName);
+            Assert.AreEqual(model.Message, getCohortResponse.LatestMessageCreatedByEmployer);
+        }
+
+        [Test]
+        public async Task GetFinished_InvalidModel_ShouldReturnBadRequestResponse()
+        {
+            _fixture.WithInvalidModel();
+            
+            var response = await _fixture.Sut.Finished(null);
+            
+            Assert.IsTrue(response is BadRequestObjectResult);
         }
     }
 
@@ -118,6 +145,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         public CreateCohortWithOtherPartyControllerTestFixture WithInvalidModel()
         {
             Sut.ModelState.AddModelError("AKey", "Some Error");
+            return this;
+        }
+
+        public CreateCohortWithOtherPartyControllerTestFixture SetCreateCohortResponse(CreateCohortResponse createCohortResponse)
+        {
+            CommitmentsApiClientMock.Setup(c => c.CreateCohort(It.IsAny<CreateCohortWithOtherPartyRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(createCohortResponse);
+
+            return this;
+        }
+
+        public CreateCohortWithOtherPartyControllerTestFixture SetGetCohortResponse(GetCohortResponse getCohortResponse)
+        {
+            CommitmentsApiClientMock.Setup(c => c.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(getCohortResponse);
+            
             return this;
         }
 
