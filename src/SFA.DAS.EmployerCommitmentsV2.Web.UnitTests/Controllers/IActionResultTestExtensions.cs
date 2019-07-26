@@ -23,7 +23,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests
             return result.VerifyResponseObjectType<RedirectToActionResult>();
         }
 
-
         public static IActionResult VerifyReturnsBadRequest(this IActionResult result)
         {
             var badRequest = result.VerifyResponseObjectType<BadRequestResult>();
