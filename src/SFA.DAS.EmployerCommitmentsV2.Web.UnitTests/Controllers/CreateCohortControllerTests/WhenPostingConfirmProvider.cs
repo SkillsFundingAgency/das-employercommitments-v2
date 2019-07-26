@@ -42,6 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             ValidationResult validationResult,
             ValidationFailure error,
             [Frozen] Mock<IValidator<ConfirmProviderViewModel>> mockValidator,
+            [Frozen] Mock<IMapper<ConfirmProviderViewModel, AssignRequest>> mockMapper,
             CreateCohortController controller)
         {
             viewModel.UseThisProvider = true;
@@ -49,6 +50,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             var result = controller.ConfirmProvider(viewModel) as RedirectToActionResult;
 
             result.ActionName.Should().Be("assign");
+            result.RouteValues.Should().NotBeEmpty();
+            mockMapper.Verify(x=>x.Map(viewModel), Times.Once);
         }
 
 

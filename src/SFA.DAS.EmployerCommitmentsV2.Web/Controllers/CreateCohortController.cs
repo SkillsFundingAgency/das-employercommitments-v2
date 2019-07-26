@@ -25,6 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> _confirmProviderViewModelMapper;
 		private readonly IMapper<AssignRequest, AssignViewModel> _assignViewModelMapper;
         private readonly IMapper<ConfirmProviderViewModel, SelectProviderViewModel> _selectProviderFromConfirmMapper;
+        private readonly IMapper<ConfirmProviderViewModel, AssignRequest> _assignRequestMapper;
         private readonly IValidator<SelectProviderViewModel> _selectProviderViewModelValidator;
         private readonly IValidator<ConfirmProviderViewModel> _confirmProviderViewModelValidator;
         private readonly ILinkGenerator _linkGenerator;
@@ -37,7 +38,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             IMapper<SelectProviderViewModel, ConfirmProviderRequest> confirmProviderRequestMapper,
 			IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> confirmProviderViewModelMapper,
             IMapper<ConfirmProviderViewModel, SelectProviderViewModel> selectProviderFromConfirmMapper,
-			IMapper<AssignRequest, AssignViewModel> assignViewModelMapper,
+            IMapper<ConfirmProviderViewModel, AssignRequest> assignRequestMapper,
+            IMapper<AssignRequest, AssignViewModel> assignViewModelMapper,
             IValidator<SelectProviderViewModel> selectProviderViewModelValidator,
             IValidator<ConfirmProviderViewModel> confirmProviderViewModelValidator,
             ILinkGenerator linkGenerator,
@@ -50,6 +52,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             _confirmProviderRequestMapper = confirmProviderRequestMapper;
             _confirmProviderViewModelMapper = confirmProviderViewModelMapper;
             _selectProviderFromConfirmMapper = selectProviderFromConfirmMapper;
+            _assignRequestMapper = assignRequestMapper;
             _selectProviderViewModelValidator = selectProviderViewModelValidator;
             _confirmProviderViewModelValidator = confirmProviderViewModelValidator;
             _linkGenerator = linkGenerator;
@@ -150,7 +153,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (request.UseThisProvider.Value)
             {
-                return RedirectToAction("assign");
+                var model = _assignRequestMapper.Map(request);
+                return RedirectToAction("assign", model);
             }
 
             var returnModel = _selectProviderFromConfirmMapper.Map(request);
@@ -183,11 +187,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var routeValues = new
             {
                 model.AccountHashedId,
-                model.EmployerAccountLegalEntityPublicHashedId,
+                model.AccountLegalEntityPublicHashedId,
                 model.ReservationId,
                 model.StartMonthYear,
                 model.CourseCode,
-                model.UkPrn
+                model.ProviderId
             };
 
             switch (model.WhoIsAddingApprentices)

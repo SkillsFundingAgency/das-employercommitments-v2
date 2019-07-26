@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         {
             var viewModel = mapper.Map(request);
 
-            viewModel.EmployerAccountLegalEntityPublicHashedId.Should().Be(request.EmployerAccountLegalEntityPublicHashedId);
+            viewModel.AccountLegalEntityPublicHashedId.Should().Be(request.EmployerAccountLegalEntityPublicHashedId);
         }
 
         [Test, AutoData]
@@ -65,7 +65,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         {
             var viewModel = mapper.Map(request);
 
-            viewModel.UkPrn.Should().Be(request.UkPrn);
+            viewModel.ProviderId.Should().Be(request.ProviderId);
         }
     }
 }

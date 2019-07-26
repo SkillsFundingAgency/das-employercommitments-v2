@@ -34,11 +34,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             var expectedRouteValues = new RouteValueDictionary(new
             {
                 viewModel.AccountHashedId,
-                viewModel.EmployerAccountLegalEntityPublicHashedId,
+                viewModel.AccountLegalEntityPublicHashedId,
                 viewModel.ReservationId,
                 viewModel.StartMonthYear,
                 viewModel.CourseCode,
-                viewModel.UkPrn
+                viewModel.ProviderId
             });
             viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Employer;
 
@@ -57,11 +57,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             var expectedRouteValues = new RouteValueDictionary(new
             {
                 viewModel.AccountHashedId,
-                viewModel.EmployerAccountLegalEntityPublicHashedId,
+                viewModel.AccountLegalEntityPublicHashedId,
                 viewModel.ReservationId,
                 viewModel.StartMonthYear,
                 viewModel.CourseCode,
-                viewModel.UkPrn
+                viewModel.ProviderId
             });
             viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Provider;
 
