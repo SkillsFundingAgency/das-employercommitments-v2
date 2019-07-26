@@ -4,15 +4,42 @@
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl">Select Provider</h1>
 
-        <form method="post">
-            <partial name="_SelectProviderHiddenPartial" model="@Model" />
+        <partial name="_ValidationSummary" />
+
+        <h1 class="govuk-heading-xl">Add training provider details</h1>
+
+        <form method="post" asp-action="SelectProvider">
             
-            <span>UKPRN: </span><input type="text" name="providerId"/>
+            <partial name="_SelectProviderHiddenPartial"/>
 
-            <button type="submit" class="govuk-button">Search</button>
+            <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
+                <label class="govuk-heading-s " for="error-message-ProviderId">
+                    UK Provider Reference Number
+                </label>
 
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <span id="provider-search-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> Number not recognised. Check the number you've entered is correct or contact your training provider for help.
+                    </span>
+                }
+                <input class="govuk-input @(ViewData.ModelState.IsValid ? "" : "govuk-input--error")" id="error-message-ProviderId" name="ProviderId" type="text">
+            </div>
+
+            <details class="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        What is a UK Provider Reference Number?
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    A UK Provider Reference Number (UKPRN) is a unique, 8-digit number that identifies a training provider. Your training provider can tell you their UKPRN.
+                </div>
+            </details>
+            <button type="submit" class="govuk-button" tabindex="1">
+                Continue
+            </button>
         </form>
 
 
