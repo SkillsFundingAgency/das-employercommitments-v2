@@ -85,6 +85,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("select-provider")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SelectProvider(SelectProviderViewModel request)
         {
             try
@@ -142,6 +143,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("confirm-provider")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult ConfirmProvider(ConfirmProviderViewModel request)
         {
             var validationResult = _confirmProviderViewModelValidator.Validate(request);
@@ -177,6 +179,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("assign")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Assign(AssignViewModel model)
         {
             if (!ModelState.IsValid)

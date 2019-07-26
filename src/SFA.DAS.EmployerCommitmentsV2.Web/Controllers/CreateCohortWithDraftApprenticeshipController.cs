@@ -67,6 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpPost]
         [Route("add")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipViewModel model)
         {
             if (!ModelState.IsValid)
