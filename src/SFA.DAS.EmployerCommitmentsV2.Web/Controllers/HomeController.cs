@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Authorization.Mvc.Attributes;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    [Authorize]
+    [DasAuthorize(EmployerFeature.EmployerCommitmentsV2)]
     [Route("")]
     public class HomeController : Controller
     {
