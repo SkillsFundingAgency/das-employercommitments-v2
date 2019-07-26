@@ -84,34 +84,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         }
 
         [Test, MoqAutoData]
-        public void AndTheEmployerLegalEntityPublicHashedIdIsEmpty_ThenReturnsInvalid(
-            SelectProviderViewModel viewModel,
-            long providerId,
-            SelectProviderViewModelValidator validator)
-        {
-            viewModel.ProviderId = providerId.ToString();
-            viewModel.EmployerAccountLegalEntityPublicHashedId = string.Empty;
-
-            var result = validator.Validate(viewModel);
-
-            Assert.False(result.IsValid);
-        }
-
-        [Test, MoqAutoData]
-        public void AndTheEmployerLegalEntityPublicHashedIdIsWhiteSpace_ThenReturnsInvalid(
-            SelectProviderViewModel viewModel,
-            long providerId,
-            SelectProviderViewModelValidator validator)
-        {
-            viewModel.ProviderId = providerId.ToString();
-            viewModel.EmployerAccountLegalEntityPublicHashedId = "  ";
-
-            var result = validator.Validate(viewModel);
-
-            Assert.False(result.IsValid);
-        }
-
-        [Test, MoqAutoData]
         public void AndViewModelIsValid_ThenReturnsValid(
             SelectProviderViewModel viewModel,
             long providerId,
