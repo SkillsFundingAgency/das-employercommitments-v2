@@ -57,7 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 var request = _createCohortWithOtherPartyMapper.Map(model);
                 await _commitmentsApiClient.CreateCohort(request);
-                return RedirectToAction("Finished");
+                return RedirectToAction("Finished", new {model.AccountHashedId});
             }
             catch (CommitmentsApiModelException ex)
             {

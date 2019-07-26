@@ -20,7 +20,7 @@
 
             <div class="govuk-form-group  @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
                 <label class="govuk-label govuk-!-font-weight-bold" for="Message">Message (optional)</label>
-                <textarea class="govuk-textarea" id="Message" name="Message" cols="40" rows="10"></textarea>
+                @Html.TextAreaFor(m=>m.Message, new {@class = "govuk-textarea", cols = 40, rows = 10  })
             </div>
 
             <button type="submit" class="govuk-button">Send</button>
