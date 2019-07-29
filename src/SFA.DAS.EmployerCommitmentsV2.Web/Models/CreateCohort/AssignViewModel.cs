@@ -6,7 +6,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
     {
         public string AccountHashedId { get; set; }
         public string ReservationId { get; set; }
-        public string AccountLegalEntityPublicHashedId { get; set; }
+        public string AccountLegalEntityHashedId { get; set; }
         public string StartMonthYear { get; set; }
         public string CourseCode { get; set; }
         public long ProviderId { get; set; }

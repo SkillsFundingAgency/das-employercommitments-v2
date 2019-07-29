@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         {
             var viewModel = mapper.Map(request);
 
-            viewModel.EmployerAccountLegalEntityPublicHashedId.Should().Be(request.EmployerAccountLegalEntityPublicHashedId);
+            viewModel.AccountLegalEntityHashedId.Should().Be(request.AccountLegalEntityHashedId);
         }
 
         [Test, AutoData]

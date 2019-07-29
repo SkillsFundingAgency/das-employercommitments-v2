@@ -58,7 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         {
             var result = mapper.Map(request);
 
-            Assert.AreEqual(request.EmployerAccountLegalEntityPublicHashedId, result.EmployerAccountLegalEntityPublicHashedId);
+            Assert.AreEqual(request.AccountLegalEntityHashedId, result.AccountLegalEntityHashedId);
         }
 
         [Test, MoqAutoData]

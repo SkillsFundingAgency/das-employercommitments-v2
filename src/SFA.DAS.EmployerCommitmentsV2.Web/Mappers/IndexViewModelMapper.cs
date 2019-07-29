@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
             return new IndexViewModel
             {
                 AccountHashedId = source.AccountHashedId,
-                EmployerAccountLegalEntityPublicHashedId = source.EmployerAccountLegalEntityPublicHashedId,
+                AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 ReservationId = source.ReservationId,
                 StartMonthYear = source.StartMonthYear,
                 CourseCode = source.CourseCode

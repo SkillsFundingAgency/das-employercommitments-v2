@@ -34,7 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             var expectedRouteValues = new RouteValueDictionary(new
             {
                 viewModel.AccountHashedId,
-                viewModel.AccountLegalEntityPublicHashedId,
+                viewModel.AccountLegalEntityHashedId,
                 viewModel.ReservationId,
                 viewModel.StartMonthYear,
                 viewModel.CourseCode,
@@ -58,7 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             var expectedRouteValues = new RouteValueDictionary(new
             {
                 viewModel.AccountHashedId,
-                viewModel.AccountLegalEntityPublicHashedId,
+                viewModel.AccountLegalEntityHashedId,
                 viewModel.ReservationId,
                 viewModel.StartMonthYear,
                 viewModel.CourseCode,

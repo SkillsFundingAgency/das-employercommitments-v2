@@ -12,7 +12,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
                 AccountHashedId = source.AccountHashedId,
                 CourseCode = source.CourseCode,
                 ReservationId = source.ReservationId,
-                EmployerAccountLegalEntityPublicHashedId = source.EmployerAccountLegalEntityPublicHashedId,
+                AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 StartMonthYear = source.StartMonthYear,
                 ProviderId = source.ProviderId
             };

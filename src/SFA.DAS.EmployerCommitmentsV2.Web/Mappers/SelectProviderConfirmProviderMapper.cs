@@ -13,7 +13,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
                 ReservationId = source.ReservationId,
                 CourseCode = source.CourseCode,
                 AccountHashedId = source.AccountHashedId,
-                EmployerAccountLegalEntityPublicHashedId = source.EmployerAccountLegalEntityPublicHashedId,
+                AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 StartMonthYear = source.StartMonthYear
             };
         }

@@ -190,7 +190,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var routeValues = new
             {
                 model.AccountHashedId,
-                model.AccountLegalEntityPublicHashedId,
+                model.AccountLegalEntityHashedId,
                 model.ReservationId,
                 model.StartMonthYear,
                 model.CourseCode,
