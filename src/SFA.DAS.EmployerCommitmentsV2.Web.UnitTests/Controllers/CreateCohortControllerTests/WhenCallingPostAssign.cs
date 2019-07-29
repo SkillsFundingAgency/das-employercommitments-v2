@@ -45,7 +45,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             var result = controller.Assign(viewModel) as RedirectToActionResult;
 
             result.Should().NotBeNull();
-            result.ActionName.Should().Be("Apprentice");
+            result.ActionName.Should().Be("AddDraftApprenticeship");
+            result.ControllerName.Should().Be("CreateCohortWithDraftApprenticeship");
             result.RouteValues.Should().BeEquivalentTo(expectedRouteValues);
         }
 

@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
-using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Extensions;
 using SFA.DAS.Commitments.Shared.Interfaces;
@@ -18,7 +17,7 @@ using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    [Route("{AccountHashedId}/organisations/{AccountLegalEntityHashedId}/unapproved/")]
+    [Route("{AccountHashedId}/unapproved/add")]
     [DasAuthorize()]
     public class CreateCohortWithDraftApprenticeshipController : Controller
     {
@@ -43,7 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
-        [Route("add")]
+        [Route("apprentice")]
         public async Task<IActionResult> AddDraftApprenticeship(CreateCohortWithDraftApprenticeshipRequest request)
         {
             if (!ModelState.IsValid)
@@ -66,7 +65,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpPost]
-        [Route("add")]
+        [Route("apprentice")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipViewModel model)
         {
