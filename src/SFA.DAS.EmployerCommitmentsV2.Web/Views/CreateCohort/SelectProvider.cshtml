@@ -25,7 +25,7 @@
                         <span class="govuk-visually-hidden">Error:</span> Number not recognised. Check the number you've entered is correct or contact your training provider for help.
                     </span>
                 }
-                <input class="govuk-input @(ViewData.ModelState.IsValid ? "" : "govuk-input--error")" id="error-message-ProviderId" name="ProviderId" type="text">
+                <input asp-for="ProviderId" class="govuk-input @(ViewData.ModelState.IsValid ? "" : "govuk-input--error")" id="error-message-ProviderId"/>
             </div>
 
             <details class="govuk-details">
@@ -38,7 +38,7 @@
                     A UK Provider Reference Number (UKPRN) is a unique, 8-digit number that identifies a training provider. Your training provider can tell you their UKPRN.
                 </div>
             </details>
-            <button type="submit" class="govuk-button" tabindex="1">
+            <button type="submit" class="govuk-button">
                 Continue
             </button>
         </form>
