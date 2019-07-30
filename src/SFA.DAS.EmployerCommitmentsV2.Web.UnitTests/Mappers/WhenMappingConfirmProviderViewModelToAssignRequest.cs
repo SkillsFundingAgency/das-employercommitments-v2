@@ -1,4 +1,7 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using AutoFixture.NUnit3;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
@@ -6,14 +9,12 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 {
-    [TestFixture]
-    public class WhenMappingSelectProviderRequestToViewModel
+    public class WhenMappingConfirmProviderViewModelToAssignRequest
     {
-
         [Test, AutoData]
         public void ThenMapsReservationId(
-            SelectProviderRequest request,
-            SelectProviderViewModelMapper mapper)
+            ConfirmProviderViewModel request,
+            ConfirmProviderAssignRequestMapper mapper)
         {
             var result = mapper.Map(request);
 
@@ -22,8 +23,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 
         [Test, MoqAutoData]
         public void ThenMapsAccountHashedId(
-            SelectProviderRequest request,
-            SelectProviderViewModelMapper mapper)
+            ConfirmProviderViewModel request,
+            ConfirmProviderAssignRequestMapper mapper)
         {
             var result = mapper.Map(request);
 
@@ -32,8 +33,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 
         [Test, MoqAutoData]
         public void ThenMapsCourseCode(
-            SelectProviderRequest request,
-            SelectProviderViewModelMapper mapper)
+            ConfirmProviderViewModel request,
+            ConfirmProviderAssignRequestMapper mapper)
         {
             var result = mapper.Map(request);
 
@@ -42,8 +43,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 
         [Test, MoqAutoData]
         public void ThenMapsStartMonthYear(
-            SelectProviderRequest request,
-            SelectProviderViewModelMapper mapper)
+            ConfirmProviderViewModel request,
+            ConfirmProviderAssignRequestMapper mapper)
         {
             var result = mapper.Map(request);
 
@@ -52,12 +53,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 
         [Test, MoqAutoData]
         public void ThenMapsEmployerAccountLegalEntityPublicHashedId(
-            SelectProviderRequest request,
-            SelectProviderViewModelMapper mapper)
+            ConfirmProviderViewModel request,
+            ConfirmProviderAssignRequestMapper mapper)
         {
             var result = mapper.Map(request);
 
             Assert.AreEqual(request.AccountLegalEntityHashedId, result.AccountLegalEntityHashedId);
+        }
+
+        [Test, MoqAutoData]
+        public void ThenMapsProviderId(
+            ConfirmProviderViewModel request,
+            ConfirmProviderAssignRequestMapper mapper)
+        {
+            var result = mapper.Map(request);
+
+            Assert.AreEqual(request.ProviderId, result.ProviderId);
         }
     }
 }

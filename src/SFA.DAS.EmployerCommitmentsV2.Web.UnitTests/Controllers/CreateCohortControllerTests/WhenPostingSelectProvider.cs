@@ -14,10 +14,6 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading.Tasks;
-using Castle.Core.Logging;
-using Microsoft.AspNetCore.Http.Connections.Internal;
-using Microsoft.Extensions.Logging;
-using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortControllerTests
@@ -30,15 +26,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             SelectProviderViewModel viewModel,
             ValidationResult validationResult,
             ValidationFailure error,
+            string errorKey,
+            string errorMessage,
             [Frozen] Mock<IValidator<SelectProviderViewModel>> mockValidator,
             CreateCohortController controller)
         {
-            validationResult.Errors.Add(error);
-            mockValidator
-                .Setup(x => x.Validate(viewModel))
-                .Returns(validationResult);
+            controller.ModelState.AddModelError(errorKey, errorMessage);
 
             var result = await controller.SelectProvider(viewModel) as ViewResult;
+
             Assert.Null(result.ViewName);
             Assert.AreSame(viewModel,result.ViewData.Model);
 
@@ -164,14 +160,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             SelectProviderViewModel viewModel,
             CreateCohortController controller)
         {
-            controller.ModelState.AddModelError(nameof(viewModel.EmployerAccountLegalEntityPublicHashedId), "Must be set");
+            controller.ModelState.AddModelError(nameof(viewModel.AccountLegalEntityHashedId), "Must be set");
 
-            var result = await controller.SelectProvider(viewModel) as RedirectToActionResult;
+            var result = await controller.SelectProvider(viewModel) as ViewResult;
 
             Assert.NotNull(result);
-            Assert.AreEqual("Error", result.ControllerName);
-            Assert.AreEqual("Error", result.ActionName);
-            Assert.AreEqual(400, (int) result.RouteValues["StatusCode"]);
         }
 
     }

@@ -6,55 +6,43 @@ using NUnit.Framework;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
-using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortControllerTests
 {
-    public class WhenCallingGetIndex
+    public class WhenCallingGetAssign
     {
         [Test, MoqAutoData]
         public void And_ModelState_Invalid_Then_Redirect_To_Error(
-            IndexRequest request,
+            AssignRequest request,
             string errorKey,
             string errorMessage,
             CreateCohortController controller)
         {
             controller.ModelState.AddModelError(errorKey, errorMessage);
 
-            var result = controller.Index(request) as RedirectToActionResult;
+            var result = controller.Assign(request) as RedirectToActionResult;
 
             result.ActionName.Should().Be("Error");
             result.ControllerName.Should().Be("Error");
         }
-        
+
         [Test, MoqAutoData]
-        public void Then_Returns_View_With_Correct_ViewModel(
-            IndexRequest request,
-            IndexViewModel viewModel,
-            string organisationsLink,
-            string schemesLink,
-            [Frozen] Mock<IMapper<IndexRequest, IndexViewModel>> mockMapper,
-            [Frozen] Mock<ILinkGenerator> mockLinkGenerator,
+        public void Then_Returns_View_With_Correct_Model(
+            AssignRequest request,
+            AssignViewModel viewModel,
+            [Frozen] Mock<IMapper<AssignRequest, AssignViewModel>> mockMapper,
             CreateCohortController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map(request))
                 .Returns(viewModel);
-            mockLinkGenerator
-                .Setup(generator => generator.YourOrganisationsAndAgreements(request.AccountHashedId))
-                .Returns(organisationsLink);
-            mockLinkGenerator
-                .Setup(generator => generator.PayeSchemes(request.AccountHashedId))
-                .Returns(schemesLink);
 
-            var result = controller.Index(request) as ViewResult;
+            var result = controller.Assign(request) as ViewResult;
 
             result.ViewName.Should().BeNull();
-            var model = result.Model as IndexViewModel;
+            var model = result.Model as AssignViewModel;
             model.Should().BeSameAs(viewModel);
-            model.OrganisationsLink.Should().Be(organisationsLink);
-            model.PayeSchemesLink.Should().Be(schemesLink);
         }
     }
 }
