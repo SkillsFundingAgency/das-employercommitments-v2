@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
