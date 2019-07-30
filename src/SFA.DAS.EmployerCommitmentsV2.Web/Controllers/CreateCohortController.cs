@@ -84,11 +84,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SelectProvider(SelectProviderViewModel request)
         {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToAction("Error", "Error", new { StatusCode = 400 });
-            }
-
             try
             {
                 if (!ModelState.IsValid)

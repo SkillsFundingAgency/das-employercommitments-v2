@@ -160,14 +160,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             SelectProviderViewModel viewModel,
             CreateCohortController controller)
         {
-            controller.ModelState.AddModelError(nameof(viewModel.EmployerAccountLegalEntityPublicHashedId), "Must be set");
+            controller.ModelState.AddModelError(nameof(viewModel.AccountLegalEntityHashedId), "Must be set");
 
-            var result = await controller.SelectProvider(viewModel) as RedirectToActionResult;
+            var result = await controller.SelectProvider(viewModel) as ViewResult;
 
             Assert.NotNull(result);
-            Assert.AreEqual("Error", result.ControllerName);
-            Assert.AreEqual("Error", result.ActionName);
-            Assert.AreEqual(400, (int) result.RouteValues["StatusCode"]);
         }
 
     }
