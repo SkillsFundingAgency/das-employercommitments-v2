@@ -4,6 +4,10 @@
 @{
     ViewData["Title"] = "Apprenticeships";
     ViewBag.Title = "Start adding apprentices";
+
+    var customErrorKeys = new Dictionary<string, string> { { $"error-message-{nameof(AssignViewModel.WhoIsAddingApprentices)}", "WhoIsAddingApprentices" } };
+
+    ViewData["CustomErrorKeys"] = customErrorKeys;
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">

@@ -9,6 +9,7 @@
 
                 @{
                     var explorer = ViewData.ModelExplorer;
+                    var customErrorKeys = ViewData["CustomErrorKeys"] as Dictionary<string, string>;
                     foreach (var property in explorer.Properties)
                     {
                         var propertyName = property.Metadata.PropertyName;
@@ -18,8 +19,16 @@
                         {
                             foreach (var error in errors)
                             {
+
+                                var propertyLink = $"error-message-{propertyName}";
+                                if (customErrorKeys!=null && customErrorKeys.ContainsKey(propertyLink))
+                                {
+                                    propertyLink = customErrorKeys[propertyLink];
+                                }
+                                propertyLink = $"#{propertyLink}";
+
                                 <li>
-                                    <a href="#error-message-@propertyName" data-focuses="error-message-@propertyName">
+                                    <a href="@propertyLink" data-focuses="@propertyLink">
                                         @error.ErrorMessage
                                     </a>
                                 </li>
