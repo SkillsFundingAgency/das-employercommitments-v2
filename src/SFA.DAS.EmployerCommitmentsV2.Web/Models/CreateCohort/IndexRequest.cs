@@ -5,12 +5,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
 {
     public class IndexRequest
     {
-        [Required]
         [FromRoute]
+        [Required]
         public string AccountHashedId { get; set; }
         public string ReservationId { get; set; }
         [Required]
         public string AccountLegalEntityHashedId { get; set; }
+
         public string StartMonthYear { get; set; }
         public string CourseCode { get; set; }
     }
