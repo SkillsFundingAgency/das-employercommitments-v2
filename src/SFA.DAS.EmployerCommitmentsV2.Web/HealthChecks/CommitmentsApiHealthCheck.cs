@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.HealthChecks
             
             return response.Roles.Contains(Role.Employer) && !response.Roles.Contains(Role.Provider)
                 ? HealthCheckResult.Healthy(null, data)
-                : HealthCheckResult.Unhealthy(null, null, data);
+                : HealthCheckResult.Unhealthy($"Client should be in '{Role.Employer}' role and not be in '{Role.Provider}' role", null, data);
         }
     }
 }
