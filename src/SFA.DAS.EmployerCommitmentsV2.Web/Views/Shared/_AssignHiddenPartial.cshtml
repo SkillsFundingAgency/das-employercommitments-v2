@@ -1,8 +1,9 @@
 ﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort.AssignViewModel
 
-@Html.HiddenFor(x => x.AccountHashedId)
-@Html.HiddenFor(x => x.AccountLegalEntityHashedId)
-@Html.HiddenFor(x => x.ReservationId)
-@Html.HiddenFor(x => x.CourseCode)
-@Html.HiddenFor(x => x.StartMonthYear)
-@Html.HiddenFor(x => x.ProviderId)
+
+<input type="hidden" asp-for="AccountHashedId">
+<input type="hidden" asp-for="AccountLegalEntityHashedId">
+<input type="hidden" asp-for="ReservationId">
+<input type="hidden" asp-for="CourseCode">
+<input type="hidden" asp-for="StartMonthYear">
+<input type="hidden" asp-for="ProviderId">
