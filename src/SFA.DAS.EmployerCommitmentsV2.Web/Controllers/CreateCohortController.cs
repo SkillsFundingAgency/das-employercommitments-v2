@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    [DasAuthorize(EmployerUserRole.Owner)]
+    [DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
     [Route("{accountHashedId}/unapproved/add")]
     public class CreateCohortController : Controller
     {
@@ -23,9 +21,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IMapper<SelectProviderRequest, SelectProviderViewModel> _selectProviderViewModelMapper;
         private readonly IMapper<SelectProviderViewModel, ConfirmProviderRequest> _confirmProviderRequestMapper;
         private readonly IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> _confirmProviderViewModelMapper;
+		private readonly IMapper<AssignRequest, AssignViewModel> _assignViewModelMapper;
         private readonly IMapper<ConfirmProviderViewModel, SelectProviderViewModel> _selectProviderFromConfirmMapper;
-        private readonly IValidator<SelectProviderViewModel> _selectProviderViewModelValidator;
-        private readonly IValidator<ConfirmProviderViewModel> _confirmProviderViewModelValidator;
+        private readonly IMapper<ConfirmProviderViewModel, AssignRequest> _assignRequestMapper;
         private readonly ILinkGenerator _linkGenerator;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly ILogger<CreateCohortController> _logger;
@@ -34,21 +32,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             IMapper<IndexRequest, IndexViewModel> indexViewModelMapper,
             IMapper<SelectProviderRequest, SelectProviderViewModel> selectProviderViewModelMapper,
             IMapper<SelectProviderViewModel, ConfirmProviderRequest> confirmProviderRequestMapper,
-            IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> confirmProviderViewModelMapper,
+			IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> confirmProviderViewModelMapper,
             IMapper<ConfirmProviderViewModel, SelectProviderViewModel> selectProviderFromConfirmMapper,
-            IValidator<SelectProviderViewModel> selectProviderViewModelValidator,
-            IValidator<ConfirmProviderViewModel> confirmProviderViewModelValidator,
+            IMapper<ConfirmProviderViewModel, AssignRequest> assignRequestMapper,
+            IMapper<AssignRequest, AssignViewModel> assignViewModelMapper,
             ILinkGenerator linkGenerator,
             ICommitmentsApiClient commitmentsApiClient,
             ILogger<CreateCohortController> logger)
         {
             _indexViewModelMapper = indexViewModelMapper;
-            _selectProviderViewModelMapper = selectProviderViewModelMapper;
+ 			_selectProviderViewModelMapper = selectProviderViewModelMapper;
+			_assignViewModelMapper = assignViewModelMapper;
             _confirmProviderRequestMapper = confirmProviderRequestMapper;
             _confirmProviderViewModelMapper = confirmProviderViewModelMapper;
             _selectProviderFromConfirmMapper = selectProviderFromConfirmMapper;
-            _selectProviderViewModelValidator = selectProviderViewModelValidator;
-            _confirmProviderViewModelValidator = confirmProviderViewModelValidator;
+            _assignRequestMapper = assignRequestMapper;
             _linkGenerator = linkGenerator;
             _commitmentsApiClient = commitmentsApiClient;
             _logger = logger;
@@ -56,6 +54,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         public IActionResult Index(IndexRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Error", "Error");
+            }
+
             var viewModel = _indexViewModelMapper.Map(request);
 
             viewModel.OrganisationsLink = _linkGenerator.YourOrganisationsAndAgreements(request.AccountHashedId);
@@ -78,9 +81,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             try
             {
-                var validationResult = _selectProviderViewModelValidator.Validate(request);
-
-                if (!validationResult.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return View(request);
                 }
@@ -133,16 +134,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public IActionResult ConfirmProvider(ConfirmProviderViewModel request)
         {
-            var validationResult = _confirmProviderViewModelValidator.Validate(request);
-
-            if (!validationResult.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(request);
             }
 
             if (request.UseThisProvider.Value)
             {
-                return RedirectToAction("assign");
+                var model = _assignRequestMapper.Map(request);
+                return RedirectToAction("assign", model);
             }
 
             var returnModel = _selectProviderFromConfirmMapper.Map(request);
@@ -150,5 +150,53 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return RedirectToAction("SelectProvider", returnModel);
         }
 
+        [Route("assign")]
+        public IActionResult Assign(AssignRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Error", "Error");
+            }
+
+            var viewModel = _assignViewModelMapper.Map(request);
+
+            return View(viewModel);
+        }
+
+        [Route("assign")]
+        [HttpPost]
+        public IActionResult Assign(AssignViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var routeValues = new
+            {
+                model.AccountHashedId,
+                model.AccountLegalEntityHashedId,
+                model.ReservationId,
+                model.StartMonthYear,
+                model.CourseCode,
+                model.ProviderId
+            };
+
+            switch (model.WhoIsAddingApprentices)
+            {
+                case WhoIsAddingApprentices.Employer:
+                    return RedirectToAction("AddDraftApprenticeship","CreateCohortWithDraftApprenticeship", routeValues);
+                case WhoIsAddingApprentices.Provider:
+                    return RedirectToAction("Message", routeValues);
+                default:
+                    return RedirectToAction("Error", "Error");
+            }
+        }
+        
+        [Route("message")]
+        public IActionResult Message(MessageRequest request)
+        {
+            return View();
+        }
     }
 }

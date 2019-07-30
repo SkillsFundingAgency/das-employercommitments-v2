@@ -1,11 +1,11 @@
 ﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
-@model SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort.ConfirmProviderViewModel
+@model ConfirmProviderViewModel
 
 
-<input type="hidden" id="@nameof(ConfirmProviderViewModel.AccountHashedId)" name="@nameof(ConfirmProviderViewModel.AccountHashedId)" value="@Model.AccountHashedId"/>
-<input type="hidden" id="@nameof(ConfirmProviderViewModel.EmployerAccountLegalEntityPublicHashedId)" name="@nameof(ConfirmProviderViewModel.EmployerAccountLegalEntityPublicHashedId)" value="@Model.EmployerAccountLegalEntityPublicHashedId"/>
-<input type="hidden" id="@nameof(ConfirmProviderViewModel.ReservationId)" name="@nameof(ConfirmProviderViewModel.ReservationId)" value="@Model.ReservationId"/>
-<input type="hidden" id="@nameof(ConfirmProviderViewModel.CourseCode)" name="@nameof(ConfirmProviderViewModel.CourseCode)" value="@Model.CourseCode"/>
-<input type="hidden" id="@nameof(ConfirmProviderViewModel.StartMonthYear)" name="@nameof(ConfirmProviderViewModel.StartMonthYear)" value="@Model.StartMonthYear"/>
-<input type="hidden" id="@nameof(ConfirmProviderViewModel.ProviderId)" name="@nameof(ConfirmProviderViewModel.ProviderId)" value="@Model.ProviderId"/>
-<input type="hidden" id="@nameof(ConfirmProviderViewModel.ProviderName)" name="@nameof(ConfirmProviderViewModel.ProviderName)" value="@Model.ProviderName"/>
+<input type="hidden" asp-for="AccountHashedId" >
+<input type="hidden" asp-for="AccountLegalEntityHashedId">
+<input type="hidden" asp-for="ReservationId">
+<input type="hidden" asp-for="CourseCode">
+<input type="hidden" asp-for="StartMonthYear">
+<input type="hidden" asp-for="ProviderId">
+<input type="hidden" asp-for="ProviderName">

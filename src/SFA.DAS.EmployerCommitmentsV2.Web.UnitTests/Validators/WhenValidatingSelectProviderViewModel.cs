@@ -90,7 +90,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             SelectProviderViewModelValidator validator)
         {
             viewModel.ProviderId = providerId.ToString();
-            viewModel.EmployerAccountLegalEntityPublicHashedId = string.Empty;
+            viewModel.AccountLegalEntityHashedId = string.Empty;
 
             var result = validator.Validate(viewModel);
 
@@ -104,7 +104,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             SelectProviderViewModelValidator validator)
         {
             viewModel.ProviderId = providerId.ToString();
-            viewModel.EmployerAccountLegalEntityPublicHashedId = "  ";
+            viewModel.AccountLegalEntityHashedId = "  ";
 
             var result = validator.Validate(viewModel);
 
@@ -119,7 +119,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             SelectProviderViewModelValidator validator)
         {
             viewModel.ProviderId = providerId.ToString();
-            viewModel.EmployerAccountLegalEntityPublicHashedId = someString;
+            viewModel.AccountLegalEntityHashedId = someString;
 
             var result = validator.Validate(viewModel);
 

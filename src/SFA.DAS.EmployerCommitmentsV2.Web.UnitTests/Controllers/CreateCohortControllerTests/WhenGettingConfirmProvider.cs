@@ -18,15 +18,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
     {
         [Test, MoqAutoData]
         public async Task Then_The_View_Is_Returned(
-            int ukPrn,
+            int providerId,
             ConfirmProviderRequest confirmProviderRequest,
             GetProviderResponse getProviderResponse,
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             CreateCohortController controller)
         {
-            confirmProviderRequest.ProviderId = ukPrn;
+            confirmProviderRequest.ProviderId = providerId;
             mockApiClient
-                .Setup(x => x.GetProvider(ukPrn, It.IsAny<CancellationToken>()))
+                .Setup(x => x.GetProvider(providerId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(getProviderResponse);
 
             var result = await controller.ConfirmProvider(confirmProviderRequest) as ViewResult;
@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
 
         [Test, MoqAutoData]
         public async Task Then_The_Provider_Details_Are_Populated_From_The_UkPrn(
-            int ukPrn,
+            int providerId,
             ConfirmProviderRequest confirmProviderRequest,
             GetProviderResponse getProviderResponse,
             ConfirmProviderViewModel viewModel,
@@ -44,9 +44,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             CreateCohortController controller)
         {
-            confirmProviderRequest.ProviderId = ukPrn;
+            confirmProviderRequest.ProviderId = providerId;
             mockApiClient
-                .Setup(x => x.GetProvider(ukPrn, It.IsAny<CancellationToken>()))
+                .Setup(x => x.GetProvider(providerId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(getProviderResponse);
             mapper.Setup(c => c.Map(confirmProviderRequest))
                 .Returns(viewModel);
@@ -60,7 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
 
         [Test, MoqAutoData]
         public async Task Then_If_The_Result_Is_Not_Returned_A_Bad_Request_Is_Returned(
-            int ukPrn,
+            int providerId,
             ConfirmProviderRequest confirmProviderRequest,
             GetProviderResponse getProviderResponse,
             CreateCohortController controller)

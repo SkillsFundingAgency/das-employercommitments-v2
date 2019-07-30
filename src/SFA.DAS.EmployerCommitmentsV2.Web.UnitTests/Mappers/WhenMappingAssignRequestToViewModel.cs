@@ -6,12 +6,12 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 {
-    public class WhenMappingIndexRequestToViewModel
+    public class WhenMappingAssignRequestToViewModel
     {
         [Test, AutoData]
         public void Then_Maps_AccountHashedId(
-            IndexRequest request,
-            IndexViewModelMapper mapper)
+            AssignRequest request,
+            AssignViewModelMapper mapper)
         {
             var viewModel = mapper.Map(request);
 
@@ -20,8 +20,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 
         [Test, AutoData]
         public void Then_Maps_EmployerAccountLegalEntityPublicHashedId(
-            IndexRequest request,
-            IndexViewModelMapper mapper)
+            AssignRequest request,
+            AssignViewModelMapper mapper)
         {
             var viewModel = mapper.Map(request);
 
@@ -30,8 +30,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 
         [Test, AutoData]
         public void Then_Maps_ReservationId(
-            IndexRequest request,
-            IndexViewModelMapper mapper)
+            AssignRequest request,
+            AssignViewModelMapper mapper)
         {
             var viewModel = mapper.Map(request);
 
@@ -40,8 +40,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 
         [Test, AutoData]
         public void Then_Maps_StartMonthYear(
-            IndexRequest request,
-            IndexViewModelMapper mapper)
+            AssignRequest request,
+            AssignViewModelMapper mapper)
         {
             var viewModel = mapper.Map(request);
 
@@ -50,12 +50,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 
         [Test, AutoData]
         public void Then_Maps_CourseCode(
-            IndexRequest request,
-            IndexViewModelMapper mapper)
+            AssignRequest request,
+            AssignViewModelMapper mapper)
         {
             var viewModel = mapper.Map(request);
 
             viewModel.CourseCode.Should().Be(request.CourseCode);
+        }
+
+        [Test, AutoData]
+        public void Then_Maps_UkPrn(
+            AssignRequest request,
+            AssignViewModelMapper mapper)
+        {
+            var viewModel = mapper.Map(request);
+
+            viewModel.ProviderId.Should().Be(request.ProviderId);
         }
     }
 }

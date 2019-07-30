@@ -20,14 +20,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             ConfirmProviderViewModel viewModel,
             ValidationResult validationResult,
             ValidationFailure error,
+            string errorKey,
+            string errorMessage,
             [Frozen] Mock<IValidator<ConfirmProviderViewModel>> mockValidator,
             CreateCohortController controller)
         {
-            validationResult.Errors.Add(error);
-            mockValidator
-                .Setup(x => x.Validate(viewModel))
-                .Returns(validationResult);
-
+            controller.ModelState.AddModelError(errorKey, errorMessage);
+            
             var result = controller.ConfirmProvider(viewModel) as ViewResult;
 
             Assert.IsNotNull(result);
@@ -42,6 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             ValidationResult validationResult,
             ValidationFailure error,
             [Frozen] Mock<IValidator<ConfirmProviderViewModel>> mockValidator,
+            [Frozen] Mock<IMapper<ConfirmProviderViewModel, AssignRequest>> mockMapper,
             CreateCohortController controller)
         {
             viewModel.UseThisProvider = true;
@@ -49,6 +49,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             var result = controller.ConfirmProvider(viewModel) as RedirectToActionResult;
 
             result.ActionName.Should().Be("assign");
+            result.RouteValues.Should().NotBeEmpty();
+            mockMapper.Verify(x=>x.Map(viewModel), Times.Once);
         }
 
 

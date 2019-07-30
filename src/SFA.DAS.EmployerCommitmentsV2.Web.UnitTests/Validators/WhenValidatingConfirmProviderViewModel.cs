@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             viewModel.ProviderId = providerId;
             viewModel.ProviderName = providerName;
             viewModel.UseThisProvider = null;
-            viewModel.EmployerAccountLegalEntityPublicHashedId = employerAccountLegalEntityPublicHashedId;
+            viewModel.AccountLegalEntityHashedId = employerAccountLegalEntityPublicHashedId;
 
             var result = validator.Validate(viewModel);
 

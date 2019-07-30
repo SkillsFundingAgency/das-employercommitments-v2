@@ -9,12 +9,12 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 {
-    public class WhenMappingSelectProviderViewModelToConfirmProviderViewModel
+    public class WhenMappingConfirmProviderViewModelToAssignRequest
     {
         [Test, AutoData]
         public void ThenMapsReservationId(
             ConfirmProviderViewModel request,
-            SelectProviderConfirmProviderMapper mapper)
+            ConfirmProviderAssignRequestMapper mapper)
         {
             var result = mapper.Map(request);
 
@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public void ThenMapsAccountHashedId(
             ConfirmProviderViewModel request,
-            SelectProviderConfirmProviderMapper mapper)
+            ConfirmProviderAssignRequestMapper mapper)
         {
             var result = mapper.Map(request);
 
@@ -34,7 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public void ThenMapsCourseCode(
             ConfirmProviderViewModel request,
-            SelectProviderConfirmProviderMapper mapper)
+            ConfirmProviderAssignRequestMapper mapper)
         {
             var result = mapper.Map(request);
 
@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public void ThenMapsStartMonthYear(
             ConfirmProviderViewModel request,
-            SelectProviderConfirmProviderMapper mapper)
+            ConfirmProviderAssignRequestMapper mapper)
         {
             var result = mapper.Map(request);
 
@@ -54,11 +54,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public void ThenMapsEmployerAccountLegalEntityPublicHashedId(
             ConfirmProviderViewModel request,
-            SelectProviderConfirmProviderMapper mapper)
+            ConfirmProviderAssignRequestMapper mapper)
         {
             var result = mapper.Map(request);
 
             Assert.AreEqual(request.AccountLegalEntityHashedId, result.AccountLegalEntityHashedId);
+        }
+
+        [Test, MoqAutoData]
+        public void ThenMapsProviderId(
+            ConfirmProviderViewModel request,
+            ConfirmProviderAssignRequestMapper mapper)
+        {
+            var result = mapper.Map(request);
+
+            Assert.AreEqual(request.ProviderId, result.ProviderId);
         }
     }
 }
