@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
@@ -79,7 +77,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("select-provider")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SelectProvider(SelectProviderViewModel request)
         {
             try
@@ -135,7 +132,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("confirm-provider")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult ConfirmProvider(ConfirmProviderViewModel request)
         {
             if (!ModelState.IsValid)
@@ -169,7 +165,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("assign")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Assign(AssignViewModel model)
         {
             if (!ModelState.IsValid)
