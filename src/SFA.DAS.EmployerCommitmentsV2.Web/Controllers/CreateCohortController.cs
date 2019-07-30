@@ -26,8 +26,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 		private readonly IMapper<AssignRequest, AssignViewModel> _assignViewModelMapper;
         private readonly IMapper<ConfirmProviderViewModel, SelectProviderViewModel> _selectProviderFromConfirmMapper;
         private readonly IMapper<ConfirmProviderViewModel, AssignRequest> _assignRequestMapper;
-        private readonly IValidator<SelectProviderViewModel> _selectProviderViewModelValidator;
-        private readonly IValidator<ConfirmProviderViewModel> _confirmProviderViewModelValidator;
         private readonly ILinkGenerator _linkGenerator;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly ILogger<CreateCohortController> _logger;
@@ -40,8 +38,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             IMapper<ConfirmProviderViewModel, SelectProviderViewModel> selectProviderFromConfirmMapper,
             IMapper<ConfirmProviderViewModel, AssignRequest> assignRequestMapper,
             IMapper<AssignRequest, AssignViewModel> assignViewModelMapper,
-            IValidator<SelectProviderViewModel> selectProviderViewModelValidator,
-            IValidator<ConfirmProviderViewModel> confirmProviderViewModelValidator,
             ILinkGenerator linkGenerator,
             ICommitmentsApiClient commitmentsApiClient,
             ILogger<CreateCohortController> logger)
@@ -53,8 +49,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             _confirmProviderViewModelMapper = confirmProviderViewModelMapper;
             _selectProviderFromConfirmMapper = selectProviderFromConfirmMapper;
             _assignRequestMapper = assignRequestMapper;
-            _selectProviderViewModelValidator = selectProviderViewModelValidator;
-            _confirmProviderViewModelValidator = confirmProviderViewModelValidator;
             _linkGenerator = linkGenerator;
             _commitmentsApiClient = commitmentsApiClient;
             _logger = logger;
@@ -90,9 +84,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             try
             {
-                var validationResult = _selectProviderViewModelValidator.Validate(request);
-
-                if (!validationResult.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return View(request);
                 }
@@ -146,9 +138,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ConfirmProvider(ConfirmProviderViewModel request)
         {
-            var validationResult = _confirmProviderViewModelValidator.Validate(request);
-
-            if (!validationResult.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(request);
             }

@@ -20,14 +20,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             ConfirmProviderViewModel viewModel,
             ValidationResult validationResult,
             ValidationFailure error,
+            string errorKey,
+            string errorMessage,
             [Frozen] Mock<IValidator<ConfirmProviderViewModel>> mockValidator,
             CreateCohortController controller)
         {
-            validationResult.Errors.Add(error);
-            mockValidator
-                .Setup(x => x.Validate(viewModel))
-                .Returns(validationResult);
-
+            controller.ModelState.AddModelError(errorKey, errorMessage);
+            
             var result = controller.ConfirmProvider(viewModel) as ViewResult;
 
             Assert.IsNotNull(result);
