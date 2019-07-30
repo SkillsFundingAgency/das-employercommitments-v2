@@ -34,18 +34,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             var expectedRouteValues = new RouteValueDictionary(new
             {
                 viewModel.AccountHashedId,
-                viewModel.EmployerAccountLegalEntityPublicHashedId,
+                viewModel.AccountLegalEntityHashedId,
                 viewModel.ReservationId,
                 viewModel.StartMonthYear,
                 viewModel.CourseCode,
-                viewModel.UkPrn
+                viewModel.ProviderId
             });
             viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Employer;
 
             var result = controller.Assign(viewModel) as RedirectToActionResult;
 
             result.Should().NotBeNull();
-            result.ActionName.Should().Be("Apprentice");
+            result.ActionName.Should().Be("AddDraftApprenticeship");
+            result.ControllerName.Should().Be("CreateCohortWithDraftApprenticeship");
             result.RouteValues.Should().BeEquivalentTo(expectedRouteValues);
         }
 
@@ -57,11 +58,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             var expectedRouteValues = new RouteValueDictionary(new
             {
                 viewModel.AccountHashedId,
-                viewModel.EmployerAccountLegalEntityPublicHashedId,
+                viewModel.AccountLegalEntityHashedId,
                 viewModel.ReservationId,
                 viewModel.StartMonthYear,
                 viewModel.CourseCode,
-                viewModel.UkPrn
+                viewModel.ProviderId
             });
             viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Provider;
 

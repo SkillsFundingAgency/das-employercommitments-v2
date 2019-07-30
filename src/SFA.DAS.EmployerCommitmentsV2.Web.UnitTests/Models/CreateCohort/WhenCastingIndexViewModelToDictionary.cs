@@ -33,8 +33,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.CreateCohort
         {
             var dictionary = indexViewModel.ToDictionary();
 
-            dictionary.Should().ContainKey(nameof(IndexViewModel.EmployerAccountLegalEntityPublicHashedId))
-                .WhichValue.Should().Be(indexViewModel.EmployerAccountLegalEntityPublicHashedId);
+            dictionary.Should().ContainKey(nameof(IndexViewModel.AccountLegalEntityHashedId))
+                .WhichValue.Should().Be(indexViewModel.AccountLegalEntityHashedId);
         }
 
         [Test, AutoData]

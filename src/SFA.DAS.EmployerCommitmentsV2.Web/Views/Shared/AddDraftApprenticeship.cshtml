@@ -13,10 +13,12 @@
             <p class="govuk-body">You'll only be able to authorize payments for this apprentice once all the fields have been completed - either by yourself or your training provider</p>
         </div>
 
-        <form id="addApprenticeship" novalidate method="post" action="@Url.Action("AddDraftApprenticeship")">
+        <form id="addApprenticeship" novalidate method="post" action="@Url.Action("AddDraftApprenticeship", "CreateCohortWithDraftApprenticeship")">
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.CohortReference)
             @Html.HiddenFor(x => x.ProviderId)
+            @Html.HiddenFor(x => x.AccountLegalEntityHashedId)
+            
 
             <partial name="DraftApprenticeship" for="@Model" />
 
