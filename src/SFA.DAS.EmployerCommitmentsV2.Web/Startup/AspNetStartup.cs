@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .AddEmployerUrlHelper(_configuration)
                 .AddDasAuthorization()
                 .AddMemoryCache()
-                .AddMaMenuConfiguration(_configuration, "logoutroute", "idamsClientId");
+                .AddDasMaMenuConfiguration(_configuration);
         }
 
         public void ConfigureContainer(Registry registry)
