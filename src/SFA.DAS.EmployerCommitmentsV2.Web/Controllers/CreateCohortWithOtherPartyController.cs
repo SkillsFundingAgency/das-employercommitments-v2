@@ -34,7 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 AccountHashedId = request.AccountHashedId,
                 AccountLegalEntityHashedId = request.EmployerAccountLegalEntityPublicHashedId,
-                ProviderId = request.UkPrn,
+                ProviderId = request.ProviderId,
                 StartMonthYear = request.StartMonthYear,
                 CourseCode = request.CourseCode,
                 ReservationId = request.ReservationId
