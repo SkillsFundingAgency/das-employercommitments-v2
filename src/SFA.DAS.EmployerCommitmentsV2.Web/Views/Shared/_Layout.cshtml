@@ -29,8 +29,8 @@
     document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
 </script>
 <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
-<partial name="_Header"></partial>
-<partial name="_Menu" model="@accountHashedId"></partial>
+<partial name="_Header" />
+<partial name="_Menu" model="@accountHashedId" />
 <div class="govuk-width-container">
 
     <div class="govuk-phase-banner">
@@ -52,7 +52,7 @@
     </main>
 </div>
 
-<partial name="_Footer"></partial>
+<partial name="_Footer" />
 
 <script src="/libs/govuk-frontend/all.js"></script>
 <script>
