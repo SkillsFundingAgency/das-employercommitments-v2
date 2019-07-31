@@ -3,6 +3,7 @@
 
 @{
     string accountHashedId = (string)ViewContext.RouteData.Values["accountHashedId"];
+    ViewBag.HideHeaderBorder = true;
 }
 
 <head>
@@ -25,40 +26,46 @@
     <meta property="og:image" content="/assets/images/govuk-opengraph-image.png"/>
 </head>
 <body class="govuk-template__body">
-<script>
-    document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
-</script>
-<a href="#main-content" class="govuk-skip-link">Skip to main content</a>
-<partial name="_Header" />
-<partial name="_Menu" model="@accountHashedId" />
-<div class="govuk-width-container">
+    <script>
+        document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+    </script>
+    <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+    <partial name="_Header" />
+    <partial name="_Menu" model="@accountHashedId" />
+    <div class="govuk-width-container">
 
-    <div class="govuk-phase-banner">
-        <p class="govuk-phase-banner__content">
-            <strong class="govuk-tag govuk-phase-banner__content__tag ">
-                beta
-            </strong>
-            <span class="govuk-phase-banner__text">
-                This is a new service
-            </span>
-        </p>
+        <div class="govuk-phase-banner">
+            <p class="govuk-phase-banner__content">
+                <strong class="govuk-tag govuk-phase-banner__content__tag ">
+                    beta
+                </strong>
+                <span class="govuk-phase-banner__text">
+                    This is a new service
+                </span>
+            </p>
+        </div>
+
+        <!--TO DO add Back link logic
+        <a href="#" class="govuk-back-link">Back</a>
+        -->
+        <main class="govuk-main-wrapper " id="main-content" role="main">
+            @RenderBody()
+        </main>
     </div>
 
-    <!--TO DO add Back link logic
-    <a href="#" class="govuk-back-link">Back</a>
-    -->
-    <main class="govuk-main-wrapper " id="main-content" role="main">
-        @RenderBody()
-    </main>
-</div>
+    <partial name="_Footer" />
 
-<partial name="_Footer" />
+    <script src="/libs/govuk-frontend/all.js"></script>
+    <script src="/libs/jquery/jquery.min.js"></script>
+    <script src="/js/das-all.js"></script>
+    <script src="/js/app.min.js"></script>
 
-<script src="/libs/govuk-frontend/all.js"></script>
-<script>
-    window.GOVUKFrontend.initAll();
-</script>
-@RenderSection("Scripts", required: false)
+    <script>
+        window.GOVUKFrontend.initAll();
+        window.DASFrontend.initAll();
+    </script>
+
+    @RenderSection("Scripts", required: false)
 
 </body>
 </html>
