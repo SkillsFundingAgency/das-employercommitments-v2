@@ -12,9 +12,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         {
             var authenticationConfiguration = configuration.GetSection(ConfigurationKeys.AuthenticationConfiguration).Get<AuthenticationConfiguration>();
 
-            //UrlBuilder.GetLink(null, "", "", "");
-
-            services.AddMaMenuConfiguration(configuration, RouteNames.Logout, authenticationConfiguration.ClientId);
+            services.AddMaMenuConfiguration(configuration, RouteNames.SignOut, authenticationConfiguration.ClientId);
 
             return services;
         }

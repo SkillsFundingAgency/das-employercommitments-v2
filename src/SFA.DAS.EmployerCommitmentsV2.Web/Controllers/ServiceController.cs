@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     [Route("service")]
     public class ServiceController : Controller
     {
-        [Route("signout", Name = RouteNames.Logout)]
+        [Route("signout", Name = RouteNames.SignOut)]
         public async Task SignOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

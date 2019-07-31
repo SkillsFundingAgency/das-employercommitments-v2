@@ -2,6 +2,6 @@
 {
     public static class RouteNames
     {
-        public const string Logout = "Logout_Get";
+        public const string SignOut = "SignOut";
     }
 }
