@@ -3,17 +3,17 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {
-    public class IndexViewModelMapper : IMapper<IndexRequest, IndexViewModel>
+    public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, SelectProviderViewModel>
     {
-        public IndexViewModel Map(IndexRequest source)
+        public SelectProviderViewModel Map(SelectProviderRequest source)
         {
-            return new IndexViewModel
+            return new SelectProviderViewModel
             {
                 AccountHashedId = source.AccountHashedId,
+                CourseCode = source.CourseCode,
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
-                ReservationId = source.ReservationId,
                 StartMonthYear = source.StartMonthYear,
-                CourseCode = source.CourseCode
+                ReservationId = source.ReservationId,
             };
         }
     }

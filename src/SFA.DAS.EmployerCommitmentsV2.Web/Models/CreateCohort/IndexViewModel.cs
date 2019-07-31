@@ -6,7 +6,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
     {
         public string AccountHashedId { get; set; }
         public string ReservationId { get; set; }
-        public string EmployerAccountLegalEntityPublicHashedId { get; set; }
+        public string AccountLegalEntityHashedId { get; set; }
         public string StartMonthYear { get; set; }
         public string CourseCode { get; set; }
         public string OrganisationsLink { get; set; }
@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
             var dictionary = new Dictionary<string, string>
             {
                 {nameof(AccountHashedId), AccountHashedId },
-                {nameof(EmployerAccountLegalEntityPublicHashedId), EmployerAccountLegalEntityPublicHashedId }
+                {nameof(AccountLegalEntityHashedId), AccountLegalEntityHashedId }
             };
             
             if (!string.IsNullOrWhiteSpace(ReservationId))

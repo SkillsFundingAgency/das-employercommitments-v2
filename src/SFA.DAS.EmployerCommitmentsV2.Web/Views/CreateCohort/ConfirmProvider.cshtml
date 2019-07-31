@@ -1,7 +1,58 @@
-﻿
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
+@model ConfirmProviderViewModel
+
 @{
     ViewData["Title"] = "ConfirmProvider";
+    ViewBag.Title = "Confirm training provider";
 }
 
-<h1>ConfirmProvider</h1>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary"/>
+
+        <h1 class="govuk-heading-xl">Confirm training provider</h1>
+        
+        <p class="govuk-body-l">UK Provider Reference Number <strong>'@Model.ProviderId'</strong> matches:</p>
+        
+        <h2 class="govuk-heading-l govuk-!-margin-bottom-0">@Model.ProviderName</h2>
+        <dl class="das-definition-list das-definition-list--inline  das-definition-list--muted govuk-!-margin-bottom-7">
+            <dt class="das-definition-list__title">UKPRN</dt>
+            <dd class="das-definition-list__definition">@Model.ProviderId</dd>
+        </dl>
+
+        <form method="post" asp-controller="CreateCohort" asp-action="ConfirmProvider">
+            <partial name="_ConfirmProviderHiddenPartial" model="@Model" />
+            
+            <div class="govuk-form-group  @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        <h1 class="govuk-fieldset__heading">
+                            Is this the main provider of the apprenticeship training?
+                        </h1>
+                    </legend>
+                    @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(nameof(ConfirmProviderViewModel.UseThisProvider)))
+                    {
+                        <span id="error-message-@nameof(ConfirmProviderViewModel.UseThisProvider)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(ConfirmProviderViewModel.UseThisProvider)].Errors.First().ErrorMessage
+                        </span>
+                    }
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="UseThisProvider" name="UseThisProvider" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="UseThisProvider">
+                                Yes, use @Model.ProviderName
+                            </label> </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="UseThisProvider-no" name="UseThisProvider" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="UseThisProvider-no">
+                                No, change UK Provider Reference Number
+                            </label> </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <button type="submit" class="govuk-button">Continue</button>
+        </form>
+    </div>
+</div>
 

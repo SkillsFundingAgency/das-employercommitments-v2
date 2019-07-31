@@ -1,0 +1,44 @@
+﻿using AutoFixture.NUnit3;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using NUnit.Framework;
+using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
+using SFA.DAS.Testing.AutoFixture;
+
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortControllerTests
+{
+    [TestFixture]
+    public class WhenGettingSelectProvider
+    {
+        [Test, MoqAutoData]
+        public void ThenMapsTheRequestToViewModel(
+            SelectProviderRequest request,
+            SelectProviderViewModel viewModel,
+            [Frozen] Mock<IMapper<SelectProviderRequest, SelectProviderViewModel>> mockMapper,
+            CreateCohortController controller)
+        {
+            controller.SelectProvider(request);
+
+            mockMapper.Verify(x => x.Map(It.IsAny<SelectProviderRequest>()), Times.Once);
+        }
+
+        [Test, MoqAutoData]
+        public void ThenReturnsView(
+            SelectProviderRequest request,
+            SelectProviderViewModel viewModel,
+            [Frozen] Mock<IMapper<SelectProviderRequest, SelectProviderViewModel>> mockMapper,
+            CreateCohortController controller)
+        {
+            mockMapper
+                .Setup(mapper => mapper.Map(request))
+                .Returns(viewModel);
+
+            var result = controller.SelectProvider(request) as ViewResult;
+
+            Assert.Null(result.ViewName);
+            Assert.AreSame(viewModel, result.Model);
+        }
+    }
+}
