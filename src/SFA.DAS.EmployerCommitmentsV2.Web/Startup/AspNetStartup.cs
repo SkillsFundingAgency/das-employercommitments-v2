@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.Mvc.Extensions;
+using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 using SFA.DAS.EmployerUrlHelper;
@@ -27,7 +28,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .AddDasEmployerAuthentication(_configuration)
                 .AddEmployerUrlHelper(_configuration)
                 .AddDasAuthorization()
-                .AddMemoryCache();
+                .AddMemoryCache()
+                .AddMaMenuConfiguration(_configuration, "logoutroute", "idamsClientId");
         }
 
         public void ConfigureContainer(Registry registry)
