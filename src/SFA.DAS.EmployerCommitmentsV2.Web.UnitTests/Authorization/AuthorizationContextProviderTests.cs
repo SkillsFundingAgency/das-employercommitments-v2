@@ -13,7 +13,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.Encoding;
 
-namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.Authorization
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
 {
     [TestFixture]
     [Parallelizable]

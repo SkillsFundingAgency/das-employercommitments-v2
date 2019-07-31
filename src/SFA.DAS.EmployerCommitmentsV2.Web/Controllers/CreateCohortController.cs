@@ -2,12 +2,13 @@
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    [DasAuthorize(EmployerUserRole.Owner)]
+    [DasAuthorize(EmployerFeature.EmployerCommitmentsV2, EmployerUserRole.Owner)]
     [Route("{accountHashedId}/unapproved/add")]
     public class CreateCohortController : Controller
     {

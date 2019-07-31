@@ -12,14 +12,15 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.EmployerCommitmentsV2.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
 using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
+    [DasAuthorize(EmployerFeature.EmployerCommitmentsV2)]
     [Route("{AccountHashedId}/organisations/{AccountLegalEntityHashedId}/unapproved/")]
-    [DasAuthorize()]
     public class CreateCohortWithDraftApprenticeshipController : Controller
     {
         private readonly ICommitmentsService _employerCommitmentsService;
