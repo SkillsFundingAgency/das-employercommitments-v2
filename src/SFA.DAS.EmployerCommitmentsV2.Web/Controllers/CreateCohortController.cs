@@ -70,6 +70,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("select-provider")]
         public IActionResult SelectProvider(SelectProviderRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Error", "Error", new { StatusCode = 400 });
+            }
+
             var viewModel = _selectProviderViewModelMapper.Map(request);
 
             return View(viewModel);

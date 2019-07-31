@@ -4,6 +4,10 @@
 @{
     ViewData["Title"] = "ConfirmProvider";
     ViewBag.Title = "Confirm training provider";
+
+    var customErrorKeys = new Dictionary<string, string> { { $"error-message-{nameof(ConfirmProviderViewModel.UseThisProvider)}", "UseThisProvider" } };
+
+    ViewData["CustomErrorKeys"] = customErrorKeys;
 }
 
 <div class="govuk-grid-row">

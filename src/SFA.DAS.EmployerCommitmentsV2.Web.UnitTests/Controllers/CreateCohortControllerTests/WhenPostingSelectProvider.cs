@@ -155,5 +155,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             Assert.AreEqual(actionName,result.ActionName);
         }
 
+        [Test, MoqAutoData]
+        public async Task ThenIfModelIsInvalidRedirectToErrorPage(
+            SelectProviderViewModel viewModel,
+            CreateCohortController controller)
+        {
+            controller.ModelState.AddModelError(nameof(viewModel.AccountLegalEntityHashedId), "Must be set");
+
+            var result = await controller.SelectProvider(viewModel) as ViewResult;
+
+            Assert.NotNull(result);
+        }
+
     }
 }
