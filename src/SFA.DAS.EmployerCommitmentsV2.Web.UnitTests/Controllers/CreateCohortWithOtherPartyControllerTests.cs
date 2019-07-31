@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
 
             await _fixture.Sut.Message(request);
 
-            _fixture.CommitmentsApiClientMock.Verify(x => x.GetProvider(request.UkPrn, It.IsAny<CancellationToken>()));
+            _fixture.CommitmentsApiClientMock.Verify(x => x.GetProvider(request.ProviderId, It.IsAny<CancellationToken>()));
         }
 
         [Test, AutoData]
@@ -189,7 +189,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             Assert.AreEqual(request.AccountHashedId, model.AccountHashedId);
             Assert.AreEqual(request.CourseCode, model.CourseCode);
             Assert.AreEqual(request.StartMonthYear, model.StartMonthYear);
-            Assert.AreEqual(request.UkPrn, model.ProviderId);
+            Assert.AreEqual(request.ProviderId, model.ProviderId);
             Assert.AreEqual(request.EmployerAccountLegalEntityPublicHashedId, model.AccountLegalEntityHashedId);
             Assert.AreEqual(request.ReservationId, model.ReservationId);
 

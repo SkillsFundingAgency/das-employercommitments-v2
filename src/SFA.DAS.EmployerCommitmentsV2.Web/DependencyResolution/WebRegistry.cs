@@ -1,7 +1,9 @@
-﻿using SFA.DAS.EmployerAccounts.Api.Client;
+﻿using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Services.Stubs;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
+using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerUrlHelper;
 using StructureMap;
 using StructureMap.Building.Interception;
@@ -12,6 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
     {
         public WebRegistry()
         {
+            For(typeof(IMapper<,>)).DecorateAllWith(typeof(AttachUserInfoToSaveRequests<,>));
             For<IAuthenticationService>().Use<AuthenticationService>();
             For<StubEmployerAccountsApiClient>().Use<StubEmployerAccountsApiClient>().Singleton();
             For<IEmployerAccountsApiClient>().InterceptWith(new FuncInterceptor<IEmployerAccountsApiClient>(

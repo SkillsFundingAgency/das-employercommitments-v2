@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoFixture.NUnit3" Version="4.10.0" />
     <PackageReference Include="FluentAssertions" Version="5.7.0" />
     <PackageReference Include="AutoFixture" Version="4.10.0" />
     <PackageReference Include="CompareNETObjects" Version="4.59.0" />
@@ -14,11 +15,11 @@
     <PackageReference Include="nunit" Version="3.11.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
-    <PackageReference Include="SFA.DAS.Commitments.Shared" Version="0.1.28-cv-190-updatesha0002" />
+    <PackageReference Include="SFA.DAS.Commitments.Shared" Version="0.1.28-cv-318-add-with-0007" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="3.0.118" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Types" Version="3.0.118" />
+    <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="1.0.1" />
     <PackageReference Include="SFA.DAS.Testing.AutoFixture" Version="3.0.121" />
-    <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="0.1.0" />
   </ItemGroup>
 
   <ItemGroup>

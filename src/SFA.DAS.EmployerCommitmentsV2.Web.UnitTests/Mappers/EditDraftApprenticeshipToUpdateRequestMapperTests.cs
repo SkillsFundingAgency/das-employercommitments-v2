@@ -8,11 +8,11 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 {
     [TestFixture]
-    public class WhenIMapDraftApprenticeshipRequest
+    public class WhenIMapDraftApprenticeshipToUpdateRequest
     {
-        private AddDraftApprenticeshipRequestMapper _mapper;
-        private AddDraftApprenticeshipViewModel _source;
-        private CreateCohortRequest _result;
+        private EditDraftApprenticeshipToUpdateRequestMapper _mapper;
+        private EditDraftApprenticeshipViewModel _source;
+        private Func<UpdateDraftApprenticeshipRequest> _act;
 
         [SetUp]
         public void Arrange()
@@ -23,13 +23,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
             var startDate = fixture.Create<DateTime?>();
             var endDate = fixture.Create<DateTime?>();
 
-            _mapper = new AddDraftApprenticeshipRequestMapper();
+            _mapper = new EditDraftApprenticeshipToUpdateRequestMapper();
 
-            _source = fixture.Build<AddDraftApprenticeshipViewModel>()
+            _source = fixture.Build<EditDraftApprenticeshipViewModel>()
                 .With(x => x.BirthDay, birthDate?.Day)
                 .With(x => x.BirthMonth, birthDate?.Month)
                 .With(x => x.BirthYear, birthDate?.Year)
-                .With(x => x.Cost, birthDate?.Year)
                 .With(x => x.EndMonth, endDate?.Month)
                 .With(x => x.EndYear, endDate?.Year)
                 .With(x => x.StartMonth, startDate?.Month)
@@ -38,67 +37,70 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
                 .Without(x => x.Courses)
                 .Create();
 
-            _result = _mapper.Map(TestHelper.Clone(_source));
+            _act = () => _mapper.Map(TestHelper.Clone(_source));
         }
 
         [Test]
         public void ThenReservationIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.ReservationId, _result.ReservationId);
+            var result = _act();
+            Assert.AreEqual(_source.ReservationId, result.ReservationId);
         }
 
         [Test]
         public void ThenFirstNameIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.FirstName, _result.FirstName);
+            var result = _act();
+            Assert.AreEqual(_source.FirstName, result.FirstName);
         }
 
         [Test]
         public void ThenDateOfBirthIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.DateOfBirth.Date, _result.DateOfBirth);
+            var result = _act();
+            Assert.AreEqual(_source.DateOfBirth.Date, result.DateOfBirth);
         }
 
         [Test]
-        public void ThenUniqueLearnerNumberIsMappedCorrectly()
+        public void ThenUniqueLearnerNumberIsMappedToNull()
         {
-            Assert.AreEqual(_source.Uln, _result.Uln);
+            var result = _act();
+            Assert.AreEqual(_source.Uln, result.Uln);
         }
 
         [Test]
         public void ThenCourseCodeIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CourseCode, _result.CourseCode);
+            var result = _act();
+            Assert.AreEqual(_source.CourseCode, result.CourseCode);
         }
 
         [Test]
         public void ThenCostIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.Cost, _result.Cost);
+            var result = _act();
+            Assert.AreEqual(_source.Cost, result.Cost);
         }
 
         [Test]
         public void ThenStartDateIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.StartDate.Date, _result.StartDate);
+            var result = _act();
+            Assert.AreEqual(_source.StartDate.Date, result.StartDate);
         }
 
         [Test]
         public void ThenEndDateIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.EndDate.Date, _result.EndDate);
+            var result = _act();
+            Assert.AreEqual(_source.EndDate.Date, result.EndDate);
         }
 
         [Test]
         public void ThenOriginatorReferenceIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.Reference, _result.OriginatorReference);
-        }
-
-        [Test]
-        public void ThenProviderIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.ProviderId, _result.ProviderId);
+            var result = _act();
+            Assert.AreEqual(_source.Reference, result.Reference);
         }
     }
 }
