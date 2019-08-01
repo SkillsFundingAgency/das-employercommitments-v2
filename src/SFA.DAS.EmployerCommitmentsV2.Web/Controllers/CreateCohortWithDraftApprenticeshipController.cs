@@ -55,6 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var model = new AddDraftApprenticeshipViewModel
             {
                 AccountLegalEntityId = request.AccountLegalEntityId,
+                AccountLegalEntityHashedId = request.AccountLegalEntityHashedId,
                 StartDate = new MonthYearModel(request.StartMonthYear),
                 ReservationId = request.ReservationId,
                 CourseCode = request.CourseCode,
