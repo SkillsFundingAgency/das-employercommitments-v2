@@ -5,9 +5,9 @@ using SFA.DAS.Authorization.CommitmentPermissions.Context;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.EmployerUserRoles.Context;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.Encoding;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
-using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
 {
@@ -31,10 +31,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
             var cohortId = GetCohortId();
             var userRef = GetUserRef();
 
-            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, accountId,  AuthorizationKeys.AccountId);
-            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, cohortId, AuthorizationKeys.CohortId);
-            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetAccountLegalEntityHashedId(), AuthorizationKeys.AccountLegalEntityId);
-            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetDraftApprenticeshipId(), AuthorizationKeys.DraftApprenticeshipId);
+            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, accountId, AuthorizationContextKeys.AccountId);
+            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, cohortId, AuthorizationContextKeys.CohortId);
+            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetAccountLegalEntityHashedId(), AuthorizationContextKeys.AccountLegalEntityId);
+            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetDraftApprenticeshipId(), AuthorizationContextKeys.DraftApprenticeshipId);
 
             if (accountId.HasValue && userRef.HasValue)
             {

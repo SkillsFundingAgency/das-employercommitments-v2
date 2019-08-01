@@ -16,7 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
     public class WhenPostingConfirmProvider
     {
         [Test, MoqAutoData]
-        public async Task And_The_ViewModel_Is_Invalid_Then_Returns_View(
+        public void And_The_ViewModel_Is_Invalid_Then_Returns_View(
             ConfirmProviderViewModel viewModel,
             ValidationResult validationResult,
             ValidationFailure error,
@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
         }
 
         [Test, MoqAutoData]
-        public async Task And_The_ViewModel_Is_Valid_And_Set_To_Use_Provider_Then_Redirects_To_Assign_Action_And_The_Model_Mapped_To_The_Assign(
+        public void And_The_ViewModel_Is_Valid_And_Set_To_Use_Provider_Then_Redirects_To_Assign_Action_And_The_Model_Mapped_To_The_Assign(
             ConfirmProviderViewModel viewModel,
             ValidationResult validationResult,
             ValidationFailure error,
@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
 
 
         [Test, MoqAutoData]
-        public async Task And_The_ViewModel_Is_Valid_And_Set_To_Not_Use_Provider_Then_Redirects_To_SelectProvider_Action_And_The_Model_Mapped_To_The_Assign(
+        public void And_The_ViewModel_Is_Valid_And_Set_To_Not_Use_Provider_Then_Redirects_To_SelectProvider_Action_And_The_Model_Mapped_To_The_Assign(
             ConfirmProviderViewModel viewModel,
             ValidationResult validationResult,
             ValidationFailure error,

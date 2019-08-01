@@ -64,7 +64,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             HttpResponseMessage error,
             CreateCohortController controller)
         {
-            var viewName = "ConfirmProvider";
             error.StatusCode = HttpStatusCode.NotFound;
             viewModel.ProviderId = providerId.ToString();
             mockApiClient
