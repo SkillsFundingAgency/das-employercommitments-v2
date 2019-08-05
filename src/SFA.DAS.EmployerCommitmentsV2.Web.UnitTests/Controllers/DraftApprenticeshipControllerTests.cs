@@ -116,8 +116,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
 
     public class DraftApprenticeshipControllerTestFixtures
     {
-        private long draftApprentice_setModelToInvalid;
-
         public DraftApprenticeshipControllerTestFixtures()
         {
             CommitmentsServiceMock = new Mock<ICommitmentsService>();
