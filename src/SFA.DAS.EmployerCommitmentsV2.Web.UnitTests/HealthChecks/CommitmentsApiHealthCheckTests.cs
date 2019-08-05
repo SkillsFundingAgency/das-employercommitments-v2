@@ -1,47 +1,49 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.HealthChecks;
 using SFA.DAS.Http;
 using SFA.DAS.Testing;
 
-namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.HealthChecks
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.HealthChecks
 {
     [TestFixture]
     [Parallelizable]
     public class CommitmentsApiHealthCheckTests : FluentTest<CommitmentsApiHealthCheckTestsFixture>
     {
-        [Test]
-        public Task CheckHealthAsync_WhenPingSucceeds_ThenShouldReturnHealthyStatus()
+        [TestCase(new [] { Role.Employer }, HealthStatus.Healthy)]
+        [TestCase(new [] { Role.Provider }, HealthStatus.Unhealthy)]
+        [TestCase(new [] { Role.Employer, Role.Provider }, HealthStatus.Unhealthy)]
+        public async Task CheckHealthAsync_WhenWhoAmISucceedsAndUserIsInRoles_ThenShouldReturnHealthStatus(string[] roles, HealthStatus healthStatus)
         {
-            return TestAsync(
-                f => f.SetPingSuccess(),
+            await TestAsync(
+                f => f.SetWhoAmISuccess(roles),
                 f => f.CheckHealthAsync(),
-                (f, r) => r.Status.Should().Be(HealthStatus.Healthy));
+                (f, r) =>
+                {
+                    r.Should().NotBeNull();
+                    r.Status.Should().Be(healthStatus);
+                    r.Data["Roles"].Should().BeOfType<List<string>>().Which.Should().BeEquivalentTo(roles);
+                });
         }
         
         [Test]
-        public Task CheckHealthAsync_WhenPingFails_ThenShouldReturnUnhealthyStatus()
+        public async Task CheckHealthAsync_WhenWhoAmIFails_ThenShouldThrowException()
         {
-            return TestAsync(
-                f => f.SetPingFailure(),
+            await TestExceptionAsync(
+                f => f.SetWhoAmIFailure(),
                 f => f.CheckHealthAsync(),
-                (f, r) => r.Status.Should().Be(HealthStatus.Unhealthy));
-        }
-        
-        [Test]
-        public Task CheckHealthAsync_WhenPingFails_ThenShouldReturnException()
-        {
-            return TestAsync(
-                f => f.SetPingFailure(),
-                f => f.CheckHealthAsync(),
-                (f, r) => r.Exception.Should().Be(f.Exception));
+                (f, r) => r.Should().Throw<Exception>().Which.Should().Be(f.Exception));
         }
     }
 
@@ -49,8 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.HealthChecks
     {
         public HealthCheckContext HealthCheckContext { get; set; }
         public Mock<ICommitmentsApiClient> ApiClient { get; set; }
-        public Mock<ILogger<CommitmentsApiHealthCheck>> Logger { get; set; }
-        public CommitmentsApiHealthCheck CommitmentsApiHealthCheck { get; set; }
+        public CommitmentsApiHealthCheck HealthCheck { get; set; }
         public HttpResponseMessage HttpResponseMessage { get; set; }
         public RestHttpClientException Exception { get; set; }
 
@@ -62,8 +63,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.HealthChecks
             };
             
             ApiClient = new Mock<ICommitmentsApiClient>();
-            Logger = new Mock<ILogger<CommitmentsApiHealthCheck>>();
-            CommitmentsApiHealthCheck = new CommitmentsApiHealthCheck(ApiClient.Object, Logger.Object);
+            HealthCheck = new CommitmentsApiHealthCheck(ApiClient.Object);
 
             HttpResponseMessage = new HttpResponseMessage(HttpStatusCode.NotFound)
             {
@@ -76,19 +76,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Web.HealthChecks
 
         public Task<HealthCheckResult> CheckHealthAsync()
         {
-            return CommitmentsApiHealthCheck.CheckHealthAsync(HealthCheckContext);
+            return HealthCheck.CheckHealthAsync(HealthCheckContext);
         }
 
-        public CommitmentsApiHealthCheckTestsFixture SetPingSuccess()
+        public CommitmentsApiHealthCheckTestsFixture SetWhoAmISuccess(IEnumerable<string> roles)
         {
-            ApiClient.Setup(c => c.HealthCheck()).ReturnsAsync(true);
+            ApiClient.Setup(c => c.WhoAmI()).ReturnsAsync(new WhoAmIResponse { Roles = roles.ToList() });
             
             return this;
         }
 
-        public CommitmentsApiHealthCheckTestsFixture SetPingFailure()
+        public CommitmentsApiHealthCheckTestsFixture SetWhoAmIFailure()
         {
-            ApiClient.Setup(c => c.HealthCheck()).ThrowsAsync(Exception);
+            ApiClient.Setup(c => c.WhoAmI()).ThrowsAsync(Exception);
             
             return this;
         }
