@@ -5,14 +5,11 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {
-    public class AddDraftApprenticeshipRequestMapper : IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest>
+    public class EditDraftApprenticeshipToUpdateRequestMapper : IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipRequest>
     {
-        public CreateCohortRequest Map(AddDraftApprenticeshipViewModel source)
-        {
-            return new CreateCohortRequest
+        public UpdateDraftApprenticeshipRequest Map(EditDraftApprenticeshipViewModel source) =>
+            new UpdateDraftApprenticeshipRequest
             {
-                AccountLegalEntityId = source.AccountLegalEntityId,
-                ProviderId = source.ProviderId,
                 ReservationId = source.ReservationId,
                 FirstName = source.FirstName,
                 LastName = source.LastName,
@@ -22,8 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
                 Cost = source.Cost,
                 StartDate = source.StartDate.Date,
                 EndDate = source.EndDate.Date,
-                OriginatorReference = source.Reference
+                Reference = source.Reference
             };
-        }
     }
 }

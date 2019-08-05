@@ -122,6 +122,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
 
             Assert.Throws<UnauthorizedAccessException>(() => _fixture.GetAuthorizationContext());
         }
+
+        [Test]
+        public void GetAuthorizationContext_WhenDaftApprenticeshipIdDoesNotExist_ThenShouldThrowKeyNotFoundException()
+        {
+            _fixture.SetInvalidDraftApprenticeshipId();
+
+            Assert.Throws<UnauthorizedAccessException>(() => _fixture.GetAuthorizationContext());
+        }
+
+        [Test]
+        public void GetAuthorizationContext_WhenDraftApprenticeshipIdExistAndIsValid_ThenShouldReturnAuthorizationContextWithDraftApprenticeshipId()
+        {
+            _fixture.SetValidDraftApprenticeshipId();
+
+            var authorizationContext = _fixture.GetAuthorizationContext();
+
+            Assert.IsNotNull(authorizationContext);
+            Assert.AreEqual(_fixture.DraftApprenticeshipId, authorizationContext.Get<long?>("DraftApprenticeshipId"));
+        }
     }
 
     public class AuthorizationContextProviderTestsFixture
@@ -131,10 +150,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
         public Mock<IAuthenticationService> UserService { get; set; }
         public Mock<IRoutingFeature> RoutingFeature { get; set; }
         public Mock<IEncodingService> EncodingService { get; set; }
-        public string AccountHashedId { get; set; }
-        public long AccountId { get; set; }
+        public string DraftApprenticeshipHashedId { get; set; }
+        public long DraftApprenticeshipId { get; set; }
         public long CohortId { get; set; }
         public string CohortReference { get; set; }
+        public string AccountHashedId { get; set; }
+        public long AccountId { get; set; }
         public Guid? UserRef { get; set; }
         public string UserRefClaimValue { get; set; }
         public RouteData RouteData { get; set; }
@@ -211,13 +232,41 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
         {
             CohortReference = "BBB";
 
-            //var routeData = new RouteData();
             var cohortId = CohortId;
 
             RouteData.Values[RouteValueKeys.CohortReference] = CohortReference;
 
             RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
             EncodingService.Setup(h => h.TryDecode(CohortReference, EncodingType.CohortReference, out cohortId)).Returns(false);
+
+            return this;
+        }
+
+        public AuthorizationContextProviderTestsFixture SetValidDraftApprenticeshipId()
+        {
+            DraftApprenticeshipHashedId = "DEF";
+            DraftApprenticeshipId = 989;
+
+            var draftApprenticeshipId = DraftApprenticeshipId;
+
+            RouteData.Values[RouteValueKeys.DraftApprenticeshipHashedId] = DraftApprenticeshipHashedId;
+
+            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
+            EncodingService.Setup(h => h.TryDecode(DraftApprenticeshipHashedId, EncodingType.ApprenticeshipId, out draftApprenticeshipId)).Returns(true);
+
+            return this;
+        }
+
+        public AuthorizationContextProviderTestsFixture SetInvalidDraftApprenticeshipId()
+        {
+            DraftApprenticeshipHashedId = "CCCC";
+
+            var draftApprenticeshipId = DraftApprenticeshipId;
+
+            RouteData.Values[RouteValueKeys.DraftApprenticeshipHashedId] = DraftApprenticeshipHashedId;
+
+            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
+            EncodingService.Setup(h => h.TryDecode(DraftApprenticeshipHashedId, EncodingType.ApprenticeshipId, out draftApprenticeshipId)).Returns(false);
 
             return this;
         }
