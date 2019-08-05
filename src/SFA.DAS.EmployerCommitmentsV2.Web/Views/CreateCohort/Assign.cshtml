@@ -39,7 +39,14 @@
                             <input class="govuk-radios__input" id="WhoIsAddingApprentices-Provider" name="WhoIsAddingApprentices" type="radio" value="@WhoIsAddingApprentices.Provider">
                             <label class="govuk-label govuk-radios__label" for="WhoIsAddingApprentices-Provider">
                                 I would like my provider to add apprentices
-                            </label> </div>
+                            </label>
+                            @if (ViewContext.RouteData.Values["reservationId"] != null)
+                            {
+
+                                <label class="govuk-details" for="WhoIsAddingApprentices-Provider">
+                                    Your provider will have to select or make a new funding reservation on your behalf if you chose this option
+                                </label>
+                            }</div>
                     </div>
                 </fieldset>
             </div>
