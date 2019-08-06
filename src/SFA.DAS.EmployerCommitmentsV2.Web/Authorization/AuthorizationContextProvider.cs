@@ -5,9 +5,9 @@ using SFA.DAS.Authorization.CommitmentPermissions.Context;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.EmployerUserRoles.Context;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.Encoding;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
 {

@@ -22,21 +22,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
     <PackageReference Include="NLog.Schema" Version="4.5.11" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.0" />
-    <PackageReference Include="SFA.DAS.Apprenticeships.Api.Client" Version="0.11.203" />
-    <PackageReference Include="SFA.DAS.Commitments.Shared" Version="1.0.3-cv-318-add-with-0011" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="4.1.6" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Types" Version="4.1.6" />
-
-    <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.77" />
-    <PackageReference Include="SFA.DAS.Authorization.CommitmentPermissions" Version="5.6.4" />
-    <PackageReference Include="SFA.DAS.Authorization.EmployerFeatures" Version="5.6.2" />
-    <PackageReference Include="SFA.DAS.Authorization.EmployerUserRoles" Version="5.6.2" />
     <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="5.6.2" />
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.77" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="1.0.1" />
-    <PackageReference Include="SFA.DAS.Encoding" Version="1.1.1" />
     <PackageReference Include="SFA.DAS.NLog.Targets.Redis" Version="1.2.1" />
-    <PackageReference Include="StructureMap" Version="4.7.0" />
     <PackageReference Include="StructureMap.AspNetCore" Version="2.0.0" />
     <PackageReference Include="WebEssentials.AspNetCore.CdnTagHelpers" Version="1.0.16" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
