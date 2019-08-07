@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
+using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Extensions;
@@ -19,7 +20,7 @@ using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    [DasAuthorize(EmployerFeature.EmployerCommitmentsV2, EmployerUserRole.OwnerOrTransactor)]
+    [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EmployerCommitmentsV2, EmployerUserRole.OwnerOrTransactor)]
     [Route("{AccountHashedId}/unapproved/{cohortReference}/apprentices")]
     public class DraftApprenticeshipController : Controller
     {
