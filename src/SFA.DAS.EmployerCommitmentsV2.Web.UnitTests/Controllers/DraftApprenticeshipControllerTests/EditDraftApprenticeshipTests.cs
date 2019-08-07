@@ -16,16 +16,16 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
 using SFA.DAS.EmployerUrlHelper;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {
     [TestFixture]
     [Parallelizable(ParallelScope.Children)]
-    public class DraftApprenticeshipControllerTests
+    public class EditDraftApprenticeshipTests
     {
         [Test]
         public async Task GetEditDraftApprenticeship_ValidModel_ShouldReturnBadRequestIfModelStateIsNotValid()
         {
-            var fixtures = new DraftApprenticeshipControllerTestFixtures().WithModelStateError();
+            var fixtures = new EditDraftApprenticeshipTestFixtures().WithModelStateError();
 
             var result = await fixtures.Sut.EditDraftApprenticeship(new EditDraftApprenticeshipRequest());
 
@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         [Test]
         public async Task GetEditDraftApprenticeship_ValidModel_ShouldReturnViewModel()
         {
-            var fixtures = new DraftApprenticeshipControllerTestFixtures().WithCourses().WithDraftApprenticeship().WithCohort();
+            var fixtures = new EditDraftApprenticeshipTestFixtures().WithCourses().WithDraftApprenticeship().WithCohort();
 
             var result = await fixtures.Sut.EditDraftApprenticeship(fixtures.EditDraftApprenticeshipRequest);
 
@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         [Test]
         public async Task GetEditDraftApprenticeship_WithValidModelAndTransferCohort_ShouldSeeStandardCourses()
         {
-            var fixtures = new DraftApprenticeshipControllerTestFixtures().WithStandardCourses().WithDraftApprenticeship().WithTransferCohort();
+            var fixtures = new EditDraftApprenticeshipTestFixtures().WithStandardCourses().WithDraftApprenticeship().WithTransferCohort();
 
             var result = await fixtures.Sut.EditDraftApprenticeship(fixtures.EditDraftApprenticeshipRequest);
 
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         [Test]
         public async Task GetEditDraftApprenticeship_ValidModelButCohortIsWithProvider_ShouldRedirectUserToViewDetails()
         {
-            var fixtures = new DraftApprenticeshipControllerTestFixtures().WithCourses().WithDraftApprenticeship();
+            var fixtures = new EditDraftApprenticeshipTestFixtures().WithCourses().WithDraftApprenticeship();
             fixtures.WithCohort(new CohortDetails{CohortId = fixtures.CohortId, WithParty = Party.Provider}).WithViewApprenticeLink("XYZ");
 
             var result = await fixtures.Sut.EditDraftApprenticeship(fixtures.EditDraftApprenticeshipRequest);
@@ -75,7 +75,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         [Test]
         public async Task PostEditDraftApprenticeship_WithInvalidModel_ShouldReturnTheViewModelAndAddProviderNameAndCourses()
         {
-            var fixtures = new DraftApprenticeshipControllerTestFixtures().WithModelStateError().WithCourses("XXX", "YYYY").WithCohort();
+            var fixtures = new EditDraftApprenticeshipTestFixtures().WithModelStateError().WithCourses("XXX", "YYYY").WithCohort();
 
             var result = await fixtures.Sut.EditDraftApprenticeship(new EditDraftApprenticeshipViewModel { DraftApprenticeshipId = fixtures.DraftApprenticeshipId, CohortId = fixtures.CohortId, FirstName = "First", LastName = "Last"});
 
@@ -89,7 +89,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         [Test]
         public async Task PostEditDraftApprenticeship_WithValidModelButFailsWithDomainError_ShouldReturnTheViewModelWithModelStateError()
         {
-            var fixtures = new DraftApprenticeshipControllerTestFixtures().WithUpdateDraftApprenticeshipDomainError().WithCourses().WithCohort();
+            var fixtures = new EditDraftApprenticeshipTestFixtures().WithUpdateDraftApprenticeshipDomainError().WithCourses().WithCohort();
 
             var result = await fixtures.Sut.EditDraftApprenticeship(new EditDraftApprenticeshipViewModel { DraftApprenticeshipId = fixtures.DraftApprenticeshipId, CohortId = fixtures.CohortId, FirstName = "First", LastName = "Last" });
 
@@ -102,7 +102,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         [Test]
         public async Task PostEditDraftApprenticeship_WithValidModel_ShouldSaveDraftApprenticeshipAndRedirectToCohortPage()
         {
-            var fixtures = new DraftApprenticeshipControllerTestFixtures()
+            var fixtures = new EditDraftApprenticeshipTestFixtures()
                     .WithCohort()
                     .WithCohortLink("cohortPage");
 
@@ -114,9 +114,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         }
     }
 
-    public class DraftApprenticeshipControllerTestFixtures
+    public class EditDraftApprenticeshipTestFixtures
     {
-        public DraftApprenticeshipControllerTestFixtures()
+        public EditDraftApprenticeshipTestFixtures()
         {
             CommitmentsServiceMock = new Mock<ICommitmentsService>();
             ToViewModelMapper = new EditDraftApprenticeshipDetailsToViewModelMapper();
@@ -164,7 +164,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         public List<ErrorDetail> ApiErrors { get; private set; }
         public EditDraftApprenticeshipRequest EditDraftApprenticeshipRequest;
 
-        public DraftApprenticeshipControllerTestFixtures WithCohortLink(string url)
+        public EditDraftApprenticeshipTestFixtures WithCohortLink(string url)
         {
             LinkGeneratorMock
                 .Setup(lg => lg.CommitmentsLink(It.IsAny<string>()))
@@ -173,7 +173,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             return this;
         }
 
-        public DraftApprenticeshipControllerTestFixtures WithViewApprenticeLink(string url)
+        public EditDraftApprenticeshipTestFixtures WithViewApprenticeLink(string url)
         {
             LinkGeneratorMock
                 .Setup(lg => lg.CommitmentsLink(It.IsAny<string>()))
@@ -182,7 +182,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             return this;
         }
 
-        public DraftApprenticeshipControllerTestFixtures WithDraftApprenticeship(EditDraftApprenticeshipDetails details = null)
+        public EditDraftApprenticeshipTestFixtures WithDraftApprenticeship(EditDraftApprenticeshipDetails details = null)
         {
             var returnValue = details ?? EditDraftApprenticeshipDetails;
 
@@ -193,7 +193,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             return this;
         }
 
-        public DraftApprenticeshipControllerTestFixtures WithUpdateDraftApprenticeshipDomainError()
+        public EditDraftApprenticeshipTestFixtures WithUpdateDraftApprenticeshipDomainError()
         {
             CommitmentsServiceMock
                 .Setup(cs => cs.UpdateDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<UpdateDraftApprenticeshipRequest>()))
@@ -202,7 +202,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             return this;
         }
 
-        public DraftApprenticeshipControllerTestFixtures WithCohort(CohortDetails cohortDetails = null)
+        public EditDraftApprenticeshipTestFixtures WithCohort(CohortDetails cohortDetails = null)
         {
             var returnValue = cohortDetails ?? CohortDetails;
 
@@ -212,7 +212,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
 
             return this;
         }
-        public DraftApprenticeshipControllerTestFixtures WithTransferCohort()
+        public EditDraftApprenticeshipTestFixtures WithTransferCohort()
         {
             var returnValue = new CohortDetails { CohortId = CohortId, HashedCohortId = CohortReference, IsFundedByTransfer =  true, WithParty = Party.Employer};
 
@@ -223,7 +223,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             return this;
         }
 
-        public DraftApprenticeshipControllerTestFixtures WithCourses(params string[] courseCodes)
+        public EditDraftApprenticeshipTestFixtures WithCourses(params string[] courseCodes)
         {
             TrainingProgrammeApiClientMock
                 .Setup(tp => tp.GetAllTrainingProgrammes())
@@ -237,7 +237,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             return this;
         }
 
-        public DraftApprenticeshipControllerTestFixtures WithStandardCourses(params string[] courseCodes)
+        public EditDraftApprenticeshipTestFixtures WithStandardCourses(params string[] courseCodes)
         {
             TrainingProgrammeApiClientMock
                 .Setup(tp => tp.GetStandardTrainingProgrammes())
@@ -250,7 +250,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
 
             return this;
         }
-        public DraftApprenticeshipControllerTestFixtures WithModelStateError()
+        public EditDraftApprenticeshipTestFixtures WithModelStateError()
         {
             Sut.ModelState.AddModelError("AKey", "Some Error");
             return this;
