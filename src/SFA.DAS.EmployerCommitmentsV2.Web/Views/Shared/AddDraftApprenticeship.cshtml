@@ -17,6 +17,7 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.CohortReference)
             @Html.HiddenFor(x => x.ProviderId)
+            @Html.HiddenFor(x => x.AccountLegalEntityHashedId)
 
             <partial name="DraftApprenticeship" for="@Model" />
 

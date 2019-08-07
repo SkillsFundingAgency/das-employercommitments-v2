@@ -9,6 +9,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             switch (statusCode)
             {
+                case 400:
                 case 403:
                 case 404:
                     return View(statusCode.ToString());

@@ -14,6 +14,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
     public class WhenCallingGetIndex
     {
         [Test, MoqAutoData]
+        public void And_ModelState_Invalid_Then_Redirect_To_Error(
+            IndexRequest request,
+            string errorKey,
+            string errorMessage,
+            CreateCohortController controller)
+        {
+            controller.ModelState.AddModelError(errorKey, errorMessage);
+
+            var result = controller.Index(request) as RedirectToActionResult;
+
+            result.ActionName.Should().Be("Error");
+            result.ControllerName.Should().Be("Error");
+        }
+        
+        [Test, MoqAutoData]
         public void Then_Returns_View_With_Correct_ViewModel(
             IndexRequest request,
             IndexViewModel viewModel,
