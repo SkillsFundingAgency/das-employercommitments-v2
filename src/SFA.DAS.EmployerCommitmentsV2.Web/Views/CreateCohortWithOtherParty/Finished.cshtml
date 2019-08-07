@@ -1,0 +1,38 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort.FinishedViewModel
+
+@{
+    ViewData["Title"] = "Instructions sent";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">Cohort sent to your training provider</h1>
+        </div>
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Cohort reference</dt>
+                <dd class="govuk-summary-list__value">@Model.CohortReference</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Sent to</dt>
+                <dd class="govuk-summary-list__value">@Model.ProviderName</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">On behalf of</dt>
+                <dd class="govuk-summary-list__value">@Model.LegalEntityName</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Message</dt>
+                <dd class="govuk-summary-list__value">@Model.Message</dd>
+            </div>
+        </dl>
+        <h2 class="govuk-heading-m">What happens next?</h2>
+        <p class="govuk-body">Your training provider will review your request and contact you as soon as possible - either with questions or to ask you to review the apprentice details they've added.</p>
+        <div class="govuk-inset-text das-inset-text--filled">
+            <h3 class="govuk-heading-m govuk-!-margin-bottom-2">Help us improve this section</h3>
+            <p class="govuk-body">Take a 3 minute survey about adding apprentices so that we can improve the service.</p>
+            <a class="govuk-button" href="https://www.smartsurvey.co.uk/s/apprenticeshipservicefeedback">Take the survey</a>
+        </div>
+    </div>    
+</div>

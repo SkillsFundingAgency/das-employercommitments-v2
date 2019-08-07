@@ -7,5 +7,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models
         public string AccountHashedId { get; set; }
 
         public long AccountLegalEntityId { get; set; }
+        public string AccountLegalEntityHashedId { get; set; }
     }
 }
