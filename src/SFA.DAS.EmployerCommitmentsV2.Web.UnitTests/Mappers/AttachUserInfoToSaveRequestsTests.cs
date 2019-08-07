@@ -75,7 +75,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
             InputViewModel = new AddDraftApprenticeshipViewModel();
             InputDetails = new EditDraftApprenticeshipDetails();
 
-            SaveRequestMapper = new AttachUserInfoToSaveRequests<AddDraftApprenticeshipViewModel, CreateCohortRequest>(new AddDraftApprenticeshipRequestMapper(), AuthenticationServiceMock.Object);
+            SaveRequestMapper = new AttachUserInfoToSaveRequests<AddDraftApprenticeshipViewModel, CreateCohortRequest>(new AddDraftApprenticeshipToCreateCohortRequestMapper(), AuthenticationServiceMock.Object);
             NonSaveRequestMapper = new AttachUserInfoToSaveRequests<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel>(new EditDraftApprenticeshipDetailsToViewModelMapper(), AuthenticationServiceMock.Object);
         }
 

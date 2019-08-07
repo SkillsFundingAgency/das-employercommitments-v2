@@ -17,6 +17,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
 using SFA.DAS.EmployerUrlHelper;
+using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Requests.AddDraftApprenticeshipRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -27,6 +28,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ICommitmentsService _commitmentsService;
         private readonly IMapper<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel> _editDraftApprenticeshipDetailsToViewModelMapper;
         private readonly IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipRequest> _updateDraftApprenticeshipRequestMapper;
+        private readonly IMapper<AddDraftApprenticeshipViewModel, SFA.DAS.CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest> _addDraftApprenticeshipRequestMapper;
         private readonly ILinkGenerator _linkGenerator;
         private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
 
@@ -34,14 +36,77 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             ICommitmentsService commitmentsService,
             IMapper<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel> editDraftApprenticeshipDetailsToViewModelMapper,
             IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipRequest> updateDraftApprenticeshipRequestMapper,
+            IMapper<AddDraftApprenticeshipViewModel, SFA.DAS.CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest> addDraftApprenticeshipRequestMapper,
             ILinkGenerator linkGenerator,
             ITrainingProgrammeApiClient trainingProgrammeApiClient)
         {
             _commitmentsService = commitmentsService;
             _editDraftApprenticeshipDetailsToViewModelMapper = editDraftApprenticeshipDetailsToViewModelMapper;
             _updateDraftApprenticeshipRequestMapper = updateDraftApprenticeshipRequestMapper;
+            _addDraftApprenticeshipRequestMapper = addDraftApprenticeshipRequestMapper;
             _linkGenerator = linkGenerator;
             _trainingProgrammeApiClient = trainingProgrammeApiClient;
+        }
+
+        [HttpGet]
+        [Route("add")]
+        public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var model = new AddDraftApprenticeshipViewModel
+                {
+                    AccountHashedId = request.AccountHashedId,
+                    CohortReference = request.CohortReference,
+                    CohortId = request.CohortId,
+                    AccountLegalEntityHashedId = request.AccountLegalEntityHashedId,
+                    AccountLegalEntityId = request.AccountLegalEntityId,
+                    ReservationId = request.ReservationId,
+                    StartDate = new MonthYearModel(request.StartMonthYear),
+                    CourseCode = request.CourseCode
+                };
+                
+                await AddProviderNameAndCoursesToModel(model);
+
+                return View(model);
+            }
+            catch (CohortEmployerUpdateDeniedException)
+            {
+                return Redirect(_linkGenerator.CommitmentsLink($"accounts/{request.AccountHashedId}/apprentices/{request.CohortReference}/details"));
+            }
+        }
+
+        [HttpPost]
+        [Route("add")]
+        public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                await AddProviderNameAndCoursesToModel(model);
+                
+                return View(model);
+            }
+            
+            try
+            {
+                var addDraftApprenticeshipRequest = _addDraftApprenticeshipRequestMapper.Map(model);
+                
+                await _commitmentsService.AddDraftApprenticeshipToCohort(model.CohortId.Value, addDraftApprenticeshipRequest);
+                
+                return Redirect(_linkGenerator.CommitmentsLink($"accounts/{model.AccountHashedId}/apprentices/{model.CohortReference}/details"));
+            }
+            catch (CommitmentsApiModelException ex)
+            {
+                ModelState.AddModelExceptionErrors(ex);
+                await AddProviderNameAndCoursesToModel(model);
+                
+                return View(model);
+            }
         }
 
         [HttpGet]
