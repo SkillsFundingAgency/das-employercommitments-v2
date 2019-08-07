@@ -11,6 +11,7 @@ using SFA.DAS.Commitments.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
@@ -18,8 +19,8 @@ using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
+    [DasAuthorize(EmployerFeature.EmployerCommitmentsV2, EmployerUserRole.OwnerOrTransactor)]
     [Route("{AccountHashedId}/unapproved/{cohortReference}/apprentices")]
-    [DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
     public class DraftApprenticeshipController : Controller
     {
         private readonly ICommitmentsService _commitmentsService;
