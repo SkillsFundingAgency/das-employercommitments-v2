@@ -22,7 +22,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models
             EndDate = new MonthYearModel("");
         }
 
-        public int ProviderId { get; set; }
+        public long ProviderId { get; set; }
+        public string ProviderName { get; set; }
+
         public string CohortReference { get; set; }
         public long? CohortId { get; set; }
 
@@ -77,6 +79,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models
         public string Reference { get; set; }
 
         public IReadOnlyList<ITrainingProgramme> Courses { get; set; }
-        public string ProviderName { get; set; }
     }
 }

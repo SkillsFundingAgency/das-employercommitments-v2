@@ -18,6 +18,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests
             return result.VerifyResponseObjectType<RedirectResult>();
         }
 
+        public static RedirectToActionResult VerifyReturnsRedirectToActionResult(this IActionResult result)
+        {
+            return result.VerifyResponseObjectType<RedirectToActionResult>();
+        }
+
         public static IActionResult VerifyReturnsBadRequest(this IActionResult result)
         {
             var badRequest = result.VerifyResponseObjectType<BadRequestResult>();
@@ -27,12 +32,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests
             return badRequest;
         }
 
+        public static IActionResult VerifyReturnsBadRequestObject(this IActionResult result)
+        {
+            var badRequest = result.VerifyResponseObjectType<BadRequestObjectResult>();
+
+            result.VerifyReturnsSpecifiedStatusCode(HttpStatusCode.BadRequest);
+
+            return badRequest;
+        }
+
+
         public static ObjectResult VerifyReturnsSpecifiedStatusCode(this IActionResult result, HttpStatusCode expectedStatusCode)
         {
             var objectResult = result
                 .VerifyResponseObjectType<ObjectResult>();
 
-            Assert.AreEqual(expectedStatusCode, objectResult.StatusCode);
+            Assert.AreEqual((int?)expectedStatusCode, objectResult.StatusCode);
 
             return objectResult;
         }
