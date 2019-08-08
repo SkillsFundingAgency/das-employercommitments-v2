@@ -27,5 +27,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
         {
             return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/{cohortReference}/apprenticeships/{draftApprenticeshipHashedId}/view");
         }
+
+        public static string DeleteApprentice(this ILinkGenerator linkGenerator,
+            string accountHashedId,
+            string cohortReference,
+            string draftApprenticeshipHashedId)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/{cohortReference}/apprenticeships/{draftApprenticeshipHashedId}/delete");
+        }
     }
 }
