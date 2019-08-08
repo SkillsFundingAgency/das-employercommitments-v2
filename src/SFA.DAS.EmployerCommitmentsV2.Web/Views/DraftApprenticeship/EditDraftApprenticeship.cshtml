@@ -1,4 +1,5 @@
 ﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.EditDraftApprenticeshipViewModel
+@inject ILinkGenerator LinkGenerator
 
 @{
     ViewData["Title"] = "Apprenticeships";
@@ -16,10 +17,10 @@
             @Html.AntiForgeryToken()
             <partial name="DraftApprenticeship" for="@Model" />
             <button type="submit" class="govuk-button">Save</button>
-            @*<a class="govuk-button govuk-button--warning das-float-right" href="@Url.ProviderApprenticeshipServiceLink($"{Model.ProviderId}/apprentices/{Model.CohortReference}/{Model.DraftApprenticeshipHashedId}/delete")">Delete</a>
-        <p class="govuk-body  govuk-!-margin-bottom-0">
-            <a class="govuk-body govuk-link" href="@Url.ProviderApprenticeshipServiceLink($"{Model.ProviderId}/apprentices/{Model.CohortReference}/details")">Cancel</a>
-        </p>*@
+            <a class="govuk-button govuk-button--warning das-float-right" href="@LinkGenerator.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/{Model.CohortReference}/apprenticeships/{Model.DraftApprenticeshipHashedId}/delete")">Delete</a>
+            @*<p class="govuk-body  govuk-!-margin-bottom-0">
+                <a class="govuk-body govuk-link" href="@Url.ProviderApprenticeshipServiceLink($"{Model.ProviderId}/apprentices/{Model.CohortReference}/details")">Cancel</a>
+            </p>*@
         </form>
 
     </div>

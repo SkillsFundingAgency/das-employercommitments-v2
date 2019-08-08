@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Employer.Shared.UI;
-using SFA.DAS.Employer.Shared.UI.Startup;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
@@ -12,7 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
     {
         public static IServiceCollection AddDasMvc(this IServiceCollection services)
         {
-            services.AddMvc(o=>
+            services.AddMvc(o =>
                 {
                     o.AddAuthorization();
                     o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
