@@ -19,8 +19,8 @@ using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    [Route("{AccountHashedId}/unapproved/add")]
     [DasAuthorize(EmployerFeature.EmployerCommitmentsV2, EmployerUserRole.OwnerOrTransactor)]
+    [Route("{AccountHashedId}/unapproved/add")]
     public class CreateCohortWithDraftApprenticeshipController : Controller
     {
         private readonly ICommitmentsService _employerCommitmentsService;
