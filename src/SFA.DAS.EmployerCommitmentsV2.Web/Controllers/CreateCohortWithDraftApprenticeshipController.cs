@@ -13,6 +13,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.EmployerCommitmentsV2.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Features;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
 using SFA.DAS.EmployerUrlHelper;
@@ -84,7 +85,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             try
             {
                 var newCohort = await _employerCommitmentsService.CreateCohort(request);
-                var reviewYourCohort = _linkGenerator.CommitmentsLink($"accounts/{model.AccountHashedId}/apprentices/{newCohort.CohortReference}/details");
+                var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId,newCohort.CohortReference);
                 return Redirect(reviewYourCohort);
             }
             catch (CommitmentsApiModelException ex)

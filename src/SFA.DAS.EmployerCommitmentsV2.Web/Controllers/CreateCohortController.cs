@@ -8,6 +8,7 @@ using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Features;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
@@ -62,8 +63,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             var viewModel = _indexViewModelMapper.Map(request);
 
-            viewModel.OrganisationsLink = _linkGenerator.AccountsLink($"accounts/{request.AccountHashedId}/agreements");
-            viewModel.PayeSchemesLink = _linkGenerator.AccountsLink($"accounts/{request.AccountHashedId}/schemes");
+            viewModel.OrganisationsLink = _linkGenerator.YourOrganisationsAndAgreements(request.AccountHashedId);
+            viewModel.PayeSchemesLink = _linkGenerator.PayeSchemes(request.AccountHashedId);
 
             return View(viewModel);
         }

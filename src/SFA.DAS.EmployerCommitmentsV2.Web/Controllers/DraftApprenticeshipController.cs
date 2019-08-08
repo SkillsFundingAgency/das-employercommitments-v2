@@ -14,6 +14,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
 using SFA.DAS.EmployerUrlHelper;
@@ -77,7 +78,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
             catch (CohortEmployerUpdateDeniedException)
             {
-                return Redirect(_linkGenerator.CommitmentsLink($"accounts/{request.AccountHashedId}/apprentices/{request.CohortReference}/details"));
+                return Redirect(_linkGenerator.CohortDetails(request.AccountHashedId, request.CohortReference));
             }
         }
 
@@ -98,7 +99,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 
                 await _commitmentsService.AddDraftApprenticeshipToCohort(model.CohortId.Value, addDraftApprenticeshipRequest);
                 
-                return Redirect(_linkGenerator.CommitmentsLink($"accounts/{model.AccountHashedId}/apprentices/{model.CohortReference}/details"));
+                return Redirect(_linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference));
             }
             catch (CommitmentsApiModelException ex)
             {
@@ -133,7 +134,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
             catch (CohortEmployerUpdateDeniedException)
             {
-                return Redirect(_linkGenerator.CommitmentsLink($"accounts/{request.AccountHashedId}/apprentices/{request.CohortReference}/apprenticeships/{request.DraftApprenticeshipHashedId}/view"));
+                return Redirect(_linkGenerator.ViewApprentice(request.AccountHashedId, request.CohortReference, request.DraftApprenticeshipHashedId));
             }
         }
 
@@ -152,7 +153,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 var updateRequest = _updateDraftApprenticeshipRequestMapper.Map(model);
                 await _commitmentsService.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
 
-                var reviewYourCohort = _linkGenerator.CommitmentsLink($"accounts/{model.AccountHashedId}/apprentices/{model.CohortReference}/details");
+                var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);
                 return Redirect(reviewYourCohort);
             }
             catch (CommitmentsApiModelException ex)
