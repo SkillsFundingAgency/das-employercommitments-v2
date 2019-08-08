@@ -5,7 +5,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {
-    public class AddDraftApprenticeshipRequestMapper : IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest>
+    public class AddDraftApprenticeshipToCreateCohortRequestMapper : IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest>
     {
         public CreateCohortRequest Map(AddDraftApprenticeshipViewModel source)
         {
