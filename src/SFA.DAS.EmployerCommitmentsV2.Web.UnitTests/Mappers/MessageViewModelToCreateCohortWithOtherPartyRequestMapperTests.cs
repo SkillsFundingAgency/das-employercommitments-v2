@@ -42,5 +42,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         {
             Assert.AreEqual(_source.Message, _result.Message);
         }
+
+        [Test]
+        public void ThenAccountIdIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.AccountId, _result.AccountId);
+        }
     }
 }
