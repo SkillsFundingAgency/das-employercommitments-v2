@@ -190,15 +190,10 @@
                             {
                                 "name": "ASPNETCORE_ENVIRONMENT",
                                 "value": "[toUpper(parameters('environmentName'))]"
-                            }
-                        ]
-                    },
-                    "appServiceConnectionStrings": {
-                        "value": [
+                            },
                             {
-                                "name": "Redis",
-                                "connectionString": "[parameters('loggingRedisConnectionString')]",
-                                "type": "Custom"
+                                "name": "LoggingRedisConnectionString",
+                                "value": "[parameters('loggingRedisConnectionString')]"
                             }
                         ]
                     },
