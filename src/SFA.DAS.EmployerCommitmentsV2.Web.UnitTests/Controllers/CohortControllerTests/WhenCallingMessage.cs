@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Shared.Interfaces;
@@ -128,12 +129,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
             ErrorDetail = new ErrorDetail("field1", "error message");
 
-            Sut = new CreateCohortWithOtherPartyController(RequestMapper, CommitmentsApiClientMock.Object);
+            Sut = new CohortController(
+                Mock.Of<IMapper<IndexRequest, IndexViewModel>>(),
+                Mock.Of<IMapper<SelectProviderRequest, SelectProviderViewModel>>(),
+                Mock.Of<IMapper<SelectProviderViewModel, ConfirmProviderRequest>>(),
+                Mock.Of<IMapper<ConfirmProviderRequest, ConfirmProviderViewModel>>(),
+                Mock.Of<IMapper<ConfirmProviderViewModel, SelectProviderViewModel>>(),
+                Mock.Of<IMapper<ConfirmProviderViewModel, AssignRequest>>(),
+                Mock.Of<IMapper<AssignRequest, AssignViewModel>>(),
+                CommitmentsApiClientMock.Object, Mock.Of<ILogger<CohortController>>(),
+                RequestMapper);
         }
 
         public Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }
         public IMapper<MessageViewModel, CreateCohortWithOtherPartyRequest> RequestMapper { get; }
-        public CreateCohortWithOtherPartyController Sut { get; }
+        public CohortController Sut { get; }
         public ErrorDetail ErrorDetail { get; }
 
         public CreateCohortWithOtherPartyControllerTestFixture WithProviderName(string name)
