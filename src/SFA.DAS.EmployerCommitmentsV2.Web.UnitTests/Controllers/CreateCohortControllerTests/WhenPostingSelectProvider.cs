@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             string errorKey,
             string errorMessage,
             [Frozen] Mock<IValidator<SelectProviderViewModel>> mockValidator,
-            CreateCohortController controller)
+            CohortController controller)
         {
             controller.ModelState.AddModelError(errorKey, errorMessage);
 
@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             long providerId,
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             GetProviderResponse apiResponse,
-            CreateCohortController controller)
+            CohortController controller)
         {
             viewModel.ProviderId = providerId.ToString();
             
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             GetProviderResponse apiResponse,
             HttpResponseMessage error,
-            CreateCohortController controller)
+            CohortController controller)
         {
             error.StatusCode = HttpStatusCode.NotFound;
             viewModel.ProviderId = providerId.ToString();
@@ -84,7 +84,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             GetProviderResponse apiResponse,
             HttpResponseMessage error,
-            CreateCohortController controller)
+            CohortController controller)
         {
             error.StatusCode = HttpStatusCode.NetworkAuthenticationRequired;
             viewModel.ProviderId = providerId.ToString();
@@ -109,7 +109,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             [Frozen] Mock<IMapper<SelectProviderViewModel, ConfirmProviderRequest>> mockConfirmProviderRequestMapper,
             GetProviderResponse apiResponse,
-            CreateCohortController controller)
+            CohortController controller)
         {
             viewModel.ProviderId = providerId.ToString();
             mockValidator
@@ -134,7 +134,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             [Frozen] Mock<IMapper<SelectProviderViewModel, ConfirmProviderRequest>> mockConfirmProviderRequestMapper,
             GetProviderResponse apiResponse,
             ConfirmProviderRequest confirmProviderRequest,
-            CreateCohortController controller)
+            CohortController controller)
         {
             var actionName = "ConfirmProvider";
             viewModel.ProviderId = providerId.ToString();
@@ -157,7 +157,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
         [Test, MoqAutoData]
         public async Task ThenIfModelIsInvalidRedirectToErrorPage(
             SelectProviderViewModel viewModel,
-            CreateCohortController controller)
+            CohortController controller)
         {
             controller.ModelState.AddModelError(nameof(viewModel.AccountLegalEntityHashedId), "Must be set");
 

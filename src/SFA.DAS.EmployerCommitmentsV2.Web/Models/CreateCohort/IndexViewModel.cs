@@ -9,9 +9,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
         public string AccountLegalEntityHashedId { get; set; }
         public string StartMonthYear { get; set; }
         public string CourseCode { get; set; }
-        public string OrganisationsLink { get; set; }
-        public string PayeSchemesLink { get; set; }
-
         public virtual Dictionary<string, string> ToDictionary()
         {
             var dictionary = new Dictionary<string, string>

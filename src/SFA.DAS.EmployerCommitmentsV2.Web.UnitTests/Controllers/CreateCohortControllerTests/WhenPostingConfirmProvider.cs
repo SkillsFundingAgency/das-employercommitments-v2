@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             string errorKey,
             string errorMessage,
             [Frozen] Mock<IValidator<ConfirmProviderViewModel>> mockValidator,
-            CreateCohortController controller)
+            CohortController controller)
         {
             controller.ModelState.AddModelError(errorKey, errorMessage);
             
@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             ValidationFailure error,
             [Frozen] Mock<IValidator<ConfirmProviderViewModel>> mockValidator,
             [Frozen] Mock<IMapper<ConfirmProviderViewModel, AssignRequest>> mockMapper,
-            CreateCohortController controller)
+            CohortController controller)
         {
             viewModel.UseThisProvider = true;
 
@@ -61,7 +61,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             ValidationFailure error,
             [Frozen] Mock<IValidator<ConfirmProviderViewModel>> mockValidator,
             IMapper<ConfirmProviderViewModel, SelectProviderViewModel> mockMapper,
-            CreateCohortController controller)
+            CohortController controller)
         {
             viewModel.UseThisProvider = false;
 

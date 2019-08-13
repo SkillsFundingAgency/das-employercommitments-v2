@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             IndexRequest request,
             string errorKey,
             string errorMessage,
-            CreateCohortController controller)
+            CohortController controller)
         {
             controller.ModelState.AddModelError(errorKey, errorMessage);
 
@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             string schemesLink,
             [Frozen] Mock<IMapper<IndexRequest, IndexViewModel>> mockMapper,
             [Frozen] Mock<ILinkGenerator> mockLinkGenerator,
-            CreateCohortController controller)
+            CohortController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map(request))
@@ -53,8 +53,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             result.ViewName.Should().BeNull();
             var model = result.Model as IndexViewModel;
             model.Should().BeSameAs(viewModel);
-            model.OrganisationsLink.Should().Be(organisationsLink);
-            model.PayeSchemesLink.Should().Be(schemesLink);
         }
     }
 }

@@ -18,7 +18,7 @@
         <p class="govuk-body-l">You can start adding details of your apprentices or ask your training provider to add them for you.</p>
         <p class="govuk-body-l">If you ask your training provider to add them, you need to check and agree the details before any payments are made.</p>
 
-        <form method="post" asp-controller="CreateCohort" asp-action="Assign">
+        <form method="post" asp-controller="Cohort" asp-action="Assign">
             <partial name="_AssignHiddenPartial" model="@Model" />
             
             <div class="govuk-form-group  @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">

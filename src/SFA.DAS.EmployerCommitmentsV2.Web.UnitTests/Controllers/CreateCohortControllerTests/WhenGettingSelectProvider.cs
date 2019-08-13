@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             SelectProviderRequest request,
             SelectProviderViewModel viewModel,
             [Frozen] Mock<IMapper<SelectProviderRequest, SelectProviderViewModel>> mockMapper,
-            CreateCohortController controller)
+            CohortController controller)
         {
             controller.SelectProvider(request);
 
@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             SelectProviderRequest request,
             SelectProviderViewModel viewModel,
             [Frozen] Mock<IMapper<SelectProviderRequest, SelectProviderViewModel>> mockMapper,
-            CreateCohortController controller)
+            CohortController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map(request))
@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
         public void ThenIfModelIsInvalidRedirectToErrorPage(
             SelectProviderRequest request,
             SelectProviderViewModel viewModel,
-            CreateCohortController controller)
+            CohortController controller)
         {
             controller.ModelState.AddModelError(nameof(request.AccountLegalEntityHashedId), "Must be set");
 

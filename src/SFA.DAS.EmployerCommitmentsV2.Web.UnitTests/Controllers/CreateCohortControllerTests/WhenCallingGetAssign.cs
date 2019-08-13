@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             AssignRequest request,
             string errorKey,
             string errorMessage,
-            CreateCohortController controller)
+            CohortController controller)
         {
             controller.ModelState.AddModelError(errorKey, errorMessage);
 
@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             AssignRequest request,
             AssignViewModel viewModel,
             [Frozen] Mock<IMapper<AssignRequest, AssignViewModel>> mockMapper,
-            CreateCohortController controller)
+            CohortController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map(request))

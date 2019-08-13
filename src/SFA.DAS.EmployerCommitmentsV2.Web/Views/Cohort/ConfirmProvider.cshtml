@@ -24,7 +24,7 @@
             <dd class="das-definition-list__definition">@Model.ProviderId</dd>
         </dl>
 
-        <form method="post" asp-controller="CreateCohort" asp-action="ConfirmProvider">
+        <form method="post" asp-controller="Cohort" asp-action="ConfirmProvider">
             <partial name="_ConfirmProviderHiddenPartial" model="@Model" />
             
             <div class="govuk-form-group  @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">

@@ -1,4 +1,6 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort.IndexViewModel
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort.IndexViewModel
 @{
     ViewData["Title"] = "Apprenticeships";
     ViewBag.Title = "Add an apprentice";
@@ -15,8 +17,8 @@
         <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
             <li>know the names of your apprentices</li>
             <li>know your training provider's UK Provider Reference Number (UKPRN) -your training provider can tell you this</li>
-            <li>make sure the organisation that's named on the contract you have with your training provider is in your account - <a href="@Model.OrganisationsLink" target="_blank" rel="noreferrer">view organisations in this account</a></li>
-            <li>make sure the PAYE scheme that each apprentice is paid through is in your account - <a href="@Model.PayeSchemesLink" target="_blank" rel="noreferrer">view PAYE schemes in this account</a></li>
+            <li>make sure the organisation that's named on the contract you have with your training provider is in your account - <a href="LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)" target="_blank" rel="noreferrer">view organisations in this account</a></li>
+            <li>make sure the PAYE scheme that each apprentice is paid through is in your account - <a href="@LinkGenerator.PayeSchemes(Model.AccountHashedId)" target="_blank" rel="noreferrer">view PAYE schemes in this account</a></li>
         </ul>
         
         <a asp-action="SelectProvider" asp-all-route-data="@Model.ToDictionary()" role="button" draggable="false" class="govuk-button govuk-button--start">

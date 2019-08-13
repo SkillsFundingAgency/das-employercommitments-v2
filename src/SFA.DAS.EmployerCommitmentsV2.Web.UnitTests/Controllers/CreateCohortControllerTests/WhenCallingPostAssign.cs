@@ -15,7 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             AssignViewModel viewModel,
             string errorKey,
             string errorMessage,
-            CreateCohortController controller)
+            CohortController controller)
         {
             controller.ModelState.AddModelError(errorKey, errorMessage);
 
@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
         [Test, MoqAutoData]
         public void And_Employer_Adding_Apprentices_Then_Redirect_To_Add_Apprentice(
             AssignViewModel viewModel,
-            CreateCohortController controller)
+            CohortController controller)
         {
             var expectedRouteValues = new RouteValueDictionary(new
             {
@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
         [Test, MoqAutoData]
         public void And_Provider_Adding_Apprentices_Then_Redirect_To_Message(
             AssignViewModel viewModel,
-            CreateCohortController controller)
+            CohortController controller)
         {
             var expectedRouteValues = new RouteValueDictionary(new
             {
@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
         [Test, MoqAutoData]
         public void And_Unknown_Adding_Apprentices_Then_Redirect_To_Error(
             AssignViewModel viewModel,
-            CreateCohortController controller)
+            CohortController controller)
         {
             viewModel.WhoIsAddingApprentices = (WhoIsAddingApprentices)55;
 

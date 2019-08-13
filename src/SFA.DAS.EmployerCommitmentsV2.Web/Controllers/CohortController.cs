@@ -8,16 +8,14 @@ using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Features;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
-using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
     [DasAuthorize(EmployerFeature.EmployerCommitmentsV2, EmployerUserRole.OwnerOrTransactor)]
     [Route("{accountHashedId}/unapproved/add")]
-    public class CreateCohortController : Controller
+    public class CohortController : Controller
     {
         private readonly IMapper<IndexRequest, IndexViewModel> _indexViewModelMapper;
         private readonly IMapper<SelectProviderRequest, SelectProviderViewModel> _selectProviderViewModelMapper;
@@ -26,11 +24,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 		private readonly IMapper<AssignRequest, AssignViewModel> _assignViewModelMapper;
         private readonly IMapper<ConfirmProviderViewModel, SelectProviderViewModel> _selectProviderFromConfirmMapper;
         private readonly IMapper<ConfirmProviderViewModel, AssignRequest> _assignRequestMapper;
-        private readonly ILinkGenerator _linkGenerator;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly ILogger<CreateCohortController> _logger;
+        private readonly ILogger<CohortController> _logger;
 
-        public CreateCohortController(
+        public CohortController(
             IMapper<IndexRequest, IndexViewModel> indexViewModelMapper,
             IMapper<SelectProviderRequest, SelectProviderViewModel> selectProviderViewModelMapper,
             IMapper<SelectProviderViewModel, ConfirmProviderRequest> confirmProviderRequestMapper,
@@ -38,9 +35,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             IMapper<ConfirmProviderViewModel, SelectProviderViewModel> selectProviderFromConfirmMapper,
             IMapper<ConfirmProviderViewModel, AssignRequest> assignRequestMapper,
             IMapper<AssignRequest, AssignViewModel> assignViewModelMapper,
-            ILinkGenerator linkGenerator,
             ICommitmentsApiClient commitmentsApiClient,
-            ILogger<CreateCohortController> logger)
+            ILogger<CohortController> logger)
         {
             _indexViewModelMapper = indexViewModelMapper;
  			_selectProviderViewModelMapper = selectProviderViewModelMapper;
@@ -49,7 +45,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             _confirmProviderViewModelMapper = confirmProviderViewModelMapper;
             _selectProviderFromConfirmMapper = selectProviderFromConfirmMapper;
             _assignRequestMapper = assignRequestMapper;
-            _linkGenerator = linkGenerator;
             _commitmentsApiClient = commitmentsApiClient;
             _logger = logger;
         }
@@ -62,9 +57,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             var viewModel = _indexViewModelMapper.Map(request);
-
-            viewModel.OrganisationsLink = _linkGenerator.YourOrganisationsAndAgreements(request.AccountHashedId);
-            viewModel.PayeSchemesLink = _linkGenerator.PayeSchemes(request.AccountHashedId);
 
             return View(viewModel);
         }
@@ -108,12 +100,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 }
 
                 _logger.LogError(
-                    $"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.StatusCode)}='{ex.StatusCode}', {nameof(ex.ReasonPhrase)}='{ex.ReasonPhrase}'");
+                    $"Failed '{nameof(CohortController)}-{nameof(SelectProvider)}': {nameof(ex.StatusCode)}='{ex.StatusCode}', {nameof(ex.ReasonPhrase)}='{ex.ReasonPhrase}'");
             }
             catch (Exception ex)
             {
                 _logger.LogError(
-                    $"Failed '{nameof(CreateCohortController)}-{nameof(SelectProvider)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
+                    $"Failed '{nameof(CohortController)}-{nameof(SelectProvider)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
             }
 
             return RedirectToAction("Error", "Error");

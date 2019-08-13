@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             ConfirmProviderRequest confirmProviderRequest,
             GetProviderResponse getProviderResponse,
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
-            CreateCohortController controller)
+            CohortController controller)
         {
             confirmProviderRequest.ProviderId = providerId;
             mockApiClient
@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             ConfirmProviderViewModel viewModel,
             [Frozen] Mock<IMapper<ConfirmProviderRequest, ConfirmProviderViewModel>> mapper,
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
-            CreateCohortController controller)
+            CohortController controller)
         {
             confirmProviderRequest.ProviderId = providerId;
             mockApiClient
@@ -63,7 +63,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
             int providerId,
             ConfirmProviderRequest confirmProviderRequest,
             GetProviderResponse getProviderResponse,
-            CreateCohortController controller)
+            CohortController controller)
         {
             controller.ModelState.AddModelError(nameof(confirmProviderRequest.ProviderId),"ProviderId is not valid");
 
