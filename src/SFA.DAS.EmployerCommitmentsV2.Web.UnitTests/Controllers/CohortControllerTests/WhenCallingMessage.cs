@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
@@ -13,7 +14,9 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
+using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
 {
@@ -137,8 +140,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
                 Mock.Of<IMapper<ConfirmProviderViewModel, SelectProviderViewModel>>(),
                 Mock.Of<IMapper<ConfirmProviderViewModel, AssignRequest>>(),
                 Mock.Of<IMapper<AssignRequest, AssignViewModel>>(),
+                //Mock.Of<IMapper<MessageViewModel, CreateCohortWithOtherPartyRequest>>(),
+                RequestMapper,
+                Mock.Of<IMapper<AddDraftApprenticeshipViewModel,CreateCohortRequest>>(),
                 CommitmentsApiClientMock.Object, Mock.Of<ILogger<CohortController>>(),
-                RequestMapper);
+                Mock.Of<ICommitmentsService>(),
+                Mock.Of<ITrainingProgrammeApiClient>(),
+                Mock.Of<ILinkGenerator>()
+                );
         }
 
         public Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Apprenticeships.Api.Client;
@@ -13,6 +14,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
 using SFA.DAS.EmployerUrlHelper;
 
@@ -226,14 +228,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
             return this;
         }
 
-        public CreateCohortWithDraftApprenticeshipController CreateController()
+        public CohortController CreateController()
         {
-            var controller = new CreateCohortWithDraftApprenticeshipController(
-                CommitmentsService, 
-                RequestMapper, 
-                LinkGenerator, 
+            var controller = new CohortController(
+
+                Mock.Of<IMapper<IndexRequest, IndexViewModel>>(),
+                Mock.Of<IMapper<SelectProviderRequest, SelectProviderViewModel>>(),
+                Mock.Of<IMapper<SelectProviderViewModel, ConfirmProviderRequest>>(),
+                Mock.Of<IMapper<ConfirmProviderRequest, ConfirmProviderViewModel>>(),
+                Mock.Of<IMapper<ConfirmProviderViewModel, SelectProviderViewModel>>(),
+                Mock.Of<IMapper<ConfirmProviderViewModel, AssignRequest>>(),
+                Mock.Of<IMapper<AssignRequest, AssignViewModel>>(),
+                Mock.Of<IMapper<MessageViewModel, CreateCohortWithOtherPartyRequest>>(),
+                RequestMapper,
+                CommitmentsApiClient,
+                Mock.Of<ILogger<CohortController>>(),
+                CommitmentsService,
                 TrainingProgrammeApiClient,
-                CommitmentsApiClient);
+                LinkGenerator
+            );
 
             if (_setModelToInvalid)
             {
