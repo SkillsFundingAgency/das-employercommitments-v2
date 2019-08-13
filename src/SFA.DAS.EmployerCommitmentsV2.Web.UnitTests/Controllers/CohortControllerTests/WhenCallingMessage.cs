@@ -18,7 +18,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
     [TestFixture]
     [Parallelizable]

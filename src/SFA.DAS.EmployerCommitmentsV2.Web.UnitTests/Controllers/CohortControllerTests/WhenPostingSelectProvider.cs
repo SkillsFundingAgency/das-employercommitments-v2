@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentValidation;
 using FluentValidation.Results;
@@ -12,11 +13,10 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
-using SFA.DAS.Testing.AutoFixture;
-using System.Threading.Tasks;
 using SFA.DAS.Http;
+using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
     [TestFixture]
     public class WhenPostingSelectProvider
