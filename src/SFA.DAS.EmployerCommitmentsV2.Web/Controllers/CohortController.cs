@@ -27,7 +27,7 @@ using SFA.DAS.Http;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
     [DasAuthorize(EmployerFeature.EmployerCommitmentsV2, EmployerUserRole.OwnerOrTransactor)]
-    [Route("{accountHashedId}/unapproved/add")]
+    [Route("{accountHashedId}/unapproved")]
     public class CohortController : Controller
     {
         private readonly IMapper<IndexRequest, IndexViewModel> _indexViewModelMapper;
@@ -58,7 +58,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             ICommitmentsApiClient commitmentsApiClient,
             ILogger<CohortController> logger,
             ICommitmentsService employerCommitmentsService,
-            ITrainingProgrammeApiClient trainingProgrammeApiClient, ILinkGenerator linkGenerator)
+            ITrainingProgrammeApiClient trainingProgrammeApiClient,
+            ILinkGenerator linkGenerator)
         {
             _indexViewModelMapper = indexViewModelMapper;
  			_selectProviderViewModelMapper = selectProviderViewModelMapper;
@@ -76,6 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             _linkGenerator = linkGenerator;
         }
 
+        [Route("add")]
         public IActionResult Index(IndexRequest request)
         {
             if (!ModelState.IsValid)
@@ -88,7 +90,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
-        [Route("select-provider")]
+        [Route("add/select-provider")]
         public IActionResult SelectProvider(SelectProviderRequest request)
         {
             if (!ModelState.IsValid)
@@ -101,7 +103,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
-        [Route("select-provider")]
+        [Route("add/select-provider")]
         [HttpPost]
         public async Task<IActionResult> SelectProvider(SelectProviderViewModel request)
         {
@@ -138,7 +140,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return RedirectToAction("Error", "Error");
         }
 
-        [Route("confirm-provider")]
+        [Route("add/confirm-provider")]
         [HttpGet]
         public async Task<IActionResult> ConfirmProvider(ConfirmProviderRequest request)
         {
@@ -156,7 +158,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(model);
         }
 
-        [Route("confirm-provider")]
+        [Route("add/confirm-provider")]
         [HttpPost]
         public IActionResult ConfirmProvider(ConfirmProviderViewModel request)
         {
@@ -176,7 +178,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return RedirectToAction("SelectProvider", returnModel);
         }
 
-        [Route("assign")]
+        [Route("add/assign")]
         public IActionResult Assign(AssignRequest request)
         {
             if (!ModelState.IsValid)
@@ -189,7 +191,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
-        [Route("assign")]
+        [Route("add/assign")]
         [HttpPost]
         public IActionResult Assign(AssignViewModel model)
         {
@@ -221,7 +223,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
 
         [HttpGet]
-        [Route("apprentice")]
+        [Route("add/apprentice")]
         public async Task<IActionResult> AddDraftApprenticeship(CreateCohortWithDraftApprenticeshipRequest request)
         {
             if (!ModelState.IsValid)
@@ -245,7 +247,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpPost]
-        [Route("apprentice")]
+        [Route("add/apprentice")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipViewModel model)
         {
@@ -273,7 +275,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
 
-        [Route("message")]
+        [Route("add/message")]
         public async Task<IActionResult> Message(MessageRequest request)
         {
             var messageModel = new MessageViewModel
@@ -291,7 +293,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpPost]
-        [Route("message")]
+        [Route("add/message")]
         public async Task<IActionResult> Message(MessageViewModel model)
         {
             if (!ModelState.IsValid)
@@ -316,7 +318,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [DasAuthorize(CommitmentOperation.AccessCohort)]
         [HttpGet]
-        [Route("finished")]
+        [Route("add/finished")]
         public async Task<IActionResult> Finished(FinishedRequest request)
         {
             if (!ModelState.IsValid)

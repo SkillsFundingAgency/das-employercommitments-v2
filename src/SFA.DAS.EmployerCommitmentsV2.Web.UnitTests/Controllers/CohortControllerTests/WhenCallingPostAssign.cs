@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CreateCohortCo
 
             result.Should().NotBeNull();
             result.ActionName.Should().Be("AddDraftApprenticeship");
-            result.ControllerName.Should().Be("CreateCohortWithDraftApprenticeship");
+            result.ControllerName.Should().Be("Cohort");
             result.RouteValues.Should().BeEquivalentTo(expectedRouteValues);
         }
 
