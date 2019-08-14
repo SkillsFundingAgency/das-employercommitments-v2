@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
+using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing.AutoFixture;
@@ -34,12 +35,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             IndexViewModel viewModel,
             string organisationsLink,
             string schemesLink,
-            [Frozen] Mock<IMapper<IndexRequest, IndexViewModel>> mockMapper,
+            [Frozen] Mock<IModelMapper> mockMapper,
             [Frozen] Mock<ILinkGenerator> mockLinkGenerator,
             CohortController controller)
         {
             mockMapper
-                .Setup(mapper => mapper.Map(request))
+                .Setup(mapper => mapper.Map<IndexViewModel>(request))
                 .Returns(viewModel);
             mockLinkGenerator
                 .Setup(generator => generator.AccountsLink($"accounts/{request.AccountHashedId}/agreements"))

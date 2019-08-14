@@ -18,6 +18,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.EmployerCommitmentsV2.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
@@ -30,13 +31,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     [Route("{accountHashedId}/unapproved")]
     public class CohortController : Controller
     {
-        private readonly IMapper<IndexRequest, IndexViewModel> _indexViewModelMapper;
-        private readonly IMapper<SelectProviderRequest, SelectProviderViewModel> _selectProviderViewModelMapper;
-        private readonly IMapper<SelectProviderViewModel, ConfirmProviderRequest> _confirmProviderRequestMapper;
-        private readonly IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> _confirmProviderViewModelMapper;
-		private readonly IMapper<AssignRequest, AssignViewModel> _assignViewModelMapper;
-        private readonly IMapper<ConfirmProviderViewModel, SelectProviderViewModel> _selectProviderFromConfirmMapper;
-        private readonly IMapper<ConfirmProviderViewModel, AssignRequest> _assignRequestMapper;
         private readonly IMapper<MessageViewModel, CreateCohortWithOtherPartyRequest> _createCohortWithOtherPartyMapper;
         private readonly IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest> _createCohortRequestMapper;
         private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
@@ -44,30 +38,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ICommitmentsService _employerCommitmentsService;
         private readonly ILogger<CohortController> _logger;
         private readonly ILinkGenerator _linkGenerator;
+        private readonly IModelMapper _modelMapper;
 
         public CohortController(
-            IMapper<IndexRequest, IndexViewModel> indexViewModelMapper,
-            IMapper<SelectProviderRequest, SelectProviderViewModel> selectProviderViewModelMapper,
-            IMapper<SelectProviderViewModel, ConfirmProviderRequest> confirmProviderRequestMapper,
-			IMapper<ConfirmProviderRequest, ConfirmProviderViewModel> confirmProviderViewModelMapper,
-            IMapper<ConfirmProviderViewModel, SelectProviderViewModel> selectProviderFromConfirmMapper,
-            IMapper<ConfirmProviderViewModel, AssignRequest> assignRequestMapper,
-            IMapper<AssignRequest, AssignViewModel> assignViewModelMapper,
             IMapper<MessageViewModel, CreateCohortWithOtherPartyRequest> createCohortWithOtherPartyMapper,
             IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest> createCohortRequestMapper,
             ICommitmentsApiClient commitmentsApiClient,
             ILogger<CohortController> logger,
             ICommitmentsService employerCommitmentsService,
             ITrainingProgrammeApiClient trainingProgrammeApiClient,
-            ILinkGenerator linkGenerator)
+            ILinkGenerator linkGenerator,
+            IModelMapper modelMapper)
         {
-            _indexViewModelMapper = indexViewModelMapper;
- 			_selectProviderViewModelMapper = selectProviderViewModelMapper;
-			_assignViewModelMapper = assignViewModelMapper;
-            _confirmProviderRequestMapper = confirmProviderRequestMapper;
-            _confirmProviderViewModelMapper = confirmProviderViewModelMapper;
-            _selectProviderFromConfirmMapper = selectProviderFromConfirmMapper;
-            _assignRequestMapper = assignRequestMapper;
             _commitmentsApiClient = commitmentsApiClient;
             _logger = logger;
             _createCohortWithOtherPartyMapper = createCohortWithOtherPartyMapper;
@@ -75,6 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             _employerCommitmentsService = employerCommitmentsService;
             _trainingProgrammeApiClient = trainingProgrammeApiClient;
             _linkGenerator = linkGenerator;
+            _modelMapper = modelMapper;
         }
 
         [Route("add")]
@@ -85,8 +68,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 return RedirectToAction("Error", "Error");
             }
 
-            var viewModel = _indexViewModelMapper.Map(request);
-
+            var viewModel = _modelMapper.Map<IndexViewModel>(request);
             return View(viewModel);
         }
 
@@ -98,8 +80,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 return RedirectToAction("Error", "Error", new { StatusCode = 400 });
             }
 
-            var viewModel = _selectProviderViewModelMapper.Map(request);
-
+            var viewModel = _modelMapper.Map<SelectProviderViewModel>(request);
             return View(viewModel);
         }
 
@@ -116,8 +97,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
                 await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
 
-                var confirmProviderRequest = _confirmProviderRequestMapper.Map(request);
-
+                var confirmProviderRequest = _modelMapper.Map<ConfirmProviderRequest>(request);
                 return RedirectToAction("ConfirmProvider", confirmProviderRequest);
             }
             catch (RestHttpClientException ex)
@@ -151,8 +131,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             var response = await _commitmentsApiClient.GetProvider(request.ProviderId);
 
-            var model = _confirmProviderViewModelMapper.Map(request);
-            model.ProviderId = response.ProviderId;
+            var model = _modelMapper.Map<ConfirmProviderViewModel>(request);
+            model.ProviderId = response.ProviderId; //todo: can we move/remove these?
             model.ProviderName = response.Name;
 
             return View(model);
@@ -169,12 +149,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (request.UseThisProvider.Value)
             {
-                var model = _assignRequestMapper.Map(request);
+                var model = _modelMapper.Map<AssignRequest>(request);
                 return RedirectToAction("assign", model);
             }
 
-            var returnModel = _selectProviderFromConfirmMapper.Map(request);
-
+            var returnModel = _modelMapper.Map<SelectProviderViewModel>(request);
             return RedirectToAction("SelectProvider", returnModel);
         }
 
@@ -186,8 +165,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 return RedirectToAction("Error", "Error");
             }
 
-            var viewModel = _assignViewModelMapper.Map(request);
-
+            var viewModel = _modelMapper.Map<AssignViewModel>(request);
             return View(viewModel);
         }
 
@@ -259,7 +237,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             var request = _createCohortRequestMapper.Map(model);
             request.UserId = User.Upn();
-
+            
             try
             {
                 var newCohort = await _employerCommitmentsService.CreateCohort(request);

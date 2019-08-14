@@ -148,6 +148,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             LinkGeneratorMock = new Mock<ILinkGenerator>();
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
             CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
+            ModelMapperMock = new Mock<IModelMapper>();
         }
 
         public Mock<ICommitmentsService> CommitmentsServiceMock { get; } 
@@ -157,6 +158,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
         public Mock<ILinkGenerator> LinkGeneratorMock { get; }
         public ILinkGenerator LinkGenerator => LinkGeneratorMock.Object;
+
+        public Mock<IModelMapper> ModelMapperMock { get; set; }
+        public IModelMapper ModelMapper => ModelMapperMock.Object;
 
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClientMock { get; }
         public ITrainingProgrammeApiClient TrainingProgrammeApiClient => TrainingProgrammeApiClientMock.Object;
@@ -231,21 +235,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         public CohortController CreateController()
         {
             var controller = new CohortController(
-
-                Mock.Of<IMapper<IndexRequest, IndexViewModel>>(),
-                Mock.Of<IMapper<SelectProviderRequest, SelectProviderViewModel>>(),
-                Mock.Of<IMapper<SelectProviderViewModel, ConfirmProviderRequest>>(),
-                Mock.Of<IMapper<ConfirmProviderRequest, ConfirmProviderViewModel>>(),
-                Mock.Of<IMapper<ConfirmProviderViewModel, SelectProviderViewModel>>(),
-                Mock.Of<IMapper<ConfirmProviderViewModel, AssignRequest>>(),
-                Mock.Of<IMapper<AssignRequest, AssignViewModel>>(),
                 Mock.Of<IMapper<MessageViewModel, CreateCohortWithOtherPartyRequest>>(),
                 RequestMapper,
                 CommitmentsApiClient,
                 Mock.Of<ILogger<CohortController>>(),
                 CommitmentsService,
                 TrainingProgrammeApiClient,
-                LinkGenerator
+                LinkGenerator,
+                ModelMapper
             );
 
             if (_setModelToInvalid)

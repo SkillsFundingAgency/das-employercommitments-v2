@@ -133,20 +133,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             ErrorDetail = new ErrorDetail("field1", "error message");
 
             Sut = new CohortController(
-                Mock.Of<IMapper<IndexRequest, IndexViewModel>>(),
-                Mock.Of<IMapper<SelectProviderRequest, SelectProviderViewModel>>(),
-                Mock.Of<IMapper<SelectProviderViewModel, ConfirmProviderRequest>>(),
-                Mock.Of<IMapper<ConfirmProviderRequest, ConfirmProviderViewModel>>(),
-                Mock.Of<IMapper<ConfirmProviderViewModel, SelectProviderViewModel>>(),
-                Mock.Of<IMapper<ConfirmProviderViewModel, AssignRequest>>(),
-                Mock.Of<IMapper<AssignRequest, AssignViewModel>>(),
-                //Mock.Of<IMapper<MessageViewModel, CreateCohortWithOtherPartyRequest>>(),
                 RequestMapper,
                 Mock.Of<IMapper<AddDraftApprenticeshipViewModel,CreateCohortRequest>>(),
                 CommitmentsApiClientMock.Object, Mock.Of<ILogger<CohortController>>(),
                 Mock.Of<ICommitmentsService>(),
                 Mock.Of<ITrainingProgrammeApiClient>(),
-                Mock.Of<ILinkGenerator>()
+                Mock.Of<ILinkGenerator>(),
+                Mock.Of<IModelMapper>()
                 );
         }
 

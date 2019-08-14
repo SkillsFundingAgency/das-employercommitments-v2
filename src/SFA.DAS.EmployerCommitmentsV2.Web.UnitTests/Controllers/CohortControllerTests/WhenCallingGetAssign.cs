@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
+using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -31,11 +32,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         public void Then_Returns_View_With_Correct_Model(
             AssignRequest request,
             AssignViewModel viewModel,
-            [Frozen] Mock<IMapper<AssignRequest, AssignViewModel>> mockMapper,
+            [Frozen] Mock<IModelMapper> mockMapper,
             CohortController controller)
         {
             mockMapper
-                .Setup(mapper => mapper.Map(request))
+                .Setup(mapper => mapper.Map<AssignViewModel>(request))
                 .Returns(viewModel);
 
             var result = controller.Assign(request) as ViewResult;

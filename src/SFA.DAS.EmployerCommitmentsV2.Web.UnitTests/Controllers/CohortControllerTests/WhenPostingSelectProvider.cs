@@ -12,6 +12,7 @@ using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
+using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.Http;
 using SFA.DAS.Testing.AutoFixture;
@@ -107,7 +108,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             ValidationResult validationResult,
             [Frozen] Mock<IValidator<SelectProviderViewModel>> mockValidator,
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
-            [Frozen] Mock<IMapper<SelectProviderViewModel, ConfirmProviderRequest>> mockConfirmProviderRequestMapper,
+            [Frozen] Mock<IModelMapper> mockMapper,
             GetProviderResponse apiResponse,
             CohortController controller)
         {
@@ -121,7 +122,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             await controller.SelectProvider(viewModel);
 
-            mockConfirmProviderRequestMapper.Verify(x => x.Map(viewModel), Times.Once);
+            mockMapper.Verify(x => x.Map<ConfirmProviderRequest>(viewModel), Times.Once);
         }
 
         [Test, MoqAutoData]
@@ -131,7 +132,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             ValidationResult validationResult,
             [Frozen] Mock<IValidator<SelectProviderViewModel>> mockValidator,
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
-            [Frozen] Mock<IMapper<SelectProviderViewModel, ConfirmProviderRequest>> mockConfirmProviderRequestMapper,
+            [Frozen] Mock<IModelMapper> mockMapper,
             GetProviderResponse apiResponse,
             ConfirmProviderRequest confirmProviderRequest,
             CohortController controller)
@@ -144,8 +145,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             mockApiClient
                 .Setup(x => x.GetProvider(long.Parse(viewModel.ProviderId), CancellationToken.None))
                 .ReturnsAsync(apiResponse);
-            mockConfirmProviderRequestMapper
-                .Setup(x => x.Map(viewModel))
+            mockMapper
+                .Setup(x => x.Map<ConfirmProviderRequest>(viewModel))
                 .Returns(confirmProviderRequest);
 
             var result = await controller.SelectProvider(viewModel) as RedirectToActionResult;

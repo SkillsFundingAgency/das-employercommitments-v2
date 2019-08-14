@@ -4,6 +4,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
+using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -16,23 +17,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         public void ThenMapsTheRequestToViewModel(
             SelectProviderRequest request,
             SelectProviderViewModel viewModel,
-            [Frozen] Mock<IMapper<SelectProviderRequest, SelectProviderViewModel>> mockMapper,
+            [Frozen] Mock<IModelMapper> mockMapper,
             CohortController controller)
         {
             controller.SelectProvider(request);
 
-            mockMapper.Verify(x => x.Map(It.IsAny<SelectProviderRequest>()), Times.Once);
+            mockMapper.Verify(x => x.Map<SelectProviderViewModel>(It.IsAny<SelectProviderRequest>()), Times.Once);
         }
 
         [Test, MoqAutoData]
         public void ThenReturnsView(
             SelectProviderRequest request,
             SelectProviderViewModel viewModel,
-            [Frozen] Mock<IMapper<SelectProviderRequest, SelectProviderViewModel>> mockMapper,
+            [Frozen] Mock<IModelMapper> mockMapper,
             CohortController controller)
         {
             mockMapper
-                .Setup(mapper => mapper.Map(request))
+                .Setup(mapper => mapper.Map<SelectProviderViewModel>(request))
                 .Returns(viewModel);
 
             var result = controller.SelectProvider(request) as ViewResult;

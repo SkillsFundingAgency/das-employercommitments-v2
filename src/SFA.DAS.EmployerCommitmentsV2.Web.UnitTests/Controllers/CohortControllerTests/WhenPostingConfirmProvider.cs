@@ -7,6 +7,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
+using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -40,16 +41,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             ValidationResult validationResult,
             ValidationFailure error,
             [Frozen] Mock<IValidator<ConfirmProviderViewModel>> mockValidator,
-            [Frozen] Mock<IMapper<ConfirmProviderViewModel, AssignRequest>> mockMapper,
+            [Frozen] Mock<IModelMapper> mockMapper,
+            AssignRequest mapperResult,
             CohortController controller)
         {
+            mockMapper.Setup(x => x.Map<AssignRequest>(It.IsAny<ConfirmProviderViewModel>()))
+                .Returns(mapperResult);
             viewModel.UseThisProvider = true;
 
             var result = controller.ConfirmProvider(viewModel) as RedirectToActionResult;
 
             result.ActionName.Should().Be("assign");
             result.RouteValues.Should().NotBeEmpty();
-            mockMapper.Verify(x=>x.Map(viewModel), Times.Once);
+            mockMapper.Verify(x=>x.Map<AssignRequest>(viewModel), Times.Once);
         }
 
 
@@ -59,9 +63,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             ValidationResult validationResult,
             ValidationFailure error,
             [Frozen] Mock<IValidator<ConfirmProviderViewModel>> mockValidator,
-            IMapper<ConfirmProviderViewModel, SelectProviderViewModel> mockMapper,
+            [Frozen] Mock<IModelMapper> mockMapper,
+            SelectProviderViewModel mapperResult,
             CohortController controller)
         {
+            mockMapper.Setup(x => x.Map<SelectProviderViewModel>(It.IsAny<ConfirmProviderViewModel>()))
+                .Returns(mapperResult);
+
             viewModel.UseThisProvider = false;
 
             var result = controller.ConfirmProvider(viewModel) as RedirectToActionResult;
