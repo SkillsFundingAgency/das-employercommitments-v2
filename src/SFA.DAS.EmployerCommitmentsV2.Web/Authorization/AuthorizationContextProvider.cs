@@ -86,12 +86,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
 
             if (!_authenticationService.TryGetUserClaimValue(EmployeeClaims.Id, out var idClaimValue))
             {
-                throw new UnauthorizedAccessException();
+                throw new UnauthorizedAccessException($"Failed to get value for claim '{EmployeeClaims.Id}'");
             }
 
             if (!Guid.TryParse(idClaimValue, out var id))
             {
-                throw new UnauthorizedAccessException();
+                throw new UnauthorizedAccessException($"Failed to parse value '{idClaimValue}' for claim '{EmployeeClaims.Id}'");
             }
 
             return id;
@@ -106,7 +106,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
 
             if (!_encodingService.TryDecode(encodedValue, encodedType, out var id))
             {
-                throw new UnauthorizedAccessException();
+                throw new UnauthorizedAccessException($"Failed to decode '{keyName}' value '{encodedValue}' using encoding type '{encodedType}'");
             }
 
             return id;
