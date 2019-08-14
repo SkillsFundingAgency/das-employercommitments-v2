@@ -142,7 +142,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures()
         {
             CommitmentsServiceMock = new Mock<ICommitmentsService>();
-            RequestMapper = new AddDraftApprenticeshipRequestMapper();
+            RequestMapper = new AddDraftApprenticeshipToCreateCohortRequestMapper();
             LinkGeneratorMock = new Mock<ILinkGenerator>();
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
             CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
@@ -181,7 +181,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithReviewCohortLink(string url)
         {
             LinkGeneratorMock
-                .Setup(lg => lg.CohortDetails(It.IsAny<string>(), It.IsAny<string>()))
+                .Setup(lg => lg.CommitmentsLink(It.IsAny<string>()))
                 .Returns(url);
 
             return this;
