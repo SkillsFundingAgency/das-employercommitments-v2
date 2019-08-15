@@ -236,7 +236,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             var request = _createCohortRequestMapper.Map(model);
-            request.UserId = User.Upn();
             
             try
             {
