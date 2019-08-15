@@ -128,23 +128,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
     {
         public CreateCohortWithOtherPartyControllerTestFixture()
         {
-            RequestMapper = new MessageViewModelToCreateCohortWithOtherPartyRequestMapper();
             CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
             ErrorDetail = new ErrorDetail("field1", "error message");
 
+            MapperResult = new CreateCohortWithOtherPartyRequest();
+            ModelMapperMock = new Mock<IModelMapper>();
+            ModelMapperMock.Setup(x => x.Map<CreateCohortWithOtherPartyRequest>(It.IsAny<object>()))
+                .Returns(() => MapperResult);
+            
             Sut = new CohortController(
-                RequestMapper,
-                Mock.Of<IMapper<AddDraftApprenticeshipViewModel,CreateCohortRequest>>(),
                 CommitmentsApiClientMock.Object, Mock.Of<ILogger<CohortController>>(),
                 Mock.Of<ICommitmentsService>(),
                 Mock.Of<ITrainingProgrammeApiClient>(),
                 Mock.Of<ILinkGenerator>(),
-                Mock.Of<IModelMapper>()
+                ModelMapperMock.Object
                 );
         }
 
         public Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }
-        public IMapper<MessageViewModel, CreateCohortWithOtherPartyRequest> RequestMapper { get; }
+        public Mock<IModelMapper> ModelMapperMock { get; }
+        public CreateCohortWithOtherPartyRequest MapperResult { get; }
         public CohortController Sut { get; }
         public ErrorDetail ErrorDetail { get; }
 
@@ -180,9 +183,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             CommitmentsApiClientMock.Verify(
                 x => x.CreateCohort(
-                    It.Is<CreateCohortWithOtherPartyRequest>(p =>
-                        p.ProviderId == model.ProviderId && p.AccountLegalEntityId == model.AccountLegalEntityId &&
-                        p.Message == model.Message), It.IsAny<CancellationToken>()));
+                    It.Is<CreateCohortWithOtherPartyRequest>(p => p == MapperResult), It.IsAny<CancellationToken>()));
 
             return this;
         }

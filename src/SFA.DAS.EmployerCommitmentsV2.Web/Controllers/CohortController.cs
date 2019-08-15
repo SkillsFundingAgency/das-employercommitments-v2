@@ -29,8 +29,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     [Route("{accountHashedId}/unapproved")]
     public class CohortController : Controller
     {
-        private readonly IMapper<MessageViewModel, CreateCohortWithOtherPartyRequest> _createCohortWithOtherPartyMapper;
-        private readonly IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest> _createCohortRequestMapper;
         private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly ICommitmentsService _employerCommitmentsService;
@@ -39,8 +37,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IModelMapper _modelMapper;
 
         public CohortController(
-            IMapper<MessageViewModel, CreateCohortWithOtherPartyRequest> createCohortWithOtherPartyMapper,
-            IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest> createCohortRequestMapper,
             ICommitmentsApiClient commitmentsApiClient,
             ILogger<CohortController> logger,
             ICommitmentsService employerCommitmentsService,
@@ -50,8 +46,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             _commitmentsApiClient = commitmentsApiClient;
             _logger = logger;
-            _createCohortWithOtherPartyMapper = createCohortWithOtherPartyMapper;
-            _createCohortRequestMapper = createCohortRequestMapper;
             _employerCommitmentsService = employerCommitmentsService;
             _trainingProgrammeApiClient = trainingProgrammeApiClient;
             _linkGenerator = linkGenerator;
@@ -233,7 +227,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 return View(model);
             }
 
-            var request = _createCohortRequestMapper.Map(model);
+            var request = _modelMapper.Map<CreateCohortRequest>(model);
             
             try
             {
@@ -279,7 +273,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             try
             {
-                var request = _createCohortWithOtherPartyMapper.Map(model);
+                var request = _modelMapper.Map<CreateCohortWithOtherPartyRequest>(model);
                 var response = await _commitmentsApiClient.CreateCohort(request);
                 return RedirectToAction("Finished", new { model.AccountHashedId, response.CohortReference });
             }

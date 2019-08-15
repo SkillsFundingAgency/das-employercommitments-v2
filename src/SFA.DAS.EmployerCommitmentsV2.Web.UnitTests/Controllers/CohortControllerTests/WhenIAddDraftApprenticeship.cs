@@ -235,8 +235,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         public CohortController CreateController()
         {
             var controller = new CohortController(
-                Mock.Of<IMapper<MessageViewModel, CreateCohortWithOtherPartyRequest>>(),
-                RequestMapper,
                 CommitmentsApiClient,
                 Mock.Of<ILogger<CohortController>>(),
                 CommitmentsService,
