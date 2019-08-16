@@ -22,6 +22,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
+using SFA.DAS.Validation.Mvc.Filters;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -53,25 +54,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("add")]
+        [ValidateModelStateFilter]
         public IActionResult Index(IndexRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToAction("Error", "Error");
-            }
-
             var viewModel = _modelMapper.Map<IndexViewModel>(request);
             return View(viewModel);
         }
 
         [Route("add/select-provider")]
+        [ValidateModelStateFilter]
         public IActionResult SelectProvider(SelectProviderRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToAction("Error", "Error", new { StatusCode = 400 });
-            }
-
             var viewModel = _modelMapper.Map<SelectProviderViewModel>(request);
             return View(viewModel);
         }
@@ -114,13 +107,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("add/confirm-provider")]
         [HttpGet]
+        [ValidateModelStateFilter]
         public async Task<IActionResult> ConfirmProvider(ConfirmProviderRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToAction("Error", "Error");
-            }
-
             var response = await _commitmentsApiClient.GetProvider(request.ProviderId);
 
             var model = _modelMapper.Map<ConfirmProviderViewModel>(request);
@@ -150,13 +139,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("add/assign")]
+        [ValidateModelStateFilter]
         public IActionResult Assign(AssignRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToAction("Error", "Error");
-            }
-
             var viewModel = _modelMapper.Map<AssignViewModel>(request);
             return View(viewModel);
         }
@@ -194,13 +179,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("add/apprentice")]
+        [ValidateModelStateFilter]
         public async Task<IActionResult> AddDraftApprenticeship(CreateCohortWithDraftApprenticeshipRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var model = new AddDraftApprenticeshipViewModel
             {
                 AccountLegalEntityId = request.AccountLegalEntityId,
@@ -245,6 +226,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
 
         [Route("add/message")]
+        [ValidateModelStateFilter]
         public async Task<IActionResult> Message(MessageRequest request)
         {
             var messageModel = new MessageViewModel
@@ -287,14 +269,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [DasAuthorize(CommitmentOperation.AccessCohort)]
         [HttpGet]
+        [ValidateModelStateFilter]
         [Route("add/finished")]
         public async Task<IActionResult> Finished(FinishedRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var response = await _commitmentsApiClient.GetCohort(request.CohortId);
 
             return View(new FinishedViewModel

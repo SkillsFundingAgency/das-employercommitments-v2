@@ -28,6 +28,8 @@
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.77" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.18" />
     <PackageReference Include="SFA.DAS.NLog.Targets.Redis" Version="1.2.1" />
+    <PackageReference Include="SFA.DAS.Validation" Version="6.0.1" />
+    <PackageReference Include="SFA.DAS.Validation.Mvc" Version="6.0.1" />
     <PackageReference Include="StructureMap.AspNetCore" Version="2.0.0" />
     <PackageReference Include="WebEssentials.AspNetCore.CdnTagHelpers" Version="1.0.16" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
