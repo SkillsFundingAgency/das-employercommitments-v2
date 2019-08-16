@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -13,8 +12,6 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
 
@@ -51,17 +48,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var model = result.VerifyReturnsViewModel().WithModel<MessageViewModel>();
             _fixture.VerifyViewModelIsMappedCorrectly(request, model);
-        }
-
-        [Test, AutoData]
-        public async Task PostMessage_WithInvalidRequest_ShouldReturnViewModelAndNotCallCreateCohort(MessageViewModel model)
-        {
-            _fixture.WithProviderName("ProviderName").WithInvalidModel();
-
-            var result = await _fixture.Sut.Message(model);
-
-            result.VerifyReturnsViewModel().WithModel<MessageViewModel>();
-            _fixture.CommitmentsApiClientMock.Verify(x=>x.CreateCohort(It.IsAny<CreateCohortWithOtherPartyRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test, AutoData]
@@ -113,100 +99,98 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             Assert.AreEqual(model.Message, getCohortResponse.LatestMessageCreatedByEmployer);
         }
 
-        [Test]
-        public async Task GetFinished_InvalidModel_ShouldReturnBadRequestResponse()
+        public class CreateCohortWithOtherPartyControllerTestFixture
         {
-            _fixture.WithInvalidModel();
-            
-            var response = await _fixture.Sut.Finished(null);
-            
-            Assert.IsTrue(response is BadRequestObjectResult);
-        }
-    }
+            public CreateCohortWithOtherPartyControllerTestFixture()
+            {
+                CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
+                ErrorDetail = new ErrorDetail("field1", "error message");
 
-    public class CreateCohortWithOtherPartyControllerTestFixture
-    {
-        public CreateCohortWithOtherPartyControllerTestFixture()
-        {
-            CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
-            ErrorDetail = new ErrorDetail("field1", "error message");
+                MapperResult = new CreateCohortWithOtherPartyRequest();
+                ModelMapperMock = new Mock<IModelMapper>();
+                ModelMapperMock.Setup(x => x.Map<CreateCohortWithOtherPartyRequest>(It.IsAny<object>()))
+                    .Returns(() => MapperResult);
 
-            MapperResult = new CreateCohortWithOtherPartyRequest();
-            ModelMapperMock = new Mock<IModelMapper>();
-            ModelMapperMock.Setup(x => x.Map<CreateCohortWithOtherPartyRequest>(It.IsAny<object>()))
-                .Returns(() => MapperResult);
-            
-            Sut = new CohortController(
-                CommitmentsApiClientMock.Object, Mock.Of<ILogger<CohortController>>(),
-                Mock.Of<ICommitmentsService>(),
-                Mock.Of<ITrainingProgrammeApiClient>(),
-                Mock.Of<ILinkGenerator>(),
-                ModelMapperMock.Object
+                Sut = new CohortController(
+                    CommitmentsApiClientMock.Object, Mock.Of<ILogger<CohortController>>(),
+                    Mock.Of<ICommitmentsService>(),
+                    Mock.Of<ITrainingProgrammeApiClient>(),
+                    Mock.Of<ILinkGenerator>(),
+                    ModelMapperMock.Object
                 );
-        }
+            }
 
-        public Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }
-        public Mock<IModelMapper> ModelMapperMock { get; }
-        public CreateCohortWithOtherPartyRequest MapperResult { get; }
-        public CohortController Sut { get; }
-        public ErrorDetail ErrorDetail { get; }
+            public Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }
+            public Mock<IModelMapper> ModelMapperMock { get; }
+            public CreateCohortWithOtherPartyRequest MapperResult { get; }
+            public CohortController Sut { get; }
+            public ErrorDetail ErrorDetail { get; }
 
-        public CreateCohortWithOtherPartyControllerTestFixture WithProviderName(string name)
-        {
-            CommitmentsApiClientMock.Setup(x => x.GetProvider(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetProviderResponse { Name = name});
-            return this;
-        }
+            public CreateCohortWithOtherPartyControllerTestFixture WithProviderName(string name)
+            {
+                CommitmentsApiClientMock.Setup(x => x.GetProvider(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                    .ReturnsAsync(new GetProviderResponse {Name = name});
+                return this;
+            }
 
-        public CreateCohortWithOtherPartyControllerTestFixture WithInvalidModel()
-        {
-            Sut.ModelState.AddModelError("AKey", "Some Error");
-            return this;
-        }
+            public CreateCohortWithOtherPartyControllerTestFixture WithInvalidModel()
+            {
+                Sut.ModelState.AddModelError("AKey", "Some Error");
+                return this;
+            }
 
-        public CreateCohortWithOtherPartyControllerTestFixture SetCreateCohortResponse(CreateCohortResponse createCohortResponse)
-        {
-            CommitmentsApiClientMock.Setup(c => c.CreateCohort(It.IsAny<CreateCohortWithOtherPartyRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(createCohortResponse);
+            public CreateCohortWithOtherPartyControllerTestFixture SetCreateCohortResponse(
+                CreateCohortResponse createCohortResponse)
+            {
+                CommitmentsApiClientMock.Setup(c =>
+                        c.CreateCohort(It.IsAny<CreateCohortWithOtherPartyRequest>(), It.IsAny<CancellationToken>()))
+                    .ReturnsAsync(createCohortResponse);
 
-            return this;
-        }
+                return this;
+            }
 
-        public CreateCohortWithOtherPartyControllerTestFixture SetGetCohortResponse(GetCohortResponse getCohortResponse)
-        {
-            CommitmentsApiClientMock.Setup(c => c.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(getCohortResponse);
-            
-            return this;
-        }
+            public CreateCohortWithOtherPartyControllerTestFixture SetGetCohortResponse(
+                GetCohortResponse getCohortResponse)
+            {
+                CommitmentsApiClientMock.Setup(c => c.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                    .ReturnsAsync(getCohortResponse);
 
-        public CreateCohortWithOtherPartyControllerTestFixture VerifyAddCohortIsCalledWithCorrectMappedValues(MessageViewModel model)
-        {
-            CommitmentsApiClientMock.Verify(
-                x => x.CreateCohort(
-                    It.Is<CreateCohortWithOtherPartyRequest>(p => p == MapperResult), It.IsAny<CancellationToken>()));
+                return this;
+            }
 
-            return this;
-        }
+            public CreateCohortWithOtherPartyControllerTestFixture VerifyAddCohortIsCalledWithCorrectMappedValues(
+                MessageViewModel model)
+            {
+                CommitmentsApiClientMock.Verify(
+                    x => x.CreateCohort(
+                        It.Is<CreateCohortWithOtherPartyRequest>(p => p == MapperResult),
+                        It.IsAny<CancellationToken>()));
 
-        public CreateCohortWithOtherPartyControllerTestFixture WithCreateCohortApiError()
-        {
-            CommitmentsApiClientMock.Setup(
-                    x => x.CreateCohort(It.IsAny<CreateCohortWithOtherPartyRequest>(), It.IsAny<CancellationToken>()))
-                .ThrowsAsync(new CommitmentsApiModelException(new List<ErrorDetail>{ErrorDetail}));
+                return this;
+            }
 
-            return this;
-        }
+            public CreateCohortWithOtherPartyControllerTestFixture WithCreateCohortApiError()
+            {
+                CommitmentsApiClientMock.Setup(
+                        x => x.CreateCohort(It.IsAny<CreateCohortWithOtherPartyRequest>(),
+                            It.IsAny<CancellationToken>()))
+                    .ThrowsAsync(new CommitmentsApiModelException(new List<ErrorDetail> {ErrorDetail}));
 
-        public CreateCohortWithOtherPartyControllerTestFixture VerifyViewModelIsMappedCorrectly(MessageRequest request, MessageViewModel model)
-        {
-            Assert.AreEqual(request.AccountHashedId, model.AccountHashedId);
-            Assert.AreEqual(request.CourseCode, model.CourseCode);
-            Assert.AreEqual(request.StartMonthYear, model.StartMonthYear);
-            Assert.AreEqual(request.ProviderId, model.ProviderId);
-            Assert.AreEqual(request.EmployerAccountLegalEntityPublicHashedId, model.AccountLegalEntityHashedId);
-            Assert.AreEqual(request.ReservationId, model.ReservationId);
+                return this;
+            }
 
-            return this;
+            public CreateCohortWithOtherPartyControllerTestFixture VerifyViewModelIsMappedCorrectly(
+                MessageRequest request, MessageViewModel model)
+            {
+                Assert.AreEqual(request.AccountHashedId, model.AccountHashedId);
+                Assert.AreEqual(request.CourseCode, model.CourseCode);
+                Assert.AreEqual(request.StartMonthYear, model.StartMonthYear);
+                Assert.AreEqual(request.ProviderId, model.ProviderId);
+                Assert.AreEqual(request.EmployerAccountLegalEntityPublicHashedId, model.AccountLegalEntityHashedId);
+                Assert.AreEqual(request.ReservationId, model.ReservationId);
+
+                return this;
+            }
         }
     }
 }

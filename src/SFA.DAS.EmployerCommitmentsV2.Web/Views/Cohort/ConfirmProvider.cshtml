@@ -2,12 +2,7 @@
 @model ConfirmProviderViewModel
 
 @{
-    ViewData["Title"] = "ConfirmProvider";
     ViewBag.Title = "Confirm training provider";
-
-    var customErrorKeys = new Dictionary<string, string> { { $"error-message-{nameof(ConfirmProviderViewModel.UseThisProvider)}", "UseThisProvider" } };
-
-    ViewData["CustomErrorKeys"] = customErrorKeys;
 }
 
 <div class="govuk-grid-row">
@@ -24,7 +19,7 @@
             <dd class="das-definition-list__definition">@Model.ProviderId</dd>
         </dl>
 
-        <form method="post" asp-controller="Cohort" asp-action="ConfirmProvider">
+        <form method="post">
             <partial name="_ConfirmProviderHiddenPartial" model="@Model" />
             
             <div class="govuk-form-group  @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">

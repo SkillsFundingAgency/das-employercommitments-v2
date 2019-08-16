@@ -23,25 +23,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
     public class WhenPostingSelectProvider
     {
         [Test, MoqAutoData]
-        public async Task AndViewModelIsInvalid_ThenReturnsView(
-            SelectProviderViewModel viewModel,
-            ValidationResult validationResult,
-            ValidationFailure error,
-            string errorKey,
-            string errorMessage,
-            [Frozen] Mock<IValidator<SelectProviderViewModel>> mockValidator,
-            CohortController controller)
-        {
-            controller.ModelState.AddModelError(errorKey, errorMessage);
-
-            var result = await controller.SelectProvider(viewModel) as ViewResult;
-
-            Assert.Null(result.ViewName);
-            Assert.AreSame(viewModel,result.ViewData.Model);
-
-        }
-
-        [Test, MoqAutoData]
         public async Task ThenCallsApi(
             SelectProviderViewModel viewModel,
             long providerId,
@@ -154,18 +135,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             Assert.NotNull(result);
             Assert.AreEqual(actionName,result.ActionName);
         }
-
-        [Test, MoqAutoData]
-        public async Task ThenIfModelIsInvalidRedirectToErrorPage(
-            SelectProviderViewModel viewModel,
-            CohortController controller)
-        {
-            controller.ModelState.AddModelError(nameof(viewModel.AccountLegalEntityHashedId), "Must be set");
-
-            var result = await controller.SelectProvider(viewModel) as ViewResult;
-
-            Assert.NotNull(result);
-        }
-
     }
 }

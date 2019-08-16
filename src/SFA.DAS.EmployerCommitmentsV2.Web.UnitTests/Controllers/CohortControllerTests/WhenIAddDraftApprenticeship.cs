@@ -93,36 +93,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         }
 
         [Test]
-        public async Task PostAddDraftApprenticeship_WithInvalidModel_ShouldReturnViewModel()
-        {
-            var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
-                .ForPostRequest()
-                .WithInvalidModel()
-                .WithTrainingProvider();
-
-            var result = await fixtures.CheckPost();
-
-            result.VerifyReturnsViewModel().WithModel<AddDraftApprenticeshipViewModel>();
-        }
-
-        [Test]
-        public async Task PostAddDraftApprenticeship_WithInvalidModel_ShouldReturnViewModelWithCoursesSet()
-        {
-            var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
-                .ForPostRequest()
-                .WithInvalidModel()
-                .WithCourses("001", "002")
-                .WithTrainingProvider();
-
-            var result = await fixtures.CheckPost();
-
-            var model = result.VerifyReturnsViewModel().WithModel<AddDraftApprenticeshipViewModel>();
-
-            Assert.IsNotNull(model, "Model is null");
-            Assert.IsNotEmpty(model.Courses, "Courses were empty");
-        }
-
-        [Test]
         public async Task PostAddDraftApprenticeship_WithValidModel_ShouldSaveCohort()
         {
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()

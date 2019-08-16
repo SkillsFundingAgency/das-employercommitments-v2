@@ -16,26 +16,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
     public class WhenPostingConfirmProvider
     {
         [Test, MoqAutoData]
-        public void And_The_ViewModel_Is_Invalid_Then_Returns_View(
-            ConfirmProviderViewModel viewModel,
-            ValidationResult validationResult,
-            ValidationFailure error,
-            string errorKey,
-            string errorMessage,
-            [Frozen] Mock<IValidator<ConfirmProviderViewModel>> mockValidator,
-            CohortController controller)
-        {
-            controller.ModelState.AddModelError(errorKey, errorMessage);
-            
-            var result = controller.ConfirmProvider(viewModel) as ViewResult;
-
-            Assert.IsNotNull(result);
-            Assert.Null(result.ViewName);
-            Assert.AreSame(viewModel, result.ViewData.Model);
-
-        }
-
-        [Test, MoqAutoData]
         public void And_The_ViewModel_Is_Valid_And_Set_To_Use_Provider_Then_Redirects_To_Assign_Action_And_The_Model_Mapped_To_The_Assign(
             ConfirmProviderViewModel viewModel,
             ValidationResult validationResult,

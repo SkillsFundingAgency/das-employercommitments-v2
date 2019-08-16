@@ -57,21 +57,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             actualModel.ProviderId.Should().Be(getProviderResponse.ProviderId);
             actualModel.ProviderName.Should().Be(getProviderResponse.Name);
         }
-
-        [Test, MoqAutoData]
-        public async Task Then_If_The_Result_Is_Not_Returned_A_Bad_Request_Is_Returned(
-            int providerId,
-            ConfirmProviderRequest confirmProviderRequest,
-            GetProviderResponse getProviderResponse,
-            CohortController controller)
-        {
-            controller.ModelState.AddModelError(nameof(confirmProviderRequest.ProviderId),"ProviderId is not valid");
-
-            var result = await controller.ConfirmProvider(confirmProviderRequest) as RedirectToActionResult;
-
-            result.Should().NotBeNull();
-            result.ControllerName.Should().Be("Error");
-            result.ActionName.Should().Be("Error");
-        }
     }
 }

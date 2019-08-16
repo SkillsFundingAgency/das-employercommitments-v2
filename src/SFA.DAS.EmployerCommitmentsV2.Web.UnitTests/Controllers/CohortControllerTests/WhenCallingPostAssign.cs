@@ -11,22 +11,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
     public class WhenCallingPostAssign
     {
         [Test, MoqAutoData]
-        public void And_ModelState_Invalid_Then_Returns_View(
-            AssignViewModel viewModel,
-            string errorKey,
-            string errorMessage,
-            CohortController controller)
-        {
-            controller.ModelState.AddModelError(errorKey, errorMessage);
-
-            var result = controller.Assign(viewModel) as ViewResult;
-
-            result.Should().NotBeNull();
-            result.ViewName.Should().BeNull();
-            result.Model.Should().BeSameAs(viewModel);
-        }
-
-        [Test, MoqAutoData]
         public void And_Employer_Adding_Apprentices_Then_Redirect_To_Add_Apprentice(
             AssignViewModel viewModel,
             CohortController controller)

@@ -5,7 +5,6 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing.AutoFixture;
@@ -14,21 +13,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 {
     public class WhenCallingGetIndex
     {
-        [Test, MoqAutoData]
-        public void And_ModelState_Invalid_Then_Redirect_To_Error(
-            IndexRequest request,
-            string errorKey,
-            string errorMessage,
-            CohortController controller)
-        {
-            controller.ModelState.AddModelError(errorKey, errorMessage);
-
-            var result = controller.Index(request) as RedirectToActionResult;
-
-            result.ActionName.Should().Be("Error");
-            result.ControllerName.Should().Be("Error");
-        }
-        
         [Test, MoqAutoData]
         public void Then_Returns_View_With_Correct_ViewModel(
             IndexRequest request,

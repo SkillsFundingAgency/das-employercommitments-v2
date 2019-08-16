@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using SFA.DAS.Validation.Mvc;
 using SFA.DAS.Validation.Mvc.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
@@ -17,7 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 {
                     o.AddAuthorization();
                     o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-                    //o.AddValidation();
+                    o.AddValidation();
                 })
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
