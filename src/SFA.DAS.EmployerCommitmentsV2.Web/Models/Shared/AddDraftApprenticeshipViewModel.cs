@@ -1,6 +1,6 @@
 ﻿using SFA.DAS.Authorization.ModelBinding;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
 {
     public class AddDraftApprenticeshipViewModel : DraftApprenticeshipViewModel, IAuthorizationContextModel
     {

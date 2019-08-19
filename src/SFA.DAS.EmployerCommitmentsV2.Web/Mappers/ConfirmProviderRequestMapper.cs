@@ -1,5 +1,5 @@
 ﻿using SFA.DAS.Commitments.Shared.Interfaces;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {

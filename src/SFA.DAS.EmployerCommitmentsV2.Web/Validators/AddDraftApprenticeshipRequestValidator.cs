@@ -1,7 +1,8 @@
 using System;
 using System.Globalization;
 using FluentValidation;
-using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
 {

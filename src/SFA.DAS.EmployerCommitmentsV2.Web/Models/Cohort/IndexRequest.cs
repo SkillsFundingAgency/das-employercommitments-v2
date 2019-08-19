@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 {
     public class IndexRequest
     {

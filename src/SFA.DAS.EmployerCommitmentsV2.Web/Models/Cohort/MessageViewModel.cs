@@ -1,7 +1,6 @@
-﻿using System;
-using SFA.DAS.Authorization.ModelBinding;
+﻿using SFA.DAS.Authorization.ModelBinding;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 {
     public class MessageViewModel : IAuthorizationContextModel
     {
