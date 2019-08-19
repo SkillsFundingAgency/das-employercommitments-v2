@@ -53,11 +53,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add")]
         public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
                 var model = new AddDraftApprenticeshipViewModel
@@ -86,13 +81,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add")]
         public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                await AddProviderNameAndCoursesToModel(model);
-                
-                return View(model);
-            }
-            
             try
             {
                 var addDraftApprenticeshipRequest = _addDraftApprenticeshipRequestMapper.Map(model);
@@ -114,11 +102,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{DraftApprenticeshipHashedId}/edit")]
         public async Task<IActionResult> EditDraftApprenticeship(EditDraftApprenticeshipRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
                 var editModel =
@@ -142,12 +125,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{DraftApprenticeshipHashedId}/edit")]
         public async Task<IActionResult> EditDraftApprenticeship(EditDraftApprenticeshipViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                await AddProviderNameAndCoursesToModel(model);
-                return View(model);
-            }
-
             try
             {
                 var updateRequest = _updateDraftApprenticeshipRequestMapper.Map(model);
