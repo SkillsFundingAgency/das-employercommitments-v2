@@ -95,8 +95,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public EditDraftApprenticeshipTestsFixture()
         {
             CommitmentsServiceMock = new Mock<ICommitmentsService>();
-            ToViewModelMapper = new EditDraftApprenticeshipDetailsToViewModelMapper();
-            ToApiRequestMapper = new EditDraftApprenticeshipToUpdateRequestMapper();
             LinkGeneratorMock = new Mock<ILinkGenerator>();
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
 
@@ -117,17 +115,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             };
             ApiErrors = new List<ErrorDetail>{new ErrorDetail("Field1", "Message1")};
 
+            ModelMapperMock = new Mock<IModelMapper>();
+            ModelMapperMock.Setup(x => x.Map<EditDraftApprenticeshipViewModel>(It.IsAny<EditDraftApprenticeshipDetails>()))
+                .Returns(new EditDraftApprenticeshipViewModel
+                {
+                    CohortId = CohortId
+                });
+
             Sut = new DraftApprenticeshipController(CommitmentsServiceMock.Object,
-                ToViewModelMapper,
-                ToApiRequestMapper,
-                null,
                 LinkGeneratorMock.Object,
-                TrainingProgrammeApiClientMock.Object);
+                TrainingProgrammeApiClientMock.Object,
+                ModelMapperMock.Object);
         }
 
         public Mock<ICommitmentsService> CommitmentsServiceMock { get; }
-        public IMapper<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel> ToViewModelMapper;
-        public IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipRequest> ToApiRequestMapper;
+        public Mock<IModelMapper> ModelMapperMock { get; }
         public Mock<ILinkGenerator> LinkGeneratorMock { get; }
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClientMock { get; }
         public CohortDetails CohortDetails { get; private set; }

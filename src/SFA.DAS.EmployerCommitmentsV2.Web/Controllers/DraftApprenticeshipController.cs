@@ -15,8 +15,6 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerUrlHelper;
@@ -29,26 +27,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     public class DraftApprenticeshipController : Controller
     {
         private readonly ICommitmentsService _commitmentsService;
-        private readonly IMapper<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel> _editDraftApprenticeshipDetailsToViewModelMapper;
-        private readonly IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipRequest> _updateDraftApprenticeshipRequestMapper;
-        private readonly IMapper<AddDraftApprenticeshipViewModel, SFA.DAS.CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest> _addDraftApprenticeshipRequestMapper;
+        private readonly IModelMapper _modelMapper;
         private readonly ILinkGenerator _linkGenerator;
         private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
 
         public DraftApprenticeshipController(
             ICommitmentsService commitmentsService,
-            IMapper<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel> editDraftApprenticeshipDetailsToViewModelMapper,
-            IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipRequest> updateDraftApprenticeshipRequestMapper,
-            IMapper<AddDraftApprenticeshipViewModel, SFA.DAS.CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest> addDraftApprenticeshipRequestMapper,
             ILinkGenerator linkGenerator,
-            ITrainingProgrammeApiClient trainingProgrammeApiClient)
+            ITrainingProgrammeApiClient trainingProgrammeApiClient,
+            IModelMapper modelMapper)
         {
             _commitmentsService = commitmentsService;
-            _editDraftApprenticeshipDetailsToViewModelMapper = editDraftApprenticeshipDetailsToViewModelMapper;
-            _updateDraftApprenticeshipRequestMapper = updateDraftApprenticeshipRequestMapper;
-            _addDraftApprenticeshipRequestMapper = addDraftApprenticeshipRequestMapper;
             _linkGenerator = linkGenerator;
             _trainingProgrammeApiClient = trainingProgrammeApiClient;
+            _modelMapper = modelMapper;
         }
 
         [HttpGet]
@@ -85,8 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             try
             {
-                var addDraftApprenticeshipRequest = _addDraftApprenticeshipRequestMapper.Map(model);
-                
+                var addDraftApprenticeshipRequest = _modelMapper.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(model);
                 await _commitmentsService.AddDraftApprenticeshipToCohort(model.CohortId.Value, addDraftApprenticeshipRequest);
                 
                 return Redirect(_linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference));
@@ -109,7 +100,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 var editModel =
                     await _commitmentsService.GetDraftApprenticeshipForCohort(request.CohortId,
                         request.DraftApprenticeshipId);
-                var model = _editDraftApprenticeshipDetailsToViewModelMapper.Map(editModel);
+
+                var model = _modelMapper.Map<EditDraftApprenticeshipViewModel>(editModel);
 
                 model.AccountHashedId = request.AccountHashedId;
                 
@@ -129,7 +121,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             try
             {
-                var updateRequest = _updateDraftApprenticeshipRequestMapper.Map(model);
+                var updateRequest = _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
                 await _commitmentsService.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
 
                 var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);

@@ -18,6 +18,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing;
+using StructureMap.Query;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {
@@ -120,7 +121,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public CommitmentsApiModelException CommitmentsApiModelException { get; set; }
         public Mock<ICommitmentsService> CommitmentsService { get; set; }
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClient { get; set; }
-        public Mock<IMapper<AddDraftApprenticeshipViewModel, SFA.DAS.CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>> AddDraftApprenticeshipRequestMapper { get; set; }
+        public Mock<IModelMapper> ModelMapper { get; set; }
         public Mock<ILinkGenerator> LinkGenerator { get; set; }
         public DraftApprenticeshipController Controller { get; set; }
 
@@ -164,21 +165,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             CommitmentsApiModelException = new CommitmentsApiModelException(new List<ErrorDetail> { new ErrorDetail("Foo", "Bar") });
             CommitmentsService = new Mock<ICommitmentsService>();
             TrainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
-            AddDraftApprenticeshipRequestMapper = new Mock<IMapper<AddDraftApprenticeshipViewModel, SFA.DAS.CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>>();
+            ModelMapper = new Mock<IModelMapper>();
             LinkGenerator = new Mock<ILinkGenerator>();
             
             Controller = new DraftApprenticeshipController(
                 CommitmentsService.Object, 
-                null, 
-                null,
-                AddDraftApprenticeshipRequestMapper.Object,
                 LinkGenerator.Object,
-                TrainingProgrammeApiClient.Object);
+                TrainingProgrammeApiClient.Object,
+                ModelMapper.Object
+                );
 
             CommitmentsService.Setup(c => c.GetCohortDetail(Cohort.CohortId)).ReturnsAsync(Cohort);
             TrainingProgrammeApiClient.Setup(c => c.GetAllTrainingProgrammes()).ReturnsAsync(Courses);
             TrainingProgrammeApiClient.Setup(c => c.GetStandardTrainingProgrammes()).ReturnsAsync(StandardCourses);
-            AddDraftApprenticeshipRequestMapper.Setup(m => m.Map(ViewModel)).Returns(AddDraftApprenticeshipRequest);
+            ModelMapper.Setup(m => m.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(ViewModel)).Returns(AddDraftApprenticeshipRequest);
             LinkGenerator.Setup(g => g.CommitmentsLink(CohortDetailsUrl)).Returns(CohortDetailsUrl);
         }
 
