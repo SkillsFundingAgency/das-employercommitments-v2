@@ -23,16 +23,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
     public class EditDraftApprenticeshipTests
     {
         [Test]
-        public async Task GetEditDraftApprenticeship_ValidModel_ShouldReturnBadRequestIfModelStateIsNotValid()
-        {
-            var fixtures = new EditDraftApprenticeshipTestsFixture().WithModelStateError();
-
-            var result = await fixtures.Sut.EditDraftApprenticeship(new EditDraftApprenticeshipRequest());
-
-            result.VerifyReturnsBadRequestObject();
-        }
-
-        [Test]
         public async Task GetEditDraftApprenticeship_ValidModel_ShouldReturnViewModel()
         {
             var fixtures = new EditDraftApprenticeshipTestsFixture().WithCourses().WithDraftApprenticeship().WithCohort();
@@ -70,20 +60,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             var redirect = result.VerifyReturnsRedirect();
             Assert.AreEqual("XYZ", redirect.Url);
             fixtures.LinkGeneratorMock.Verify(x=>x.CommitmentsLink($"accounts/{fixtures.AccountHashedId}/apprentices/{fixtures.CohortReference}/apprenticeships/{fixtures.DraftApprenticeshipHashedId}/view"));
-        }
-
-        [Test]
-        public async Task PostEditDraftApprenticeship_WithInvalidModel_ShouldReturnTheViewModelAndAddProviderNameAndCourses()
-        {
-            var fixtures = new EditDraftApprenticeshipTestsFixture().WithModelStateError().WithCourses("XXX", "YYYY").WithCohort();
-
-            var result = await fixtures.Sut.EditDraftApprenticeship(new EditDraftApprenticeshipViewModel { DraftApprenticeshipId = fixtures.DraftApprenticeshipId, CohortId = fixtures.CohortId, FirstName = "First", LastName = "Last"});
-
-            var model = result.VerifyReturnsViewModel().WithModel<EditDraftApprenticeshipViewModel>();
-            Assert.AreEqual("First", model.FirstName);
-            Assert.AreEqual("Last", model.LastName);
-            Assert.AreEqual(2, model.Courses.Count);
-            Assert.AreEqual("ProviderName", model.ProviderName);
         }
 
         [Test]

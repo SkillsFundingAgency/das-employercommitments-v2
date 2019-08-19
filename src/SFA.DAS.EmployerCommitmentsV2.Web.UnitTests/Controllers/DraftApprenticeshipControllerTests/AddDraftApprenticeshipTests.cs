@@ -45,16 +45,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
 
         [Test]
-        public async Task WhenGettingActionAndModelStateIsInvalid_ThenShouldReturnBadRequest()
-        {
-            await TestAsync(
-                f => f.SetInvalidModelState(),
-                f => f.Get(),
-                (f, r) => r.Should().NotBeNull()
-                    .And.BeOfType<BadRequestObjectResult>());
-        }
-
-        [Test]
         public async Task WhenGettingActionAndCohortIsNotWithEmployer_ThenShouldRedirectToCohortDetailsUrl()
         {
             await TestAsync(
@@ -94,20 +84,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 (f, r) => r.Should().NotBeNull()
                     .And.BeOfType<RedirectResult>().Which
                     .Url.Should().Be(f.CohortDetailsUrl));
-        }
-
-        [Test]
-        public async Task WhenPostingActionAndModelStateIsInvalid_ThenShouldReturnView()
-        {
-            await TestAsync(
-                f => f.SetInvalidModelState(),
-                f => f.Post(),
-                (f, r) => r.Should().NotBeNull()
-                    .And.BeOfType<ViewResult>()
-                    .Which.Model.Should().Be(f.ViewModel)
-                    .And.Match<AddDraftApprenticeshipViewModel>(m =>
-                        m.ProviderName == f.Cohort.ProviderName &&
-                        m.Courses == f.Courses));
         }
 
         [Test]
