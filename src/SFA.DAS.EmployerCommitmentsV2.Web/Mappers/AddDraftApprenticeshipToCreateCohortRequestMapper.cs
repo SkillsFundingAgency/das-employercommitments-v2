@@ -11,6 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
         {
             return new CreateCohortRequest
             {
+                AccountId = source.AccountId,
                 AccountLegalEntityId = source.AccountLegalEntityId,
                 ProviderId = source.ProviderId,
                 ReservationId = source.ReservationId,
