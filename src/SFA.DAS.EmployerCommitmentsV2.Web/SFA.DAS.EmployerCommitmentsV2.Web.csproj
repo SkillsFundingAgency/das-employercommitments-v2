@@ -23,7 +23,7 @@
     <PackageReference Include="NLog.Schema" Version="4.5.11" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.0" />
     <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="5.6.7" />
-    <PackageReference Include="SFA.DAS.Commitments.Shared" Version="1.0.3-cv-356-create-co0035" />
+    <PackageReference Include="SFA.DAS.Commitments.Shared" Version="1.0.3-cv-356-create-co0036" />
    
     <PackageReference Include="SFA.DAS.Employer.Shared.UI" Version="2.0.3" />
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.77" />
