@@ -49,35 +49,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         }
 
         [Test]
-        public async Task GetAddDraftApprenticeship_WithValidModel_ShouldSeeAllCourses()
-        {
-            var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
-                .ForGetRequest()
-                .WithTrainingProvider();
-
-            await fixtures.CheckGet();
-
-            fixtures.TrainingProgrammeApiClientMock.Verify(tp => tp.GetStandardTrainingProgrammes(), Times.Never);
-            fixtures.TrainingProgrammeApiClientMock.Verify(tp => tp.GetFrameworkTrainingProgrammes(), Times.Never);
-            fixtures.TrainingProgrammeApiClientMock.Verify(tp => tp.GetAllTrainingProgrammes(), Times.Once);
-        }
-
-        [Test]
-        public async Task GetAddDraftApprenticeship_WithValidModel_ShouldSeeATrainingProvider()
-        {
-            var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
-                .ForGetRequest()
-                .WithTrainingProvider();
-            
-            var result = await fixtures.CheckGet();
-
-            var model = result.VerifyReturnsViewModel().WithModel<AddDraftApprenticeshipViewModel>();
-
-            Assert.AreEqual(model.ProviderName, "Name");
-            Assert.AreEqual(model.ProviderId, 1);
-        }
-
-        [Test]
         public async Task PostAddDraftApprenticeship_WithInvalidRequest_ShouldReturnRedirectToGet()
         {
             const string reviewCohortUrl = "https://www.reviewmycohort.gov.uk";
@@ -119,6 +90,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
             CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
             ModelMapperMock = new Mock<IModelMapper>();
+            ModelMapperMock.Setup(x => x.Map<AddDraftApprenticeshipViewModel>(It.IsAny<CreateCohortWithDraftApprenticeshipRequest>()))
+                .ReturnsAsync(new AddDraftApprenticeshipViewModel());
         }
 
         public Mock<ICommitmentsService> CommitmentsServiceMock { get; } 
