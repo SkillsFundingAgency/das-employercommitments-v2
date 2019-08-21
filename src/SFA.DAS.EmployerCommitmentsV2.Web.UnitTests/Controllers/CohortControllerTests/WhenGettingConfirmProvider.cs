@@ -33,29 +33,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             result.ViewName.Should().BeNull();
         }
-
-        [Test, MoqAutoData]
-        public async Task Then_The_Provider_Details_Are_Populated_From_The_UkPrn(
-            int providerId,
-            ConfirmProviderRequest confirmProviderRequest,
-            GetProviderResponse getProviderResponse,
-            ConfirmProviderViewModel viewModel,
-            [Frozen] Mock<IMapper<ConfirmProviderRequest, ConfirmProviderViewModel>> mapper,
-            [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
-            CohortController controller)
-        {
-            confirmProviderRequest.ProviderId = providerId;
-            mockApiClient
-                .Setup(x => x.GetProvider(providerId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(getProviderResponse);
-            mapper.Setup(c => c.Map(confirmProviderRequest))
-                .ReturnsAsync(viewModel);
-
-            var result = await controller.ConfirmProvider(confirmProviderRequest) as ViewResult;
-
-            var actualModel = result.Model as ConfirmProviderViewModel;
-            actualModel.ProviderId.Should().Be(getProviderResponse.ProviderId);
-            actualModel.ProviderName.Should().Be(getProviderResponse.Name);
-        }
     }
 }

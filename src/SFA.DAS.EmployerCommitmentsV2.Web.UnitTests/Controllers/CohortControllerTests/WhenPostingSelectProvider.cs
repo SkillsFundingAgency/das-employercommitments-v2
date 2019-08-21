@@ -38,24 +38,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         }
 
         [Test, MoqAutoData]
-        public async Task AndApiThrowsNotFoundException_ThenReturnsViewWithFailedValidation(
+        public async Task AndApiThrowsNotFoundException_ThenReturnsRedirectResult(
             SelectProviderViewModel viewModel,
             long providerId,
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
-            GetProviderResponse apiResponse,
             HttpResponseMessage error,
+            [Frozen] Mock<IModelMapper> modelMapper,
             CohortController controller)
         {
+            modelMapper.Setup(x => x.Map<SelectProviderRequest>(viewModel))
+                .ReturnsAsync(new SelectProviderRequest());
+
             error.StatusCode = HttpStatusCode.NotFound;
             viewModel.ProviderId = providerId.ToString();
             mockApiClient
                 .Setup(x => x.GetProvider(providerId, CancellationToken.None))
                 .ThrowsAsync(new RestHttpClientException(error,error.ReasonPhrase));
 
-            var result = await controller.SelectProvider(viewModel) as ViewResult;
+            var result = await controller.SelectProvider(viewModel) as RedirectToActionResult;
 
-            Assert.Null(result.ViewName);
-            Assert.AreSame(viewModel,result.ViewData.Model);
+            Assert.AreEqual(nameof(CohortController.SelectProvider), result.ActionName);
             Assert.False(controller.ModelState.IsValid);
         }
 

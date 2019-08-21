@@ -81,7 +81,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 if (ex.StatusCode == HttpStatusCode.NotFound)
                 {
                     ModelState.AddModelError(nameof(request.ProviderId), "Check UK Provider Reference Number");
-                    return View(request);
+                    var returnModel = await _modelMapper.Map<SelectProviderRequest>(request);
+                    return RedirectToAction("SelectProvider", returnModel);
                 }
 
                 _logger.LogError(
@@ -100,12 +101,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ConfirmProvider(ConfirmProviderRequest request)
         {
-            var response = await _commitmentsApiClient.GetProvider(request.ProviderId);
-
             var model = await _modelMapper.Map<ConfirmProviderViewModel>(request);
-            model.ProviderId = response.ProviderId; //todo: can we move/remove these?
-            model.ProviderName = response.Name;
-
             return View(model);
         }
 
