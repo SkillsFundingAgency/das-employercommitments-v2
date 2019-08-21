@@ -197,7 +197,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var messageModel = new MessageViewModel
             {
                 AccountHashedId = request.AccountHashedId,
-                AccountLegalEntityHashedId = request.EmployerAccountLegalEntityPublicHashedId,
+                AccountLegalEntityHashedId = request.AccountLegalEntityHashedId,
                 ProviderId = request.ProviderId,
                 StartMonthYear = request.StartMonthYear,
                 CourseCode = request.CourseCode,

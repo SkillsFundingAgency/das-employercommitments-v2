@@ -9,7 +9,7 @@
         <partial name="_ValidationSummary" />
         <h1 class="govuk-heading-xl">Message for your training provider</h1>
         <p class="govuk-body-l">Let <b>@Model.ProviderName</b> know what you'd like them to do next.</p>
-        <form method="post" asp-controller="CreateCohortWithOtherParty" asp-action="Message">
+        <form method="post">
 
             @Html.HiddenFor(x => x.AccountLegalEntityHashedId)
             @Html.HiddenFor(x => x.ReservationId)

@@ -186,7 +186,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 Assert.AreEqual(request.CourseCode, model.CourseCode);
                 Assert.AreEqual(request.StartMonthYear, model.StartMonthYear);
                 Assert.AreEqual(request.ProviderId, model.ProviderId);
-                Assert.AreEqual(request.EmployerAccountLegalEntityPublicHashedId, model.AccountLegalEntityHashedId);
+                Assert.AreEqual(request.AccountLegalEntityHashedId, model.AccountLegalEntityHashedId);
                 Assert.AreEqual(request.ReservationId, model.ReservationId);
 
                 return this;

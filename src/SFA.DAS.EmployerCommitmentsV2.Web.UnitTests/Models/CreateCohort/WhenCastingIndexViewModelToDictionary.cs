@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.CreateCohort
             var dictionary = indexViewModel.ToDictionary();
 
             dictionary.Should().ContainKey(nameof(IndexViewModel.ReservationId))
-                .WhichValue.Should().Be(indexViewModel.ReservationId);
+                .WhichValue.Should().Be(indexViewModel.ReservationId?.ToString());
         }
 
         [Test, AutoData]
