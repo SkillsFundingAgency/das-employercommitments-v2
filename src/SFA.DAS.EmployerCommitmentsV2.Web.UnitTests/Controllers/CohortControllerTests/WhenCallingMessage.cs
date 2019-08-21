@@ -109,7 +109,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 MapperResult = new CreateCohortWithOtherPartyRequest();
                 ModelMapperMock = new Mock<IModelMapper>();
                 ModelMapperMock.Setup(x => x.Map<CreateCohortWithOtherPartyRequest>(It.IsAny<object>()))
-                    .Returns(() => MapperResult);
+                    .ReturnsAsync(() => MapperResult);
 
                 Sut = new CohortController(
                     CommitmentsApiClientMock.Object, Mock.Of<ILogger<CohortController>>(),

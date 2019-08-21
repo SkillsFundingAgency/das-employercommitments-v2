@@ -117,10 +117,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             ModelMapperMock = new Mock<IModelMapper>();
             ModelMapperMock.Setup(x => x.Map<EditDraftApprenticeshipViewModel>(It.IsAny<EditDraftApprenticeshipDetails>()))
-                .Returns(new EditDraftApprenticeshipViewModel
+                .Returns(Task.FromResult(new EditDraftApprenticeshipViewModel
                 {
                     CohortId = CohortId
-                });
+                }));
 
             Sut = new DraftApprenticeshipController(CommitmentsServiceMock.Object,
                 LinkGeneratorMock.Object,

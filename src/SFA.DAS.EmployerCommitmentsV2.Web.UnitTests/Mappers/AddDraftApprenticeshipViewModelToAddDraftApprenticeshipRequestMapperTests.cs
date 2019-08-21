@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 
         public AddDraftApprenticeshipRequest Map()
         {
-            return Mapper.Map(ViewModel);
+            return Mapper.Map(ViewModel).Result;
         }
     }
 }

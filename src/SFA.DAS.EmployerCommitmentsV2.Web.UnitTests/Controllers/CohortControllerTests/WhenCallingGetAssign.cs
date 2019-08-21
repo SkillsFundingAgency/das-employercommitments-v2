@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -14,7 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
     public class WhenCallingGetAssign
     {
         [Test, MoqAutoData]
-        public void Then_Returns_View_With_Correct_Model(
+        public async Task Then_Returns_View_With_Correct_Model(
             AssignRequest request,
             AssignViewModel viewModel,
             [Frozen] Mock<IModelMapper> mockMapper,
@@ -22,9 +23,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             mockMapper
                 .Setup(mapper => mapper.Map<AssignViewModel>(request))
-                .Returns(viewModel);
+                .ReturnsAsync(viewModel);
 
-            var result = controller.Assign(request) as ViewResult;
+            var result = await controller.Assign(request) as ViewResult;
 
             result.ViewName.Should().BeNull();
             var model = result.Model as AssignViewModel;

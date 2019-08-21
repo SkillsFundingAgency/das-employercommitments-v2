@@ -52,16 +52,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("add")]
-        public IActionResult Index(IndexRequest request)
+        public async Task<IActionResult> Index(IndexRequest request)
         {
-            var viewModel = _modelMapper.Map<IndexViewModel>(request);
+            var viewModel = await _modelMapper.Map<IndexViewModel>(request);
             return View(viewModel);
         }
 
         [Route("add/select-provider")]
-        public IActionResult SelectProvider(SelectProviderRequest request)
+        public async Task<IActionResult> SelectProvider(SelectProviderRequest request)
         {
-            var viewModel = _modelMapper.Map<SelectProviderViewModel>(request);
+            var viewModel = await _modelMapper.Map<SelectProviderViewModel>(request);
             return View(viewModel);
         }
 
@@ -73,7 +73,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
 
-                var confirmProviderRequest = _modelMapper.Map<ConfirmProviderRequest>(request);
+                var confirmProviderRequest = await _modelMapper.Map<ConfirmProviderRequest>(request);
                 return RedirectToAction("ConfirmProvider", confirmProviderRequest);
             }
             catch (RestHttpClientException ex)
@@ -102,7 +102,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var response = await _commitmentsApiClient.GetProvider(request.ProviderId);
 
-            var model = _modelMapper.Map<ConfirmProviderViewModel>(request);
+            var model = await _modelMapper.Map<ConfirmProviderViewModel>(request);
             model.ProviderId = response.ProviderId; //todo: can we move/remove these?
             model.ProviderName = response.Name;
 
@@ -111,22 +111,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("add/confirm-provider")]
         [HttpPost]
-        public IActionResult ConfirmProvider(ConfirmProviderViewModel request)
+        public async Task<IActionResult> ConfirmProvider(ConfirmProviderViewModel request)
         {
             if (request.UseThisProvider.Value)
             {
-                var model = _modelMapper.Map<AssignRequest>(request);
+                var model = await _modelMapper.Map<AssignRequest>(request);
                 return RedirectToAction("assign", model);
             }
 
-            var returnModel = _modelMapper.Map<SelectProviderViewModel>(request);
+            var returnModel = await _modelMapper.Map<SelectProviderViewModel>(request);
             return RedirectToAction("SelectProvider", returnModel);
         }
 
         [Route("add/assign")]
-        public IActionResult Assign(AssignRequest request)
+        public async Task<IActionResult> Assign(AssignRequest request)
         {
-            var viewModel = _modelMapper.Map<AssignViewModel>(request);
+            var viewModel = await _modelMapper.Map<AssignViewModel>(request);
             return View(viewModel);
         }
 
@@ -179,7 +179,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add/apprentice")]
         public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipViewModel model)
         {
-            var request = _modelMapper.Map<CreateCohortRequest>(model);
+            var request = await _modelMapper.Map<CreateCohortRequest>(model);
             
             try
             {
@@ -218,7 +218,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             try
             {
-                var request = _modelMapper.Map<CreateCohortWithOtherPartyRequest>(model);
+                var request = await _modelMapper.Map<CreateCohortWithOtherPartyRequest>(model);
                 var response = await _commitmentsApiClient.CreateCohort(request);
                 return RedirectToAction("Finished", new { model.AccountHashedId, response.CohortReference });
             }

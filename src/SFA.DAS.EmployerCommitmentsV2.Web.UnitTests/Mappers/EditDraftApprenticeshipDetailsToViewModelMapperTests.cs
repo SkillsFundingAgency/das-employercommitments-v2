@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AutoFixture;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Shared.Models;
@@ -13,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
     {
         private EditDraftApprenticeshipDetailsToViewModelMapper _mapper;
         private EditDraftApprenticeshipDetails _source;
-        private Func<EditDraftApprenticeshipViewModel> _act;
+        private Func<Task<EditDraftApprenticeshipViewModel>> _act;
 
         [SetUp]
         public void Arrange()
@@ -23,115 +24,115 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
             _mapper = new EditDraftApprenticeshipDetailsToViewModelMapper();
             _source = fixture.Build<EditDraftApprenticeshipDetails>().Create();
 
-            _act = () => _mapper.Map(TestHelper.Clone(_source));
+            _act = async () => await _mapper.Map(TestHelper.Clone(_source));
         }
 
         [Test]
-        public void ThenDraftApprenticeshipIdIsMappedCorrectly()
+        public async Task ThenDraftApprenticeshipIdIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.DraftApprenticeshipId, result.DraftApprenticeshipId);
         }
 
         [Test]
-        public void ThenDraftApprenticeshipHashedIdIsMappedCorrectly()
+        public async Task ThenDraftApprenticeshipHashedIdIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.DraftApprenticeshipId, result.DraftApprenticeshipId);
         }
 
         [Test]
-        public void ThenCohortIdIsMappedCorrectly()
+        public async Task ThenCohortIdIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.CohortId, result.CohortId);
         }
 
         [Test]
-        public void ThenCohortReferenceIsMappedCorrectly()
+        public async Task ThenCohortReferenceIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.CohortReference, result.CohortReference);
         }
 
         [Test]
-        public void ThenReservationIdIsMappedCorrectly()
+        public async Task ThenReservationIdIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.ReservationId, result.ReservationId);
         }
 
         [Test]
-        public void ThenFirstNameIsMappedCorrectly()
+        public async Task ThenFirstNameIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.FirstName, result.FirstName);
         }
 
         [Test]
-        public void ThenLastNameIsMappedCorrectly()
+        public async Task ThenLastNameIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.LastName, result.LastName);
         }
 
         [Test]
-        public void ThenUniqueLearnerNumberIsMappedCorrectly()
+        public async Task ThenUniqueLearnerNumberIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.UniqueLearnerNumber, result.Uln);
         }
 
         [Test]
-        public void ThenDateOfBirthIsMappedCorrectly()
+        public async Task ThenDateOfBirthIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.DateOfBirth?.Day, result.DateOfBirth.Day);
             Assert.AreEqual(_source.DateOfBirth?.Month, result.DateOfBirth.Month);
             Assert.AreEqual(_source.DateOfBirth?.Year, result.DateOfBirth.Year);
         }
 
         [Test]
-        public void ThenCourseCodeIsMappedCorrectly()
+        public async Task ThenCourseCodeIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.CourseCode, result.CourseCode);
         }
 
         [Test]
-        public void ThenCostIsMappedCorrectly()
+        public async Task ThenCostIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.Cost, result.Cost);
         }
 
         [Test]
-        public void ThenStartDateIsMappedCorrectly()
+        public async Task ThenStartDateIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.StartDate?.Month, result.StartDate.Month);
             Assert.AreEqual(_source.StartDate?.Year, result.StartDate.Year);
         }
 
         [Test]
-        public void ThenEndDateIsMappedCorrectly()
+        public async Task ThenEndDateIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.EndDate?.Month, result.EndDate.Month);
             Assert.AreEqual(_source.EndDate?.Year, result.EndDate.Year);
         }
 
         [Test]
-        public void ThenOriginatorReferenceIsMappedCorrectly()
+        public async Task ThenOriginatorReferenceIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.OriginatorReference, result.Reference);
         }
 
         [Test]
-        public void ThenProviderIdIsMappedCorrectly()
+        public async Task ThenProviderIdIsMappedCorrectly()
         {
-            var result = _act();
+            var result = await _act();
             Assert.AreEqual(_source.ProviderId, result.ProviderId);
         }
     }

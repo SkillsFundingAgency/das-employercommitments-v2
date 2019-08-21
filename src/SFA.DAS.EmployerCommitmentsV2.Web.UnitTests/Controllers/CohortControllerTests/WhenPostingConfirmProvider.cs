@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
@@ -16,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
     public class WhenPostingConfirmProvider
     {
         [Test, MoqAutoData]
-        public void And_The_ViewModel_Is_Valid_And_Set_To_Use_Provider_Then_Redirects_To_Assign_Action_And_The_Model_Mapped_To_The_Assign(
+        public async Task And_The_ViewModel_Is_Valid_And_Set_To_Use_Provider_Then_Redirects_To_Assign_Action_And_The_Model_Mapped_To_The_Assign(
             ConfirmProviderViewModel viewModel,
             ValidationResult validationResult,
             ValidationFailure error,
@@ -26,10 +27,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             CohortController controller)
         {
             mockMapper.Setup(x => x.Map<AssignRequest>(It.IsAny<ConfirmProviderViewModel>()))
-                .Returns(mapperResult);
+                .ReturnsAsync(mapperResult);
             viewModel.UseThisProvider = true;
 
-            var result = controller.ConfirmProvider(viewModel) as RedirectToActionResult;
+            var result = await controller.ConfirmProvider(viewModel) as RedirectToActionResult;
 
             result.ActionName.Should().Be("assign");
             result.RouteValues.Should().NotBeEmpty();
@@ -38,7 +39,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
 
         [Test, MoqAutoData]
-        public void And_The_ViewModel_Is_Valid_And_Set_To_Not_Use_Provider_Then_Redirects_To_SelectProvider_Action_And_The_Model_Mapped_To_The_Assign(
+        public async Task And_The_ViewModel_Is_Valid_And_Set_To_Not_Use_Provider_Then_Redirects_To_SelectProvider_Action_And_The_Model_Mapped_To_The_Assign(
             ConfirmProviderViewModel viewModel,
             ValidationResult validationResult,
             ValidationFailure error,
@@ -48,11 +49,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             CohortController controller)
         {
             mockMapper.Setup(x => x.Map<SelectProviderViewModel>(It.IsAny<ConfirmProviderViewModel>()))
-                .Returns(mapperResult);
+                .ReturnsAsync(mapperResult);
 
             viewModel.UseThisProvider = false;
 
-            var result = controller.ConfirmProvider(viewModel) as RedirectToActionResult;
+            var result = await controller.ConfirmProvider(viewModel) as RedirectToActionResult;
 
             result.ActionName.Should().Be("SelectProvider");
             result.RouteValues.Should().NotBeEmpty();

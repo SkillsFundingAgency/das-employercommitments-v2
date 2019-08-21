@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 .Setup(x => x.GetProvider(providerId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(getProviderResponse);
             mapper.Setup(c => c.Map(confirmProviderRequest))
-                .Returns(viewModel);
+                .ReturnsAsync(viewModel);
 
             var result = await controller.ConfirmProvider(confirmProviderRequest) as ViewResult;
 

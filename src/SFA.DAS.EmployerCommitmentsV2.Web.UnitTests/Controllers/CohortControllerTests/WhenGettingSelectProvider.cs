@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -14,19 +15,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
     public class WhenGettingSelectProvider
     {
         [Test, MoqAutoData]
-        public void ThenMapsTheRequestToViewModel(
+        public async Task ThenMapsTheRequestToViewModel(
             SelectProviderRequest request,
             SelectProviderViewModel viewModel,
             [Frozen] Mock<IModelMapper> mockMapper,
             CohortController controller)
         {
-            controller.SelectProvider(request);
+            await controller.SelectProvider(request);
 
             mockMapper.Verify(x => x.Map<SelectProviderViewModel>(It.IsAny<SelectProviderRequest>()), Times.Once);
         }
 
         [Test, MoqAutoData]
-        public void ThenReturnsView(
+        public async Task ThenReturnsView(
             SelectProviderRequest request,
             SelectProviderViewModel viewModel,
             [Frozen] Mock<IModelMapper> mockMapper,
@@ -34,9 +35,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             mockMapper
                 .Setup(mapper => mapper.Map<SelectProviderViewModel>(request))
-                .Returns(viewModel);
+                .ReturnsAsync(viewModel);
 
-            var result = controller.SelectProvider(request) as ViewResult;
+            var result = await controller.SelectProvider(request) as ViewResult;
 
             Assert.Null(result.ViewName);
             Assert.AreSame(viewModel, result.Model);

@@ -128,7 +128,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 .ReturnsAsync(apiResponse);
             mockMapper
                 .Setup(x => x.Map<ConfirmProviderRequest>(viewModel))
-                .Returns(confirmProviderRequest);
+                .ReturnsAsync(confirmProviderRequest);
 
             var result = await controller.SelectProvider(viewModel) as RedirectToActionResult;
 

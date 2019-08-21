@@ -1,13 +1,14 @@
-﻿using SFA.DAS.Commitments.Shared.Interfaces;
+﻿using System.Threading.Tasks;
+using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {
     public class ConfirmProviderRequestMapper : IMapper<SelectProviderViewModel, ConfirmProviderRequest>
     {
-        public ConfirmProviderRequest Map(SelectProviderViewModel source)
+        public Task<ConfirmProviderRequest> Map(SelectProviderViewModel source)
         {
-            return new ConfirmProviderRequest
+            return Task.FromResult(new ConfirmProviderRequest
             {
                 AccountHashedId = source.AccountHashedId,
                 CourseCode = source.CourseCode,
@@ -15,7 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
                 ProviderId = long.Parse(source.ProviderId),
                 ReservationId = source.ReservationId,
                 StartMonthYear = source.StartMonthYear
-            };
+            });
         }
     }
 }

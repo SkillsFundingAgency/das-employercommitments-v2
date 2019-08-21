@@ -77,7 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             try
             {
-                var addDraftApprenticeshipRequest = _modelMapper.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(model);
+                var addDraftApprenticeshipRequest = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(model);
                 await _commitmentsService.AddDraftApprenticeshipToCohort(model.CohortId.Value, addDraftApprenticeshipRequest);
                 
                 return Redirect(_linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference));
@@ -101,7 +101,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     await _commitmentsService.GetDraftApprenticeshipForCohort(request.CohortId,
                         request.DraftApprenticeshipId);
 
-                var model = _modelMapper.Map<EditDraftApprenticeshipViewModel>(editModel);
+                var model = await _modelMapper.Map<EditDraftApprenticeshipViewModel>(editModel);
 
                 model.AccountHashedId = request.AccountHashedId;
                 
@@ -121,7 +121,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             try
             {
-                var updateRequest = _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
+                var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
                 await _commitmentsService.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
 
                 var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);
