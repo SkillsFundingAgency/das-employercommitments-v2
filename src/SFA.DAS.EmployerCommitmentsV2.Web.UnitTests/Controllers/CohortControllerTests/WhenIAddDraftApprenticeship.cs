@@ -13,7 +13,6 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerUrlHelper;
@@ -80,8 +79,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
     public class CreateCohortWithDraftApprenticeshipControllerTestFixtures
     {
-        private bool _setModelToInvalid;
-
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures()
         {
             CommitmentsServiceMock = new Mock<ICommitmentsService>();
@@ -106,7 +103,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         public IModelMapper ModelMapper => ModelMapperMock.Object;
 
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClientMock { get; }
-        public ITrainingProgrammeApiClient TrainingProgrammeApiClient => TrainingProgrammeApiClientMock.Object;
 
         public CreateCohortWithDraftApprenticeshipRequest GetRequest { get; private set; }
         public AddDraftApprenticeshipViewModel PostRequest { get; private set; }
@@ -145,26 +141,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             return this;
         }
 
-        public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithInvalidModel()
-        {
-            _setModelToInvalid = true;
-            return this;
-        }
-
-        public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithCourses(params string[] courseCodes)
-        {
-            TrainingProgrammeApiClientMock
-                .Setup(tp => tp.GetAllTrainingProgrammes())
-                .ReturnsAsync(courseCodes.Select(cc =>
-                {
-                    var trainingProgramMock = new Mock<ITrainingProgramme>();
-                    trainingProgramMock.Setup(tpm => tpm.Id).Returns(cc);
-                    return trainingProgramMock.Object;
-                }).ToList());
-
-            return this;
-        }
-
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithTrainingProvider()
         {
             var response = new GetProviderResponse {Name = "Name", ProviderId = 1};
@@ -181,16 +157,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 CommitmentsApiClient,
                 Mock.Of<ILogger<CohortController>>(),
                 CommitmentsService,
-                TrainingProgrammeApiClient,
                 LinkGenerator,
                 ModelMapper
             );
-
-            if (_setModelToInvalid)
-            {
-                controller.ModelState.AddModelError("AKey", "Some Error");
-            }
-
             return controller;
         }
 

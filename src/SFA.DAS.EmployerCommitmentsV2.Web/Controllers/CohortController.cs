@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
@@ -23,7 +22,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     [Route("{accountHashedId}/unapproved")]
     public class CohortController : Controller
     {
-        private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly ICommitmentsService _employerCommitmentsService;
         private readonly ILogger<CohortController> _logger;
@@ -34,14 +32,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             ICommitmentsApiClient commitmentsApiClient,
             ILogger<CohortController> logger,
             ICommitmentsService employerCommitmentsService,
-            ITrainingProgrammeApiClient trainingProgrammeApiClient,
             ILinkGenerator linkGenerator,
             IModelMapper modelMapper)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _logger = logger;
             _employerCommitmentsService = employerCommitmentsService;
-            _trainingProgrammeApiClient = trainingProgrammeApiClient;
             _linkGenerator = linkGenerator;
             _modelMapper = modelMapper;
         }
