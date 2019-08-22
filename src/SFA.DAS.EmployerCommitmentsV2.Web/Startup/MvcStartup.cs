@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.Mvc.Extensions;
+using SFA.DAS.Commitments.Shared.Extensions;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using SFA.DAS.Validation.Mvc.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
 {

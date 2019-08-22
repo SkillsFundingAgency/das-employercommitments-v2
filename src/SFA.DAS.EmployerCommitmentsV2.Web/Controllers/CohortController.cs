@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
-using SFA.DAS.Commitments.Shared.Extensions;
 using SFA.DAS.Commitments.Shared.Interfaces;
-using SFA.DAS.Commitments.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -165,19 +160,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipViewModel model)
         {
             var request = await _modelMapper.Map<CreateCohortRequest>(model);
-            
-            try
-            {
-                var newCohort = await _employerCommitmentsService.CreateCohort(request);
-                var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, newCohort.CohortReference);
-                return Redirect(reviewYourCohort);
-            }
-            catch (CommitmentsApiModelException ex)
-            {
-                ModelState.AddModelExceptionErrors(ex);
-                await AddCoursesAndProviderNameToModel(model);
-                return View(model);
-            }
+            var newCohort = await _employerCommitmentsService.CreateCohort(request);
+            var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, newCohort.CohortReference);
+            return Redirect(reviewYourCohort);
         }
 
         [Route("add/message")]
@@ -201,18 +186,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add/message")]
         public async Task<IActionResult> Message(MessageViewModel model)
         {
-            try
-            {
-                var request = await _modelMapper.Map<CreateCohortWithOtherPartyRequest>(model);
-                var response = await _commitmentsApiClient.CreateCohort(request);
-                return RedirectToAction("Finished", new { model.AccountHashedId, response.CohortReference });
-            }
-            catch (CommitmentsApiModelException ex)
-            {
-                ModelState.AddModelExceptionErrors(ex);
-                model.ProviderName = await GetProviderName(model.ProviderId);
-                return View(model);
-            }
+            var request = await _modelMapper.Map<CreateCohortWithOtherPartyRequest>(model);
+            var response = await _commitmentsApiClient.CreateCohort(request);
+            return RedirectToAction("Finished", new { model.AccountHashedId, response.CohortReference });
         }
 
         [DasAuthorize(CommitmentOperation.AccessCohort)]
@@ -235,21 +211,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             return (await _commitmentsApiClient.GetProvider(providerId)).Name;
         }
-
-
-        private async Task AddCoursesAndProviderNameToModel(DraftApprenticeshipViewModel model)
-        {
-            var courses = await GetCourses();
-            model.Courses = courses;
-
-            var providerName = await GetProviderName(model.ProviderId);
-            model.ProviderName = providerName;
-        }
-
-        private Task<IReadOnlyList<ITrainingProgramme>> GetCourses()
-        {
-            return _trainingProgrammeApiClient.GetAllTrainingProgrammes();
-        }
-
     }
 }

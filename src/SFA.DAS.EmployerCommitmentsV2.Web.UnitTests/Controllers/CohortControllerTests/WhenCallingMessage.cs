@@ -67,25 +67,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         }
 
         [Test, AutoData]
-        public async Task PostMessage_WithValidRequestButApiErrorOccurs_ShouldSetModelState(MessageViewModel model)
-        {
-            _fixture.WithProviderName("ProviderName").WithCreateCohortApiError();
-
-            await _fixture.Sut.Message(model);
-
-            Assert.AreEqual(1, _fixture.Sut.ModelState.Count);
-        }
-
-        [Test, AutoData]
-        public async Task PostMessage_WithValidRequestButApiErrorOccurs_ShouldReturnViewModel(MessageViewModel model)
-        {
-            _fixture.WithProviderName("ProviderName").WithCreateCohortApiError();
-
-            var result = await _fixture.Sut.Message(model);
-            result.VerifyReturnsViewModel().WithModel<MessageViewModel>();
-        }
-
-        [Test, AutoData]
         public async Task GetFinished_ValidModel_ShouldReturnFinishedViewModelWithMappedValues(FinishedRequest request, GetCohortResponse getCohortResponse)
         {
             _fixture.SetGetCohortResponse(getCohortResponse);
