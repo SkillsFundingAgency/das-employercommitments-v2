@@ -4,6 +4,8 @@ using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.Testing;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
@@ -65,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 
         public AddDraftApprenticeshipRequest Map()
         {
-            return Mapper.Map(ViewModel);
+            return Mapper.Map(ViewModel).Result;
         }
     }
 }

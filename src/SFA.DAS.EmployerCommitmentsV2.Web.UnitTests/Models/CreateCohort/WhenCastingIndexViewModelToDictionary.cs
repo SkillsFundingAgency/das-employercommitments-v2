@@ -1,7 +1,7 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.CreateCohort
 {
@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.CreateCohort
             var dictionary = indexViewModel.ToDictionary();
 
             dictionary.Should().ContainKey(nameof(IndexViewModel.ReservationId))
-                .WhichValue.Should().Be(indexViewModel.ReservationId);
+                .WhichValue.Should().Be(indexViewModel.ReservationId?.ToString());
         }
 
         [Test, AutoData]

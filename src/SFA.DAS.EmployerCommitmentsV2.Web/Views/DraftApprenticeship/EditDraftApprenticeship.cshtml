@@ -1,5 +1,5 @@
 ﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
-@model SFA.DAS.EmployerCommitmentsV2.Web.Models.EditDraftApprenticeshipViewModel
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.EditDraftApprenticeshipViewModel
 @inject ILinkGenerator LinkGenerator
 
 @{
@@ -14,7 +14,7 @@
             <p class="govuk-body">You'll only be able to authorise payments for this apprentice once all the fields have been completed - either by yourself or your training provider</p>
         </div>
 
-        <form id="addApprenticeship" novalidate method="post" action="@Url.Action("EditDraftApprenticeship")">
+        <form id="addApprenticeship" novalidate method="post">
             @Html.AntiForgeryToken()
             <partial name="DraftApprenticeship" for="@Model" />
             <button type="submit" class="govuk-button">Save</button>

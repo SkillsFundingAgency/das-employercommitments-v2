@@ -1,6 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System.Threading.Tasks;
+using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.CreateCohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
@@ -9,79 +10,79 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
     public class WhenMappingConfirmProviderRequest
     {
         [Test, MoqAutoData]
-        public void ThenMapsReservationId(
+        public async Task ThenMapsReservationId(
             SelectProviderViewModel viewModel,
             long providerId,
             ConfirmProviderRequestMapper mapper)
         {
             viewModel.ProviderId = providerId.ToString();
 
-            var result = mapper.Map(viewModel);
+            var result = await mapper.Map(viewModel);
 
             Assert.AreEqual(viewModel.ReservationId,result.ReservationId);
         }
 
         [Test, MoqAutoData]
-        public void ThenMapsCourseCode(
+        public async Task ThenMapsCourseCode(
             SelectProviderViewModel viewModel,
             long providerId,
             ConfirmProviderRequestMapper mapper)
         {
             viewModel.ProviderId = providerId.ToString();
 
-            var result = mapper.Map(viewModel);
+            var result = await mapper.Map(viewModel);
 
             Assert.AreEqual(viewModel.CourseCode, result.CourseCode);
         }
 
         [Test, MoqAutoData]
-        public void ThenMapsAccountHashedId(
+        public async Task ThenMapsAccountHashedId(
             SelectProviderViewModel viewModel,
             long providerId,
             ConfirmProviderRequestMapper mapper)
         {
             viewModel.ProviderId = providerId.ToString();
 
-            var result = mapper.Map(viewModel);
+            var result = await mapper.Map(viewModel);
 
             Assert.AreEqual(viewModel.AccountHashedId, result.AccountHashedId);
         }
 
         [Test, MoqAutoData]
-        public void ThenMapsEmployerAccountLegalEntityPublicHashedId(
+        public async Task ThenMapsEmployerAccountLegalEntityPublicHashedId(
             SelectProviderViewModel viewModel,
             long providerId,
             ConfirmProviderRequestMapper mapper)
         {
             viewModel.ProviderId = providerId.ToString();
 
-            var result = mapper.Map(viewModel);
+            var result = await mapper.Map(viewModel);
 
             Assert.AreEqual(viewModel.AccountLegalEntityHashedId, result.AccountLegalEntityHashedId);
         }
 
         [Test, MoqAutoData]
-        public void ThenMapsStartMonthYear(
+        public async Task ThenMapsStartMonthYear(
             SelectProviderViewModel viewModel,
             long providerId,
             ConfirmProviderRequestMapper mapper)
         {
             viewModel.ProviderId = providerId.ToString();
 
-            var result = mapper.Map(viewModel);
+            var result = await mapper.Map(viewModel);
 
             Assert.AreEqual(viewModel.StartMonthYear, result.StartMonthYear);
         }
 
         [Test, MoqAutoData]
-        public void ThenMapsProviderId(
+        public async Task ThenMapsProviderId(
             SelectProviderViewModel viewModel,
             long providerId,
             ConfirmProviderRequestMapper mapper)
         {
             viewModel.ProviderId = providerId.ToString();
 
-            var result = mapper.Map(viewModel);
+            var result = await mapper.Map(viewModel);
 
             Assert.AreEqual(providerId, result.ProviderId);
         }

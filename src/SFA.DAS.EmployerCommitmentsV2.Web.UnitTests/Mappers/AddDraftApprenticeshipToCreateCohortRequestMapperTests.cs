@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AutoFixture;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 {
@@ -15,7 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         private CreateCohortRequest _result;
 
         [SetUp]
-        public void Arrange()
+        public async Task Arrange()
         {
             var fixture = new Fixture();
 
@@ -38,7 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
                 .Without(x => x.Courses)
                 .Create();
 
-            _result = _mapper.Map(TestHelper.Clone(_source));
+            _result = await _mapper.Map(TestHelper.Clone(_source));
         }
 
         [Test]

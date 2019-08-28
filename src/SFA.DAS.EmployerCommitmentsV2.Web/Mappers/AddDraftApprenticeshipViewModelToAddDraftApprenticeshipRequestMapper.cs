@@ -1,14 +1,17 @@
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {
     public class AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapper : IMapper<AddDraftApprenticeshipViewModel, AddDraftApprenticeshipRequest>
     {
-        public AddDraftApprenticeshipRequest Map(AddDraftApprenticeshipViewModel source)
+        public Task<AddDraftApprenticeshipRequest> Map(AddDraftApprenticeshipViewModel source)
         {
-            return new AddDraftApprenticeshipRequest
+            return Task.FromResult(new AddDraftApprenticeshipRequest
             {
                 UserId = "X", // TODO: Remove this from the request as it's not required
                 ProviderId = 1, // TODO: Remove this from the request as it's not required
@@ -22,7 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
                 EndDate = source.EndDate.Date,
                 OriginatorReference = source.Reference,
                 ReservationId = source.ReservationId
-            };
+            });
         }
     }
 }

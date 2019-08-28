@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Commitments.Shared.Interfaces;
+﻿using System.Threading.Tasks;
+using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.CommitmentsV2.Types;
@@ -18,9 +19,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
             _authenticationService = authenticationService;
         }
 
-        public TTo Map(TFrom source)
+        public async Task<TTo> Map(TFrom source)
         {
-            var to = _innerMapper.Map(source);
+            var to = await _innerMapper.Map(source);
 
             if (to is SaveDataRequest saveDataRequest)
             {

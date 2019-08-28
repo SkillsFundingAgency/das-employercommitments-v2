@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System.Threading.Tasks;
+using AutoFixture;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Shared.Models;
@@ -6,6 +7,9 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 {
@@ -22,18 +26,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         }
 
         [Test]
-        public void MapSaveRequest_WhenNoAuthenticatedUser_ThenResultIsNotNullAndUserInfoIsNull()
+        public async Task MapSaveRequest_WhenNoAuthenticatedUser_ThenResultIsNotNullAndUserInfoIsNull()
         {
-            var result = _fixture.SaveRequestMapper.Map(_fixture.InputViewModel);
+            var result = await _fixture.SaveRequestMapper.Map(_fixture.InputViewModel);
 
             Assert.IsNotNull(result);
             Assert.IsNull(result.UserInfo);
         }
 
         [Test]
-        public void MapSaveRequest_WhenAuthenticatedUser_ThenUserInfoIsNotNullAndPopulated()
+        public async Task MapSaveRequest_WhenAuthenticatedUser_ThenUserInfoIsNotNullAndPopulated()
         {
-            var result = _fixture.SetupAuthenticatedUser().SaveRequestMapper.Map(_fixture.InputViewModel);
+            var result = await _fixture.SetupAuthenticatedUser().SaveRequestMapper.Map(_fixture.InputViewModel);
 
             Assert.IsNotNull(result.UserInfo);
             Assert.AreEqual("UserId", result.UserInfo.UserId);
@@ -42,17 +46,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         }
 
         [Test]
-        public void MapNonSaveRequest_WhenNoAuthenticatedUser_ThenResultIsNotNull()
+        public async Task MapNonSaveRequest_WhenNoAuthenticatedUser_ThenResultIsNotNull()
         {
-            var result = _fixture.NonSaveRequestMapper.Map(_fixture.InputDetails);
+            var result = await _fixture.NonSaveRequestMapper.Map(_fixture.InputDetails);
 
             Assert.IsNotNull(result);
         }
 
         [Test]
-        public void MapNonSaveRequest_WhenAuthenticatedUser_ThenResultIsNotNull()
+        public async Task MapNonSaveRequest_WhenAuthenticatedUser_ThenResultIsNotNull()
         {
-            var result = _fixture.SetupAuthenticatedUser().NonSaveRequestMapper.Map(_fixture.InputDetails);
+            var result = await _fixture.SetupAuthenticatedUser().NonSaveRequestMapper.Map(_fixture.InputDetails);
 
             Assert.IsNotNull(result);
         }

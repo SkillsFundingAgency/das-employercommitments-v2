@@ -13,7 +13,7 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
-using SFA.DAS.EmployerCommitmentsV2.Web.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
@@ -22,16 +22,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
     [Parallelizable(ParallelScope.Children)]
     public class EditDraftApprenticeshipTests
     {
-        [Test]
-        public async Task GetEditDraftApprenticeship_ValidModel_ShouldReturnBadRequestIfModelStateIsNotValid()
-        {
-            var fixtures = new EditDraftApprenticeshipTestsFixture().WithModelStateError();
-
-            var result = await fixtures.Sut.EditDraftApprenticeship(new EditDraftApprenticeshipRequest());
-
-            result.VerifyReturnsBadRequestObject();
-        }
-
         [Test]
         public async Task GetEditDraftApprenticeship_ValidModel_ShouldReturnViewModel()
         {
@@ -73,20 +63,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
 
         [Test]
-        public async Task PostEditDraftApprenticeship_WithInvalidModel_ShouldReturnTheViewModelAndAddProviderNameAndCourses()
-        {
-            var fixtures = new EditDraftApprenticeshipTestsFixture().WithModelStateError().WithCourses("XXX", "YYYY").WithCohort();
-
-            var result = await fixtures.Sut.EditDraftApprenticeship(new EditDraftApprenticeshipViewModel { DraftApprenticeshipId = fixtures.DraftApprenticeshipId, CohortId = fixtures.CohortId, FirstName = "First", LastName = "Last"});
-
-            var model = result.VerifyReturnsViewModel().WithModel<EditDraftApprenticeshipViewModel>();
-            Assert.AreEqual("First", model.FirstName);
-            Assert.AreEqual("Last", model.LastName);
-            Assert.AreEqual(2, model.Courses.Count);
-            Assert.AreEqual("ProviderName", model.ProviderName);
-        }
-
-        [Test]
         public async Task PostEditDraftApprenticeship_WithValidModelButFailsWithDomainError_ShouldReturnTheViewModelWithModelStateError()
         {
             var fixtures = new EditDraftApprenticeshipTestsFixture().WithUpdateDraftApprenticeshipDomainError().WithCourses().WithCohort();
@@ -119,8 +95,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public EditDraftApprenticeshipTestsFixture()
         {
             CommitmentsServiceMock = new Mock<ICommitmentsService>();
-            ToViewModelMapper = new EditDraftApprenticeshipDetailsToViewModelMapper();
-            ToApiRequestMapper = new EditDraftApprenticeshipToUpdateRequestMapper();
             LinkGeneratorMock = new Mock<ILinkGenerator>();
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
 
@@ -141,17 +115,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             };
             ApiErrors = new List<ErrorDetail>{new ErrorDetail("Field1", "Message1")};
 
+            ModelMapperMock = new Mock<IModelMapper>();
+            ModelMapperMock.Setup(x => x.Map<EditDraftApprenticeshipViewModel>(It.IsAny<EditDraftApprenticeshipDetails>()))
+                .Returns(Task.FromResult(new EditDraftApprenticeshipViewModel
+                {
+                    CohortId = CohortId
+                }));
+
             Sut = new DraftApprenticeshipController(CommitmentsServiceMock.Object,
-                ToViewModelMapper,
-                ToApiRequestMapper,
-                null,
                 LinkGeneratorMock.Object,
-                TrainingProgrammeApiClientMock.Object);
+                TrainingProgrammeApiClientMock.Object,
+                ModelMapperMock.Object);
         }
 
         public Mock<ICommitmentsService> CommitmentsServiceMock { get; }
-        public IMapper<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel> ToViewModelMapper;
-        public IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipRequest> ToApiRequestMapper;
+        public Mock<IModelMapper> ModelMapperMock { get; }
         public Mock<ILinkGenerator> LinkGeneratorMock { get; }
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClientMock { get; }
         public CohortDetails CohortDetails { get; private set; }

@@ -1,4 +1,4 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.AddDraftApprenticeshipViewModel
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared.AddDraftApprenticeshipViewModel
 
 @{
     ViewData["Title"] = "Apprenticeships";
@@ -13,7 +13,7 @@
             <p class="govuk-body">You'll only be able to authorise payments for this apprentice once all the fields have been completed - either by yourself or your training provider</p>
         </div>
 
-        <form id="addApprenticeship" novalidate method="post" action="@Url.Action("AddDraftApprenticeship")">
+        <form id="addApprenticeship" novalidate method="post">
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.CohortReference)
             @Html.HiddenFor(x => x.ProviderId)
