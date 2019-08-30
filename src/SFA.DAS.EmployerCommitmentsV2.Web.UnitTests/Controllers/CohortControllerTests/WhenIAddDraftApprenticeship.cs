@@ -71,8 +71,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 .WithTrainingProvider();
 
             await fixtures.CheckPost();
-
-            fixtures.CommitmentsServiceMock.Verify(cs => cs.CreateCohort(It.IsAny<CreateCohortRequest>()), Times.Once);
+            
+            fixtures.CommitmentsApiClientMock.Verify(cs => cs.CreateCohort(It.IsAny<CreateCohortRequest>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 
@@ -80,7 +80,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
     {
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures()
         {
-            CommitmentsServiceMock = new Mock<ICommitmentsService>();
             RequestMapper = new AddDraftApprenticeshipToCreateCohortRequestMapper();
             LinkGeneratorMock = new Mock<ILinkGenerator>();
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
@@ -89,9 +88,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             ModelMapperMock.Setup(x => x.Map<ApprenticeViewModel>(It.IsAny<ApprenticeRequest>()))
                 .ReturnsAsync(new ApprenticeViewModel());
         }
-
-        public Mock<ICommitmentsService> CommitmentsServiceMock { get; } 
-        public ICommitmentsService CommitmentsService => CommitmentsServiceMock.Object;
 
         public IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest> RequestMapper { get; }
 
@@ -132,8 +128,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithCreatedCohort(string cohortReference, long  cohortId)
         {
-            CommitmentsServiceMock
-                .Setup(cs => cs.CreateCohort(It.IsAny<CreateCohortRequest>()))
+            CommitmentsApiClientMock
+                .Setup(cs => cs.CreateCohort(It.IsAny<CreateCohortRequest>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new CreateCohortResponse {CohortReference = cohortReference, CohortId = cohortId});
 
             return this;
@@ -154,7 +150,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             var controller = new CohortController(
                 CommitmentsApiClient,
                 Mock.Of<ILogger<CohortController>>(),
-                CommitmentsService,
                 LinkGenerator,
                 ModelMapper
             );

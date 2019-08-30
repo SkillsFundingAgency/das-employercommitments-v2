@@ -12,7 +12,6 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
 
@@ -23,7 +22,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     public class CohortController : Controller
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly ICommitmentsService _employerCommitmentsService;
         private readonly ILogger<CohortController> _logger;
         private readonly ILinkGenerator _linkGenerator;
         private readonly IModelMapper _modelMapper;
@@ -31,13 +29,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public CohortController(
             ICommitmentsApiClient commitmentsApiClient,
             ILogger<CohortController> logger,
-            ICommitmentsService employerCommitmentsService,
             ILinkGenerator linkGenerator,
             IModelMapper modelMapper)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _logger = logger;
-            _employerCommitmentsService = employerCommitmentsService;
             _linkGenerator = linkGenerator;
             _modelMapper = modelMapper;
         }
@@ -156,7 +152,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> Apprentice(ApprenticeViewModel model)
         {
             var request = await _modelMapper.Map<CreateCohortRequest>(model);
-            var newCohort = await _employerCommitmentsService.CreateCohort(request);
+            var newCohort = await _commitmentsApiClient.CreateCohort(request);
             var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, newCohort.CohortReference);
             return Redirect(reviewYourCohort);
         }

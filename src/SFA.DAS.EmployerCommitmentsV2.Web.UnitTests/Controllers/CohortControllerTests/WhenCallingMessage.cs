@@ -94,7 +94,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
                 Sut = new CohortController(
                     CommitmentsApiClientMock.Object, Mock.Of<ILogger<CohortController>>(),
-                    Mock.Of<ICommitmentsService>(),
                     Mock.Of<ILinkGenerator>(),
                     ModelMapperMock.Object
                 );
