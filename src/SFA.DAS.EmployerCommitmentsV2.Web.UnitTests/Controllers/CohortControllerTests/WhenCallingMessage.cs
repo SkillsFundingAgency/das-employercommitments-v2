@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture;
 using AutoFixture.NUnit3;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.Commitments.Shared.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
@@ -30,30 +32,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         }
 
         [Test, AutoData]
-        public async Task GetMessage_ValidModel_ShouldCallGetProvider(MessageRequest request)
-        {
-            _fixture.WithProviderName("ProviderName");
-
-            await _fixture.Sut.Message(request);
-
-            _fixture.CommitmentsApiClientMock.Verify(x => x.GetProvider(request.ProviderId, It.IsAny<CancellationToken>()));
-        }
-
-        [Test, AutoData]
         public async Task GetMessage_ValidModel_ShouldReturnMessageViewModelWithMappedValues(MessageRequest request)
         {
-            _fixture.WithProviderName("ProviderName");
-
             var result = await _fixture.Sut.Message(request);
 
             var model = result.VerifyReturnsViewModel().WithModel<MessageViewModel>();
-            _fixture.VerifyViewModelIsMappedCorrectly(request, model);
+            _fixture.VerifyViewModelIsMappedCorrectly(model);
         }
 
         [Test, AutoData]
         public async Task PostMessage_WithValidRequest_ShouldAddCohortAndReturnRedirectResult(MessageViewModel model, CreateCohortResponse createCohortResponse)
         {
-            _fixture.WithProviderName("ProviderName").SetCreateCohortResponse(createCohortResponse);
+            _fixture.SetCreateCohortResponse(createCohortResponse);
 
             var result = await _fixture.Sut.Message(model);
 
@@ -84,6 +74,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             public CreateCohortWithOtherPartyControllerTestFixture()
             {
+                var autoFixture = new Fixture();
+
                 CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
                 ErrorDetail = new ErrorDetail("field1", "error message");
 
@@ -91,6 +83,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 ModelMapperMock = new Mock<IModelMapper>();
                 ModelMapperMock.Setup(x => x.Map<CreateCohortWithOtherPartyRequest>(It.IsAny<object>()))
                     .ReturnsAsync(() => MapperResult);
+
+                MessageViewModel = autoFixture.Create<MessageViewModel>();
+                ModelMapperMock.Setup(x => x.Map<MessageViewModel>(It.IsAny<object>()))
+                    .ReturnsAsync(() => MessageViewModel);
 
                 Sut = new CohortController(
                     CommitmentsApiClientMock.Object, Mock.Of<ILogger<CohortController>>(),
@@ -102,15 +98,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             public Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }
             public Mock<IModelMapper> ModelMapperMock { get; }
             public CreateCohortWithOtherPartyRequest MapperResult { get; }
+            public MessageViewModel MessageViewModel { get; }
             public CohortController Sut { get; }
             public ErrorDetail ErrorDetail { get; }
-
-            public CreateCohortWithOtherPartyControllerTestFixture WithProviderName(string name)
-            {
-                CommitmentsApiClientMock.Setup(x => x.GetProvider(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                    .ReturnsAsync(new GetProviderResponse {Name = name});
-                return this;
-            }
 
             public CreateCohortWithOtherPartyControllerTestFixture WithInvalidModel()
             {
@@ -158,15 +148,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 return this;
             }
 
-            public CreateCohortWithOtherPartyControllerTestFixture VerifyViewModelIsMappedCorrectly(
-                MessageRequest request, MessageViewModel model)
+            public CreateCohortWithOtherPartyControllerTestFixture VerifyViewModelIsMappedCorrectly(MessageViewModel model)
             {
-                Assert.AreEqual(request.AccountHashedId, model.AccountHashedId);
-                Assert.AreEqual(request.CourseCode, model.CourseCode);
-                Assert.AreEqual(request.StartMonthYear, model.StartMonthYear);
-                Assert.AreEqual(request.ProviderId, model.ProviderId);
-                Assert.AreEqual(request.AccountLegalEntityHashedId, model.AccountLegalEntityHashedId);
-                Assert.AreEqual(request.ReservationId, model.ReservationId);
+                Assert.AreEqual(MessageViewModel.AccountHashedId, model.AccountHashedId);
+                Assert.AreEqual(MessageViewModel.CourseCode, model.CourseCode);
+                Assert.AreEqual(MessageViewModel.StartMonthYear, model.StartMonthYear);
+                Assert.AreEqual(MessageViewModel.ProviderId, model.ProviderId);
+                Assert.AreEqual(MessageViewModel.AccountLegalEntityHashedId, model.AccountLegalEntityHashedId);
+                Assert.AreEqual(MessageViewModel.ReservationId, model.ReservationId);
 
                 return this;
             }

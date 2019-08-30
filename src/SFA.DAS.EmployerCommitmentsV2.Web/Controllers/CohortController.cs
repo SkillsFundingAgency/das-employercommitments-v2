@@ -160,18 +160,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add/message")]
         public async Task<IActionResult> Message(MessageRequest request)
         {
-            var messageModel = new MessageViewModel
-            {
-                AccountHashedId = request.AccountHashedId,
-                AccountLegalEntityHashedId = request.AccountLegalEntityHashedId,
-                ProviderId = request.ProviderId,
-                StartMonthYear = request.StartMonthYear,
-                CourseCode = request.CourseCode,
-                ReservationId = request.ReservationId
-            };
-            messageModel.ProviderName = await GetProviderName(messageModel.ProviderId);
-
-            return View(messageModel);
+            var model = await _modelMapper.Map<MessageViewModel>(request);
+            return View(model);
         }
 
         [HttpPost]
