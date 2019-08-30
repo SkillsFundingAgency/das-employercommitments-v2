@@ -11,19 +11,17 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 {
     [TestFixture]
-    public class CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipViewModelMapperTests
+    public class ApprenticeViewModelMapperTests
     {
-        private CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipViewModelMapper _mapper;
+        private ApprenticeViewModelMapper _mapper;
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
         private GetProviderResponse _providerResponse;
         private ApprenticeRequest _source;
-        private AddDraftApprenticeshipViewModel _result;
+        private ApprenticeViewModel _result;
         private IReadOnlyList<ITrainingProgramme> _courses;
         private Mock<ITrainingProgrammeApiClient> _trainingProgrammeApiClient;
 
@@ -45,7 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
             _trainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
             _trainingProgrammeApiClient.Setup(x => x.GetAllTrainingProgrammes()).ReturnsAsync(_courses);
 
-            _mapper = new CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipViewModelMapper(
+            _mapper = new ApprenticeViewModelMapper(
                 _commitmentsApiClient.Object,
                 _trainingProgrammeApiClient.Object);
 

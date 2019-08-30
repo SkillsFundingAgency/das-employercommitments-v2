@@ -1,17 +1,13 @@
 ﻿using System.Threading.Tasks;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {
-    public class AddDraftApprenticeshipToCreateCohortRequestMapper : IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest>
+    public class CreateCohortRequestMapper : IMapper<ApprenticeViewModel, CreateCohortRequest>
     {
-        public Task<CreateCohortRequest> Map(AddDraftApprenticeshipViewModel source)
+        public Task<CreateCohortRequest> Map(ApprenticeViewModel source)
         {
             return Task.FromResult(new CreateCohortRequest
             {

@@ -1,8 +1,9 @@
 ﻿using SFA.DAS.Authorization.ModelBinding;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 {
-    public class AddDraftApprenticeshipViewModel : DraftApprenticeshipViewModel, IAuthorizationContextModel
+    public class ApprenticeViewModel : DraftApprenticeshipViewModel, IAuthorizationContextModel
     {
         public long AccountId { get; set; }
         public string AccountHashedId { get; set; }
@@ -10,4 +11,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public long AccountLegalEntityId { get; set; }
         public string AccountLegalEntityHashedId { get; set; }
     }
+
 }

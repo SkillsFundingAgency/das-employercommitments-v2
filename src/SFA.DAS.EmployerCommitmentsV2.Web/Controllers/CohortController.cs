@@ -134,7 +134,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             switch (model.WhoIsAddingApprentices)
             {
                 case WhoIsAddingApprentices.Employer:
-                    return RedirectToAction("AddDraftApprenticeship", "Cohort", routeValues);
+                    return RedirectToAction("Apprentice", "Cohort", routeValues);
                 case WhoIsAddingApprentices.Provider:
                     return RedirectToAction("Message", routeValues);
                 default:
@@ -145,15 +145,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("add/apprentice")]
-        public async Task<IActionResult> AddDraftApprenticeship(CreateCohortWithDraftApprenticeshipRequest request)
+        public async Task<IActionResult> Apprentice(ApprenticeRequest request)
         {
-            var model = await _modelMapper.Map<AddDraftApprenticeshipViewModel>(request);
+            var model = await _modelMapper.Map<ApprenticeViewModel>(request);
             return View(model);
         }
 
         [HttpPost]
         [Route("add/apprentice")]
-        public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipViewModel model)
+        public async Task<IActionResult> Apprentice(ApprenticeViewModel model)
         {
             var request = await _modelMapper.Map<CreateCohortRequest>(model);
             var newCohort = await _employerCommitmentsService.CreateCohort(request);

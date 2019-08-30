@@ -1,9 +1,10 @@
 using SFA.DAS.Commitments.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using AddDraftApprenticeshipRequest = SFA.DAS.CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {
