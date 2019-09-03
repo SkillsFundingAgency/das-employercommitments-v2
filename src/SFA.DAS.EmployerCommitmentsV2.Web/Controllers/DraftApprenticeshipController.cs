@@ -98,20 +98,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{DraftApprenticeshipHashedId}/edit")]
         public async Task<IActionResult> EditDraftApprenticeship(EditDraftApprenticeshipViewModel model)
         {
-            try
-            {
-                var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
-                await _commitmentsService.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
+            var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
+            await _commitmentsService.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
 
-                var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);
-                return Redirect(reviewYourCohort);
-            }
-            catch (CommitmentsApiModelException ex)
-            {
-                ModelState.AddModelExceptionErrors(ex);
-                await AddProviderNameAndCoursesToModel(model);
-                return View(model);
-            }
+            var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);
+            return Redirect(reviewYourCohort);
         }
 
         private async Task<CohortDetails> GetCohortDetails(long cohortId)

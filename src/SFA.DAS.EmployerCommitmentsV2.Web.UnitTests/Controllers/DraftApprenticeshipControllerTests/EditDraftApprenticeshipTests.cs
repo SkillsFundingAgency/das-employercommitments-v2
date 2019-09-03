@@ -64,19 +64,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
 
         [Test]
-        public async Task PostEditDraftApprenticeship_WithValidModelButFailsWithDomainError_ShouldReturnTheViewModelWithModelStateError()
-        {
-            var fixtures = new EditDraftApprenticeshipTestsFixture().WithUpdateDraftApprenticeshipDomainError().WithCourses().WithCohort();
-
-            var result = await fixtures.Sut.EditDraftApprenticeship(new EditDraftApprenticeshipViewModel { DraftApprenticeshipId = fixtures.DraftApprenticeshipId, CohortId = fixtures.CohortId, FirstName = "First", LastName = "Last" });
-
-            var model = result.VerifyReturnsViewModel().WithModel<EditDraftApprenticeshipViewModel>();
-            Assert.AreEqual(fixtures.Sut.ModelState.Count, 1);
-            Assert.AreEqual("First", model.FirstName);
-            Assert.AreEqual("Last", model.LastName);
-        }
-
-        [Test]
         public async Task PostEditDraftApprenticeship_WithValidModel_ShouldSaveDraftApprenticeshipAndRedirectToCohortPage()
         {
             var fixtures = new EditDraftApprenticeshipTestsFixture()
