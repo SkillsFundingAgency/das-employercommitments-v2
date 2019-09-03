@@ -12,6 +12,7 @@ using SFA.DAS.Commitments.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
+using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
@@ -34,41 +35,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 (f, r) => r.Should().NotBeNull()
                     .And.BeOfType<ViewResult>()
                     .Which.Model.Should().NotBeNull()
-                    .And.Match<AddDraftApprenticeshipViewModel>(m => 
-                        m.AccountHashedId == f.Request.AccountHashedId &&
-                        m.CohortReference == f.Request.CohortReference &&
-                        m.CohortId == f.Request.CohortId &&
-                        m.AccountLegalEntityHashedId == f.Request.AccountLegalEntityHashedId &&
-                        m.AccountLegalEntityId == f.Request.AccountLegalEntityId &&
-                        m.ReservationId == f.Request.ReservationId &&
-                        m.StartDate.MonthYear == f.Request.StartMonthYear &&
-                        m.CourseCode == f.Request.CourseCode &&
-                        m.ProviderName == f.Cohort.ProviderName &&
-                        m.Courses == f.Courses));
+                    .And.Match<AddDraftApprenticeshipViewModel>(m => m == f.ViewModel));
         }
 
         [Test]
         public async Task WhenGettingActionAndCohortIsNotWithEmployer_ThenShouldRedirectToCohortDetailsUrl()
         {
             await TestAsync(
-                f => f.SetCohortWithParty(Party.Provider),
+                f => f.SetCohortWithOtherParty(),
                 f => f.Get(),
                 (f, r) => r.Should().NotBeNull()
                     .And.BeOfType<RedirectResult>().Which
                     .Url.Should().Be(f.CohortDetailsUrl));
-        }
-
-        [Test]
-        public async Task WhenGettingActionAndCohortIsFundedByTransfer_ThenShouldReturnViewWithStandardTrainingProgrammesOnly()
-        {
-            await TestAsync(
-                f => f.SetCohortFundedByTransfer(),
-                f => f.Get(),
-                (f, r) => r.Should().NotBeNull()
-                    .And.BeOfType<ViewResult>()
-                    .Which.Model.Should().NotBeNull()
-                    .And.Match<AddDraftApprenticeshipViewModel>(m =>
-                        m.Courses == f.StandardCourses));
         }
 
         [Test]
@@ -179,6 +157,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             TrainingProgrammeApiClient.Setup(c => c.GetAllTrainingProgrammes()).ReturnsAsync(Courses);
             TrainingProgrammeApiClient.Setup(c => c.GetStandardTrainingProgrammes()).ReturnsAsync(StandardCourses);
             ModelMapper.Setup(m => m.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(ViewModel)).Returns(Task.FromResult(AddDraftApprenticeshipRequest));
+
+            ModelMapper.Setup(m => m.Map<AddDraftApprenticeshipViewModel>(It.IsAny<AddDraftApprenticeshipRequest>())).ReturnsAsync(ViewModel);
+
             LinkGenerator.Setup(g => g.CommitmentsLink(CohortDetailsUrl)).Returns(CohortDetailsUrl);
         }
 
@@ -199,9 +180,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             return this;
         }
 
-        public AddDraftApprenticeshipTestsFixture SetCohortWithParty(Party party)
+        public AddDraftApprenticeshipTestsFixture SetCohortWithOtherParty()
         {
-            Cohort.WithParty = party;
+            ModelMapper.Setup(x => x.Map<AddDraftApprenticeshipViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
+                .Throws(new CohortEmployerUpdateDeniedException("Cohort With Other Party"));
             
             return this;
         }

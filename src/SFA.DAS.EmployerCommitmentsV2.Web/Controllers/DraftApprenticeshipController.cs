@@ -49,20 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             try
             {
-                var model = new AddDraftApprenticeshipViewModel
-                {
-                    AccountHashedId = request.AccountHashedId,
-                    CohortReference = request.CohortReference,
-                    CohortId = request.CohortId,
-                    AccountLegalEntityHashedId = request.AccountLegalEntityHashedId,
-                    AccountLegalEntityId = request.AccountLegalEntityId,
-                    ReservationId = request.ReservationId,
-                    StartDate = new MonthYearModel(request.StartMonthYear),
-                    CourseCode = request.CourseCode
-                };
-                
-                await AddProviderNameAndCoursesToModel(model);
-
+                var model = await _modelMapper.Map<AddDraftApprenticeshipViewModel>(request);
                 return View(model);
             }
             catch (CohortEmployerUpdateDeniedException)
