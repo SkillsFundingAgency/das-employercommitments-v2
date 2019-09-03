@@ -134,7 +134,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             Controller = new DraftApprenticeshipController(
                 CommitmentsService.Object, 
                 LinkGenerator.Object,
-                TrainingProgrammeApiClient.Object,
                 ModelMapper.Object,
                 CommitmentsApiClient.Object
                 );
