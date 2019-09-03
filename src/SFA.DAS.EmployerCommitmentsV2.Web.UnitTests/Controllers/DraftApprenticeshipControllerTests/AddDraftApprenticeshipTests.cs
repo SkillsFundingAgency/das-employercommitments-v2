@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.Commitments.Shared.Models;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -54,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             await TestAsync(
                 f => f.Post(),
-                f => f.CommitmentsService.Verify(c => c.AddDraftApprenticeshipToCohort(f.ViewModel.CohortId.Value, f.AddDraftApprenticeshipRequest)));
+                f => f.CommitmentsApiClient.Verify(c => c.AddDraftApprenticeship(f.ViewModel.CohortId.Value, f.AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>())));
         }
         
         [Test]
@@ -79,6 +81,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public string CohortDetailsUrl { get; set; }
         public CommitmentsApiModelException CommitmentsApiModelException { get; set; }
         public Mock<ICommitmentsService> CommitmentsService { get; set; }
+        public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClient { get; set; }
         public Mock<IModelMapper> ModelMapper { get; set; }
         public Mock<ILinkGenerator> LinkGenerator { get; set; }
@@ -123,6 +126,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             CohortDetailsUrl = $"accounts/{Request.AccountHashedId}/apprentices/{Request.CohortReference}/details";
             CommitmentsApiModelException = new CommitmentsApiModelException(new List<ErrorDetail> { new ErrorDetail("Foo", "Bar") });
             CommitmentsService = new Mock<ICommitmentsService>();
+            CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             TrainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
             ModelMapper = new Mock<IModelMapper>();
             LinkGenerator = new Mock<ILinkGenerator>();
@@ -131,7 +135,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 CommitmentsService.Object, 
                 LinkGenerator.Object,
                 TrainingProgrammeApiClient.Object,
-                ModelMapper.Object
+                ModelMapper.Object,
+                CommitmentsApiClient.Object
                 );
 
             CommitmentsService.Setup(c => c.GetCohortDetail(Cohort.CohortId)).ReturnsAsync(Cohort);
@@ -165,21 +170,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             ModelMapper.Setup(x => x.Map<AddDraftApprenticeshipViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
                 .Throws(new CohortEmployerUpdateDeniedException("Cohort With Other Party"));
-            
-            return this;
-        }
-
-        public AddDraftApprenticeshipTestsFixture SetCohortFundedByTransfer()
-        {
-            Cohort.IsFundedByTransfer = true;
-            
-            return this;
-        }
-
-        public AddDraftApprenticeshipTestsFixture SetCommitmentsApiModelException()
-        {
-            CommitmentsService.Setup(c => c.AddDraftApprenticeshipToCohort(It.IsAny<long>(), It.IsAny<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>()))
-                .ThrowsAsync(CommitmentsApiModelException);
             
             return this;
         }

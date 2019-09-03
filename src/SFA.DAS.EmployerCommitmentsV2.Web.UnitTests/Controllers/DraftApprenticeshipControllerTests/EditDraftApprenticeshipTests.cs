@@ -7,6 +7,7 @@ using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.Commitments.Shared.Models;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Types;
@@ -125,7 +126,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             Sut = new DraftApprenticeshipController(CommitmentsServiceMock.Object,
                 LinkGeneratorMock.Object,
                 TrainingProgrammeApiClientMock.Object,
-                ModelMapperMock.Object);
+                ModelMapperMock.Object,
+                Mock.Of<ICommitmentsApiClient>());
         }
 
         public Mock<ICommitmentsService> CommitmentsServiceMock { get; }

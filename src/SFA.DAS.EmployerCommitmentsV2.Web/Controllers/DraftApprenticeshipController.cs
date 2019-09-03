@@ -9,6 +9,7 @@ using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Extensions;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.Commitments.Shared.Models;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Types;
@@ -30,17 +31,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IModelMapper _modelMapper;
         private readonly ILinkGenerator _linkGenerator;
         private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
+        private readonly ICommitmentsApiClient _commitmentsApiClient;
 
         public DraftApprenticeshipController(
             ICommitmentsService commitmentsService,
             ILinkGenerator linkGenerator,
             ITrainingProgrammeApiClient trainingProgrammeApiClient,
-            IModelMapper modelMapper)
+            IModelMapper modelMapper, ICommitmentsApiClient commitmentsApiClient)
         {
             _commitmentsService = commitmentsService;
             _linkGenerator = linkGenerator;
             _trainingProgrammeApiClient = trainingProgrammeApiClient;
             _modelMapper = modelMapper;
+            _commitmentsApiClient = commitmentsApiClient;
         }
 
         [HttpGet]
@@ -63,7 +66,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipViewModel model)
         {
                 var addDraftApprenticeshipRequest = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(model);
-                await _commitmentsService.AddDraftApprenticeshipToCohort(model.CohortId.Value, addDraftApprenticeshipRequest);
+                await _commitmentsApiClient.AddDraftApprenticeship(model.CohortId.Value, addDraftApprenticeshipRequest);
                 return Redirect(_linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference));
         }
 
