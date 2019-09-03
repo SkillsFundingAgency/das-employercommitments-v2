@@ -62,20 +62,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add")]
         public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipViewModel model)
         {
-            try
-            {
                 var addDraftApprenticeshipRequest = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(model);
                 await _commitmentsService.AddDraftApprenticeshipToCohort(model.CohortId.Value, addDraftApprenticeshipRequest);
-                
                 return Redirect(_linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference));
-            }
-            catch (CommitmentsApiModelException ex)
-            {
-                ModelState.AddModelExceptionErrors(ex);
-                await AddProviderNameAndCoursesToModel(model);
-                
-                return View(model);
-            }
         }
 
         [HttpGet]
