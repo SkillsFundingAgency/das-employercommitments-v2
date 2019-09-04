@@ -5,7 +5,6 @@ using AutoFixture.NUnit3;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
@@ -13,7 +12,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
@@ -95,8 +94,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 Sut = new CohortController(
                     CommitmentsApiClientMock.Object, Mock.Of<ILogger<CohortController>>(),
                     Mock.Of<ICommitmentsService>(),
-                    Mock.Of<ILinkGenerator>(),
-                    ModelMapperMock.Object
+                    ModelMapperMock.Object,
+                    Mock.Of<IUrlSelectorService>()
                 );
             }
 

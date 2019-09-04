@@ -10,10 +10,9 @@ using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Features;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
-using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
@@ -25,21 +24,40 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly ICommitmentsService _employerCommitmentsService;
         private readonly ILogger<CohortController> _logger;
-        private readonly ILinkGenerator _linkGenerator;
         private readonly IModelMapper _modelMapper;
+        private readonly IUrlSelectorService _urlSelectorService;
 
         public CohortController(
             ICommitmentsApiClient commitmentsApiClient,
             ILogger<CohortController> logger,
             ICommitmentsService employerCommitmentsService,
-            ILinkGenerator linkGenerator,
-            IModelMapper modelMapper)
+            IModelMapper modelMapper,
+            IUrlSelectorService urlSelectorService)
         {
-            _commitmentsApiClient = commitmentsApiClient;
-            _logger = logger;
-            _employerCommitmentsService = employerCommitmentsService;
-            _linkGenerator = linkGenerator;
-            _modelMapper = modelMapper;
+            _commitmentsApiClient = commitmentsApiClient ?? throw new ArgumentNullException(nameof(commitmentsApiClient));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _employerCommitmentsService = employerCommitmentsService ?? throw new ArgumentNullException(nameof(employerCommitmentsService));
+            _modelMapper = modelMapper ?? throw new ArgumentNullException(nameof(modelMapper));
+            _urlSelectorService = urlSelectorService ?? throw new ArgumentNullException(nameof(urlSelectorService));
+        }
+
+        [HttpGet]
+        [Route("{CohortReference}")]
+        // TODO: the following line needs adding when the new emp-auth nuget package is available
+        //[DasAuthorize(EmployerFeature.EnhancedApproval)]
+        public async Task<IActionResult> Approve(ApproveRequest request)
+        {
+            var redirectToV1Action =
+                await _urlSelectorService.RedirectToV1IfCohortWithOtherParty(request.AccountHashedId,
+                    request.CohortReference);
+
+            if (redirectToV1Action != null)
+            {
+                return redirectToV1Action;
+            }
+
+            var viewModel = await _modelMapper.Map<ApproveViewModel>(request);
+            return View(viewModel);
         }
 
         [Route("add")]
@@ -157,8 +175,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var request = await _modelMapper.Map<CreateCohortRequest>(model);
             var newCohort = await _employerCommitmentsService.CreateCohort(request);
-            var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, newCohort.CohortReference);
-            return Redirect(reviewYourCohort);
+
+            return _urlSelectorService.RedirectToCohortDetails(Url, model.AccountHashedId, newCohort.CohortReference);
         }
 
         [Route("add/message")]

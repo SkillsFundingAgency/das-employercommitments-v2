@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Apprenticeships.Api.Client;
@@ -11,9 +12,8 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
@@ -122,16 +122,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                     CohortId = CohortId
                 }));
 
+            UrlSelectorService = new Mock<IUrlSelectorService>();
+
             Sut = new DraftApprenticeshipController(CommitmentsServiceMock.Object,
                 LinkGeneratorMock.Object,
                 TrainingProgrammeApiClientMock.Object,
-                ModelMapperMock.Object);
+                ModelMapperMock.Object,
+                UrlSelectorService.Object);
         }
 
         public Mock<ICommitmentsService> CommitmentsServiceMock { get; }
         public Mock<IModelMapper> ModelMapperMock { get; }
         public Mock<ILinkGenerator> LinkGeneratorMock { get; }
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClientMock { get; }
+        public Mock<IUrlSelectorService> UrlSelectorService { get; }
         public CohortDetails CohortDetails { get; private set; }
         public string AccountHashedId => "ACHID";
         public long CohortId => 1;
@@ -145,9 +149,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
         public EditDraftApprenticeshipTestsFixture WithCohortLink(string url)
         {
-            LinkGeneratorMock
-                .Setup(lg => lg.CommitmentsLink(It.IsAny<string>()))
-                .Returns(url);
+            UrlSelectorService
+                .Setup(lg => lg.RedirectToCohortDetails(
+                    It.IsAny<IUrlHelper>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new RedirectResult(url));
+
 
             return this;
         }

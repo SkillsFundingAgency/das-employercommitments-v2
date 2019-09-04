@@ -12,13 +12,11 @@ using SFA.DAS.Commitments.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing;
-using StructureMap.Query;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {
@@ -123,6 +121,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClient { get; set; }
         public Mock<IModelMapper> ModelMapper { get; set; }
         public Mock<ILinkGenerator> LinkGenerator { get; set; }
+        public Mock<IUrlSelectorService> UrlSelectorService { get; set; }
         public DraftApprenticeshipController Controller { get; set; }
 
         public AddDraftApprenticeshipTestsFixture()
@@ -167,12 +166,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             TrainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
             ModelMapper = new Mock<IModelMapper>();
             LinkGenerator = new Mock<ILinkGenerator>();
-            
+            UrlSelectorService = new Mock<IUrlSelectorService>();
+
             Controller = new DraftApprenticeshipController(
                 CommitmentsService.Object, 
                 LinkGenerator.Object,
                 TrainingProgrammeApiClient.Object,
-                ModelMapper.Object
+                ModelMapper.Object,
+                UrlSelectorService.Object
                 );
 
             CommitmentsService.Setup(c => c.GetCohortDetail(Cohort.CohortId)).ReturnsAsync(Cohort);
@@ -180,6 +181,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             TrainingProgrammeApiClient.Setup(c => c.GetStandardTrainingProgrammes()).ReturnsAsync(StandardCourses);
             ModelMapper.Setup(m => m.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(ViewModel)).Returns(Task.FromResult(AddDraftApprenticeshipRequest));
             LinkGenerator.Setup(g => g.CommitmentsLink(CohortDetailsUrl)).Returns(CohortDetailsUrl);
+            UrlSelectorService
+                .Setup(ss =>ss.RedirectToCohortDetails(It.IsAny<IUrlHelper>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new RedirectResult(CohortDetailsUrl));
         }
 
         public Task<IActionResult> Get()

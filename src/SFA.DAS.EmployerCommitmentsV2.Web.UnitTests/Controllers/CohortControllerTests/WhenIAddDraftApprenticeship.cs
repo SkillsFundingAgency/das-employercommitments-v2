@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
@@ -15,7 +13,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
-using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
@@ -83,7 +81,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             CommitmentsServiceMock = new Mock<ICommitmentsService>();
             RequestMapper = new AddDraftApprenticeshipToCreateCohortRequestMapper();
-            LinkGeneratorMock = new Mock<ILinkGenerator>();
+            UrlSelectorServiceMock = new Mock<IUrlSelectorService>();
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
             CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
             ModelMapperMock = new Mock<IModelMapper>();
@@ -96,8 +94,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
         public IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest> RequestMapper { get; }
 
-        public Mock<ILinkGenerator> LinkGeneratorMock { get; }
-        public ILinkGenerator LinkGenerator => LinkGeneratorMock.Object;
+        public Mock<IUrlSelectorService> UrlSelectorServiceMock { get; }
+        public IUrlSelectorService UrlSelectorService => UrlSelectorServiceMock.Object;
 
         public Mock<IModelMapper> ModelMapperMock { get; set; }
         public IModelMapper ModelMapper => ModelMapperMock.Object;
@@ -125,9 +123,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithReviewCohortLink(string url)
         {
-            LinkGeneratorMock
-                .Setup(lg => lg.CommitmentsLink(It.IsAny<string>()))
-                .Returns(url);
+            UrlSelectorServiceMock
+                .Setup(lg => lg.RedirectToCohortDetails(
+                    It.IsAny<IUrlHelper>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new RedirectResult(url));
 
             return this;
         }
@@ -157,8 +156,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 CommitmentsApiClient,
                 Mock.Of<ILogger<CohortController>>(),
                 CommitmentsService,
-                LinkGenerator,
-                ModelMapper
+                ModelMapper,
+                UrlSelectorService
             );
             return controller;
         }

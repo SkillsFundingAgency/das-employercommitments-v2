@@ -17,6 +17,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using SFA.DAS.EmployerUrlHelper;
 using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
 
@@ -29,18 +30,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ICommitmentsService _commitmentsService;
         private readonly IModelMapper _modelMapper;
         private readonly ILinkGenerator _linkGenerator;
+        private readonly IUrlSelectorService _urlSelectorService;
         private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
 
         public DraftApprenticeshipController(
             ICommitmentsService commitmentsService,
             ILinkGenerator linkGenerator,
             ITrainingProgrammeApiClient trainingProgrammeApiClient,
-            IModelMapper modelMapper)
+            IModelMapper modelMapper,
+            IUrlSelectorService urlSelectorService)
         {
             _commitmentsService = commitmentsService;
             _linkGenerator = linkGenerator;
             _trainingProgrammeApiClient = trainingProgrammeApiClient;
             _modelMapper = modelMapper;
+            _urlSelectorService = urlSelectorService;
         }
 
         [HttpGet]
@@ -67,7 +71,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
             catch (CohortEmployerUpdateDeniedException)
             {
-                return Redirect(_linkGenerator.CohortDetails(request.AccountHashedId, request.CohortReference));
+                return _urlSelectorService.RedirectToCohortDetails(Url, request.AccountHashedId, request.CohortReference);
             }
         }
 
@@ -80,7 +84,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 var addDraftApprenticeshipRequest = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(model);
                 await _commitmentsService.AddDraftApprenticeshipToCohort(model.CohortId.Value, addDraftApprenticeshipRequest);
                 
-                return Redirect(_linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference));
+                return _urlSelectorService.RedirectToCohortDetails(Url, model.AccountHashedId, model.CohortReference);
             }
             catch (CommitmentsApiModelException ex)
             {
@@ -124,8 +128,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
                 await _commitmentsService.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
 
-                var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);
-                return Redirect(reviewYourCohort);
+                return _urlSelectorService.RedirectToCohortDetails(Url, model.AccountHashedId, model.CohortReference);
             }
             catch (CommitmentsApiModelException ex)
             {
