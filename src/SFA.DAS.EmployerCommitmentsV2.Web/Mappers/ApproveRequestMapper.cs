@@ -4,7 +4,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {
-    public class ApproveViewModelMapper : IMapper<ApproveRequest, ApproveViewModel>
+    public class ApproveRequestMapper : IMapper<ApproveRequest, ApproveViewModel>
     {
         public Task<ApproveViewModel> Map(ApproveRequest source)
         {

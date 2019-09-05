@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
@@ -16,6 +17,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests
         public static RedirectResult VerifyReturnsRedirect(this IActionResult result)
         {
             return result.VerifyResponseObjectType<RedirectResult>();
+        }
+
+        public static NotFoundResult VerifyReturnsNotFound(this IActionResult result)
+        {
+            return result.VerifyResponseObjectType<NotFoundResult>();
+        }
+
+        public static NotFoundObjectResult VerifyReturnsNotFoundWithObject(this IActionResult result)
+        {
+            return result.VerifyResponseObjectType<NotFoundObjectResult>();
         }
 
         public static RedirectToActionResult VerifyReturnsRedirectToActionResult(this IActionResult result)
@@ -69,5 +80,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests
             Assert.IsInstanceOf<TExpectedModel>(result.Model);
             return result.Model as TExpectedModel;
         }
+
+        public static RedirectResult ThatMatches(this RedirectResult result, Func<RedirectResult, bool> match)
+        {
+            Assert.IsTrue(match(result));
+            return result;
+        }
+
+        public static TExpectedModel ThatMatches<TExpectedModel>(this TExpectedModel result, Func<TExpectedModel, bool> match) where TExpectedModel : class
+        {
+            Assert.IsTrue(match(result));
+            return result;
+        }
+
     }
 }

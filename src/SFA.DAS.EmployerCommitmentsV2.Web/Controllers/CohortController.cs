@@ -9,10 +9,13 @@ using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerCommitmentsV2.Web.Services;
+using SFA.DAS.Encoding;
 using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
@@ -26,19 +29,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ILogger<CohortController> _logger;
         private readonly IModelMapper _modelMapper;
         private readonly IUrlSelectorService _urlSelectorService;
+        private readonly IEncodingService _encodingService;
 
         public CohortController(
             ICommitmentsApiClient commitmentsApiClient,
             ILogger<CohortController> logger,
             ICommitmentsService employerCommitmentsService,
             IModelMapper modelMapper,
-            IUrlSelectorService urlSelectorService)
+            IUrlSelectorService urlSelectorService,
+            IEncodingService encodingService)
         {
             _commitmentsApiClient = commitmentsApiClient ?? throw new ArgumentNullException(nameof(commitmentsApiClient));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _employerCommitmentsService = employerCommitmentsService ?? throw new ArgumentNullException(nameof(employerCommitmentsService));
             _modelMapper = modelMapper ?? throw new ArgumentNullException(nameof(modelMapper));
             _urlSelectorService = urlSelectorService ?? throw new ArgumentNullException(nameof(urlSelectorService));
+            _encodingService = encodingService ?? throw new ArgumentNullException(nameof(encodingService));
         }
 
         [HttpGet]
@@ -47,9 +53,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         //[DasAuthorize(EmployerFeature.EnhancedApproval)]
         public async Task<IActionResult> Approve(ApproveRequest request)
         {
-            var redirectToV1Action =
-                await _urlSelectorService.RedirectToV1IfCohortWithOtherParty(request.AccountHashedId,
-                    request.CohortReference);
+            GetCohortResponse response;
+            try
+            {
+                response = await _commitmentsApiClient.GetCohort(_encodingService.Decode(request.CohortReference, EncodingType.CohortReference));
+            }
+            catch (RestHttpClientException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+            {
+                return NotFound();
+            }
+
+            if (response.WithParty == Party.None)
+                return NotFound();
+
+            var redirectToV1Action = _urlSelectorService.RedirectToV1IfCohortWithOtherParty(request.AccountHashedId, request.CohortReference, response);
 
             if (redirectToV1Action != null)
             {

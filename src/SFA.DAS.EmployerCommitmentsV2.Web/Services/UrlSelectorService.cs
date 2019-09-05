@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -17,20 +17,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Services
         private readonly Lazy<Func<IUrlHelper, string, string, ActionResult>> _lazyCohortDetailsLink;
         private readonly IAuthorizationService _authorizationService;
         private readonly ILinkGenerator _linkGenerator;
-        private readonly IEncodingService _encodingService;
-        private readonly ICommitmentsApiClient _commitmentsApiClient;
 
         public UrlSelectorService(
             IAuthorizationService authorizationService, 
-            ILinkGenerator linkGenerator, 
-            IEncodingService encodingService,
-            ICommitmentsApiClient commitmentsApiClient)
+            ILinkGenerator linkGenerator)
         {
             _linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
             _authorizationService = authorizationService ?? throw new ArgumentNullException(nameof(authorizationService));
             _lazyCohortDetailsLink = new Lazy<Func<IUrlHelper, string, string, ActionResult>>(InitialiseCohortDetailsLink);
-            _encodingService = encodingService ?? throw new ArgumentNullException(nameof(encodingService));
-            _commitmentsApiClient = commitmentsApiClient ?? throw new ArgumentNullException(nameof(commitmentsApiClient));
         }
 
         public ActionResult RedirectToCohortDetails(IUrlHelper urlHelper, string accountHashedId, string cohortReference)
@@ -38,11 +32,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Services
             return _lazyCohortDetailsLink.Value(urlHelper, accountHashedId, cohortReference);
         }
 
-        public async Task<ActionResult> RedirectToV1IfCohortWithOtherParty(string accountHashId, string cohortReference)
+        public ActionResult RedirectToV1IfCohortWithOtherParty(string accountHashId, string cohortReference, GetCohortResponse cohort)
         {
-            var cohortId = _encodingService.Decode(cohortReference, EncodingType.CohortReference);
-
-            if (await IsWithOtherParty(cohortId))
+            if (cohort.WithParty == Party.Provider)
             {
                 return GetLinkToV1(accountHashId, cohortReference);
             }
@@ -86,13 +78,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Services
                     UrlHelper = urlHelper,
                     Permanent = false
                 };
-        }
-
-        private async Task<bool> IsWithOtherParty(long cohortId)
-        {
-            var cohort = await _commitmentsApiClient.GetCohort(cohortId).ConfigureAwait(false);
-
-            return cohort.WithParty == Party.Provider;
         }
     }
 }

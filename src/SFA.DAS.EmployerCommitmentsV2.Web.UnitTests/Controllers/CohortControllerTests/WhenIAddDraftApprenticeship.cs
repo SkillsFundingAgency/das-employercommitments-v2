@@ -14,6 +14,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerCommitmentsV2.Web.Services;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
@@ -157,7 +158,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 Mock.Of<ILogger<CohortController>>(),
                 CommitmentsService,
                 ModelMapper,
-                UrlSelectorService
+                UrlSelectorService,
+                Mock.Of<IEncodingService>()
             );
             return controller;
         }

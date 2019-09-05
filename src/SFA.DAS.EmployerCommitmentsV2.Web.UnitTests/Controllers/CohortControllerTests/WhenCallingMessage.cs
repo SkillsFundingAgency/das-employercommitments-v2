@@ -13,6 +13,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Services;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
@@ -95,7 +96,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                     CommitmentsApiClientMock.Object, Mock.Of<ILogger<CohortController>>(),
                     Mock.Of<ICommitmentsService>(),
                     ModelMapperMock.Object,
-                    Mock.Of<IUrlSelectorService>()
+                    Mock.Of<IUrlSelectorService>(),
+                    Mock.Of<IEncodingService>()
                 );
             }
 

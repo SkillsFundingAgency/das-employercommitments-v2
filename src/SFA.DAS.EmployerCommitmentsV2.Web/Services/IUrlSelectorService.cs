@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Services
@@ -20,9 +21,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Services
         ActionResult RedirectToCohortDetails(IUrlHelper urlHelper, string accountHashedId, string cohortReference);
 
         /// <summary>
-        ///     Redirects to version 1 of the CohortDetails page if the cohort is with the provider regardless of the state of
-        ///     the <see cref="EmployerFeature.EnhancedApproval"/> feature toggle otherwise returns null.
+        ///     Redirects to version 1 of the CohortDetails page for the supplied account and cohort if the supplied cohort is
+        ///     with the provider.
         /// </summary>
-        Task<ActionResult> RedirectToV1IfCohortWithOtherParty(string accountHashedId, string cohortReference);
+        ActionResult RedirectToV1IfCohortWithOtherParty(string accountHashId, string cohortReference, GetCohortResponse cohort);
     }
 }

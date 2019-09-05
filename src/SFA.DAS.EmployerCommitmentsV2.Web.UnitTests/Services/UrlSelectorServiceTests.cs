@@ -44,22 +44,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Services
             Assert.Throws<ArgumentNullException>(() => fixtures.CreateSut(linkGenerator: null));
         }
 
-        [Test]
-        public void Constructor_NullEncodingServiceArguments_ShouldThrowArgumentNullException()
-        {
-            var fixtures = new UrlSelectorServiceTestFixtures();
-
-            Assert.Throws<ArgumentNullException>(() => fixtures.CreateSut(encodingService: null));
-        }
-
-        [Test]
-        public void Constructor_NullCommitmentsApiClientArguments_ShouldThrowArgumentNullException()
-        {
-            var fixtures = new UrlSelectorServiceTestFixtures();
-
-            Assert.Throws<ArgumentNullException>(() => fixtures.CreateSut(commitmentsApiClient: null));
-        }
-
         [TestCase(true)]
         [TestCase(false)]
         public void RedirectToCohortDetails_WithEnhancedApprovalsToggleSet_ShouldReturnAppropriateLink(bool enableEnhancedApprovals)
@@ -86,7 +70,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Services
         [TestCase(Party.Provider, false, true)]
         [TestCase(Party.Employer, true, false)]
         [TestCase(Party.Employer, false, false)]
-        public async Task RedirectToV1IfCohortWithOtherParty_WithEnhancedApprovalsToggleSet_ShouldReturnAppropriateLink(Party party, bool enableEnhancedApprovals, bool expectRedirectToV1)
+        public void RedirectToV1IfCohortWithOtherParty_WithEnhancedApprovalsToggleSet_ShouldReturnAppropriateLink(Party party, bool enableEnhancedApprovals, bool expectRedirectToV1)
         {
             var fixtures = new UrlSelectorServiceTestFixtures()
                 .SetEnhancedApproval(enableEnhancedApprovals)
@@ -94,8 +78,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Services
                 .SetCohortLinks();
 
             var sut = fixtures.CreateSut();
+            var cohort = new GetCohortResponse {WithParty = party};
 
-            var action = await sut.RedirectToV1IfCohortWithOtherParty("AC1234", "CO1234");
+            var action = sut.RedirectToV1IfCohortWithOtherParty("AC1234", "CO1234", cohort);
 
             if (expectRedirectToV1)
             {
@@ -167,9 +152,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Services
         {
             return new UrlSelectorService(
                 AuthorizationService,
-                LinkGenerator,
-                EncodingService,
-                CommitmentsApiClient
+                LinkGenerator
                 );
         }
 
@@ -182,9 +165,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Services
         {
             return new UrlSelectorService(
                 authorizationService,
-                LinkGenerator,
-                EncodingService,
-                CommitmentsApiClient
+                LinkGenerator
             );
         }
 
@@ -192,29 +173,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Services
         {
             return new UrlSelectorService(
                 AuthorizationService,
-                linkGenerator,
-                EncodingService,
-                CommitmentsApiClient
-            );
-        }
-
-        public UrlSelectorService CreateSut(IEncodingService encodingService)
-        {
-            return new UrlSelectorService(
-                AuthorizationService,
-                LinkGenerator,
-                encodingService,
-                CommitmentsApiClient
-            );
-        }
-
-        public UrlSelectorService CreateSut(ICommitmentsApiClient commitmentsApiClient)
-        {
-            return new UrlSelectorService(
-                AuthorizationService,
-                LinkGenerator,
-                EncodingService,
-                commitmentsApiClient
+                linkGenerator
             );
         }
     }
