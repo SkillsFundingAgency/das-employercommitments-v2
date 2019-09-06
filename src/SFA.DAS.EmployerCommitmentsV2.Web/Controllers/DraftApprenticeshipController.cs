@@ -92,6 +92,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
             await _commitmentsService.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
 
+            if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
+            {
+                return RedirectToAction("Details", "Cohort", new { model.CohortReference, model.AccountHashedId });
+            }
+
             var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);
             return Redirect(reviewYourCohort);
         }
