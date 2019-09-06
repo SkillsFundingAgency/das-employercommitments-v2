@@ -9,6 +9,7 @@ using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -36,6 +37,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             _logger = logger;
             _linkGenerator = linkGenerator;
             _modelMapper = modelMapper;
+        }
+
+        [Route("{cohortReference}")]
+        public async Task<IActionResult> Details(DetailsRequest request)
+        {
+            var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
+
+            if (viewModel.WithParty != Party.Employer)
+            {
+                return Redirect(_linkGenerator.CohortDetails(viewModel.AccountHashedId, viewModel.CohortReference));
+            }
+
+            return View(viewModel);
         }
 
         [Route("add")]
