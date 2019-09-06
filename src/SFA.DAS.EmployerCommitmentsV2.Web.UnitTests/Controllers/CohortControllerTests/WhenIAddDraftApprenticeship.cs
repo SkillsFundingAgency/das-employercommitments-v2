@@ -60,7 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = await fixtures.CheckPost();
 
-            result.VerifyReturnsRedirectToActionResult();
+            result.VerifyReturnsRedirectToActionResult().WithActionName("Details");
         }
 
 

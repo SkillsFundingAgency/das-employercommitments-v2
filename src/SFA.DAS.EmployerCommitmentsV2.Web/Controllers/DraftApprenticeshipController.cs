@@ -11,6 +11,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
 using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
@@ -64,7 +65,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
             {
-                return RedirectToAction("Details", "Cohort", new { model.CohortReference, model.AccountHashedId });
+                return RedirectToAction("Details", "Cohort", new { model.AccountHashedId, model.CohortReference });
             }
 
             return Redirect(_linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference));
@@ -94,7 +95,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
             {
-                return RedirectToAction("Details", "Cohort", new { model.CohortReference, model.AccountHashedId });
+                return RedirectToAction("Details", "Cohort", new { model.AccountHashedId, model.CohortReference });
             }
 
             var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);
