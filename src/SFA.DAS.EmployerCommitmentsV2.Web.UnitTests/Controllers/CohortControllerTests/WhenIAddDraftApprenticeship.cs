@@ -10,6 +10,7 @@ using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
@@ -17,6 +18,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.Testing.Builders;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
@@ -49,19 +51,34 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         }
 
         [Test]
-        public async Task PostAddDraftApprenticeship_WithInvalidRequest_ShouldReturnRedirectToGet()
+        public async Task PostAddDraftApprenticeship_WithValidModel_WithEnhancedApproval_ShouldRedirectToCohortDetailsV2()
         {
-            const string reviewCohortUrl = "https://www.reviewmycohort.gov.uk";
-
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
-                                .ForPostRequest()
-                                .WithCreatedCohort("ABC123", 123)
-                                .WithReviewCohortLink(reviewCohortUrl);
+                .ForPostRequest()
+                .WithCreatedCohort("ABC123", 123)
+                .WithEnhancedApproval();
 
             var result = await fixtures.CheckPost();
 
-            result.VerifyReturnsRedirect().WithUrl(reviewCohortUrl);
+            result.VerifyReturnsRedirectToActionResult();
         }
+
+
+        [Test]
+        public async Task PostAddDraftApprenticeship_WithValidModel_WithoutEnhancedApproval_ShouldRedirectToCohortDetailsV1()
+        {
+            var redirectUrl = "V1CohortDetailsPage";
+
+            var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
+                .ForPostRequest()
+                .WithCreatedCohort("ABC123", 123)
+                .WithReviewCohortLink(redirectUrl);
+
+            var result = await fixtures.CheckPost();
+
+            result.VerifyReturnsRedirect().WithUrl(redirectUrl);
+        }
+
 
         [Test]
         public async Task PostAddDraftApprenticeship_WithValidModel_ShouldSaveCohort()
@@ -89,6 +106,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             ModelMapperMock = new Mock<IModelMapper>();
             ModelMapperMock.Setup(x => x.Map<ApprenticeViewModel>(It.IsAny<ApprenticeRequest>()))
                 .ReturnsAsync(new ApprenticeViewModel());
+            AuthorizationServiceMock = new Mock<IAuthorizationService>();
+            AuthorizationServiceMock.Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval))
+                .Returns(false);
         }
 
         public IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest> RequestMapper { get; }
@@ -98,6 +118,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
         public Mock<IModelMapper> ModelMapperMock { get; set; }
         public IModelMapper ModelMapper => ModelMapperMock.Object;
+
+        public Mock<IAuthorizationService> AuthorizationServiceMock { get; set; }
+        public IAuthorizationService AuthorizationService => AuthorizationServiceMock.Object;
 
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClientMock { get; }
 
@@ -147,6 +170,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             return this;
         }
 
+        public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithEnhancedApproval()
+        {
+            AuthorizationServiceMock
+                .Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval))
+                .Returns(true);
+
+            return this;
+        }
+
         public CohortController CreateController()
         {
             var controller = new CohortController(
@@ -154,7 +186,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 Mock.Of<ILogger<CohortController>>(),
                 LinkGenerator,
                 ModelMapper,
-                Mock.Of<IAuthorizationService>()
+                AuthorizationService
             );
             return controller;
         }

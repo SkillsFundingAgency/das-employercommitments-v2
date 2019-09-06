@@ -9,10 +9,12 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.Testing.Builders;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {
@@ -58,6 +60,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             var redirect = result.VerifyReturnsRedirect();
             Assert.AreEqual("cohortPage", redirect.Url);
         }
+
+        [Test]
+        public async Task PostEditDraftApprenticeship_WithValidModel__WithEnhancedApproval_ShouldSaveDraftApprenticeshipAndRedirectToCohortDetailsV2Page()
+        {
+            var fixtures = new EditDraftApprenticeshipTestsFixture()
+                .WithEnhancedApproval()
+                .WithCohort();
+
+            var result = await fixtures.Sut.EditDraftApprenticeship(new EditDraftApprenticeshipViewModel { AccountHashedId = fixtures.AccountHashedId, CohortId = fixtures.CohortId, CohortReference = fixtures.CohortReference, DraftApprenticeshipId = fixtures.DraftApprenticeshipId });
+
+            fixtures.CommitmentsServiceMock.Verify(cs => cs.UpdateDraftApprenticeship(fixtures.CohortId, fixtures.DraftApprenticeshipId, It.IsAny<UpdateDraftApprenticeshipRequest>()), Times.Once);
+            var redirect = result.VerifyReturnsRedirectToActionResult();
+            Assert.AreEqual("Details", redirect.ActionName);
+        }
     }
 
     public class EditDraftApprenticeshipTestsFixture
@@ -92,16 +108,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             ModelMapperMock.Setup(x => x.Map<EditDraftApprenticeshipViewModel>(It.IsAny<EditDraftApprenticeshipRequest>()))
                 .ReturnsAsync(EditDraftApprenticeshipViewModel);
 
+            AuthorizationServiceMock = new Mock<IAuthorizationService>();
+            AuthorizationServiceMock.Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval)).Returns(false);
+
             Sut = new DraftApprenticeshipController(CommitmentsServiceMock.Object,
                 LinkGeneratorMock.Object,
                 ModelMapperMock.Object,
                 Mock.Of<ICommitmentsApiClient>(),
-                Mock.Of<IAuthorizationService>());
+                AuthorizationServiceMock.Object);
         }
 
         public Mock<ICommitmentsService> CommitmentsServiceMock { get; }
         public Mock<IModelMapper> ModelMapperMock { get; }
         public Mock<ILinkGenerator> LinkGeneratorMock { get; }
+        public Mock<IAuthorizationService> AuthorizationServiceMock { get; }
         public CohortDetails CohortDetails { get; private set; }
         public string AccountHashedId => "ACHID";
         public long CohortId => 1;
@@ -170,6 +190,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 .Setup(cs => cs.GetCohortDetail(It.IsAny<long>()))
                 .ReturnsAsync(returnValue);
 
+            return this;
+        }
+
+        public EditDraftApprenticeshipTestsFixture WithEnhancedApproval()
+        {
+            AuthorizationServiceMock.Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval)).Returns(true);
             return this;
         }
 
