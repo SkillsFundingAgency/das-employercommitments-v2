@@ -8,6 +8,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.Commitments.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -135,7 +136,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 CommitmentsService.Object, 
                 LinkGenerator.Object,
                 ModelMapper.Object,
-                CommitmentsApiClient.Object
+                CommitmentsApiClient.Object,
+                Mock.Of<IAuthorizationService>()
                 );
 
             CommitmentsService.Setup(c => c.GetCohortDetail(Cohort.CohortId)).ReturnsAsync(Cohort);

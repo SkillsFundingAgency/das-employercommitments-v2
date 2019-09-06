@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Apprenticeships.Api.Client;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.Commitments.Shared.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -91,7 +92,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 Sut = new CohortController(
                     CommitmentsApiClientMock.Object, Mock.Of<ILogger<CohortController>>(),
                     Mock.Of<ILinkGenerator>(),
-                    ModelMapperMock.Object
+                    ModelMapperMock.Object,
+                    Mock.Of<IAuthorizationService>()
                 );
             }
 

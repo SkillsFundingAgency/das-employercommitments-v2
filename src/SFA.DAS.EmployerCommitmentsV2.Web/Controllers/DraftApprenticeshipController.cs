@@ -4,6 +4,7 @@ using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
@@ -16,7 +17,7 @@ using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.D
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EmployerCommitmentsV2, EmployerUserRole.OwnerOrTransactor)]
+    [DasAuthorize(CommitmentOperation.AccessCohort, EmployerUserRole.OwnerOrTransactor)]
     [Route("{AccountHashedId}/unapproved/{cohortReference}/apprentices")]
     public class DraftApprenticeshipController : Controller
     {
@@ -24,16 +25,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IModelMapper _modelMapper;
         private readonly ILinkGenerator _linkGenerator;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly IAuthorizationService _authorizationService;
 
         public DraftApprenticeshipController(
             ICommitmentsService commitmentsService,
             ILinkGenerator linkGenerator,
-            IModelMapper modelMapper, ICommitmentsApiClient commitmentsApiClient)
+            IModelMapper modelMapper, ICommitmentsApiClient commitmentsApiClient,
+            IAuthorizationService authorizationService)
         {
             _commitmentsService = commitmentsService;
             _linkGenerator = linkGenerator;
             _modelMapper = modelMapper;
             _commitmentsApiClient = commitmentsApiClient;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -55,9 +59,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add")]
         public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipViewModel model)
         {
-                var addDraftApprenticeshipRequest = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(model);
-                await _commitmentsApiClient.AddDraftApprenticeship(model.CohortId.Value, addDraftApprenticeshipRequest);
-                return Redirect(_linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference));
+            var addDraftApprenticeshipRequest = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(model);
+            await _commitmentsApiClient.AddDraftApprenticeship(model.CohortId.Value, addDraftApprenticeshipRequest);
+
+            if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
+            {
+                return RedirectToAction("Details", "Cohort", new { model.CohortReference, model.AccountHashedId });
+            }
+
+            return Redirect(_linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference));
         }
 
         [HttpGet]

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.Commitments.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -94,7 +95,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             Sut = new DraftApprenticeshipController(CommitmentsServiceMock.Object,
                 LinkGeneratorMock.Object,
                 ModelMapperMock.Object,
-                Mock.Of<ICommitmentsApiClient>());
+                Mock.Of<ICommitmentsApiClient>(),
+                Mock.Of<IAuthorizationService>());
         }
 
         public Mock<ICommitmentsService> CommitmentsServiceMock { get; }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
@@ -18,7 +19,7 @@ using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    [DasAuthorize(EmployerFeature.EmployerCommitmentsV2, EmployerUserRole.OwnerOrTransactor)]
+    [DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
     [Route("{accountHashedId}/unapproved")]
     public class CohortController : Controller
     {
@@ -26,17 +27,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ILogger<CohortController> _logger;
         private readonly ILinkGenerator _linkGenerator;
         private readonly IModelMapper _modelMapper;
+        private readonly IAuthorizationService _authorizationService;
 
         public CohortController(
             ICommitmentsApiClient commitmentsApiClient,
             ILogger<CohortController> logger,
             ILinkGenerator linkGenerator,
-            IModelMapper modelMapper)
+            IModelMapper modelMapper,
+            IAuthorizationService authorizationService)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _logger = logger;
             _linkGenerator = linkGenerator;
             _modelMapper = modelMapper;
+            _authorizationService = authorizationService;
         }
 
         [Route("{cohortReference}")]
@@ -152,7 +156,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
         }
 
-
         [HttpGet]
         [Route("add/apprentice")]
         public async Task<IActionResult> Apprentice(ApprenticeRequest request)
@@ -167,8 +170,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var request = await _modelMapper.Map<CreateCohortRequest>(model);
             var newCohort = await _commitmentsApiClient.CreateCohort(request);
+
+            if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
+            {
+                return RedirectToAction("Details", new {newCohort.CohortReference, model.AccountHashedId });
+            }
+
             var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, newCohort.CohortReference);
-            return Redirect(reviewYourCohort);
+                return Redirect(reviewYourCohort);
         }
 
         [Route("add/message")]
@@ -201,11 +210,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 ProviderName = response.ProviderName,
                 Message = response.LatestMessageCreatedByEmployer
             });
-        }
-
-        private async Task<string> GetProviderName(long providerId)
-        {
-            return (await _commitmentsApiClient.GetProvider(providerId)).Name;
         }
     }
 }
