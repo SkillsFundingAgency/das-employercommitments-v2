@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDasCookiePolicy()
+            services
                 .AddDasHealthChecks()
                 .AddDasMvc()
                 .AddDasEmployerAuthentication(_configuration)
@@ -43,7 +43,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .UseStaticFiles()
                 .UseDasHealthChecks()
                 .UseAuthentication()
-                .UseCookiePolicy()
                 .UseMvc();
         }
     }
