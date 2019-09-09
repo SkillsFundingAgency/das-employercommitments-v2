@@ -7,5 +7,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string AccountHashedId { get; set; }
         public Party WithParty { get; set; }
         public string CohortReference { get; set; }
+        public string LegalEntityName { get; set; }
     }
 }
