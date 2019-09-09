@@ -24,7 +24,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountHashedId = source.AccountHashedId,
                 CohortReference = source.CohortReference,
                 WithParty = cohort.WithParty,
-                LegalEntityName = cohort.LegalEntityName
+                LegalEntityName = cohort.LegalEntityName,
+                ProviderName = cohort.ProviderName,
+                Message = cohort.LatestMessageCreatedByProvider
             };
         }
     }

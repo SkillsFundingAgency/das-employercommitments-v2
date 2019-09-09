@@ -9,3 +9,17 @@
 
 <p><strong>Organisation:</strong> @Model.LegalEntityName</p>
 <p><strong>Reference:</strong> @Model.CohortReference</p>
+
+<p><strong>Message from @Model.ProviderName:</strong></p>
+<div class="govuk-inset-text">
+    <p class="govuk-body">    
+        @if (string.IsNullOrWhiteSpace(@Model.Message))
+        {
+            <span>No message added.</span>
+        }
+        else
+        {
+            @Model.Message
+        }
+    </p>
+</div>

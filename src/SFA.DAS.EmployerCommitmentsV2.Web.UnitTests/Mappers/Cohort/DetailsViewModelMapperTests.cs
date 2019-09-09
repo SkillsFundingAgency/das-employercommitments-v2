@@ -5,7 +5,6 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
-using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
@@ -52,6 +51,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public void LegalEntityNameIsMappedCorrectly()
         {
             Assert.AreEqual(_cohort.LegalEntityName,_result.LegalEntityName);
+        }
+
+        [Test]
+        public void ProviderNameIsMappedCorrectly()
+        {
+            Assert.AreEqual(_cohort.ProviderName, _result.ProviderName);
+        }
+
+        [Test]
+        public void MessageIsMappedCorrectly()
+        {
+            Assert.AreEqual(_cohort.LatestMessageCreatedByProvider, _result.Message);
         }
     }
 }
