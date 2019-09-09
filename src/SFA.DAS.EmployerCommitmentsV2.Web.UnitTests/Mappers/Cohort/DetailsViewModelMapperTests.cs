@@ -64,5 +64,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             Assert.AreEqual(_cohort.LatestMessageCreatedByProvider, _result.Message);
         }
+
+        [Test]
+        public void CohortReferenceIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.CohortReference, _result.CohortReference);
+        }
     }
 }
