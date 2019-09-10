@@ -1,4 +1,5 @@
 ﻿using System;
+using SFA.DAS.Commitments.Shared.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 {
@@ -16,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 
         public string DisplayName => $"{FirstName} {LastName}";
 
-        public string DisplayDateOfBirth => DateOfBirth.HasValue ? $"{DateOfBirth.Value:d MMM yyyy}" : "-";
+        public string DisplayDateOfBirth => DateOfBirth.HasValue ? DateOfBirth.Value.ToGdsFormat() : "-";
 
         public string DisplayTrainingDates
         {
@@ -24,13 +25,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
             {
                 if (StartDate.HasValue && EndDate.HasValue)
                 {
-                    return $"{StartDate.Value:MMM yyyy} to {EndDate.Value:MMM yyyy}";
+                    return $"{StartDate.Value.ToGdsFormatWithoutDay()} to {EndDate.Value.ToGdsFormatWithoutDay()}";
                 }
 
                 return "-";
             }
         }
 
-        public string DisplayCost => Cost.HasValue ? $"£{Cost.Value:n0}" : "-";
+        public string DisplayCost => Cost.HasValue ? $"{Cost.Value.ToGdsCostFormat()}" : "-";
     }
 }
