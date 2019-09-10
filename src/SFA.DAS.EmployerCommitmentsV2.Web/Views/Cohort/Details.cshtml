@@ -4,7 +4,7 @@
     ViewData["Title"] = "Approve apprentices' details";
 }
 
-<h1 class="govuk-heading-xl">Approve apprentices' details</h1>
+<h1 class="govuk-heading-xl">Approve @Model.DraftApprenticeships.Count apprentices' details</h1>
 
 
 <p><strong>Organisation:</strong> @Model.LegalEntityName</p>
@@ -23,3 +23,18 @@
         }
     </p>
 </div>
+
+@foreach (var draftApprenticeship in Model.DraftApprenticeships)
+{
+    <p>
+        <span>@draftApprenticeship.DisplayName</span>
+        -
+        <span>@draftApprenticeship.DisplayDateOfBirth</span>
+        -
+        <span>@draftApprenticeship.DisplayTrainingDates</span>
+        -
+        <span>@draftApprenticeship.DisplayCost</span>
+    </p>
+}
+
+

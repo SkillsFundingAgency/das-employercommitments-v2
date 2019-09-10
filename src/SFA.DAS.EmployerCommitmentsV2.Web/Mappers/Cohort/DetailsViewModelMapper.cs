@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             await Task.WhenAll(new List<Task> { cohortTask, draftApprenticeshipsTask });
 
             var cohort = await cohortTask;
-            var draftApprenticeships = await draftApprenticeshipsTask;
+            var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
 
             return new DetailsViewModel
             {

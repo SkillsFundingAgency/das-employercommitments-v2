@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -21,7 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private DetailsViewModel _result;
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
         private GetCohortResponse _cohort;
-        private IReadOnlyCollection<DraftApprenticeshipDto> _draftApprenticeships;
+        private GetDraftApprenticeshipsResponse _draftApprenticeshipsResponse;
 
         [SetUp]
         public async Task Arrange()
@@ -29,14 +28,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var autoFixture = new Fixture();
 
             _cohort = autoFixture.Create<GetCohortResponse>();
-            _draftApprenticeships = autoFixture.Create<List<DraftApprenticeshipDto>>();
+            _draftApprenticeshipsResponse = autoFixture.Create<GetDraftApprenticeshipsResponse>();
 
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _commitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_cohort);
 
             _commitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_draftApprenticeships);
+                .ReturnsAsync(_draftApprenticeshipsResponse);
 
             _mapper = new DetailsViewModelMapper(_commitmentsApiClient.Object);
             _source = autoFixture.Create<DetailsRequest>();
@@ -82,9 +81,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void DraftApprenticeshipsAreMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeships.Count, _result.DraftApprenticeships.Count);
+            Assert.AreEqual(_draftApprenticeshipsResponse.DraftApprenticeships.Count, _result.DraftApprenticeships.Count);
 
-            foreach (var draftApprenticeship in _draftApprenticeships)
+            foreach (var draftApprenticeship in _draftApprenticeshipsResponse.DraftApprenticeships)
             {
                 var draftApprenticeshipResult =
                     _result.DraftApprenticeships.Single(x => x.Id == draftApprenticeship.Id);
