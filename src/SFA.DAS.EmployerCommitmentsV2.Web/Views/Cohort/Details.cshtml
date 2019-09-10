@@ -24,17 +24,22 @@
     </p>
 </div>
 
+<table class="responsive govuk-table">
+    <thead>
+    <tr>
+        <th scope="col">Name</th>
+        <th>Date of birth</th>
+        <th>Training dates</th>
+        <th>Price</th>
+    </tr>
+    </thead>
 @foreach (var draftApprenticeship in Model.DraftApprenticeships)
 {
-    <p>
-        <span>@draftApprenticeship.DisplayName</span>
-        -
-        <span>@draftApprenticeship.DisplayDateOfBirth</span>
-        -
-        <span>@draftApprenticeship.DisplayTrainingDates</span>
-        -
-        <span>@draftApprenticeship.DisplayCost</span>
-    </p>
+    <tr>
+        <td>@draftApprenticeship.DisplayName</td>
+        <td>@draftApprenticeship.DisplayDateOfBirth</td>
+        <td>@draftApprenticeship.DisplayTrainingDates</td>
+        <td>@draftApprenticeship.DisplayCost</td>
+    </tr>
 }
-
-
+</table>
