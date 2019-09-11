@@ -6,40 +6,157 @@
 
 <h1 class="govuk-heading-xl">Approve @Model.DraftApprenticeships.Count apprentices' details</h1>
 
+<dl class="das-definition-list das-definition-list--inline">
+    <dt class="das-definition-list__title">Organisation</dt>
+    <dd class="das-definition-list__definition">@Model.LegalEntityName</dd>
+    <dt class="das-definition-list__title">Reference</dt>
+    <dd class="das-definition-list__definition">@Model.CohortReference</dd>
+</dl>
 
-<p><strong>Organisation:</strong> @Model.LegalEntityName</p>
-<p><strong>Reference:</strong> @Model.CohortReference</p>
-
-<p><strong>Message from @Model.ProviderName:</strong></p>
+<h2 class="govuk-heading-s">Message from @Model.ProviderName:</h2>
 <div class="govuk-inset-text">
-    <p class="govuk-body">    
-        @if (string.IsNullOrWhiteSpace(@Model.Message))
-        {
-            <span>No message added.</span>
-        }
-        else
-        {
-            @Model.Message
-        }
-    </p>
+    @if (string.IsNullOrWhiteSpace(@Model.Message))
+    {
+        <span>No message added.</span>
+    }
+    else
+    {
+        @Model.Message
+    }
 </div>
 
-<table class="responsive govuk-table">
-    <thead>
-    <tr>
-        <th scope="col">Name</th>
-        <th>Date of birth</th>
-        <th>Training dates</th>
-        <th>Price</th>
-    </tr>
+<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+<table class="govuk-table">
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
+            <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
+            <th scope="col" class="govuk-table__header das-table-cell-width-30">Training dates</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
+        </tr>
     </thead>
-@foreach (var draftApprenticeship in Model.DraftApprenticeships)
-{
-    <tr>
-        <td>@draftApprenticeship.DisplayName</td>
-        <td>@draftApprenticeship.DisplayDateOfBirth</td>
-        <td>@draftApprenticeship.DisplayTrainingDates</td>
-        <td>@draftApprenticeship.DisplayCost</td>
-    </tr>
-}
+    <tbody class="govuk-table__body">
+
+        @foreach (var draftApprenticeship in Model.DraftApprenticeships)
+        {
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">@draftApprenticeship.DisplayName</td>
+                <td class="govuk-table__cell">@draftApprenticeship.DisplayDateOfBirth</td>
+                <td class="govuk-table__cell">@draftApprenticeship.DisplayTrainingDates</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">@draftApprenticeship.DisplayCost</td>
+            </tr>
+        }
+    </tbody>
 </table>
+
+
+@*<h3 class="govuk-heading-m">3 x Bespoke Saddler, Level 3 (Standard)</h3>
+
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
+                    <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
+                    <th scope="col" class="govuk-table__header das-table-cell-width-30">Training Dates</th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
+                    <th scope="col" class="govuk-table__header das-table-cell-width-10"><span class="govuk-visually-hidden">Action</span></th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">Barry Block</td>
+                    <td class="govuk-table__cell">15 Apr 2002</td>
+                    <td class="govuk-table__cell">Oct 2019 to Nov 2020</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <a href="">Edit <span class="govuk-visually-hidden">Barry Block's details</span></a>
+                        <a href="">Delete <span class="govuk-visually-hidden">Barry Block's details</span></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 class="govuk-heading-m">3 x Bespoke Saddler, Level 3 (Standard)</h3>
+
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
+                    <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
+                    <th scope="col" class="govuk-table__header das-table-cell-width-30">Training Dates</th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
+                    <th scope="col" class="govuk-table__header das-table-cell-width-10"><span class="govuk-visually-hidden">Action</span></th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">Barry Block</td>
+                    <td class="govuk-table__cell">15 Apr 2002</td>
+                    <td class="govuk-table__cell">Oct 2019 to Nov 2020</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <a href="">Edit <span class="govuk-visually-hidden">Barry Block's details</span></a>
+                        <a href="">Delete <span class="govuk-visually-hidden">Barry Block's details</span></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header das-table-cell-width-80" scope="row">Total apprenticeship training price <br>(excluding VAT)</th>
+                    <td class="govuk-table__cell govuk-table__header--numeric das-table-cell-width-10"><strong>&pound;42,000</strong></td>
+                    <td class="govuk-table__cell das-table-cell-width-10" aria-hidden="true"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><a href="#" class="govuk-link">Add another apprentice</a> </p>
+
+        <hr class="govuk-section-break govuk-section-break--l">
+
+
+    <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h3 class="govuk-fieldset__heading">
+                        Choose an option
+                    </h3>
+                </legend>
+                <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="radio-approve" name="next-steps" type="radio" value="" data-aria-controls="conditional-approve">
+                        <label class="govuk-label govuk-radios__label" for="radio-approve">
+                            Approve these details including my changes
+                        </label>
+                    </div>
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-approve">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="approve-details">
+                                Let @Model.ProviderName know what you'd like them to do next (optional)
+                            </label>
+                            <textarea class="govuk-textarea" id="approve-details" name="approve-details" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="radio-send" name="next-steps" type="radio" value="" data-aria-controls="conditional-send">
+                        <label class="govuk-label govuk-radios__label" for="radio-send">
+                            Send my changes to the training provider to review or add details
+                        </label>
+                    </div>
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-send">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="send-details">
+                                Let @Model.ProviderName know about any errors they need to fix or what you'd like them to do next (optional)
+                            </label>
+                            <textarea class="govuk-textarea" id="send-details" name="send-details" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+
+*@
