@@ -4,16 +4,19 @@ using System.Threading.Tasks;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
     public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly IEncodingService _encodingService;
 
-        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
+        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
         {
             _commitmentsApiClient = commitmentsApiClient;
+            _encodingService = encodingService;
         }
 
         public async Task<DetailsViewModel> Map(DetailsRequest source)
@@ -37,6 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 DraftApprenticeships = draftApprenticeships.Select(a => new CohortDraftApprenticeshipViewModel
                     {
                         Id = a.Id,
+                        DraftApprenticeshipHashedId = _encodingService.Encode(a.Id, EncodingType.ApprenticeshipId),
                         FirstName = a.FirstName,
                         LastName = a.LastName,
                         Cost = a.Cost,

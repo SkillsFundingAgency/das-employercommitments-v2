@@ -9,6 +9,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -19,8 +20,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private DetailsRequest _source;
         private DetailsViewModel _result;
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
+        private Mock<IEncodingService> _encodingService;
         private GetCohortResponse _cohort;
         private GetDraftApprenticeshipsResponse _draftApprenticeshipsResponse;
+        private string _apprenticeshipHashedId;
 
         [SetUp]
         public async Task Arrange()
@@ -37,7 +40,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _commitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_draftApprenticeshipsResponse);
 
-            _mapper = new DetailsViewModelMapper(_commitmentsApiClient.Object);
+            _apprenticeshipHashedId = autoFixture.Create<string>();
+            _encodingService = new Mock<IEncodingService>();
+            _encodingService.Setup(x => x.Encode(It.IsAny<long>(),
+                    It.Is<EncodingType>(et => et == EncodingType.ApprenticeshipId)))
+                .Returns(_apprenticeshipHashedId);
+
+            _mapper = new DetailsViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object);
             _source = autoFixture.Create<DetailsRequest>();
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }
@@ -103,6 +112,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(source.Cost, result.Cost);
             Assert.AreEqual(source.StartDate, result.StartDate);
             Assert.AreEqual(source.EndDate, result.EndDate);
+            Assert.AreEqual(_apprenticeshipHashedId, result.DraftApprenticeshipHashedId);
         }
     }
 }
