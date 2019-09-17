@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
@@ -33,6 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 WithParty = cohort.WithParty,
                 LegalEntityName = cohort.LegalEntityName,
                 ProviderName = cohort.ProviderName,
+                CanAmendCohort = CanAmendCohort(cohort), 
                 Message = cohort.LatestMessageCreatedByProvider,
                 DraftApprenticeships = draftApprenticeships.Select(a => new CohortDraftApprenticeshipViewModel
                     {
@@ -47,6 +51,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                         StartDate = a.StartDate
                     }).ToList()
             };
+        }
+
+        private bool CanAmendCohort(GetCohortResponse cohort)
+        {
+            
+            if (cohort.WithParty == Party.Employer)
+            {
+                switch (cohort.EditStatus)
+                {
+                    case EditStatus.Neither:
+                        return true;
+                    case EditStatus.Both:
+                        return false;
+                    case EditStatus.EmployerOnly :
+                        return true;
+                    case EditStatus.ProviderOnly:
+                        return false;
+                    default:
+                        throw new Exception($"EditStatus {cohort.EditStatus} not defined");
+                }
+            }
+
+            return false;
         }
     }
 }

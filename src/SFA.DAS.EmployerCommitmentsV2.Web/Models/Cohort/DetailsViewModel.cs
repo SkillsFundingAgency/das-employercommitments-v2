@@ -12,5 +12,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string ProviderName { get; set; }
         public string Message { get; set; }
         public IReadOnlyCollection<CohortDraftApprenticeshipViewModel> DraftApprenticeships { get; set; }
+        public bool CanAmendCohort { get; set; }
     }
 }

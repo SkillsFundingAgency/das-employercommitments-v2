@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -13,86 +14,143 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
     [TestFixture]
+    [Parallelizable(ParallelScope.All)]
     public class DetailsViewModelMapperTests
     {
-        private DetailsViewModelMapper _mapper;
-        private DetailsRequest _source;
-        private DetailsViewModel _result;
-        private Mock<ICommitmentsApiClient> _commitmentsApiClient;
-        private GetCohortResponse _cohort;
-        private GetDraftApprenticeshipsResponse _draftApprenticeshipsResponse;
-
-        [SetUp]
-        public async Task Arrange()
+        [Test]
+        public async Task AccountHashedIdIsMappedCorrectly()
         {
-            var autoFixture = new Fixture();
-
-            _cohort = autoFixture.Create<GetCohortResponse>();
-            _draftApprenticeshipsResponse = autoFixture.Create<GetDraftApprenticeshipsResponse>();
-
-            _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _commitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_cohort);
-
-            _commitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_draftApprenticeshipsResponse);
-
-            _mapper = new DetailsViewModelMapper(_commitmentsApiClient.Object);
-            _source = autoFixture.Create<DetailsRequest>();
-            _result = await _mapper.Map(TestHelper.Clone(_source));
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(fixture.Source.AccountHashedId, result.AccountHashedId);
         }
 
         [Test]
-        public void AccountHashedIdIsMappedCorrectly()
+        public async Task WithPartyIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountHashedId, _result.AccountHashedId);
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(fixture.Cohort.WithParty, result.WithParty);
         }
 
         [Test]
-        public void WithPartyIsMappedCorrectly()
+        public async Task LegalEntityNameIsMappedCorrectly()
         {
-            Assert.AreEqual(_cohort.WithParty, _result.WithParty);
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(fixture.Cohort.LegalEntityName, result.LegalEntityName);
         }
 
         [Test]
-        public void LegalEntityNameIsMappedCorrectly()
+        public async Task ProviderNameIsMappedCorrectly()
         {
-            Assert.AreEqual(_cohort.LegalEntityName,_result.LegalEntityName);
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(fixture.Cohort.ProviderName, result.ProviderName);
         }
 
         [Test]
-        public void ProviderNameIsMappedCorrectly()
+        public async Task MessageIsMappedCorrectly()
         {
-            Assert.AreEqual(_cohort.ProviderName, _result.ProviderName);
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(fixture.Cohort.LatestMessageCreatedByProvider, result.Message);
         }
 
         [Test]
-        public void MessageIsMappedCorrectly()
+        public async Task CohortReferenceIsMappedCorrectly()
         {
-            Assert.AreEqual(_cohort.LatestMessageCreatedByProvider, _result.Message);
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(fixture.Source.CohortReference, result.CohortReference);
         }
 
         [Test]
-        public void CohortReferenceIsMappedCorrectly()
+        public async Task DraftApprenticeshipsAreMappedCorrectly()
         {
-            Assert.AreEqual(_source.CohortReference, _result.CohortReference);
-        }
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
 
-        [Test]
-        public void DraftApprenticeshipsAreMappedCorrectly()
-        {
-            Assert.AreEqual(_draftApprenticeshipsResponse.DraftApprenticeships.Count, _result.DraftApprenticeships.Count);
+            Assert.AreEqual(fixture.DraftApprenticeshipsResponse.DraftApprenticeships.Count, result.DraftApprenticeships.Count);
 
-            foreach (var draftApprenticeship in _draftApprenticeshipsResponse.DraftApprenticeships)
+            foreach (var draftApprenticeship in fixture.DraftApprenticeshipsResponse.DraftApprenticeships)
             {
                 var draftApprenticeshipResult =
-                    _result.DraftApprenticeships.Single(x => x.Id == draftApprenticeship.Id);
+                    result.DraftApprenticeships.Single(x => x.Id == draftApprenticeship.Id);
 
-                AssertEquality(draftApprenticeship, draftApprenticeshipResult);
+                fixture.AssertEquality(draftApprenticeship, draftApprenticeshipResult);
             }
         }
 
-        private void AssertEquality(DraftApprenticeshipDto source, CohortDraftApprenticeshipViewModel result)
+        [TestCase(Party.None)]
+        [TestCase(Party.Provider)]
+        [TestCase(Party.TransferSender)]
+        public async Task CanAmendCohortIsAlwaysFalseWhenPartyIsNotEmployer(Party party)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().SetCohortWithParty(party);
+            var result = await fixture.Map();
+            Assert.IsFalse(result.CanAmendCohort);
+        }
+
+        [TestCase(EditStatus.Neither, true)]
+        [TestCase(EditStatus.EmployerOnly, true)]
+        [TestCase(EditStatus.ProviderOnly, false)]
+        [TestCase(EditStatus.Both, false)]
+        public async Task CanAmendCohortIsTheExpectedValueWhenPartyIsEmployer(EditStatus editStatus, bool expected)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().SetCohortWithParty(Party.Employer).SetCohortWithEditStatus(editStatus);
+            var result = await fixture.Map();
+            Assert.AreEqual(expected, result.CanAmendCohort);
+        }
+    }
+
+    public class DetailsViewModelMapperTestsFixture
+    {
+        public DetailsViewModelMapper Mapper;
+        public DetailsRequest Source;
+        public DetailsViewModel Result;
+        public Mock<ICommitmentsApiClient> CommitmentsApiClient;
+        public GetCohortResponse Cohort;
+        public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
+        private Fixture _autoFixture;
+
+        public DetailsViewModelMapperTestsFixture()
+        {
+            _autoFixture = new Fixture();
+
+            Cohort = _autoFixture.Create<GetCohortResponse>();
+            DraftApprenticeshipsResponse = _autoFixture.Create<GetDraftApprenticeshipsResponse>();
+
+            CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+            CommitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Cohort);
+
+            CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(DraftApprenticeshipsResponse);
+
+            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object);
+            Source = _autoFixture.Create<DetailsRequest>();
+
+        }
+
+        public DetailsViewModelMapperTestsFixture SetCohortWithParty(Party party)
+        {
+            Cohort.WithParty = party;
+            return this;
+        }
+
+        public DetailsViewModelMapperTestsFixture SetCohortWithEditStatus(EditStatus editStatus)
+        {
+            Cohort.EditStatus = editStatus;
+            return this;
+        }
+
+        public Task<DetailsViewModel> Map()
+        {
+            return Mapper.Map(TestHelper.Clone(Source));
+        }
+
+        public void AssertEquality(DraftApprenticeshipDto source, CohortDraftApprenticeshipViewModel result)
         {
             Assert.AreEqual(source.Id, result.Id);
             Assert.AreEqual(source.FirstName, result.FirstName);
