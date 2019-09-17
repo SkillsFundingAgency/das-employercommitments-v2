@@ -15,8 +15,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
             services.AddMvc(o =>
                 {
                     o.AddAuthorization();
-                    o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                     o.AddValidation();
+                    o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 })
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
