@@ -88,25 +88,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                     .And.BeOfType<RedirectResult>().Which
                     .Url.Should().Be(f.CohortDetailsUrl));
         }
-
-        [Test]
-        public async Task WhenPostingActionAndCommitmentsApiModelExceptionIsThrown_ThenShouldReturnView()
-        {
-            await TestAsync(
-                f => f.SetCommitmentsApiModelException(),
-                f => f.Post(),
-                (f, r) =>
-                {
-                    f.Controller.ModelState.ErrorCount.Should().Be(f.CommitmentsApiModelException.Errors.Count);
-                    
-                    r.Should().NotBeNull()
-                        .And.BeOfType<ViewResult>()
-                        .Which.Model.Should().Be(f.ViewModel)
-                        .And.Match<AddDraftApprenticeshipViewModel>(m =>
-                            m.ProviderName == f.Cohort.ProviderName &&
-                            m.Courses == f.Courses);
-                });
-        }
     }
 
     public class AddDraftApprenticeshipTestsFixture

@@ -20,11 +20,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddDasHealthChecks()
-                .AddDasMvc()
-                .AddDasEmployerAuthentication(_configuration)
                 .AddDasAuthorization()
+                .AddDasEmployerAuthentication(_configuration)
+                .AddDasHealthChecks()
                 .AddDasMaMenuConfiguration(_configuration)
+                .AddDasMvc()
                 .AddEmployerUrlHelper()
                 .AddMemoryCache();
         }

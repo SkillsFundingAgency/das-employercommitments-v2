@@ -75,20 +75,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add")]
         public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipViewModel model)
         {
-            try
-            {
-                var addDraftApprenticeshipRequest = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(model);
-                await _commitmentsService.AddDraftApprenticeshipToCohort(model.CohortId.Value, addDraftApprenticeshipRequest);
-                
-                return Redirect(_linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference));
-            }
-            catch (CommitmentsApiModelException ex)
-            {
-                ModelState.AddModelExceptionErrors(ex);
-                await AddProviderNameAndCoursesToModel(model);
-                
-                return View(model);
-            }
+            var addDraftApprenticeshipRequest = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(model);
+            await _commitmentsService.AddDraftApprenticeshipToCohort(model.CohortId.Value, addDraftApprenticeshipRequest);
+            
+            return Redirect(_linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference));
         }
 
         [HttpGet]
@@ -119,20 +109,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{DraftApprenticeshipHashedId}/edit")]
         public async Task<IActionResult> EditDraftApprenticeship(EditDraftApprenticeshipViewModel model)
         {
-            try
-            {
-                var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
-                await _commitmentsService.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
-
-                var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);
-                return Redirect(reviewYourCohort);
-            }
-            catch (CommitmentsApiModelException ex)
-            {
-                ModelState.AddModelExceptionErrors(ex);
-                await AddProviderNameAndCoursesToModel(model);
-                return View(model);
-            }
+            var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
+            await _commitmentsService.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
+            var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);
+            
+            return Redirect(reviewYourCohort);
         }
 
         private async Task<CohortDetails> GetCohortDetails(long cohortId)
