@@ -69,7 +69,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public async Task TransferSenderHashedIdIsEncodedCorrectlyWhenThereIsAValue()
         {
-            var fixture = new DetailsViewModelMapperTestsFixture().SetTransferSenderId(123);
+            var fixture = new DetailsViewModelMapperTestsFixture().SetTransferSenderIdAndItsExpectedHashedValue(123, "X123X");
             var result = await fixture.Map();
             Assert.AreEqual("X123X", result.TransferSenderHashedId);
         }
@@ -77,7 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public async Task TransferSenderHashedIdIsNullWhenThereIsNoValue()
         {
-            var fixture = new DetailsViewModelMapperTestsFixture().SetTransferSenderId(null);
+            var fixture = new DetailsViewModelMapperTestsFixture().SetTransferSenderIdAndItsExpectedHashedValue(null, null);
             var result = await fixture.Map();
             Assert.IsNull(result.TransferSenderHashedId);
         }
@@ -147,8 +147,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 .ReturnsAsync(DraftApprenticeshipsResponse);
 
             EncodingService = new Mock<IEncodingService>();
-            EncodingService.Setup(x => x.Encode(It.IsAny<long>(), It.IsAny<EncodingType>()))
-                .Returns((long p, EncodingType t) => $"X{p}X");
 
             Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object);
             Source = _autoFixture.Create<DetailsRequest>();
@@ -166,9 +164,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             return this;
         }
 
-        public DetailsViewModelMapperTestsFixture SetTransferSenderId(long? transferSenderId)
+        public DetailsViewModelMapperTestsFixture SetTransferSenderIdAndItsExpectedHashedValue(long? transferSenderId, string expectedHashedId)
         {
             Cohort.TransferSenderId = transferSenderId;
+            if (transferSenderId.HasValue)
+            {
+                EncodingService.Setup(x => x.Encode(transferSenderId.Value, EncodingType.PublicAccountId))
+                    .Returns(expectedHashedId);
+            }
+
             return this;
         }
 
