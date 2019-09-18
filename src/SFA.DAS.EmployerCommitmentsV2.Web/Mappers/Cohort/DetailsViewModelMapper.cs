@@ -7,16 +7,19 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
     public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly IEncodingService _encodingService;
 
-        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
+        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
         {
             _commitmentsApiClient = commitmentsApiClient;
+            _encodingService = encodingService;
         }
 
         public async Task<DetailsViewModel> Map(DetailsRequest source)
@@ -34,9 +37,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountHashedId = source.AccountHashedId,
                 CohortReference = source.CohortReference,
                 WithParty = cohort.WithParty,
+                AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
                 LegalEntityName = cohort.LegalEntityName,
                 ProviderName = cohort.ProviderName,
-                CanAmendCohort = CanAmendCohort(cohort), 
+                CanAmendCohort = CanAmendCohort(cohort),
+                TransferSenderHashedId = cohort.TransferSenderId == null ? null : _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId),
                 Message = cohort.LatestMessageCreatedByProvider,
                 DraftApprenticeships = draftApprenticeships.Select(a => new CohortDraftApprenticeshipViewModel
                     {
@@ -55,7 +60,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         private bool CanAmendCohort(GetCohortResponse cohort)
         {
-            
             if (cohort.WithParty == Party.Employer)
             {
                 switch (cohort.EditStatus)

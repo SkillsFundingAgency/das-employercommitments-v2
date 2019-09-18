@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
+﻿@using SFA.DAS.EmployerUrlHelper.Mvc
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
 
 @{
     ViewData["Title"] = "Approve apprentices' details";
@@ -113,7 +114,7 @@
             </tbody>
         </table>*@
 
-        <p><a href="#" class="govuk-link">Add another apprentice</a> </p>
+        <p><a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}")" class="govuk-link">Add another apprentice</a> </p>
 
         <hr class="govuk-section-break govuk-section-break--l">
 

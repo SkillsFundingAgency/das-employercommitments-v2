@@ -10,6 +10,7 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -66,6 +67,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
+        public async Task TransferSenderHashedIdIsEncodedCorrectlyWhenThereIsAValue()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().SetTransferSenderId(123);
+            var result = await fixture.Map();
+            Assert.AreEqual("X123X", result.TransferSenderHashedId);
+        }
+
+        [Test]
+        public async Task TransferSenderHashedIdIsNullWhenThereIsNoValue()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().SetTransferSenderId(null);
+            var result = await fixture.Map();
+            Assert.IsNull(result.TransferSenderHashedId);
+        }
+
+        [Test]
         public async Task DraftApprenticeshipsAreMappedCorrectly()
         {
             var fixture = new DetailsViewModelMapperTestsFixture();
@@ -110,6 +127,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public DetailsRequest Source;
         public DetailsViewModel Result;
         public Mock<ICommitmentsApiClient> CommitmentsApiClient;
+        public Mock<IEncodingService> EncodingService;
         public GetCohortResponse Cohort;
         public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
         private Fixture _autoFixture;
@@ -128,9 +146,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(DraftApprenticeshipsResponse);
 
-            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object);
-            Source = _autoFixture.Create<DetailsRequest>();
+            EncodingService = new Mock<IEncodingService>();
+            EncodingService.Setup(x => x.Encode(It.IsAny<long>(), It.IsAny<EncodingType>()))
+                .Returns((long p, EncodingType t) => $"X{p}X");
 
+            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object);
+            Source = _autoFixture.Create<DetailsRequest>();
         }
 
         public DetailsViewModelMapperTestsFixture SetCohortWithParty(Party party)
@@ -142,6 +163,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public DetailsViewModelMapperTestsFixture SetCohortWithEditStatus(EditStatus editStatus)
         {
             Cohort.EditStatus = editStatus;
+            return this;
+        }
+
+        public DetailsViewModelMapperTestsFixture SetTransferSenderId(long? transferSenderId)
+        {
+            Cohort.TransferSenderId = transferSenderId;
             return this;
         }
 
