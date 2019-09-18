@@ -39,19 +39,27 @@
     </thead>
     <tbody class="govuk-table__body">
 
-        @foreach (var draftApprenticeship in Model.DraftApprenticeships)
-        {
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell">@draftApprenticeship.DisplayName</td>
-                <td class="govuk-table__cell">@draftApprenticeship.DisplayDateOfBirth</td>
-                <td class="govuk-table__cell">@draftApprenticeship.DisplayTrainingDates</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">@draftApprenticeship.DisplayCost</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">
-                    <a href="@Url.Action("EditDraftApprenticeship", "DraftApprenticeship", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">Edit <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
-                </td>
-            </tr>
-        }
+    @foreach (var draftApprenticeship in Model.DraftApprenticeships)
+    {
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell">@draftApprenticeship.DisplayName</td>
+            <td class="govuk-table__cell">@draftApprenticeship.DisplayDateOfBirth</td>
+            <td class="govuk-table__cell">@draftApprenticeship.DisplayTrainingDates</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">@draftApprenticeship.DisplayCost</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">
+                <a href="@Url.Action("EditDraftApprenticeship", "DraftApprenticeship", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">Edit <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
+            </td>
+        </tr>
+    }
     </tbody>
+    
+    <tfoot>
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell" colspan="3">Total apprenticeship training price (excluding VAT)</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">@Model.DisplayTotalCost</td>
+            <td class="govuk-table__cell"></td>
+        </tr>
+    </tfoot>
 </table>
 
 

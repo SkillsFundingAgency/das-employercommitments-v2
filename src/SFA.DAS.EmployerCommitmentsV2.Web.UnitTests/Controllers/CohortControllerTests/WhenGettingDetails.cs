@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
@@ -95,6 +96,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 var detailsViewModel = (DetailsViewModel) viewModel;
 
                 Assert.AreEqual(_viewModel, detailsViewModel);
+                Assert.AreEqual(_viewModel.DraftApprenticeships.Sum(da => da.Cost), _viewModel.TotalCost, "The total cost stored in the model is incorrect");
             }
 
             public void VerifyResultIsRedirectToV1()
