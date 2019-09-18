@@ -4,8 +4,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {
-    public class IndexViewModelMapper : IMapper<IndexRequest, IndexViewModel>
-    {
+    public class IndexViewModelMapper : IMapper<IndexRequest, IndexViewModel> {
         public Task<IndexViewModel> Map(IndexRequest source)
         {
             return Task.FromResult(new IndexViewModel

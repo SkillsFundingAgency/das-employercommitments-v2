@@ -3,8 +3,6 @@ using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.Testing;
 
@@ -12,7 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 {
     [TestFixture]
     [Parallelizable]
-    public class AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapperTests : FluentTest<AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapperTestsFixture>
+    public class AddDraftApprenticeshipRequestMapperTests : FluentTest<AddDraftApprenticeshipRequestMapperTestFixtures>
     {
         [Test]
         public void Map_WhenMapping_ThenShouldSetProperties()
@@ -37,12 +35,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         }
     }
 
-    public class AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapperTestsFixture
+    public class AddDraftApprenticeshipRequestMapperTestFixtures
     {
         public AddDraftApprenticeshipViewModel ViewModel { get; set; }
-        public AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapper Mapper { get; set; }
+        public Web.Mappers.AddDraftApprenticeshipRequestMapper Mapper { get; set; }
 
-        public AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapperTestsFixture()
+        public AddDraftApprenticeshipRequestMapperTestFixtures()
         {
             ViewModel = new AddDraftApprenticeshipViewModel
             {
@@ -62,7 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
                 ReservationId = Guid.NewGuid()
             };
             
-            Mapper = new AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapper();
+            Mapper = new Web.Mappers.AddDraftApprenticeshipRequestMapper();
         }
 
         public AddDraftApprenticeshipRequest Map()

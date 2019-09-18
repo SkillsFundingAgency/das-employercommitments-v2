@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.Commitments.Shared.Models;
@@ -9,12 +8,12 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {
-    public class CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipViewModelMapper : IMapper<CreateCohortWithDraftApprenticeshipRequest, AddDraftApprenticeshipViewModel>
+    public class AddDraftApprenticeshipViewModelMapper : IMapper<CreateCohortWithDraftApprenticeshipRequest, AddDraftApprenticeshipViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
 
-        public CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipViewModelMapper(
+        public AddDraftApprenticeshipViewModelMapper(
             ICommitmentsApiClient commitmentsApiClient,
             ITrainingProgrammeApiClient trainingProgrammeApiClient)
         {
@@ -36,7 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
                 CourseCode = source.CourseCode,
                 ProviderId = (int)source.ProviderId,
                 ProviderName = provider.Name,
-                Courses =  courses
+                Courses = courses
             };
 
             return result;

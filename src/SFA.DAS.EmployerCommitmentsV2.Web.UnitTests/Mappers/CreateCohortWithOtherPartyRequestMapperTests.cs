@@ -8,9 +8,9 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 {
     [TestFixture]
-    public class MessageViewModelToCreateCohortWithOtherPartyRequestMapperTests
+    public class CreateCohortWithOtherPartyRequestMapperTests
     {
-        private MessageViewModelToCreateCohortWithOtherPartyRequestMapper _mapper;
+        private CreateCohortWithOtherPartyRequestMapper _mapper;
         private MessageViewModel _source;
         private CreateCohortWithOtherPartyRequest _result;
 
@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         {
             var fixture = new Fixture();
 
-            _mapper = new MessageViewModelToCreateCohortWithOtherPartyRequestMapper();
+            _mapper = new CreateCohortWithOtherPartyRequestMapper();
 
             _source = fixture.Build<MessageViewModel>().Create();
 

@@ -16,9 +16,9 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 {
     [TestFixture]
-    public class CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipViewModelMapperTests
+    public class AddDraftApprenticeshipViewModelMapperTests
     {
-        private CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipViewModelMapper _mapper;
+        private AddDraftApprenticeshipViewModelMapper _mapper;
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
         private GetProviderResponse _providerResponse;
         private CreateCohortWithDraftApprenticeshipRequest _source;
@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
             _trainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
             _trainingProgrammeApiClient.Setup(x => x.GetAllTrainingProgrammes()).ReturnsAsync(_courses);
 
-            _mapper = new CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipViewModelMapper(
+            _mapper = new AddDraftApprenticeshipViewModelMapper(
                 _commitmentsApiClient.Object,
                 _trainingProgrammeApiClient.Object);
 

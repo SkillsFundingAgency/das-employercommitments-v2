@@ -82,7 +82,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures()
         {
             CommitmentsServiceMock = new Mock<ICommitmentsService>();
-            RequestMapper = new AddDraftApprenticeshipToCreateCohortRequestMapper();
+            RequestMapper = new CreateCohortRequestMapper();
             LinkGeneratorMock = new Mock<ILinkGenerator>();
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
             CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
@@ -94,7 +94,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         public Mock<ICommitmentsService> CommitmentsServiceMock { get; } 
         public ICommitmentsService CommitmentsService => CommitmentsServiceMock.Object;
 
-        public IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest> RequestMapper { get; }
+        public CreateCohortRequestMapper RequestMapper { get; }
 
         public Mock<ILinkGenerator> LinkGeneratorMock { get; }
         public ILinkGenerator LinkGenerator => LinkGeneratorMock.Object;

@@ -4,8 +4,6 @@ using AutoFixture;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
@@ -13,7 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
     [TestFixture]
     public class WhenIMapDraftApprenticeshipRequest
     {
-        private AddDraftApprenticeshipToCreateCohortRequestMapper _mapper;
+        private CreateCohortRequestMapper _mapper;
         private AddDraftApprenticeshipViewModel _source;
         private CreateCohortRequest _result;
 
@@ -26,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
             var startDate = fixture.Create<DateTime?>();
             var endDate = fixture.Create<DateTime?>();
 
-            _mapper = new AddDraftApprenticeshipToCreateCohortRequestMapper();
+            _mapper = new CreateCohortRequestMapper();
 
             _source = fixture.Build<AddDraftApprenticeshipViewModel>()
                 .With(x => x.BirthDay, birthDate?.Day)

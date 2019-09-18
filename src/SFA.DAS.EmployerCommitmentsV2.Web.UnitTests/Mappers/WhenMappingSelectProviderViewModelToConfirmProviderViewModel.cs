@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
@@ -15,7 +12,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, AutoData]
         public async Task ThenMapsReservationId(
             ConfirmProviderViewModel request,
-            SelectProviderConfirmProviderMapper mapper)
+            SelectProviderViewModelMapper mapper)
         {
             var result = await mapper.Map(request);
 
@@ -25,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public async Task ThenMapsAccountHashedId(
             ConfirmProviderViewModel request,
-            SelectProviderConfirmProviderMapper mapper)
+            SelectProviderViewModelMapper mapper)
         {
             var result = await mapper.Map(request);
 
@@ -35,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public async Task ThenMapsCourseCode(
             ConfirmProviderViewModel request,
-            SelectProviderConfirmProviderMapper mapper)
+            SelectProviderViewModelMapper mapper)
         {
             var result = await mapper.Map(request);
 
@@ -45,7 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public async Task ThenMapsStartMonthYear(
             ConfirmProviderViewModel request,
-            SelectProviderConfirmProviderMapper mapper)
+            SelectProviderViewModelMapper mapper)
         {
             var result = await mapper.Map(request);
 
@@ -55,7 +52,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public async Task ThenMapsEmployerAccountLegalEntityPublicHashedId(
             ConfirmProviderViewModel request,
-            SelectProviderConfirmProviderMapper mapper)
+            SelectProviderViewModelMapper mapper)
         {
             var result = await mapper.Map(request);
 

@@ -4,17 +4,18 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
 {
-    public class SelectProviderViewModelToSelectProviderRequestMapper : IMapper<SelectProviderViewModel, SelectProviderRequest>
+    public class AssignRequestMapper : IMapper<ConfirmProviderViewModel, AssignRequest>
     {
-        public Task<SelectProviderRequest> Map(SelectProviderViewModel source)
+        public Task<AssignRequest> Map(ConfirmProviderViewModel source)
         {
-            return Task.FromResult(new SelectProviderRequest
+            return Task.FromResult(new AssignRequest
             {
                 AccountHashedId = source.AccountHashedId,
-                AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 CourseCode = source.CourseCode,
                 ReservationId = source.ReservationId,
-                StartMonthYear = source.StartMonthYear
+                AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
+                StartMonthYear = source.StartMonthYear,
+                ProviderId = source.ProviderId
             });
         }
     }

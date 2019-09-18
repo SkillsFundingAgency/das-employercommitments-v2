@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using AutoFixture.NUnit3;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -11,7 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
     public class WhenMappingSelectProviderRequestToViewModel
     {
 
-        [Test, AutoData]
+        [Test, MoqAutoData]
         public async Task ThenMapsReservationId(
             SelectProviderRequest request,
             SelectProviderViewModelMapper mapper)

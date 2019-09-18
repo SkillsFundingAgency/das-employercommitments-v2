@@ -13,7 +13,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
         {
             _commitmentsApiClient = commitmentsApiClient;
         }
-        
+
         public async Task<ConfirmProviderViewModel> Map(ConfirmProviderRequest source)
         {
             var providerResponse = await _commitmentsApiClient.GetProvider(source.ProviderId);
@@ -30,7 +30,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers
             };
 
             return result;
-
         }
     }
 }

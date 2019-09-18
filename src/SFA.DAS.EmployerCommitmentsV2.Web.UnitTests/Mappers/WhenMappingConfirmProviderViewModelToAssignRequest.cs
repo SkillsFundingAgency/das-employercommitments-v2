@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+﻿using System.Threading.Tasks;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -12,10 +8,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
 {
     public class WhenMappingConfirmProviderViewModelToAssignRequest
     {
-        [Test, AutoData]
+        [Test, MoqAutoData]
         public async Task ThenMapsReservationId(
             ConfirmProviderViewModel request,
-            ConfirmProviderAssignRequestMapper mapper)
+            AssignRequestMapper mapper)
         {
             var result = await mapper.Map(request);
 
@@ -25,7 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public async Task ThenMapsAccountHashedId(
             ConfirmProviderViewModel request,
-            ConfirmProviderAssignRequestMapper mapper)
+            AssignRequestMapper mapper)
         {
             var result = await mapper.Map(request);
 
@@ -35,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public async Task ThenMapsCourseCode(
             ConfirmProviderViewModel request,
-            ConfirmProviderAssignRequestMapper mapper)
+            AssignRequestMapper mapper)
         {
             var result = await mapper.Map(request);
 
@@ -45,7 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public async Task ThenMapsStartMonthYear(
             ConfirmProviderViewModel request,
-            ConfirmProviderAssignRequestMapper mapper)
+            AssignRequestMapper mapper)
         {
             var result = await mapper.Map(request);
 
@@ -55,7 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public async Task ThenMapsEmployerAccountLegalEntityPublicHashedId(
             ConfirmProviderViewModel request,
-            ConfirmProviderAssignRequestMapper mapper)
+            AssignRequestMapper mapper)
         {
             var result = await mapper.Map(request);
 
@@ -65,7 +61,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers
         [Test, MoqAutoData]
         public async Task ThenMapsProviderId(
             ConfirmProviderViewModel request,
-            ConfirmProviderAssignRequestMapper mapper)
+            AssignRequestMapper mapper)
         {
             var result = await mapper.Map(request);
 
