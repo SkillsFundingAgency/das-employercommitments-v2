@@ -46,6 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 DraftApprenticeships = draftApprenticeships.Select(a => new CohortDraftApprenticeshipViewModel
                     {
                         Id = a.Id,
+                        DraftApprenticeshipHashedId = _encodingService.Encode(a.Id, EncodingType.ApprenticeshipId),
                         FirstName = a.FirstName,
                         LastName = a.LastName,
                         Cost = a.Cost,

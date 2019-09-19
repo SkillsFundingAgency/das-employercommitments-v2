@@ -6,6 +6,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
     public class CohortDraftApprenticeshipViewModel
     {
         public long Id { get; set; }
+        public string DraftApprenticeshipHashedId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime? DateOfBirth { get; set; }

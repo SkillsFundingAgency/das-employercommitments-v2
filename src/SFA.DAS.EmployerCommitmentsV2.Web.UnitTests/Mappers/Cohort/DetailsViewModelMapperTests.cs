@@ -85,7 +85,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public async Task DraftApprenticeshipsAreMappedCorrectly()
         {
-            var fixture = new DetailsViewModelMapperTestsFixture();
+            var fixture = new DetailsViewModelMapperTestsFixture().SetEncodingOfApprenticeIds();
             var result = await fixture.Map();
 
             Assert.AreEqual(fixture.DraftApprenticeshipsResponse.DraftApprenticeships.Count, result.DraftApprenticeships.Count);
@@ -176,6 +176,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             return this;
         }
 
+        public DetailsViewModelMapperTestsFixture SetEncodingOfApprenticeIds()
+        {
+            EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.ApprenticeshipId))
+                .Returns((long p, EncodingType t) => $"X{p}X" );
+
+            return this;
+        }
+
+
+
         public Task<DetailsViewModel> Map()
         {
             return Mapper.Map(TestHelper.Clone(Source));
@@ -192,6 +202,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(source.Cost, result.Cost);
             Assert.AreEqual(source.StartDate, result.StartDate);
             Assert.AreEqual(source.EndDate, result.EndDate);
+            Assert.AreEqual($"X{source.Id}X", result.DraftApprenticeshipHashedId);
         }
     }
 }

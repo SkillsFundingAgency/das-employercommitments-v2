@@ -35,6 +35,7 @@
             <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
             <th scope="col" class="govuk-table__header das-table-cell-width-30">Training dates</th>
             <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
+            <th scope="col" class="govuk-table__header das-table-cell-width-10"><span class="govuk-visually-hidden">Action</span></th>
         </tr>
     </thead>
     <tbody class="govuk-table__body">
@@ -46,6 +47,9 @@
                 <td class="govuk-table__cell">@draftApprenticeship.DisplayDateOfBirth</td>
                 <td class="govuk-table__cell">@draftApprenticeship.DisplayTrainingDates</td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">@draftApprenticeship.DisplayCost</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a href="@Url.Action("EditDraftApprenticeship", "DraftApprenticeship", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">Edit <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
+                </td>
             </tr>
         }
     </tbody>
