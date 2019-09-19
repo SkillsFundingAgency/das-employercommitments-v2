@@ -19,11 +19,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Stubs
             _httpClient = new HttpClient { BaseAddress = new System.Uri("https://sfa-stub-employeraccountapi.herokuapp.com/api-v2/") };
         }
 
-        public Task HealthCheck()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> IsUserInRole(IsUserInRoleRequest roleRequest, CancellationToken cancellationToken)
         {
             var user = await GetUser(roleRequest.AccountId, roleRequest.UserRef, cancellationToken).ConfigureAwait(false); ;
@@ -44,6 +39,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Stubs
         {
             var user = await GetUser(roleRequest.AccountId, roleRequest.UserRef, cancellationToken).ConfigureAwait(false); ;
             return user != null && user.Roles.Any();
+        }
+
+        public Task Ping(CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new NotImplementedException();
         }
 
         private async Task<UserDto> GetUser(long accountId, Guid userRef, CancellationToken cancellationToken)
