@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     [TestFixture]
     public class CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipViewModelMapperTests
     {
-        private CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipViewModelMapper _mapper;
+        private AddDraftApprenticeshipViewModelMapper _mapper;
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
         private GetProviderResponse _providerResponse;
         private ApprenticeRequest _source;
@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _trainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
             _trainingProgrammeApiClient.Setup(x => x.GetAllTrainingProgrammes()).ReturnsAsync(_courses);
 
-            _mapper = new CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipViewModelMapper(
+            _mapper = new AddDraftApprenticeshipViewModelMapper(
                 _commitmentsApiClient.Object,
                 _trainingProgrammeApiClient.Object);
 

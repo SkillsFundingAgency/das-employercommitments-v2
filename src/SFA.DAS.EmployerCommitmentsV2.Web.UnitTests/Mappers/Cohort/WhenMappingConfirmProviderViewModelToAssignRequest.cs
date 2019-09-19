@@ -12,7 +12,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test, AutoData]
         public async Task ThenMapsReservationId(
             ConfirmProviderViewModel request,
-            ConfirmProviderAssignRequestMapper mapper)
+            AssignRequestMapper mapper)
         {
             var result = await mapper.Map(request);
 
@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test, MoqAutoData]
         public async Task ThenMapsAccountHashedId(
             ConfirmProviderViewModel request,
-            ConfirmProviderAssignRequestMapper mapper)
+            AssignRequestMapper mapper)
         {
             var result = await mapper.Map(request);
 
@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test, MoqAutoData]
         public async Task ThenMapsCourseCode(
             ConfirmProviderViewModel request,
-            ConfirmProviderAssignRequestMapper mapper)
+            AssignRequestMapper mapper)
         {
             var result = await mapper.Map(request);
 
@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test, MoqAutoData]
         public async Task ThenMapsStartMonthYear(
             ConfirmProviderViewModel request,
-            ConfirmProviderAssignRequestMapper mapper)
+            AssignRequestMapper mapper)
         {
             var result = await mapper.Map(request);
 
@@ -52,7 +52,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test, MoqAutoData]
         public async Task ThenMapsEmployerAccountLegalEntityPublicHashedId(
             ConfirmProviderViewModel request,
-            ConfirmProviderAssignRequestMapper mapper)
+            AssignRequestMapper mapper)
         {
             var result = await mapper.Map(request);
 
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test, MoqAutoData]
         public async Task ThenMapsProviderId(
             ConfirmProviderViewModel request,
-            ConfirmProviderAssignRequestMapper mapper)
+            AssignRequestMapper mapper)
         {
             var result = await mapper.Map(request);
 
