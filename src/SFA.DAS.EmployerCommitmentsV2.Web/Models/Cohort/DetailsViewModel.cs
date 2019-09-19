@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
@@ -11,6 +12,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string LegalEntityName { get; set; }
         public string ProviderName { get; set; }
         public string Message { get; set; }
-        public IReadOnlyCollection<CohortDraftApprenticeshipViewModel> DraftApprenticeships { get; set; }
+        public int DraftApprenticeshipsCount => Courses.SelectMany(c => c.DraftApprenticeships).Count();
+        public IReadOnlyCollection<DetailsViewCourseGroupingModel> Courses { get; set; }
     }
 }
