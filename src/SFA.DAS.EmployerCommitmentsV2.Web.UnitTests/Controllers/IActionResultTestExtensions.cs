@@ -23,6 +23,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests
             return result.VerifyResponseObjectType<RedirectToActionResult>();
         }
 
+        public static RedirectToActionResult WithActionName(this RedirectToActionResult result, string expectedName)
+        {
+            Assert.AreEqual(expectedName, result.ActionName);
+            return result;
+        }
+
         public static IActionResult VerifyReturnsBadRequest(this IActionResult result)
         {
             var badRequest = result.VerifyResponseObjectType<BadRequestResult>();

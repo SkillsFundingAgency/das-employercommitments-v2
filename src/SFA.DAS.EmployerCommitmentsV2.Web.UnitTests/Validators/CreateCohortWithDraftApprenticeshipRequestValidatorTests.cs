@@ -15,7 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [TestCase(123, true)]
         public void Validate_ProviderId_ShouldBeValidated(long providerId, bool expectToBeValid)
         {
-            var model = new CreateCohortWithDraftApprenticeshipRequest { ProviderId = providerId};
+            var model = new ApprenticeRequest { ProviderId = providerId};
             AssertValidationResult(request => request.ProviderId, model, expectToBeValid);
         }
 
@@ -24,11 +24,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [TestCase(123, true)]
         public void Validate_StartDate_ShouldBeValidated(long accountLegalEntityId, bool expectedValid)
         {
-            var model = new CreateCohortWithDraftApprenticeshipRequest { AccountLegalEntityId = accountLegalEntityId };
+            var model = new ApprenticeRequest { AccountLegalEntityId = accountLegalEntityId };
             AssertValidationResult(request => request.AccountLegalEntityId, model, expectedValid);
         }
 
-        private void AssertValidationResult<T>(Expression<Func<CreateCohortWithDraftApprenticeshipRequest, T>> property, CreateCohortWithDraftApprenticeshipRequest instance, bool expectedValid)
+        private void AssertValidationResult<T>(Expression<Func<ApprenticeRequest, T>> property, ApprenticeRequest instance, bool expectedValid)
         {
             var validator = new CreateCohortWithDraftApprenticeshipRequestValidator();
 

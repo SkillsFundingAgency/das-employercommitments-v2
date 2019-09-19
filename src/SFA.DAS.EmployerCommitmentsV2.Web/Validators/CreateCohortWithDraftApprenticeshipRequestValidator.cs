@@ -3,7 +3,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
 {
-    public class CreateCohortWithDraftApprenticeshipRequestValidator : AbstractValidator<CreateCohortWithDraftApprenticeshipRequest>
+    public class CreateCohortWithDraftApprenticeshipRequestValidator : AbstractValidator<ApprenticeRequest>
     {
         public CreateCohortWithDraftApprenticeshipRequestValidator()
         {
