@@ -1,46 +1,42 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
-using SFA.DAS.Commitments.Shared.Extensions;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.Commitments.Shared.Interfaces;
-using SFA.DAS.Commitments.Shared.Models;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Api.Types.Validation;
-using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerUrlHelper;
 using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EmployerCommitmentsV2, EmployerUserRole.OwnerOrTransactor)]
+    [DasAuthorize(CommitmentOperation.AccessCohort, EmployerUserRole.OwnerOrTransactor)]
     [Route("{AccountHashedId}/unapproved/{cohortReference}/apprentices")]
     public class DraftApprenticeshipController : Controller
     {
         private readonly ICommitmentsService _commitmentsService;
         private readonly IModelMapper _modelMapper;
         private readonly ILinkGenerator _linkGenerator;
-        private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
+        private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly IAuthorizationService _authorizationService;
 
         public DraftApprenticeshipController(
             ICommitmentsService commitmentsService,
             ILinkGenerator linkGenerator,
-            ITrainingProgrammeApiClient trainingProgrammeApiClient,
-            IModelMapper modelMapper)
+            IModelMapper modelMapper, ICommitmentsApiClient commitmentsApiClient,
+            IAuthorizationService authorizationService)
         {
             _commitmentsService = commitmentsService;
             _linkGenerator = linkGenerator;
-            _trainingProgrammeApiClient = trainingProgrammeApiClient;
             _modelMapper = modelMapper;
+            _commitmentsApiClient = commitmentsApiClient;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -49,20 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             try
             {
-                var model = new AddDraftApprenticeshipViewModel
-                {
-                    AccountHashedId = request.AccountHashedId,
-                    CohortReference = request.CohortReference,
-                    CohortId = request.CohortId,
-                    AccountLegalEntityHashedId = request.AccountLegalEntityHashedId,
-                    AccountLegalEntityId = request.AccountLegalEntityId,
-                    ReservationId = request.ReservationId,
-                    StartDate = new MonthYearModel(request.StartMonthYear),
-                    CourseCode = request.CourseCode
-                };
-                
-                await AddProviderNameAndCoursesToModel(model);
-
+                var model = await _modelMapper.Map<AddDraftApprenticeshipViewModel>(request);
                 return View(model);
             }
             catch (CohortEmployerUpdateDeniedException)
@@ -76,8 +59,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipViewModel model)
         {
             var addDraftApprenticeshipRequest = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(model);
-            await _commitmentsService.AddDraftApprenticeshipToCohort(model.CohortId.Value, addDraftApprenticeshipRequest);
-            
+            await _commitmentsApiClient.AddDraftApprenticeship(model.CohortId.Value, addDraftApprenticeshipRequest);
+
+            if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
+            {
+                return RedirectToAction("Details", "Cohort", new { model.AccountHashedId, model.CohortReference });
+            }
+
             return Redirect(_linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference));
         }
 
@@ -87,16 +75,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             try
             {
-                var editModel =
-                    await _commitmentsService.GetDraftApprenticeshipForCohort(request.CohortId,
-                        request.DraftApprenticeshipId);
-
-                var model = await _modelMapper.Map<EditDraftApprenticeshipViewModel>(editModel);
-
-                model.AccountHashedId = request.AccountHashedId;
-                
-                await AddProviderNameAndCoursesToModel(model);
-
+                var model = await _modelMapper.Map<EditDraftApprenticeshipViewModel>(request);
                 return View(model);
             }
             catch (CohortEmployerUpdateDeniedException)
@@ -111,37 +90,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
             await _commitmentsService.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
-            var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);
-            
-            return Redirect(reviewYourCohort);
-        }
 
-        private async Task<CohortDetails> GetCohortDetails(long cohortId)
-        {
-            var cohort = await _commitmentsService.GetCohortDetail(cohortId);
-
-            if (cohort.WithParty != Party.Employer)
-                throw new CohortEmployerUpdateDeniedException($"Cohort {cohort} is not with the Employer");
-
-            return cohort;
-        }
-
-        private async Task AddProviderNameAndCoursesToModel(DraftApprenticeshipViewModel model)
-        {
-            var cohort = await GetCohortDetails(model.CohortId.Value);
-            var courses = await GetCourses(!cohort.IsFundedByTransfer);
-
-            model.ProviderName = cohort.ProviderName;
-            model.Courses = courses;
-        }
-
-        private Task<IReadOnlyList<ITrainingProgramme>> GetCourses(bool includeFrameworks)
-        {
-            if (includeFrameworks)
+            if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
             {
-                return _trainingProgrammeApiClient.GetAllTrainingProgrammes();
+                return RedirectToAction("Details", "Cohort", new { model.AccountHashedId, model.CohortReference });
             }
-            return _trainingProgrammeApiClient.GetStandardTrainingProgrammes();
+
+            var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);
+            return Redirect(reviewYourCohort);
         }
     }
 }
