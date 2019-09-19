@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -31,6 +33,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var autoFixture = new Fixture();
 
             _cohort = autoFixture.Create<GetCohortResponse>();
+            var draftApprenticeships = CreateDraftApprenticeshipDtos(autoFixture);
+            autoFixture.Register(() => draftApprenticeships);
             _draftApprenticeshipsResponse = autoFixture.Create<GetDraftApprenticeshipsResponse>();
 
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
@@ -88,14 +92,64 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
+        public void DraftApprenticeshipTotalCountIsReportedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeshipsResponse.DraftApprenticeships.Count, _result.DraftApprenticeshipsCount);
+        }
+
+        [Test]
+        public void DraftApprenticeshipCourseCountIsReportedCorrectly()
+        {
+            foreach (var course in _result.Courses)
+            {
+                var expectedCount = _draftApprenticeshipsResponse.DraftApprenticeships
+                                        .Count(a =>a.CourseCode == course.CourseCode && a.CourseName == course.CourseName);
+
+                Assert.AreEqual(expectedCount, course.Count);
+            }
+        }
+
+        [Test]
+        public void DraftApprenticeshipCourseOrderIsByCourseName()
+        {
+            var expectedSequence = _draftApprenticeshipsResponse.DraftApprenticeships
+                .Select(c => new { c.CourseName, c.CourseCode })
+                .Distinct()
+                .OrderBy(c => c.CourseName).ThenBy(c => c.CourseCode)
+                .ToList();
+
+            var actualSequence = _result.Courses
+                .Select(c => new { c.CourseName, c.CourseCode })
+                .OrderBy(c => c.CourseName).ThenBy(c => c.CourseCode)
+                .ToList();
+                
+            AssertSequenceOrder(expectedSequence, actualSequence, (e,a) => e.CourseName == a.CourseName && e.CourseCode == a.CourseCode);
+        }
+
+        [Test]
+        public void DraftApprenticesOrderIsByApprenticeName()
+        {
+            foreach (var course in _result.Courses)
+            {
+                var expectedSequence = _draftApprenticeshipsResponse.DraftApprenticeships
+                    .Where(a => a.CourseName == course.CourseName && a.CourseCode == course.CourseCode)
+                    .Select(a => $"{a.FirstName} {a.LastName}")
+                    .OrderBy(a => a)
+                    .ToList();
+
+                var actualSequence = course.DraftApprenticeships.Select(a => a.DisplayName).ToList();
+
+                AssertSequenceOrder(expectedSequence, actualSequence, (e,a) => e == a);
+            }
+        }
+
+        [Test]
         public void DraftApprenticeshipsAreMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipsResponse.DraftApprenticeships.Count, _result.DraftApprenticeships.Count);
-
             foreach (var draftApprenticeship in _draftApprenticeshipsResponse.DraftApprenticeships)
             {
                 var draftApprenticeshipResult =
-                    _result.DraftApprenticeships.Single(x => x.Id == draftApprenticeship.Id);
+                    _result.Courses.SelectMany(c => c.DraftApprenticeships).Single(x => x.Id == draftApprenticeship.Id);
 
                 AssertEquality(draftApprenticeship, draftApprenticeshipResult);
             }
@@ -107,12 +161,41 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(source.FirstName, result.FirstName);
             Assert.AreEqual(source.LastName, result.LastName);
             Assert.AreEqual(source.DateOfBirth, result.DateOfBirth);
-            Assert.AreEqual(source.CourseCode, result.CourseCode);
-            Assert.AreEqual(source.CourseName, result.CourseName);
             Assert.AreEqual(source.Cost, result.Cost);
             Assert.AreEqual(source.StartDate, result.StartDate);
             Assert.AreEqual(source.EndDate, result.EndDate);
             Assert.AreEqual(_apprenticeshipHashedId, result.DraftApprenticeshipHashedId);
+        }
+
+        private IReadOnlyCollection<DraftApprenticeshipDto> CreateDraftApprenticeshipDtos(Fixture autoFixture)
+        {
+            var draftApprenticeships = autoFixture.CreateMany<DraftApprenticeshipDto>(6).ToArray();
+            SetCourseDetails(draftApprenticeships[0], "Course1", "C1");
+            SetCourseDetails(draftApprenticeships[1], "Course1", "C1");
+            SetCourseDetails(draftApprenticeships[2], "Course1", "C1");
+
+            SetCourseDetails(draftApprenticeships[3], "Course2", "C2");
+            SetCourseDetails(draftApprenticeships[4], "Course2", "C2");
+
+            SetCourseDetails(draftApprenticeships[5], "Course3", "C3");
+
+            return draftApprenticeships;
+        }
+
+        private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode)
+        {
+            draftApprenticeship.CourseName = courseName;
+            draftApprenticeship.CourseCode = courseCode;
+        }
+
+        public void AssertSequenceOrder<T>(List<T> expected, List<T> actual, Func<T, T, bool> evaluator)
+        {
+            Assert.AreEqual(expected.Count, actual.Count, "Expected and actual sequences are different lengths");
+
+            for (int i = 0; i < actual.Count; i++)
+            {
+                Assert.IsTrue(evaluator(expected[i], actual[i]), "Actual sequence are not in same order as expected");
+            }
         }
     }
 }
