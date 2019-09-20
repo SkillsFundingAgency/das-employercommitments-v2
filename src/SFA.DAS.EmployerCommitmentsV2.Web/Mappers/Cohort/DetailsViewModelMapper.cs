@@ -38,7 +38,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 LegalEntityName = cohort.LegalEntityName,
                 ProviderName = cohort.ProviderName,
                 Message = cohort.LatestMessageCreatedByProvider,
-                Courses = GroupCourses(draftApprenticeships)
+                Courses = GroupCourses(draftApprenticeships),
+                PageTitle = draftApprenticeships.Count == 1
+                    ? "Approve apprentice details"
+                    : $"Approve {draftApprenticeships.Count} apprentices' details"
             };
         }
 

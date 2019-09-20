@@ -26,33 +26,42 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private GetCohortResponse _cohort;
         private GetDraftApprenticeshipsResponse _draftApprenticeshipsResponse;
         private string _apprenticeshipHashedId;
+        private Fixture _autoFixture;
+
 
         [SetUp]
         public async Task Arrange()
         {
-            var autoFixture = new Fixture();
+            _autoFixture = new Fixture();
+            _autoFixture.Create<GetCohortResponse>();
 
-            _cohort = autoFixture.Create<GetCohortResponse>();
-            var draftApprenticeships = CreateDraftApprenticeshipDtos(autoFixture);
-            autoFixture.Register(() => draftApprenticeships);
-            _draftApprenticeshipsResponse = autoFixture.Create<GetDraftApprenticeshipsResponse>();
+            _cohort = _autoFixture.Create<GetCohortResponse>();
 
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _commitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_cohort);
+            var draftApprenticeships = CreateDraftApprenticeshipDtos(_autoFixture);
+            SetDraftApprenticeships(draftApprenticeships);
 
-            _commitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_draftApprenticeshipsResponse);
 
-            _apprenticeshipHashedId = autoFixture.Create<string>();
+
+            _apprenticeshipHashedId = _autoFixture.Create<string>();
             _encodingService = new Mock<IEncodingService>();
             _encodingService.Setup(x => x.Encode(It.IsAny<long>(),
                     It.Is<EncodingType>(et => et == EncodingType.ApprenticeshipId)))
                 .Returns(_apprenticeshipHashedId);
 
             _mapper = new DetailsViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object);
-            _source = autoFixture.Create<DetailsRequest>();
+            _source = _autoFixture.Create<DetailsRequest>();
             _result = await _mapper.Map(TestHelper.Clone(_source));
+        }
+
+        private void SetDraftApprenticeships(IReadOnlyCollection<DraftApprenticeshipDto> draftApprenticeships)
+        {
+            _autoFixture.Register(() => draftApprenticeships);
+            _draftApprenticeshipsResponse = _autoFixture.Create<GetDraftApprenticeshipsResponse>();
+            _commitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_draftApprenticeshipsResponse);
         }
 
         [Test]
@@ -153,6 +162,27 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
                 AssertEquality(draftApprenticeship, draftApprenticeshipResult);
             }
+        }
+
+        [TestCase(0, "Approve 0 apprentices' details")]
+        [TestCase(1, "Approve apprentice details")]
+        [TestCase(2, "Approve 2 apprentices' details")]
+        public async Task PageTitleIsSetCorrectlyForTheNumberOfApprenticeships(int numberOfApprenticeships, string expectedPageTitle)
+        {
+            // Arrange
+            var draftApprenticeships = _autoFixture.CreateMany<DraftApprenticeshipDto>(numberOfApprenticeships).ToArray();
+            for (var i = 0; i < numberOfApprenticeships; i++)
+            {
+                SetCourseDetails(draftApprenticeships[i], $"Course1", "C1");
+            }
+            SetDraftApprenticeships(draftApprenticeships);
+
+            // Act_
+            var result = await _mapper.Map(_source);
+
+            // Assert
+
+            Assert.AreEqual(expectedPageTitle, result.PageTitle);
         }
 
         private void AssertEquality(DraftApprenticeshipDto source, CohortDraftApprenticeshipViewModel result)
