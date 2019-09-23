@@ -118,14 +118,11 @@
         </tbody>
     </table>*@
 
-@if (Model.CanAmendCohort)
-{
     <p>
         <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}")" class="govuk-link">Add another apprentice</a>
     </p>
-}
 
-<hr class="govuk-section-break govuk-section-break--l">
+    <hr class="govuk-section-break govuk-section-break--l">
 
 @*
     <div class="govuk-form-group">
