@@ -98,27 +98,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 fixture.AssertEquality(draftApprenticeship, draftApprenticeshipResult);
             }
         }
-
-        [TestCase(Party.None)]
-        [TestCase(Party.Provider)]
-        [TestCase(Party.TransferSender)]
-        public async Task CanAmendCohortIsAlwaysFalseWhenPartyIsNotEmployer(Party party)
-        {
-            var fixture = new DetailsViewModelMapperTestsFixture().SetCohortWithParty(party);
-            var result = await fixture.Map();
-            Assert.IsFalse(result.CanAmendCohort);
-        }
-
-        [TestCase(EditStatus.Neither, true)]
-        [TestCase(EditStatus.EmployerOnly, true)]
-        [TestCase(EditStatus.ProviderOnly, false)]
-        [TestCase(EditStatus.Both, false)]
-        public async Task CanAmendCohortIsTheExpectedValueWhenPartyIsEmployer(EditStatus editStatus, bool expected)
-        {
-            var fixture = new DetailsViewModelMapperTestsFixture().SetCohortWithParty(Party.Employer).SetCohortWithEditStatus(editStatus);
-            var result = await fixture.Map();
-            Assert.AreEqual(expected, result.CanAmendCohort);
-        }
     }
 
     public class DetailsViewModelMapperTestsFixture
@@ -155,12 +134,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public DetailsViewModelMapperTestsFixture SetCohortWithParty(Party party)
         {
             Cohort.WithParty = party;
-            return this;
-        }
-
-        public DetailsViewModelMapperTestsFixture SetCohortWithEditStatus(EditStatus editStatus)
-        {
-            Cohort.EditStatus = editStatus;
             return this;
         }
 

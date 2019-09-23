@@ -40,7 +40,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
                 LegalEntityName = cohort.LegalEntityName,
                 ProviderName = cohort.ProviderName,
-                CanAmendCohort = CanAmendCohort(cohort),
                 TransferSenderHashedId = cohort.TransferSenderId == null ? null : _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId),
                 Message = cohort.LatestMessageCreatedByProvider,
                 DraftApprenticeships = draftApprenticeships.Select(a => new CohortDraftApprenticeshipViewModel
@@ -57,28 +56,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                         StartDate = a.StartDate
                     }).ToList()
             };
-        }
-
-        private bool CanAmendCohort(GetCohortResponse cohort)
-        {
-            if (cohort.WithParty == Party.Employer)
-            {
-                switch (cohort.EditStatus)
-                {
-                    case EditStatus.Neither:
-                        return true;
-                    case EditStatus.Both:
-                        return false;
-                    case EditStatus.EmployerOnly :
-                        return true;
-                    case EditStatus.ProviderOnly:
-                        return false;
-                    default:
-                        throw new Exception($"EditStatus {cohort.EditStatus} not defined");
-                }
-            }
-
-            return false;
         }
     }
 }
