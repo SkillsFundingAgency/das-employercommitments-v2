@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
 
 @{
     ViewData["Title"] = "Approve apprentices' details";
@@ -31,30 +32,61 @@
 {
     <h1>@course.Count x @course.DisplayCourseName</h1>
 
+    if (@course.FundingBandExcess != null)
+    {
+    <div class="govuk-inset-text das-inset-text--highlight">
+        <h3 class="govuk-heading-s">@course.FundingBandExcess.ApprenticesExceedingBand apprenticeships above the funding band maximum</h3>
+        <p>
+            The price for this apprenticeship is above it's
+            @if (course.FundingBandExcess.SingleFundingBandCapExceeded == null)
+            {
+                <text><a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band maximum</a>.</text>
+            }
+            else
+            {
+                <text>
+                    <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band maximum</a> of &pound;@(course.FundingBandExcess.SingleFundingBandCapExceeded).
+                </text>
+            }
+            You'll need to pay the difference to the training provider.
+        </p>
+    </div>
+    }
+
     <table class="govuk-table">
         <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
-            <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
-            <th scope="col" class="govuk-table__header das-table-cell-width-30">Training dates</th>
-            <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
-            <th scope="col" class="govuk-table__header das-table-cell-width-10"><span class="govuk-visually-hidden">Action</span></th>
-        </tr>
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
+                <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
+                <th scope="col" class="govuk-table__header das-table-cell-width-30">Training dates</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
+                <th scope="col" class="govuk-table__header das-table-cell-width-10"><span class="govuk-visually-hidden">Action</span></th>
+            </tr>
         </thead>
         <tbody class="govuk-table__body">
 
-        @foreach (var draftApprenticeship in course.DraftApprenticeships)
-        {
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell">@draftApprenticeship.DisplayName</td>
-                <td class="govuk-table__cell">@draftApprenticeship.DisplayDateOfBirth</td>
-                <td class="govuk-table__cell">@draftApprenticeship.DisplayTrainingDates</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">@draftApprenticeship.DisplayCost</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">
-                    <a href="@Url.Action("EditDraftApprenticeship", "DraftApprenticeship", new {@draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId})">Edit <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
-                </td>
-            </tr>
-        }
+            @foreach (var draftApprenticeship in course.DraftApprenticeships)
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">@draftApprenticeship.DisplayName</td>
+                    <td class="govuk-table__cell">@draftApprenticeship.DisplayDateOfBirth</td>
+                    <td class="govuk-table__cell">@draftApprenticeship.DisplayTrainingDates</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        @if(@draftApprenticeship.ExceedsFundingBandCap){
+                            <span class="das-table-cell--highlight">
+                                @draftApprenticeship.DisplayCost
+                            </span>
+                        }
+                        else
+                        {
+                            @draftApprenticeship.DisplayCost
+                        }
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <a href="@Url.Action("EditDraftApprenticeship", "DraftApprenticeship", new {@draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId})">Edit <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 }
