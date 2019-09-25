@@ -60,9 +60,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{cohortReference}")]
         [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
         [HttpPost]
-        public IActionResult Details(DetailsViewModel viewModel)
+        public async Task<IActionResult> Details(DetailsViewModel viewModel)
         {
-            return View();
+            if (viewModel.Selection != CohortDetailsOptions.Send)
+            {
+                throw new NotImplementedException();
+            }
+
+            var request = await _modelMapper.Map<SendCohortRequest>(viewModel);
+            await _commitmentsApiClient.SendCohort(viewModel.CohortId, request);
+
+            return RedirectToAction("Sent", new { viewModel.CohortReference, viewModel.AccountHashedId});
+
+        }
+
+        [HttpGet]
+        [Route("{cohortReference}/sent")]
+        [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
+        public void Sent()
+        {
+            throw new NotImplementedException();
         }
 
         [Route("add")]
