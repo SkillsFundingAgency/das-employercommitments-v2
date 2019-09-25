@@ -14,5 +14,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string Message { get; set; }
         public IReadOnlyCollection<CohortDraftApprenticeshipViewModel> DraftApprenticeships { get; set; }
         public string TransferSenderHashedId { get; set; }
+
+        public CohortDetailsOptions? Selection { get; set; }
+        public string SendMessage { get; set; }
+        public string ApproveMessage { get; set; }
+    }
+
+    public enum CohortDetailsOptions
+    {
+        Send,
+        Approve
     }
 }

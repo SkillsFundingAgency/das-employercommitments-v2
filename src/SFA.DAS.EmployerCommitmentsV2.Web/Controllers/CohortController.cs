@@ -57,6 +57,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
+        [Route("{cohortReference}")]
+        [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
+        [HttpPost]
+        public IActionResult Details(DetailsViewModel viewModel)
+        {
+            return View();
+        }
+
         [Route("add")]
         public async Task<IActionResult> Index(IndexRequest request)
         {
