@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
@@ -16,6 +17,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 
         public int NumberOfApprenticesExceedingFundingBandCap { get; }
 
-        public string DisplaySingleFundingBandCap => _fundingBandCapsExceeded.Length == 1 ? $"{_fundingBandCapsExceeded[0].ToString("C0")}." : ".";
+        public string DisplaySingleFundingBandCap => _fundingBandCapsExceeded.Length == 1 ? $"£{string.Format("{0:#,0}", _fundingBandCapsExceeded[0])}." : ".";
     }
 }
