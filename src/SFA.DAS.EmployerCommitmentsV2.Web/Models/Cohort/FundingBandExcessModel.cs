@@ -15,6 +15,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 
         public int NumberOfApprenticesExceedingFundingBandCap { get; }
 
-        public string DisplaySingleFundingBandCap => _fundingBandCapsExceeded.Length == 1 ? $"£{string.Format("{0:#,0}", _fundingBandCapsExceeded[0])}." : ".";
+        public string DisplaySingleFundingBandCap => _fundingBandCapsExceeded.Length == 1 ? $"£{_fundingBandCapsExceeded[0]:#,0}." : ".";
     }
 }
