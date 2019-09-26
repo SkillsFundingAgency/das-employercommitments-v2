@@ -42,14 +42,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 LegalEntityName = cohort.LegalEntityName,
                 ProviderName = cohort.ProviderName,
                 Message = cohort.LatestMessageCreatedByProvider,
-                Courses = await GroupCourses(draftApprenticeships.ToList())
+                Courses = GroupCourses(draftApprenticeships)
             };
         }
 
-        private async Task<IReadOnlyCollection<DetailsViewCourseGroupingModel>> GroupCourses(IList<DraftApprenticeshipDto> draftApprenticeships)
+        private IReadOnlyCollection<DetailsViewCourseGroupingModel> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships)
         {
-            var apprenticeFundingBandCaps = await Task.WhenAll(draftApprenticeships.Select(async a => new { a.Id, FundingBandCap = await GetFundingBandCap(a.CourseCode, a.StartDate) }));
-
             var groupedByCourse = draftApprenticeships
                 .GroupBy(a => new { a.CourseCode, a.CourseName })
                 .Select(course => new DetailsViewCourseGroupingModel
@@ -60,21 +58,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                         // Sort before on raw properties rather than use displayName property post select for performance reasons
                         .OrderBy(a => a.FirstName)
                         .ThenBy(a => a.LastName)
-                        .Join(apprenticeFundingBandCaps, a => a.Id, fc => fc.Id, (a, fc) => new CohortDraftApprenticeshipViewModel
+                        .Select(a => new CohortDraftApprenticeshipViewModel
                         {
                             Id = a.Id,
                             DraftApprenticeshipHashedId = _encodingService.Encode(a.Id, EncodingType.ApprenticeshipId),
                             FirstName = a.FirstName,
                             LastName = a.LastName,
                             Cost = a.Cost,
-                            FundingBandCap = fc.FundingBandCap,
                             DateOfBirth = a.DateOfBirth,
                             EndDate = a.EndDate,
                             StartDate = a.StartDate
                         })
-                        .Select(a => a)
                 .ToList()
-            })
+                })
             .OrderBy(c => c.CourseName)
                 .ToList();
 
@@ -83,8 +79,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             return groupedByCourse;
         }
 
-        private static void PopulateFundingBandExcessModels(List<DetailsViewCourseGroupingModel> courseGroups)
+        private void PopulateFundingBandExcessModels(List<DetailsViewCourseGroupingModel> courseGroups)
         {
+            Parallel.ForEach(courseGroups, group => SetFundingBandCap(group.CourseCode, group.DraftApprenticeships));
             foreach (var courseGroup in courseGroups)
             {
                 var apprenticesExceedingFundingBand = courseGroup.DraftApprenticeships.Where(x => x.ExceedsFundingBandCap).ToList();
@@ -97,6 +94,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                         new FundingBandExcessModel(apprenticesExceedingFundingBand.Count, fundingExceededValues);
                 }
             }
+        }
+
+        private void SetFundingBandCap(string courseCode, IEnumerable<CohortDraftApprenticeshipViewModel> draftApprenticeships)
+        {
+            Parallel.ForEach(draftApprenticeships, async a => a.FundingBandCap = await GetFundingBandCap(courseCode, a.StartDate));
         }
 
         private async Task<int?> GetFundingBandCap(string courseCode, DateTime? startDate)

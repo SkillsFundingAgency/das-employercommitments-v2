@@ -35,19 +35,10 @@
     if (@course.FundingBandExcess != null)
     {
     <div class="govuk-inset-text das-inset-text--highlight">
-        <h3 class="govuk-heading-s">@course.FundingBandExcess.ApprenticesExceedingBand apprenticeships above the funding band maximum</h3>
+        <h3 class="govuk-heading-s">@course.FundingBandExcess.NumberOfApprenticesExceedingFundingBandCap apprenticeships above the funding band maximum</h3>
         <p>
-            The price for this apprenticeship is above it's
-            @if (course.FundingBandExcess.SingleFundingBandCapExceeded == null)
-            {
-                <text><a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band maximum</a>.</text>
-            }
-            else
-            {
-                <text>
-                    <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band maximum</a> of &pound;@(course.FundingBandExcess.SingleFundingBandCapExceeded).
-                </text>
-            }
+            The price for this apprenticeship is above its
+            <text><a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band maximum</a> @course.FundingBandExcess.DisplaySingleFundingBandCap</text>
             You'll need to pay the difference to the training provider.
         </p>
     </div>

@@ -202,28 +202,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public void FundingBandExcessModelShowsTwoApprenticeshipsExceedingTheBandForCourse1()
         {
             var excessModel = _result.Courses.FirstOrDefault(x => x.CourseCode == "C1").FundingBandExcess;
-            Assert.AreEqual(2, excessModel.ApprenticesExceedingBand);
+            Assert.AreEqual(2, excessModel.NumberOfApprenticesExceedingFundingBandCap);
         }
 
         [Test]
-        public void FundingBandExcessModelHasNullOnSingleFundingCapExceeded()
+        public void FundingBandExcessModelShowsOnlyTheFullStopWhenMultipleFundingCapsAreExceeded()
         {
             var excessModel = _result.Courses.FirstOrDefault(x => x.CourseCode == "C1").FundingBandExcess;
-            Assert.IsNull(excessModel.SingleFundingBandCapExceeded);
+            Assert.AreEqual(".",excessModel.DisplaySingleFundingBandCap);
         }
 
         [Test]
         public void FundingBandExcessModelShowsOneApprenticeshipExceedingTheBandForCourse2()
         {
             var excessModel = _result.Courses.FirstOrDefault(x => x.CourseCode == "C2").FundingBandExcess;
-            Assert.AreEqual(1, excessModel.ApprenticesExceedingBand);
+            Assert.AreEqual(1, excessModel.NumberOfApprenticesExceedingFundingBandCap);
         }
 
         [Test]
         public void FundingBandExcessModelShowsTheSingleFundingBandCapExceeded()
         {
             var excessModel = _result.Courses.FirstOrDefault(x => x.CourseCode == "C2").FundingBandExcess;
-            Assert.AreEqual(1000, excessModel.SingleFundingBandCapExceeded);
+            Assert.AreEqual("£1,000.", excessModel.DisplaySingleFundingBandCap);
         }
 
         [Test]

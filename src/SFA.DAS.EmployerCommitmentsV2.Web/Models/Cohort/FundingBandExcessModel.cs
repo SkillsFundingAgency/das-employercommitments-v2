@@ -6,16 +6,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 {
     public class FundingBandExcessModel
     {
-        private readonly int?[] _fundingBandCapsExceeded;
+        private readonly int[] _fundingBandCapsExceeded;
 
-        public FundingBandExcessModel(int apprenticesExceedingBand, IEnumerable<int?> fundingBandCapsExceeded)
+        public FundingBandExcessModel(int numberOfApprenticesExceedingFundingBandCap, IEnumerable<int?> fundingBandCapsExceeded)
         {
-            _fundingBandCapsExceeded = fundingBandCapsExceeded.ToArray();
-            ApprenticesExceedingBand = apprenticesExceedingBand;
+            _fundingBandCapsExceeded = fundingBandCapsExceeded.Where(x=>x.HasValue).Select(x=>x.Value).ToArray();
+            NumberOfApprenticesExceedingFundingBandCap = numberOfApprenticesExceedingFundingBandCap;
         }
 
-        public int ApprenticesExceedingBand { get; }
+        public int NumberOfApprenticesExceedingFundingBandCap { get; }
 
-        public int? SingleFundingBandCapExceeded => _fundingBandCapsExceeded.Length == 1 ? _fundingBandCapsExceeded[0] : (int?) null;
+        public string DisplaySingleFundingBandCap => _fundingBandCapsExceeded.Length == 1 ? $"{_fundingBandCapsExceeded[0].ToString("C0")}." : ".";
     }
 }
