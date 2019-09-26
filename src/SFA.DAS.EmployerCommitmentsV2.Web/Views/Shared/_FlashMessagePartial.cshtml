@@ -1,0 +1,28 @@
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@if(TempData.ContainsKey("FlashMessage"))
+{
+    var message = TempData["FlashMessage"];
+    var level = (FlashMessageLevel) TempData["FlashMessageLevel"];
+    
+    <div class="das-notification das-notification--@GetCssClassForLevel(level)" tabindex="-1">
+        <p class="das-notification__body">@message</p>
+    </div>
+}
+
+@functions
+{
+    private string GetCssClassForLevel(FlashMessageLevel level)
+    {
+        switch(level)
+        {
+            case FlashMessageLevel.Info:
+                return "info";
+            case FlashMessageLevel.Warning:
+                return "warning";
+            case FlashMessageLevel.Success:
+                return "success";
+            default:
+                throw new ArgumentOutOfRangeException(nameof(level));
+        }
+    }
+}

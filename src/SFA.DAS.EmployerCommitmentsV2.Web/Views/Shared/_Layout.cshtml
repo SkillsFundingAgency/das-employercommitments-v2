@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+<!DOCTYPE html>
 <html lang="en" class="govuk-template ">
 
 @{
@@ -37,6 +38,9 @@
         <a href="#" class="govuk-back-link">Back</a>
         -->
         <main class="govuk-main-wrapper " id="main-content" role="main">
+            
+            <partial name="_FlashMessagePartial"/>
+
             @RenderBody()
         </main>
     </div>
@@ -50,7 +54,7 @@
 
     <script>
         window.GOVUKFrontend.initAll();
-        window.DASFrontend.initAll();
+            window.DASFrontend.initAll();
     </script>
 
     @RenderSection("Scripts", required: false)
