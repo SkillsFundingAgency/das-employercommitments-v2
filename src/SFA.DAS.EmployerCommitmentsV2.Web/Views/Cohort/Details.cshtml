@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
+﻿@using SFA.DAS.EmployerUrlHelper.Mvc
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
 
 @{
     ViewData["Title"] = "Approve apprentices' details";
@@ -61,71 +62,73 @@
 
 @*<h3 class="govuk-heading-m">3 x Bespoke Saddler, Level 3 (Standard)</h3>
 
-        <table class="govuk-table">
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
-                    <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
-                    <th scope="col" class="govuk-table__header das-table-cell-width-30">Training Dates</th>
-                    <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
-                    <th scope="col" class="govuk-table__header das-table-cell-width-10"><span class="govuk-visually-hidden">Action</span></th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">Barry Block</td>
-                    <td class="govuk-table__cell">15 Apr 2002</td>
-                    <td class="govuk-table__cell">Oct 2019 to Nov 2020</td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <a href="">Edit <span class="govuk-visually-hidden">Barry Block's details</span></a>
-                        <a href="">Delete <span class="govuk-visually-hidden">Barry Block's details</span></a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
+                <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
+                <th scope="col" class="govuk-table__header das-table-cell-width-30">Training Dates</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
+                <th scope="col" class="govuk-table__header das-table-cell-width-10"><span class="govuk-visually-hidden">Action</span></th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">Barry Block</td>
+                <td class="govuk-table__cell">15 Apr 2002</td>
+                <td class="govuk-table__cell">Oct 2019 to Nov 2020</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a href="">Edit <span class="govuk-visually-hidden">Barry Block's details</span></a>
+                    <a href="">Delete <span class="govuk-visually-hidden">Barry Block's details</span></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-        <h3 class="govuk-heading-m">3 x Bespoke Saddler, Level 3 (Standard)</h3>
+    <h3 class="govuk-heading-m">3 x Bespoke Saddler, Level 3 (Standard)</h3>
 
-        <table class="govuk-table">
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
-                    <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
-                    <th scope="col" class="govuk-table__header das-table-cell-width-30">Training Dates</th>
-                    <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
-                    <th scope="col" class="govuk-table__header das-table-cell-width-10"><span class="govuk-visually-hidden">Action</span></th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">Barry Block</td>
-                    <td class="govuk-table__cell">15 Apr 2002</td>
-                    <td class="govuk-table__cell">Oct 2019 to Nov 2020</td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <a href="">Edit <span class="govuk-visually-hidden">Barry Block's details</span></a>
-                        <a href="">Delete <span class="govuk-visually-hidden">Barry Block's details</span></a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
+                <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
+                <th scope="col" class="govuk-table__header das-table-cell-width-30">Training Dates</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
+                <th scope="col" class="govuk-table__header das-table-cell-width-10"><span class="govuk-visually-hidden">Action</span></th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">Barry Block</td>
+                <td class="govuk-table__cell">15 Apr 2002</td>
+                <td class="govuk-table__cell">Oct 2019 to Nov 2020</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a href="">Edit <span class="govuk-visually-hidden">Barry Block's details</span></a>
+                    <a href="">Delete <span class="govuk-visually-hidden">Barry Block's details</span></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-        <table class="govuk-table">
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header das-table-cell-width-80" scope="row">Total apprenticeship training price <br>(excluding VAT)</th>
-                    <td class="govuk-table__cell govuk-table__header--numeric das-table-cell-width-10"><strong>&pound;42,000</strong></td>
-                    <td class="govuk-table__cell das-table-cell-width-10" aria-hidden="true"></td>
-                </tr>
-            </tbody>
-        </table>
+    <table class="govuk-table">
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header das-table-cell-width-80" scope="row">Total apprenticeship training price <br>(excluding VAT)</th>
+                <td class="govuk-table__cell govuk-table__header--numeric das-table-cell-width-10"><strong>&pound;42,000</strong></td>
+                <td class="govuk-table__cell das-table-cell-width-10" aria-hidden="true"></td>
+            </tr>
+        </tbody>
+    </table>*@
 
-        <p><a href="#" class="govuk-link">Add another apprentice</a> </p>
+    <p>
+        <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}")" class="govuk-link">Add another apprentice</a>
+    </p>
 
-        <hr class="govuk-section-break govuk-section-break--l">
+    <hr class="govuk-section-break govuk-section-break--l">
 
-
+@*
     <div class="govuk-form-group">
             <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
