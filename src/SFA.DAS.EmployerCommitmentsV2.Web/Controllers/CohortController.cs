@@ -77,9 +77,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpGet]
         [Route("{cohortReference}/sent")]
         [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
-        public void Sent()
+        public IActionResult Sent()
         {
-            throw new NotImplementedException();
+            return new NotFoundResult();
         }
 
         [Route("add")]
