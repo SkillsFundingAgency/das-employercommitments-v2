@@ -101,11 +101,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             Assert.AreEqual(_cohort.ProviderName, _result.ProviderName);
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public async Task CoursesAreMappedCorrectly(bool fundedByTransfer)
+        [TestCase(123, true)]
+        [TestCase(null, false)]
+        public async Task CoursesAreMappedCorrectly(long? transferSenderId, bool fundedByTransfer)
         {
-            _cohort.IsFundedByTransfer = fundedByTransfer;
+            _cohort.TransferSenderId = transferSenderId;
 
             _result = await _mapper.Map(_source);
 
