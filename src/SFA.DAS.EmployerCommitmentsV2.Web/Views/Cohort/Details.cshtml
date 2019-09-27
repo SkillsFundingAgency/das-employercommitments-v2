@@ -124,11 +124,12 @@
 
     <p>
         <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}")" class="govuk-link">Add another apprentice</a>
+        <a href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/{Model.CohortReference}/details/delete")" class="govuk-link das-float-right">Delete this group</a>
     </p>
 
     <hr class="govuk-section-break govuk-section-break--l">
 
-@*
+    @*
     <div class="govuk-form-group">
             <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
