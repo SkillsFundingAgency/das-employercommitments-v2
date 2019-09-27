@@ -231,7 +231,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await fixture.Map();
 
             var excessModel = result.Courses.FirstOrDefault(x => x.CourseCode == "C2").FundingBandExcess;
-            Assert.AreEqual("£1,000.", excessModel.DisplaySingleFundingBandCap);
+            Assert.AreEqual(" £1,000.", excessModel.DisplaySingleFundingBandCap);
         }
 
         [Test]
