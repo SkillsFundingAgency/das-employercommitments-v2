@@ -12,7 +12,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         public static IServiceCollection AddDasHealthChecks(this IServiceCollection services)
         {
             services.AddHealthChecks()
-                .AddCheck<CommitmentsApiHealthCheck>("Commitments API Health Check");
+                .AddCheck<CommitmentsApiHealthCheck>("Commitments API Health Check")
+                .AddCheck<EmployerAccountsApiHealthCheck>("Employer Accounts API Health Check");
             
             return services;
         }
