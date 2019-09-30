@@ -2,10 +2,10 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
 
 @{
-    ViewData["Title"] = "Approve apprentices' details";
+    ViewData["Title"] = Model.PageTitle;
 }
 
-<h1 class="govuk-heading-xl">Approve @Model.DraftApprenticeships.Count apprentices' details</h1>
+<h1 class="govuk-heading-xl">@Model.PageTitle</h1>
 
 <dl class="das-definition-list das-definition-list--inline">
     <dt class="das-definition-list__title">Organisation</dt>
@@ -28,8 +28,12 @@
 
 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
-<table class="govuk-table">
-    <thead class="govuk-table__head">
+@foreach (var course in Model.Courses)
+{
+    <h3 class="govuk-heading-m">@course.Count x @course.DisplayCourseName</h3>
+
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
         <tr class="govuk-table__row">
             <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
             <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
@@ -37,10 +41,10 @@
             <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
             <th scope="col" class="govuk-table__header das-table-cell-width-10"><span class="govuk-visually-hidden">Action</span></th>
         </tr>
-    </thead>
-    <tbody class="govuk-table__body">
+        </thead>
+        <tbody class="govuk-table__body">
 
-        @foreach (var draftApprenticeship in Model.DraftApprenticeships)
+        @foreach (var draftApprenticeship in course.DraftApprenticeships)
         {
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">@draftApprenticeship.DisplayName</td>
@@ -48,13 +52,13 @@
                 <td class="govuk-table__cell">@draftApprenticeship.DisplayTrainingDates</td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">@draftApprenticeship.DisplayCost</td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">
-                    <a href="@Url.Action("EditDraftApprenticeship", "DraftApprenticeship", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">Edit <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
+                    <a href="@Url.Action("EditDraftApprenticeship", "DraftApprenticeship", new {@draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId})">Edit <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
                 </td>
             </tr>
         }
-    </tbody>
-</table>
-
+        </tbody>
+    </table>
+}
 
 @*<h3 class="govuk-heading-m">3 x Bespoke Saddler, Level 3 (Standard)</h3>
 
