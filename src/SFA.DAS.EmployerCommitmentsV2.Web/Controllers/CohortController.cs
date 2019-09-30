@@ -66,12 +66,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 throw new NotImplementedException();
             }
-
+            
             var request = await _modelMapper.Map<SendCohortRequest>(viewModel);
             await _commitmentsApiClient.SendCohort(viewModel.CohortId, request);
 
             return RedirectToAction("Sent", new { viewModel.CohortReference, viewModel.AccountHashedId});
-
         }
 
         [HttpGet]
