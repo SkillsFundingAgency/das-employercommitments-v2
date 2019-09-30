@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     [TestFixture]
     public class MessageViewModelToCreateCohortWithOtherPartyRequestMapperTests
     {
-        private MessageViewModelToCreateCohortWithOtherPartyRequestMapper _mapper;
+        private CreateCohortWithOtherPartyRequestMapper _mapper;
         private MessageViewModel _source;
         private CreateCohortWithOtherPartyRequest _result;
 
@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new Fixture();
 
-            _mapper = new MessageViewModelToCreateCohortWithOtherPartyRequestMapper();
+            _mapper = new CreateCohortWithOtherPartyRequestMapper();
 
             _source = fixture.Build<MessageViewModel>().Create();
 
