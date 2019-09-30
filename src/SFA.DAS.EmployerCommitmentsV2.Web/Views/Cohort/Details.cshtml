@@ -31,7 +31,7 @@
 
 @foreach (var course in Model.Courses)
 {
-    <h1>@course.Count x @course.DisplayCourseName</h1>
+    <h3 class="govuk-heading-m">@course.Count x @course.DisplayCourseName</h3>
     if (@course.FundingBandExcess != null)
     {
     <div class="govuk-inset-text das-inset-text--highlight">
