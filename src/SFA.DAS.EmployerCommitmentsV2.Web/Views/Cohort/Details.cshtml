@@ -3,10 +3,10 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
 
 @{
-    ViewData["Title"] = "Approve apprentices' details";
+    ViewData["Title"] = Model.PageTitle;
 }
 
-<h1 class="govuk-heading-xl">Approve @Model.DraftApprenticeshipsCount apprentices' details</h1>
+<h1 class="govuk-heading-xl">@Model.PageTitle</h1>
 
 <dl class="das-definition-list das-definition-list--inline">
     <dt class="das-definition-list__title">Organisation</dt>
