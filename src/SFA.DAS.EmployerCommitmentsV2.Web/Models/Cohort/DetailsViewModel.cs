@@ -20,6 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public CohortDetailsOptions? Selection { get; set; }
         public string SendMessage { get; set; }
         public string ApproveMessage { get; set; }
+        public bool IsApprovedByProvider { get; set; }
     }
 
     public enum CohortDetailsOptions
