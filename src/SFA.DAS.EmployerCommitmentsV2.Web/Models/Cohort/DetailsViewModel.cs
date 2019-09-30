@@ -16,5 +16,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string TransferSenderHashedId { get; set; }
         public int DraftApprenticeshipsCount => Courses.SelectMany(c => c.DraftApprenticeships).Count();
         public IReadOnlyCollection<DetailsViewCourseGroupingModel> Courses { get; set; }
+        public string PageTitle { get; set; }
     }
 }

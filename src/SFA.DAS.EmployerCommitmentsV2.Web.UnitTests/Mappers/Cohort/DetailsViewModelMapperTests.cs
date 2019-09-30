@@ -162,7 +162,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             }
         }
 
+        [TestCase(0, "Approve 0 apprentices' details")]
+        [TestCase(1, "Approve apprentice details")]
+        [TestCase(2, "Approve 2 apprentices' details")]
+        public async Task PageTitleIsSetCorrectlyForTheNumberOfApprenticeships(int numberOfApprenticeships, string expectedPageTitle)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().CreateThisNumberOfApprenticeships(numberOfApprenticeships);
+            var result = await fixture.Map();
 
+            Assert.AreEqual(expectedPageTitle, result.PageTitle);
+        }
     }
 
     public class DetailsViewModelMapperTestsFixture
@@ -226,6 +235,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             return this;
         }
 
+        public DetailsViewModelMapperTestsFixture CreateThisNumberOfApprenticeships(int numberOfApprenticeships)
+        {
+            var draftApprenticeships = _autoFixture.CreateMany<DraftApprenticeshipDto>(numberOfApprenticeships).ToArray();
+            DraftApprenticeshipsResponse.DraftApprenticeships = draftApprenticeships;
+            return this;
+        }
+
         public Task<DetailsViewModel> Map()
         {
             return Mapper.Map(TestHelper.Clone(Source));
@@ -273,6 +289,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             draftApprenticeship.CourseName = courseName;
             draftApprenticeship.CourseCode = courseCode;
         }
-
     }
 }
