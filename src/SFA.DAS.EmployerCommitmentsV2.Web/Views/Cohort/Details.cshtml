@@ -141,20 +141,20 @@
             </legend>
             @Html.ValidationMessageFor(m => m.Selection, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Selection) })
             <div class="govuk-radios govuk-radios--conditional" data-module="radios">
-                @*<div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio" value="approve" data-aria-controls="conditional-approve">
+                <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio" value="@CohortDetailsOptions.Approve" data-aria-controls="conditional-approve">
                         <label class="govuk-label govuk-radios__label" for="radio-approve">
-                            Approve these details including my changes
+                            Yes, approve and notify training provider
                         </label>
                     </div>
                     <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-approve">
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="approve-details">
-                                Let @Model.ProviderName know what you'd like them to do next (optional)
+                                Leave @Model.ProviderName a message (optional)
                             </label>
                             <textarea class="govuk-textarea" id="approve-details" name="approvemessage" rows="5"></textarea>
                         </div>
-                    </div>*@
+                    </div>
                 <div class="govuk-radios__item">
                     <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Send" data-aria-controls="conditional-send">
                     <label class="govuk-label govuk-radios__label" for="radio-send">
