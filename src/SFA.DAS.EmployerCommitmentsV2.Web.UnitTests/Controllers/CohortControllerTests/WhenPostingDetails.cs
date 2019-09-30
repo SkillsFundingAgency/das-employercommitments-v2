@@ -40,6 +40,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             _fixture.VerifyRedirectedToSendConfirmation();
         }
 
+        [Test]
+        public async Task And_User_Selected_Approve_Then_Cohort_Is_Approved_By_Employer()
+        {
+            await _fixture.Post(CohortDetailsOptions.Approve);
+            _fixture.VerifyCohortApprovedByEmployer();
+        }
+
+        [Test]
+        public async Task And_User_Selected_Approve_Then_User_Is_Redirected_To_Confirmation_Page()
+        {
+            await _fixture.Post(CohortDetailsOptions.Approve);
+            _fixture.VerifyRedirectedToApprovalConfirmation();
+        }
+
         public class WhenPostingDetailsFixture
         {
             private readonly CohortController _controller;
@@ -48,7 +62,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             private readonly DetailsViewModel _viewModel;
             private readonly long _cohortId;
-            private readonly SendCohortRequest _apiRequest;
+            private readonly SendCohortRequest _sendCohortApiRequest;
+            private readonly ApproveCohortRequest _approveCohortApiRequest;
+
 
             public WhenPostingDetailsFixture()
             {
@@ -64,13 +80,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                     CohortId = _cohortId
                 };
 
-                _apiRequest = new SendCohortRequest();
+                _sendCohortApiRequest = new SendCohortRequest();
+                _approveCohortApiRequest = new ApproveCohortRequest();
 
                 modelMapper.Setup(x => x.Map<SendCohortRequest>(It.Is<DetailsViewModel>(vm => vm == _viewModel)))
-                    .ReturnsAsync(_apiRequest);
+                    .ReturnsAsync(_sendCohortApiRequest);
+
+                modelMapper.Setup(x => x.Map<ApproveCohortRequest>(It.Is<DetailsViewModel>(vm => vm == _viewModel)))
+                    .ReturnsAsync(_approveCohortApiRequest);
 
                 _commitmentsApiClient.Setup(x => x.SendCohort(It.Is<long>(c => c == _cohortId),
-                        It.Is<SendCohortRequest>(r => r == _apiRequest), It.IsAny<CancellationToken>()))
+                        It.Is<SendCohortRequest>(r => r == _sendCohortApiRequest), It.IsAny<CancellationToken>()))
+                    .Returns(Task.CompletedTask);
+
+                _commitmentsApiClient.Setup(x => x.ApproveCohort(It.Is<long>(c => c == _cohortId),
+                        It.Is<ApproveCohortRequest>(r => r == _approveCohortApiRequest), It.IsAny<CancellationToken>()))
                     .Returns(Task.CompletedTask);
 
                 _controller = new CohortController(_commitmentsApiClient.Object,
@@ -89,7 +113,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             public void VerifyCohortSentToProvider()
             {
                 _commitmentsApiClient.Verify(x => x.SendCohort(It.Is<long>(c => c == _cohortId),
-                        It.Is<SendCohortRequest>(r => r == _apiRequest),
+                        It.Is<SendCohortRequest>(r => r == _sendCohortApiRequest),
                         It.IsAny<CancellationToken>()),
                     Times.Once);
             }
@@ -100,6 +124,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 var redirect = (RedirectToActionResult) _result;
                 Assert.AreEqual("Sent", redirect.ActionName);
             }
+
+            public void VerifyCohortApprovedByEmployer()
+            {
+                _commitmentsApiClient.Verify(x => x.ApproveCohort(It.Is<long>(c => c == _cohortId),
+                        It.Is<ApproveCohortRequest>(r => r == _approveCohortApiRequest),
+                        It.IsAny<CancellationToken>()),
+                    Times.Once);
+            }
+
+            public void VerifyRedirectedToApprovalConfirmation()
+            {
+                Assert.IsInstanceOf<RedirectToActionResult>(_result);
+                var redirect = (RedirectToActionResult)_result;
+                Assert.AreEqual("Approved", redirect.ActionName);
+            }
+
         }
     }
 }

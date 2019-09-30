@@ -62,21 +62,37 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Details(DetailsViewModel viewModel)
         {
-            if (viewModel.Selection != CohortDetailsOptions.Send)
+            switch (viewModel.Selection)
             {
-                throw new NotImplementedException();
+                case CohortDetailsOptions.Send:
+                {
+                    var request = await _modelMapper.Map<SendCohortRequest>(viewModel);
+                    await _commitmentsApiClient.SendCohort(viewModel.CohortId, request);
+                    return RedirectToAction("Sent", new { viewModel.CohortReference, viewModel.AccountHashedId});
+                }
+                case CohortDetailsOptions.Approve:
+                    {
+                        var request = await _modelMapper.Map<ApproveCohortRequest>(viewModel);
+                        await _commitmentsApiClient.ApproveCohort(viewModel.CohortId, request);
+                        return RedirectToAction("Approved", new { viewModel.CohortReference, viewModel.AccountHashedId });
+                    }
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
             }
-            
-            var request = await _modelMapper.Map<SendCohortRequest>(viewModel);
-            await _commitmentsApiClient.SendCohort(viewModel.CohortId, request);
-
-            return RedirectToAction("Sent", new { viewModel.CohortReference, viewModel.AccountHashedId});
         }
 
         [HttpGet]
         [Route("{cohortReference}/sent")]
         [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
         public IActionResult Sent()
+        {
+            return new NotFoundResult();
+        }
+
+        [HttpGet]
+        [Route("{cohortReference}/approved")]
+        [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
+        public IActionResult Approved()
         {
             return new NotFoundResult();
         }
