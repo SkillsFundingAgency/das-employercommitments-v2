@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             {
                 return Task.FromResult(new ApproveCohortRequest
                 {
-                    Message = source.SendMessage
+                    Message = source.ApproveMessage
                 });
             }
     }
