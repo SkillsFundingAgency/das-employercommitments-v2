@@ -71,11 +71,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     return RedirectToAction("Sent", new { viewModel.CohortReference, viewModel.AccountHashedId});
                 }
                 case CohortDetailsOptions.Approve:
-                    {
-                        var request = await _modelMapper.Map<ApproveCohortRequest>(viewModel);
-                        await _commitmentsApiClient.ApproveCohort(viewModel.CohortId, request);
-                        return RedirectToAction("Approved", new { viewModel.CohortReference, viewModel.AccountHashedId });
-                    }
+                {
+                    var request = await _modelMapper.Map<ApproveCohortRequest>(viewModel);
+                    await _commitmentsApiClient.ApproveCohort(viewModel.CohortId, request);
+                    return RedirectToAction("Approved", new { viewModel.CohortReference, viewModel.AccountHashedId });
+                }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
             }
