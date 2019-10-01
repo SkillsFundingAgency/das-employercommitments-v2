@@ -92,9 +92,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpGet]
         [Route("{cohortReference}/approved")]
         [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
-        public IActionResult Approved()
+        public async Task<IActionResult> Approved(ApprovedRequest request)
         {
-            return new NotFoundResult();
+            var viewModel = await _modelMapper.Map<ApprovedViewModel>(request);
+            return View(viewModel);
         }
 
         [Route("add")]
