@@ -4,7 +4,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class SelectProviderViewModelToSelectProviderRequestMapper : IMapper<SelectProviderViewModel, SelectProviderRequest>
+    public class SelectProviderRequestMapper : IMapper<SelectProviderViewModel, SelectProviderRequest>
     {
         public Task<SelectProviderRequest> Map(SelectProviderViewModel source)
         {

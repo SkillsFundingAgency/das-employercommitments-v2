@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -67,6 +69,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
+        public async Task IsApprovedByProviderIsMappedCorrectly()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(fixture.Cohort.IsApprovedByProvider, result.IsApprovedByProvider);
+        }
+
+        [Test]
         public async Task TransferSenderHashedIdIsEncodedCorrectlyWhenThereIsAValue()
         {
             var fixture = new DetailsViewModelMapperTestsFixture().SetTransferSenderIdAndItsExpectedHashedValue(123, "X123X");
@@ -83,20 +93,92 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
-        public async Task DraftApprenticeshipsAreMappedCorrectly()
+        public async Task DraftApprenticeshipTotalCountIsReportedCorrectly()
         {
-            var fixture = new DetailsViewModelMapperTestsFixture().SetEncodingOfApprenticeIds();
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(fixture.DraftApprenticeshipsResponse.DraftApprenticeships.Count, result.DraftApprenticeshipsCount);
+        }
+
+        [Test]
+        public async Task DraftApprenticeshipCourseCountIsReportedCorrectly()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
             var result = await fixture.Map();
 
-            Assert.AreEqual(fixture.DraftApprenticeshipsResponse.DraftApprenticeships.Count, result.DraftApprenticeships.Count);
+            foreach (var course in result.Courses)
+            {
+                var expectedCount = fixture.DraftApprenticeshipsResponse.DraftApprenticeships
+                    .Count(a => a.CourseCode == course.CourseCode && a.CourseName == course.CourseName);
+
+                Assert.AreEqual(expectedCount, course.Count);
+            }
+        }
+
+        [Test]
+        public async Task DraftApprenticeshipCourseOrderIsByCourseName()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+
+            var expectedSequence = fixture.DraftApprenticeshipsResponse.DraftApprenticeships
+                .Select(c => new { c.CourseName, c.CourseCode })
+                .Distinct()
+                .OrderBy(c => c.CourseName).ThenBy(c => c.CourseCode)
+                .ToList();
+
+            var actualSequence = result.Courses
+                .Select(c => new { c.CourseName, c.CourseCode })
+                .OrderBy(c => c.CourseName).ThenBy(c => c.CourseCode)
+                .ToList();
+
+            fixture.AssertSequenceOrder(expectedSequence, actualSequence, (e, a) => e.CourseName == a.CourseName && e.CourseCode == a.CourseCode);
+        }
+
+        [Test]
+        public async Task DraftApprenticesOrderIsByApprenticeName()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+
+            foreach (var course in result.Courses)
+            {
+                var expectedSequence = fixture.DraftApprenticeshipsResponse.DraftApprenticeships
+                    .Where(a => a.CourseName == course.CourseName && a.CourseCode == course.CourseCode)
+                    .Select(a => $"{a.FirstName} {a.LastName}")
+                    .OrderBy(a => a)
+                    .ToList();
+
+                var actualSequence = course.DraftApprenticeships.Select(a => a.DisplayName).ToList();
+
+                fixture.AssertSequenceOrder(expectedSequence, actualSequence, (e, a) => e == a);
+            }
+        }
+
+        [Test]
+        public async Task DraftApprenticeshipsAreMappedCorrectly()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
 
             foreach (var draftApprenticeship in fixture.DraftApprenticeshipsResponse.DraftApprenticeships)
             {
                 var draftApprenticeshipResult =
-                    result.DraftApprenticeships.Single(x => x.Id == draftApprenticeship.Id);
+                    result.Courses.SelectMany(c => c.DraftApprenticeships).Single(x => x.Id == draftApprenticeship.Id);
 
                 fixture.AssertEquality(draftApprenticeship, draftApprenticeshipResult);
             }
+        }
+
+        [TestCase(0, "Approve 0 apprentices' details")]
+        [TestCase(1, "Approve apprentice details")]
+        [TestCase(2, "Approve 2 apprentices' details")]
+        public async Task PageTitleIsSetCorrectlyForTheNumberOfApprenticeships(int numberOfApprenticeships, string expectedPageTitle)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().CreateThisNumberOfApprenticeships(numberOfApprenticeships);
+            var result = await fixture.Map();
+
+            Assert.AreEqual(expectedPageTitle, result.PageTitle);
         }
     }
 
@@ -116,6 +198,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _autoFixture = new Fixture();
 
             Cohort = _autoFixture.Create<GetCohortResponse>();
+
+            var draftApprenticeships = CreateDraftApprenticeshipDtos(_autoFixture);
+            _autoFixture.Register(() => draftApprenticeships);
             DraftApprenticeshipsResponse = _autoFixture.Create<GetDraftApprenticeshipsResponse>();
 
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
@@ -126,6 +211,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 .ReturnsAsync(DraftApprenticeshipsResponse);
 
             EncodingService = new Mock<IEncodingService>();
+            SetEncodingOfApprenticeIds();
 
             Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object);
             Source = _autoFixture.Create<DetailsRequest>();
@@ -157,7 +243,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             return this;
         }
 
-
+        public DetailsViewModelMapperTestsFixture CreateThisNumberOfApprenticeships(int numberOfApprenticeships)
+        {
+            var draftApprenticeships = _autoFixture.CreateMany<DraftApprenticeshipDto>(numberOfApprenticeships).ToArray();
+            DraftApprenticeshipsResponse.DraftApprenticeships = draftApprenticeships;
+            return this;
+        }
 
         public Task<DetailsViewModel> Map()
         {
@@ -170,12 +261,41 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(source.FirstName, result.FirstName);
             Assert.AreEqual(source.LastName, result.LastName);
             Assert.AreEqual(source.DateOfBirth, result.DateOfBirth);
-            Assert.AreEqual(source.CourseCode, result.CourseCode);
-            Assert.AreEqual(source.CourseName, result.CourseName);
             Assert.AreEqual(source.Cost, result.Cost);
             Assert.AreEqual(source.StartDate, result.StartDate);
             Assert.AreEqual(source.EndDate, result.EndDate);
             Assert.AreEqual($"X{source.Id}X", result.DraftApprenticeshipHashedId);
+        }
+
+        public void AssertSequenceOrder<T>(List<T> expected, List<T> actual, Func<T, T, bool> evaluator)
+        {
+            Assert.AreEqual(expected.Count, actual.Count, "Expected and actual sequences are different lengths");
+
+            for (int i = 0; i < actual.Count; i++)
+            {
+                Assert.IsTrue(evaluator(expected[i], actual[i]), "Actual sequence are not in same order as expected");
+            }
+        }
+
+        private IReadOnlyCollection<DraftApprenticeshipDto> CreateDraftApprenticeshipDtos(Fixture autoFixture)
+        {
+            var draftApprenticeships = autoFixture.CreateMany<DraftApprenticeshipDto>(6).ToArray();
+            SetCourseDetails(draftApprenticeships[0], "Course1", "C1");
+            SetCourseDetails(draftApprenticeships[1], "Course1", "C1");
+            SetCourseDetails(draftApprenticeships[2], "Course1", "C1");
+
+            SetCourseDetails(draftApprenticeships[3], "Course2", "C2");
+            SetCourseDetails(draftApprenticeships[4], "Course2", "C2");
+
+            SetCourseDetails(draftApprenticeships[5], "Course3", "C3");
+
+            return draftApprenticeships;
+        }
+
+        private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode)
+        {
+            draftApprenticeship.CourseName = courseName;
+            draftApprenticeship.CourseCode = courseCode;
         }
     }
 }

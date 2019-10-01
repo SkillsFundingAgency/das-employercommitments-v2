@@ -8,12 +8,12 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipViewModelMapper : IMapper<ApprenticeRequest, AddDraftApprenticeshipViewModel>
+    public class AddDraftApprenticeshipViewModelMapper : IMapper<ApprenticeRequest, AddDraftApprenticeshipViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
 
-        public CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipViewModelMapper(
+        public AddDraftApprenticeshipViewModelMapper(
             ICommitmentsApiClient commitmentsApiClient,
             ITrainingProgrammeApiClient trainingProgrammeApiClient)
         {
