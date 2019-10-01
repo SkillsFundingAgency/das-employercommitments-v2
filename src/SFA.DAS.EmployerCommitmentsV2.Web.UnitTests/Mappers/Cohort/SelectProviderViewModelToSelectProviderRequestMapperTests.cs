@@ -9,7 +9,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     [TestFixture]
     public class SelectProviderViewModelToSelectProviderRequestMapperTests
     {
-        private SelectProviderViewModelToSelectProviderRequestMapper _mapper;
+        private SelectProviderRequestMapper _mapper;
         private SelectProviderViewModel _source;
         private SelectProviderRequest _result;
 
@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var autoFixture = new Fixture();
 
-            _mapper = new SelectProviderViewModelToSelectProviderRequestMapper();
+            _mapper = new SelectProviderRequestMapper();
             _source = autoFixture.Create<SelectProviderViewModel>();
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }

@@ -99,7 +99,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
     {
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures()
         {
-            RequestMapper = new AddDraftApprenticeshipToCreateCohortRequestMapper();
+            RequestMapper = new CreateCohortRequestMapper();
             LinkGeneratorMock = new Mock<ILinkGenerator>();
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
             CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();

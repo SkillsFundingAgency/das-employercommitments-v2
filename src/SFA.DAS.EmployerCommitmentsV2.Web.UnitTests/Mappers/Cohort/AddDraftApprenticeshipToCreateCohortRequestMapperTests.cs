@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     [TestFixture]
     public class WhenIMapDraftApprenticeshipRequest
     {
-        private AddDraftApprenticeshipToCreateCohortRequestMapper _mapper;
+        private CreateCohortRequestMapper _mapper;
         private AddDraftApprenticeshipViewModel _source;
         private CreateCohortRequest _result;
 
@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var startDate = fixture.Create<DateTime?>();
             var endDate = fixture.Create<DateTime?>();
 
-            _mapper = new AddDraftApprenticeshipToCreateCohortRequestMapper();
+            _mapper = new CreateCohortRequestMapper();
 
             _source = fixture.Build<AddDraftApprenticeshipViewModel>()
                 .With(x => x.BirthDay, birthDate?.Day)

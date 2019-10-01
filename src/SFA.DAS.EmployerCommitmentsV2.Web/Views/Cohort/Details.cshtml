@@ -1,10 +1,13 @@
 ﻿@using SFA.DAS.EmployerUrlHelper.Mvc
+@using SFA.DAS.Commitments.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
 
 @{
     ViewData["Title"] = Model.PageTitle;
 }
 
+<partial name="_ValidationSummary" />
 <h1 class="govuk-heading-xl">@Model.PageTitle</h1>
 
 <dl class="das-definition-list das-definition-list--inline">
@@ -122,53 +125,65 @@
         </tbody>
     </table>*@
 
-    <p>
-        <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}")" class="govuk-link">Add another apprentice</a>
-        <a href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/{Model.CohortReference}/details/delete")" class="govuk-link das-float-right">Delete this group</a>
-    </p>
+<p>
+    <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}")" class="govuk-link">Add another apprentice</a>
+    <a href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/{Model.CohortReference}/details/delete")" class="govuk-link das-float-right">Delete this group</a>
+</p>
 
-    <hr class="govuk-section-break govuk-section-break--l">
+<hr class="govuk-section-break govuk-section-break--l">
 
-    @*
-    <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                    <h3 class="govuk-fieldset__heading">
-                        Choose an option
-                    </h3>
-                </legend>
-                <div class="govuk-radios govuk-radios--conditional" data-module="radios">
-                    <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="radio-approve" name="next-steps" type="radio" value="" data-aria-controls="conditional-approve">
-                        <label class="govuk-label govuk-radios__label" for="radio-approve">
-                            Approve these details including my changes
-                        </label>
-                    </div>
+
+<form id="submitCohort" novalidate method="post">
+
+    <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.Selection, "govuk-form-group--error")">
+
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                <h3 class="govuk-fieldset__heading">
+                    Approve these details?
+                </h3>
+            </legend>
+            @Html.ValidationMessageFor(m => m.Selection, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Selection) })
+            <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio" value="@CohortDetailsOptions.Approve" data-aria-controls="conditional-approve">
+                    <label class="govuk-label govuk-radios__label" for="radio-approve">
+                        Yes, approve and notify training provider
+                    </label>
+                </div>
+                @if (!Model.IsApprovedByProvider)
+                {
                     <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-approve">
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="approve-details">
-                                Let @Model.ProviderName know what you'd like them to do next (optional)
+                                Leave @Model.ProviderName a message (optional)
                             </label>
-                            <textarea class="govuk-textarea" id="approve-details" name="approve-details" rows="5"></textarea>
+                            <textarea class="govuk-textarea" id="approve-details" name="approvemessage" rows="5"></textarea>
                         </div>
                     </div>
-                    <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="radio-send" name="next-steps" type="radio" value="" data-aria-controls="conditional-send">
-                        <label class="govuk-label govuk-radios__label" for="radio-send">
-                            Send my changes to the training provider to review or add details
+                }
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Send" data-aria-controls="conditional-send">
+                    <label class="govuk-label govuk-radios__label" for="radio-send">
+                        No, request changes from training provider
+                    </label>
+                </div>
+                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-send">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="send-details">
+                            Leave @Model.ProviderName a message (optional)
                         </label>
-                    </div>
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-send">
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="send-details">
-                                Let @Model.ProviderName know about any errors they need to fix or what you'd like them to do next (optional)
-                            </label>
-                            <textarea class="govuk-textarea" id="send-details" name="send-details" rows="5"></textarea>
-                        </div>
+                        <textarea class="govuk-textarea" id="send-details" name="sendmessage" rows="5"></textarea>
                     </div>
                 </div>
-            </fieldset>
-        </div>
+            </div>
+        </fieldset>
+    </div>
 
-
-*@
+    <button type="submit" class="govuk-button">Save and submit</button>
+    
+    <p>
+        <a href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/cohorts")" class="govuk-link">Save and exit</a>
+    </p>
+    
+</form>

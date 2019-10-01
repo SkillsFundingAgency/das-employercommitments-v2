@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     public class AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapperTestsFixture
     {
         public AddDraftApprenticeshipViewModel ViewModel { get; set; }
-        public AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapper Mapper { get; set; }
+        public AddDraftApprenticeshipRequestMapper Mapper { get; set; }
 
         public AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapperTestsFixture()
         {
@@ -60,7 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 ReservationId = Guid.NewGuid()
             };
             
-            Mapper = new AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapper();
+            Mapper = new AddDraftApprenticeshipRequestMapper();
         }
 
         public AddDraftApprenticeshipRequest Map()

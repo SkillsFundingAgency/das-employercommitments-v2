@@ -46,7 +46,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 Courses = GroupCourses(draftApprenticeships),
                 PageTitle = draftApprenticeships.Count == 1
                     ? "Approve apprentice details"
-                    : $"Approve {draftApprenticeships.Count} apprentices' details"
+                    : $"Approve {draftApprenticeships.Count} apprentices' details",
+                IsApprovedByProvider = cohort.IsApprovedByProvider,
             };
         }
 
