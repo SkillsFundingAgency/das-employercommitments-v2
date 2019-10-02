@@ -78,7 +78,7 @@
                 "description": "The resource group name of the shared keyvault."
             }
         },
-        "CdnUrl": {
+        "cdnUrl": {
           "type": "string"
         }
     },
@@ -200,7 +200,7 @@
                             },
                             {
                               "name": "Cdn:Url",
-                              "value": "[parameters('CdnUrl')]"
+                              "value": "[parameters('cdnUrl')]"
                             }
                         ]
                     },
