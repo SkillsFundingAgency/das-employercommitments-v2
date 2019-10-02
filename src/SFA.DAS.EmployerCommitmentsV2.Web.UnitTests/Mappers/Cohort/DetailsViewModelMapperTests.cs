@@ -71,6 +71,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
+        public async Task IsApprovedByProviderIsMappedCorrectly()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(fixture.Cohort.IsApprovedByProvider, result.IsApprovedByProvider);
+        }
+
+        [Test]
         public async Task TransferSenderHashedIdIsEncodedCorrectlyWhenThereIsAValue()
         {
             var fixture = new DetailsViewModelMapperTestsFixture().SetTransferSenderIdAndItsExpectedHashedValue(123, "X123X");
