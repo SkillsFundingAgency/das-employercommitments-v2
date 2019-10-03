@@ -28,11 +28,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public bool IsApprovedByProvider { get; set; }
         public int TotalCost => Courses?.Sum(g => g.DraftApprenticeships.Sum(a => a.Cost ?? 0)) ?? 0;
         public string DisplayTotalCost => TotalCost.ToGdsCostFormat();
+        public bool IsAgreementSigned { get; set; }
+        public string OptionsTitle => IsAgreementSigned ? "Choose an option" : "Approve these details?";
+        public bool ShowViewAgreementOption => IsAgreementSigned;
+        public bool ShowApprovalOption => !IsAgreementSigned;
+        public bool ShowApprovalOptionMessage => ShowApprovalOption && IsApprovedByProvider;
     }
 
     public enum CohortDetailsOptions
     {
         Send,
-        Approve
+        Approve,
+        ViewEmployerAgreement
     }
 }
