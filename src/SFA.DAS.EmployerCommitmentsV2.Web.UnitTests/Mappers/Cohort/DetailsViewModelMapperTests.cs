@@ -262,6 +262,56 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             Assert.AreEqual(expectedPageTitle, result.PageTitle);
         }
+
+        [TestCase(true)]
+        //[TestCase(false)]
+        public async Task IsAgreementSignedIsMappedCorrectly(bool expectedIsAgreementSigned)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedIsAgreementSigned, result.IsAgreementSigned);
+        }
+
+        [TestCase(true, "Approve these details?")]
+        //[TestCase(false, "Choose an option")]
+        public async Task OptionsTitleIsMappedCorrectly(bool isAgreementSigned, string expectedOptionsTitle)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedOptionsTitle, result.OptionsTitle);
+        }
+
+        [TestCase(true, true)]
+        //[TestCase(false, false)]
+        public async Task ShowViewAgreementOptionIsMappedCorrectly(bool isAgreementSigned,
+            bool expectedShowViewAgreementOption)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedShowViewAgreementOption, result.ShowViewAgreementOption);
+        }
+
+        [TestCase(true, false)]
+        //TestCase(false, true)]
+        public async Task ShowApprovalOptionIsMappedCorrectly(bool isAgreementSigned, bool expectedShowApprovalOption)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedShowApprovalOption, result.ShowApprovalOption);
+        }
+
+        //[TestCase(true, true, true)]
+        [TestCase(false, true, false)]
+        //[TestCase(true, false, false)]
+        [TestCase(false,false,false)]
+        public async Task ShowApprovalOptionMessageIsMappedCorrectly(bool showApprovalOption, bool isApprovedByProvider,
+            bool expectedShowApprovalOptionMessage)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedShowApprovalOptionMessage, result.ShowApprovalOptionMessage);
+        }
+        
     }
 
     public class DetailsViewModelMapperTestsFixture
