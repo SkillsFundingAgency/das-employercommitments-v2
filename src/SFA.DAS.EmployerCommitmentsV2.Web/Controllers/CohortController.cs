@@ -78,9 +78,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     }
                 case CohortDetailsOptions.ViewEmployerAgreement:
                 {
-                    var request = await _modelMapper.Map<ApproveCohortRequest>(viewModel);
-                    await _commitmentsApiClient.ApproveCohort(viewModel.CohortId, request);
-                    return RedirectToAction("Approved", new { viewModel.CohortReference, viewModel.AccountHashedId });
+                    throw new NotImplementedException("Goto View Agreement Page");
                 }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
