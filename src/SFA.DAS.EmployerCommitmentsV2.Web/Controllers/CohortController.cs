@@ -78,7 +78,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     }
                 case CohortDetailsOptions.ViewEmployerAgreement:
                 {
-                    throw new NotImplementedException("Goto View Agreement Page");
+                    return Redirect(_linkGenerator.AccountsLink(
+                        $"accounts/{viewModel.AccountHashedId}/agreements/{viewModel.AccountLegalEntityHashedId}/about-your-agreement"));
                 }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
