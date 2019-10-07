@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.Commitments.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
-using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
@@ -18,22 +18,37 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
         private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
+        private readonly IEmployerAgreementService _employerAgreementService;
 
-        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, ITrainingProgrammeApiClient trainingProgrammeApiClient)
+        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, 
+            ITrainingProgrammeApiClient trainingProgrammeApiClient, IEmployerAgreementService employerAgreementService)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
             _trainingProgrammeApiClient = trainingProgrammeApiClient;
+            _employerAgreementService = employerAgreementService;
         }
 
         public async Task<DetailsViewModel> Map(DetailsRequest source)
         {
+            GetCohortResponse cohort;
+
+            Task<bool> IsAgreementSigned()
+            {
+                if (cohort.IsFundedByTransfer)
+                {
+                    return _employerAgreementService.IsAgreementSigned(source.AccountId, cohort.AccountLegalEntityId,
+                        AgreementFeature.Transfers);
+                }
+                return _employerAgreementService.IsAgreementSigned(source.AccountId, cohort.AccountLegalEntityId);
+            }
+
             var cohortTask = _commitmentsApiClient.GetCohort(source.CohortId);
             var draftApprenticeshipsTask = _commitmentsApiClient.GetDraftApprenticeships(source.CohortId);
 
             await Task.WhenAll(cohortTask, draftApprenticeshipsTask);
 
-            var cohort = await cohortTask;
+            cohort = await cohortTask;
             var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
 
             return new DetailsViewModel
@@ -51,7 +66,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                     ? "Approve apprentice details"
                     : $"Approve {draftApprenticeships.Count} apprentices' details",
                 IsApprovedByProvider = cohort.IsApprovedByProvider,
-                IsAgreementSigned = true
+                IsAgreementSigned = await IsAgreementSigned()
             };
         }
 

@@ -12,7 +12,7 @@
     <PackageReference Include="SFA.DAS.Authorization.CommitmentPermissions" Version="5.6.7" />
     <PackageReference Include="SFA.DAS.Authorization.EmployerFeatures" Version="5.6.7" />
     <PackageReference Include="SFA.DAS.Authorization.EmployerUserRoles" Version="5.6.7" />
-    <PackageReference Include="SFA.DAS.Commitments.Shared" Version="1.0.3-cv-449-check-for0001" />
+    <PackageReference Include="SFA.DAS.Commitments.Shared" Version="1.0.3-cv-449-check-for0003" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="4.1.278" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Types" Version="4.1.278" />
     <PackageReference Include="SFA.DAS.EmployerAccounts.Api.Client" Version="1.6.2086" />
