@@ -265,55 +265,114 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(expectedPageTitle, result.PageTitle);
         }
 
-        [TestCase(true)]
-        //[TestCase(false)]
-        public async Task IsAgreementSignedIsMappedCorrectly(bool expectedIsAgreementSigned)
+        [TestCase(true, true)]
+        [TestCase(false, false)]
+        public async Task IsAgreementSignedIsMappedCorrectlyWithATransfer(bool isAgreementSigned,  bool expectedIsAgreementSigned)
         {
             var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetTransferSender().SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedIsAgreementSigned, result.IsAgreementSigned);
+        }
+
+        [TestCase(true, true)]
+        [TestCase(false, false)]
+        public async Task IsAgreementSignedIsMappedCorrectlyWithoutATransfer(bool isAgreementSigned, bool expectedIsAgreementSigned)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetIsAgreementSigned(isAgreementSigned);
             var result = await fixture.Map();
             Assert.AreEqual(expectedIsAgreementSigned, result.IsAgreementSigned);
         }
 
         [TestCase(true, "Approve these details?")]
-        //[TestCase(false, "Choose an option")]
-        public async Task OptionsTitleIsMappedCorrectly(bool isAgreementSigned, string expectedOptionsTitle)
+        [TestCase(false, "Choose an option")]
+        public async Task OptionsTitleIsMappedCorrectlyWithATransfer(bool isAgreementSigned, string expectedOptionsTitle)
         {
             var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetTransferSender().SetIsAgreementSigned(isAgreementSigned);
             var result = await fixture.Map();
             Assert.AreEqual(expectedOptionsTitle, result.OptionsTitle);
         }
 
-        [TestCase(true, true)]
-        //[TestCase(false, false)]
-        public async Task ShowViewAgreementOptionIsMappedCorrectly(bool isAgreementSigned,
-            bool expectedShowViewAgreementOption)
+        [TestCase(true, "Approve these details?")]
+        [TestCase(false, "Choose an option")]
+        public async Task OptionsTitleIsMappedCorrectlyWithoutATransfer(bool isAgreementSigned, string expectedOptionsTitle)
         {
             var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedOptionsTitle, result.OptionsTitle);
+        }
+
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        public async Task ShowViewAgreementOptionIsMappedCorrectlyWithATransfer(bool isAgreementSigned, bool expectedShowViewAgreementOption)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetTransferSender().SetIsAgreementSigned(isAgreementSigned);
             var result = await fixture.Map();
             Assert.AreEqual(expectedShowViewAgreementOption, result.ShowViewAgreementOption);
         }
 
         [TestCase(true, false)]
-        //TestCase(false, true)]
-        public async Task ShowApprovalOptionIsMappedCorrectly(bool isAgreementSigned, bool expectedShowApprovalOption)
+        [TestCase(false, true)]
+        public async Task ShowViewAgreementOptionIsMappedCorrectlyWithoutATransfer(bool isAgreementSigned, bool expectedShowViewAgreementOption)
         {
             var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedShowViewAgreementOption, result.ShowViewAgreementOption);
+        }
+
+        [TestCase(true, true)]
+        [TestCase(false, false)]
+        public async Task ShowApprovalOptionIsMappedCorrectlyWithATransfer(bool isAgreementSigned, bool expectedShowApprovalOption)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetTransferSender().SetIsAgreementSigned(isAgreementSigned);
             var result = await fixture.Map();
             Assert.AreEqual(expectedShowApprovalOption, result.ShowApprovalOption);
         }
 
-        //[TestCase(true, true, true)]
-        [TestCase(false, true, false)]
-        //[TestCase(true, false, false)]
-        [TestCase(false,false,false)]
-        public async Task ShowApprovalOptionMessageIsMappedCorrectly(bool showApprovalOption, bool isApprovedByProvider,
-            bool expectedShowApprovalOptionMessage)
+        [TestCase(true, true)]
+        [TestCase(false,  false)]
+        public async Task ShowApprovalOptionIsMappedCorrectlyWithoutATransfer(bool isAgreementSigned, bool expectedShowApprovalOption)
         {
             var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedShowApprovalOption, result.ShowApprovalOption);
+        }
+
+        [TestCase(true, true, true, true)]
+        [TestCase(false, false, true, false)]
+        [TestCase(true, true, false, false)]
+        [TestCase(false, false, false, false)]
+        public async Task ShowApprovalOptionMessageIsMappedCorrectlyWithATransfer(bool isAgreementSigned, bool showApprovalOption, 
+            bool isApprovedByProvider, bool expectedShowApprovalOptionMessage)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.Cohort.IsApprovedByProvider = isApprovedByProvider;
+            fixture.SetTransferSender().SetIsAgreementSigned(isAgreementSigned);
             var result = await fixture.Map();
             Assert.AreEqual(expectedShowApprovalOptionMessage, result.ShowApprovalOptionMessage);
         }
-        
+
+        [TestCase(true, true, true, true)]
+        [TestCase(false, false, true, false)]
+        [TestCase(true, true, false, false)]
+        [TestCase(false, false, false, false)]
+        public async Task ShowApprovalOptionMessageIsMappedCorrectlyWithoutATransfer(bool isAgreementSigned, bool showApprovalOption,
+            bool isApprovedByProvider, bool expectedShowApprovalOptionMessage)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.Cohort.IsApprovedByProvider = isApprovedByProvider;
+            fixture.SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedShowApprovalOptionMessage, result.ShowApprovalOptionMessage);
+        }
+
     }
 
     public class DetailsViewModelMapperTestsFixture
@@ -339,7 +398,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             _autoFixture = new Fixture();
 
-            Cohort = _autoFixture.Create<GetCohortResponse>();
+            Cohort = _autoFixture.Build<GetCohortResponse>().Without(x => x.TransferSenderId).Create(); 
 
             var draftApprenticeships = CreateDraftApprenticeshipDtos(_autoFixture);
             _autoFixture.Register(() => draftApprenticeships);
@@ -364,9 +423,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 .ReturnsAsync(_trainingProgramme);
 
             EmployerAgreementService = new Mock<IEmployerAgreementService>();
-            EmployerAgreementService.Setup(x => x.IsAgreementSigned(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(true);
-            EmployerAgreementService.Setup(x => x.IsAgreementSigned(It.IsAny<long>(), It.IsAny<long>(), AgreementFeature.Transfers)).ReturnsAsync(true);
-
+            
             EncodingService = new Mock<IEncodingService>();
             SetEncodingOfApprenticeIds();
 
@@ -457,6 +514,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             draftApprenticeship.CourseCode = courseCode;
             draftApprenticeship.Cost = cost;
             draftApprenticeship.StartDate = startDate;
+        }
+
+        public DetailsViewModelMapperTestsFixture SetIsAgreementSigned(bool isAgreementSigned)
+        {
+            if (Cohort.IsFundedByTransfer)
+            { EmployerAgreementService
+                .Setup(x => x.IsAgreementSigned(It.IsAny<long>(), It.IsAny<long>(), AgreementFeature.Transfers))
+                .ReturnsAsync(isAgreementSigned);}
+            else
+            {
+                EmployerAgreementService
+                    .Setup(x => x.IsAgreementSigned(It.IsAny<long>(), It.IsAny<long>()))
+                    .ReturnsAsync(isAgreementSigned);
+            }
+
+            return this;
+        }
+
+        public DetailsViewModelMapperTestsFixture SetTransferSender()
+        {
+            Cohort.TransferSenderId = _autoFixture.Create<long>();
+            return this;
         }
     }
 }

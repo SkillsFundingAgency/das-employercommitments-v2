@@ -30,8 +30,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string DisplayTotalCost => TotalCost.ToGdsCostFormat();
         public bool IsAgreementSigned { get; set; }
         public string OptionsTitle => IsAgreementSigned ? "Approve these details?": "Choose an option";
-        public bool ShowViewAgreementOption => IsAgreementSigned;
-        public bool ShowApprovalOption => !IsAgreementSigned;
+        public bool ShowViewAgreementOption => !IsAgreementSigned;
+        public bool ShowApprovalOption => IsAgreementSigned;
         public bool ShowApprovalOptionMessage => ShowApprovalOption && IsApprovedByProvider;
     }
 
