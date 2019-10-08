@@ -77,6 +77,9 @@
             "metadata": {
                 "description": "The resource group name of the shared keyvault."
             }
+        },
+        "cdnUrl": {
+          "type": "string"
         }
     },
     "variables": {
@@ -192,8 +195,12 @@
                                 "value": "[toUpper(parameters('environmentName'))]"
                             },
                             {
-                                "name": "LoggingRedisConnectionString",
-                                "value": "[parameters('loggingRedisConnectionString')]"
+                              "name": "LoggingRedisConnectionString",
+                              "value": "[parameters('loggingRedisConnectionString')]"
+                            },
+                            {
+                              "name": "Cdn:Url",
+                              "value": "[parameters('cdnUrl')]"
                             }
                         ]
                     },
