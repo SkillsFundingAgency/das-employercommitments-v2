@@ -74,6 +74,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             private readonly string _linkGeneratorResult;
             private readonly SendCohortRequest _sendCohortApiRequest;
             private readonly ApproveCohortRequest _approveCohortApiRequest;
+            private readonly ViewEmployerAgreementRequest _viewEmployerAgreementRequest;
 
 
             public WhenPostingDetailsFixture()
@@ -97,12 +98,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
                 _sendCohortApiRequest = new SendCohortRequest();
                 _approveCohortApiRequest = new ApproveCohortRequest();
+                _viewEmployerAgreementRequest = new ViewEmployerAgreementRequest
+                {
+                    AccountHashedId = autoFixture.Create<string>(),
+                    AccountLegalEntityHashedId = autoFixture.Create<string>()
+                };
 
                 modelMapper.Setup(x => x.Map<SendCohortRequest>(It.Is<DetailsViewModel>(vm => vm == _viewModel)))
                     .ReturnsAsync(_sendCohortApiRequest);
 
                 modelMapper.Setup(x => x.Map<ApproveCohortRequest>(It.Is<DetailsViewModel>(vm => vm == _viewModel)))
                     .ReturnsAsync(_approveCohortApiRequest);
+
+                modelMapper.Setup(x =>
+                        x.Map<ViewEmployerAgreementRequest>(It.Is<DetailsViewModel>(vm => vm == _viewModel)))
+                    .ReturnsAsync(_viewEmployerAgreementRequest);
 
                 _commitmentsApiClient.Setup(x => x.SendCohort(It.Is<long>(c => c == _cohortId),
                         It.Is<SendCohortRequest>(r => r == _sendCohortApiRequest), It.IsAny<CancellationToken>()))
