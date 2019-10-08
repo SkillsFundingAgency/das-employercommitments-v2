@@ -17,15 +17,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             _commitmentsApiClient = commitmentsApiClient;
         }
 
-        public Task<ViewEmployerAgreementRequest> Map(DetailsViewModel source)
+        public async Task<ViewEmployerAgreementRequest> Map(DetailsViewModel source)
         {
-            var cohort =  _commitmentsApiClient.GetCohort(source.CohortId);
-
-            return Task.FromResult(new ViewEmployerAgreementRequest
+            var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
+            return new ViewEmployerAgreementRequest
             {
-                AccountLegalEntityHashedId = _encodingService.Encode(cohort.Result.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
+                AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
                 AccountHashedId = source.AccountHashedId
-            });
+            };
         }
     }
 }
