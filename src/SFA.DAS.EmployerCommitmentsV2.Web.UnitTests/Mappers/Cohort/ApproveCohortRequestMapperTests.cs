@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var autoFixture = new Fixture();
 
-            _source = autoFixture.Create<DetailsViewModel>();
+            _source = autoFixture.Build<DetailsViewModel>().Without(x=>x.Courses).Create();
             
             _mapper = new ApproveCohortRequestMapper();
 

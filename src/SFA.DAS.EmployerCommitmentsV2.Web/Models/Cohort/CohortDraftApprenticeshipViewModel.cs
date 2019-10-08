@@ -13,6 +13,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int? Cost { get; set; }
+        public int? FundingBandCap { get; set; }
+
+        public bool ExceedsFundingBandCap
+        {
+            get
+            {
+                if (Cost.HasValue && FundingBandCap.HasValue)
+                {
+                    return Cost.Value > FundingBandCap.Value;
+                }
+
+                return false;
+            }
+        }
 
         public string DisplayName => $"{FirstName} {LastName}";
 

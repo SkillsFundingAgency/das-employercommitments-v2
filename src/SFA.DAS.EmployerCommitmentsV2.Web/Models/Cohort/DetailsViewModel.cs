@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Authorization.ModelBinding;
+using SFA.DAS.Commitments.Shared.Extensions;
 using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
@@ -25,7 +26,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string SendMessage { get; set; }
         public string ApproveMessage { get; set; }
         public bool IsApprovedByProvider { get; set; }
+        public int TotalCost => Courses?.Sum(g => g.DraftApprenticeships.Sum(a => a.Cost ?? 0)) ?? 0;
+        public string DisplayTotalCost => TotalCost.ToGdsCostFormat();
     }
+
     public enum CohortDetailsOptions
     {
         Send,
