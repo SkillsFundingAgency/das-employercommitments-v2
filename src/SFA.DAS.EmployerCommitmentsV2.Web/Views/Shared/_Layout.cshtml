@@ -33,9 +33,10 @@
     <partial name="_Header" />
     <partial name="_Menu" model="@accountHashedId" />
     <div class="govuk-width-container">
-        <!--TO DO add Back link logic
-        <a href="#" class="govuk-back-link">Back</a>
-        -->
+        @if (IsSectionDefined("Back"))
+        {
+            @RenderSection("Back")
+        }
         <main class="govuk-main-wrapper " id="main-content" role="main">
             @RenderBody()
         </main>

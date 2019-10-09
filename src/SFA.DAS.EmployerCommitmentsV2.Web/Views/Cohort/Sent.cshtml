@@ -1,0 +1,45 @@
+﻿@using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+@using SFA.DAS.EmployerUrlHelper.Mvc
+@model SentViewModel
+
+@{
+    ViewData["Title"] = "Sent";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">Notification sent to training provider</h1>
+        </div>
+        <dl class="govuk-summary-list govuk-summary-list--no-border">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Reference</dt>
+                <dd class="govuk-summary-list__value">@Model.CohortReference</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Training provider</dt>
+                <dd class="govuk-summary-list__value">@Model.ProviderName</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Submitted by</dt>
+                <dd class="govuk-summary-list__value">@Model.LegalEntityName</dd>
+            </div>
+        </dl>
+        <h2 class="govuk-heading-m">What's next?</h2>
+        <p class="govuk-body">Your training provider will review these apprentice details and contact you as soon as possible.</p>
+            
+
+        <div class="govuk-inset-text das-inset-text--filled">
+            <h3 class="govuk-heading-m govuk-!-margin-bottom-2">Help us improve this section</h3>
+            <p class="govuk-body">Take a 3 minute survey about adding apprentices so that we can improve the service.</p>
+            <a class="govuk-button" href="https://www.smartsurvey.co.uk/s/apprenticeshipservicefeedback">Take the survey</a>
+        </div>
+    </div>
+</div>
+
+
+@section Back
+    {
+    <a id="back-link" class="govuk-back-link" href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/home")">Back to Apprentices</a>
+} 
