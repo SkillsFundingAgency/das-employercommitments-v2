@@ -7,7 +7,7 @@ using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Authorization.Services;
-using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Types;

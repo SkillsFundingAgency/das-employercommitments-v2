@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.Commitments.Shared.Interfaces;
-using SFA.DAS.Commitments.Shared.Models;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort

@@ -1,6 +1,6 @@
 ﻿using SFA.DAS.Authorization.EmployerUserRoles.DependencyResolution;
 using SFA.DAS.AutoConfiguration.DependencyResolution;
-using SFA.DAS.Commitments.Shared.DependencyInjection;
+using SFA.DAS.CommitmentsV2.Shared.DependencyInjection;
 using SFA.DAS.EmployerCommitmentsV2.DependencyResolution;
 using StructureMap;
 

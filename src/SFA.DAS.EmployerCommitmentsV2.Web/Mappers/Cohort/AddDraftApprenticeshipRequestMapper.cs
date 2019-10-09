@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using AddDraftApprenticeshipRequest = SFA.DAS.CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest;
 
