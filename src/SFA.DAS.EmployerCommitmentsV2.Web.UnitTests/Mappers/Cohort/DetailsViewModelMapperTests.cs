@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Apprenticeships.Api.Client;
+using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
@@ -170,6 +172,86 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             }
         }
 
+        [Test]
+        public async Task FundingBandCapsAreMappedCorrectlyForCoursesStartingOnDefaultdate()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+
+            foreach (var draftApprenticeship in fixture.DraftApprenticeshipsResponse.DraftApprenticeships.Where(x => x.StartDate == fixture.DefaultStartDate))
+            {
+                var draftApprenticeshipResult =
+                    result.Courses.SelectMany(c => c.DraftApprenticeships).Single(x => x.Id == draftApprenticeship.Id);
+
+                Assert.AreEqual(1000, draftApprenticeshipResult.FundingBandCap);
+            }
+        }
+
+        [Test]
+        public async Task FundingBandCapsAreNullForCoursesStarting2MonthsAhead()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+
+            foreach (var draftApprenticeship in fixture.DraftApprenticeshipsResponse.DraftApprenticeships.Where(x => x.StartDate == fixture.DefaultStartDate.AddMonths(2)))
+            {
+                var draftApprenticeshipResult =
+                    result.Courses.SelectMany(c => c.DraftApprenticeships).Single(x => x.Id == draftApprenticeship.Id);
+
+                Assert.AreEqual(null, draftApprenticeshipResult.FundingBandCap);
+            }
+        }
+
+        [Test]
+        public async Task FundingBandExcessModelShowsTwoApprenticeshipsExceedingTheBandForCourse1()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+
+            var excessModel = result.Courses.FirstOrDefault(x => x.CourseCode == "C1").FundingBandExcess;
+            Assert.AreEqual(2, excessModel.NumberOfApprenticesExceedingFundingBandCap);
+        }
+
+        [Test]
+        public async Task FundingBandExcessModelShowsOnlyTheFullStopWhenMultipleFundingCapsAreExceeded()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+
+            var excessModel = result.Courses.FirstOrDefault(x => x.CourseCode == "C1").FundingBandExcess;
+            Assert.AreEqual(".", excessModel.DisplaySingleFundingBandCap);
+        }
+
+        [Test]
+        public async Task FundingBandExcessModelShowsOneApprenticeshipExceedingTheBandForCourse2()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+
+            var excessModel = result.Courses.FirstOrDefault(x => x.CourseCode == "C2").FundingBandExcess;
+            Assert.AreEqual(1, excessModel.NumberOfApprenticesExceedingFundingBandCap);
+        }
+
+        [Test]
+        public async Task FundingBandExcessModelShowsTheSingleFundingBandCapExceeded()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+
+            var excessModel = result.Courses.FirstOrDefault(x => x.CourseCode == "C2").FundingBandExcess;
+            Assert.AreEqual(" £1,000.", excessModel.DisplaySingleFundingBandCap);
+        }
+
+        [Test]
+        public async Task FundingBandExcessModelIsNullForCourse3()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+
+            var excessModel = result.Courses.FirstOrDefault(x => x.CourseCode == "C3").FundingBandExcess;
+            Assert.IsNull(excessModel);
+        }
+
         [TestCase(0, "Approve 0 apprentices' details")]
         [TestCase(1, "Approve apprentice details")]
         [TestCase(2, "Approve 2 apprentices' details")]
@@ -188,10 +270,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public DetailsRequest Source;
         public DetailsViewModel Result;
         public Mock<ICommitmentsApiClient> CommitmentsApiClient;
+        public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClient;
         public Mock<IEncodingService> EncodingService;
         public GetCohortResponse Cohort;
         public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
+        public DateTime DefaultStartDate = new DateTime(2019, 10, 1);
+
         private Fixture _autoFixture;
+        private ITrainingProgramme _trainingProgramme;
+        private List<FundingPeriod> _fundingPeriods;
+        private DateTime _startFundingPeriod = new DateTime(2019, 10, 1);
+        private DateTime _endFundingPeriod = new DateTime(2019, 10, 30);
 
         public DetailsViewModelMapperTestsFixture()
         {
@@ -210,10 +299,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(DraftApprenticeshipsResponse);
 
+            _fundingPeriods = new List<FundingPeriod>
+            {
+                new FundingPeriod{ EffectiveFrom = _startFundingPeriod, EffectiveTo = _endFundingPeriod, FundingCap = 1000},
+                new FundingPeriod{ EffectiveFrom = _startFundingPeriod.AddMonths(1), EffectiveTo = _endFundingPeriod.AddMonths(1), FundingCap = 500}
+            };
+            _trainingProgramme = new Standard { EffectiveFrom = DefaultStartDate, EffectiveTo = DefaultStartDate.AddYears(1), FundingPeriods = _fundingPeriods };
+
+            TrainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
+            TrainingProgrammeApiClient.Setup(x => x.GetTrainingProgramme(It.IsAny<string>()))
+                .ReturnsAsync(_trainingProgramme);
+
             EncodingService = new Mock<IEncodingService>();
             SetEncodingOfApprenticeIds();
 
-            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object);
+            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, TrainingProgrammeApiClient.Object);
             Source = _autoFixture.Create<DetailsRequest>();
         }
 
@@ -280,22 +380,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private IReadOnlyCollection<DraftApprenticeshipDto> CreateDraftApprenticeshipDtos(Fixture autoFixture)
         {
             var draftApprenticeships = autoFixture.CreateMany<DraftApprenticeshipDto>(6).ToArray();
-            SetCourseDetails(draftApprenticeships[0], "Course1", "C1");
-            SetCourseDetails(draftApprenticeships[1], "Course1", "C1");
-            SetCourseDetails(draftApprenticeships[2], "Course1", "C1");
+            SetCourseDetails(draftApprenticeships[0], "Course1", "C1", 1000);
+            SetCourseDetails(draftApprenticeships[1], "Course1", "C1", 2100);
+            SetCourseDetails(draftApprenticeships[2], "Course1", "C1", 2000, DefaultStartDate.AddMonths(1));
 
-            SetCourseDetails(draftApprenticeships[3], "Course2", "C2");
-            SetCourseDetails(draftApprenticeships[4], "Course2", "C2");
+            SetCourseDetails(draftApprenticeships[3], "Course2", "C2", 1500);
+            SetCourseDetails(draftApprenticeships[4], "Course2", "C2", null);
 
-            SetCourseDetails(draftApprenticeships[5], "Course3", "C3");
+            SetCourseDetails(draftApprenticeships[5], "Course3", "C3", null, DefaultStartDate.AddMonths(2));
 
             return draftApprenticeships;
         }
 
-        private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode)
+        private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode, int? cost, DateTime? startDate = null)
         {
+            startDate = startDate ?? DefaultStartDate;
+
             draftApprenticeship.CourseName = courseName;
             draftApprenticeship.CourseCode = courseCode;
+            draftApprenticeship.Cost = cost;
+            draftApprenticeship.StartDate = startDate;
         }
     }
 }

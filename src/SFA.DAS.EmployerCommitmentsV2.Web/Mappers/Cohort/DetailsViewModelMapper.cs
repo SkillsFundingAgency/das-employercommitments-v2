@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
@@ -13,11 +14,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
+        private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
 
-        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
+        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, ITrainingProgrammeApiClient trainingProgrammeApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
+            _trainingProgrammeApiClient = trainingProgrammeApiClient;
         }
 
         public async Task<DetailsViewModel> Map(DetailsRequest source)
@@ -50,13 +53,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         private IReadOnlyCollection<DetailsViewCourseGroupingModel> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships)
         {
-            return draftApprenticeships
-                .GroupBy(a => new {a.CourseCode, a.CourseName})
+            var groupedByCourse = draftApprenticeships
+                .GroupBy(a => new { a.CourseCode, a.CourseName })
                 .Select(course => new DetailsViewCourseGroupingModel
                 {
                     CourseCode = course.Key.CourseCode,
                     CourseName = course.Key.CourseName,
-                    DraftApprenticeships = course 
+                    DraftApprenticeships = course
                         // Sort before on raw properties rather than use displayName property post select for performance reasons
                         .OrderBy(a => a.FirstName)
                         .ThenBy(a => a.LastName)
@@ -71,10 +74,60 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                             EndDate = a.EndDate,
                             StartDate = a.StartDate
                         })
-                        .ToList()
+                .ToList()
                 })
-                .OrderBy(c => c.CourseName)
+            .OrderBy(c => c.CourseName)
                 .ToList();
+
+            PopulateFundingBandExcessModels(groupedByCourse);
+
+            return groupedByCourse;
+        }
+
+        private void PopulateFundingBandExcessModels(List<DetailsViewCourseGroupingModel> courseGroups)
+        {
+            Parallel.ForEach(courseGroups, group => SetFundingBandCap(group.CourseCode, group.DraftApprenticeships));
+            foreach (var courseGroup in courseGroups)
+            {
+                var apprenticesExceedingFundingBand = courseGroup.DraftApprenticeships.Where(x => x.ExceedsFundingBandCap).ToList();
+                int numberExceedingBand = apprenticesExceedingFundingBand.Count;
+
+                if (numberExceedingBand > 0)
+                {
+                    var fundingExceededValues = apprenticesExceedingFundingBand.GroupBy(x => x.FundingBandCap).Select(fundingBand => fundingBand.Key);
+                    courseGroup.FundingBandExcess =
+                        new FundingBandExcessModel(apprenticesExceedingFundingBand.Count, fundingExceededValues);
+                }
+            }
+        }
+
+        private void SetFundingBandCap(string courseCode, IEnumerable<CohortDraftApprenticeshipViewModel> draftApprenticeships)
+        {
+            Parallel.ForEach(draftApprenticeships, async a => a.FundingBandCap = await GetFundingBandCap(courseCode, a.StartDate));
+        }
+
+        private async Task<int?> GetFundingBandCap(string courseCode, DateTime? startDate)
+        {
+            if (startDate == null)
+            {
+                return null;
+            }
+
+            var course = await _trainingProgrammeApiClient.GetTrainingProgramme(courseCode);
+
+            if (course == null)
+            {
+                return null;
+            }
+
+            var cap = course.FundingCapOn(startDate.Value);
+
+            if (cap > 0)
+            {
+                return cap;
+            }
+
+            return null;
         }
     }
 }
