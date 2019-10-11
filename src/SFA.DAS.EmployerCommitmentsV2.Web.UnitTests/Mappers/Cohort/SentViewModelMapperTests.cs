@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public async Task AccountHashedIdIsMappedCorrectly()
         {
-            var fixture = new ApprovedViewModelMapperTestsFixture();
+            var fixture = new SentViewModelMapperTestsFixture();
             var result = await fixture.Map();
             Assert.AreEqual(fixture.Source.AccountHashedId, result.AccountHashedId);
         }
@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public async Task LegalEntityNameIsMappedCorrectly()
         {
-            var fixture = new ApprovedViewModelMapperTestsFixture();
+            var fixture = new SentViewModelMapperTestsFixture();
             var result = await fixture.Map();
             Assert.AreEqual(fixture.Cohort.LegalEntityName, result.LegalEntityName);
         }
@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public async Task ProviderNameIsMappedCorrectly()
         {
-            var fixture = new ApprovedViewModelMapperTestsFixture();
+            var fixture = new SentViewModelMapperTestsFixture();
             var result = await fixture.Map();
             Assert.AreEqual(fixture.Cohort.ProviderName, result.ProviderName);
         }
@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public async Task CohortReferenceIsMappedCorrectly()
         {
-            var fixture = new ApprovedViewModelMapperTestsFixture();
+            var fixture = new SentViewModelMapperTestsFixture();
             var result = await fixture.Map();
             Assert.AreEqual(fixture.Source.CohortReference, result.CohortReference);
         }
@@ -51,13 +51,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public async Task CohortIdIsMappedCorrectly()
         {
-            var fixture = new ApprovedViewModelMapperTestsFixture();
+            var fixture = new SentViewModelMapperTestsFixture();
             var result = await fixture.Map();
             Assert.AreEqual(fixture.Source.CohortId, result.CohortId);
         }
     }
 
-    public class ApprovedViewModelMapperTestsFixture
+    public class SentViewModelMapperTestsFixture
     {
         public SentViewModelMapper Mapper;
         public SentRequest Source;
@@ -68,7 +68,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
         private Fixture _autoFixture;
 
-        public ApprovedViewModelMapperTestsFixture()
+        public SentViewModelMapperTestsFixture()
         {
             _autoFixture = new Fixture();
 
