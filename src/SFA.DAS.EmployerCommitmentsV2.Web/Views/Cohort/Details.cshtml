@@ -22,6 +22,23 @@
         </div>
     </div>  
 }
+else
+{
+    if (!Model.EmployerCanApprove && Model.DraftApprenticeshipsCount > 0)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+    
+                <div class="govuk-panel" style="border-color:#2e358b;">
+                    <h1 class="govuk-panel__title">
+                        You must complete all apprentice details before you can approve this record
+                    </h1>
+                </div>
+       
+            </div>
+        </div>
+    }
+}
 
 <partial name="_ValidationSummary" />
 <h1 class="govuk-heading-xl">@Model.PageTitle</h1>
@@ -136,31 +153,41 @@
                         </label>
                     </div>
                 }
+                
+                @if (Model.EmployerCanApprove)
+                {
+                    if (Model.ShowApprovalOption)
+                     {
+                         <div class="govuk-radios__item">
+                             <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio" value="@CohortDetailsOptions.Approve" data-aria-controls="conditional-approve">
+                             <label class="govuk-label govuk-radios__label" for="radio-approve">
+                                 Yes, approve and notify training provider
+                             </label>
+                         </div>
+                     }
+                    if (!Model.ShowApprovalOptionMessage)
+                     {
+                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-approve">
+                             <div class="govuk-form-group">
+                                 <label class="govuk-label" for="approve-details">
+                                     Leave @Model.ProviderName a message (optional)
+                                 </label>
+                                 <textarea class="govuk-textarea" id="approve-details" name="approvemessage" rows="5"></textarea>
+                             </div>
+                         </div>
+                     }
+                }
+                
+                @{ var requestChangesLabel = new string("No, request changes from training provider");  }
+                @if (!Model.EmployerCanApprove)
+                {
+                    requestChangesLabel = "Request changes from training provider";
+                }
 
-                @if (Model.ShowApprovalOption)
-                {
-                    <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio" value="@CohortDetailsOptions.Approve" data-aria-controls="conditional-approve">
-                        <label class="govuk-label govuk-radios__label" for="radio-approve">
-                            Yes, approve and notify training provider
-                        </label>
-                    </div>
-                }
-                @if (!Model.ShowApprovalOptionMessage)
-                {
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-approve">
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="approve-details">
-                                Leave @Model.ProviderName a message (optional)
-                            </label>
-                            <textarea class="govuk-textarea" id="approve-details" name="approvemessage" rows="5"></textarea>
-                        </div>
-                    </div>
-                }
                 <div class="govuk-radios__item">
                     <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Send" data-aria-controls="conditional-send">
                     <label class="govuk-label govuk-radios__label" for="radio-send">
-                        No, request changes from training provider
+                        @requestChangesLabel
                     </label>
                 </div>
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-send">
@@ -171,6 +198,17 @@
                         <textarea class="govuk-textarea" id="send-details" name="sendmessage" rows="5"></textarea>
                     </div>
                 </div>
+                
+                @if (!Model.EmployerCanApprove)
+                {
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Homepage">
+                    <label class="govuk-label govuk-radios__label">
+                        Go to homepage
+                    </label>
+                </div>
+                }
+
             </div>
         </fieldset>
     </div>

@@ -82,6 +82,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     return Redirect(_linkGenerator.AccountsLink(
                         $"accounts/{request.AccountHashedId}/agreements/{request.AccountLegalEntityHashedId}/about-your-agreement"));
                 }
+                case CohortDetailsOptions.Homepage:
+                {
+                    return Redirect(_linkGenerator.CommitmentsLink($"accounts/{viewModel.AccountHashedId}/apprentices/home"));
+                }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
             }
