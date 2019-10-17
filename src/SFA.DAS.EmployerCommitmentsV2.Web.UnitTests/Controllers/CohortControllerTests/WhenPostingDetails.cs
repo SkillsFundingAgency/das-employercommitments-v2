@@ -61,6 +61,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             _fixture.VerifyRedirectedToViewEmployerAgreement();
         }
 
+        [Test]
+        public async Task And_User_Selected_Homepage_Then_User_Is_Redirected_To_Homepage()
+        {
+            await _fixture.Post(CohortDetailsOptions.Homepage);
+            _fixture.VerifyRedirectedToHomepage();
+        }
+
         public class WhenPostingDetailsFixture
         {
             private readonly CohortController _controller;
@@ -127,6 +134,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 linkGenerator.Setup(x => x.AccountsLink(It.IsAny<string>()))
                     .Returns(_linkGeneratorResult);
 
+                linkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>()))
+                    .Returns(_linkGeneratorResult);
+
                 _controller = new CohortController(_commitmentsApiClient.Object,
                     Mock.Of<ILogger<CohortController>>(),
                     linkGenerator.Object,
@@ -177,6 +187,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 Assert.AreEqual(_linkGeneratorResult, redirect.Url);
             }
 
+            public void VerifyRedirectedToHomepage()
+            {
+                Assert.IsInstanceOf<RedirectResult>(_result);
+                var redirect = (RedirectResult)_result;
+                Assert.AreEqual(_linkGeneratorResult, redirect.Url);
+            }
         }
     }
 }
