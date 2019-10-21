@@ -32,15 +32,15 @@
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
     <partial name="_Header" />
     <partial name="_Menu" model="@accountHashedId" />
-    <div class="govuk-width-container">
-        @if (IsSectionDefined("Back"))
-        {
-            @RenderSection("Back")
-        }
-        <main class="govuk-main-wrapper " id="main-content" role="main">
-            @RenderBody()
-        </main>
-    </div>
+<div class="govuk-width-container">
+    @if (IsSectionDefined("Back"))
+    {
+        @RenderSection("Back")
+    }
+    <main class="govuk-main-wrapper " id="main-content" role="main">
+        @RenderBody()
+    </main>
+</div>
 
     <partial name="_Footer" />
 
