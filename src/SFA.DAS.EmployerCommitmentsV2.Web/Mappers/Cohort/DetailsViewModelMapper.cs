@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                     : $"Approve {draftApprenticeships.Count} apprentices' details",
                 IsApprovedByProvider = cohort.IsApprovedByProvider,
                 IsAgreementSigned = await IsAgreementSigned(),
-                EmployerCanApprove = cohort.EmployerCanApprove
+                IsCompleteForEmployer = cohort.IsCompleteForEmployer
             };
         }
 

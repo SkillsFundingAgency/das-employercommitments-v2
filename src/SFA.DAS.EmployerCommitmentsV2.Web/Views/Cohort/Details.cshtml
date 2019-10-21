@@ -24,7 +24,7 @@
 }
 else
 {
-    if (!Model.EmployerCanApprove && Model.DraftApprenticeshipsCount > 0)
+    if (!Model.IsCompleteForEmployer)
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
@@ -154,7 +154,7 @@ else
                     </div>
                 }
                 
-                @if (Model.EmployerCanApprove)
+                @if (Model.IsCompleteForEmployer) //Approval options only shown if the Employer can approve the cohort
                 {
                     if (Model.ShowApprovalOption)
                      {
@@ -178,8 +178,8 @@ else
                      }
                 }
                 
-                @{ var requestChangesLabel = new string("No, request changes from training provider");  }
-                @if (!Model.EmployerCanApprove)
+                @{ var requestChangesLabel = "No, request changes from training provider";  }
+                @if (!Model.IsCompleteForEmployer)
                 {
                     requestChangesLabel = "Request changes from training provider";
                 }
@@ -199,7 +199,7 @@ else
                     </div>
                 </div>
                 
-                @if (!Model.EmployerCanApprove)
+                @if (!Model.IsCompleteForEmployer)
                 {
                 <div class="govuk-radios__item">
                     <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Homepage">
