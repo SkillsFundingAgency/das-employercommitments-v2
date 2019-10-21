@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             _fixture.WithParty(withParty);
             await _fixture.GetDetails();
-            _fixture.VerifyResultIsRedirectToV1();
+            _fixture.VerifyResultIsNotRedirectToV1();
         }
 
         public class WhenGettingDetailsTestFixture
@@ -99,12 +99,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 Assert.AreEqual(expectedTotalCost, _viewModel.TotalCost, "The total cost stored in the model is incorrect");
             }
 
-            public void VerifyResultIsRedirectToV1()
+            public void VerifyResultIsNotRedirectToV1()
             {
-                Assert.IsInstanceOf<RedirectResult>(_result);
-                var redirectResult = (RedirectResult) _result;
-                Assert.AreEqual(_linkGeneratorResult, redirectResult.Url);
+                Assert.IsNotInstanceOf<RedirectResult>(_result);
             }
+
         }
     }
 }
