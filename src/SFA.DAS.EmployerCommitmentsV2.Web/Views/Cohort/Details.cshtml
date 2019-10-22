@@ -5,7 +5,6 @@
 
 @{
     ViewData["Title"] = Model.PageTitle;
-    var isReadOnly = Model.WithParty != SFA.DAS.CommitmentsV2.Types.Party.Employer;
 }
 
 <partial name="_ValidationSummary" />
@@ -76,7 +75,7 @@
                     }    
                 </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">
-                    @if (!isReadOnly)
+                    @if (!Model.IsReadOnly)
                     {
                         <a href="@Url.Action("EditDraftApprenticeship", "DraftApprenticeship", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">Edit <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
                     }
@@ -97,7 +96,7 @@
     </tbody>
 </table>
 
-@if (!isReadOnly)
+@if (!Model.IsReadOnly)
 {
 <p>
     <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}")" class="govuk-link">Add another apprentice</a>

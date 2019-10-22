@@ -34,11 +34,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
         [TestCase(Party.Provider)]
         [TestCase(Party.TransferSender)]
-        public async Task ThenShouldRedirectToV1IfCohortIsNotWithEmployer(Party withParty)
+        public async Task ThenShouldNotRedirectToV1IfCohortIsNotWithEmployer(Party withParty)
         {
             _fixture.WithParty(withParty);
             await _fixture.GetDetails();
             _fixture.VerifyResultIsNotRedirectToV1();
+        }
+
+        [TestCase(Party.Provider)]
+        [TestCase(Party.TransferSender)]
+        public async Task ThenModelViewIsReadOnlyIfCohortIsNotWithEmployer(Party withParty)
+        {
+            _fixture.WithParty(withParty);
+            await _fixture.GetDetails();
+            Assert.IsTrue(_fixture.IsViewModelReadOnly());
         }
 
         public class WhenGettingDetailsTestFixture
@@ -102,6 +111,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             public void VerifyResultIsNotRedirectToV1()
             {
                 Assert.IsNotInstanceOf<RedirectResult>(_result);
+            }
+
+            public bool IsViewModelReadOnly()
+            {
+                return _viewModel.IsReadOnly;
             }
 
         }
