@@ -34,16 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
         [TestCase(Party.Provider)]
         [TestCase(Party.TransferSender)]
-        public async Task ThenShouldNotRedirectToV1IfCohortIsNotWithEmployer(Party withParty)
-        {
-            _fixture.WithParty(withParty);
-            await _fixture.GetDetails();
-            _fixture.VerifyResultIsNotRedirectToV1();
-        }
-
-        [TestCase(Party.Provider)]
-        [TestCase(Party.TransferSender)]
-        public async Task ThenModelViewIsReadOnlyIfCohortIsNotWithEmployer(Party withParty)
+        public async Task ThenViewModelIsReadOnlyIfCohortIsNotWithEmployer(Party withParty)
         {
             _fixture.WithParty(withParty);
             await _fixture.GetDetails();
@@ -106,11 +97,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
                 var expectedTotalCost = _viewModel.Courses?.Sum(g => g.DraftApprenticeships.Sum(a => a.Cost ?? 0)) ?? 0;
                 Assert.AreEqual(expectedTotalCost, _viewModel.TotalCost, "The total cost stored in the model is incorrect");
-            }
-
-            public void VerifyResultIsNotRedirectToV1()
-            {
-                Assert.IsNotInstanceOf<RedirectResult>(_result);
             }
 
             public bool IsViewModelReadOnly()
