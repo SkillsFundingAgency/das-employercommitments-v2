@@ -75,7 +75,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> Details(DetailsRequest request)
         {
             var viewModel = await _modelMapper.Map<IDraftApprenticeshipViewModel>(request);
-            return View(viewModel);
+            var viewName = viewModel is EditDraftApprenticeshipViewModel ? "Edit" : "View";
+            return View(viewName, viewModel);
         }
 
         [HttpPost]

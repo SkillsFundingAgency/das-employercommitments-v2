@@ -78,14 +78,11 @@
                         }
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
-                        @if (!Model.IsReadOnly)
-                        {
-                            <a href="@Url.Action("EditDraftApprenticeship", "DraftApprenticeship", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">Edit <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
-                        }
-                        else
-                        {
-                            <a href="@LinkGenerator.ViewApprentice(Model.AccountHashedId, Model.CohortReference, draftApprenticeship.DraftApprenticeshipHashedId)">View</a>
-                        }
+                        @{ var detailsLabel = Model.IsReadOnly ? "View" : "Edit"; }
+                        <a href="@Url.Action("Details","DraftApprenticeship", new {@draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId})">
+                            @detailsLabel
+                            <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
+                        </a>
                     </td>
                 </tr>
             }

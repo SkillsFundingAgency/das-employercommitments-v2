@@ -7,9 +7,9 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        
+
         <h1 class="govuk-heading-xl">View apprentice details</h1>
-        
+
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
@@ -96,12 +96,12 @@
 
     private string DisplayOptionalField(DateTime? value)
     {
-        return value.HasValue ? value.Value.ToGdsFormat(): "--";
+        return value.HasValue ? value.Value.ToGdsFormat() : "--";
     }
 
     private string DisplayOptionalEstimatedDate(DateTime? value)
     {
-        return value.HasValue ? value.Value.ToGdsFormatWithoutDay(): "--";
+        return value.HasValue ? value.Value.ToGdsFormatWithoutDay() : "--";
     }
 
     private string DisplayCost(int? value)
@@ -110,3 +110,12 @@
     }
 
 }
+
+
+@Html.ActionLink("Return to group of apprentices", "Details", "Cohort", new { @Model.AccountHashedId, @Model.CohortReference }, new { @class = "govuk-link", id = "return-link" })
+
+
+@section Back
+{
+    @Html.ActionLink("Back", "Details", "Cohort", new { @Model.AccountHashedId, @Model.CohortReference }, new { @class = "govuk-back-link", id = "back-link" })
+} 
