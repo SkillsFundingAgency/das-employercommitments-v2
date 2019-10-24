@@ -262,6 +262,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             Assert.AreEqual(expectedPageTitle, result.PageTitle);
         }
+
+        [TestCase(0, null)]
+        [TestCase(1, "1 apprenticeship above funding band maximum")]
+        [TestCase(2, "2 apprenticeships above funding band maximum")]
+        public async Task FundingBandCapExcessHeaderIsSetCorrectlyForTheNumberOfApprenticeshipsOverFundingCap(int numberOfApprenticeshipsOverFundingBandCap, string expectedFundingBandCapExcessHeader)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().CreateThisNumberOfApprenticeships(2, numberOfApprenticeshipsOverFundingBandCap);
+            var result = await fixture.Map();
+            
+            Assert.AreEqual(expectedFundingBandCapExcessHeader, result.FundingBandCapExcessHeader);
+        }
+
+        [TestCase(0, null)]
+        [TestCase(1, "The price for this apprenticeship ")]
+        [TestCase(2, "The price for these apprenticeships ")]
+        public async Task FundingBandCapExcessLabelIsSetCorrectlyForTheNumberOfApprenticeshipsOverFundingCap(int numberOfApprenticeshipsOverFundingBandCap, string expectedFundingBandCapExcessLabel)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().CreateThisNumberOfApprenticeships(2, numberOfApprenticeshipsOverFundingBandCap);
+            var result = await fixture.Map();
+
+            Assert.AreEqual(expectedFundingBandCapExcessLabel, result.FundingBandCapExcessLabel);
+        }
     }
 
     public class DetailsViewModelMapperTestsFixture
@@ -343,9 +365,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             return this;
         }
 
-        public DetailsViewModelMapperTestsFixture CreateThisNumberOfApprenticeships(int numberOfApprenticeships)
+        public DetailsViewModelMapperTestsFixture CreateThisNumberOfApprenticeships(int numberOfApprenticeships, int numberOfApprenticesOverFundingBandCap = default)
         {
             var draftApprenticeships = _autoFixture.CreateMany<DraftApprenticeshipDto>(numberOfApprenticeships).ToArray();
+            foreach (int i in Enumerable.Range(1, numberOfApprenticesOverFundingBandCap))
+            {
+                draftApprenticeships[i-1] = SetCostOverFundingBandMax(draftApprenticeships[i-1]);
+                draftApprenticeships[i - 1] = SetStartDate(draftApprenticeships[i-1]);
+            }
             DraftApprenticeshipsResponse.DraftApprenticeships = draftApprenticeships;
             return this;
         }
@@ -400,6 +427,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             draftApprenticeship.CourseCode = courseCode;
             draftApprenticeship.Cost = cost;
             draftApprenticeship.StartDate = startDate;
+        }
+
+        private DraftApprenticeshipDto SetCostOverFundingBandMax(DraftApprenticeshipDto apprenticeship)
+        {
+            apprenticeship.Cost = 99999;
+            return apprenticeship;
+        }
+
+        private DraftApprenticeshipDto SetStartDate(DraftApprenticeshipDto apprenticeship)
+        {
+            apprenticeship.StartDate = DefaultStartDate;
+            return apprenticeship;
         }
     }
 }
