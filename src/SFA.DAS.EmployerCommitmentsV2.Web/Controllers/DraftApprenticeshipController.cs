@@ -70,21 +70,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
+        [Route("{DraftApprenticeshipHashedId}")]
         [Route("{DraftApprenticeshipHashedId}/edit")]
-        public async Task<IActionResult> EditDraftApprenticeship(EditDraftApprenticeshipRequest request)
+        public async Task<IActionResult> Details(DetailsRequest request)
         {
-            try
-            {
-                var model = await _modelMapper.Map<EditDraftApprenticeshipViewModel>(request);
-                return View(model);
-            }
-            catch (CohortEmployerUpdateDeniedException)
-            {
-                return Redirect(_linkGenerator.ViewApprentice(request.AccountHashedId, request.CohortReference, request.DraftApprenticeshipHashedId));
-            }
+            var viewModel = await _modelMapper.Map<IDraftApprenticeshipViewModel>(request);
+            return View(viewModel);
         }
 
         [HttpPost]
+        [Route("{DraftApprenticeshipHashedId}")]
         [Route("{DraftApprenticeshipHashedId}/edit")]
         public async Task<IActionResult> EditDraftApprenticeship(EditDraftApprenticeshipViewModel model)
         {

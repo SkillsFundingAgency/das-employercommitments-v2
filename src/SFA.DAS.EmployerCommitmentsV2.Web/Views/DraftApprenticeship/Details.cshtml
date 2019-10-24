@@ -1,0 +1,21 @@
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.IDraftApprenticeshipViewModel
+
+
+@if (Model is EditDraftApprenticeshipViewModel)
+{
+    <partial name="Edit" model="@Model" />
+}
+
+@if (Model is ViewDraftApprenticeshipViewModel)
+{
+    <partial name="View" model="@Model" />
+}
+
+@Html.ActionLink("Return to group of apprentices", "Details", "Cohort", new { @Model.AccountHashedId, @Model.CohortReference }, new { @class="govuk-link", id = "return-link" })
+
+
+@section Back
+{
+    @Html.ActionLink("Back", "Details", "Cohort", new { @Model.AccountHashedId, @Model.CohortReference }, new { @class = "govuk-back-link", id = "back-link" })
+} 
