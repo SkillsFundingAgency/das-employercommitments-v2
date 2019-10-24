@@ -1,10 +1,8 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 {
@@ -13,12 +11,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IModelMapper _modelMapper;
         
-        public IDraftApprenticeshipDetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, ITrainingProgrammeApiClient trainingProgrammeApiClient, EditDraftApprenticeshipViewModelMapper editDraftApprenticeshipViewModelMapper, IModelMapper modelMapper)
+        public IDraftApprenticeshipDetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IModelMapper modelMapper)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _modelMapper = modelMapper;
         }
-
 
         public async Task<IDraftApprenticeshipViewModel> Map(DetailsRequest source)
         {

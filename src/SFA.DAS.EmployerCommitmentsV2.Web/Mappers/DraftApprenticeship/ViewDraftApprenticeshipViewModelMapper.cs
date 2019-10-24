@@ -34,7 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 DateOfBirth = draftApprenticeship.DateOfBirth,
                 TrainingCourse = trainingCourse == null ? "" : trainingCourse.ExtendedTitle,
                 Cost = draftApprenticeship.Cost,
-                StartDate =  draftApprenticeship.StartDate,
+                StartDate = draftApprenticeship.StartDate,
                 EndDate = draftApprenticeship.EndDate,
                 Reference = draftApprenticeship.Reference
             };

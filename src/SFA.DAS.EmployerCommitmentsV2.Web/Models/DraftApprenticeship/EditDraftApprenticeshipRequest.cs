@@ -1,9 +1,8 @@
-﻿using SFA.DAS.Authorization.ModelBinding;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+﻿using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 {
-    public class EditDraftApprenticeshipRequest
+    public class EditDraftApprenticeshipRequest: IDraftApprenticeshipRequest
     {
         public DetailsRequest Request { get; set; }
         public GetCohortResponse Cohort { get; set; }
