@@ -34,6 +34,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var cohort = await cohortTask;
             var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
 
+            var courses = GroupCourses(draftApprenticeships);
+
             return new DetailsViewModel
             {
                 AccountHashedId = source.AccountHashedId,
@@ -44,11 +46,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 ProviderName = cohort.ProviderName,
                 TransferSenderHashedId = cohort.TransferSenderId == null ? null : _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId),
                 Message = cohort.LatestMessageCreatedByProvider,
-                Courses = GroupCourses(draftApprenticeships),
+                Courses = courses,
                 PageTitle = draftApprenticeships.Count == 1
                     ? "Approve apprentice details"
                     : $"Approve {draftApprenticeships.Count} apprentices' details",
                 IsApprovedByProvider = cohort.IsApprovedByProvider,
+                FundingBandCapExcessHeader = SetFundingBandExcessHeader(courses),
+                FundingBandCapExcessLabel = SetFundingBandExcessLabel(courses)
             };
         }
 
@@ -128,6 +132,38 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 return cap;
             }
 
+            return null;
+        }
+
+        private string SetFundingBandExcessHeader(IReadOnlyCollection<DetailsViewCourseGroupingModel> courses)
+        {
+            int fundingBandExcessCount = 0;
+            foreach (DetailsViewCourseGroupingModel course in courses)
+            {
+                if (course.FundingBandExcess != null)
+                    fundingBandExcessCount += course.FundingBandExcess.NumberOfApprenticesExceedingFundingBandCap;
+            }
+
+            if (fundingBandExcessCount == 1)
+                return new string($"{fundingBandExcessCount} apprenticeship above funding band maximum");
+            if (fundingBandExcessCount > 1)
+                return new string($"{fundingBandExcessCount} apprenticeships above funding band maximum");
+            return null;
+        }
+
+        private string SetFundingBandExcessLabel(IReadOnlyCollection<DetailsViewCourseGroupingModel> courses)
+        {
+            int fundingBandExcessCount = 0;
+            foreach (DetailsViewCourseGroupingModel course in courses)
+            {
+                if (course.FundingBandExcess != null)
+                    fundingBandExcessCount += course.FundingBandExcess.NumberOfApprenticesExceedingFundingBandCap;
+            }
+
+            if (fundingBandExcessCount == 1)
+                return new string("The price for this apprenticeship ");
+            if (fundingBandExcessCount > 1)
+                return new string("The price for these apprenticeships ");
             return null;
         }
     }
