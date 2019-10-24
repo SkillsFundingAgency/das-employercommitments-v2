@@ -70,7 +70,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{DraftApprenticeshipHashedId}")]
+        [Route("{DraftApprenticeshipHashedId}", Name="Details")]
         [Route("{DraftApprenticeshipHashedId}/edit")]
         public async Task<IActionResult> Details(DetailsRequest request)
         {
