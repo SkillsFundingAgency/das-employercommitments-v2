@@ -30,6 +30,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string DisplayTotalCost => TotalCost.ToGdsCostFormat();
         public string FundingBandCapExcessHeader { get; set; }
         public string FundingBandCapExcessLabel { get; set; }
+        public bool IsReadOnly => WithParty != Party.Employer;
     }
 
     public enum CohortDetailsOptions
