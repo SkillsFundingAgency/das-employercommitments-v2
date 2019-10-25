@@ -49,11 +49,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
 
-            if (viewModel.WithParty != Party.Employer)
-            {
-                return Redirect(_linkGenerator.CohortDetails(viewModel.AccountHashedId, viewModel.CohortReference));
-            }
-
             return View(viewModel);
         }
 

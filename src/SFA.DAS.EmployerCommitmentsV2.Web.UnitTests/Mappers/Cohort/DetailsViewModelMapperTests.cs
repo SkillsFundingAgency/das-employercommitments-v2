@@ -252,16 +252,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.IsNull(excessModel);
         }
 
-        [TestCase(0, "Approve 0 apprentices' details")]
-        [TestCase(1, "Approve apprentice details")]
-        [TestCase(2, "Approve 2 apprentices' details")]
-        public async Task PageTitleIsSetCorrectlyForTheNumberOfApprenticeships(int numberOfApprenticeships, string expectedPageTitle)
+        [TestCase(0, "Approve 0 apprentices' details", Party.Employer)]
+        [TestCase(1, "Approve apprentice details", Party.Employer)]
+        [TestCase(2, "Approve 2 apprentices' details", Party.Employer)]
+        [TestCase(0, "View 0 apprentices' details", Party.Provider)]
+        [TestCase(1, "View apprentice details", Party.Provider)]
+        [TestCase(2, "View 2 apprentices' details", Party.Provider)]
+        [TestCase(0, "View 0 apprentices' details", Party.TransferSender)]
+        [TestCase(1, "View apprentice details", Party.TransferSender)]
+        [TestCase(2, "View 2 apprentices' details", Party.TransferSender)]
+        public async Task PageTitleIsSetCorrectlyForTheNumberOfApprenticeships(int numberOfApprenticeships, string expectedPageTitle, Party withParty)
         {
             var fixture = new DetailsViewModelMapperTestsFixture().CreateThisNumberOfApprenticeships(numberOfApprenticeships);
+            fixture.Cohort.WithParty = withParty;
+
             var result = await fixture.Map();
 
             Assert.AreEqual(expectedPageTitle, result.PageTitle);
         }
+
     }
 
     public class DetailsViewModelMapperTestsFixture
