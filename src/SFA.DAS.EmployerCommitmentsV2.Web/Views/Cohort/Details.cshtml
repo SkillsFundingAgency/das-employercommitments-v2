@@ -80,7 +80,7 @@
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         <a href="@Url.Action("EditDraftApprenticeship", "DraftApprenticeship", new {@draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId})">Edit <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
                         <br /><br />
-                        <a href="@LinkGenerator.DeleteApprentice(Model.AccountHashedId, Model.CohortReference, draftApprenticeship.DraftApprenticeshipHashedId)">Delete</a>
+                        <a href="@LinkGenerator.DeleteApprentice(Model.AccountHashedId, Model.CohortReference, draftApprenticeship.DraftApprenticeshipHashedId)">Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
                     </td>
                 </tr>
             }
