@@ -34,11 +34,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
 
         [Test]
-        public async Task GetDetails_Editable_Cohort_ShouldReturnEditPage()
+        public async Task GetDetails_Cohort_With_Employer_ShouldReturnEditPage()
         {
             var fixtures = new DetailsTestFixture()
                 .WithDraftApprenticeship()
-                .WithEditableCohort();
+                .WithCohortWithEmployer();
 
             var result = await fixtures.Sut.Details(fixtures.DetailsRequest);
             var viewResult = result.VerifyReturnsViewModel();
@@ -46,11 +46,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
 
         [Test]
-        public async Task GetDetails_ReadOnly_Cohort_ShouldReturnViewPage()
+        public async Task GetDetails_Cohort_With_OtherParty_ShouldReturnViewPage()
         {
             var fixtures = new DetailsTestFixture()
                 .WithDraftApprenticeship()
-                .WithReadOnlyCohort();
+                .WithCohortWithOtherParty();
 
             var result = await fixtures.Sut.Details(fixtures.DetailsRequest);
             var viewResult = result.VerifyReturnsViewModel();
@@ -158,14 +158,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             return this;
         }
 
-        public DetailsTestFixture WithReadOnlyCohort()
+        public DetailsTestFixture WithCohortWithOtherParty()
         {
             ModelMapperMock.Setup(x => x.Map<IDraftApprenticeshipViewModel>(It.IsAny<DetailsRequest>()))
                 .ReturnsAsync(new ViewDraftApprenticeshipViewModel());
             return this;
         }
 
-        public DetailsTestFixture WithEditableCohort()
+        public DetailsTestFixture WithCohortWithEmployer()
         {
             ModelMapperMock.Setup(x => x.Map<IDraftApprenticeshipViewModel>(It.IsAny<DetailsRequest>()))
                 .ReturnsAsync(new EditDraftApprenticeshipViewModel());
