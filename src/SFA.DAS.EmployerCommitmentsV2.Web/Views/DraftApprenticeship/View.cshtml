@@ -101,19 +101,16 @@
 
     private string DisplayOptionalEstimatedDate(DateTime? value)
     {
-        return value.HasValue ? value.Value.ToGdsFormatWithoutDay() : "--";
+        return value.HasValue ? $"{value:MMMM yyyy}" : "--";
     }
 
     private string DisplayCost(int? value)
     {
         return value.HasValue ? value.Value.ToGdsCostFormat() : "--";
     }
-
 }
 
-
 @Html.ActionLink("Return to group of apprentices", "Details", "Cohort", new { @Model.AccountHashedId, @Model.CohortReference }, new { @class = "govuk-link", id = "return-link" })
-
 
 @section Back
 {
