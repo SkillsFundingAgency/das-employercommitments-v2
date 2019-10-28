@@ -8,7 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         private readonly int[] _fundingBandCapsExceeded;
 
         public FundingBandExcessModel(int numberOfApprenticesExceedingFundingBandCap, IEnumerable<int?> fundingBandCapsExceeded,
-            string fundingBandCapExcessHeader, string fundingBandCapExcessLabel)
+            string fundingBandCapExcessHeader = "", string fundingBandCapExcessLabel = "")
         {
             _fundingBandCapsExceeded = fundingBandCapsExceeded.Where(x=>x.HasValue).Select(x=>x.Value).ToArray();
             NumberOfApprenticesExceedingFundingBandCap = numberOfApprenticesExceedingFundingBandCap;
