@@ -35,6 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
 
             var courses = GroupCourses(draftApprenticeships);
+            var viewOrApprove = cohort.WithParty == CommitmentsV2.Types.Party.Employer ? "Approve" : "View";
 
             return new DetailsViewModel
             {
@@ -48,8 +49,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 Message = cohort.LatestMessageCreatedByProvider,
                 Courses = courses,
                 PageTitle = draftApprenticeships.Count == 1
-                    ? "Approve apprentice details"
-                    : $"Approve {draftApprenticeships.Count} apprentices' details",
+                    ? $"{viewOrApprove} apprentice details"
+                    : $"{viewOrApprove} {draftApprenticeships.Count} apprentices' details",
                 IsApprovedByProvider = cohort.IsApprovedByProvider,
             };
         }

@@ -28,7 +28,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public bool IsApprovedByProvider { get; set; }
         public int TotalCost => Courses?.Sum(g => g.DraftApprenticeships.Sum(a => a.Cost ?? 0)) ?? 0;
         public string DisplayTotalCost => TotalCost.ToGdsCostFormat();
+<<<<<<< HEAD
 
+=======
+        public string FundingBandCapExcessHeader { get; set; }
+        public string FundingBandCapExcessLabel { get; set; }
+        public bool IsReadOnly => WithParty != Party.Employer;
+>>>>>>> 99bd3c058c6b4f3fdd3499e101c7323fb508ebb2
     }
 
     public enum CohortDetailsOptions
