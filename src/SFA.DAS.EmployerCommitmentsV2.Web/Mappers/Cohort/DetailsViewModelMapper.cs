@@ -33,14 +33,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         {
             GetCohortResponse cohort;
 
-            Task<bool> IsAgreementSigned()
+            async Task<bool> IsAgreementSigned()
             {
+                var ale = await _commitmentsApiClient.GetLegalEntity(cohort.AccountLegalEntityId);
+                var maLegalEntityId = ale.MaLegalEntityId;
+
                 if (cohort.IsFundedByTransfer)
                 {
-                    return _employerAgreementService.IsAgreementSigned(source.AccountId, cohort.AccountLegalEntityId,
+                    return await _employerAgreementService.IsAgreementSigned(source.AccountId, maLegalEntityId,
                         AgreementFeature.Transfers);
                 }
-                return _employerAgreementService.IsAgreementSigned(source.AccountId, cohort.AccountLegalEntityId);
+                return await _employerAgreementService.IsAgreementSigned(source.AccountId, maLegalEntityId);
             }
 
             var cohortTask = _commitmentsApiClient.GetCohort(source.CohortId);

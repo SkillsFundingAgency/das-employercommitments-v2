@@ -381,6 +381,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(expectedShowApprovalOptionMessage, result.ShowApprovalOptionMessage);
         }
 
+        [Test]
+        public async Task VerifyGetAccountLegalEntityAndIsAgreementSignedEndpointsAreCalledWithCorrectParams()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            await fixture.Map();
+            fixture.CommitmentsApiClient.Verify(x=>x.GetLegalEntity(fixture.Cohort.AccountLegalEntityId, It.IsAny<CancellationToken>()));
+            fixture.EmployerAgreementService.Verify(x => x.IsAgreementSigned(fixture.Source.AccountId, fixture.AccountLegalEntityResponse.MaLegalEntityId));
+        }
     }
 
     public class DetailsViewModelMapperTestsFixture
@@ -395,6 +403,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public GetCohortResponse Cohort;
         public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
         public DateTime DefaultStartDate = new DateTime(2019, 10, 1);
+        public AccountLegalEntityResponse AccountLegalEntityResponse;
 
         private Fixture _autoFixture;
         private ITrainingProgramme _trainingProgramme;
@@ -406,7 +415,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             _autoFixture = new Fixture();
 
-            Cohort = _autoFixture.Build<GetCohortResponse>().Without(x => x.TransferSenderId).Create(); 
+            Cohort = _autoFixture.Build<GetCohortResponse>().Without(x => x.TransferSenderId).Create();
+            AccountLegalEntityResponse = _autoFixture.Create<AccountLegalEntityResponse>();
 
             var draftApprenticeships = CreateDraftApprenticeshipDtos(_autoFixture);
             _autoFixture.Register(() => draftApprenticeships);
@@ -415,9 +425,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             CommitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(Cohort);
-
             CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(DraftApprenticeshipsResponse);
+            CommitmentsApiClient.Setup(x => x.GetLegalEntity(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(AccountLegalEntityResponse);
 
             _fundingPeriods = new List<FundingPeriod>
             {
