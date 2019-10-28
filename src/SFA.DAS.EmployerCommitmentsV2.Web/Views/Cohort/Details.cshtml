@@ -37,9 +37,9 @@
     if (@course.FundingBandExcess != null)
     {
         <div class="govuk-inset-text das-inset-text--highlight">
-            <h3 class="govuk-heading-s">@Model.FundingBandCapExcessHeader</h3>
+            <h3 class="govuk-heading-s">@course.FundingBandExcess.FundingBandCapExcessHeader</h3>
             <p>
-                @Model.FundingBandCapExcessLabel is above its
+                @course.FundingBandExcess.FundingBandCapExcessLabel is above its
                 <text><a target="_blank" href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band maximum</a>@course.FundingBandExcess.DisplaySingleFundingBandCap</text>
                 You'll need to pay the difference directly to the training provider.
             </p>
