@@ -164,9 +164,9 @@
 
     </form>
 }
-else
+
+@section Back
 {
-    <p>
-        <a href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/cohorts")" class="govuk-link">Back</a>
-    </p>
+    <a class="govuk-back-link" href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/cohorts")">Back</a>
+
 }
