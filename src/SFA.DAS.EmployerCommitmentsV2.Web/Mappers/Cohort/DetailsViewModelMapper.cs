@@ -51,6 +51,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             cohort = await cohortTask;
             var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
 
+            var viewOrApprove = cohort.WithParty == CommitmentsV2.Types.Party.Employer ? "Approve" : "View";
+
             return new DetailsViewModel
             {
                 AccountHashedId = source.AccountHashedId,
@@ -63,8 +65,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 Message = cohort.LatestMessageCreatedByProvider,
                 Courses = GroupCourses(draftApprenticeships),
                 PageTitle = draftApprenticeships.Count == 1
-                    ? "Approve apprentice details"
-                    : $"Approve {draftApprenticeships.Count} apprentices' details",
+                    ? $"{viewOrApprove} apprentice details"
+                    : $"{viewOrApprove} {draftApprenticeships.Count} apprentices' details",
                 IsApprovedByProvider = cohort.IsApprovedByProvider,
                 IsAgreementSigned = await IsAgreementSigned()
             };

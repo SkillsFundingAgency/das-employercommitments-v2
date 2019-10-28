@@ -33,6 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public bool ShowViewAgreementOption => !IsAgreementSigned;
         public bool ShowApprovalOption => IsAgreementSigned;
         public bool ShowApprovalOptionMessage => ShowApprovalOption && IsApprovedByProvider;
+        public bool IsReadOnly => WithParty != Party.Employer;
     }
 
     public enum CohortDetailsOptions

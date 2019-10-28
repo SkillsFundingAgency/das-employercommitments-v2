@@ -1,13 +1,12 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.Services;
-using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -15,49 +14,41 @@ using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
-    public class WhenGettingDetails
+    [TestFixture]
+    public class WhenGettingApproval
     {
-        private WhenGettingDetailsTestFixture _fixture;
+        private WhenGettingApprovalTestFixture _fixture;
 
         [SetUp]
         public void Arrange()
         {
-            _fixture = new WhenGettingDetailsTestFixture();
+            _fixture = new WhenGettingApprovalTestFixture();
         }
 
         [Test]
         public async Task ThenViewModelShouldBeMappedFromRequest()
         {
-            await _fixture.GetDetails();
+            await _fixture.GetApproved();
             _fixture.VerifyViewModelIsMappedFromRequest();
         }
 
-        [TestCase(Party.Provider)]
-        [TestCase(Party.TransferSender)]
-        public async Task ThenViewModelIsReadOnlyIfCohortIsNotWithEmployer(Party withParty)
+        public class WhenGettingApprovalTestFixture
         {
-            _fixture.WithParty(withParty);
-            await _fixture.GetDetails();
-            Assert.IsTrue(_fixture.IsViewModelReadOnly());
-        }
-
-        public class WhenGettingDetailsTestFixture
-        {
-            private readonly DetailsRequest _request;
-            private readonly DetailsViewModel _viewModel;
+            private readonly ApprovedRequest _request;
+            private readonly ApprovedViewModel _viewModel;
             private IActionResult _result;
             private readonly string _linkGeneratorResult;
 
-            public WhenGettingDetailsTestFixture()
+            public WhenGettingApprovalTestFixture()
             {
                 var autoFixture = new Fixture();
 
-                _request = autoFixture.Create<DetailsRequest>();
-                _viewModel = autoFixture.Create<DetailsViewModel>();
-                _viewModel.WithParty = Party.Employer;
+                _request = autoFixture.Create<ApprovedRequest>();
+                _viewModel = autoFixture.Create<ApprovedViewModel>();
+                _viewModel.WithParty = Party.Provider;
 
                 var modelMapper = new Mock<IModelMapper>();
-                modelMapper.Setup(x => x.Map<DetailsViewModel>(It.Is<DetailsRequest>(r => r == _request)))
+                modelMapper.Setup(x => x.Map<ApprovedViewModel>(It.Is<ApprovedRequest>(r => r == _request)))
                     .ReturnsAsync(_viewModel);
 
                 _linkGeneratorResult = autoFixture.Create<string>();
@@ -74,15 +65,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             public CohortController CohortController { get; set; }
 
-            public WhenGettingDetailsTestFixture WithParty(Party withParty)
+            public WhenGettingApprovalTestFixture WithParty(Party withParty)
             {
                 _viewModel.WithParty = withParty;
                 return this;
             }
 
-            public async Task GetDetails()
+            public async Task GetApproved()
             {
-                _result = await CohortController.Details(_request);
+                _result = await CohortController.Approved(_request);
             }
 
             public void VerifyViewModelIsMappedFromRequest()
@@ -90,20 +81,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 var viewResult = (ViewResult)_result;
                 var viewModel = viewResult.Model;
 
-                Assert.IsInstanceOf<DetailsViewModel>(viewModel);
-                var detailsViewModel = (DetailsViewModel) viewModel;
+                Assert.IsInstanceOf<ApprovedViewModel>(viewModel);
+                var detailsViewModel = (ApprovedViewModel)viewModel;
 
                 Assert.AreEqual(_viewModel, detailsViewModel);
-
-                var expectedTotalCost = _viewModel.Courses?.Sum(g => g.DraftApprenticeships.Sum(a => a.Cost ?? 0)) ?? 0;
-                Assert.AreEqual(expectedTotalCost, _viewModel.TotalCost, "The total cost stored in the model is incorrect");
             }
-
-            public bool IsViewModelReadOnly()
-            {
-                return _viewModel.IsReadOnly;
-            }
-
         }
     }
 }
