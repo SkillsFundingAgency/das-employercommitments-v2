@@ -149,9 +149,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         private string SetFundingBandExcessLabel(int apprenticeshipsOverCap)
         {
             if (apprenticeshipsOverCap == 1)
-                return new string("The price for this apprenticeship ");
+                return new string("The price for this apprenticeship is above its");
             if (apprenticeshipsOverCap > 1)
-                return new string("The price for these apprenticeships ");
+                return new string("The price for these apprenticeships is above the");
             return null;
         }
     }

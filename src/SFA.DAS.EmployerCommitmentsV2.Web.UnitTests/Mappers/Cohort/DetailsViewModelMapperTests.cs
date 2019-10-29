@@ -281,8 +281,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(expectedFundingBandCapExcessHeader, result.Courses.FirstOrDefault().FundingBandExcess.FundingBandCapExcessHeader);
         }
 
-        [TestCase(1, "The price for this apprenticeship ")]
-        [TestCase(2, "The price for these apprenticeships ")]
+        [TestCase(1, "The price for this apprenticeship is above its")]
+        [TestCase(2, "The price for these apprenticeships is above the")]
         public async Task FundingBandCapExcessLabelIsSetCorrectlyForTheNumberOfApprenticeshipsOverFundingCap(int numberOfApprenticeshipsOverFundingBandCap, string expectedFundingBandCapExcessLabel)
         {
             var fixture = new DetailsViewModelMapperTestsFixture().CreateThisNumberOfApprenticeships(numberOfApprenticeshipsOverFundingBandCap, numberOfApprenticeshipsOverFundingBandCap);
