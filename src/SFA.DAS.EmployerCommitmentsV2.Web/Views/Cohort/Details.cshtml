@@ -173,7 +173,7 @@
                 <div class="govuk-radios__item">
                     <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Send" data-aria-controls="conditional-send">
                     <label class="govuk-label govuk-radios__label" for="radio-send">
-                        No, request changes from training provider
+                        @Model.SendBackToProviderOptionMessage
                     </label>
                 </div>
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-send">

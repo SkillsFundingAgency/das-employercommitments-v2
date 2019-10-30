@@ -64,6 +64,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(fixture.Cohort.LatestMessageCreatedByProvider, result.Message);
         }
 
+        [TestCase(true, "No, request changes from training provider")]
+        [TestCase(false, "Send to the training provider to review or add details")]
+        public async Task SendBackToProviderOptionMessageIsMappedCorrectly(bool isAgreementSigned, string expected)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expected, result.SendBackToProviderOptionMessage);
+        }
+
         [Test]
         public async Task CohortReferenceIsMappedCorrectly()
         {

@@ -55,6 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
 
             var viewOrApprove = cohort.WithParty == CommitmentsV2.Types.Party.Employer ? "Approve" : "View";
+            var isAgreementSigned = await IsAgreementSigned();
 
             return new DetailsViewModel
             {
@@ -71,7 +72,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                     ? $"{viewOrApprove} apprentice details"
                     : $"{viewOrApprove} {draftApprenticeships.Count} apprentices' details",
                 IsApprovedByProvider = cohort.IsApprovedByProvider,
-                IsAgreementSigned = await IsAgreementSigned()
+                IsAgreementSigned = isAgreementSigned,
+                SendBackToProviderOptionMessage = isAgreementSigned 
+                    ? "No, request changes from training provider" 
+                    : "Send to the training provider to review or add details"
             };
         }
 
