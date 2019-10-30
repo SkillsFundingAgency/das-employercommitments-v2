@@ -14,6 +14,8 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
+using SFA.DAS.EAS.Account.Api.Client;
+using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
@@ -46,6 +48,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var fixture = new DetailsViewModelMapperTestsFixture();
             var result = await fixture.Map();
             Assert.AreEqual(fixture.Cohort.LegalEntityName, result.LegalEntityName);
+        }
+
+        [Test]
+        public async Task LegalEntityCodeIsMappedCorrectly()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(fixture.LegalEntityViewModel.Code, result.LegalEntityCode);
         }
 
         [Test]
@@ -398,6 +408,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             fixture.CommitmentsApiClient.Verify(x=>x.GetLegalEntity(fixture.Cohort.AccountLegalEntityId, It.IsAny<CancellationToken>()));
             fixture.EmployerAgreementService.Verify(x => x.IsAgreementSigned(fixture.Source.AccountId, fixture.AccountLegalEntityResponse.MaLegalEntityId));
         }
+
+        [Test]
+        public async Task VerifyGetLegalEntityIsCalledWithCorrectParams()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            await fixture.Map();
+            fixture.AccountApiClient.Verify(x => x.GetLegalEntity(fixture.Source.AccountHashedId, fixture.AccountLegalEntityResponse.MaLegalEntityId));
+        }
     }
 
     public class DetailsViewModelMapperTestsFixture
@@ -408,11 +426,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public Mock<ICommitmentsApiClient> CommitmentsApiClient;
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClient;
         public Mock<IEmployerAgreementService> EmployerAgreementService;
+        public Mock<IAccountApiClient> AccountApiClient;
         public Mock<IEncodingService> EncodingService;
         public GetCohortResponse Cohort;
         public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
         public DateTime DefaultStartDate = new DateTime(2019, 10, 1);
         public AccountLegalEntityResponse AccountLegalEntityResponse;
+        public LegalEntityViewModel LegalEntityViewModel;
 
         private Fixture _autoFixture;
         private ITrainingProgramme _trainingProgramme;
@@ -426,6 +446,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             Cohort = _autoFixture.Build<GetCohortResponse>().Without(x => x.TransferSenderId).Create();
             AccountLegalEntityResponse = _autoFixture.Create<AccountLegalEntityResponse>();
+            LegalEntityViewModel = _autoFixture.Create<LegalEntityViewModel>();
 
             var draftApprenticeships = CreateDraftApprenticeshipDtos(_autoFixture);
             _autoFixture.Register(() => draftApprenticeships);
@@ -438,6 +459,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 .ReturnsAsync(DraftApprenticeshipsResponse);
             CommitmentsApiClient.Setup(x => x.GetLegalEntity(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(AccountLegalEntityResponse);
+
+            AccountApiClient = new Mock<IAccountApiClient>();
+            AccountApiClient.Setup(x => x.GetLegalEntity(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(LegalEntityViewModel);
 
             _fundingPeriods = new List<FundingPeriod>
             {
@@ -455,7 +479,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             EncodingService = new Mock<IEncodingService>();
             SetEncodingOfApprenticeIds();
 
-            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, TrainingProgrammeApiClient.Object, EmployerAgreementService.Object);
+            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, TrainingProgrammeApiClient.Object, EmployerAgreementService.Object, AccountApiClient.Object);
             Source = _autoFixture.Create<DetailsRequest>();
         }
 
