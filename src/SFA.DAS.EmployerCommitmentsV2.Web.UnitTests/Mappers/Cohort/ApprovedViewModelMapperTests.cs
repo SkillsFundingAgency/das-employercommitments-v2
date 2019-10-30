@@ -14,20 +14,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
     [TestFixture]
     [Parallelizable(ParallelScope.All)]
-    public class SentViewModelMapperTests
+    public class ApprovedViewModelMapperTests
     {
         [Test]
         public async Task AccountHashedIdIsMappedCorrectly()
         {
-            var fixture = new SentViewModelMapperTestsFixture();
+            var fixture = new ApprovedViewModelMapperTestsFixture();
             var result = await fixture.Map();
             Assert.AreEqual(fixture.Source.AccountHashedId, result.AccountHashedId);
         }
 
         [Test]
+        public async Task WithPartyIsMappedCorrectly()
+        {
+            var fixture = new ApprovedViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(fixture.Cohort.WithParty, result.WithParty);
+        }
+
+        [Test]
         public async Task LegalEntityNameIsMappedCorrectly()
         {
-            var fixture = new SentViewModelMapperTestsFixture();
+            var fixture = new ApprovedViewModelMapperTestsFixture();
             var result = await fixture.Map();
             Assert.AreEqual(fixture.Cohort.LegalEntityName, result.LegalEntityName);
         }
@@ -35,40 +43,40 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public async Task ProviderNameIsMappedCorrectly()
         {
-            var fixture = new SentViewModelMapperTestsFixture();
+            var fixture = new ApprovedViewModelMapperTestsFixture();
             var result = await fixture.Map();
             Assert.AreEqual(fixture.Cohort.ProviderName, result.ProviderName);
         }
 
         [Test]
-        public async Task CohortReferenceIsMappedCorrectly()
+        public async Task MessageIsMappedCorrectly()
         {
-            var fixture = new SentViewModelMapperTestsFixture();
+            var fixture = new ApprovedViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Source.CohortReference, result.CohortReference);
+            Assert.AreEqual(fixture.Cohort.LatestMessageCreatedByEmployer, result.Message);
         }
 
         [Test]
-        public async Task CohortIdIsMappedCorrectly()
+        public async Task CohortReferenceIsMappedCorrectly()
         {
-            var fixture = new SentViewModelMapperTestsFixture();
+            var fixture = new ApprovedViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Source.CohortId, result.CohortId);
+            Assert.AreEqual(fixture.Source.CohortReference, result.CohortReference);
         }
     }
 
-    public class SentViewModelMapperTestsFixture
+    public class ApprovedViewModelMapperTestsFixture
     {
-        public SentViewModelMapper Mapper;
-        public SentRequest Source;
-        public SentViewModel Result;
+        public ApprovedViewModelMapper Mapper;
+        public ApprovedRequest Source;
+        public ApprovedViewModel Result;
         public Mock<ICommitmentsApiClient> CommitmentsApiClient;
         public Mock<IEncodingService> EncodingService;
         public GetCohortResponse Cohort;
         public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
         private Fixture _autoFixture;
 
-        public SentViewModelMapperTestsFixture()
+        public ApprovedViewModelMapperTestsFixture()
         {
             _autoFixture = new Fixture();
 
@@ -85,14 +93,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             EncodingService = new Mock<IEncodingService>();
 
-            Mapper = new SentViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object);
-            Source = _autoFixture.Create<SentRequest>();
+            Mapper = new ApprovedViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object);
+            Source = _autoFixture.Create<ApprovedRequest>();
         }
 
-        public Task<SentViewModel> Map()
+        public ApprovedViewModelMapperTestsFixture SetCohortWithParty(Party party)
+        {
+            Cohort.WithParty = party;
+            return this;
+        }
+
+        public Task<ApprovedViewModel> Map()
         {
             return Mapper.Map(TestHelper.Clone(Source));
         }
+
 
     }
 }

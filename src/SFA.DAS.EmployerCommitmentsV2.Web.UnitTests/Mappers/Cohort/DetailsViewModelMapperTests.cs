@@ -14,6 +14,8 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
+using SFA.DAS.EAS.Account.Api.Client;
+using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
@@ -49,6 +51,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
+        public async Task LegalEntityCodeIsMappedCorrectly()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(fixture.LegalEntityViewModel.Code, result.LegalEntityCode);
+        }
+
+        [Test]
         public async Task ProviderNameIsMappedCorrectly()
         {
             var fixture = new DetailsViewModelMapperTestsFixture();
@@ -62,6 +72,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var fixture = new DetailsViewModelMapperTestsFixture();
             var result = await fixture.Map();
             Assert.AreEqual(fixture.Cohort.LatestMessageCreatedByProvider, result.Message);
+        }
+
+        [TestCase(true, false, "No, request changes from training provider")]
+        [TestCase(false, true, "Send to the training provider to review or add details")]
+        [TestCase(false, true, "Send to the training provider to review or add details")]
+        [TestCase(false, false, "Send to the training provider to review or add details")]
+        public async Task SendBackToProviderOptionMessageIsMappedCorrectly(bool isAgreementSigned, bool employerComplete, string expected)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().SetIsAgreementSigned(isAgreementSigned).SetEmployerComplete(employerComplete);
+            var result = await fixture.Map();
+            Assert.AreEqual(expected, result.SendBackToProviderOptionMessage);
         }
 
         [Test]
@@ -254,12 +275,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.IsNull(excessModel);
         }
 
-        [TestCase(0, "Approve 0 apprentices' details")]
-        [TestCase(1, "Approve apprentice details")]
-        [TestCase(2, "Approve 2 apprentices' details")]
-        public async Task PageTitleIsSetCorrectlyForTheNumberOfApprenticeships(int numberOfApprenticeships, string expectedPageTitle)
+        [TestCase(0, "Approve 0 apprentices' details", Party.Employer)]
+        [TestCase(1, "Approve apprentice details", Party.Employer)]
+        [TestCase(2, "Approve 2 apprentices' details", Party.Employer)]
+        [TestCase(0, "View 0 apprentices' details", Party.Provider)]
+        [TestCase(1, "View apprentice details", Party.Provider)]
+        [TestCase(2, "View 2 apprentices' details", Party.Provider)]
+        [TestCase(0, "View 0 apprentices' details", Party.TransferSender)]
+        [TestCase(1, "View apprentice details", Party.TransferSender)]
+        [TestCase(2, "View 2 apprentices' details", Party.TransferSender)]
+        public async Task PageTitleIsSetCorrectlyForTheNumberOfApprenticeships(int numberOfApprenticeships, string expectedPageTitle, Party withParty)
         {
             var fixture = new DetailsViewModelMapperTestsFixture().CreateThisNumberOfApprenticeships(numberOfApprenticeships);
+            fixture.Cohort.WithParty = withParty;
+
             var result = await fixture.Map();
 
             Assert.AreEqual(expectedPageTitle, result.PageTitle);
@@ -374,13 +403,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
+        public async Task VerifyGetAccountLegalEntityAndIsAgreementSignedEndpointsAreCalledWithCorrectParams()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            await fixture.Map();
+            fixture.CommitmentsApiClient.Verify(x=>x.GetLegalEntity(fixture.Cohort.AccountLegalEntityId, It.IsAny<CancellationToken>()));
+            fixture.EmployerAgreementService.Verify(x => x.IsAgreementSigned(fixture.Source.AccountId, fixture.AccountLegalEntityResponse.MaLegalEntityId));
+        }
+
+        [Test]
+        public async Task VerifyGetLegalEntityIsCalledWithCorrectParams()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            await fixture.Map();
+            fixture.AccountApiClient.Verify(x => x.GetLegalEntity(fixture.Source.AccountHashedId, fixture.AccountLegalEntityResponse.MaLegalEntityId));
+        }
+
+        [Test]
         public async Task EmployerCanApproveIsMappedCorrectly()
         {
             var fixture = new DetailsViewModelMapperTestsFixture();
             var result = await fixture.Map();
             Assert.AreEqual(fixture.Cohort.IsCompleteForEmployer, result.IsCompleteForEmployer);
         }
-
     }
 
     public class DetailsViewModelMapperTestsFixture
@@ -391,10 +436,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public Mock<ICommitmentsApiClient> CommitmentsApiClient;
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClient;
         public Mock<IEmployerAgreementService> EmployerAgreementService;
+        public Mock<IAccountApiClient> AccountApiClient;
         public Mock<IEncodingService> EncodingService;
         public GetCohortResponse Cohort;
         public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
         public DateTime DefaultStartDate = new DateTime(2019, 10, 1);
+        public AccountLegalEntityResponse AccountLegalEntityResponse;
+        public LegalEntityViewModel LegalEntityViewModel;
 
         private Fixture _autoFixture;
         private ITrainingProgramme _trainingProgramme;
@@ -406,7 +454,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             _autoFixture = new Fixture();
 
-            Cohort = _autoFixture.Build<GetCohortResponse>().Without(x => x.TransferSenderId).Create(); 
+            Cohort = _autoFixture.Build<GetCohortResponse>().Without(x => x.TransferSenderId).Create();
+            AccountLegalEntityResponse = _autoFixture.Create<AccountLegalEntityResponse>();
+            LegalEntityViewModel = _autoFixture.Create<LegalEntityViewModel>();
 
             var draftApprenticeships = CreateDraftApprenticeshipDtos(_autoFixture);
             _autoFixture.Register(() => draftApprenticeships);
@@ -415,9 +465,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             CommitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(Cohort);
-
             CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(DraftApprenticeshipsResponse);
+            CommitmentsApiClient.Setup(x => x.GetLegalEntity(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(AccountLegalEntityResponse);
+
+            AccountApiClient = new Mock<IAccountApiClient>();
+            AccountApiClient.Setup(x => x.GetLegalEntity(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(LegalEntityViewModel);
 
             _fundingPeriods = new List<FundingPeriod>
             {
@@ -435,7 +489,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             EncodingService = new Mock<IEncodingService>();
             SetEncodingOfApprenticeIds();
 
-            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, TrainingProgrammeApiClient.Object, EmployerAgreementService.Object);
+            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, TrainingProgrammeApiClient.Object, EmployerAgreementService.Object, AccountApiClient.Object);
             Source = _autoFixture.Create<DetailsRequest>();
         }
 
@@ -537,6 +591,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                     .ReturnsAsync(isAgreementSigned);
             }
 
+            return this;
+        }
+
+        public DetailsViewModelMapperTestsFixture SetEmployerComplete(bool employerComplete)
+        {
+            Cohort.IsCompleteForEmployer = employerComplete;
             return this;
         }
 
