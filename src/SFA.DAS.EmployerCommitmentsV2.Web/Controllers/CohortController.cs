@@ -75,7 +75,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 {
                     var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
                     return Redirect(_linkGenerator.AccountsLink(
-                        $"accounts/{request.AccountHashedId}/agreements/{request.AccountLegalEntityHashedId}/about-your-agreement"));
+                        $"accounts/{request.AccountHashedId}/agreements"));
                 }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));

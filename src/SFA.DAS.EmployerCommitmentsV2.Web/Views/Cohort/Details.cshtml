@@ -130,8 +130,8 @@
     <hr class="govuk-section-break govuk-section-break--l">
 
 <form id="submitCohort" novalidate method="post">
-
-        <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.Selection, "govuk-form-group--error")">
+    @Html.HiddenFor(x=>x.LegalEntityCode)
+    <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.Selection, "govuk-form-group--error")">
 
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
