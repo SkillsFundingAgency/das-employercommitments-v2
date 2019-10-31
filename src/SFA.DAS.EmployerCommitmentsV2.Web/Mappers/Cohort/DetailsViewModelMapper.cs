@@ -7,6 +7,7 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -56,14 +57,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var legalEntity = await _accountsApiClient.GetLegalEntity(source.AccountHashedId, ale.MaLegalEntityId);
             var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
 
-            var viewOrApprove = cohort.WithParty == CommitmentsV2.Types.Party.Employer ? "Approve" : "View";
+            var viewOrApprove = cohort.WithParty == Party.Employer ? "Approve" : "View";
             var isAgreementSigned = await IsAgreementSigned(ale.MaLegalEntityId);
-
-            var sendBackToProviderOptionMessage = "No, request changes from training provider";
-            if (!isAgreementSigned || cohort.IsCompleteForEmployer)
-            {
-                sendBackToProviderOptionMessage = "Send to the training provider to review or add details";
-            }
 
             return new DetailsViewModel
             {
@@ -82,7 +77,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                     : $"{viewOrApprove} {draftApprenticeships.Count} apprentices' details",
                 IsApprovedByProvider = cohort.IsApprovedByProvider,
                 IsAgreementSigned = isAgreementSigned,
-                SendBackToProviderOptionMessage = sendBackToProviderOptionMessage, 
                 IsCompleteForEmployer = cohort.IsCompleteForEmployer
             };
         }

@@ -30,11 +30,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public int TotalCost => Courses?.Sum(g => g.DraftApprenticeships.Sum(a => a.Cost ?? 0)) ?? 0;
         public string DisplayTotalCost => TotalCost.ToGdsCostFormat();
         public bool IsAgreementSigned { get; set; }
-        public string OptionsTitle => IsAgreementSigned ? "Approve these details?": "Choose an option";
+        public string OptionsTitle => IsAgreementSigned && IsCompleteForEmployer ? "Approve these details?": "Choose an option";
         public bool ShowViewAgreementOption => !IsAgreementSigned;
-        public bool ShowApprovalOption => IsAgreementSigned;
-        public bool ShowApprovalOptionMessage => ShowApprovalOption && IsApprovedByProvider;
-        public string SendBackToProviderOptionMessage { get; set; }
+        public bool EmployerCanApprove => IsAgreementSigned && IsCompleteForEmployer;
+        public bool ShowApprovalOptionMessage => EmployerCanApprove && IsApprovedByProvider;
+        public string SendBackToProviderOptionMessage => EmployerCanApprove
+            ? "No, request changes from training provider"
+            : "Send to the training provider to review or add details";
         public bool IsReadOnly => WithParty != Party.Employer;
         public bool IsCompleteForEmployer { get; set; }
     }

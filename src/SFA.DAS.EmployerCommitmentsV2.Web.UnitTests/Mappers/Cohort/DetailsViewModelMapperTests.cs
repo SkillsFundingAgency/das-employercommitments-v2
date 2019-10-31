@@ -74,8 +74,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(fixture.Cohort.LatestMessageCreatedByProvider, result.Message);
         }
 
-        [TestCase(true, false, "No, request changes from training provider")]
-        [TestCase(false, true, "Send to the training provider to review or add details")]
+        [TestCase(true, true, "No, request changes from training provider")]
+        [TestCase(true, false, "Send to the training provider to review or add details")]
         [TestCase(false, true, "Send to the training provider to review or add details")]
         [TestCase(false, false, "Send to the training provider to review or add details")]
         public async Task SendBackToProviderOptionMessageIsMappedCorrectly(bool isAgreementSigned, bool employerComplete, string expected)
@@ -361,7 +361,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var fixture = new DetailsViewModelMapperTestsFixture();
             fixture.SetTransferSender().SetIsAgreementSigned(isAgreementSigned);
             var result = await fixture.Map();
-            Assert.AreEqual(expectedShowApprovalOption, result.ShowApprovalOption);
+            Assert.AreEqual(expectedShowApprovalOption, result.EmployerCanApprove);
         }
 
         [TestCase(true, true)]
@@ -371,7 +371,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var fixture = new DetailsViewModelMapperTestsFixture();
             fixture.SetIsAgreementSigned(isAgreementSigned);
             var result = await fixture.Map();
-            Assert.AreEqual(expectedShowApprovalOption, result.ShowApprovalOption);
+            Assert.AreEqual(expectedShowApprovalOption, result.EmployerCanApprove);
         }
 
         [TestCase(true, true, true, true)]

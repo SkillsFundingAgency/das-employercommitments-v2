@@ -167,30 +167,26 @@ else
                     </div>
                 }
                 
-                @if (Model.IsCompleteForEmployer) //Approval options only shown if the Employer can approve the cohort
+                @if (Model.EmployerCanApprove)
                 {
-                    if (Model.ShowApprovalOption)
-                     {
-                         <div class="govuk-radios__item">
-                             <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio" value="@CohortDetailsOptions.Approve" data-aria-controls="conditional-approve">
-                             <label class="govuk-label govuk-radios__label" for="radio-approve">
-                                 Yes, approve and notify training provider
-                             </label>
-                         </div>
-                     }
-                    if (!Model.ShowApprovalOptionMessage)
-                     {
-                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-approve">
-                             <div class="govuk-form-group">
-                                 <label class="govuk-label" for="approve-details">
-                                     Leave @Model.ProviderName a message (optional)
-                                 </label>
-                                 <textarea class="govuk-textarea" id="approve-details" name="approvemessage" rows="5"></textarea>
-                             </div>
-                         </div>
-                     }
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio" value="@CohortDetailsOptions.Approve" data-aria-controls="conditional-approve">
+                        <label class="govuk-label govuk-radios__label" for="radio-approve">
+                            Yes, approve and notify training provider
+                        </label>
+                    </div>
                 }
-                
+                @if (!Model.ShowApprovalOptionMessage)
+                {
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-approve">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="approve-details">
+                                Leave @Model.ProviderName a message (optional)
+                            </label>
+                            <textarea class="govuk-textarea" id="approve-details" name="approvemessage" rows="5"></textarea>
+                        </div>
+                    </div>
+                 }
                 <div class="govuk-radios__item">
                     <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Send" data-aria-controls="conditional-send">
                     <label class="govuk-label govuk-radios__label" for="radio-send">
