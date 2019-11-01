@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Authorization.ModelBinding;
-using SFA.DAS.Commitments.Shared.Extensions;
+using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
@@ -14,12 +14,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public long CohortId { get; set; }
         public string AccountLegalEntityHashedId { get; set; }
         public string LegalEntityName { get; set; }
+        public string LegalEntityCode { get; set; }
         public string ProviderName { get; set; }
         public string Message { get; set; }
         public string TransferSenderHashedId { get; set; }
-
         public int DraftApprenticeshipsCount => Courses?.SelectMany(c => c.DraftApprenticeships).Count() ?? 0;
-        
         public IReadOnlyCollection<DetailsViewCourseGroupingModel> Courses { get; set; }
         public string PageTitle { get; set; }
         public CohortDetailsOptions? Selection { get; set; }
@@ -28,12 +27,35 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public bool IsApprovedByProvider { get; set; }
         public int TotalCost => Courses?.Sum(g => g.DraftApprenticeships.Sum(a => a.Cost ?? 0)) ?? 0;
         public string DisplayTotalCost => TotalCost.ToGdsCostFormat();
+        public bool IsAgreementSigned { get; set; }
+        public string OptionsTitle => IsAgreementSigned && IsCompleteForEmployer ? "Approve these details?": "Choose an option";
+        public bool ShowViewAgreementOption => !IsAgreementSigned;
+        public bool EmployerCanApprove => IsAgreementSigned && IsCompleteForEmployer;
+        public bool ShowApprovalOptionMessage => EmployerCanApprove && IsApprovedByProvider;
         public bool IsReadOnly => WithParty != Party.Employer;
+        public bool IsCompleteForEmployer { get; set; }
+        public string SendBackToProviderOptionMessage
+        {
+            get
+            {
+                if (!IsAgreementSigned)
+                {
+                    return "Send to the training provider to review or add details";
+                }
+                if (!EmployerCanApprove)
+                {
+                    return "Request changes from training provider";
+                }
+                return "No, request changes from training provider";
+            }
+        }
     }
 
     public enum CohortDetailsOptions
     {
         Send,
-        Approve
+        Approve,
+        ViewEmployerAgreement, 
+        Homepage
     }
 }

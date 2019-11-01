@@ -8,6 +8,7 @@
         public static readonly string CommitmentsApiClientConfiguration = $"{EmployerCommitmentsV2}:CommitmentsApiClientConfiguration";
         public const string EmployerCommitmentsV2 = "SFA.DAS.EmployerCommitmentsV2";
         public static readonly string EmployerFeaturesConfiguration = $"{EmployerCommitmentsV2}:Features";
+        public static readonly string AccountApiConfiguration = $"{EmployerCommitmentsV2}:AccountApi";
         public static readonly string PublicAccountIdHashingConfiguration = $"{EmployerCommitmentsV2}:PublicAccountIdHashingConfiguration";
         public static readonly string PublicAccountLegalEntityIdHashingConfiguration = $"{EmployerCommitmentsV2}:PublicAccountLegalEntityIdHashingConfiguration";
         public const string EmployerUrlConfiguration = "SFA.DAS.EmployerUrlHelper";

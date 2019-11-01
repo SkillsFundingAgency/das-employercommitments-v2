@@ -1,10 +1,9 @@
-﻿using SFA.DAS.Commitments.Shared.Interfaces;
-using SFA.DAS.Commitments.Shared.Services;
+﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Services;
 using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Services.Stubs;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
-using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using StructureMap;
 using StructureMap.Building.Interception;

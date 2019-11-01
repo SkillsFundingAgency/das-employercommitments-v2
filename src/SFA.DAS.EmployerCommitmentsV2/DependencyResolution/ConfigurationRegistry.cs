@@ -2,6 +2,7 @@
 using SFA.DAS.Authorization.CommitmentPermissions.Configuration;
 using SFA.DAS.Authorization.EmployerFeatures.Configuration;
 using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
+using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.Encoding;
 using StructureMap;
@@ -21,6 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution
             AddConfiguration<PublicAccountIdHashingConfiguration>(ConfigurationKeys.PublicAccountIdHashingConfiguration);
             AddConfiguration<PublicAccountLegalEntityIdHashingConfiguration>(ConfigurationKeys.PublicAccountLegalEntityIdHashingConfiguration);
             AddConfiguration<EncodingConfig>(ConfigurationKeys.Encoding);
+            AddConfiguration<AccountApiConfiguration>(ConfigurationKeys.AccountApiConfiguration);
         }
 
         private void AddConfiguration<T>(string key) where T : class

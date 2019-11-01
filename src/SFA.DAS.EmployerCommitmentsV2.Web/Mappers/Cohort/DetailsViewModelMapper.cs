@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
+using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
 
@@ -16,26 +20,46 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
         private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
+        private readonly IEmployerAgreementService _employerAgreementService;
+        private readonly IAccountApiClient _accountsApiClient;
 
-        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, ITrainingProgrammeApiClient trainingProgrammeApiClient)
+        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, 
+            ITrainingProgrammeApiClient trainingProgrammeApiClient, IEmployerAgreementService employerAgreementService, IAccountApiClient accountsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
             _trainingProgrammeApiClient = trainingProgrammeApiClient;
+            _employerAgreementService = employerAgreementService;
+            _accountsApiClient = accountsApiClient;
         }
 
         public async Task<DetailsViewModel> Map(DetailsRequest source)
         {
+            GetCohortResponse cohort;
+
+            async Task<bool> IsAgreementSigned(long maLegalEntityId)
+            {
+                if (cohort.IsFundedByTransfer)
+                {
+                    return await _employerAgreementService.IsAgreementSigned(source.AccountId, maLegalEntityId,
+                        AgreementFeature.Transfers);
+                }
+                return await _employerAgreementService.IsAgreementSigned(source.AccountId, maLegalEntityId);
+            }
+
             var cohortTask = _commitmentsApiClient.GetCohort(source.CohortId);
             var draftApprenticeshipsTask = _commitmentsApiClient.GetDraftApprenticeships(source.CohortId);
 
             await Task.WhenAll(cohortTask, draftApprenticeshipsTask);
 
-            var cohort = await cohortTask;
+            cohort = await cohortTask;
+            var ale = await _commitmentsApiClient.GetLegalEntity(cohort.AccountLegalEntityId);
+            var legalEntity = await _accountsApiClient.GetLegalEntity(source.AccountHashedId, ale.MaLegalEntityId);
             var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
 
             var courses = GroupCourses(draftApprenticeships);
             var viewOrApprove = cohort.WithParty == CommitmentsV2.Types.Party.Employer ? "Approve" : "View";
+            var isAgreementSigned = await IsAgreementSigned(ale.MaLegalEntityId);
 
             return new DetailsViewModel
             {
@@ -44,6 +68,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 WithParty = cohort.WithParty,
                 AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
                 LegalEntityName = cohort.LegalEntityName,
+                LegalEntityCode = legalEntity.Code,
                 ProviderName = cohort.ProviderName,
                 TransferSenderHashedId = cohort.TransferSenderId == null ? null : _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId),
                 Message = cohort.LatestMessageCreatedByProvider,
@@ -52,6 +77,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                     ? $"{viewOrApprove} apprentice details"
                     : $"{viewOrApprove} {draftApprenticeships.Count} apprentices' details",
                 IsApprovedByProvider = cohort.IsApprovedByProvider,
+                IsAgreementSigned = isAgreementSigned,
+                IsCompleteForEmployer = cohort.IsCompleteForEmployer
             };
         }
 

@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Commitments.Shared.Configuration;
+﻿using SFA.DAS.CommitmentsV2.Shared.Configuration;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Configuration
 {

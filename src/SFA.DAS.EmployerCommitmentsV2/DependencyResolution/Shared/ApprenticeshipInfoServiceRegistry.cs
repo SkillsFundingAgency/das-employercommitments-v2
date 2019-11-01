@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Commitments.Shared.Configuration;
-using SFA.DAS.EmployerCommitmentsV2.Configuration;
+using SFA.DAS.CommitmentsV2.Shared.Configuration;
 using StructureMap;
 
 namespace SFA.DAS.Commitments.Shared.DependencyInjection
