@@ -75,7 +75,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [TestCase(true, true, "No, request changes from training provider")]
-        [TestCase(true, false, "Send to the training provider to review or add details")]
+        [TestCase(true, false, "Request changes from training provider")]
         [TestCase(false, true, "Send to the training provider to review or add details")]
         [TestCase(false, false, "Send to the training provider to review or add details")]
         public async Task SendBackToProviderOptionMessageIsMappedCorrectly(bool isAgreementSigned, bool employerComplete, string expected)
