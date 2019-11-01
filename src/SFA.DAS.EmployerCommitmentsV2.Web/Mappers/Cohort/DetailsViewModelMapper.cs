@@ -99,8 +99,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 if (numberExceedingBand > 0)
                 {
                     var fundingExceededValues = apprenticesExceedingFundingBand.GroupBy(x => x.FundingBandCap).Select(fundingBand => fundingBand.Key);
-                    var fundingBandCapExcessHeader = SetFundingBandExcessHeader(apprenticesExceedingFundingBand.Count);
-                    var fundingBandCapExcessLabel = SetFundingBandExcessLabel(apprenticesExceedingFundingBand.Count);
+                    var fundingBandCapExcessHeader = GetFundingBandExcessHeader(apprenticesExceedingFundingBand.Count);
+                    var fundingBandCapExcessLabel = GetFundingBandExcessLabel(apprenticesExceedingFundingBand.Count);
 
                     courseGroup.FundingBandExcess =
                         new FundingBandExcessModel(apprenticesExceedingFundingBand.Count, fundingExceededValues, fundingBandCapExcessHeader, fundingBandCapExcessLabel);
@@ -137,7 +137,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             return null;
         }
 
-        private string SetFundingBandExcessHeader(int apprenticeshipsOverCap)
+        private string GetFundingBandExcessHeader(int apprenticeshipsOverCap)
         {
             if (apprenticeshipsOverCap == 1)
                 return new string($"{apprenticeshipsOverCap} apprenticeship above funding band maximum");
@@ -146,7 +146,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             return null;
         }
 
-        private string SetFundingBandExcessLabel(int apprenticeshipsOverCap)
+        private string GetFundingBandExcessLabel(int apprenticeshipsOverCap)
         {
             if (apprenticeshipsOverCap == 1)
                 return new string("The price for this apprenticeship is above its");
