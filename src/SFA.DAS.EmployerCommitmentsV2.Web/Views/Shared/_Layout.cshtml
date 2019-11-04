@@ -33,17 +33,16 @@
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
     <partial name="_Header" />
     <partial name="_Menu" model="@accountHashedId" />
-    <div class="govuk-width-container">
-        <!--TO DO add Back link logic
-        <a href="#" class="govuk-back-link">Back</a>
-        -->
-        <main class="govuk-main-wrapper " id="main-content" role="main">
-            
-            <partial name="_FlashMessagePartial"/>
-
-            @RenderBody()
-        </main>
-    </div>
+<div class="govuk-width-container">
+    @if (IsSectionDefined("Back"))
+    {
+        @RenderSection("Back")
+    }
+    <main class="govuk-main-wrapper " id="main-content" role="main">
+        <partial name="_FlashMessagePartial"/>
+        @RenderBody()
+    </main>
+</div>
 
     <partial name="_Footer" />
 

@@ -2,7 +2,7 @@
 using AutoFixture;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Commitments.Shared.Models;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
@@ -76,8 +76,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             InputViewModel = new AddDraftApprenticeshipViewModel();
             InputDetails = new EditDraftApprenticeshipDetails();
 
-            SaveRequestMapper = new AttachUserInfoToSaveRequests<AddDraftApprenticeshipViewModel, CreateCohortRequest>(new AddDraftApprenticeshipToCreateCohortRequestMapper(), AuthenticationServiceMock.Object);
-            NonSaveRequestMapper = new AttachUserInfoToSaveRequests<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel>(new EditDraftApprenticeshipDetailsToViewModelMapper(), AuthenticationServiceMock.Object);
+            SaveRequestMapper = new AttachUserInfoToSaveRequests<AddDraftApprenticeshipViewModel, CreateCohortRequest>(new CreateCohortRequestMapper(), AuthenticationServiceMock.Object);
+            NonSaveRequestMapper = new AttachUserInfoToSaveRequests<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel>(new EditDraftApprenticeshipViewModelMapper(), AuthenticationServiceMock.Object);
         }
 
         public AttachUserInfoToSaveRequestsTestsFixture SetupAuthenticatedUser()

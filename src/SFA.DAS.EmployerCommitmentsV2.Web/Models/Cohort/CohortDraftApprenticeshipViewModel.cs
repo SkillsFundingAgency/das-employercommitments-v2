@@ -1,5 +1,5 @@
 ﻿using System;
-using SFA.DAS.Commitments.Shared.Extensions;
+using SFA.DAS.CommitmentsV2.Shared.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 {
@@ -12,9 +12,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public DateTime? DateOfBirth { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public string CourseCode { get; set; }
-        public string CourseName { get; set; }
         public int? Cost { get; set; }
+        public int? FundingBandCap { get; set; }
+
+        public bool ExceedsFundingBandCap
+        {
+            get
+            {
+                if (Cost.HasValue && FundingBandCap.HasValue)
+                {
+                    return Cost.Value > FundingBandCap.Value;
+                }
+
+                return false;
+            }
+        }
 
         public string DisplayName => $"{FirstName} {LastName}";
 

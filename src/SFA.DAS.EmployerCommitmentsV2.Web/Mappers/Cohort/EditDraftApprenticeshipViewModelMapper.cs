@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.Commitments.Shared.Interfaces;
-using SFA.DAS.Commitments.Shared.Models;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class EditDraftApprenticeshipDetailsToViewModelMapper : IMapper<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel>
+    public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel>
     {
         public Task<EditDraftApprenticeshipViewModel> Map(EditDraftApprenticeshipDetails source) =>
             Task.FromResult(new EditDraftApprenticeshipViewModel(source.DateOfBirth, source.StartDate, source.EndDate)

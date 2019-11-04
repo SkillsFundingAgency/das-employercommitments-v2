@@ -7,7 +7,7 @@ using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Authorization.Services;
-using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Types;
@@ -49,11 +49,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
 
-            if (viewModel.WithParty != Party.Employer)
-            {
-                return Redirect(_linkGenerator.CohortDetails(viewModel.AccountHashedId, viewModel.CohortReference));
-            }
-
             return View(viewModel);
         }
 
@@ -62,24 +57,51 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Details(DetailsViewModel viewModel)
         {
-            if (viewModel.Selection != CohortDetailsOptions.Send)
+            switch (viewModel.Selection)
             {
-                throw new NotImplementedException();
+                case CohortDetailsOptions.Send:
+                {
+                    var request = await _modelMapper.Map<SendCohortRequest>(viewModel);
+                    await _commitmentsApiClient.SendCohort(viewModel.CohortId, request);
+                    return RedirectToAction("Sent", new { viewModel.CohortReference, viewModel.AccountHashedId});
+                }
+                case CohortDetailsOptions.Approve:
+                    {
+                        var request = await _modelMapper.Map<ApproveCohortRequest>(viewModel);
+                        await _commitmentsApiClient.ApproveCohort(viewModel.CohortId, request);
+                        return RedirectToAction("Approved", new { viewModel.CohortReference, viewModel.AccountHashedId });
+                    }
+                case CohortDetailsOptions.ViewEmployerAgreement:
+                {
+                    var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
+                    return Redirect(_linkGenerator.AccountsLink(
+                        $"accounts/{request.AccountHashedId}/agreements"));
+                }
+                case CohortDetailsOptions.Homepage:
+                {
+                        return Redirect(_linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
+                    }
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
             }
-
-            var request = await _modelMapper.Map<SendCohortRequest>(viewModel);
-            await _commitmentsApiClient.SendCohort(viewModel.CohortId, request);
-
-            return RedirectToAction("Sent", new { viewModel.CohortReference, viewModel.AccountHashedId});
-
         }
 
         [HttpGet]
         [Route("{cohortReference}/sent")]
         [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
-        public IActionResult Sent()
+        public async Task<IActionResult> Sent(SentRequest request)
         {
-            return new NotFoundResult();
+            var viewModel = await _modelMapper.Map<SentViewModel>(request);
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [Route("{cohortReference}/approved")]
+        [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
+        public async Task<IActionResult> Approved(ApprovedRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ApprovedViewModel>(request);
+            return View(viewModel);
         }
 
         [Route("add")]

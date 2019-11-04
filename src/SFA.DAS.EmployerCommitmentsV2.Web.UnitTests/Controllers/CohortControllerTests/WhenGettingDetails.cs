@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
@@ -6,11 +6,10 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.Services;
-using SFA.DAS.Commitments.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
 
@@ -35,11 +34,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
         [TestCase(Party.Provider)]
         [TestCase(Party.TransferSender)]
-        public async Task ThenShouldRedirectToV1IfCohortIsNotWithEmployer(Party withParty)
+        public async Task ThenViewModelIsReadOnlyIfCohortIsNotWithEmployer(Party withParty)
         {
             _fixture.WithParty(withParty);
             await _fixture.GetDetails();
-            _fixture.VerifyResultIsRedirectToV1();
+            Assert.IsTrue(_fixture.IsViewModelReadOnly());
         }
 
         public class WhenGettingDetailsTestFixture
@@ -95,14 +94,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 var detailsViewModel = (DetailsViewModel) viewModel;
 
                 Assert.AreEqual(_viewModel, detailsViewModel);
+
+                var expectedTotalCost = _viewModel.Courses?.Sum(g => g.DraftApprenticeships.Sum(a => a.Cost ?? 0)) ?? 0;
+                Assert.AreEqual(expectedTotalCost, _viewModel.TotalCost, "The total cost stored in the model is incorrect");
             }
 
-            public void VerifyResultIsRedirectToV1()
+            public bool IsViewModelReadOnly()
             {
-                Assert.IsInstanceOf<RedirectResult>(_result);
-                var redirectResult = (RedirectResult) _result;
-                Assert.AreEqual(_linkGeneratorResult, redirectResult.Url);
+                return _viewModel.IsReadOnly;
             }
+
         }
     }
 }

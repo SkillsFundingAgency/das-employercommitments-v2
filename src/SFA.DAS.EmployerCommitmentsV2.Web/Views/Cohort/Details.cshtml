@@ -1,14 +1,50 @@
-﻿@using SFA.DAS.EmployerUrlHelper.Mvc
-@using SFA.DAS.Commitments.Shared.Extensions
+﻿@using Microsoft.CodeAnalysis.CSharp.Syntax
+@using SFA.DAS.EmployerUrlHelper.Mvc
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
+@inject ILinkGenerator LinkGenerator
 
 @{
-    ViewData["Title"] = "Approve apprentices' details";
+    ViewData["Title"] = Model.PageTitle;
+}
+
+@if (!Model.IsAgreementSigned)
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+    
+            <div class="govuk-panel" style="border-color:#2e358b;">
+                <h1 class="govuk-panel__title">
+                    You must sign your employer agreement before you can approve this record
+                </h1>
+            </div>
+       
+        </div>
+    </div>  
+}
+else
+{
+    if (!Model.IsCompleteForEmployer)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+    
+                <div class="govuk-panel" style="border-color:#2e358b;">
+                    <h1 class="govuk-panel__title">
+                        You must complete all apprentice details before you can approve this record
+                    </h1>
+                </div>
+       
+            </div>
+        </div>
+    }
 }
 
 <partial name="_ValidationSummary" />
-<h1 class="govuk-heading-xl">Approve @Model.DraftApprenticeships.Count apprentices' details</h1>
+<h1 class="govuk-heading-xl">@Model.PageTitle</h1>
 
 <dl class="das-definition-list das-definition-list--inline">
     <dt class="das-definition-list__title">Organisation</dt>
@@ -31,133 +67,130 @@
 
 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
-<table class="govuk-table">
-    <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
-            <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
-            <th scope="col" class="govuk-table__header das-table-cell-width-30">Training dates</th>
-            <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
-            <th scope="col" class="govuk-table__header das-table-cell-width-10"><span class="govuk-visually-hidden">Action</span></th>
-        </tr>
-    </thead>
-    <tbody class="govuk-table__body">
-
-        @foreach (var draftApprenticeship in Model.DraftApprenticeships)
-        {
+@foreach (var course in Model.Courses)
+{
+    <h3 class="govuk-heading-m">@course.Count x @course.DisplayCourseName</h3>
+    if (@course.FundingBandExcess != null)
+    {
+        <div class="govuk-inset-text das-inset-text--highlight">
+            <h3 class="govuk-heading-s">@course.FundingBandExcess.NumberOfApprenticesExceedingFundingBandCap apprenticeships above the funding band maximum</h3>
+            <p>
+                The price for this apprenticeship is above its
+                <text><a target="_blank" href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band maximum</a>@course.FundingBandExcess.DisplaySingleFundingBandCap</text>
+                You'll need to pay the difference directly to the training provider.
+            </p>
+        </div>
+    }
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell">@draftApprenticeship.DisplayName</td>
-                <td class="govuk-table__cell">@draftApprenticeship.DisplayDateOfBirth</td>
-                <td class="govuk-table__cell">@draftApprenticeship.DisplayTrainingDates</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">@draftApprenticeship.DisplayCost</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">
-                    <a href="@Url.Action("EditDraftApprenticeship", "DraftApprenticeship", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">Edit <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
-                </td>
+                <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
+                <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
+                <th scope="col" class="govuk-table__header das-table-cell-width-30">Training dates</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
+                <th scope="col" class="govuk-table__header das-table-cell-width-10"><span class="govuk-visually-hidden">Action</span></th>
             </tr>
-        }
+        </thead>
+        <tbody class="govuk-table__body">
+
+            @foreach (var draftApprenticeship in course.DraftApprenticeships)
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">@draftApprenticeship.DisplayName</td>
+                    <td class="govuk-table__cell">@draftApprenticeship.DisplayDateOfBirth</td>
+                    <td class="govuk-table__cell">@draftApprenticeship.DisplayTrainingDates</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        @if (@draftApprenticeship.ExceedsFundingBandCap)
+                        {
+                            <span class="das-table-cell--highlight">
+                                @draftApprenticeship.DisplayCost
+                            </span>
+                        }
+                        else
+                        {
+                            @draftApprenticeship.DisplayCost
+                        }
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        @if (!Model.IsReadOnly)
+                        {
+                            <a href="@Url.Action("EditDraftApprenticeship", "DraftApprenticeship", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">Edit <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
+                        }
+                        else
+                        {
+                            <a href="@LinkGenerator.ViewApprentice(Model.AccountHashedId, Model.CohortReference, draftApprenticeship.DraftApprenticeshipHashedId)">View</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<table class="govuk-table">
+    <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header das-table-cell-width-80" scope="row">Total apprenticeship training price <br>(excluding VAT)</th>
+            <td class="govuk-table__cell govuk-table__header--numeric das-table-cell-width-10"><strong>@Model.DisplayTotalCost</strong></td>
+            <td class="govuk-table__cell das-table-cell-width-10" aria-hidden="true"></td>
+        </tr>
     </tbody>
 </table>
 
+@if (!Model.IsReadOnly)
+{
+    <p>
+        <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}")" class="govuk-link">Add another apprentice</a>
+        <a href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/{Model.CohortReference}/details/delete")" class="govuk-link das-float-right">Delete this group</a>
+    </p>
 
-@*<h3 class="govuk-heading-m">3 x Bespoke Saddler, Level 3 (Standard)</h3>
-
-    <table class="govuk-table">
-        <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
-                <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
-                <th scope="col" class="govuk-table__header das-table-cell-width-30">Training Dates</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
-                <th scope="col" class="govuk-table__header das-table-cell-width-10"><span class="govuk-visually-hidden">Action</span></th>
-            </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell">Barry Block</td>
-                <td class="govuk-table__cell">15 Apr 2002</td>
-                <td class="govuk-table__cell">Oct 2019 to Nov 2020</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">
-                    <a href="">Edit <span class="govuk-visually-hidden">Barry Block's details</span></a>
-                    <a href="">Delete <span class="govuk-visually-hidden">Barry Block's details</span></a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h3 class="govuk-heading-m">3 x Bespoke Saddler, Level 3 (Standard)</h3>
-
-    <table class="govuk-table">
-        <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
-                <th scope="col" class="govuk-table__header das-table-cell-width-25">Date of birth</th>
-                <th scope="col" class="govuk-table__header das-table-cell-width-30">Training Dates</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10">Price</th>
-                <th scope="col" class="govuk-table__header das-table-cell-width-10"><span class="govuk-visually-hidden">Action</span></th>
-            </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell">Barry Block</td>
-                <td class="govuk-table__cell">15 Apr 2002</td>
-                <td class="govuk-table__cell">Oct 2019 to Nov 2020</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">
-                    <a href="">Edit <span class="govuk-visually-hidden">Barry Block's details</span></a>
-                    <a href="">Delete <span class="govuk-visually-hidden">Barry Block's details</span></a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table class="govuk-table">
-        <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header das-table-cell-width-80" scope="row">Total apprenticeship training price <br>(excluding VAT)</th>
-                <td class="govuk-table__cell govuk-table__header--numeric das-table-cell-width-10"><strong>&pound;42,000</strong></td>
-                <td class="govuk-table__cell das-table-cell-width-10" aria-hidden="true"></td>
-            </tr>
-        </tbody>
-    </table>*@
-
-<p>
-    <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}")" class="govuk-link">Add another apprentice</a>
-</p>
-
-<hr class="govuk-section-break govuk-section-break--l">
-
+    <hr class="govuk-section-break govuk-section-break--l">
 
 <form id="submitCohort" novalidate method="post">
-
+    @Html.HiddenFor(x=>x.LegalEntityCode)
     <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.Selection, "govuk-form-group--error")">
 
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                <h3 class="govuk-fieldset__heading">
-                    Approve these details?
-                </h3>
+                <h3 class="govuk-fieldset__heading">@Model.OptionsTitle</h3>
             </legend>
             @Html.ValidationMessageFor(m => m.Selection, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Selection) })
             <div class="govuk-radios govuk-radios--conditional" data-module="radios">
-                @*<div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio" value="approve" data-aria-controls="conditional-approve">
-                        <label class="govuk-label govuk-radios__label" for="radio-approve">
-                            Approve these details including my changes
+
+                @if (Model.ShowViewAgreementOption)
+                {
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="radio-view" name="selection" type="radio" value="@CohortDetailsOptions.ViewEmployerAgreement" data-aria-controls="conditional-view">
+                        <label class="govuk-label govuk-radios__label" for="radio-view">
+                            View employer agreement
                         </label>
                     </div>
+                }
+                
+                @if (Model.EmployerCanApprove)
+                {
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio" value="@CohortDetailsOptions.Approve" data-aria-controls="conditional-approve">
+                        <label class="govuk-label govuk-radios__label" for="radio-approve">
+                            Yes, approve and notify training provider
+                        </label>
+                    </div>
+                }
+                @if (!Model.ShowApprovalOptionMessage)
+                {
                     <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-approve">
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="approve-details">
-                                Let @Model.ProviderName know what you'd like them to do next (optional)
+                                Leave @Model.ProviderName a message (optional)
                             </label>
                             <textarea class="govuk-textarea" id="approve-details" name="approvemessage" rows="5"></textarea>
                         </div>
-                    </div>*@
+                    </div>
+                 }
                 <div class="govuk-radios__item">
                     <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Send" data-aria-controls="conditional-send">
                     <label class="govuk-label govuk-radios__label" for="radio-send">
-                        No, request changes from training provider
+                        @Model.SendBackToProviderOptionMessage
                     </label>
                 </div>
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-send">
@@ -168,14 +201,32 @@
                         <textarea class="govuk-textarea" id="send-details" name="sendmessage" rows="5"></textarea>
                     </div>
                 </div>
+                
+                @if (!Model.IsCompleteForEmployer)
+                {
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Homepage">
+                    <label class="govuk-label govuk-radios__label">
+                        Go to homepage
+                    </label>
+                </div>
+                }
+
             </div>
         </fieldset>
     </div>
 
-    <button type="submit" class="govuk-button">Save and submit</button>
-    
-    <p>
-        <a href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/cohorts")" class="govuk-link">Save and exit</a>
-    </p>
-    
-</form>
+        <button type="submit" class="govuk-button">Save and submit</button>
+
+        <p>
+            <a href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/cohorts")" class="govuk-link">Save and exit</a>
+        </p>
+
+    </form>
+}
+
+@section Back
+{
+    <a class="govuk-back-link" href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/cohorts")">Back</a>
+
+}

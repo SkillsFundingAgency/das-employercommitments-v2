@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using AutoFixture;
 using NUnit.Framework;
-using SFA.DAS.Commitments.Shared.Models;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     [TestFixture]
     public class WhenIMapEditDraftApprenticeshipDetailsToViewModel
     {
-        private EditDraftApprenticeshipDetailsToViewModelMapper _mapper;
+        private EditDraftApprenticeshipViewModelMapper _mapper;
         private EditDraftApprenticeshipDetails _source;
         private Func<Task<EditDraftApprenticeshipViewModel>> _act;
 
@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new Fixture();
 
-            _mapper = new EditDraftApprenticeshipDetailsToViewModelMapper();
+            _mapper = new EditDraftApprenticeshipViewModelMapper();
             _source = fixture.Build<EditDraftApprenticeshipDetails>().Create();
 
             _act = async () => await _mapper.Map(TestHelper.Clone(_source));

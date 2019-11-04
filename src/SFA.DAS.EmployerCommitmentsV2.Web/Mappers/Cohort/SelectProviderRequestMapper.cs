@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class SelectProviderViewModelToSelectProviderRequestMapper : IMapper<SelectProviderViewModel, SelectProviderRequest>
+    public class SelectProviderRequestMapper : IMapper<SelectProviderViewModel, SelectProviderRequest>
     {
         public Task<SelectProviderRequest> Map(SelectProviderViewModel source)
         {
