@@ -66,21 +66,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     return RedirectToAction("Sent", new { viewModel.CohortReference, viewModel.AccountHashedId});
                 }
                 case CohortDetailsOptions.Approve:
-                    {
-                        var request = await _modelMapper.Map<ApproveCohortRequest>(viewModel);
-                        await _commitmentsApiClient.ApproveCohort(viewModel.CohortId, request);
-                        return RedirectToAction("Approved", new { viewModel.CohortReference, viewModel.AccountHashedId });
-                    }
+                {
+                    var request = await _modelMapper.Map<ApproveCohortRequest>(viewModel);
+                    await _commitmentsApiClient.ApproveCohort(viewModel.CohortId, request);
+                    return RedirectToAction("Approved", new { viewModel.CohortReference, viewModel.AccountHashedId });
+                }
                 case CohortDetailsOptions.ViewEmployerAgreement:
                 {
                     var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
+                    if (request.AgreementHashedId == null)
+                    {
+                        return Redirect(_linkGenerator.AccountsLink($"accounts/{request.AccountHashedId}/agreements/"));
+                    }
                     return Redirect(_linkGenerator.AccountsLink(
-                        $"accounts/{request.AccountHashedId}/agreements"));
+                    $"accounts/{request.AccountHashedId}/agreements/{request.AgreementHashedId}/about-your-agreement"));
                 }
                 case CohortDetailsOptions.Homepage:
                 {
-                        return Redirect(_linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
-                    }
+                    return Redirect(_linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
+                }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
             }
