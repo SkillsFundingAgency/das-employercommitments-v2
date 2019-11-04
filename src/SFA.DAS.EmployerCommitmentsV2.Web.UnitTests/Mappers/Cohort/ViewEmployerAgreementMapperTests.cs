@@ -82,7 +82,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             CommitmentsApiClient.Setup(x => x.GetLatestAgreementId(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((long?)null);
-
             return this;
         }
 
@@ -92,7 +91,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             CommitmentsApiClient.Verify(x=>x.GetLatestAgreementId(Cohort.AccountLegalEntityId, It.IsAny<CancellationToken>()));
             Assert.AreEqual("XYZ", agreementHashedId);
         }
-
     }
-
 }
