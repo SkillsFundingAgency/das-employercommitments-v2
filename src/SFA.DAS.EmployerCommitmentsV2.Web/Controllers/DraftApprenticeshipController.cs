@@ -93,7 +93,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
             {
-                TempData.AddFlashMessage("Apprentice updated", ITempDataDictionaryExtensions.FlashMessageLevel.Info);
                 return RedirectToAction("Details", "Cohort", new { model.AccountHashedId, model.CohortReference });
             }
 
