@@ -1,7 +1,6 @@
 ﻿@using Microsoft.CodeAnalysis.CSharp.Syntax
 @using SFA.DAS.EmployerUrlHelper.Mvc
 @using SFA.DAS.CommitmentsV2.Shared.Extensions
-
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
@@ -47,8 +46,8 @@ else
 <h1 class="govuk-heading-xl">@Model.PageTitle</h1>
 
 <dl class="das-definition-list das-definition-list--inline">
-    <dt class="das-definition-list__title">Organisation</dt>
-    <dd class="das-definition-list__definition">@Model.LegalEntityName</dd>
+    <dt class="das-definition-list__title govuk-!-margin-bottom-4">Organisation</dt>
+    <dd class="das-definition-list__definition govuk-!-margin-bottom-4">@Model.LegalEntityName</dd>
     <dt class="das-definition-list__title">Reference</dt>
     <dd class="das-definition-list__definition">@Model.CohortReference</dd>
 </dl>
