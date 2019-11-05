@@ -9,21 +9,17 @@ using NUnit.Framework;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.Authorization.Services;
-using SFA.DAS.Commitments.Shared.Interfaces;
-using SFA.DAS.Commitments.Shared.Models;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing;
-using StructureMap.Query;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {

@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .AddAzureTableStorage(
                     Configuration.ConfigurationKeys.Encoding,
                     Configuration.ConfigurationKeys.EmployerCommitmentsV2,
-                    Commitments.Shared.Configuration.ConfigurationKeys.CommitmentsSharedConfiguration,
+                    CommitmentsV2.Shared.Configuration.ConfigurationKeys.CommitmentsSharedConfiguration,
                     Configuration.ConfigurationKeys.EmployerUrlConfiguration,
                     Configuration.ConfigurationKeys.EmployerSharedUiConfiguration));
         }

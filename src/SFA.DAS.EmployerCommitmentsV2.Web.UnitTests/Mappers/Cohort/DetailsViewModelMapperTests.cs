@@ -9,9 +9,14 @@ using NUnit.Framework;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
+using SFA.DAS.EAS.Account.Api.Client;
+using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
@@ -60,6 +65,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var fixture = new DetailsViewModelMapperTestsFixture();
             var result = await fixture.Map();
             Assert.AreEqual(fixture.Cohort.LatestMessageCreatedByProvider, result.Message);
+        }
+
+        [TestCase(true, true, "No, request changes from training provider")]
+        [TestCase(true, false, "Request changes from training provider")]
+        [TestCase(false, true, "Send to the training provider to review or add details")]
+        [TestCase(false, false, "Send to the training provider to review or add details")]
+        public async Task SendBackToProviderOptionMessageIsMappedCorrectly(bool isAgreementSigned, bool employerComplete, string expected)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().SetIsAgreementSigned(isAgreementSigned).SetEmployerComplete(employerComplete);
+            var result = await fixture.Map();
+            Assert.AreEqual(expected, result.SendBackToProviderOptionMessage);
         }
 
         [Test]
@@ -271,6 +287,154 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(expectedPageTitle, result.PageTitle);
         }
 
+        [TestCase(true, true)]
+        [TestCase(false, false)]
+        public async Task IsAgreementSignedIsMappedCorrectlyWithATransfer(bool isAgreementSigned,  bool expectedIsAgreementSigned)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetTransferSender().SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedIsAgreementSigned, result.IsAgreementSigned);
+        }
+
+        [TestCase(true, true)]
+        [TestCase(false, false)]
+        public async Task IsAgreementSignedIsMappedCorrectlyWithoutATransfer(bool isAgreementSigned, bool expectedIsAgreementSigned)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedIsAgreementSigned, result.IsAgreementSigned);
+        }
+
+        [TestCase(true, "Approve these details?")]
+        [TestCase(false, "Choose an option")]
+        public async Task OptionsTitleIsMappedCorrectlyWithATransfer(bool isAgreementSigned, string expectedOptionsTitle)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetTransferSender().SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedOptionsTitle, result.OptionsTitle);
+        }
+
+        [TestCase(true, "Approve these details?")]
+        [TestCase(false, "Choose an option")]
+        public async Task OptionsTitleIsMappedCorrectlyWithoutATransfer(bool isAgreementSigned, string expectedOptionsTitle)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedOptionsTitle, result.OptionsTitle);
+        }
+
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        public async Task ShowViewAgreementOptionIsMappedCorrectlyWithATransfer(bool isAgreementSigned, bool expectedShowViewAgreementOption)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetTransferSender().SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedShowViewAgreementOption, result.ShowViewAgreementOption);
+        }
+
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        public async Task ShowViewAgreementOptionIsMappedCorrectlyWithoutATransfer(bool isAgreementSigned, bool expectedShowViewAgreementOption)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedShowViewAgreementOption, result.ShowViewAgreementOption);
+        }
+
+        [TestCase(true, true)]
+        [TestCase(false, false)]
+        public async Task ShowApprovalOptionIsMappedCorrectlyWithATransfer(bool isAgreementSigned, bool expectedShowApprovalOption)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetTransferSender().SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedShowApprovalOption, result.EmployerCanApprove);
+        }
+
+        [TestCase(true, true)]
+        [TestCase(false,  false)]
+        public async Task ShowApprovalOptionIsMappedCorrectlyWithoutATransfer(bool isAgreementSigned, bool expectedShowApprovalOption)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedShowApprovalOption, result.EmployerCanApprove);
+        }
+
+
+        [TestCase(true, true, false)]
+        [TestCase(true, false, true)]
+        [TestCase(false, true, false)]
+        [TestCase(false, false, false)]
+        public async Task ShowGotoHomePageOptionIsMappedCorrectly(bool isAgreementSigned, bool isEmployerComplete, bool expected)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetIsAgreementSigned(isAgreementSigned);
+            fixture.SetEmployerComplete(isEmployerComplete);
+            var result = await fixture.Map();
+            Assert.AreEqual(expected, result.ShowGotoHomePageOption);
+        }
+
+        [TestCase(true, true, true, true)]
+        [TestCase(false, false, true, false)]
+        [TestCase(true, true, false, false)]
+        [TestCase(false, false, false, false)]
+        public async Task ShowApprovalOptionMessageIsMappedCorrectlyWithATransfer(bool isAgreementSigned, bool showApprovalOption, 
+            bool isApprovedByProvider, bool expectedShowApprovalOptionMessage)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.Cohort.IsApprovedByProvider = isApprovedByProvider;
+            fixture.SetTransferSender().SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedShowApprovalOptionMessage, result.ShowApprovalOptionMessage);
+        }
+
+        [TestCase(true, true, true, true)]
+        [TestCase(false, false, true, false)]
+        [TestCase(true, true, false, false)]
+        [TestCase(false, false, false, false)]
+        public async Task ShowApprovalOptionMessageIsMappedCorrectlyWithoutATransfer(bool isAgreementSigned, bool showApprovalOption,
+            bool isApprovedByProvider, bool expectedShowApprovalOptionMessage)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.Cohort.IsApprovedByProvider = isApprovedByProvider;
+            fixture.SetIsAgreementSigned(isAgreementSigned);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedShowApprovalOptionMessage, result.ShowApprovalOptionMessage);
+        }
+
+        [Test]
+        public async Task VerifyIsAgreementSignedEndpointIsCalledWithCorrectParams()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            await fixture.Map();
+            fixture.CommitmentsApiClient.Verify(x => x.IsAgreementSigned(It.Is<AgreementSignedRequest>(p => p.AccountLegalEntityId == fixture.Cohort.AccountLegalEntityId 
+            && p.AgreementFeatures == null), It.IsAny<CancellationToken>()));
+        }
+
+        [Test]
+        public async Task VerifyIsAgreementSignedEndpointIsCalledWithCorrectParamsWhenIsFundedByTransfer()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetTransferSender();
+            await fixture.Map();
+            fixture.CommitmentsApiClient.Verify(x => x.IsAgreementSigned(It.Is<AgreementSignedRequest>(p => p.AccountLegalEntityId == fixture.Cohort.AccountLegalEntityId
+            && p.AgreementFeatures.Length == 1 && p.AgreementFeatures[0] == AgreementFeature.Transfers), It.IsAny<CancellationToken>()));
+        }
+
+        [Test]
+        public async Task EmployerCanApproveIsMappedCorrectly()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(fixture.Cohort.IsCompleteForEmployer, result.IsCompleteForEmployer);
+        }
     }
 
     public class DetailsViewModelMapperTestsFixture
@@ -280,10 +444,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public DetailsViewModel Result;
         public Mock<ICommitmentsApiClient> CommitmentsApiClient;
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClient;
+        public Mock<IAccountApiClient> AccountApiClient;
         public Mock<IEncodingService> EncodingService;
         public GetCohortResponse Cohort;
         public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
         public DateTime DefaultStartDate = new DateTime(2019, 10, 1);
+        public AccountLegalEntityResponse AccountLegalEntityResponse;
+        public LegalEntityViewModel LegalEntityViewModel;
 
         private Fixture _autoFixture;
         private ITrainingProgramme _trainingProgramme;
@@ -295,7 +462,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             _autoFixture = new Fixture();
 
-            Cohort = _autoFixture.Create<GetCohortResponse>();
+            Cohort = _autoFixture.Build<GetCohortResponse>().Without(x => x.TransferSenderId).Create();
+            AccountLegalEntityResponse = _autoFixture.Create<AccountLegalEntityResponse>();
+            LegalEntityViewModel = _autoFixture.Create<LegalEntityViewModel>();
 
             var draftApprenticeships = CreateDraftApprenticeshipDtos(_autoFixture);
             _autoFixture.Register(() => draftApprenticeships);
@@ -304,9 +473,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             CommitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(Cohort);
-
             CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(DraftApprenticeshipsResponse);
+            CommitmentsApiClient.Setup(x => x.GetLegalEntity(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(AccountLegalEntityResponse);
+
+            AccountApiClient = new Mock<IAccountApiClient>();
+            AccountApiClient.Setup(x => x.GetLegalEntity(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(LegalEntityViewModel);
 
             _fundingPeriods = new List<FundingPeriod>
             {
@@ -322,7 +495,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             EncodingService = new Mock<IEncodingService>();
             SetEncodingOfApprenticeIds();
 
-            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, TrainingProgrammeApiClient.Object);
+            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, TrainingProgrammeApiClient.Object, AccountApiClient.Object);
             Source = _autoFixture.Create<DetailsRequest>();
         }
 
@@ -347,7 +520,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public DetailsViewModelMapperTestsFixture SetEncodingOfApprenticeIds()
         {
             EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.ApprenticeshipId))
-                .Returns((long p, EncodingType t) => $"X{p}X" );
+                .Returns((long p, EncodingType t) => $"X{p}X");
 
             return this;
         }
@@ -409,6 +582,27 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             draftApprenticeship.CourseCode = courseCode;
             draftApprenticeship.Cost = cost;
             draftApprenticeship.StartDate = startDate;
+        }
+
+        public DetailsViewModelMapperTestsFixture SetIsAgreementSigned(bool isAgreementSigned)
+        {
+            CommitmentsApiClient
+               .Setup(x => x.IsAgreementSigned(It.IsAny<AgreementSignedRequest>(), It.IsAny<CancellationToken>()))
+               .ReturnsAsync(isAgreementSigned);
+
+            return this;
+        }
+
+        public DetailsViewModelMapperTestsFixture SetEmployerComplete(bool employerComplete)
+        {
+            Cohort.IsCompleteForEmployer = employerComplete;
+            return this;
+        }
+
+        public DetailsViewModelMapperTestsFixture SetTransferSender()
+        {
+            Cohort.TransferSenderId = _autoFixture.Create<long>();
+            return this;
         }
     }
 }

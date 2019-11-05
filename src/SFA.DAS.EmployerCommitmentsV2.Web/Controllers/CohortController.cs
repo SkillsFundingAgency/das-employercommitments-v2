@@ -7,7 +7,7 @@ using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Authorization.Services;
-using SFA.DAS.Commitments.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Types;
@@ -70,6 +70,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     var request = await _modelMapper.Map<ApproveCohortRequest>(viewModel);
                     await _commitmentsApiClient.ApproveCohort(viewModel.CohortId, request);
                     return RedirectToAction("Approved", new { viewModel.CohortReference, viewModel.AccountHashedId });
+                }
+                case CohortDetailsOptions.ViewEmployerAgreement:
+                {
+                    var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
+                    if (request.AgreementHashedId == null)
+                    {
+                        return Redirect(_linkGenerator.AccountsLink($"accounts/{request.AccountHashedId}/agreements/"));
+                    }
+                    return Redirect(_linkGenerator.AccountsLink(
+                    $"accounts/{request.AccountHashedId}/agreements/{request.AgreementHashedId}/about-your-agreement"));
+                }
+                case CohortDetailsOptions.Homepage:
+                {
+                    return Redirect(_linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
                 }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
