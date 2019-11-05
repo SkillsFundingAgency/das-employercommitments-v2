@@ -12,6 +12,7 @@ using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -20,16 +21,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
         private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
-        private readonly IEmployerAgreementService _employerAgreementService;
         private readonly IAccountApiClient _accountsApiClient;
 
         public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, 
-            ITrainingProgrammeApiClient trainingProgrammeApiClient, IEmployerAgreementService employerAgreementService, IAccountApiClient accountsApiClient)
+            ITrainingProgrammeApiClient trainingProgrammeApiClient, IAccountApiClient accountsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
             _trainingProgrammeApiClient = trainingProgrammeApiClient;
-            _employerAgreementService = employerAgreementService;
             _accountsApiClient = accountsApiClient;
         }
 
@@ -37,14 +36,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         {
             GetCohortResponse cohort;
 
-            async Task<bool> IsAgreementSigned(long maLegalEntityId)
+            Task<bool> IsAgreementSigned(long accountLegalEntityId)
             {
+                var request = new AgreementSignedRequest
+                {
+                    AccountLegalEntityId = accountLegalEntityId
+                };
+
                 if (cohort.IsFundedByTransfer)
                 {
-                    return await _employerAgreementService.IsAgreementSigned(source.AccountId, maLegalEntityId,
-                        AgreementFeature.Transfers);
+                    request.AgreementFeatures = new AgreementFeature[] { AgreementFeature.Transfers };
                 }
-                return await _employerAgreementService.IsAgreementSigned(source.AccountId, maLegalEntityId);
+
+                return _commitmentsApiClient.IsAgreementSigned(request);
             }
 
             var cohortTask = _commitmentsApiClient.GetCohort(source.CohortId);
@@ -53,12 +57,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             await Task.WhenAll(cohortTask, draftApprenticeshipsTask);
 
             cohort = await cohortTask;
-            var ale = await _commitmentsApiClient.GetLegalEntity(cohort.AccountLegalEntityId);
-            var legalEntity = await _accountsApiClient.GetLegalEntity(source.AccountHashedId, ale.MaLegalEntityId);
             var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
 
             var viewOrApprove = cohort.WithParty == Party.Employer ? "Approve" : "View";
-            var isAgreementSigned = await IsAgreementSigned(ale.MaLegalEntityId);
+            var isAgreementSigned = await IsAgreementSigned(cohort.AccountLegalEntityId);
 
             return new DetailsViewModel
             {
@@ -67,7 +69,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 WithParty = cohort.WithParty,
                 AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
                 LegalEntityName = cohort.LegalEntityName,
-                LegalEntityCode = legalEntity.Code,
                 ProviderName = cohort.ProviderName,
                 TransferSenderHashedId = cohort.TransferSenderId == null ? null : _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId),
                 Message = cohort.LatestMessageCreatedByProvider,
