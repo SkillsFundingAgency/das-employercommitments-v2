@@ -367,6 +367,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(expectedShowApprovalOption, result.EmployerCanApprove);
         }
 
+
+        [TestCase(true, true, false)]
+        [TestCase(true, false, true)]
+        [TestCase(false, true, false)]
+        [TestCase(false, false, false)]
+        public async Task ShowGotoHomePageOptionIsMappedCorrectly(bool isAgreementSigned, bool isEmployerComplete, bool expected)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetIsAgreementSigned(isAgreementSigned);
+            fixture.SetEmployerComplete(isEmployerComplete);
+            var result = await fixture.Map();
+            Assert.AreEqual(expected, result.ShowGotoHomePageOption);
+        }
+
         [TestCase(true, true, true, true)]
         [TestCase(false, false, true, false)]
         [TestCase(true, true, false, false)]

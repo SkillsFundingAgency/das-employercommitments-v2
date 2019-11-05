@@ -201,7 +201,7 @@ else
                     </div>
                 </div>
                 
-                @if (!Model.IsCompleteForEmployer)
+                @if (Model.ShowGotoHomePageOption)
                 {
                 <div class="govuk-radios__item">
                     <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Homepage">
