@@ -11,6 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public long AccountLegalEntityId { get; set; }
         public string AccountLegalEntityHashedId { get; set; }
         public string TransferSenderId { get; set; }
+        public long? DecodedTransferSenderId { get; set; }
     }
 
 }
