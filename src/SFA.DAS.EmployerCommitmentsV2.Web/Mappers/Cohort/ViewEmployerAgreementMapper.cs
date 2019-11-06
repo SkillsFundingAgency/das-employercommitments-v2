@@ -20,10 +20,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         public async Task<ViewEmployerAgreementRequest> Map(DetailsViewModel source)
         {
             var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
+            long? latestAgreementId = await _commitmentsApiClient.GetLatestAgreementId(cohort.AccountLegalEntityId);
+
             return new ViewEmployerAgreementRequest
             {
-                AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
-                AccountHashedId = source.AccountHashedId
+                AccountHashedId = source.AccountHashedId,
+                AgreementHashedId = latestAgreementId == null ? null : _encodingService.Encode(latestAgreementId.Value, EncodingType.AccountId)
             };
         }
     }
