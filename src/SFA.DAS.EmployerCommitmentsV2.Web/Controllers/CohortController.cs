@@ -193,6 +193,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 model.ProviderId
             };
 
+            if (!model.ReservationId.HasValue && model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
+            {
+                //todo: transfer sender id
+                var url = _linkGenerator.ReservationsLink(
+                    $"accounts/{model.AccountHashedId}/reservations/{model.AccountLegalEntityHashedId}/select?providerId={model.ProviderId}");
+                return Redirect(url);
+            }
+
             switch (model.WhoIsAddingApprentices)
             {
                 case WhoIsAddingApprentices.Employer:

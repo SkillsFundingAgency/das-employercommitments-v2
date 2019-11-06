@@ -1,9 +1,12 @@
-﻿using FluentAssertions;
+﻿using AutoFixture.NUnit3;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
@@ -69,6 +72,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             result.Should().NotBeNull();
             result.ActionName.Should().Be("Error");
             result.ControllerName.Should().Be("Error");
+        }
+
+        [Test, MoqAutoData]
+        public void And_Employer_Adding_Apprentices_And_No_Reservation_Then_Redirect_To_Reservation_Selection(
+            [Frozen] Mock<ILinkGenerator> linkGenerator,
+            AssignViewModel viewModel,
+            CohortController controller)
+        {
+            const string reservationsUrl = "RESERVATIONS-URL";
+            linkGenerator.Setup(x => x.ReservationsLink(It.IsAny<string>())).Returns(reservationsUrl);
+            viewModel.ReservationId = null;
+            viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Employer;
+
+            var result = controller.Assign(viewModel) as RedirectResult;
+
+            result.Url.Should().Be(reservationsUrl);
         }
     }
 }
