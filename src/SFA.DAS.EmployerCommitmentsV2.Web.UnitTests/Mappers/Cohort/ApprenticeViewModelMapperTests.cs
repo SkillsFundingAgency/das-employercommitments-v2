@@ -98,5 +98,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(_courses, _result.Courses);
         }
 
+        [Test]
+        public void TransferSenderIdIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.TransferSenderId, _result.TransferSenderId);
+        }
     }
 }
