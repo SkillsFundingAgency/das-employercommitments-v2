@@ -7,8 +7,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
     public class CreateCohortRequestMapper : 
-        IMapper<ApprenticeViewModel, CreateCohortRequest>,
-        IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest>
+        IMapper<ApprenticeViewModel, CreateCohortRequest>
     {
         public Task<CreateCohortRequest> Map(ApprenticeViewModel source)
         {
@@ -30,25 +29,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 TransferSenderId = source.DecodedTransferSenderId
             });
         }
-
-        public Task<CreateCohortRequest> Map(AddDraftApprenticeshipViewModel source)
-        {
-            return Task.FromResult(new CreateCohortRequest
-            {
-                AccountId = source.AccountId,
-                AccountLegalEntityId = source.AccountLegalEntityId,
-                ProviderId = source.ProviderId,
-                ReservationId = source.ReservationId,
-                FirstName = source.FirstName,
-                LastName = source.LastName,
-                DateOfBirth = source.DateOfBirth.Date,
-                Uln = source.Uln,
-                CourseCode = source.CourseCode,
-                Cost = source.Cost,
-                StartDate = source.StartDate.Date,
-                EndDate = source.EndDate.Date,
-                OriginatorReference = source.Reference
-            });
-        }
-    }
+     }
 }

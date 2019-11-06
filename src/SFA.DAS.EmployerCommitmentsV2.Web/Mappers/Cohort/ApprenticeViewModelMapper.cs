@@ -21,7 +21,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         public async Task<ApprenticeViewModel> Map(ApprenticeRequest source)
         {
-            var courses = await _trainingProgrammeApiClient.GetAllTrainingProgrammes();
+            var courses = !string.IsNullOrWhiteSpace(source.TransferSenderId)
+                ? await _trainingProgrammeApiClient.GetStandardTrainingProgrammes()
+                : await _trainingProgrammeApiClient.GetAllTrainingProgrammes();
+
             var provider = await _commitmentsApiClient.GetProvider(source.ProviderId);
 
             var result = new ApprenticeViewModel
