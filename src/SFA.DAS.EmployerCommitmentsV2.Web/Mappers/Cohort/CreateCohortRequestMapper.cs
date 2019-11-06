@@ -26,7 +26,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 Cost = source.Cost,
                 StartDate = source.StartDate.Date,
                 EndDate = source.EndDate.Date,
-                OriginatorReference = source.Reference
+                OriginatorReference = source.Reference,
+                TransferSenderId = source.DecodedTransferSenderId
             });
         }
 
