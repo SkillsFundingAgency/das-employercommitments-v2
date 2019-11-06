@@ -197,7 +197,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 model.ReservationId,
                 model.StartMonthYear,
                 model.CourseCode,
-                model.ProviderId
+                model.ProviderId,
+                model.TransferSenderId
             };
 
             switch (model.WhoIsAddingApprentices)
