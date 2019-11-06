@@ -17,6 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 StartMonthYear = source.StartMonthYear,
                 ReservationId = source.ReservationId,
+                TransferSenderId =  source.TransferSenderId
             });
         }
 
@@ -29,7 +30,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 CourseCode = source.CourseCode,
                 AccountHashedId = source.AccountHashedId,
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
-                StartMonthYear = source.StartMonthYear
+                StartMonthYear = source.StartMonthYear,
+                TransferSenderId = source.TransferSenderId
             });
         }
     }

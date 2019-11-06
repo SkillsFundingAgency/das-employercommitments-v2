@@ -60,5 +60,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             Assert.AreEqual(request.AccountLegalEntityHashedId, result.AccountLegalEntityHashedId);
         }
+
+
+        [Test, MoqAutoData]
+        public async Task ThenMapsTransferSenderId(
+            SelectProviderRequest request,
+            SelectProviderViewModelMapper mapper)
+        {
+            var result = await mapper.Map(request);
+
+            Assert.AreEqual(request.TransferSenderId, result.TransferSenderId);
+        }
     }
 }
