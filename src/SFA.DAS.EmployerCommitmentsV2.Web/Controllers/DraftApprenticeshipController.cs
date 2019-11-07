@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
@@ -8,6 +9,7 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Features;
+using SFA.DAS.EmployerCommitmentsV2.Web.Enums;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
@@ -98,6 +100,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);
             return Redirect(reviewYourCohort);
+        }
+
+        [HttpGet]
+        [Route("{DraftApprenticeshipHashedId}/Delete/{Origin}")]
+        public async Task<IActionResult> DeleteDraftApprenticeship(DeleteDraftApprenticeshipRequest request)
+        {
+            try
+            {
+                var model = await _modelMapper.Map<DeleteDraftApprenticeshipViewModel>(request);
+                return View(model);
+            }
+            catch (CohortEmployerUpdateDeniedException)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
