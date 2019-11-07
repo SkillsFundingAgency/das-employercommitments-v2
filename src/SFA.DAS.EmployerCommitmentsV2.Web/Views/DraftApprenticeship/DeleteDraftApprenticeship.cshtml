@@ -11,33 +11,45 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 <h1 class="govuk-heading-xl">Delete apprentice @Model.FullName's record?</h1>
+                
                 <partial name="_ValidationSummary" />
 
-                <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset">
-                        <div class="govuk-radios">
+                <form method="post">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(x => x.AccountHashedId)
+                    @Html.HiddenFor(x => x.DraftApprenticeshipHashedId)
+                    @Html.HiddenFor(x => x.CohortReference)
 
-                            <div class="govuk-radios__item">
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <div class="govuk-radios">
 
-                                <input class="govuk-radios__input" id="confirmDelete" name="confirmDelete" type="radio" value="true">
-                                <label class="govuk-label govuk-radios__label" for="confirmDelete">
-                                    Yes, delete the record
-                                </label>
+                                <div class="govuk-radios__item">
+
+                                    <input class="govuk-radios__input" id="confirmDelete" name="confirmDelete" type="radio" value="true">
+                                    <label class="govuk-label govuk-radios__label" for="confirmDelete">
+                                        Yes, delete the record
+                                    </label>
+
+                                </div>
+
+                                <div class="govuk-radios__item">
+
+                                    <input class="govuk-radios__input" id="deleteRecord-false" name="confirmDelete" type="radio" value="false">
+                                    <label class="govuk-label govuk-radios__label" for="confirmDelete-false">
+                                        No, don't delete
+                                    </label>
+
+                                </div>
 
                             </div>
+                        </fieldset>
+                    </div>
 
-                            <div class="govuk-radios__item">
-
-                                <input class="govuk-radios__input" id="deleteRecord-false" name="confirmDelete" type="radio" value="false">
-                                <label class="govuk-label govuk-radios__label" for="confirmDelete-false">
-                                    No, don't delete
-                                </label>
-
-                            </div>
-
-                        </div>
-                    </fieldset>
-                </div>
+                    <button class="govuk-button" type="submit" data-module="govuk-button">
+                        Save and continue
+                    </button>
+                </form>
 
             </div>
         </div>
