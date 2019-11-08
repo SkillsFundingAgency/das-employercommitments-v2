@@ -25,7 +25,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 viewModel.ReservationId,
                 viewModel.StartMonthYear,
                 viewModel.CourseCode,
-                viewModel.ProviderId
+                viewModel.ProviderId,
+                viewModel.TransferSenderId
             });
             viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Employer;
 
@@ -49,7 +50,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 viewModel.ReservationId,
                 viewModel.StartMonthYear,
                 viewModel.CourseCode,
-                viewModel.ProviderId
+                viewModel.ProviderId,
+                viewModel.TransferSenderId
             });
             viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Provider;
 
