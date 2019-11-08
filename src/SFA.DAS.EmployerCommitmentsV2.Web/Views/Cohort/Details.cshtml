@@ -146,8 +146,7 @@ else
     <hr class="govuk-section-break govuk-section-break--l">
 
 <form id="submitCohort" novalidate method="post">
-    @Html.HiddenFor(x=>x.LegalEntityCode)
-    <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.Selection, "govuk-form-group--error")">
+      <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.Selection, "govuk-form-group--error")">
 
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -201,7 +200,7 @@ else
                     </div>
                 </div>
                 
-                @if (!Model.IsCompleteForEmployer)
+                @if (Model.ShowGotoHomePageOption)
                 {
                 <div class="govuk-radios__item">
                     <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Homepage">
