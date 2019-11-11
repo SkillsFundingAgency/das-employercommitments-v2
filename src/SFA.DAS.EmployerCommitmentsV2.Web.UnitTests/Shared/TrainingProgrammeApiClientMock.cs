@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AutoFixture;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Moq;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
@@ -27,7 +24,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Shared
             _allTrainingProgrammes.AddRange(frameworks);
             _trainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
             _trainingProgrammeApiClient.Setup(x => x.GetAllTrainingProgrammes()).ReturnsAsync(_allTrainingProgrammes);
-            _trainingProgrammeApiClient.Setup(x => x.GetStandardTrainingProgrammes()).ReturnsAsync(_standardTrainingProgrammes);
+            _trainingProgrammeApiClient.Setup(x => x.GetStandardTrainingProgrammes())
+                .ReturnsAsync(_standardTrainingProgrammes);
+
+            _trainingProgrammeApiClient.Setup(x => x.GetTrainingProgramme(It.IsAny<string>()))
+                .ReturnsAsync((string requestedId) => { return _allTrainingProgrammes.Single(y => y.Id == requestedId); });
         }
 
         public ITrainingProgrammeApiClient Object => _trainingProgrammeApiClient.Object;
