@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
@@ -127,6 +126,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 await _commitmentsApiClient.DeleteDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId.Value, new DeleteDraftApprenticeshipRequest());
                 TempData.AddFlashMessage("Apprentice record deleted", ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                return RedirectToAction("Details", "Cohort", new {model.AccountHashedId, model.CohortReference});
             }
 
             return Redirect(_linkGenerator.OriginOfDeleteDraftApprentice(model.Origin, model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId));
