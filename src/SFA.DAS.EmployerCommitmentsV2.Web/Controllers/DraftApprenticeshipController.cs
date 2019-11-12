@@ -9,13 +9,12 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Features;
-using SFA.DAS.EmployerCommitmentsV2.Web.Enums;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
 using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
-using System.Collections.Generic;
+
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -105,6 +104,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("{DraftApprenticeshipHashedId}/Delete/{Origin}")]
+        [DasAuthorize(EmployerFeature.EnhancedApproval)]
         public async Task<IActionResult> DeleteDraftApprenticeship(DeleteApprenticeshipRequest request)
         {
             try
@@ -114,21 +114,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
             catch (CohortEmployerUpdateDeniedException)
             {
-                throw new NotImplementedException();
+                return Redirect(_linkGenerator.OriginOfDeleteDraftApprentice(request.Origin, request.AccountHashedId, request.CohortReference, request.DraftApprenticeshipHashedId));
             }
         }
 
         [HttpPost]
         [Route("{DraftApprenticeshipHashedId}/Delete/{Origin}")]
+        [DasAuthorize(EmployerFeature.EnhancedApproval)]
         public async Task<IActionResult> DeleteDraftApprenticeship(DeleteDraftApprenticeshipViewModel model)
         {
-            if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
+            if (model.ConfirmDelete.Value)
             {
                 await _commitmentsApiClient.DeleteDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId.Value, new DeleteDraftApprenticeshipRequest());
-
+                TempData.AddFlashMessage("Apprentice record deleted", ITempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
 
-            return Redirect(model.RedirectToOriginUrl);
+            return Redirect(_linkGenerator.OriginOfDeleteDraftApprentice(model.Origin, model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId));
         }
+
     }
 }
