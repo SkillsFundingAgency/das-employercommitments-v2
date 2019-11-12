@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoFixture;
+﻿using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -10,13 +7,10 @@ using NUnit.Framework;
 using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
-using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Shared.Models;
-using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
+using SFA.DAS.EmployerCommitmentsV2.Web.Enums;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
@@ -40,26 +34,73 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             await controller.DeleteDraftApprenticeship(request);
 
-            mockMapper.Verify(x => x.Map<DeleteDraftApprenticeshipViewModel>(request));
+            mockMapper.Verify(x => x.Map<DeleteDraftApprenticeshipViewModel>(request), Times.Once);
         }
 
         [Test, MoqAutoData]
-        public async Task WhenGettingDelete_AndMapperThrowsError_ThenRedirectsToOrigin(
+        public async Task WhenGettingDelete_AndOriginIsCohortDetails_WhenCohortEmployerUpdateDeniedExceptionIsThrown_ThenRedirectsToCohortDetails(
             [Frozen] Mock<IModelMapper> mockMapper,
+            [Frozen] Mock<ILinkGenerator> mockLinkGenerator,
             DeleteApprenticeshipRequest request,
             DraftApprenticeshipController controller)
         {
+            request.Origin = Origin.CohortDetails;
+            var cohortDetailsUrl = "TestUrl.com";
+            var unexpectedUrl = "unexpectedUrl";
+            mockLinkGenerator
+                .Setup(x => x.CommitmentsV2Link($"{request.AccountHashedId}/unapproved/{request.CohortReference}"))
+                .Returns(cohortDetailsUrl);
+            mockLinkGenerator
+                .Setup(x => x.CommitmentsV2Link($"{request.AccountHashedId}/unapproved/{request.CohortReference}/apprentices/{request.DraftApprenticeshipHashedId}/edit"))
+                .Returns("unexpectedUrl");
             mockMapper
                 .Setup(x => x.Map<DeleteDraftApprenticeshipViewModel>(request))
                 .ThrowsAsync(new CohortEmployerUpdateDeniedException($"Cohort {request.CohortId} is not With the Employer"));
 
-            await controller.DeleteDraftApprenticeship(request);
+            var result = await controller.DeleteDraftApprenticeship(request) as RedirectResult;
 
-            mockMapper.Verify(x => x.Map<DeleteDraftApprenticeshipViewModel>(request));
+            Assert.NotNull(result);
+            Assert.AreEqual(cohortDetailsUrl, result.Url);
+            Assert.False(result.Url.Equals(unexpectedUrl));
+            mockLinkGenerator.Verify(x =>
+                x.CommitmentsV2Link($"{request.AccountHashedId}/unapproved/{request.CohortReference}"), Times.Once);
+            mockLinkGenerator.Verify(x =>
+                x.CommitmentsV2Link($"{request.AccountHashedId}/unapproved/{request.CohortReference}/apprentices/{request.DraftApprenticeshipHashedId}/edit"), Times.Never);
+        }
+
+        [Test, MoqAutoData]
+        public async Task WhenGettingDelete_AndOriginIsEditPage_WhenCohortEmployerUpdateDeniedExceptionIsThrown_ThenRedirectsToEditPage(
+            [Frozen] Mock<IModelMapper> mockMapper,
+            [Frozen] Mock<ILinkGenerator> mockLinkGenerator,
+            DeleteApprenticeshipRequest request,
+            DraftApprenticeshipController controller)
+        {
+            request.Origin = Origin.EditDraftApprenticeship;
+            var EditDraftApprenticeshipUrl = "TestUrl.com";
+            var unexpectedUrl = "unexpectedUrl";
+            mockLinkGenerator
+                .Setup(x => x.CommitmentsV2Link($"{request.AccountHashedId}/unapproved/{request.CohortReference}"))
+                .Returns(unexpectedUrl);
+            mockLinkGenerator
+                .Setup(x => x.CommitmentsV2Link($"{request.AccountHashedId}/unapproved/{request.CohortReference}/apprentices/{request.DraftApprenticeshipHashedId}/edit"))
+                .Returns(EditDraftApprenticeshipUrl);
+            mockMapper
+                .Setup(x => x.Map<DeleteDraftApprenticeshipViewModel>(request))
+                .ThrowsAsync(new CohortEmployerUpdateDeniedException($"Cohort {request.CohortId} is not With the Employer"));
+
+            var result = await controller.DeleteDraftApprenticeship(request) as RedirectResult;
+
+            Assert.NotNull(result);
+            Assert.AreEqual(EditDraftApprenticeshipUrl, result.Url);
+            Assert.False(result.Url.Equals(unexpectedUrl));
+            mockLinkGenerator.Verify(x =>
+                x.CommitmentsV2Link($"{request.AccountHashedId}/unapproved/{request.CohortReference}"), Times.Never);
+            mockLinkGenerator.Verify(x =>
+                x.CommitmentsV2Link($"{request.AccountHashedId}/unapproved/{request.CohortReference}/apprentices/{request.DraftApprenticeshipHashedId}/edit"), Times.Once);
         }
 
         [Test]
-        public async Task PostDeleteApprenticeshpViewModel_WithValidModel_WithConfirmDeleteTrue_ShouldDeleteDraftApprenticeshipAndRedirectToCohortDetailsV2Page()
+        public async Task PostDeleteApprenticeshipViewModel_WithValidModel_WithConfirmDeleteTrue_ShouldDeleteDraftApprenticeshipAndRedirectToCohortDetailsV2Page()
         {
             var fixture = new DeleteDraftApprenticeshipTestsFixture()
                                 .WithEnhancedApproval()
@@ -75,11 +116,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
 
         [Test]
-        public async Task PostDeleteApprenticeshpViewModel_WithValidModel_WithConfirmDeleteFalse_ShouldNotDeleteDraftApprenticeshipAndRedirectToOrigin()
+        public async Task PostDeleteApprenticeshipViewModel_WithValidModel_WithConfirmDeleteFalse_ShouldNotDeleteDraftApprenticeshipAndRedirectToOrigin()
         {
             var fixture = new DeleteDraftApprenticeshipTestsFixture()
                                .WithEnhancedApproval()
-                               .WithDeleteDraftApprenticeshipViewModel(confirmDelete:false)
+                               .WithDeleteDraftApprenticeshipViewModel(confirmDelete: false)
                                .WithCohortDetailsLink("CohortPage");
 
             var result = await fixture.DeleteDraftApprenticeship();
@@ -122,7 +163,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 AccountHashedId = AccountHashedId,
             };
 
-            
+
 
             ModelMapperMock = new Mock<IModelMapper>();
             ModelMapperMock.Setup(x => x.Map<DeleteDraftApprenticeshipViewModel>(It.IsAny<DeleteApprenticeshipRequest>()))
