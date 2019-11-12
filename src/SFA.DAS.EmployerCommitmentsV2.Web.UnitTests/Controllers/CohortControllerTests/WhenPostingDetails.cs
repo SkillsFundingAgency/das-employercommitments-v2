@@ -108,7 +108,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 _viewEmployerAgreementRequest = new ViewEmployerAgreementRequest
                 {
                     AccountHashedId = autoFixture.Create<string>(),
-                    AccountLegalEntityHashedId = autoFixture.Create<string>()
+                    AgreementHashedId = autoFixture.Create<string>()
                 };
 
                 modelMapper.Setup(x => x.Map<SendCohortRequest>(It.Is<DetailsViewModel>(vm => vm == _viewModel)))
