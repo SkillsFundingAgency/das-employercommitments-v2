@@ -69,6 +69,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/{cohortReference}/apprenticeships/{draftApprenticeshipHashedId}/delete", url);
         }
+
+        [Test, AutoData]
+        public void OriginOfDraftDeleteApprentice_BuildsPathCorrectly_WhenOriginIs_CohortDetails(string accountHashedId, string cohortReference, string draftApprenticeshipHashedId)
+        {
+            var url = _fixture.Sut.OriginOfDeleteDraftApprentice(Origin.CohortDetails,accountHashedId, cohortReference, draftApprenticeshipHashedId);
+
+            Assert.AreEqual($"{_fixture.CommitmentsV2Link}{accountHashedId}/unapproved/{cohortReference}", url);
+        }
+
+        [Test, AutoData]
+        public void OriginOfDraftDeleteApprentice_BuildsPathCorrectly_WhenOriginIs_EditDraftApprenticeship(string accountHashedId, string cohortReference, string draftApprenticeshipHashedId)
+        {
+            var url = _fixture.Sut.OriginOfDeleteDraftApprentice(Origin.EditDraftApprenticeship, accountHashedId, cohortReference, draftApprenticeshipHashedId);
+
+            Assert.AreEqual($"{_fixture.CommitmentsV2Link}{accountHashedId}/unapproved/{cohortReference}/apprentices/{draftApprenticeshipHashedId}/edit", url);
+        }
     }
 
     public class ILinkGeneratorExtensionsTestsFixture
