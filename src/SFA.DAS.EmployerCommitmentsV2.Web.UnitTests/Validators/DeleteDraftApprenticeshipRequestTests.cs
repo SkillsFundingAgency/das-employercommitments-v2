@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
-using FluentValidation;
 using FluentValidation.TestHelper;
-using FluentValidation.Validators;
-using Microsoft.WindowsAzure.Storage.Table.Protocol;
-using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
-using Remotion.Linq.Clauses;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 
@@ -54,16 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var request = new DeleteApprenticeshipRequest() { DraftApprenticeshipId = draftApprenticeshipId};
             AssertValidationResult(x => x.DraftApprenticeshipId, request, expectedValid);
         }
-
-        //[TestCase(null, false)]
-        //[TestCase(" ", false)]
-        //[TestCase("1", true)]
-        //public void ThenOriginIsValidated(string origin, bool expectedValid)
-        //{
-        //    var request = new DeleteDraftApprenticeshipRequest() { Origin = origin };
-        //    AssertValidationResult(x => x.Origin, request, expectedValid);
-        //}
-
+        
         private void AssertValidationResult<T>(Expression<Func<DeleteApprenticeshipRequest, T>> property, DeleteApprenticeshipRequest instance, bool expectedValid)
         {
             var validator = new DeleteDraftApprenticeshipRequestValidator();
