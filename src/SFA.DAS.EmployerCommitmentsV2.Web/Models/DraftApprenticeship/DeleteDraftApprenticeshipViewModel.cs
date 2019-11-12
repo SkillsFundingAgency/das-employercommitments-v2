@@ -14,6 +14,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public bool? ConfirmDelete { get; set; }
         public Origin Origin { get; set; }
         public string FullName => $"{FirstName} {LastName}";
-        public string RedirectToOriginUrl { get; internal set; }
     }
 }

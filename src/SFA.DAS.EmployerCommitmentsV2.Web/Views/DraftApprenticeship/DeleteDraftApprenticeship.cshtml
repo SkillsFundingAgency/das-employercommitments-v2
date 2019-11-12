@@ -1,10 +1,12 @@
 ﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.DeleteDraftApprenticeshipViewModel
+@inject ILinkGenerator LinkGenerator
+
 @{
     ViewData["Title"] = "Apprenticeships";
 }
 
 <div class="govuk-width-container">
-    <a href="@Model.BackLink" class="govuk-back-link">Back</a>
+    <a href="@LinkGenerator.OriginOfDeleteDraftApprentice(Model.Origin, Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId)" class="govuk-back-link">Back</a>
 
     <main class="govuk-main-wrapper">
         <div class="govuk-grid-row">

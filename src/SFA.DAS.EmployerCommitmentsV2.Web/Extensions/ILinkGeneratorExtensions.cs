@@ -47,5 +47,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
                 return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/{cohortReference}/apprenticeships/{draftApprenticeshipHashedId}/delete");
             }
         }
+
+        public static string OriginOfDeleteDraftApprentice(this ILinkGenerator linkGenerator,
+        Origin origin,
+        string accountHashedId,
+        string cohortReference,
+        string draftApprenticeshipHashedId)
+        {
+            return (origin == Enums.Origin.CohortDetails)
+               ? linkGenerator.CommitmentsV2Link($"{accountHashedId}/unapproved/{cohortReference}")
+               : linkGenerator.CommitmentsV2Link($"{accountHashedId}/unapproved/{cohortReference}/apprentices/{draftApprenticeshipHashedId}/edit");
+        }
     }
 }
