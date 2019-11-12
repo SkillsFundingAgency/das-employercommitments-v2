@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.NUnit3;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
@@ -58,15 +59,34 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
 
         [Test]
-        public async Task PostDeleteApprenticeshpViewModel_WithValidModel_WithEnhancedApproval_ShouldDeleteDraftApprenticeshipAndRedirectToCohortDetailsV2Page()
+        public async Task PostDeleteApprenticeshpViewModel_WithValidModel_WithConfirmDeleteTrue_ShouldDeleteDraftApprenticeshipAndRedirectToCohortDetailsV2Page()
         {
-            var fixture = new DeleteDraftApprenticeshipTestsFixture().WithEnhancedApproval().WithCohortDetailsLink("cohortPage");
+            var fixture = new DeleteDraftApprenticeshipTestsFixture()
+                                .WithEnhancedApproval()
+                                .WithDeleteDraftApprenticeshipViewModel(confirmDelete: true)
+                                .WithCohortDetailsLink("CohortPage");
 
-            var result =  await fixture.Sut.DeleteDraftApprenticeship(new DeleteDraftApprenticeshipViewModel { AccountHashedId = fixture.AccountHashedId, CohortId = fixture.CohortId, DraftApprenticeshipId = fixture.DraftApprenticeshipId, Origin = Enums.Origin.EditDraftApprenticeship, ConfirmDelete = true, DraftApprenticeshipHashedId = fixture.DraftApprenticeshipHashedId, CohortReference = fixture.CohortReference });
+            var result = await fixture.DeleteDraftApprenticeship();
 
-            fixture.CommitmentApiClient.Verify(cApiClient => cApiClient.DeleteDraftApprenticeship(fixture.CohortId, fixture.DraftApprenticeshipId, It.IsAny<DeleteDraftApprenticeshipRequest>(), It.IsAny<System.Threading.CancellationToken>()), Times.Once);
+            fixture.Verify_CommitmentApiClient_DeleteApprenticeShip_IsCalled_OnlyOnce();
+            var redirect = result.VerifyReturnsRedirectToActionResult();
+            Assert.AreEqual("Details", redirect.ActionName);
+            Assert.AreEqual("Cohort", redirect.ControllerName);
+        }
+
+        [Test]
+        public async Task PostDeleteApprenticeshpViewModel_WithValidModel_WithConfirmDeleteFalse_ShouldNotDeleteDraftApprenticeshipAndRedirectToOrigin()
+        {
+            var fixture = new DeleteDraftApprenticeshipTestsFixture()
+                               .WithEnhancedApproval()
+                               .WithDeleteDraftApprenticeshipViewModel(confirmDelete:false)
+                               .WithCohortDetailsLink("CohortPage");
+
+            var result = await fixture.DeleteDraftApprenticeship();
+
+            fixture.Verify_CommitmentApiClient_DeleteApprenticeShip_Is_NeverCalled();
             var redirect = result.VerifyReturnsRedirect();
-            Assert.AreEqual("cohortPage", redirect.Url);
+            Assert.AreEqual("CohortPage", redirect.Url);
         }
     }
 
@@ -79,6 +99,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public string CohortReference => "CHREF";
         public long DraftApprenticeshipId => 99;
         public string DraftApprenticeshipHashedId => "DAHID";
+
+        public DeleteDraftApprenticeshipViewModel DeleteDraftApprenticeshipViewModel { get; set; }
+
         //public List<ErrorDetail> ApiErrors { get; }
         public Mock<IModelMapper> ModelMapperMock { get; }
         public Mock<IAuthorizationService> AuthorizationServiceMock { get; }
@@ -98,6 +121,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 DraftApprenticeshipHashedId = DraftApprenticeshipHashedId,
                 AccountHashedId = AccountHashedId,
             };
+
+            
 
             ModelMapperMock = new Mock<IModelMapper>();
             ModelMapperMock.Setup(x => x.Map<DeleteDraftApprenticeshipViewModel>(It.IsAny<DeleteApprenticeshipRequest>()))
@@ -126,6 +151,27 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 .Returns(url);
 
             return this;
+        }
+
+        public DeleteDraftApprenticeshipTestsFixture WithDeleteDraftApprenticeshipViewModel(bool confirmDelete)
+        {
+            DeleteDraftApprenticeshipViewModel = new DeleteDraftApprenticeshipViewModel { AccountHashedId = AccountHashedId, CohortId = CohortId, DraftApprenticeshipId = DraftApprenticeshipId, Origin = Enums.Origin.EditDraftApprenticeship, ConfirmDelete = confirmDelete, DraftApprenticeshipHashedId = DraftApprenticeshipHashedId, CohortReference = CohortReference };
+            return this;
+        }
+
+        public async Task<IActionResult> DeleteDraftApprenticeship()
+        {
+            return await Sut.DeleteDraftApprenticeship(DeleteDraftApprenticeshipViewModel);
+        }
+
+        public void Verify_CommitmentApiClient_DeleteApprenticeShip_IsCalled_OnlyOnce()
+        {
+            CommitmentApiClient.Verify(cApiClient => cApiClient.DeleteDraftApprenticeship(CohortId, DraftApprenticeshipId, It.IsAny<DeleteDraftApprenticeshipRequest>(), It.IsAny<System.Threading.CancellationToken>()), Times.Once);
+        }
+
+        public void Verify_CommitmentApiClient_DeleteApprenticeShip_Is_NeverCalled()
+        {
+            CommitmentApiClient.Verify(cApiClient => cApiClient.DeleteDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<DeleteDraftApprenticeshipRequest>(), It.IsAny<System.Threading.CancellationToken>()), Times.Never);
         }
     }
 
