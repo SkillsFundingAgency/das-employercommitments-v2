@@ -27,17 +27,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
         {
             var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
 
-
             if (cohort.WithParty != Party.Employer)
             {
                 throw new CohortEmployerUpdateDeniedException($"Cohort {cohort.CohortId} is not With the Employer");
             }
 
             var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(source.CohortId, source.DraftApprenticeshipId);
-
-            var backOrCancelButtonUrl = (source.Origin == Enums.Origin.CohortDetails) 
-                ? _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/{source.CohortReference}")
-                : _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/{source.CohortReference}/apprentices/{source.DraftApprenticeshipHashedId}/edit");
 
             return new DeleteDraftApprenticeshipViewModel()
             {
@@ -46,8 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 AccountHashedId = source.AccountHashedId,
                 DraftApprenticeshipHashedId = source.DraftApprenticeshipHashedId,
                 CohortReference = source.CohortReference,
-                Origin = source.Origin,
-                RedirectToOriginUrl = backOrCancelButtonUrl
+                Origin = source.Origin
             };
         }
     }

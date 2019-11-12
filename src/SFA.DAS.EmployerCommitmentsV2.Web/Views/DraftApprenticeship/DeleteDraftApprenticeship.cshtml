@@ -1,4 +1,5 @@
 ﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.DeleteDraftApprenticeshipViewModel
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @inject ILinkGenerator LinkGenerator
 
 @{
@@ -6,7 +7,7 @@
 }
 
 <div class="govuk-width-container">
-    <a href="@LinkGenerator.OriginOfDeleteDraftApprentice(Model.Origin, Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId)" class="govuk-back-link">Back</a>
+
 
     <main class="govuk-main-wrapper">
         <div class="govuk-grid-row">
@@ -58,3 +59,7 @@
     </main>
 </div>
 
+@section Back
+{
+    <a class="govuk-back-link" href="@LinkGenerator.OriginOfDeleteDraftApprentice(Model.Origin, Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId)">Back</a>
+}
