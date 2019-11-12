@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Moq;
@@ -90,15 +87,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                 .ReturnsAsync(draftApprenticeshipResponse);
 
             var result = await mapper.Map(request);
-
+            Assert.AreEqual(draftApprenticeshipResponse.FirstName, result.FirstName);
+            Assert.AreEqual(draftApprenticeshipResponse.LastName, result.LastName);
             Assert.AreEqual(expectedFullName, result.FullName );
             Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
             Assert.AreEqual(request.DraftApprenticeshipHashedId, result.DraftApprenticeshipHashedId);
             Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
-            Assert.Fail();
-            
-            //todo: generate backlink based on origin
-
+            Assert.AreEqual(request.Origin, result.Origin);
+            Assert.AreEqual(request.CohortReference, result.CohortReference);
 
         }
 
