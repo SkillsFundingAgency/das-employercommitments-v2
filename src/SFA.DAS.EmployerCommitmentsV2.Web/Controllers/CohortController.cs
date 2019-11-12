@@ -225,7 +225,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
             {
-                return RedirectToAction("Details", new {model.AccountHashedId, newCohort.CohortReference });
+                return RedirectToAction("Details", new { model.AccountHashedId, newCohort.CohortReference });
             }
 
             var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, newCohort.CohortReference);

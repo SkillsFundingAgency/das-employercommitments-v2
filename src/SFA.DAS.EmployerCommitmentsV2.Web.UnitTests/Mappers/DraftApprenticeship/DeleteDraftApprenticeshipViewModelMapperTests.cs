@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public async Task ThenCallsCommitmentsApiToGetCohort(
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             GetCohortResponse cohortResponse,
-            DeleteDraftApprenticeshipRequest request,
+            DeleteApprenticeshipRequest request,
             DeleteDraftApprenticeshipViewModelMapper mapper)
         {
             cohortResponse.WithParty = Party.Employer;
@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public void WhenCohortIsNotWithEmployer_ThenThrowsException(
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             GetCohortResponse cohortResponse,
-            DeleteDraftApprenticeshipRequest request,
+            DeleteApprenticeshipRequest request,
             DeleteDraftApprenticeshipViewModelMapper mapper)
         {
             cohortResponse.WithParty = Party.Provider;
@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             GetCohortResponse cohortResponse,
             GetDraftApprenticeshipResponse draftApprenticeshipResponse,
-            DeleteDraftApprenticeshipRequest request,
+            DeleteApprenticeshipRequest request,
             DeleteDraftApprenticeshipViewModelMapper mapper)
         {
             cohortResponse.WithParty = Party.Employer;
@@ -77,7 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             GetCohortResponse cohortResponse,
             GetDraftApprenticeshipResponse draftApprenticeshipResponse,
-            DeleteDraftApprenticeshipRequest request,
+            DeleteApprenticeshipRequest request,
             DeleteDraftApprenticeshipViewModelMapper mapper)
         {
             var expectedFullName = $"{draftApprenticeshipResponse.FirstName} {draftApprenticeshipResponse.LastName}";
@@ -93,7 +93,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             Assert.AreEqual(expectedFullName, result.FullName );
             Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
-            Assert.AreEqual(request.DraftApprenticeshipId, result.DraftApprenticeshipHashedId);
+            Assert.AreEqual(request.DraftApprenticeshipHashedId, result.DraftApprenticeshipHashedId);
             Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
             Assert.Fail();
             

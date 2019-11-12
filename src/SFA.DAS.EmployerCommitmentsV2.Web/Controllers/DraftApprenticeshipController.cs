@@ -15,6 +15,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
 using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
+using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -27,7 +28,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ILinkGenerator _linkGenerator;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IAuthorizationService _authorizationService;
-
+        
         public DraftApprenticeshipController(
             ICommitmentsService commitmentsService,
             ILinkGenerator linkGenerator,
@@ -104,7 +105,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("{DraftApprenticeshipHashedId}/Delete/{Origin}")]
-        public async Task<IActionResult> DeleteDraftApprenticeship(DeleteDraftApprenticeshipRequest request)
+        public async Task<IActionResult> DeleteDraftApprenticeship(DeleteApprenticeshipRequest request)
         {
             try
             {
@@ -115,6 +116,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 throw new NotImplementedException();
             }
+        }
+
+        [HttpPost]
+        [Route("{DraftApprenticeshipHashedId}/Delete/{Origin}")]
+        public async Task<IActionResult> DeleteDraftApprenticeship(DeleteDraftApprenticeshipViewModel model)
+        {
+            if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
+            {
+                await _commitmentsApiClient.DeleteDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId.Value, new DeleteDraftApprenticeshipRequest());
+
+            }
+
+            return Redirect(model.RedirectToOriginUrl);
         }
     }
 }

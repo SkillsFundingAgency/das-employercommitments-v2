@@ -5,6 +5,7 @@
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
 @inject ILinkGenerator LinkGenerator
+@inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService
 
 @{
     ViewData["Title"] = Model.PageTitle;
@@ -14,15 +15,15 @@
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-    
+
             <div class="govuk-panel" style="border-color:#2e358b;">
                 <h1 class="govuk-panel__title">
                     You must sign your employer agreement before you can approve this record
                 </h1>
             </div>
-       
+
         </div>
-    </div>  
+    </div>
 }
 else
 {
@@ -30,13 +31,13 @@ else
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-    
+
                 <div class="govuk-panel" style="border-color:#2e358b;">
                     <h1 class="govuk-panel__title">
                         You must complete all apprentice details before you can approve this record
                     </h1>
                 </div>
-       
+
             </div>
         </div>
     }
@@ -113,7 +114,9 @@ else
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         @if (!Model.IsReadOnly)
                         {
-                            <a href="@Url.Action("EditDraftApprenticeship", "DraftApprenticeship", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">Edit <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
+                            <a href="@Url.Action("EditDraftApprenticeship", "DraftApprenticeship", new {@draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId})">Edit <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
+                            <br /><br />
+                            <a href="@LinkGenerator.DeleteApprentice(AuthorizationService,Model.AccountHashedId, Model.CohortReference, draftApprenticeship.DraftApprenticeshipHashedId, SFA.DAS.EmployerCommitmentsV2.Web.Enums.Origin.CohortDetails)">Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span></a>
                         }
                         else
                         {
@@ -145,74 +148,74 @@ else
 
     <hr class="govuk-section-break govuk-section-break--l">
 
-<form id="submitCohort" novalidate method="post">
-      <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.Selection, "govuk-form-group--error")">
+    <form id="submitCohort" novalidate method="post">
+        <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.Selection, "govuk-form-group--error")">
 
-        <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                <h3 class="govuk-fieldset__heading">@Model.OptionsTitle</h3>
-            </legend>
-            @Html.ValidationMessageFor(m => m.Selection, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Selection) })
-            <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h3 class="govuk-fieldset__heading">@Model.OptionsTitle</h3>
+                </legend>
+                @Html.ValidationMessageFor(m => m.Selection, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Selection) })
+                <div class="govuk-radios govuk-radios--conditional" data-module="radios">
 
-                @if (Model.ShowViewAgreementOption)
-                {
+                    @if (Model.ShowViewAgreementOption)
+                    {
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="radio-view" name="selection" type="radio" value="@CohortDetailsOptions.ViewEmployerAgreement" data-aria-controls="conditional-view">
+                            <label class="govuk-label govuk-radios__label" for="radio-view">
+                                View employer agreement
+                            </label>
+                        </div>
+                    }
+
+                    @if (Model.EmployerCanApprove)
+                    {
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio" value="@CohortDetailsOptions.Approve" data-aria-controls="conditional-approve">
+                            <label class="govuk-label govuk-radios__label" for="radio-approve">
+                                Yes, approve and notify training provider
+                            </label>
+                        </div>
+                    }
+                    @if (!Model.ShowApprovalOptionMessage)
+                    {
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-approve">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="approve-details">
+                                    Leave @Model.ProviderName a message (optional)
+                                </label>
+                                <textarea class="govuk-textarea" id="approve-details" name="approvemessage" rows="5"></textarea>
+                            </div>
+                        </div>
+                    }
                     <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="radio-view" name="selection" type="radio" value="@CohortDetailsOptions.ViewEmployerAgreement" data-aria-controls="conditional-view">
-                        <label class="govuk-label govuk-radios__label" for="radio-view">
-                            View employer agreement
+                        <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Send" data-aria-controls="conditional-send">
+                        <label class="govuk-label govuk-radios__label" for="radio-send">
+                            @Model.SendBackToProviderOptionMessage
                         </label>
                     </div>
-                }
-                
-                @if (Model.EmployerCanApprove)
-                {
-                    <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio" value="@CohortDetailsOptions.Approve" data-aria-controls="conditional-approve">
-                        <label class="govuk-label govuk-radios__label" for="radio-approve">
-                            Yes, approve and notify training provider
-                        </label>
-                    </div>
-                }
-                @if (!Model.ShowApprovalOptionMessage)
-                {
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-approve">
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-send">
                         <div class="govuk-form-group">
-                            <label class="govuk-label" for="approve-details">
+                            <label class="govuk-label" for="send-details">
                                 Leave @Model.ProviderName a message (optional)
                             </label>
-                            <textarea class="govuk-textarea" id="approve-details" name="approvemessage" rows="5"></textarea>
+                            <textarea class="govuk-textarea" id="send-details" name="sendmessage" rows="5"></textarea>
                         </div>
                     </div>
-                 }
-                <div class="govuk-radios__item">
-                    <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Send" data-aria-controls="conditional-send">
-                    <label class="govuk-label govuk-radios__label" for="radio-send">
-                        @Model.SendBackToProviderOptionMessage
-                    </label>
-                </div>
-                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-send">
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" for="send-details">
-                            Leave @Model.ProviderName a message (optional)
-                        </label>
-                        <textarea class="govuk-textarea" id="send-details" name="sendmessage" rows="5"></textarea>
-                    </div>
-                </div>
-                
-                @if (Model.ShowGotoHomePageOption)
-                {
-                <div class="govuk-radios__item">
-                    <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Homepage">
-                    <label class="govuk-label govuk-radios__label">
-                        Go to homepage
-                    </label>
-                </div>
-                }
 
-            </div>
-        </fieldset>
-    </div>
+                    @if (Model.ShowGotoHomePageOption)
+                    {
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Homepage">
+                            <label class="govuk-label govuk-radios__label">
+                                Go to homepage
+                            </label>
+                        </div>
+                    }
+
+                </div>
+            </fieldset>
+        </div>
 
         <button type="submit" class="govuk-button">Save and submit</button>
 

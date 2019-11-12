@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [TestCase(null, false)]
         public void ThenAccountHashedIdIsValidated(string accountHashedId, bool expectedValid)
         {
-            var request = new DeleteDraftApprenticeshipRequest() {AccountHashedId = accountHashedId};
+            var request = new DeleteApprenticeshipRequest() {AccountHashedId = accountHashedId};
             AssertValidationResult(x => x.AccountHashedId, request, expectedValid);
         }
         [TestCase("", false)]
@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [TestCase(null, false)]
         public void ThenCohortReferenceIsValidated(string cohortReference, bool expectedValid)
         {
-            var request = new DeleteDraftApprenticeshipRequest() {CohortReference = cohortReference};
+            var request = new DeleteApprenticeshipRequest() {CohortReference = cohortReference};
             AssertValidationResult(x => x.CohortReference,request, expectedValid);
         }
 
@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [TestCase(234, true)]
         public void ThenCohortIdIsValidated(long cohortReference, bool expectedValid)
         {
-            var request = new DeleteDraftApprenticeshipRequest() { CohortId = cohortReference };
+            var request = new DeleteApprenticeshipRequest() { CohortId = cohortReference };
             AssertValidationResult(x => x.CohortId, request, expectedValid);
         }
 
@@ -51,20 +51,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [TestCase(234, true)]
         public void ThenDraftApprenticeshipIdIsValidated(long draftApprenticeshipId, bool expectedValid)
         {
-            var request = new DeleteDraftApprenticeshipRequest() { DraftApprenticeshipId = draftApprenticeshipId};
+            var request = new DeleteApprenticeshipRequest() { DraftApprenticeshipId = draftApprenticeshipId};
             AssertValidationResult(x => x.DraftApprenticeshipId, request, expectedValid);
         }
 
-        [TestCase(null, false)]
-        [TestCase(" ", false)]
-        [TestCase("1", true)]
-        public void ThenOriginIsValidated(string origin, bool expectedValid)
-        {
-            var request = new DeleteDraftApprenticeshipRequest() { Origin = origin };
-            AssertValidationResult(x => x.Origin, request, expectedValid);
-        }
+        //[TestCase(null, false)]
+        //[TestCase(" ", false)]
+        //[TestCase("1", true)]
+        //public void ThenOriginIsValidated(string origin, bool expectedValid)
+        //{
+        //    var request = new DeleteDraftApprenticeshipRequest() { Origin = origin };
+        //    AssertValidationResult(x => x.Origin, request, expectedValid);
+        //}
 
-        private void AssertValidationResult<T>(Expression<Func<DeleteDraftApprenticeshipRequest, T>> property, DeleteDraftApprenticeshipRequest instance, bool expectedValid)
+        private void AssertValidationResult<T>(Expression<Func<DeleteApprenticeshipRequest, T>> property, DeleteApprenticeshipRequest instance, bool expectedValid)
         {
             var validator = new DeleteDraftApprenticeshipRequestValidator();
 

@@ -1,6 +1,7 @@
 ﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.EditDraftApprenticeshipViewModel
 @inject ILinkGenerator LinkGenerator
+@inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService
 
 @{
     ViewData["Title"] = "Apprenticeships";
@@ -18,7 +19,7 @@
             @Html.AntiForgeryToken()
             <partial name="DraftApprenticeship" for="@Model" />
             <button type="submit" class="govuk-button">Save</button>
-            <a class="govuk-button govuk-button--warning das-float-right" href="@LinkGenerator.DeleteApprentice(Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId)">Delete</a>
+            <a class="govuk-button govuk-button--warning das-float-right" href="@LinkGenerator.DeleteApprentice(AuthorizationService,Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId, SFA.DAS.EmployerCommitmentsV2.Web.Enums.Origin.EditDraftApprenticeship)">Delete</a>
             @*<p class="govuk-body  govuk-!-margin-bottom-0">
                 <a class="govuk-body govuk-link" href="@Url.ProviderApprenticeshipServiceLink($"{Model.ProviderId}/apprentices/{Model.CohortReference}/details")">Cancel</a>
             </p>*@

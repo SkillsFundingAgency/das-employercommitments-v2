@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         [Test, MoqAutoData]
         public async Task WhenGettingDelete_ThenCallsMapper(
             [Frozen] Mock<IModelMapper> mockMapper,
-            DeleteDraftApprenticeshipRequest request,
+            DeleteApprenticeshipRequest request,
             DraftApprenticeshipController controller)
         {
             mockMapper
@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         [Test, MoqAutoData]
         public async Task WhenGettingDelete_AndMapperThrowsError_ThenRedirectsToOrigin(
             [Frozen] Mock<IModelMapper> mockMapper,
-            DeleteDraftApprenticeshipRequest request,
+            DeleteApprenticeshipRequest request,
             DraftApprenticeshipController controller)
         {
             mockMapper

@@ -5,7 +5,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
 {
-    public class DeleteDraftApprenticeshipRequestValidator : AbstractValidator<DeleteDraftApprenticeshipRequest>
+    public class DeleteDraftApprenticeshipRequestValidator : AbstractValidator<DeleteApprenticeshipRequest>
     {
         public DeleteDraftApprenticeshipRequestValidator()
         {
@@ -14,9 +14,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
             RuleFor(r => r.CohortId).GreaterThanOrEqualTo(1);
             RuleFor(r => r.DraftApprenticeshipId).GreaterThanOrEqualTo(1);
 
-            RuleFor(r => r.Origin)
-                .Must(s => !string.IsNullOrWhiteSpace(s))
-                .Must(s => Enum.TryParse(s, out Origin _));
+            //RuleFor(r => r.Origin)
+            //    .Must(s => !string.IsNullOrWhiteSpace(s))
+            //    .Must(s => Enum.TryParse(s, out Origin _));
 
 
         }
