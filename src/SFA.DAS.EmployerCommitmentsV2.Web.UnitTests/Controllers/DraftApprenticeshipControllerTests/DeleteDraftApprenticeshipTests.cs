@@ -22,19 +22,58 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
     public class DeleteDraftApprenticeshipTests
     {
 
-        [Test, MoqAutoData]
-        public async Task WhenGettingDelete_ThenCallsMapper(
-            [Frozen] Mock<IModelMapper> mockMapper,
-            DeleteApprenticeshipRequest request,
-            DraftApprenticeshipController controller)
+        [Test]
+        public async Task WhenGettingDelete_ThenRequestIsMapped()
         {
-            mockMapper
-                .Setup(x => x.Map<DeleteDraftApprenticeshipViewModel>(request))
-                .ReturnsAsync(new DeleteDraftApprenticeshipViewModel());
+            var fixture = new DeleteDraftApprenticeshipTestsFixture()
+                .WithEnhancedApproval()
+                .WithDeleteDraftApprenticeshipRequest(Origin.CohortDetails);
 
-            await controller.DeleteDraftApprenticeship(request);
+            var result = await fixture.DeleteDraftApprenticeshipGet();
+            
+            fixture.Verify_Mapper_IsCalled_Once();
+        }
 
-            mockMapper.Verify(x => x.Map<DeleteDraftApprenticeshipViewModel>(request), Times.Once);
+        [Test]
+        public async Task WhenGettingDelete_ThenViewIsReturned()
+        {
+            var fixture = new DeleteDraftApprenticeshipTestsFixture()
+                .WithEnhancedApproval()
+                .WithDeleteDraftApprenticeshipRequest(Origin.CohortDetails);
+
+            var result = await fixture.DeleteDraftApprenticeshipGet();
+
+            result.VerifyReturnsViewModel().WithModel<DeleteDraftApprenticeshipViewModel>();
+        }
+
+        [Test]
+        public async Task WhenGettingDelete_AndCohortEmployerUpdateDeniedExceptionIsThrown_ThenGeneratesRedirectUrl()
+        {
+            var fixture = new DeleteDraftApprenticeshipTestsFixture()
+                .WithEnhancedApproval()
+                .WithDeleteDraftApprenticeshipRequest(Origin.CohortDetails)
+                .WithMapperThrowingCohortEmployerUpdateDeniedException()
+                .WithCohortDetailsLink("CohortDetails");
+
+            var result = await fixture.DeleteDraftApprenticeshipGet();
+
+            fixture.Verify_LinkGenerator_IsCalled_Once();
+        }
+
+        [Test]
+        public async Task WhenGettingDelete_AndCohortEmployerUpdateDeniedExceptionIsThrown_ThenRedirectsOrigin()
+        {
+            var fixture = new DeleteDraftApprenticeshipTestsFixture()
+                .WithEnhancedApproval()
+                .WithDeleteDraftApprenticeshipRequest(Origin.CohortDetails)
+                .WithMapperThrowingCohortEmployerUpdateDeniedException()
+                .WithCohortDetailsLink("CohortDetails");
+
+            var result = await fixture.DeleteDraftApprenticeshipGet();
+
+            var redirect = result.VerifyReturnsRedirect();
+            Assert.AreEqual("CohortDetails", redirect.Url);
+            fixture.Verify_LinkGenerator_IsCalled_Once();
         }
 
         [Test, MoqAutoData]
@@ -140,8 +179,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public string CohortReference => "CHREF";
         public long DraftApprenticeshipId => 99;
         public string DraftApprenticeshipHashedId => "DAHID";
+        
 
         public DeleteDraftApprenticeshipViewModel DeleteDraftApprenticeshipViewModel { get; set; }
+        public DeleteApprenticeshipRequest DeleteDraftApprenticeshipRequest { get; set; }
 
         //public List<ErrorDetail> ApiErrors { get; }
         public Mock<IModelMapper> ModelMapperMock { get; }
@@ -194,15 +235,41 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             return this;
         }
 
+        public DeleteDraftApprenticeshipTestsFixture WithDeleteDraftApprenticeshipRequest(Origin origin)
+        {
+            DeleteDraftApprenticeshipRequest = new DeleteApprenticeshipRequest
+            {
+                AccountHashedId = AccountHashedId,
+                CohortId = CohortId,
+                DraftApprenticeshipId = DraftApprenticeshipId,
+                Origin = origin,
+                CohortReference = CohortReference,
+                DraftApprenticeshipHashedId = DraftApprenticeshipHashedId
+            };
+            return this;
+        }
+
         public DeleteDraftApprenticeshipTestsFixture WithDeleteDraftApprenticeshipViewModel(bool confirmDelete)
         {
             DeleteDraftApprenticeshipViewModel = new DeleteDraftApprenticeshipViewModel { AccountHashedId = AccountHashedId, CohortId = CohortId, DraftApprenticeshipId = DraftApprenticeshipId, Origin = Enums.Origin.EditDraftApprenticeship, ConfirmDelete = confirmDelete, DraftApprenticeshipHashedId = DraftApprenticeshipHashedId, CohortReference = CohortReference };
             return this;
         }
 
+        public DeleteDraftApprenticeshipTestsFixture WithMapperThrowingCohortEmployerUpdateDeniedException()
+        {
+            ModelMapperMock
+                .Setup(x => x.Map<DeleteDraftApprenticeshipViewModel>(DeleteDraftApprenticeshipRequest))
+                .ThrowsAsync(new CohortEmployerUpdateDeniedException($"Cohort {DeleteDraftApprenticeshipRequest.CohortId} is not With the Employer"));
+            return this;
+        }
+
         public async Task<IActionResult> DeleteDraftApprenticeship()
         {
             return await Sut.DeleteDraftApprenticeship(DeleteDraftApprenticeshipViewModel);
+        }
+        public async Task<IActionResult> DeleteDraftApprenticeshipGet()
+        {
+            return await Sut.DeleteDraftApprenticeship(DeleteDraftApprenticeshipRequest);
         }
 
         public void Verify_CommitmentApiClient_DeleteApprenticeShip_IsCalled_OnlyOnce()
@@ -214,6 +281,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             CommitmentApiClient.Verify(cApiClient => cApiClient.DeleteDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<DeleteDraftApprenticeshipRequest>(), It.IsAny<System.Threading.CancellationToken>()), Times.Never);
         }
-    }
 
+        public void Verify_Mapper_IsCalled_Once()
+        {
+            ModelMapperMock.Verify(x => x.Map<DeleteDraftApprenticeshipViewModel>(DeleteDraftApprenticeshipRequest));
+        }
+
+        public void Verify_LinkGenerator_IsCalled_Once()
+        {
+            LinkGeneratorMock.Verify(x => x.CommitmentsV2Link(It.IsAny<string>()));
+        }
+        
+    }
 }
