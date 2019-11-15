@@ -6,7 +6,6 @@ using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;
@@ -60,9 +59,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _trainingProgrammeApiClient = new TrainingProgrammeApiClientMock();
 
             _source = autoFixture.Create<EditDraftApprenticeshipRequest>();
+            _source.Cohort = _cohort;
             _mapper = new EditDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object, _trainingProgrammeApiClient.Object);
 
-            _result = await _mapper.Map(TestHelper.Clone(_source));
+            _result = await _mapper.Map(TestHelper.Clone(_source)) as EditDraftApprenticeshipViewModel;
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         [Test]
         public void CohortIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CohortId, _result.CohortId);
+            Assert.AreEqual(_source.Request.CohortId, _result.CohortId);
         }
 
         [Test]
@@ -152,7 +152,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         [Test]
         public void AccountHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountHashedId, _result.AccountHashedId);
+            Assert.AreEqual(_source.Request.AccountHashedId, _result.AccountHashedId);
         }
 
         [Test]
@@ -167,19 +167,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         {
             _cohort.TransferSenderId = transferSenderId;
 
-            _result = await _mapper.Map(_source);
+            _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
 
             Assert.AreEqual(fundedByTransfer
                     ? _trainingProgrammeApiClient.Standards
                     : _trainingProgrammeApiClient.All,
                 _result.Courses);
-        }
-
-        [Test]
-        public void ThrowsWhenCohortNotWithEditingParty()
-        {
-            _cohort.WithParty = Party.Provider;
-            Assert.ThrowsAsync<CohortEmployerUpdateDeniedException>(() => _mapper.Map(_source));
         }
     }
 }

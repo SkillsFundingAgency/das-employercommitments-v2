@@ -21,12 +21,24 @@
             <button type="submit" class="govuk-button">Save</button>
             <a class="govuk-button govuk-button--warning das-float-right" href="@LinkGenerator.DeleteApprentice(AuthorizationService,Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId, SFA.DAS.EmployerCommitmentsV2.Web.Enums.Origin.EditDraftApprenticeship)">Delete</a>
             @*<p class="govuk-body  govuk-!-margin-bottom-0">
-                <a class="govuk-body govuk-link" href="@Url.ProviderApprenticeshipServiceLink($"{Model.ProviderId}/apprentices/{Model.CohortReference}/details")">Cancel</a>
-            </p>*@
+                    <a class="govuk-body govuk-link" href="@Url.ProviderApprenticeshipServiceLink($"{Model.ProviderId}/apprentices/{Model.CohortReference}/details")">Cancel</a>
+                </p>*@
         </form>
 
     </div>
 </div>
+
+
+
+@Html.ActionLink("Return to group of apprentices", "Details", "Cohort", new { @Model.AccountHashedId, @Model.CohortReference }, new { @class = "govuk-link", id = "return-link" })
+
+
+@section Back
+{
+    @Html.ActionLink("Back", "Details", "Cohort", new { @Model.AccountHashedId, @Model.CohortReference }, new { @class = "govuk-back-link", id = "back-link" })
+}
+
+
 
 @*
     @section  Scripts
