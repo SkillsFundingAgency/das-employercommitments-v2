@@ -26,7 +26,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ILinkGenerator _linkGenerator;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IAuthorizationService _authorizationService;
-        
+        public const string ApprenticeDeletedMessage = "Apprentice record deleted";
+
         public DraftApprenticeshipController(
             ICommitmentsService commitmentsService,
             ILinkGenerator linkGenerator,
@@ -124,8 +125,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (model.ConfirmDelete.Value)
             {
-                await _commitmentsApiClient.DeleteDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId.Value, new DeleteDraftApprenticeshipRequest());
-                TempData.AddFlashMessage("Apprentice record deleted", ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                var request = await _modelMapper.Map<DeleteDraftApprenticeshipRequest>(model);
+                await _commitmentsApiClient.DeleteDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId.Value, request);
+                TempData.AddFlashMessage(ApprenticeDeletedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
                 return RedirectToAction("Details", "Cohort", new {model.AccountHashedId, model.CohortReference});
             }
 
