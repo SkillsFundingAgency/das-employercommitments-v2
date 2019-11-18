@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.Authorization.ModelBinding;
-using SFA.DAS.EmployerCommitmentsV2.Web.Enums;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 {
@@ -12,5 +11,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public long DraftApprenticeshipId { get; set; }
         public string DraftApprenticeshipHashedId { get; set; }
         public Origin Origin { get; set; }
+    }
+
+    public enum Origin
+    {
+        CohortDetails,
+        EditDraftApprenticeship
     }
 }

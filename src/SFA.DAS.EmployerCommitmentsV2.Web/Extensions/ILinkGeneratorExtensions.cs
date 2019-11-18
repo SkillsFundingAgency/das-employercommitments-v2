@@ -1,6 +1,5 @@
 using SFA.DAS.Authorization.Services;
 using SFA.DAS.EmployerCommitmentsV2.Features;
-using SFA.DAS.EmployerCommitmentsV2.Web.Enums;
 using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
@@ -32,31 +31,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
         }
 
         public static string DeleteApprentice(this ILinkGenerator linkGenerator,
-            IAuthorizationService authorizationService,
             string accountHashedId,
             string cohortReference,
-            string draftApprenticeshipHashedId,
-            Origin origin)
+            string draftApprenticeshipHashedId)
         {
-            if (authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
-            {
-                return linkGenerator.CommitmentsV2Link($"{accountHashedId}/unapproved/{cohortReference}/apprentices/{draftApprenticeshipHashedId}/Delete/{origin}");
-            }
-            else
-            {
-                return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/{cohortReference}/apprenticeships/{draftApprenticeshipHashedId}/delete");
-            }
-        }
-
-        public static string OriginOfDeleteDraftApprentice(this ILinkGenerator linkGenerator,
-        Origin origin,
-        string accountHashedId,
-        string cohortReference,
-        string draftApprenticeshipHashedId)
-        {
-            return (origin == Enums.Origin.CohortDetails)
-               ? linkGenerator.CommitmentsV2Link($"{accountHashedId}/unapproved/{cohortReference}")
-               : linkGenerator.CommitmentsV2Link($"{accountHashedId}/unapproved/{cohortReference}/apprentices/{draftApprenticeshipHashedId}/edit");
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/{cohortReference}/apprenticeships/{draftApprenticeshipHashedId}/delete");
         }
     }
 }

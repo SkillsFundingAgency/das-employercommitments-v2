@@ -9,7 +9,6 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Enums;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
@@ -27,7 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 .WithEnhancedApproval()
                 .WithDeleteDraftApprenticeshipRequest(Origin.CohortDetails);
 
-            var result = await fixture.DeleteDraftApprenticeshipGet();
+            await fixture.DeleteDraftApprenticeshipGet();
             
             fixture.Verify_Mapper_IsCalled_Once();
         }
@@ -45,21 +44,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
 
         [Test]
-        public async Task WhenGettingDelete_AndCohortEmployerUpdateDeniedExceptionIsThrown_ThenGeneratesRedirectUrl()
+        public async Task WhenGettingDelete_OriginIsEditDraftApprenticeship_AndCohortEmployerUpdateDeniedExceptionIsThrown_ThenGeneratesRedirectUrl()
         {
             var fixture = new DeleteDraftApprenticeshipTestsFixture()
                 .WithEnhancedApproval()
-                .WithDeleteDraftApprenticeshipRequest(Origin.CohortDetails)
-                .WithMapperThrowingCohortEmployerUpdateDeniedException()
-                .WithCohortDetailsLink("CohortDetails");
+                .WithDeleteDraftApprenticeshipRequest(Origin.EditDraftApprenticeship)
+                .WithMapperThrowingCohortEmployerUpdateDeniedException();
 
             var result = await fixture.DeleteDraftApprenticeshipGet();
-
-            fixture.Verify_LinkGenerator_IsCalled_Once();
+            var redirect = result.VerifyReturnsRedirectToActionResult();
+            Assert.AreEqual("Details", redirect.ActionName);
+            Assert.AreEqual(null, redirect.ControllerName);
         }
 
         [Test]
-        public async Task WhenGettingDelete_AndCohortEmployerUpdateDeniedExceptionIsThrown_ThenRedirectsOrigin()
+        public async Task WhenGettingDelete_OriginIsCohortDetails_AndCohortEmployerUpdateDeniedExceptionIsThrown_ThenRedirectsOrigin()
         {
             var fixture = new DeleteDraftApprenticeshipTestsFixture()
                 .WithEnhancedApproval()
@@ -69,9 +68,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             var result = await fixture.DeleteDraftApprenticeshipGet();
 
-            var redirect = result.VerifyReturnsRedirect();
-            Assert.AreEqual("CohortDetails", redirect.Url);
-            fixture.Verify_LinkGenerator_IsCalled_Once();
+            var redirect = result.VerifyReturnsRedirectToActionResult();
+            Assert.AreEqual("Details", redirect.ActionName);
+            Assert.AreEqual("Cohort", redirect.ControllerName);
         }
 
         [Test]
@@ -101,8 +100,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             var result = await fixture.DeleteDraftApprenticeship();
 
             fixture.Verify_CommitmentApiClient_DeleteApprenticeShip_Is_NeverCalled();
-            var redirect = result.VerifyReturnsRedirect();
-            Assert.AreEqual("CohortPage", redirect.Url);
+            var redirect = result.VerifyReturnsRedirectToActionResult();
+            Assert.AreEqual("Details", redirect.ActionName);
+            Assert.AreEqual(null, redirect.ControllerName);
         }
     }
 
@@ -187,7 +187,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
         public DeleteDraftApprenticeshipTestsFixture WithDeleteDraftApprenticeshipViewModel(bool confirmDelete)
         {
-            DeleteDraftApprenticeshipViewModel = new DeleteDraftApprenticeshipViewModel { AccountHashedId = AccountHashedId, CohortId = CohortId, DraftApprenticeshipId = DraftApprenticeshipId, Origin = Enums.Origin.EditDraftApprenticeship, ConfirmDelete = confirmDelete, DraftApprenticeshipHashedId = DraftApprenticeshipHashedId, CohortReference = CohortReference };
+            DeleteDraftApprenticeshipViewModel = new DeleteDraftApprenticeshipViewModel { AccountHashedId = AccountHashedId, CohortId = CohortId, DraftApprenticeshipId = DraftApprenticeshipId, Origin = Origin.EditDraftApprenticeship, ConfirmDelete = confirmDelete, DraftApprenticeshipHashedId = DraftApprenticeshipHashedId, CohortReference = CohortReference };
             return this;
         }
 

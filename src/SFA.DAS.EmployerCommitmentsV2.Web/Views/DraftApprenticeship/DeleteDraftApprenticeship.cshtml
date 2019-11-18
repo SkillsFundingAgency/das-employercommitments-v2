@@ -69,5 +69,7 @@
 
 @section Back
 {
-    <a class="govuk-back-link" href="@LinkGenerator.OriginOfDeleteDraftApprentice(Model.Origin, Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId)">Back</a>
+    <a class="govuk-back-link" href= @(Model.Origin == Origin.CohortDetails)
+      ? @Url.Action("Details", "Cohort", new { Model.AccountHashedId, Model.CohortReference })
+      : @Url.Action("Details", new { Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId })>Back</a>
 }

@@ -3,7 +3,6 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.Services;
 using SFA.DAS.EmployerCommitmentsV2.Features;
-using SFA.DAS.EmployerCommitmentsV2.Web.Enums;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerUrlHelper;
 
@@ -53,37 +52,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         }
 
         [Test, AutoData]
-        public void DeleteApprentice_BuildsPathCorrectly_WhenEnhancedApproval_IsTrue(string accountHashedId, string cohortReference, string draftApprenticeshipHashedId, Origin origin)
-        {
-            _fixture.SetUpForEnhancedApproval(true);
-            var url = _fixture.Sut.DeleteApprentice(_fixture.AuthorizationService.Object, accountHashedId, cohortReference, draftApprenticeshipHashedId, origin);
-
-            Assert.AreEqual($"{_fixture.CommitmentsV2Link}{accountHashedId}/unapproved/{cohortReference}/apprentices/{draftApprenticeshipHashedId}/Delete/{origin}", url);
-        }
-
-        [Test, AutoData]
-        public void DeleteApprentice_BuildsPathCorrectly_WhenEnhancedApproval_IsFalse(string accountHashedId, string cohortReference, string draftApprenticeshipHashedId, Origin origin)
+        public void DeleteApprentice_BuildsPathCorrectly(string accountHashedId, string cohortReference, string draftApprenticeshipHashedId)
         {
             _fixture.SetUpForEnhancedApproval(false);
-            var url = _fixture.Sut.DeleteApprentice(_fixture.AuthorizationService.Object, accountHashedId, cohortReference, draftApprenticeshipHashedId, origin);
+            var url = _fixture.Sut.DeleteApprentice(accountHashedId, cohortReference, draftApprenticeshipHashedId);
 
             Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/{cohortReference}/apprenticeships/{draftApprenticeshipHashedId}/delete", url);
-        }
-
-        [Test, AutoData]
-        public void OriginOfDraftDeleteApprentice_BuildsPathCorrectly_WhenOriginIs_CohortDetails(string accountHashedId, string cohortReference, string draftApprenticeshipHashedId)
-        {
-            var url = _fixture.Sut.OriginOfDeleteDraftApprentice(Origin.CohortDetails,accountHashedId, cohortReference, draftApprenticeshipHashedId);
-
-            Assert.AreEqual($"{_fixture.CommitmentsV2Link}{accountHashedId}/unapproved/{cohortReference}", url);
-        }
-
-        [Test, AutoData]
-        public void OriginOfDraftDeleteApprentice_BuildsPathCorrectly_WhenOriginIs_EditDraftApprenticeship(string accountHashedId, string cohortReference, string draftApprenticeshipHashedId)
-        {
-            var url = _fixture.Sut.OriginOfDeleteDraftApprentice(Origin.EditDraftApprenticeship, accountHashedId, cohortReference, draftApprenticeshipHashedId);
-
-            Assert.AreEqual($"{_fixture.CommitmentsV2Link}{accountHashedId}/unapproved/{cohortReference}/apprentices/{draftApprenticeshipHashedId}/edit", url);
         }
     }
 

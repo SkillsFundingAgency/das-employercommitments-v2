@@ -110,7 +110,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
             catch (CohortEmployerUpdateDeniedException)
             {
-                return Redirect(_linkGenerator.OriginOfDeleteDraftApprentice(request.Origin, request.AccountHashedId, request.CohortReference, request.DraftApprenticeshipHashedId));
+                return RedirectToOriginForDelete(request.Origin, request.AccountHashedId, request.CohortReference, request.DraftApprenticeshipHashedId);
             }
         }
 
@@ -127,8 +127,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 return RedirectToAction("Details", "Cohort", new {model.AccountHashedId, model.CohortReference});
             }
 
-            return Redirect(_linkGenerator.OriginOfDeleteDraftApprentice(model.Origin, model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId));
+            return RedirectToOriginForDelete(model.Origin, model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId);
         }
 
-    }
+        private IActionResult RedirectToOriginForDelete(Origin origin,
+        string accountHashedId,
+        string cohortReference,
+        string draftApprenticeshipHashedId)
+        {
+            return (origin == Origin.CohortDetails)
+                 ? RedirectToAction("Details", "Cohort", new { accountHashedId, cohortReference })
+                 : RedirectToAction("Details", new { accountHashedId, cohortReference, draftApprenticeshipHashedId });
+        }
+
+}
 }
