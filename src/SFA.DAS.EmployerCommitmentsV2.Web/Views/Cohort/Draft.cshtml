@@ -1,7 +1,50 @@
-﻿
+﻿@using SFA.DAS.Encoding
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DraftViewModel
+@inject IEncodingService EncodingService
+
 @{
     ViewData["Title"] = "Draft";
 }
 
-<h1>Draft</h1>
+<div class="govuk-grid-row">
 
+        <div class="govuk-grid-row">
+            <div class="govuk-width-container">
+                <h1 class="govuk-heading-xl">Draft apprentice details</h1>
+
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header das-table-cell-width-25">Training provider</th>
+                            <th scope="col" class="govuk-table__header das-table-cell-width-25">Reference</th>
+                            <th scope="col" class="govuk-table__header das-table-cell-width-25">Number of apprentices</th>
+                            <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-25"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+
+                        @foreach (var cohort in Model.Cohorts)
+                        {
+                            var cohortReference = EncodingService.Encode(cohort.CohortId, EncodingType.CohortReference);
+
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell">@cohort.ProviderName</td>
+                                <td class="govuk-table__cell">@cohortReference</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">@cohort.NumberOfDraftApprentices</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohortReference }, new { @class = "govuk-link", id = "return-link" })
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+</div>
+
+@section Back
+{
+    <a id="back-link" class="govuk-back-link" href="@Model.BackLink" >Back</a>
+}
