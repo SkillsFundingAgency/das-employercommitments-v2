@@ -263,5 +263,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 Message = response.LatestMessageCreatedByEmployer
             });
         }
+
+        [HttpGet]
+        [Route("draft")]
+        public async Task<IActionResult> Draft(DraftRequest request)
+        {
+            var viewModel = await _modelMapper.Map<DraftViewModel>(request);
+            return View(viewModel);
+        }
+
     }
 }
