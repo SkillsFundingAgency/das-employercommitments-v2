@@ -99,7 +99,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{DraftApprenticeshipHashedId}/Delete/{Origin}")]
+        [Route("{DraftApprenticeshipHashedId}/Delete/{Origin}", Name= "DeleteDraftApprenticeship")]
         [DasAuthorize(EmployerFeature.EnhancedApproval)]
         public async Task<IActionResult> DeleteDraftApprenticeship(DeleteApprenticeshipRequest request)
         {

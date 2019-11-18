@@ -10,7 +10,7 @@
 
 @{
     ViewData["Title"] = Model.PageTitle;
-}
+ }
 
 @if (!Model.IsAgreementSigned)
 {
@@ -119,8 +119,9 @@ else
                         </a>
                         <br /><br />
                         @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.EnhancedApproval))
+
                         {
-                            <a href="@Url.Action("DeleteDraftApprenticeship", "DraftApprenticeship", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId, Origin.CohortDetails })">
+                            <a href="@Url.RouteUrl("DeleteDraftApprenticeship", new { draftApprenticeship.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = Origin.CohortDetails })">
                                 Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
                             </a>
                         }
@@ -132,7 +133,7 @@ else
                         }
                     </td>
                 </tr>
-             }
+            }
         </tbody>
     </table>
 }

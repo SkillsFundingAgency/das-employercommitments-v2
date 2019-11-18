@@ -23,7 +23,7 @@
 
             @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.EnhancedApproval))
             {
-                <a class="govuk-button govuk-button--warning das-float-right" href="@Url.Action("DeleteDraftApprenticeship", new { Model.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin.EditDraftApprenticeship })">
+                <a class="govuk-button govuk-button--warning das-float-right" href="@Url.RouteUrl("DeleteDraftApprenticeship", new { Model.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = Origin.EditDraftApprenticeship })">
                     Delete
                 </a>
             }

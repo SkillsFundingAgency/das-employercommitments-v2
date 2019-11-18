@@ -5,6 +5,9 @@
 
 @{
     ViewData["Title"] = "Apprenticeships";
+    var backButtonUrl = (Model.Origin == Origin.CohortDetails)
+        ? Url.Action("Details", "Cohort", new { Model.AccountHashedId, Model.CohortReference })
+        : Url.Action("Details", new { Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId });
 }
 
 <div class="govuk-width-container">
@@ -22,6 +25,7 @@
                     @Html.HiddenFor(x => x.AccountHashedId)
                     @Html.HiddenFor(x => x.DraftApprenticeshipHashedId)
                     @Html.HiddenFor(x => x.CohortReference)
+                    @Html.HiddenFor(x => x.Origin)
 
                     <div class="govuk-form-group @(ViewContext.ModelState.IsValid ? "" : "govuk-form-group--error")">
                         <fieldset class="govuk-fieldset">
@@ -69,7 +73,5 @@
 
 @section Back
 {
-    <a class="govuk-back-link" href= @(Model.Origin == Origin.CohortDetails)
-      ? @Url.Action("Details", "Cohort", new { Model.AccountHashedId, Model.CohortReference })
-      : @Url.Action("Details", new { Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId })>Back</a>
+    <a class="govuk-back-link" href=@backButtonUrl>Back</a>
 }
