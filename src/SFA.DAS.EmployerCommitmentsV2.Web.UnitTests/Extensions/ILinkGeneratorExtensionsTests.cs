@@ -18,6 +18,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         }
 
         [Test, AutoData]
+        public void Cohort_BuildsPathCorrectly(string accountHashedId)
+        {
+            var url = _fixture.Sut.Cohorts(accountHashedId);
+
+            Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/cohorts", url);
+        }
+
+        [Test, AutoData]
         public void CohortDetails_BuildsPathCorrectly(string accountHashedId, string cohortReference)
         {
             var url = _fixture.Sut.CohortDetails(accountHashedId, cohortReference);
