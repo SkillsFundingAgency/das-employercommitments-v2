@@ -118,18 +118,21 @@ else
                             <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
                         </a>
                         <br /><br />
-                        @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.EnhancedApproval))
+                        @if (!Model.IsReadOnly)
+                        {
+                            @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.EnhancedApproval))
 
-                        {
-                            <a href="@Url.RouteUrl("DeleteDraftApprenticeship", new { draftApprenticeship.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = Origin.CohortDetails })">
-                                Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
-                            </a>
-                        }
-                        else
-                        {
-                            <a href="@LinkGenerator.DeleteApprentice(Model.AccountHashedId, Model.CohortReference, draftApprenticeship.DraftApprenticeshipHashedId)">
-                                Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
-                            </a>
+                            {
+                                <a href="@Url.RouteUrl("DeleteDraftApprenticeship", new { draftApprenticeship.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = DeleteDraftApprenticeshipOrigin.CohortDetails})" >
+                                    Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@LinkGenerator.DeleteApprentice(Model.AccountHashedId, Model.CohortReference, draftApprenticeship.DraftApprenticeshipHashedId)">
+                                    Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
+                                </a>
+                            }
                         }
                     </td>
                 </tr>

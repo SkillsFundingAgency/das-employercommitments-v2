@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             var fixture = new DeleteDraftApprenticeshipTestsFixture()
                 .WithEnhancedApproval()
-                .WithDeleteDraftApprenticeshipRequest(Origin.CohortDetails);
+                .WithDeleteDraftApprenticeshipRequest(DeleteDraftApprenticeshipOrigin.CohortDetails);
 
             await fixture.DeleteDraftApprenticeshipGet();
             
@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             var fixture = new DeleteDraftApprenticeshipTestsFixture()
                 .WithEnhancedApproval()
-                .WithDeleteDraftApprenticeshipRequest(Origin.CohortDetails);
+                .WithDeleteDraftApprenticeshipRequest(DeleteDraftApprenticeshipOrigin.CohortDetails);
 
             var result = await fixture.DeleteDraftApprenticeshipGet();
 
@@ -48,13 +48,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             var fixture = new DeleteDraftApprenticeshipTestsFixture()
                 .WithEnhancedApproval()
-                .WithDeleteDraftApprenticeshipRequest(Origin.EditDraftApprenticeship)
+                .WithDeleteDraftApprenticeshipRequest(DeleteDraftApprenticeshipOrigin.EditDraftApprenticeship)
                 .WithMapperThrowingCohortEmployerUpdateDeniedException();
 
             var result = await fixture.DeleteDraftApprenticeshipGet();
             var redirect = result.VerifyReturnsRedirectToActionResult();
             Assert.AreEqual("Details", redirect.ActionName);
-            Assert.AreEqual(null, redirect.ControllerName);
+            Assert.AreEqual("Cohort", redirect.ControllerName);
         }
 
         [Test]
@@ -62,9 +62,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             var fixture = new DeleteDraftApprenticeshipTestsFixture()
                 .WithEnhancedApproval()
-                .WithDeleteDraftApprenticeshipRequest(Origin.CohortDetails)
-                .WithMapperThrowingCohortEmployerUpdateDeniedException()
-                .WithCohortDetailsLink("CohortDetails");
+                .WithDeleteDraftApprenticeshipRequest(DeleteDraftApprenticeshipOrigin.CohortDetails)
+                .WithMapperThrowingCohortEmployerUpdateDeniedException();
 
             var result = await fixture.DeleteDraftApprenticeshipGet();
 
@@ -78,8 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             var fixture = new DeleteDraftApprenticeshipTestsFixture()
                                 .WithEnhancedApproval()
-                                .WithDeleteDraftApprenticeshipViewModel(confirmDelete: true)
-                                .WithCohortDetailsLink("CohortPage");
+                                .WithDeleteDraftApprenticeshipViewModel(confirmDelete: true);
 
             var result = await fixture.DeleteDraftApprenticeship();
 
@@ -94,9 +92,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             var fixture = new DeleteDraftApprenticeshipTestsFixture()
                                .WithEnhancedApproval()
-                               .WithDeleteDraftApprenticeshipViewModel(confirmDelete: false)
-                               .WithCohortDetailsLink("CohortPage");
-
+                               .WithDeleteDraftApprenticeshipViewModel(confirmDelete: false);
+                             
             var result = await fixture.DeleteDraftApprenticeship();
 
             fixture.Verify_CommitmentApiClient_DeleteApprenticeShip_Is_NeverCalled();
@@ -162,16 +159,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             return this;
         }
 
-        public DeleteDraftApprenticeshipTestsFixture WithCohortDetailsLink(string url)
-        {
-            LinkGeneratorMock
-                .Setup(lg => lg.CommitmentsV2Link(It.IsAny<string>()))
-                .Returns(url);
-
-            return this;
-        }
-
-        public DeleteDraftApprenticeshipTestsFixture WithDeleteDraftApprenticeshipRequest(Origin origin)
+        public DeleteDraftApprenticeshipTestsFixture WithDeleteDraftApprenticeshipRequest(DeleteDraftApprenticeshipOrigin origin)
         {
             DeleteDraftApprenticeshipRequest = new DeleteApprenticeshipRequest
             {
@@ -187,7 +175,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
         public DeleteDraftApprenticeshipTestsFixture WithDeleteDraftApprenticeshipViewModel(bool confirmDelete)
         {
-            DeleteDraftApprenticeshipViewModel = new DeleteDraftApprenticeshipViewModel { AccountHashedId = AccountHashedId, CohortId = CohortId, DraftApprenticeshipId = DraftApprenticeshipId, Origin = Origin.EditDraftApprenticeship, ConfirmDelete = confirmDelete, DraftApprenticeshipHashedId = DraftApprenticeshipHashedId, CohortReference = CohortReference };
+            DeleteDraftApprenticeshipViewModel = new DeleteDraftApprenticeshipViewModel { AccountHashedId = AccountHashedId, CohortId = CohortId, DraftApprenticeshipId = DraftApprenticeshipId, Origin = DeleteDraftApprenticeshipOrigin.EditDraftApprenticeship, ConfirmDelete = confirmDelete, DraftApprenticeshipHashedId = DraftApprenticeshipHashedId, CohortReference = CohortReference };
             return this;
         }
 
@@ -222,11 +210,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             ModelMapperMock.Verify(x => x.Map<DeleteDraftApprenticeshipViewModel>(DeleteDraftApprenticeshipRequest));
         }
-
-        public void Verify_LinkGenerator_IsCalled_Once()
-        {
-            LinkGeneratorMock.Verify(x => x.CommitmentsV2Link(It.IsAny<string>()));
-        }
-        
     }
 }

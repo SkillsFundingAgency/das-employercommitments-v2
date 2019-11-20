@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Authorization.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Authorization.ModelBinding;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
@@ -10,7 +11,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public long? DraftApprenticeshipId { get; set; }
         public string BackLink { get; set; }
         public bool? ConfirmDelete { get; set; }
-        public Origin Origin { get; set; }
+        [FromQuery]
+        public DeleteDraftApprenticeshipOrigin Origin { get; set; }
         public string FullName => $"{FirstName} {LastName}";
     }
 }

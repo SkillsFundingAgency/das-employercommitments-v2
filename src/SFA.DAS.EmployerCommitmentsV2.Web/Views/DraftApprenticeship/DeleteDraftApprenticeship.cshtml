@@ -5,11 +5,12 @@
 
 @{
     ViewData["Title"] = "Apprenticeships";
-    var backButtonUrl = (Model.Origin == Origin.CohortDetails)
+    var backButtonUrl = (Model.Origin == DeleteDraftApprenticeshipOrigin.CohortDetails)
         ? Url.Action("Details", "Cohort", new { Model.AccountHashedId, Model.CohortReference })
         : Url.Action("Details", new { Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId });
 }
 
+@*<input class="govuk-radios__input" id="ConfirmDelete" name="confirmDelete" type="radio" value="true">*@
 <div class="govuk-width-container">
 
 
@@ -39,9 +40,8 @@
 
                             <div class="govuk-radios">
                                 <div class="govuk-radios__item">
-
-                                    <input class="govuk-radios__input" id="ConfirmDelete" name="confirmDelete" type="radio" value="true">
-                                    <label class="govuk-label govuk-radios__label" for="confirmDelete">
+                                    <input asp-for="ConfirmDelete" value="true" type="radio" class="govuk-radios__input" id="confirmDelete-true"/>
+                                    <label class="govuk-label govuk-radios__label" for="confirmDelete-true">
                                         Yes, delete the record
                                     </label>
 
@@ -49,7 +49,7 @@
 
                                 <div class="govuk-radios__item">
 
-                                    <input class="govuk-radios__input" id="ConfirmDelete-false" name="confirmDelete" type="radio" value="false">
+                                    <input asp-for="ConfirmDelete" value="false" type="radio" class="govuk-radios__input" id="confirmDelete-false"/>
                                     <label class="govuk-label govuk-radios__label" for="confirmDelete-false">
                                         No, don't delete
                                     </label>

@@ -13,7 +13,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
 using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
-
+using System;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -99,7 +99,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{DraftApprenticeshipHashedId}/Delete/{Origin}", Name= "DeleteDraftApprenticeship")]
+        [Route("{DraftApprenticeshipHashedId}/Delete", Name= "DeleteDraftApprenticeship")]
         [DasAuthorize(EmployerFeature.EnhancedApproval)]
         public async Task<IActionResult> DeleteDraftApprenticeship(DeleteApprenticeshipRequest request)
         {
@@ -110,12 +110,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
             catch (CohortEmployerUpdateDeniedException)
             {
-                return RedirectToOriginForDelete(request.Origin, request.AccountHashedId, request.CohortReference, request.DraftApprenticeshipHashedId);
+                return RedirectToCohortDetails(request.AccountHashedId, request.CohortReference);
             }
+            catch (Http.RestHttpClientException exc)
+            {
+                if (exc.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return RedirectToCohortDetails(request.AccountHashedId, request.CohortReference);
+                }
+
+                throw exc;
+            }
+            
         }
 
         [HttpPost]
-        [Route("{DraftApprenticeshipHashedId}/Delete/{Origin}")]
+        [Route("{DraftApprenticeshipHashedId}/Delete")]
         [DasAuthorize(EmployerFeature.EnhancedApproval)]
         public async Task<IActionResult> DeleteDraftApprenticeship(DeleteDraftApprenticeshipViewModel model)
         {
@@ -130,15 +140,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return RedirectToOriginForDelete(model.Origin, model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId);
         }
 
-        private IActionResult RedirectToOriginForDelete(Origin origin,
+        private IActionResult RedirectToOriginForDelete(DeleteDraftApprenticeshipOrigin origin,
         string accountHashedId,
         string cohortReference,
         string draftApprenticeshipHashedId)
         {
-            return (origin == Origin.CohortDetails)
-                 ? RedirectToAction("Details", "Cohort", new { accountHashedId, cohortReference })
-                 : RedirectToAction("Details", new { accountHashedId, cohortReference, draftApprenticeshipHashedId });
+             return (origin == DeleteDraftApprenticeshipOrigin.CohortDetails) 
+                ? RedirectToCohortDetails(accountHashedId, cohortReference)
+                : RedirectToAction("Details", new { accountHashedId, cohortReference, draftApprenticeshipHashedId });
         }
 
-}
+        private IActionResult RedirectToCohortDetails(string accountHashedId, string cohortReference)
+        {
+            if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
+            {
+                return RedirectToAction("Details", "Cohort", new { accountHashedId, cohortReference });
+            }
+
+            return Redirect(_linkGenerator.CohortDetails(accountHashedId, cohortReference));
+        }
+
+    }
 }
