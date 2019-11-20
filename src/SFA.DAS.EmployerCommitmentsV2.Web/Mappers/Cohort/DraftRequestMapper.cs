@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         {
             var request = new GetCohortsRequest {AccountId = source.AccountId};
             var apiResponse = await _commitmentsApiClient.GetCohorts(request);
-            var cohorts = apiResponse.Cohorts.Where(x => x.WithParty == Party.Employer && x.IsDraft);
+            var cohorts = apiResponse.Cohorts.Where(x => x.WithParty == Party.Employer && x.IsDraft).OrderByDescending(x => x.CreatedOn);
 
             return new DraftViewModel
             {

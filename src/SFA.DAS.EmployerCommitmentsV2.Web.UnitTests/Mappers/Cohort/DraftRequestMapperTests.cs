@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -53,6 +53,33 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.True(result.Cohorts.Any(x => x.AccountId == accountId));
             Assert.False(result.Cohorts.Any(x => x.IsDraft == false || x.WithParty != Party.Employer));
 
+        }
+
+        [Test, MoqAutoData]
+        public async Task ThenApiResponseIsOrderedByCreatedOnDate(
+            [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
+            DraftRequest request,
+            [Frozen] long accountId,
+            DraftRequestMapper mapper)
+        {
+            var cohortList = new List<CohortSummary>();
+            cohortList.Add(new CohortSummary { AccountId = 5, WithParty = Party.Employer, IsDraft = true, CreatedOn = DateTime.Now});
+            cohortList.Add(new CohortSummary { AccountId = 8, WithParty = Party.Employer, IsDraft = true, CreatedOn = DateTime.Now.AddHours(-3) });
+            cohortList.Add(new CohortSummary { AccountId = 2, WithParty = Party.Employer, IsDraft = true, CreatedOn = DateTime.Now.AddHours(-6) });
+            cohortList.Add(new CohortSummary { AccountId = 6, WithParty = Party.Employer, IsDraft = true, CreatedOn = DateTime.Now.AddHours(-1) });
+            var response = new GetCohortsResponse(cohortList);
+
+            commitmentsApiClient
+                .Setup(x => x.GetCohorts(It.Is<GetCohortsRequest>(y => y.AccountId == request.AccountId), CancellationToken.None))
+                .ReturnsAsync(response);
+
+            var result = await mapper.Map(request);
+
+            Assert.AreEqual(4, result.Cohorts.Count());
+            Assert.True(result.Cohorts.ElementAt(0).AccountId == 5);
+            Assert.True(result.Cohorts.ElementAt(1).AccountId == 6);
+            Assert.True(result.Cohorts.ElementAt(2).AccountId == 8);
+            Assert.True(result.Cohorts.ElementAt(3).AccountId == 2);
         }
 
         [Test, MoqAutoData]
