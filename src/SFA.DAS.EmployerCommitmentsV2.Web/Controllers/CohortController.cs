@@ -263,5 +263,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 Message = response.LatestMessageCreatedByEmployer
             });
         }
+
+        [DasAuthorize(CommitmentOperation.AccessCohort)]
+        [HttpGet]
+        [Route("review")]
+        public async Task<IActionResult> Review(ReviewRequest request)
+        {
+            var response = await _commitmentsApiClient.GetCohorts(new GetCohortsRequest { AccountId = request.AccountId });
+            var reviewViewModel = await _modelMapper.Map<ReviewViewModel>(response);
+
+            reviewViewModel.AccountHashedId = request.AccountHashedId;
+
+            return View(reviewViewModel);
+        }
     }
 }
