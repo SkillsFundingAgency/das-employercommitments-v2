@@ -112,16 +112,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 return RedirectToCohortDetails(request.AccountHashedId, request.CohortReference);
             }
-            catch (Http.RestHttpClientException exc)
+            catch (Http.RestHttpClientException ex)
             {
-                if (exc.StatusCode == System.Net.HttpStatusCode.NotFound)
+                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     return RedirectToCohortDetails(request.AccountHashedId, request.CohortReference);
                 }
 
-                throw exc;
+                throw;
             }
-            
         }
 
         [HttpPost]
