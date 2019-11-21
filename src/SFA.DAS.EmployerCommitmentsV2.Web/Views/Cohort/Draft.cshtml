@@ -12,7 +12,7 @@
             <div class="govuk-width-container">
                 <h1 class="govuk-heading-xl">Draft apprentice details</h1>
 
-                <table class="govuk-table">
+                <table class="govuk-table das-table--responsive">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th scope="col" class="govuk-table__header das-table-cell-width-25">Training provider</th>
@@ -28,10 +28,10 @@
                             var cohortReference = EncodingService.Encode(cohort.CohortId, EncodingType.CohortReference);
 
                             <tr class="govuk-table__row">
-                                <td class="govuk-table__cell">@cohort.ProviderName</td>
-                                <td class="govuk-table__cell">@cohortReference</td>
-                                <td class="govuk-table__cell govuk-table__cell--numeric">@cohort.NumberOfDraftApprentices</td>
-                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <td class="govuk-table__cell" data-label="Training provider">@cohort.ProviderName</td>
+                                <td class="govuk-table__cell" data-label="Reference">@cohortReference</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfDraftApprentices</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" data-label="">
                                     @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohortReference }, new { @class = "govuk-link", id = "return-link" })
                                 </td>
                             </tr>
