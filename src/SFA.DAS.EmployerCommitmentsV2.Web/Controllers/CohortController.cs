@@ -10,7 +10,6 @@ using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -257,6 +256,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             return View(new FinishedViewModel
             {
+                AccountHashedId = request.AccountHashedId,
                 CohortReference = request.CohortReference,
                 LegalEntityName = response.LegalEntityName,
                 ProviderName = response.ProviderName,
