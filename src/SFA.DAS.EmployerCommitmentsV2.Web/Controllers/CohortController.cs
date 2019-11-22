@@ -269,11 +269,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("review")]
         public async Task<IActionResult> Review(ReviewRequest request)
         {
-            var response = await _commitmentsApiClient.GetCohorts(new GetCohortsRequest { AccountId = request.AccountId });
-            var reviewViewModel = await _modelMapper.Map<ReviewViewModel>(response);
-
-            reviewViewModel.AccountHashedId = request.AccountHashedId;
-
+            var reviewViewModel = await _modelMapper.Map<ReviewViewModel>(request);
             return View(reviewViewModel);
         }
     }

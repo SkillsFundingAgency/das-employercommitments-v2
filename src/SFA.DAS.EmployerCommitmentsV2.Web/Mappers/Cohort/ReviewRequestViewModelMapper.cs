@@ -1,27 +1,35 @@
-﻿using System.Threading.Tasks;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using System.Linq;
-using SFA.DAS.Encoding;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class ReviewRequestViewModelMapper : IMapper<GetCohortsResponse, ReviewViewModel>
+    public class ReviewRequestViewModelMapper : IMapper<ReviewRequest, ReviewViewModel>
     {
         private readonly IEncodingService _encodingService;
+        private readonly ICommitmentsApiClient _commitmentsApiClient;
+//        private readonly ILinkGenerator _linkGenerator;
 
-        public ReviewRequestViewModelMapper(IEncodingService encodingSummary)
+        public ReviewRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary)
         {
             _encodingService = encodingSummary;
+            _commitmentsApiClient = commitmentApiClient;
         }
 
-        public Task<ReviewViewModel> Map(GetCohortsResponse source)
+        public async Task<ReviewViewModel> Map(ReviewRequest source)
         {
-           return Task.FromResult(new ReviewViewModel
+            var cohortsResponse = await _commitmentsApiClient.GetCohorts(new GetCohortsRequest { AccountId = source.AccountId });
+
+            var reviewViewModel =  new ReviewViewModel
             {
-                CohortSummary = source.Cohorts
+                AccountHashedId = source.AccountHashedId,
+                CohortSummary = cohortsResponse.Cohorts
                 .Where(x => x.WithParty == Party.Employer && !x.IsDraft)
                 .OrderBy(z => z.CreatedOn)
                 .Select(y => new ReviewCohortSummaryViewModel
@@ -31,7 +39,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                     NumberOfApprentices = y.NumberOfDraftApprentices,
                     LastMessage = GetMessage(y.LatestMessageFromProvider)
                 }).ToList()
-            });
+            };
+
+
+            return reviewViewModel;
         }
 
         private string GetMessage(Message latestMessageFromProvider)

@@ -5,21 +5,24 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
-using AutoFixture;
 using System;
 using SFA.DAS.CommitmentsV2.Types;
 using System.Collections.Generic;
+using SFA.DAS.CommitmentsV2.Api.Client;
+using System.Threading;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
     [TestFixture]
-    public class WhenMappingCohortsResponseToViewModel
+    public class WhenMappingCohortsRequestToViewModel
     {
         [Test]
         public void OnlyTheCohortsReadyForReviewAreMapped()
         {
             var fixture = new WhenMappingCohortsResponseToViewModelFixture();
-            fixture.CreateSource().Map();
+            fixture.Map();
 
             fixture.Verify_OnlyTheCohorts_ReadyForReviewForEmployer_Are_Mapped();
         }
@@ -28,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public void Then_TheCohortReferenceIsMapped()
         {
             var fixture = new WhenMappingCohortsResponseToViewModelFixture();
-            fixture.CreateSource().Map();
+            fixture.Map();
 
             fixture.Verify_CohortRefrence_Is_Mapped();
         }
@@ -37,7 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public void Then_ProviderNameIsMapped()
         {
             var fixture = new WhenMappingCohortsResponseToViewModelFixture();
-            fixture.CreateSource().Map();
+            fixture.Map();
 
             fixture.Verify_ProviderName_Is_Mapped();
         }
@@ -46,7 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public void Then_NumberOfApprenticesAreMapped()
         {
             var fixture = new WhenMappingCohortsResponseToViewModelFixture();
-            fixture.CreateSource().Map();
+            fixture.Map();
 
             fixture.Verify_NumberOfApprentices_Are_Mapped();
         }
@@ -55,16 +58,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public void Then_LastMessage_IsMapped_Correctly()
         {
             var fixture = new WhenMappingCohortsResponseToViewModelFixture();
-            fixture.CreateSource().Map();
+            fixture.Map();
 
             fixture.Verify_LastMessage_Is_MappedCorrectly();
         }
 
         [Test]
-        public void Then_Order_OnDateCreated_Correctly()
+        public void Then_Cohort_OrderBy_OnDateCreated_Correctly()
         {
             var fixture = new WhenMappingCohortsResponseToViewModelFixture();
-            fixture.CreateSource().Map();
+            fixture.Map();
+
+            fixture.Verify_Ordered_By_DateCreated();
+        }
+
+        [Test]
+        public void Then_AccountHashedId_IsMapped()
+        {
+            var fixture = new WhenMappingCohortsResponseToViewModelFixture();
+            fixture.Map();
 
             fixture.Verify_Ordered_By_DateCreated();
         }
@@ -73,24 +85,83 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     public class WhenMappingCohortsResponseToViewModelFixture
     {
         public Mock<IEncodingService> EncodingService { get; set; }
-        public GetCohortsResponse Source { get; set; }
+        public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
+        public ReviewRequest ReviewRequest { get; set; }
+        public GetCohortsResponse GetCohortsResponse { get; set; }
         public ReviewRequestViewModelMapper Mapper { get; set; }
-        public Fixture Fixture { get; set; }
-
         public ReviewViewModel ReviewViewModel { get; set; }
+
+        public long AccountId => 1;
+
+        public string AccountHashedId => "1AccountHashedId";
 
 
         public WhenMappingCohortsResponseToViewModelFixture()
         {
-            Fixture = new Fixture();
             EncodingService = new Mock<IEncodingService>();
-            
+            CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+
+            ReviewRequest = new ReviewRequest() { AccountId = AccountId, AccountHashedId = AccountHashedId };
+            GetCohortsResponse = CreateGetCohortsResponse();
+           
+            CommitmentsApiClient.Setup(c => c.GetCohorts(It.Is<GetCohortsRequest>(r => r.AccountId == AccountId), CancellationToken.None)).Returns(Task.FromResult(GetCohortsResponse));
             EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference)).Returns((long y, EncodingType z) => y + "_Encoded");
 
-            Mapper = new ReviewRequestViewModelMapper(EncodingService.Object);
+            Mapper = new ReviewRequestViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object);
         }
 
-        public WhenMappingCohortsResponseToViewModelFixture CreateSource()
+        public WhenMappingCohortsResponseToViewModelFixture Map()
+        {
+            ReviewViewModel = Mapper.Map(ReviewRequest).Result;
+            return this;
+        }
+
+        public void Verify_OnlyTheCohorts_ReadyForReviewForEmployer_Are_Mapped()
+        {
+            Assert.AreEqual(2, ReviewViewModel.CohortSummary.Count());
+
+            Assert.IsNotNull(GetCohortInReviewViewModel(1));
+            Assert.IsNotNull(GetCohortInReviewViewModel(2));
+        }
+
+        public void Verify_CohortRefrence_Is_Mapped()
+        {
+            EncodingService.Verify(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference), Times.Exactly(2));
+
+            Assert.AreEqual("1_Encoded", GetCohortInReviewViewModel(1).CohortReference);
+            Assert.AreEqual("2_Encoded", GetCohortInReviewViewModel(2).CohortReference);
+        }
+
+        public void Verify_ProviderName_Is_Mapped()
+        {
+            Assert.AreEqual("Provider1", GetCohortInReviewViewModel(1).ProviderName);
+            Assert.AreEqual("Provider2", GetCohortInReviewViewModel(2).ProviderName);
+        }
+
+        public void Verify_NumberOfApprentices_Are_Mapped()
+        {
+            Assert.AreEqual(100, GetCohortInReviewViewModel(1).NumberOfApprentices);
+            Assert.AreEqual(200, GetCohortInReviewViewModel(2).NumberOfApprentices);
+        }
+
+        public void Verify_LastMessage_Is_MappedCorrectly()
+        {
+            Assert.AreEqual("No message added", GetCohortInReviewViewModel(1).LastMessage);
+            Assert.AreEqual("This is latestMessage from provider", GetCohortInReviewViewModel(2).LastMessage);
+        }
+
+        public void Verify_Ordered_By_DateCreated()
+        {
+            Assert.AreEqual("2_Encoded",ReviewViewModel.CohortSummary.First().CohortReference);
+            Assert.AreEqual("1_Encoded", ReviewViewModel.CohortSummary.Last().CohortReference);
+        }
+
+        public void Verify_AccountHashedId_IsMapped()
+        {
+            Assert.AreEqual(AccountHashedId, ReviewViewModel.AccountHashedId);
+        }
+
+        private GetCohortsResponse CreateGetCohortsResponse()
         {
             IEnumerable<CohortSummary> cohorts = new List<CohortSummary>()
             {
@@ -141,54 +212,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 },
             };
 
-            Source = new GetCohortsResponse(cohorts);
-            return this;
-        }
-
-        public WhenMappingCohortsResponseToViewModelFixture Map()
-        {
-            ReviewViewModel = Mapper.Map(Source).Result;
-            return this;
-        }
-
-        public void Verify_OnlyTheCohorts_ReadyForReviewForEmployer_Are_Mapped()
-        {
-            Assert.AreEqual(2, ReviewViewModel.CohortSummary.Count());
-
-            Assert.IsNotNull(GetCohortInReviewViewModel(1));
-            Assert.IsNotNull(GetCohortInReviewViewModel(2));
-        }
-
-        public void Verify_CohortRefrence_Is_Mapped()
-        {
-            EncodingService.Verify(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference), Times.Exactly(2));
-
-            Assert.AreEqual("1_Encoded", GetCohortInReviewViewModel(1).CohortReference);
-            Assert.AreEqual("2_Encoded", GetCohortInReviewViewModel(2).CohortReference);
-        }
-
-        public void Verify_ProviderName_Is_Mapped()
-        {
-            Assert.AreEqual("Provider1", GetCohortInReviewViewModel(1).ProviderName);
-            Assert.AreEqual("Provider2", GetCohortInReviewViewModel(2).ProviderName);
-        }
-
-        public void Verify_NumberOfApprentices_Are_Mapped()
-        {
-            Assert.AreEqual(100, GetCohortInReviewViewModel(1).NumberOfApprentices);
-            Assert.AreEqual(200, GetCohortInReviewViewModel(2).NumberOfApprentices);
-        }
-
-        public void Verify_LastMessage_Is_MappedCorrectly()
-        {
-            Assert.AreEqual("No message added", GetCohortInReviewViewModel(1).LastMessage);
-            Assert.AreEqual("This is latestMessage from provider", GetCohortInReviewViewModel(2).LastMessage);
-        }
-
-        public void Verify_Ordered_By_DateCreated()
-        {
-            Assert.AreEqual("2_Encoded",ReviewViewModel.CohortSummary.First().CohortReference);
-            Assert.AreEqual("1_Encoded", ReviewViewModel.CohortSummary.Last().CohortReference);
+            return new GetCohortsResponse(cohorts);
         }
 
         private long GetCohortId(string cohortReference)
