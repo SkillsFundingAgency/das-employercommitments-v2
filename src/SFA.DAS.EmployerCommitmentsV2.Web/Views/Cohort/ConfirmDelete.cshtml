@@ -1,0 +1,78 @@
+﻿@using SFA.DAS.EmployerUrlHelper.Mvc
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.ConfirmDeleteViewModel
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+        <h1 class="govuk-heading-xl">Confirm deletion</h1>
+        <form method="post">
+            <dl class="govuk-summary-list govuk-!-margin-bottom-7">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Training provider
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ProviderName
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Reference
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.CohortReference
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Number of apprentices
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.DraftApprenticeshipsCount
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Apprentices
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @foreach (var course in Model.Courses)
+                        {
+                            <text>@course.NumberOfDraftApprenticeships x @course.DisplayCourseName</text><br />
+                        }
+                    </dd>
+                </div>
+            </dl>
+            <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.ConfirmDeletion, "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        <h2 class="govuk-fieldset__heading govuk-!-margin-bottom-3">
+                            Are you sure that you want to delete all apprentice details?
+                        </h2>
+                    </legend>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="confirm-yes" name="ConfirmDeletion" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="confirm-yes">
+                                Yes, delete all apprentice details
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="confirm-no" name="ConfirmDeletion" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="confirm-no">
+                                No, don't delete all apprentice details
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <button class="govuk-button" type="submit">Save and continue</button>
+        </form>
+    </div>
+</div>
+
+@section Back
+{
+    <a class="govuk-back-link" href="@Url.CommitmentsV2Link($"{Model.AccountHashedId}/unapproved/{Model.CohortReference}")">Back</a>
+}

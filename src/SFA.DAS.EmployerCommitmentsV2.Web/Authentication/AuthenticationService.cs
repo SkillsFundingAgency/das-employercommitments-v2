@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Authentication
 {
@@ -30,6 +31,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authentication
             value = exists ? claim.Value : null;
 
             return exists;
+        }
+
+        public UserInfo UserInfo
+        {
+            get
+            {
+                if (IsUserAuthenticated())
+                {
+                    return new UserInfo
+                    {
+                        UserId = UserId,
+                        UserDisplayName = UserName,
+                        UserEmail = UserEmail
+                    };
+                }
+
+                return null;
+            }
         }
 
         private string GetUserClaimAsString(string claim)
