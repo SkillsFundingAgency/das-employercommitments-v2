@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var response = new ReviewViewModel();
             
             response.CohortSummary = source.Cohorts
-                .Where(x => x.WithParty == CommitmentsV2.Types.Party.Employer && !x.IsDraft)
+                .Where(x => x.WithParty == Party.Employer && !x.IsDraft)
                 .OrderBy(z => z.CreatedOn)
                 .Select(y => new ReviewCohortSummaryViewModel
                 {
@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                     ProviderName = y.ProviderName,
                     NumberOfApprentices = y.NumberOfDraftApprentices,
                     LastMessage = GetMessage(y.LatestMessageFromProvider)
-                });
+                }).ToList();
 
             return Task.FromResult(response);
         }
