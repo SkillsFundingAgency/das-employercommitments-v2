@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -102,12 +103,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{cohortReference}/delete")]
         [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
         [HttpPost]
-        public IActionResult Delete([FromServices] IAuthenticationService authenticationService, ConfirmDeleteViewModel viewModel)
+        public async Task<IActionResult> Delete([FromServices] IAuthenticationService authenticationService, ConfirmDeleteViewModel viewModel)
         {
 
             if(viewModel.ConfirmDeletion == true)
             { 
-                _commitmentsApiClient.DeleteCohort(viewModel.CohortId, authenticationService.UserInfo);
+                await _commitmentsApiClient.DeleteCohort(viewModel.CohortId, authenticationService.UserInfo, CancellationToken.None);
                 return Redirect(_linkGenerator.CommitmentsLink($"/accounts/{viewModel.AccountHashedId}/apprentices/cohorts"));
             }
             return RedirectToAction("Details", new { viewModel.CohortReference, viewModel.AccountHashedId });
