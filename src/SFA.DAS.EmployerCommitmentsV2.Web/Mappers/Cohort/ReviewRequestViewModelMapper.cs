@@ -19,9 +19,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         public Task<ReviewViewModel> Map(GetCohortsResponse source)
         {
-            var response = new ReviewViewModel();
-            
-            response.CohortSummary = source.Cohorts
+           return Task.FromResult(new ReviewViewModel
+            {
+                CohortSummary = source.Cohorts
                 .Where(x => x.WithParty == Party.Employer && !x.IsDraft)
                 .OrderBy(z => z.CreatedOn)
                 .Select(y => new ReviewCohortSummaryViewModel
@@ -30,9 +30,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                     ProviderName = y.ProviderName,
                     NumberOfApprentices = y.NumberOfDraftApprentices,
                     LastMessage = GetMessage(y.LatestMessageFromProvider)
-                }).ToList();
-
-            return Task.FromResult(response);
+                }).ToList()
+            });
         }
 
         private string GetMessage(Message latestMessageFromProvider)

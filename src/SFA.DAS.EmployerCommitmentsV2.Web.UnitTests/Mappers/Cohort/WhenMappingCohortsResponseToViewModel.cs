@@ -1,13 +1,10 @@
-﻿using System.Threading.Tasks;
-using System.Linq;
-using AutoFixture.NUnit3;
+﻿using System.Linq;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
-using SFA.DAS.Testing.AutoFixture;
 using AutoFixture;
 using System;
 using SFA.DAS.CommitmentsV2.Types;
@@ -193,8 +190,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual("2_Encoded",ReviewViewModel.CohortSummary.First().CohortReference);
             Assert.AreEqual("1_Encoded", ReviewViewModel.CohortSummary.Last().CohortReference);
         }
-
-        
 
         private long GetCohortId(string cohortReference)
         {
