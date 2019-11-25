@@ -17,7 +17,7 @@ using SFA.DAS.EmployerUrlHelper;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
     [TestFixture]
-    public class WhenMappingCohortsRequestToViewModel
+    public class WhenMappingReviewRequestToViewModel
     {
         [Test]
         public void OnlyTheCohortsReadyForReviewAreMapped()
