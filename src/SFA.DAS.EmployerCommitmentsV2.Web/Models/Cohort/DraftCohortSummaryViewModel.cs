@@ -10,6 +10,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string CohortReference { get; set; }
         public string ProviderName { get; set; }
         public int NumberOfApprentices { get; set; }
-        public string BackLinkUrl { get; set; }
     }
 }

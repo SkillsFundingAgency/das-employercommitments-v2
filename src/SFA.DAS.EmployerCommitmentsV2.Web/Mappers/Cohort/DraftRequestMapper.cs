@@ -7,6 +7,7 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -14,18 +15,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly ILinkGenerator _linkGenerator;
+        private readonly IEncodingService _encodingService;
 
-        public DraftRequestMapper(ICommitmentsApiClient commitmentsApiClient, ILinkGenerator linkGenerator)
+        public DraftRequestMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, ILinkGenerator linkGenerator)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _linkGenerator = linkGenerator;
+            _encodingService = encodingService;
         }
 
         public async Task<DraftViewModel> Map(DraftRequest source)
         {
             var request = new GetCohortsRequest {AccountId = source.AccountId};
             var apiResponse = await _commitmentsApiClient.GetCohorts(request);
-            var cohorts = apiResponse.Cohorts.Where(x => x.WithParty == Party.Employer && x.IsDraft).OrderByDescending(x => x.CreatedOn);
+           
+            var cohorts = apiResponse.Cohorts
+                .Where(x => x.WithParty == Party.Employer && x.IsDraft)
+                .OrderByDescending(x => x.CreatedOn)
+                .Select(x => new DraftCohortSummaryViewModel
+                {
+                   CohortReference =  _encodingService.Encode(x.CohortId, EncodingType.CohortReference),
+                   NumberOfApprentices = x.NumberOfDraftApprentices,
+                }).ToList();
 
             return new DraftViewModel
             {
@@ -34,7 +45,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 Cohorts = cohorts,
                 BackLink = _linkGenerator.Cohorts(source.AccountHashedId)
             };
-
         }
     }
 }

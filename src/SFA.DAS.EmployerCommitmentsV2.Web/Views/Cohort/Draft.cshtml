@@ -25,15 +25,13 @@
 
                         @foreach (var cohort in Model.Cohorts)
                         {
-                            var cohortReference = EncodingService.Encode(cohort.CohortId, EncodingType.CohortReference);
 
                             <tr class="govuk-table__row">
                                 <td class="govuk-table__cell" data-label="Training provider">@cohort.ProviderName</td>
-                                <td class="govuk-table__cell" data-label="Reference">@cohortReference</td>
-                                <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfDraftApprentices</td>
+                                <td class="govuk-table__cell" data-label="Reference">@cohort.CohortReference</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfApprentices</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" data-label="">
-                                    @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohortReference }, new { @class = "govuk-link", id = "return-link" })
-                                </td>
+                                    @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohort.CohortReference }, new { @class = "govuk-link", id = "return-link" })                                </td>
                             </tr>
                         }
 
