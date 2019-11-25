@@ -11,6 +11,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 
         public string BackLinkUrl { get; set; }
 
-        public IEnumerable<ReviewCohortSummaryViewModel> CohortSummary { get; set; }
+        public IEnumerable<ReviewCohortSummaryViewModel> Cohorts { get; set; }
     }
 }

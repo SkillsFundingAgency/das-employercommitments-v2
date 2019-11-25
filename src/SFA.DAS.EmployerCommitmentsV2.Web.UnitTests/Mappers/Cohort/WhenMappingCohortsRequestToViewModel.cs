@@ -130,7 +130,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
         public void Verify_OnlyTheCohorts_ReadyForReviewForEmployer_Are_Mapped()
         {
-            Assert.AreEqual(2, ReviewViewModel.CohortSummary.Count());
+            Assert.AreEqual(2, ReviewViewModel.Cohorts.Count());
 
             Assert.IsNotNull(GetCohortInReviewViewModel(1));
             Assert.IsNotNull(GetCohortInReviewViewModel(2));
@@ -164,8 +164,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
         public void Verify_Ordered_By_DateCreated()
         {
-            Assert.AreEqual("2_Encoded",ReviewViewModel.CohortSummary.First().CohortReference);
-            Assert.AreEqual("1_Encoded", ReviewViewModel.CohortSummary.Last().CohortReference);
+            Assert.AreEqual("2_Encoded",ReviewViewModel.Cohorts.First().CohortReference);
+            Assert.AreEqual("1_Encoded", ReviewViewModel.Cohorts.Last().CohortReference);
         }
 
         public void Verify_BackLinkUrl_Is_Mapped()
@@ -240,7 +240,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
         private ReviewCohortSummaryViewModel GetCohortInReviewViewModel(long id)
         {
-            return ReviewViewModel.CohortSummary.FirstOrDefault(x => GetCohortId(x.CohortReference) == id);
+            return ReviewViewModel.Cohorts.FirstOrDefault(x => GetCohortId(x.CohortReference) == id);
         }
     }
 }

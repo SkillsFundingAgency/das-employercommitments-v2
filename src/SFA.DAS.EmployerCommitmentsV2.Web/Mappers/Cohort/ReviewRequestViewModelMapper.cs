@@ -33,8 +33,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             {
                 AccountHashedId = source.AccountHashedId,
                 BackLinkUrl = _linkGenerator.Cohorts(source.AccountHashedId),
-                CohortSummary = cohortsResponse.Cohorts
-                .Where(x => x.WithParty == Party.Employer && !x.IsDraft)
+                Cohorts = cohortsResponse.Cohorts
+                .Filter(CohortStatus.Review)
                 .OrderBy(z => z.CreatedOn)
                 .Select(y => new ReviewCohortSummaryViewModel
                 {

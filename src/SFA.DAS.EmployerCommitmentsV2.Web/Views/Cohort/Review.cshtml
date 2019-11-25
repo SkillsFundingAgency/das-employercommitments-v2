@@ -1,6 +1,5 @@
 ﻿@using SFA.DAS.Encoding
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.ReviewViewModel
-@inject IEncodingService EncodingService
 
 @{
     ViewData["Title"] = "Review";
@@ -24,7 +23,7 @@
                 </thead>
                 <tbody class="govuk-table__body">
 
-                    @foreach (var cohort in Model.CohortSummary)
+                    @foreach (var cohort in Model.Cohorts)
                     {
 
                     <tr class="govuk-table__row">
@@ -33,7 +32,7 @@
                         <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfApprentices</td>
                         <td class="govuk-table__cell" data-label="Last Message">@cohort.LastMessage</td>
                         <td class="govuk-table__cell govuk-table__cell--numeric" data-label="">
-                            @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohort.CohortReference }, new { @class = "govuk-link", id = "return-link" })
+                            @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohort.CohortReference }, new { @class = "govuk-link cohort-details-link"})
                         </td>
                     </tr>
                     }
