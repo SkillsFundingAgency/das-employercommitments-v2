@@ -5,8 +5,10 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
+
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -14,12 +16,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly IEncodingService _encodingService;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-//        private readonly ILinkGenerator _linkGenerator;
+        private readonly ILinkGenerator _linkGenerator;
 
-        public ReviewRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary)
+        public ReviewRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary, ILinkGenerator linkGenerator)
         {
             _encodingService = encodingSummary;
             _commitmentsApiClient = commitmentApiClient;
+            _linkGenerator = linkGenerator;
         }
 
         public async Task<ReviewViewModel> Map(ReviewRequest source)
@@ -29,6 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var reviewViewModel =  new ReviewViewModel
             {
                 AccountHashedId = source.AccountHashedId,
+                BackLinkUrl = _linkGenerator.Cohorts(source.AccountHashedId),
                 CohortSummary = cohortsResponse.Cohorts
                 .Where(x => x.WithParty == Party.Employer && !x.IsDraft)
                 .OrderBy(z => z.CreatedOn)

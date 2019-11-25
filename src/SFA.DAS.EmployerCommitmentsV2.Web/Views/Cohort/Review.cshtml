@@ -12,14 +12,14 @@
         <div class="govuk-width-container">
             <h1 class="govuk-heading-xl">Apprentice details ready for review</h1>
 
-            <table class="govuk-table">
+            <table class="govuk-table das-table--responsive">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header das-table-cell-width-25">Training provider</th>
-                        <th scope="col" class="govuk-table__header das-table-cell-width-25">Reference</th>
+                        <th scope="col" class="govuk-table__header das-table-cell-width-10">Reference</th>
                         <th scope="col" class="govuk-table__header das-table-cell-width-25 govuk-table__header--numeric">Number of apprentices</th>
-                        <th scope="col" class="govuk-table__header das-table-cell-width-25 govuk-table__header--numeric">Last Message</th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-25"></th>
+                        <th scope="col" class="govuk-table__header das-table-cell-width-25">Last Message</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-15"></th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -28,11 +28,11 @@
                     {
 
                     <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">@cohort.ProviderName</td>
-                        <td class="govuk-table__cell">@cohort.CohortReference</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">@cohort.NumberOfApprentices</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">@cohort.LastMessage</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <td class="govuk-table__cell" data-label="Training provider">@cohort.ProviderName</td>
+                        <td class="govuk-table__cell" data-label="Reference">@cohort.CohortReference</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfApprentices</td>
+                        <td class="govuk-table__cell" data-label="Last Message">@cohort.LastMessage</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" data-label="">
                             @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohort.CohortReference }, new { @class = "govuk-link", id = "return-link" })
                         </td>
                     </tr>
@@ -47,5 +47,5 @@
 
 @section Back
 {
-   @*1 <a id="back-link" class="govuk-back-link" href="@Model.BackLink">Back</a>*@
+     <a id="back-link" class="govuk-back-link" href="@Model.BackLinkUrl">Back</a>
 }

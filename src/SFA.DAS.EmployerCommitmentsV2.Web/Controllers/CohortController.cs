@@ -264,7 +264,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             });
         }
 
-        [DasAuthorize(CommitmentOperation.AccessCohort)]
         [HttpGet]
         [Route("review")]
         public async Task<IActionResult> Review(ReviewRequest request)
