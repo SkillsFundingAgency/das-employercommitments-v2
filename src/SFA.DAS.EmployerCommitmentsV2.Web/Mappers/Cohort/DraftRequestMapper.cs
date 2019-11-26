@@ -34,6 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 .OrderByDescending(x => x.CreatedOn)
                 .Select(x => new DraftCohortSummaryViewModel
                 {
+                   ProviderName = x.ProviderName,
                    CohortReference =  _encodingService.Encode(x.CohortId, EncodingType.CohortReference),
                    NumberOfApprentices = x.NumberOfDraftApprentices,
                 }).ToList();
