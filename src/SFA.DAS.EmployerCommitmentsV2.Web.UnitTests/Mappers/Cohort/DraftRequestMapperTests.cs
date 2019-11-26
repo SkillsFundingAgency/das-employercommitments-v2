@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var fixture = new WhenMappingDraftRequestToViewModelFixture();
             fixture.Map();
 
-            fixture.Verify_OnlyTheCohorts_ReadyForDraftForEmployer_Are_Mapped();
+            fixture.Verify_OnlyTheDraftCohorts_WithEmployer_Are_Mapped();
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             return this;
         }
 
-        public void Verify_OnlyTheCohorts_ReadyForDraftForEmployer_Are_Mapped()
+        public void Verify_OnlyTheDraftCohorts_WithEmployer_Are_Mapped()
         {
             Assert.AreEqual(2, DraftViewModel.Cohorts.Count());
 
