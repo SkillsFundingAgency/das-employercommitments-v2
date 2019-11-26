@@ -14,7 +14,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountId = source.AccountId,
                 AccountLegalEntityId = source.AccountLegalEntityId,
                 ProviderId = source.ProviderId,
-                Message = source.Message
+                Message = source.Message,
+                TransferSenderId = source.DecodedTransferSenderId
             });
         }
     }
