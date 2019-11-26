@@ -31,7 +31,7 @@
                                 <td class="govuk-table__cell" data-label="Reference">@cohort.CohortReference</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfApprentices</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" data-label="">
-                                    @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohort.CohortReference }, new { @class = "govuk-link", id = "return-link" })                                </td>
+                                    @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohort.CohortReference }, new { @class = "govuk-link cohort-details-link" })</td>
                             </tr>
                         }
 
