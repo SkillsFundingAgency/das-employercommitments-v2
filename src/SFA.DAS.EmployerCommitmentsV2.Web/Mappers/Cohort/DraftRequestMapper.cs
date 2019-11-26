@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
@@ -30,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var apiResponse = await _commitmentsApiClient.GetCohorts(request);
            
             var cohorts = apiResponse.Cohorts
-                .Where(x => x.WithParty == Party.Employer && x.IsDraft)
+                .Where(x => x.GetStatus() == CohortStatus.Draft)
                 .OrderByDescending(x => x.CreatedOn)
                 .Select(x => new DraftCohortSummaryViewModel
                 {

@@ -265,6 +265,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
+        [Route("review")]
+        public async Task<IActionResult> Review(ReviewRequest request)
+        {
+            var reviewViewModel = await _modelMapper.Map<ReviewViewModel>(request);
+            return View(reviewViewModel);
+        }
+
+        [HttpGet]
         [Route("draft")]
         public async Task<IActionResult> Draft(DraftRequest request)
         {

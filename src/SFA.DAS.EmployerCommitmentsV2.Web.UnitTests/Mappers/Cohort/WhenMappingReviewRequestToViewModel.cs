@@ -17,21 +17,21 @@ using SFA.DAS.EmployerUrlHelper;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
     [TestFixture]
-    public class WhenMappingDraftRequestToViewModel
+    public class WhenMappingReviewRequestToViewModel
     {
         [Test]
-        public void OnlyTheCohortsReadyForDraftAreMapped()
+        public void OnlyTheCohortsReadyForReviewAreMapped()
         {
-            var fixture = new WhenMappingDraftRequestToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
-            fixture.Verify_OnlyTheCohorts_ReadyForDraftForEmployer_Are_Mapped();
+            fixture.Verify_OnlyTheCohorts_ReadyForReviewForEmployer_Are_Mapped();
         }
 
         [Test]
         public void Then_TheCohortReferenceIsMapped()
         {
-            var fixture = new WhenMappingDraftRequestToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
             fixture.Verify_CohortRefrence_Is_Mapped();
@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void Then_ProviderNameIsMapped()
         {
-            var fixture = new WhenMappingDraftRequestToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
             fixture.Verify_ProviderName_Is_Mapped();
@@ -49,16 +49,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void Then_NumberOfApprenticesAreMapped()
         {
-            var fixture = new WhenMappingDraftRequestToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
             fixture.Verify_NumberOfApprentices_Are_Mapped();
         }
 
         [Test]
+        public void Then_LastMessage_IsMapped_Correctly()
+        {
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
+            fixture.Map();
+
+            fixture.Verify_LastMessage_Is_MappedCorrectly();
+        }
+
+        [Test]
         public void Then_Cohort_OrderBy_OnDateCreated_Correctly()
         {
-            var fixture = new WhenMappingDraftRequestToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
             fixture.Verify_Ordered_By_DateCreated();
@@ -67,7 +76,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void Then_AccountHashedId_IsMapped()
         {
-            var fixture = new WhenMappingDraftRequestToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
             fixture.Verify_AccountHashedId_IsMapped();
@@ -76,92 +85,98 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void Then_BacklinkUrl_IsMapped()
         {
-            var fixture = new WhenMappingDraftRequestToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
             fixture.Verify_BackLinkUrl_Is_Mapped();
         }
     }
 
-    public class WhenMappingDraftRequestToViewModelFixture
+    public class WhenMappingReviewRequestToViewModelFixture
     {
         public Mock<IEncodingService> EncodingService { get; set; }
         public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
         public Mock<ILinkGenerator> LinkGenerator { get; set; }
-        public DraftRequest DraftRequest { get; set; }
+        public ReviewRequest ReviewRequest { get; set; }
         public GetCohortsResponse GetCohortsResponse { get; set; }
-        public DraftRequestMapper Mapper { get; set; }
-        public DraftViewModel DraftViewModel { get; set; }
+        public ReviewRequestViewModelMapper Mapper { get; set; }
+        public ReviewViewModel ReviewViewModel { get; set; }
 
         public long AccountId => 1;
 
         public string AccountHashedId => "1AccountHashedId";
 
-        public WhenMappingDraftRequestToViewModelFixture()
+        public WhenMappingReviewRequestToViewModelFixture()
         {
             EncodingService = new Mock<IEncodingService>();
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             LinkGenerator = new Mock<ILinkGenerator>();
 
-            DraftRequest = new DraftRequest() { AccountId = AccountId, AccountHashedId = AccountHashedId };
+            ReviewRequest = new ReviewRequest() { AccountId = AccountId, AccountHashedId = AccountHashedId };
             GetCohortsResponse = CreateGetCohortsResponse();
-
+           
             CommitmentsApiClient.Setup(c => c.GetCohorts(It.Is<GetCohortsRequest>(r => r.AccountId == AccountId), CancellationToken.None)).Returns(Task.FromResult(GetCohortsResponse));
             EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference)).Returns((long y, EncodingType z) => y + "_Encoded");
             LinkGenerator.Setup(x => x.CommitmentsLink($"accounts/{AccountHashedId}/apprentices/cohorts")).Returns("BackLinkUrl");
 
-            Mapper = new DraftRequestMapper(CommitmentsApiClient.Object, EncodingService.Object, LinkGenerator.Object);
+            Mapper = new ReviewRequestViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, LinkGenerator.Object);
         }
 
-        public WhenMappingDraftRequestToViewModelFixture Map()
+        public WhenMappingReviewRequestToViewModelFixture Map()
         {
-            DraftViewModel = Mapper.Map(DraftRequest).Result;
+            ReviewViewModel = Mapper.Map(ReviewRequest).Result;
             return this;
         }
 
-        public void Verify_OnlyTheCohorts_ReadyForDraftForEmployer_Are_Mapped()
+        public void Verify_OnlyTheCohorts_ReadyForReviewForEmployer_Are_Mapped()
         {
-            Assert.AreEqual(2, DraftViewModel.Cohorts.Count());
+            Assert.AreEqual(2, ReviewViewModel.Cohorts.Count());
 
-            Assert.IsNotNull(GetDraftCohortWithId(2));
-            Assert.IsNotNull(GetDraftCohortWithId(3));
+            Assert.IsNotNull(GetCohortInReviewViewModel(1));
+            Assert.IsNotNull(GetCohortInReviewViewModel(2));
         }
 
         public void Verify_CohortRefrence_Is_Mapped()
         {
             EncodingService.Verify(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference), Times.Exactly(2));
 
-            Assert.AreEqual("2_Encoded", GetDraftCohortWithId(2).CohortReference);
-            Assert.AreEqual("3_Encoded", GetDraftCohortWithId(3).CohortReference);
+            Assert.AreEqual("1_Encoded", GetCohortInReviewViewModel(1).CohortReference);
+            Assert.AreEqual("2_Encoded", GetCohortInReviewViewModel(2).CohortReference);
         }
 
         public void Verify_ProviderName_Is_Mapped()
         {
-            Assert.AreEqual("Provider2", GetDraftCohortWithId(2).ProviderName);
-            Assert.AreEqual("Provider3", GetDraftCohortWithId(3).ProviderName);
+            Assert.AreEqual("Provider1", GetCohortInReviewViewModel(1).ProviderName);
+            Assert.AreEqual("Provider2", GetCohortInReviewViewModel(2).ProviderName);
         }
 
         public void Verify_NumberOfApprentices_Are_Mapped()
         {
-            Assert.AreEqual(200, GetDraftCohortWithId(2).NumberOfApprentices);
-            Assert.AreEqual(300, GetDraftCohortWithId(3).NumberOfApprentices);
+            Assert.AreEqual(100, GetCohortInReviewViewModel(1).NumberOfApprentices);
+            Assert.AreEqual(200, GetCohortInReviewViewModel(2).NumberOfApprentices);
+        }
+
+        public void Verify_LastMessage_Is_MappedCorrectly()
+        {
+            Assert.AreEqual("No message added", GetCohortInReviewViewModel(1).LastMessage);
+            Assert.AreEqual("This is latestMessage from provider", GetCohortInReviewViewModel(2).LastMessage);
         }
 
         public void Verify_Ordered_By_DateCreated()
         {
-            Assert.AreEqual("3_Encoded", DraftViewModel.Cohorts.First().CohortReference);
-            Assert.AreEqual("2_Encoded", DraftViewModel.Cohorts.Last().CohortReference);
+            Assert.AreEqual("2_Encoded",ReviewViewModel.Cohorts.First().CohortReference);
+            Assert.AreEqual("1_Encoded", ReviewViewModel.Cohorts.Last().CohortReference);
         }
 
         public void Verify_BackLinkUrl_Is_Mapped()
         {
             LinkGenerator.Verify(x => x.CommitmentsLink($"accounts/{AccountHashedId}/apprentices/cohorts"), Times.Once);
-            Assert.AreEqual("BackLinkUrl", DraftViewModel.BackLink);
+            Assert.AreEqual("BackLinkUrl", ReviewViewModel.BackLinkUrl);
         }
 
         public void Verify_AccountHashedId_IsMapped()
         {
-            Assert.AreEqual(AccountHashedId, DraftViewModel.AccountHashedId);
+            Assert.AreEqual(AccountHashedId, ReviewViewModel.AccountHashedId);
         }
 
         private GetCohortsResponse CreateGetCohortsResponse()
@@ -186,9 +201,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                     ProviderId = 2,
                     ProviderName = "Provider2",
                     NumberOfDraftApprentices = 200,
-                    IsDraft = true,
+                    IsDraft = false,
                     WithParty = Party.Employer,
                     CreatedOn = DateTime.Now.AddMinutes(-5),
+                    LatestMessageFromProvider = new Message("This is latestMessage from provider", DateTime.Now.AddMinutes(-2))
                 },
                 new CohortSummary
                 {
@@ -219,12 +235,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
         private long GetCohortId(string cohortReference)
         {
-            return long.Parse(cohortReference.Replace("_Encoded", ""));
+            return long.Parse(cohortReference.Replace("_Encoded",""));
         }
 
-        private DraftCohortSummaryViewModel GetDraftCohortWithId(long id)
+        private ReviewCohortSummaryViewModel GetCohortInReviewViewModel(long id)
         {
-            return DraftViewModel.Cohorts.FirstOrDefault(x => GetCohortId(x.CohortReference) == id);
+            return ReviewViewModel.Cohorts.FirstOrDefault(x => GetCohortId(x.CohortReference) == id);
         }
     }
 }
