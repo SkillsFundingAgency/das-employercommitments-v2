@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void OnlyTheCohortsReadyForReviewAreMapped()
         {
-            var fixture = new WhenMappingCohortsResponseToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
             fixture.Verify_OnlyTheCohorts_ReadyForReviewForEmployer_Are_Mapped();
@@ -31,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void Then_TheCohortReferenceIsMapped()
         {
-            var fixture = new WhenMappingCohortsResponseToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
             fixture.Verify_CohortRefrence_Is_Mapped();
@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void Then_ProviderNameIsMapped()
         {
-            var fixture = new WhenMappingCohortsResponseToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
             fixture.Verify_ProviderName_Is_Mapped();
@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void Then_NumberOfApprenticesAreMapped()
         {
-            var fixture = new WhenMappingCohortsResponseToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
             fixture.Verify_NumberOfApprentices_Are_Mapped();
@@ -58,7 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void Then_LastMessage_IsMapped_Correctly()
         {
-            var fixture = new WhenMappingCohortsResponseToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
             fixture.Verify_LastMessage_Is_MappedCorrectly();
@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void Then_Cohort_OrderBy_OnDateCreated_Correctly()
         {
-            var fixture = new WhenMappingCohortsResponseToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
             fixture.Verify_Ordered_By_DateCreated();
@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void Then_AccountHashedId_IsMapped()
         {
-            var fixture = new WhenMappingCohortsResponseToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
             fixture.Verify_AccountHashedId_IsMapped();
@@ -85,14 +85,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void Then_BacklinkUrl_IsMapped()
         {
-            var fixture = new WhenMappingCohortsResponseToViewModelFixture();
+            var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
             fixture.Verify_BackLinkUrl_Is_Mapped();
         }
     }
 
-    public class WhenMappingCohortsResponseToViewModelFixture
+    public class WhenMappingReviewRequestToViewModelFixture
     {
         public Mock<IEncodingService> EncodingService { get; set; }
         public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
@@ -106,7 +106,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
         public string AccountHashedId => "1AccountHashedId";
 
-        public WhenMappingCohortsResponseToViewModelFixture()
+        public WhenMappingReviewRequestToViewModelFixture()
         {
             EncodingService = new Mock<IEncodingService>();
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
@@ -122,7 +122,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Mapper = new ReviewRequestViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, LinkGenerator.Object);
         }
 
-        public WhenMappingCohortsResponseToViewModelFixture Map()
+        public WhenMappingReviewRequestToViewModelFixture Map()
         {
             ReviewViewModel = Mapper.Map(ReviewRequest).Result;
             return this;
