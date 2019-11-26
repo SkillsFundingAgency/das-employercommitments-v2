@@ -10,81 +10,48 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
     public class CohortSummaryExtensionTest
     {
         [Test]
-        public void Filters_CohortSummary_For_Reviews_Correctly()
+        public void CohortSummary_GetStatus_Returns_Correct_Status_For_Review()
         {
-            var fixture = new CohortSummaryExtensionTestFixture();
-            fixture.CreateTestData();
+            var cohortSummary = new CohortSummary
+            {
+                CohortId = 1,
+                IsDraft = false,
+                WithParty = Party.Employer
+            };
 
-            fixture.CohortSummary_Filtered_Correctly_For_Reviews();
+            var status =  cohortSummary.GetStatus();
+
+            Assert.AreEqual(CohortStatus.Review, status);
         }
 
         [Test]
-        public void Filters_CohortSummary_For_Drafts_Correctly()
+        public void CohortSummary_GetStatus_Returns_Correct_Status_For_Draft()
         {
-            var fixture = new CohortSummaryExtensionTestFixture();
-            fixture.CreateTestData();
-
-            fixture.CohortSummary_Filtered_Correctly_For_Drafts();
-        }
-    }
-
-
-     public class CohortSummaryExtensionTestFixture
-     {  
-        public List<CohortSummary> Cohorts { get; set; }
-
-        public CohortSummaryExtensionTestFixture()
-        {
-            Cohorts = new List<CohortSummary>();
-        }
-
-        public CohortSummaryExtensionTestFixture CreateTestData()
-        {
-            Cohorts = new List<CohortSummary>
+            var cohortSummary = new CohortSummary
             {
-                new CohortSummary
-                {
-                    CohortId = 1,
-                    IsDraft = true,
-                    WithParty = Party.Employer
-                },
-                new CohortSummary
-                {
-                    CohortId = 2,
-                    IsDraft = false,
-                    WithParty = Party.Employer
-                },
-                new CohortSummary
-                {
-                    CohortId = 3,
-                    IsDraft = true,
-                    WithParty = Party.Provider
-                },
-                new CohortSummary
-                {
-                    CohortId = 4,
-                    IsDraft = false,
-                    WithParty = Party.Provider
-                },
+                CohortId = 1,
+                IsDraft = true,
+                WithParty = Party.Employer
             };
 
-            return this;
+            var status = cohortSummary.GetStatus();
+
+            Assert.AreEqual(CohortStatus.Draft, status);
         }
 
-        public void CohortSummary_Filtered_Correctly_For_Reviews()
+        [Test]
+        public void CohortSummary_GetStatus_Returns_Unknown_If_Unable_To_Find_The_Status()
         {
-            var filteredChorots = Cohorts.Filter(CohortStatus.Review);
+            var cohortSummary = new CohortSummary
+            {
+                CohortId = 1,
+                IsDraft = false,
+                WithParty = Party.Provider
+            };
 
-            Assert.AreEqual(1, filteredChorots.Count());
-            Assert.AreEqual(2, filteredChorots.ToArray()[0].CohortId);
-        }
+            var status = cohortSummary.GetStatus();
 
-        public void CohortSummary_Filtered_Correctly_For_Drafts()
-        {
-            var filteredChorots = Cohorts.Filter(CohortStatus.Draft);
-
-            Assert.AreEqual(1, filteredChorots.Count());
-            Assert.AreEqual(1, filteredChorots.ToArray()[0].CohortId);
+            Assert.AreEqual(CohortStatus.Unknown, status);
         }
     }
 }

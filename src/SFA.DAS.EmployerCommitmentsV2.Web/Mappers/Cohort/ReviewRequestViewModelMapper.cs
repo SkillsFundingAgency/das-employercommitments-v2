@@ -29,12 +29,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         {
             var cohortsResponse = await _commitmentsApiClient.GetCohorts(new GetCohortsRequest { AccountId = source.AccountId });
 
-            var reviewViewModel =  new ReviewViewModel
+            var reviewViewModel = new ReviewViewModel
             {
                 AccountHashedId = source.AccountHashedId,
                 BackLinkUrl = _linkGenerator.Cohorts(source.AccountHashedId),
                 Cohorts = cohortsResponse.Cohorts
-                .Filter(CohortStatus.Review)
+                .Where(x => x.GetStatus() == CohortStatus.Review)
                 .OrderBy(z => z.CreatedOn)
                 .Select(y => new ReviewCohortSummaryViewModel
                 {
@@ -44,7 +44,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                     LastMessage = GetMessage(y.LatestMessageFromProvider)
                 }).ToList()
             };
-
 
             return reviewViewModel;
         }
