@@ -3,42 +3,39 @@
 @using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
 @inject ILinkGenerator LinkGenerator
+@inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService
 
 @{
     ViewData["Title"] = Model.PageTitle;
 }
 
+<div class="govuk-grid-row">
+<div class="govuk-grid-column-two-thirds">
+
+
 @if (!Model.IsAgreementSigned)
 {
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-    
-            <div class="govuk-panel" style="border-color:#2e358b;">
-                <h1 class="govuk-panel__title">
-                    You must sign your employer agreement before you can approve this record
-                </h1>
-            </div>
-       
-        </div>
-    </div>  
+
+    <div class="govuk-panel" style="border-color:#2e358b;">
+        <h1 class="govuk-panel__title">
+            You must sign your employer agreement before you can approve this record
+        </h1>
+    </div>
 }
 else
 {
     if (!Model.IsCompleteForEmployer)
     {
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-    
-                <div class="govuk-panel" style="border-color:#2e358b;">
-                    <h1 class="govuk-panel__title">
-                        You must complete all apprentice details before you can approve this record
-                    </h1>
-                </div>
-       
-            </div>
+
+        <div class="govuk-panel" style="border-color:#2e358b;">
+            <h1 class="govuk-panel__title">
+                You must complete all apprentice details before you can approve this record
+            </h1>
         </div>
+
     }
 }
 
@@ -80,7 +77,7 @@ else
             </p>
         </div>
     }
-    <table class="govuk-table">
+    <table class="govuk-table das-table--responsive">
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header das-table-cell-width-25">Name</th>
@@ -95,10 +92,10 @@ else
             @foreach (var draftApprenticeship in course.DraftApprenticeships)
             {
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@draftApprenticeship.DisplayName</td>
-                    <td class="govuk-table__cell">@draftApprenticeship.DisplayDateOfBirth</td>
-                    <td class="govuk-table__cell">@draftApprenticeship.DisplayTrainingDates</td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <td class="govuk-table__cell" data-label="Name">@draftApprenticeship.DisplayName</td>
+                    <td class="govuk-table__cell" data-label="Date of birth">@draftApprenticeship.DisplayDateOfBirth</td>
+                    <td class="govuk-table__cell" data-label="Training dates">@draftApprenticeship.DisplayTrainingDates</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Price">
                         @if (@draftApprenticeship.ExceedsFundingBandCap)
                         {
                             <span class="das-table-cell--highlight">
@@ -111,10 +108,27 @@ else
                         }
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <a href="@Url.RouteUrl("Details", new {@draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">
+                        <a class="govuk-link edit-apprentice" href="@Url.RouteUrl("Details", new {@draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">
                             @(Model.IsReadOnly ? "View" : "Edit")
                             <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
                         </a>
+                        <br /><br/>
+                        @if (!Model.IsReadOnly)
+                        {
+                            @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.EnhancedApproval))
+
+                            {
+                                <a class="govuk-link delete-apprentice" href="@Url.RouteUrl("DeleteDraftApprenticeship", new { draftApprenticeship.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = DeleteDraftApprenticeshipOrigin.CohortDetails})" >
+                                    Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="govuk-link delete-apprentice" href="@LinkGenerator.DeleteApprentice(Model.AccountHashedId, Model.CohortReference, draftApprenticeship.DraftApprenticeshipHashedId)">
+                                    Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
+                                </a>
+                            }
+                        }
                     </td>
                 </tr>
             }
@@ -135,80 +149,80 @@ else
 @if (!Model.IsReadOnly)
 {
     <p>
-        <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}")" class="govuk-link">Add another apprentice</a>
-        <a href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/{Model.CohortReference}/details/delete")" class="govuk-link das-float-right">Delete this group</a>
+        <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}")" class="govuk-link add-apprentice">Add another apprentice</a>
+        <a href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/{Model.CohortReference}/details/delete")" class="govuk-link das-float-right delete-group">Delete this group</a>
     </p>
 
     <hr class="govuk-section-break govuk-section-break--l">
 
-<form id="submitCohort" novalidate method="post">
-      <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.Selection, "govuk-form-group--error")">
+    <form id="submitCohort" novalidate method="post">
+        <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.Selection, "govuk-form-group--error")">
 
-        <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                <h3 class="govuk-fieldset__heading">@Model.OptionsTitle</h3>
-            </legend>
-            @Html.ValidationMessageFor(m => m.Selection, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Selection) })
-            <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h3 class="govuk-fieldset__heading">@Model.OptionsTitle</h3>
+                </legend>
+                @Html.ValidationMessageFor(m => m.Selection, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Selection) })
+                <div class="govuk-radios govuk-radios--conditional" data-module="radios">
 
-                @if (Model.ShowViewAgreementOption)
-                {
+                    @if (Model.ShowViewAgreementOption)
+                    {
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="radio-view" name="selection" type="radio" value="@CohortDetailsOptions.ViewEmployerAgreement" data-aria-controls="conditional-view">
+                            <label class="govuk-label govuk-radios__label" for="radio-view">
+                                View employer agreement
+                            </label>
+                        </div>
+                    }
+
+                    @if (Model.EmployerCanApprove)
+                    {
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio" value="@CohortDetailsOptions.Approve" data-aria-controls="conditional-approve">
+                            <label class="govuk-label govuk-radios__label" for="radio-approve">
+                                Yes, approve and notify training provider
+                            </label>
+                        </div>
+                    }
+                    @if (!Model.ShowApprovalOptionMessage)
+                    {
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-approve">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="approve-details">
+                                    Leave @Model.ProviderName a message (optional)
+                                </label>
+                                <textarea class="govuk-textarea" id="approve-details" name="approvemessage" rows="5"></textarea>
+                            </div>
+                        </div>
+                    }
                     <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="radio-view" name="selection" type="radio" value="@CohortDetailsOptions.ViewEmployerAgreement" data-aria-controls="conditional-view">
-                        <label class="govuk-label govuk-radios__label" for="radio-view">
-                            View employer agreement
+                        <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Send" data-aria-controls="conditional-send">
+                        <label class="govuk-label govuk-radios__label" for="radio-send">
+                            @Model.SendBackToProviderOptionMessage
                         </label>
                     </div>
-                }
-                
-                @if (Model.EmployerCanApprove)
-                {
-                    <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio" value="@CohortDetailsOptions.Approve" data-aria-controls="conditional-approve">
-                        <label class="govuk-label govuk-radios__label" for="radio-approve">
-                            Yes, approve and notify training provider
-                        </label>
-                    </div>
-                }
-                @if (!Model.ShowApprovalOptionMessage)
-                {
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-approve">
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-send">
                         <div class="govuk-form-group">
-                            <label class="govuk-label" for="approve-details">
+                            <label class="govuk-label" for="send-details">
                                 Leave @Model.ProviderName a message (optional)
                             </label>
-                            <textarea class="govuk-textarea" id="approve-details" name="approvemessage" rows="5"></textarea>
+                            <textarea class="govuk-textarea" id="send-details" name="sendmessage" rows="5"></textarea>
                         </div>
                     </div>
-                 }
-                <div class="govuk-radios__item">
-                    <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Send" data-aria-controls="conditional-send">
-                    <label class="govuk-label govuk-radios__label" for="radio-send">
-                        @Model.SendBackToProviderOptionMessage
-                    </label>
-                </div>
-                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-send">
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" for="send-details">
-                            Leave @Model.ProviderName a message (optional)
-                        </label>
-                        <textarea class="govuk-textarea" id="send-details" name="sendmessage" rows="5"></textarea>
-                    </div>
-                </div>
-                
-                @if (Model.ShowGotoHomePageOption)
-                {
-                <div class="govuk-radios__item">
-                    <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Homepage">
-                    <label class="govuk-label govuk-radios__label">
-                        Go to homepage
-                    </label>
-                </div>
-                }
 
-            </div>
-        </fieldset>
-    </div>
+                    @if (Model.ShowGotoHomePageOption)
+                    {
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="radio-home" name="selection" type="radio" value="@CohortDetailsOptions.Homepage">
+                            <label class="govuk-label govuk-radios__label" for="radio-home">
+                                Go to homepage
+                            </label>
+                        </div>
+                    }
+
+                </div>
+            </fieldset>
+        </div>
 
         <button type="submit" class="govuk-button">Save and submit</button>
 
@@ -219,8 +233,10 @@ else
     </form>
 }
 
+</div>
+</div>
+
 @section Back
 {
     <a class="govuk-back-link" href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/cohorts")">Back</a>
-
 }

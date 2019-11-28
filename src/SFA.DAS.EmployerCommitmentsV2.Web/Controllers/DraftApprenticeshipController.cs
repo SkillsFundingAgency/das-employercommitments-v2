@@ -13,6 +13,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
 using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
+using System;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -25,6 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ILinkGenerator _linkGenerator;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IAuthorizationService _authorizationService;
+        public const string ApprenticeDeletedMessage = "Apprentice record deleted";
 
         public DraftApprenticeshipController(
             ICommitmentsService commitmentsService,
@@ -95,5 +97,67 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, model.CohortReference);
             return Redirect(reviewYourCohort);
         }
+
+        [HttpGet]
+        [Route("{DraftApprenticeshipHashedId}/Delete", Name= "DeleteDraftApprenticeship")]
+        [DasAuthorize(EmployerFeature.EnhancedApproval)]
+        public async Task<IActionResult> DeleteDraftApprenticeship(DeleteApprenticeshipRequest request)
+        {
+            try
+            {
+                var model = await _modelMapper.Map<DeleteDraftApprenticeshipViewModel>(request);
+                return View(model);
+            }
+            catch (CohortEmployerUpdateDeniedException)
+            {
+                return RedirectToCohortDetails(request.AccountHashedId, request.CohortReference);
+            }
+            catch (Http.RestHttpClientException ex)
+            {
+                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return RedirectToCohortDetails(request.AccountHashedId, request.CohortReference);
+                }
+
+                throw;
+            }
+        }
+
+        [HttpPost]
+        [Route("{DraftApprenticeshipHashedId}/Delete")]
+        [DasAuthorize(EmployerFeature.EnhancedApproval)]
+        public async Task<IActionResult> DeleteDraftApprenticeship(DeleteDraftApprenticeshipViewModel model)
+        {
+            if (model.ConfirmDelete.Value)
+            {
+                var request = await _modelMapper.Map<DeleteDraftApprenticeshipRequest>(model);
+                await _commitmentsApiClient.DeleteDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId.Value, request);
+                TempData.AddFlashMessage(ApprenticeDeletedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                return RedirectToAction("Details", "Cohort", new {model.AccountHashedId, model.CohortReference});
+            }
+
+            return RedirectToOriginForDelete(model.Origin, model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId);
+        }
+
+        private IActionResult RedirectToOriginForDelete(DeleteDraftApprenticeshipOrigin origin,
+        string accountHashedId,
+        string cohortReference,
+        string draftApprenticeshipHashedId)
+        {
+             return (origin == DeleteDraftApprenticeshipOrigin.CohortDetails) 
+                ? RedirectToCohortDetails(accountHashedId, cohortReference)
+                : RedirectToAction("Details", new { accountHashedId, cohortReference, draftApprenticeshipHashedId });
+        }
+
+        private IActionResult RedirectToCohortDetails(string accountHashedId, string cohortReference)
+        {
+            if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
+            {
+                return RedirectToAction("Details", "Cohort", new { accountHashedId, cohortReference });
+            }
+
+            return Redirect(_linkGenerator.CohortDetails(accountHashedId, cohortReference));
+        }
+
     }
 }
