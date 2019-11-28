@@ -42,8 +42,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             f.VerifyRedirectsToCohortDetailsPage(result);
         }
 
-
-
         public class WhenPostingConfirmDeleteDetailsTestFixture
         {
             public ConfirmDeleteViewModel ConfirmDeleteViewModel;

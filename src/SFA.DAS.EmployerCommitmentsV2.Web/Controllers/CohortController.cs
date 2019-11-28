@@ -96,7 +96,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> ConfirmDelete(DetailsRequest request)
         {
             var viewModel = await _modelMapper.Map<ConfirmDeleteViewModel>(request);
-
             return View(viewModel);
         }
 
@@ -105,7 +104,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete([FromServices] IAuthenticationService authenticationService, ConfirmDeleteViewModel viewModel)
         {
-
             if(viewModel.ConfirmDeletion == true)
             { 
                 await _commitmentsApiClient.DeleteCohort(viewModel.CohortId, authenticationService.UserInfo, CancellationToken.None);
@@ -113,7 +111,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
             return RedirectToAction("Details", new { viewModel.CohortReference, viewModel.AccountHashedId });
         }
-
 
         [HttpGet]
         [Route("{cohortReference}/sent")]
