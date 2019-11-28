@@ -12,47 +12,47 @@ using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class ReviewRequestViewModelMapper : IMapper<ReviewRequest, ReviewViewModel>
+    public class WithTrainingProviderRequestViewModelMapper : IMapper<WithTrainingProviderRequest, WithTrainingProviderViewModel>
     {
         private readonly IEncodingService _encodingService;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly ILinkGenerator _linkGenerator;
 
-        public ReviewRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary, ILinkGenerator linkGenerator)
+        public WithTrainingProviderRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary, ILinkGenerator linkGenerator)
         {
             _encodingService = encodingSummary;
             _commitmentsApiClient = commitmentApiClient;
             _linkGenerator = linkGenerator;
         }
 
-        public async Task<ReviewViewModel> Map(ReviewRequest source)
+        public async Task<WithTrainingProviderViewModel> Map(WithTrainingProviderRequest source)
         {
             var cohortsResponse = await _commitmentsApiClient.GetCohorts(new GetCohortsRequest { AccountId = source.AccountId });
 
-            var reviewViewModel = new ReviewViewModel
+            var reviewViewModel = new WithTrainingProviderViewModel
             {
                 AccountHashedId = source.AccountHashedId,
-                BackLinkUrl = _linkGenerator.Cohorts(source.AccountHashedId),
+                BackLink = _linkGenerator.Cohorts(source.AccountHashedId),
                 Cohorts = cohortsResponse.Cohorts
-                .Where(x => x.GetStatus() == CohortStatus.Review)
+                .Where(x => x.GetStatus() == CohortStatus.WithProvider)
                 .OrderBy(z => z.CreatedOn)
-                .Select(y => new ReviewCohortSummaryViewModel
+                .Select(y => new WithTrainingProviderCohortSummaryViewModel
                 {
                     CohortReference = _encodingService.Encode(y.CohortId, EncodingType.CohortReference),
                     ProviderName = y.ProviderName,
                     NumberOfApprentices = y.NumberOfDraftApprentices,
-                    LastMessage = GetMessage(y.LatestMessageFromProvider)
+                    LastMessage = GetMessage(y.LatestMessageFromEmployer)
                 }).ToList()
             };
 
             return reviewViewModel;
         }
 
-        private string GetMessage(Message latestMessageFromProvider)
+        private string GetMessage(Message latestMessageFromEmployer)
         {
-           if (!string.IsNullOrWhiteSpace(latestMessageFromProvider?.Text))
+           if (!string.IsNullOrWhiteSpace(latestMessageFromEmployer?.Text))
             {
-                return latestMessageFromProvider.Text;
+                return latestMessageFromEmployer.Text;
             }
 
             return "No message added";
