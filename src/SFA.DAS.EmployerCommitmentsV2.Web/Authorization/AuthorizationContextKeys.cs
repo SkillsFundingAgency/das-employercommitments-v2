@@ -6,5 +6,6 @@
         public const string CohortId = "CohortId";
         public const string AccountLegalEntityId = "AccountLegalEntityId";
         public const string DraftApprenticeshipId = "DraftApprenticeshipId";
+        public const string DecodedTransferSenderId = "DecodedTransferSenderId";
     }
 }

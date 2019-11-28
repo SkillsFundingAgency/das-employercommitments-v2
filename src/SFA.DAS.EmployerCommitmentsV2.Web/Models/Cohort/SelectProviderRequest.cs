@@ -2,5 +2,6 @@
 {
     public class SelectProviderRequest : IndexRequest
     {
+        public string TransferSenderId { get; set; }
     }
 }
