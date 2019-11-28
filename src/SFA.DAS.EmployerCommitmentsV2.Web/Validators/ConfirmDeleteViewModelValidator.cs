@@ -7,7 +7,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
     {
         public ConfirmDeleteViewModelValidator()
         {
-            RuleFor(x => x.ConfirmDeletion).NotNull().WithMessage("You must choose an option");
+            RuleFor(x => x.ConfirmDeletion).NotNull().WithMessage("Confirm deletion");
         }
     }
 }

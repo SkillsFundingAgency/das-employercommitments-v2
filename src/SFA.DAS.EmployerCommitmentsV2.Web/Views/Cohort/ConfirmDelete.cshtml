@@ -34,7 +34,7 @@
                 </div>
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
-                        Apprentices
+                        Apprenticeships
                     </dt>
                     <dd class="govuk-summary-list__value">
                         @foreach (var course in Model.Courses)
@@ -48,10 +48,11 @@
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                         <h2 class="govuk-fieldset__heading govuk-!-margin-bottom-3">
-                            Are you sure that you want to delete all apprentice details?
+                            Are you sure you want to delete all apprentice details?
                         </h2>
                     </legend>
                     <div class="govuk-radios">
+                        @Html.ValidationMessageFor(m => m.ConfirmDeletion, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ConfirmDeletion) })
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="confirm-yes" name="ConfirmDeletion" type="radio" value="true">
                             <label class="govuk-label govuk-radios__label" for="confirm-yes">
