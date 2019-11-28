@@ -15,5 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public long ProviderId { get; set; }
         public string ProviderName { get; set; }
         public string Message { get; set; }
+        public string TransferSenderId { get; set; }
+        public long? DecodedTransferSenderId { get; set; }
     }
 }

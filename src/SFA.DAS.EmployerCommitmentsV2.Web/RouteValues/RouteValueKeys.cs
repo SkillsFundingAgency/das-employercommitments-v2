@@ -6,5 +6,6 @@
         public const string CohortReference = "cohortReference";
         public const string AccountLegalEntityHashedId = "AccountLegalEntityHashedId";
         public const string DraftApprenticeshipHashedId = "DraftApprenticeshipHashedId";
+        public const string TransferSenderId = "TransferSenderId";
     }
 }

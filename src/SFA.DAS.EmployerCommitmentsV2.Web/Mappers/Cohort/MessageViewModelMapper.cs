@@ -26,7 +26,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 StartMonthYear = source.StartMonthYear,
                 CourseCode = source.CourseCode,
                 ReservationId = source.ReservationId,
-                ProviderName = provider.Name
+                ProviderName = provider.Name,
+                TransferSenderId = source.TransferSenderId
             };
         }
     }

@@ -187,6 +187,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public IActionResult Assign(AssignViewModel model)
         {
+            if (!model.ReservationId.HasValue && model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
+            {
+                var url = _linkGenerator.ReservationsLink(
+                    $"accounts/{model.AccountHashedId}/reservations/{model.AccountLegalEntityHashedId}/select?providerId={model.ProviderId}&transferSenderId={model.TransferSenderId}");
+                return Redirect(url);
+            }
+
             var routeValues = new
             {
                 model.AccountHashedId,
@@ -194,7 +201,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 model.ReservationId,
                 model.StartMonthYear,
                 model.CourseCode,
-                model.ProviderId
+                model.ProviderId,
+                model.TransferSenderId
             };
 
             switch (model.WhoIsAddingApprentices)
