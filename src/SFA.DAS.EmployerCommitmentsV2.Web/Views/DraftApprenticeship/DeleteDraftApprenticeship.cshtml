@@ -1,0 +1,77 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.DeleteDraftApprenticeshipViewModel
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@inject ILinkGenerator LinkGenerator
+
+@{
+    ViewData["Title"] = "Apprenticeships";
+    var backButtonUrl = (Model.Origin == DeleteDraftApprenticeshipOrigin.CohortDetails)
+        ? Url.Action("Details", "Cohort", new { Model.AccountHashedId, Model.CohortReference })
+        : Url.Action("Details", new { Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId });
+}
+
+@*<input class="govuk-radios__input" id="ConfirmDelete" name="confirmDelete" type="radio" value="true">*@
+<div class="govuk-width-container">
+
+
+    <main class="govuk-main-wrapper">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                <partial name="_ValidationSummary" />
+
+                <h1 class="govuk-heading-xl">Delete apprentice @Model.FullName's record?</h1>
+                <form method="post">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(x => x.AccountHashedId)
+                    @Html.HiddenFor(x => x.DraftApprenticeshipHashedId)
+                    @Html.HiddenFor(x => x.CohortReference)
+                    @Html.HiddenFor(x => x.Origin)
+
+                    <div class="govuk-form-group @(ViewContext.ModelState.IsValid ? "" : "govuk-form-group--error")">
+                        <fieldset class="govuk-fieldset">
+
+                            @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(nameof(DeleteDraftApprenticeshipViewModel.ConfirmDelete)))
+                            {
+                                <span id="error-message-@nameof(DeleteDraftApprenticeshipViewModel.ConfirmDelete)" class="govuk-error-message">
+                                    <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(DeleteDraftApprenticeshipViewModel.ConfirmDelete)].Errors.First().ErrorMessage
+                                </span>
+                            }
+
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input asp-for="ConfirmDelete" value="true" type="radio" class="govuk-radios__input" id="confirmDelete-true"/>
+                                    <label class="govuk-label govuk-radios__label" for="confirmDelete-true">
+                                        Yes, delete the record
+                                    </label>
+
+                                </div>
+
+                                <div class="govuk-radios__item">
+
+                                    <input asp-for="ConfirmDelete" value="false" type="radio" class="govuk-radios__input" id="confirmDelete-false"/>
+                                    <label class="govuk-label govuk-radios__label" for="confirmDelete-false">
+                                        No, don't delete
+                                    </label>
+
+                                </div>
+
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <button class="govuk-button" type="submit" data-module="govuk-button">
+                        Save and continue
+                    </button>
+                </form>
+
+            </div>
+        </div>
+
+    </main>
+</div>
+
+@section Back
+{
+    <a class="govuk-back-link" href=@backButtonUrl>Back</a>
+}
