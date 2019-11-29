@@ -40,12 +40,27 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         }
 
         [Test]
-        public void CohortSummary_GetStatus_Returns_Unknown_If_Unable_To_Find_The_Status()
+        public void CohortSummary_GetStatus_Returns_Correct_Status_For_WithTrainingProvider()
         {
             var cohortSummary = new CohortSummary
             {
                 CohortId = 1,
                 IsDraft = false,
+                WithParty = Party.Provider
+            };
+
+            var status = cohortSummary.GetStatus();
+
+            Assert.AreEqual(CohortStatus.WithProvider, status);
+        }
+
+        [Test]
+        public void CohortSummary_GetStatus_Returns_Unknown_If_Unable_To_Find_The_Status()
+        {
+            var cohortSummary = new CohortSummary
+            {
+                CohortId = 1,
+                IsDraft = true,
                 WithParty = Party.Provider
             };
 

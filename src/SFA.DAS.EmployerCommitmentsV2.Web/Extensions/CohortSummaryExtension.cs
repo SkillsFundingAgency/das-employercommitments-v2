@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             else if (!cohort.IsDraft && cohort.WithParty == Party.Employer)
                 return CohortStatus.Review;
             else if (!cohort.IsDraft && cohort.WithParty == Party.Provider)
-                return CohortStatus.Review;
+                return CohortStatus.WithProvider;
             else
                 return CohortStatus.Unknown;
         }

@@ -284,7 +284,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("with-training-provider")]
         public async Task<IActionResult> WithTrainingProvider(WithTrainingProviderRequest request)
         {
-            var viewModel = await _modelMapper.Map<DraftViewModel>(request);
+            var viewModel = await _modelMapper.Map<WithTrainingProviderViewModel>(request);
             return View(viewModel);
         }
         
