@@ -4,6 +4,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -33,14 +34,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
-        public async Task MapSaveRequest_WhenAuthenticatedUser_ThenUserInfoIsNotNullAndPopulated()
+        public async Task MapSaveRequest_WhenAuthenticatedUser_ThenUserInfoIsSet()
         {
             var result = await _fixture.SetupAuthenticatedUser().SaveRequestMapper.Map(_fixture.InputViewModel);
 
             Assert.IsNotNull(result.UserInfo);
-            Assert.AreEqual("UserId", result.UserInfo.UserId);
-            Assert.AreEqual("UserName", result.UserInfo.UserDisplayName);
-            Assert.AreEqual("UserEmail", result.UserInfo.UserEmail);
+            Assert.AreEqual(_fixture.UserInfo, result.UserInfo);
         }
 
         [Test]
@@ -67,6 +66,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public Mock<IAuthenticationService> AuthenticationServiceMock;
         public ApprenticeViewModel InputViewModel;
         public EditDraftApprenticeshipDetails InputDetails;
+        public UserInfo UserInfo;
 
 
         public AttachUserInfoToSaveRequestsTestsFixture()
@@ -76,6 +76,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             AuthenticationServiceMock = new Mock<IAuthenticationService>();
             InputViewModel = new ApprenticeViewModel();
             InputDetails = new EditDraftApprenticeshipDetails();
+            UserInfo = new UserInfo();
 
             SaveRequestMapper = new AttachUserInfoToSaveRequests<ApprenticeViewModel, CreateCohortRequest>(new CreateCohortRequestMapper(), AuthenticationServiceMock.Object);
             NonSaveRequestMapper = new AttachUserInfoToSaveRequests<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel>(new EditDraftApprenticeshipViewModelMapper(), AuthenticationServiceMock.Object);
@@ -87,6 +88,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             AuthenticationServiceMock.Setup(x => x.UserId).Returns("UserId");
             AuthenticationServiceMock.Setup(x => x.UserName).Returns("UserName");
             AuthenticationServiceMock.Setup(x => x.UserEmail).Returns("UserEmail");
+            AuthenticationServiceMock.Setup(x => x.UserInfo).Returns(UserInfo);
 
             return this;
         }
