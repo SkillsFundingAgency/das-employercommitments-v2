@@ -50,7 +50,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             Assert.IsFalse(result.IsLastApprenticeshipInCohort);
         }
 
-
         [Test]
         public async Task WhenCohortExistsAndWithCorrectPartyAndThisIsTheLastApprenticeship_ThenMarksModelAsIsLastApprenticeship()
         {
@@ -105,7 +104,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             public DraftApprenticeshipDto SingleApprenticeship { get; private set; }
 
             private readonly Fixture _autoFixture;
-
 
             public DeleteDraftApprenticeshipViewModelMapperTestsFixture()
             {
