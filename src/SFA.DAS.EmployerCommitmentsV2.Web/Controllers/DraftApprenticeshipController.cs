@@ -108,18 +108,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 var model = await _modelMapper.Map<DeleteDraftApprenticeshipViewModel>(request);
                 return View(model);
             }
-            catch (CohortEmployerUpdateDeniedException)
+            catch (Exception e) when (e is CohortEmployerUpdateDeniedException || e is DraftApprenticeshipNotFoundException)
             {
                 return RedirectToCohortDetails(request.AccountHashedId, request.CohortReference);
-            }
-            catch (Http.RestHttpClientException ex)
-            {
-                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    return RedirectToCohortDetails(request.AccountHashedId, request.CohortReference);
-                }
-
-                throw;
             }
         }
 
@@ -133,10 +124,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 var request = await _modelMapper.Map<DeleteDraftApprenticeshipRequest>(model);
                 await _commitmentsApiClient.DeleteDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId.Value, request);
                 TempData.AddFlashMessage(ApprenticeDeletedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
-                return RedirectToAction("Details", "Cohort", new {model.AccountHashedId, model.CohortReference});
+                return await RedirectToCohortDetailsOrBingoPage(model);
             }
 
             return RedirectToOriginForDelete(model.Origin, model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId);
+        }
+
+        private async Task<IActionResult> RedirectToCohortDetailsOrBingoPage(DeleteDraftApprenticeshipViewModel model)
+        {
+            if (await CohortExists(model.CohortId))
+            {
+                return RedirectToAction("Details", "Cohort", new { model.AccountHashedId, model.CohortReference });
+            }
+            return Redirect(_linkGenerator.CommitmentsLink($"/accounts/{model.AccountHashedId}/apprentices/cohorts"));
+        }
+
+        private async Task<bool> CohortExists(long? cohortId)
+        {
+            return (await _commitmentsApiClient.GetCohort(cohortId.Value)) != null;
         }
 
         private IActionResult RedirectToOriginForDelete(DeleteDraftApprenticeshipOrigin origin,

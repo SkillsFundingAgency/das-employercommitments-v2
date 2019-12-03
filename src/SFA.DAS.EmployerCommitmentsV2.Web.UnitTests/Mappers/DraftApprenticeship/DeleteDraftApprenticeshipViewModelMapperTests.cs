@@ -1,14 +1,18 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+using AutoFixture;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
@@ -16,89 +20,153 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
     [TestFixture]
     public class DeleteDraftApprenticeshipViewModelMapperTests 
     {
-        [Test, MoqAutoData]
-        public async Task ThenCallsCommitmentsApiToGetCohort(
-            [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
-            GetCohortResponse cohortResponse,
-            DeleteApprenticeshipRequest request,
-            DeleteDraftApprenticeshipViewModelMapper mapper)
+        [Test]
+        public async Task WhenCohortExistsAndWithCorrectPartyAndApprenticeshipFound_ThenCallsCommitmentsApiToGetCohort()
         {
-            cohortResponse.WithParty = Party.Employer;
-            mockApiClient
-                .Setup(x => x.GetCohort(request.CohortId, CancellationToken.None))
-                .ReturnsAsync(cohortResponse);
+            var f = new DeleteDraftApprenticeshipViewModelMapperTestsFixture().WithParty(Party.Employer).ApprenticeshipsExists();
 
-            await mapper.Map(request);
+            await f.Sut.Map(f.DeleteApprenticeshipRequest);
 
-            mockApiClient.Verify(x => x.GetCohort(request.CohortId, CancellationToken.None),Times.Once);
+            f.VerifyGetCohortIsCalledCorrectly();
         }
 
-        [Test, MoqAutoData]
-        public void WhenCohortIsNotWithEmployer_ThenThrowsException(
-            [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
-            GetCohortResponse cohortResponse,
-            DeleteApprenticeshipRequest request,
-            DeleteDraftApprenticeshipViewModelMapper mapper)
+        [Test]
+        public async Task WhenCohortExistsAndWithCorrectPartyAndApprenticeshipFound_ThenCallsCommitmentsApiToGetDraftApprenticeships()
         {
-            cohortResponse.WithParty = Party.Provider;
-            mockApiClient
-                .Setup(x => x.GetCohort(request.CohortId, CancellationToken.None))
-                .ReturnsAsync(cohortResponse);
+            var f = new DeleteDraftApprenticeshipViewModelMapperTestsFixture().WithParty(Party.Employer).ApprenticeshipsExists();
 
-            Assert.ThrowsAsync<CohortEmployerUpdateDeniedException>(  async () => await mapper.Map(request));
+            await f.Sut.Map(f.DeleteApprenticeshipRequest);
+
+            f.VerifyGetDraftApprenticeshipsIsCalledCorrectly();
         }
 
-        [Test, MoqAutoData]
-        public async Task ThenCallsCommitmentsApiToGetDraftApprenticeship(
-            [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
-            GetCohortResponse cohortResponse,
-            GetDraftApprenticeshipResponse draftApprenticeshipResponse,
-            DeleteApprenticeshipRequest request,
-            DeleteDraftApprenticeshipViewModelMapper mapper)
+        [Test]
+        public async Task WhenCohortExistsAndWithCorrectPartyAndApprenticeshipFound_ThenIsLastApprenticeshipIsFalse()
         {
-            cohortResponse.WithParty = Party.Employer;
-            mockApiClient
-                .Setup(x => x.GetCohort(request.CohortId, CancellationToken.None))
-                .ReturnsAsync(cohortResponse);
-            mockApiClient
-                .Setup(x => x.GetDraftApprenticeship(request.CohortId, request.DraftApprenticeshipId, CancellationToken.None))
-                .ReturnsAsync(draftApprenticeshipResponse);
+            var f = new DeleteDraftApprenticeshipViewModelMapperTestsFixture().WithParty(Party.Employer).ApprenticeshipsExists();
 
-            await mapper.Map(request);
+            var result = await f.Sut.Map(f.DeleteApprenticeshipRequest);
 
-            mockApiClient.Verify(x => x.GetDraftApprenticeship(request.CohortId, request.DraftApprenticeshipId, CancellationToken.None),Times.Once);
-        }
-
-        [Test, MoqAutoData]
-        public async Task ThenMapsRequestValuesToViewModel(
-            [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
-            GetCohortResponse cohortResponse,
-            GetDraftApprenticeshipResponse draftApprenticeshipResponse,
-            DeleteApprenticeshipRequest request,
-            DeleteDraftApprenticeshipViewModelMapper mapper)
-        {
-            var expectedFullName = $"{draftApprenticeshipResponse.FirstName} {draftApprenticeshipResponse.LastName}";
-            cohortResponse.WithParty = Party.Employer;
-            mockApiClient
-                .Setup(x => x.GetCohort(request.CohortId, CancellationToken.None))
-                .ReturnsAsync(cohortResponse);
-            mockApiClient
-                .Setup(x => x.GetDraftApprenticeship(request.CohortId, request.DraftApprenticeshipId, CancellationToken.None))
-                .ReturnsAsync(draftApprenticeshipResponse);
-
-            var result = await mapper.Map(request);
-            Assert.AreEqual(draftApprenticeshipResponse.FirstName, result.FirstName);
-            Assert.AreEqual(draftApprenticeshipResponse.LastName, result.LastName);
-            Assert.AreEqual(expectedFullName, result.FullName );
-            Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
-            Assert.AreEqual(request.DraftApprenticeshipHashedId, result.DraftApprenticeshipHashedId);
-            Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
-            Assert.AreEqual(request.Origin, result.Origin);
-            Assert.AreEqual(request.CohortReference, result.CohortReference);
-
+            Assert.IsFalse(result.IsLastApprenticeshipInCohort);
         }
 
 
+        [Test]
+        public async Task WhenCohortExistsAndWithCorrectPartyAndThisIsTheLastApprenticeship_ThenMarksModelAsIsLastApprenticeship()
+        {
+            var f = new DeleteDraftApprenticeshipViewModelMapperTestsFixture().WithParty(Party.Employer).WithSingleApprenticeship();
 
+            var result = await f.Sut.Map(f.DeleteApprenticeshipRequest);
+
+            Assert.IsTrue(result.IsLastApprenticeshipInCohort);
+        }
+
+        [Test]
+        public void WhenCohortIsWithTheProvider_ThenThrowsException()
+        {
+            var f = new DeleteDraftApprenticeshipViewModelMapperTestsFixture().WithParty(Party.Provider).ApprenticeshipsExists();
+
+            Assert.ThrowsAsync<CohortEmployerUpdateDeniedException>(async () => await f.Sut.Map(f.DeleteApprenticeshipRequest));
+        }
+
+        [Test]
+        public void WhenCohortExistsAndWithCorrectPartyButNoMatchingApprenticeship_ThenThrowsException()
+        {
+            var f = new DeleteDraftApprenticeshipViewModelMapperTestsFixture().WithParty(Party.Employer).WithNoMatchingApprentices();
+
+            Assert.ThrowsAsync<DraftApprenticeshipNotFoundException>(async () => await f.Sut.Map(f.DeleteApprenticeshipRequest));
+        }
+
+        [Test, MoqAutoData]
+        public async Task ThenMapsRequestValuesToViewModel()
+        {
+            var f = new DeleteDraftApprenticeshipViewModelMapperTestsFixture().WithParty(Party.Employer).WithSingleApprenticeship();
+
+            var result = await f.Sut.Map(f.DeleteApprenticeshipRequest);
+
+            Assert.AreEqual(f.SingleApprenticeship.FirstName, result.FirstName);
+            Assert.AreEqual(f.SingleApprenticeship.LastName, result.LastName);
+            Assert.AreEqual(f.SingleApprenticeship.FirstName + " " + f.SingleApprenticeship.LastName, result.FullName );
+            Assert.AreEqual(f.DeleteApprenticeshipRequest.AccountHashedId, result.AccountHashedId);
+            Assert.AreEqual(f.DeleteApprenticeshipRequest.DraftApprenticeshipHashedId, result.DraftApprenticeshipHashedId);
+            Assert.AreEqual(f.DeleteApprenticeshipRequest.AccountHashedId, result.AccountHashedId);
+            Assert.AreEqual(f.DeleteApprenticeshipRequest.Origin, result.Origin);
+            Assert.AreEqual(f.DeleteApprenticeshipRequest.CohortReference, result.CohortReference);
+            Assert.IsTrue(result.IsLastApprenticeshipInCohort);
+        }
+
+        public class DeleteDraftApprenticeshipViewModelMapperTestsFixture
+        {
+            public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; }
+            public GetCohortResponse GetCohortResponse { get; }
+            public GetDraftApprenticeshipsResponse GetDraftApprenticeshipsResponse { get; }
+            public DeleteApprenticeshipRequest DeleteApprenticeshipRequest { get; private set; }
+            public DeleteDraftApprenticeshipViewModelMapper Sut { get; }
+            public DraftApprenticeshipDto SingleApprenticeship { get; private set; }
+
+            private readonly Fixture _autoFixture;
+
+
+            public DeleteDraftApprenticeshipViewModelMapperTestsFixture()
+            {
+                _autoFixture = new Fixture();
+
+                GetCohortResponse = _autoFixture.Create<GetCohortResponse>();
+                GetDraftApprenticeshipsResponse = _autoFixture.Create<GetDraftApprenticeshipsResponse>();
+                CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+                CommitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                    .ReturnsAsync(GetCohortResponse);
+                CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                    .ReturnsAsync(GetDraftApprenticeshipsResponse);
+
+                Sut = new DeleteDraftApprenticeshipViewModelMapper(CommitmentsApiClient.Object, Mock.Of<ILinkGenerator>());
+            }
+
+            public DeleteDraftApprenticeshipViewModelMapperTestsFixture WithParty(Party party)
+            {
+                GetCohortResponse.WithParty = party;
+                return this;
+            }
+
+            public DeleteDraftApprenticeshipViewModelMapperTestsFixture ApprenticeshipsExists()
+            {
+                var apprenticeId = GetDraftApprenticeshipsResponse.DraftApprenticeships.ToArray()[0].Id;
+
+                DeleteApprenticeshipRequest = _autoFixture.Build<DeleteApprenticeshipRequest>()
+                    .With(x => x.DraftApprenticeshipId, apprenticeId).Create();
+                return this;
+            }
+
+            public DeleteDraftApprenticeshipViewModelMapperTestsFixture WithSingleApprenticeship()
+            {
+                SingleApprenticeship = _autoFixture.Create<DraftApprenticeshipDto>();
+                GetDraftApprenticeshipsResponse.DraftApprenticeships = new List<DraftApprenticeshipDto> {SingleApprenticeship};
+
+                CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                    .ReturnsAsync(GetDraftApprenticeshipsResponse);
+
+                DeleteApprenticeshipRequest = _autoFixture.Build<DeleteApprenticeshipRequest>()
+                    .With(x => x.DraftApprenticeshipId, SingleApprenticeship.Id).Create();
+                return this;
+            }
+
+            public DeleteDraftApprenticeshipViewModelMapperTestsFixture WithNoMatchingApprentices()
+            {
+                CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                    .ReturnsAsync(GetDraftApprenticeshipsResponse);
+                DeleteApprenticeshipRequest = _autoFixture.Create<DeleteApprenticeshipRequest>();
+                return this;
+            }
+
+            public void VerifyGetCohortIsCalledCorrectly()
+            {
+                CommitmentsApiClient.Verify(x => x.GetCohort(DeleteApprenticeshipRequest.CohortId, CancellationToken.None), Times.Once);
+            }
+
+            public void VerifyGetDraftApprenticeshipsIsCalledCorrectly()
+            {
+                CommitmentsApiClient.Verify(x => x.GetDraftApprenticeships(DeleteApprenticeshipRequest.CohortId, CancellationToken.None), Times.Once);
+            }
+        }
     }
 }
