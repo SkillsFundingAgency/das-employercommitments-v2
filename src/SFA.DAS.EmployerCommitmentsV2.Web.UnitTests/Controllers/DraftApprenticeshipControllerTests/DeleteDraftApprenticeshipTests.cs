@@ -104,23 +104,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             Assert.AreEqual("Cohort", redirect.ControllerName);
         }
 
+        [Test]
+        public async Task PostDeleteApprenticeshipViewModel_WithValidModel_WithConfirmDeleteTrue_ShouldDeleteDraftApprenticeshipAndTheCohortAndRedirectToBingoPage()
+        {
+            var fixture = new DeleteDraftApprenticeshipTestsFixture()
+                .WithEnhancedApproval()
+                .WithNoCohortFoundAfterDeletion()
+                .WithDeleteDraftApprenticeshipViewModel(confirmDelete: true);
 
-        //[Test]
-        //public async Task PostDeleteApprenticeshipViewModel_WithValidModel_WithConfirmDeleteTrue_ShouldDeleteDraftApprenticeshipAndTheCohortAndRedirectToBingoPage()
-        //{
-        //    var fixture = new DeleteDraftApprenticeshipTestsFixture()
-        //        .WithEnhancedApproval()
-        //        .WithNoCohortFoundAfterDeletion()
-        //        .WithDeleteDraftApprenticeshipViewModel(confirmDelete: true);
+            var result = await fixture.DeleteDraftApprenticeship();
 
-        //    var result = await fixture.DeleteDraftApprenticeship();
-
-        //    fixture.Verify_CommitmentApiClient_DeleteApprenticeShip_IsCalled_OnlyOnce();
-        //    var redirect = result.VerifyReturnsRedirectToActionResult();
-        //    Assert.AreEqual("Details", redirect.ActionName);
-        //    Assert.AreEqual("Cohort", redirect.ControllerName);
-        //}
-
+            fixture.Verify_CommitmentApiClient_DeleteApprenticeShip_IsCalled_OnlyOnce();
+            var redirect = result.VerifyReturnsRedirect();
+            Assert.AreEqual($"/accounts/{fixture.AccountHashedId}/apprentices/cohorts", redirect.Url);
+        }
 
         [Test]
         public async Task PostDeleteApprenticeshipViewModel_WithValidModel_WithConfirmDeleteFalse_ShouldNotDeleteDraftApprenticeshipAndRedirectToOrigin()
@@ -161,6 +158,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             CommitmentApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetCohortResponse());
 
             LinkGeneratorMock = new Mock<ILinkGenerator>();
+            LinkGeneratorMock.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns<string>(s => s);
 
             var deleteDraftApprenticeshipViewModel = new DeleteDraftApprenticeshipViewModel
             {
