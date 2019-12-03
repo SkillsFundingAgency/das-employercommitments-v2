@@ -8,6 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string ProviderName { get; set; }
 
         public bool? UseThisProvider { get; set; }
+        public string TransferSenderId { get; set; }
 
         public override Dictionary<string, string> ToDictionary()
         {

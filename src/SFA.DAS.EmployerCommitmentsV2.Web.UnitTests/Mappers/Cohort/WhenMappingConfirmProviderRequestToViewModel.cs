@@ -91,5 +91,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var viewModel = await mapper.Map(request);
             viewModel.ProviderName.Should().Be(provider.Name);
         }
+
+        [Test, MoqAutoData]
+        public async Task Then_Maps_TransferSenderId(
+            ConfirmProviderRequest request,
+            [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
+            ConfirmProviderViewModelMapper mapper)
+        {
+            var viewModel = await mapper.Map(request);
+
+            viewModel.TransferSenderId.Should().Be(request.TransferSenderId);
+        }
+
     }
 }

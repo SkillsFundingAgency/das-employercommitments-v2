@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,8 +11,8 @@ using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Features;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
@@ -88,6 +89,27 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 default:
                     throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
             }
+        }
+
+        [Route("{cohortReference}/delete")]
+        [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
+        public async Task<IActionResult> ConfirmDelete(DetailsRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ConfirmDeleteViewModel>(request);
+            return View(viewModel);
+        }
+
+        [Route("{cohortReference}/delete")]
+        [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
+        [HttpPost]
+        public async Task<IActionResult> Delete([FromServices] IAuthenticationService authenticationService, ConfirmDeleteViewModel viewModel)
+        {
+            if(viewModel.ConfirmDeletion == true)
+            { 
+                await _commitmentsApiClient.DeleteCohort(viewModel.CohortId, authenticationService.UserInfo, CancellationToken.None);
+                return Redirect(_linkGenerator.CommitmentsLink($"/accounts/{viewModel.AccountHashedId}/apprentices/cohorts"));
+            }
+            return RedirectToAction("Details", new { viewModel.CohortReference, viewModel.AccountHashedId });
         }
 
         [HttpGet]
@@ -187,6 +209,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public IActionResult Assign(AssignViewModel model)
         {
+            if (!model.ReservationId.HasValue && model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
+            {
+                var url = _linkGenerator.ReservationsLink(
+                    $"accounts/{model.AccountHashedId}/reservations/{model.AccountLegalEntityHashedId}/select?providerId={model.ProviderId}&transferSenderId={model.TransferSenderId}");
+                return Redirect(url);
+            }
+
             var routeValues = new
             {
                 model.AccountHashedId,
@@ -194,7 +223,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 model.ReservationId,
                 model.StartMonthYear,
                 model.CourseCode,
-                model.ProviderId
+                model.ProviderId,
+                model.TransferSenderId
             };
 
             switch (model.WhoIsAddingApprentices)
@@ -225,7 +255,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
             {
-                return RedirectToAction("Details", new {model.AccountHashedId, newCohort.CohortReference });
+                return RedirectToAction("Details", new { model.AccountHashedId, newCohort.CohortReference });
             }
 
             var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, newCohort.CohortReference);
