@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -14,6 +16,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {
@@ -211,8 +214,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
         public DeleteDraftApprenticeshipTestsFixture WithNoCohortFoundAfterDeletion()
         {
-            CommitmentApiClient.Setup(x => x.GetCohort(CohortId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((GetCohortResponse)null);
+            var httpResponseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
+            httpResponseMessage.RequestMessage = new HttpRequestMessage();
+            var restException = new RestHttpClientException(httpResponseMessage, "");
+            CommitmentApiClient.Setup(x => x.GetCohort(CohortId, It.IsAny<CancellationToken>())).Throws(restException);
 
             return this;
         }

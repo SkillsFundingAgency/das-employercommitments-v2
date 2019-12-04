@@ -14,6 +14,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
 using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
 using System;
+using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -141,7 +142,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         private async Task<bool> CohortExists(long? cohortId)
         {
-            return (await _commitmentsApiClient.GetCohort(cohortId.Value)) != null;
+            try
+            {
+                await _commitmentsApiClient.GetCohort(cohortId.Value);
+                return true;
+            }
+            catch(RestHttpClientException ex)
+            {
+                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+
+                throw;
+            }
         }
 
         private IActionResult RedirectToOriginForDelete(DeleteDraftApprenticeshipOrigin origin,
