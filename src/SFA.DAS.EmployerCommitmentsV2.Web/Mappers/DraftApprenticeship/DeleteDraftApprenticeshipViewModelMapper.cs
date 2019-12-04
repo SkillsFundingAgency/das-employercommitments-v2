@@ -22,31 +22,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 
         public async Task<DeleteDraftApprenticeshipViewModel> Map(DeleteApprenticeshipRequest source)
         {
-            async Task<(string FirstName, string LastName, bool IsLastApprenticeship)> GetDraftApprenticeship()
-            {
-                var draftApprenticeships = (await _commitmentsApiClient.GetDraftApprenticeships(source.CohortId)).DraftApprenticeships;
-                var draftApprenticeship = draftApprenticeships.FirstOrDefault(x => x.Id == source.DraftApprenticeshipId);
-                if (draftApprenticeship == null)
-                {
-                    throw new DraftApprenticeshipNotFoundException(
-                        $"Apprenticeship Id: {source.DraftApprenticeshipId} not found");
-                }
-
-                return (draftApprenticeship.FirstName, draftApprenticeship.LastName, draftApprenticeships.Count == 1);
-            }
-
             var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
             if (cohort.WithParty != Party.Employer)
             {
                 throw new CohortEmployerUpdateDeniedException($"Cohort {cohort.CohortId} is not With the Employer");
             }
-            var apprenticeshipToDelete = await GetDraftApprenticeship();
+
+            // Get all apprenticeships for this cohort and ensure the one we are deleting still exists
+            var draftApprenticeships = (await _commitmentsApiClient.GetDraftApprenticeships(source.CohortId)).DraftApprenticeships;
+            var draftApprenticeship = draftApprenticeships.FirstOrDefault(x => x.Id == source.DraftApprenticeshipId);
+            if (draftApprenticeship == null)
+            {
+                throw new DraftApprenticeshipNotFoundException(
+                    $"DraftApprenticeship Id: {source.DraftApprenticeshipId} not found");
+            }
 
             return new DeleteDraftApprenticeshipViewModel()
             {
-                FirstName = apprenticeshipToDelete.FirstName,
-                LastName = apprenticeshipToDelete.LastName,
-                IsLastApprenticeshipInCohort = apprenticeshipToDelete.IsLastApprenticeship,
+                FirstName = draftApprenticeship.FirstName,
+                LastName = draftApprenticeship.LastName,
+                IsLastApprenticeshipInCohort = draftApprenticeships.Count == 1,
                 AccountHashedId = source.AccountHashedId,
                 DraftApprenticeshipHashedId = source.DraftApprenticeshipHashedId,
                 CohortReference = source.CohortReference,

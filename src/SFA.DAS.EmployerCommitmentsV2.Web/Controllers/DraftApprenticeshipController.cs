@@ -125,13 +125,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 var request = await _modelMapper.Map<DeleteDraftApprenticeshipRequest>(model);
                 await _commitmentsApiClient.DeleteDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId.Value, request);
                 TempData.AddFlashMessage(ApprenticeDeletedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
-                return await RedirectToCohortDetailsOrBingoPage(model);
+                return await RedirectToCohortDetailsOrCohortsPage(model);
             }
 
             return RedirectToOriginForDelete(model.Origin, model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId);
         }
 
-        private async Task<IActionResult> RedirectToCohortDetailsOrBingoPage(DeleteDraftApprenticeshipViewModel model)
+        private async Task<IActionResult> RedirectToCohortDetailsOrCohortsPage(DeleteDraftApprenticeshipViewModel model)
         {
             if (await CohortExists(model.CohortId))
             {
