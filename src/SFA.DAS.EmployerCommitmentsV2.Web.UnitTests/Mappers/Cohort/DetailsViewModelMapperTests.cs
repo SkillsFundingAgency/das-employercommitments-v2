@@ -253,7 +253,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await fixture.Map();
 
             var excessModel = result.Courses.FirstOrDefault(x => x.CourseCode == "C2").FundingBandExcess;
-            Assert.AreEqual(" £1,000.", excessModel.DisplaySingleFundingBandCap);
+            Assert.AreEqual(" of £1,000.", excessModel.DisplaySingleFundingBandCap);
         }
 
         [Test]
@@ -283,6 +283,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await fixture.Map();
 
             Assert.AreEqual(expectedPageTitle, result.PageTitle);
+        }
+
+        [TestCase("C2", "1 apprenticeship above funding band maximum")]
+        [TestCase("C1", "2 apprenticeships above funding band maximum")]
+        public async Task FundingBandCapExcessHeaderIsSetCorrectlyForTheNumberOfApprenticeshipsOverFundingCap(string courseCode, string expectedFundingBandCapExcessHeader)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+
+            Assert.AreEqual(expectedFundingBandCapExcessHeader, result.Courses.FirstOrDefault(x => x.CourseCode == courseCode).FundingBandExcess.FundingBandCapExcessHeader);
+        }
+
+        [TestCase("C2", "The price for this apprenticeship is above its")]
+        [TestCase("C1", "The price for these apprenticeships is above the")]
+        public async Task FundingBandCapExcessLabelIsSetCorrectlyForTheNumberOfApprenticeshipsOverFundingCap(string courseCode, string expectedFundingBandCapExcessLabel)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+
+            Assert.AreEqual(expectedFundingBandCapExcessLabel, result.Courses.FirstOrDefault(x => x.CourseCode == courseCode).FundingBandExcess.FundingBandCapExcessLabel);
         }
 
         [TestCase(true, true)]

@@ -287,6 +287,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             return View(new FinishedViewModel
             {
+                AccountHashedId = request.AccountHashedId,
                 CohortReference = request.CohortReference,
                 LegalEntityName = response.LegalEntityName,
                 ProviderName = response.ProviderName,
