@@ -47,6 +47,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
+        public void Then_TransferSenderNameIsMapped()
+        {
+            var fixture = new WhenMappingWithTransferSenderRequestToViewModelFixture();
+            fixture.Map();
+
+            fixture.Verify_TransferSenderName_Is_Mapped();
+        }
+
+        [Test]
+        public void Then_TransferSenderIdIsMapped()
+        {
+            var fixture = new WhenMappingWithTransferSenderRequestToViewModelFixture();
+            fixture.Map();
+
+            fixture.Verify_TransferSenderId_Is_Mapped();
+        }
+
+        [Test]
         public void Then_NumberOfApprenticesAreMapped()
         {
             var fixture = new WhenMappingWithTransferSenderRequestToViewModelFixture();
@@ -55,22 +73,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             fixture.Verify_NumberOfApprentices_Are_Mapped();
         }
 
-        //[Test]
-        //public void Then_LastMessage_IsMapped_Correctly()
-        //{
-        //    var fixture = new WhenMappingWithTransferSenderRequestToViewModelFixture();
-        //    fixture.Map();
-
-        //    fixture.Verify_LastMessage_Is_MappedCorrectly();
-        //}
-
         [Test]
-        public void Then_Cohort_OrderBy_OnDateCreated_Correctly()
+        public void Then_OrderBy_OnDateTransfered_Correctly()
         {
             var fixture = new WhenMappingWithTransferSenderRequestToViewModelFixture();
             fixture.Map();
 
-            fixture.Verify_Ordered_By_DateCreated();
+            fixture.Verify_Ordered_By_OnDateTransfered();
         }
 
         [Test]
@@ -92,22 +101,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
-        public void When_More_Than_One_Training_Provider_Title_IsMapped()
+        public void When_More_Than_One_TransferSender_Title_IsMapped()
         {
             var fixture = new WhenMappingWithTransferSenderRequestToViewModelFixture();
             fixture.Map();
 
-            fixture.Verify_When_More_Than_One_Training_Provider_Title_IsMapped();
+            fixture.Verify_When_More_Than_One_TransferSender_Title_Is_Mapped();
         }
 
         [Test]
-        public void When_Only_One_Training_Provider_Title_IsMapped()
+        public void When_Only_One_TransferSender_Title_IsMapped()
         {
             var fixture = new WhenMappingWithTransferSenderRequestToViewModelFixture();
             fixture.SetOnlyOneTransferSender();
             fixture.Map();
 
-            fixture.Verify_When_One_Training_Provider_Title_IsMapped();
+            fixture.Verify_When_One_TransferSender_Title_Is_Mapped();
         }
     }
 
@@ -169,19 +178,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual("Provider2", GetCohortInTransferSenderViewModel(2).ProviderName);
         }
 
+        public void Verify_TransferSenderName_Is_Mapped()
+        {
+            Assert.AreEqual("TransferSender1", GetCohortInTransferSenderViewModel(1).TransferSenderName);
+            Assert.AreEqual("TransferSender2", GetCohortInTransferSenderViewModel(2).TransferSenderName);
+        }
+
+        public void Verify_TransferSenderId_Is_Mapped()
+        {
+            Assert.AreEqual(1, GetCohortInTransferSenderViewModel(1).TransferSenderId);
+            Assert.AreEqual(2, GetCohortInTransferSenderViewModel(2).TransferSenderId);
+        }
+
         public void Verify_NumberOfApprentices_Are_Mapped()
         {
             Assert.AreEqual(100, GetCohortInTransferSenderViewModel(1).NumberOfApprentices);
             Assert.AreEqual(200, GetCohortInTransferSenderViewModel(2).NumberOfApprentices);
         }
 
-        //public void Verify_LastMessage_Is_MappedCorrectly()
-        //{
-        //    Assert.AreEqual("this is the last message from Employer", GetCohortInTransferSenderViewModel(1).LastMessage);
-        //    Assert.AreEqual("No message added", GetCohortInTransferSenderViewModel(2).LastMessage);
-        //}
-
-        public void Verify_Ordered_By_DateCreated()
+        public void Verify_Ordered_By_OnDateTransfered()
         {
             Assert.AreEqual("1_Encoded", WithTransferSenderViewModel.Cohorts.First().CohortReference);
             Assert.AreEqual("2_Encoded", WithTransferSenderViewModel.Cohorts.Last().CohortReference);
@@ -198,22 +213,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(AccountHashedId, WithTransferSenderViewModel.AccountHashedId);
         }
 
-        public void Verify_When_More_Than_One_Training_Provider_Title_IsMapped()
+        public void Verify_When_More_Than_One_TransferSender_Title_Is_Mapped()
         {
-            Assert.AreEqual("Apprentice details with training providers", WithTransferSenderViewModel.Title);
+            Assert.AreEqual(WithTransferSenderRequestViewModelMapper.Title + "s", WithTransferSenderViewModel.Title);
         }
 
-        public void Verify_When_One_Training_Provider_Title_IsMapped()
+        public void Verify_When_One_TransferSender_Title_Is_Mapped()
         {
-            Assert.AreEqual("Apprentice details with training provider", WithTransferSenderViewModel.Title);
+            Assert.AreEqual(WithTransferSenderRequestViewModelMapper.Title, WithTransferSenderViewModel.Title);
         }
 
         public void SetOnlyOneTransferSender()
         {
             foreach (var resp in GetCohortsResponse.Cohorts)
             {
-                resp.ProviderId = 1;
-                resp.ProviderName = "provider1";
+                resp.TransferSenderId = 1;
+                resp.TransferSenderName = "TransferSender1";
             }
         }
         private GetCohortsResponse CreateGetCohortsResponse()
@@ -225,30 +240,37 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                     CohortId = 1,
                     AccountId = 1,
                     ProviderId = 1,
+                    TransferSenderId = 1,
+                    TransferSenderName = "TransferSender1",
                     ProviderName = "Provider1",
                     NumberOfDraftApprentices = 100,
                     IsDraft = false,
-                    WithParty = Party.Provider,
-                    CreatedOn = DateTime.Now.AddMinutes(-10),
-                    LatestMessageFromEmployer = new Message("this is the last message from Employer", DateTime.Now.AddMinutes(-10))
+                    WithParty = Party.TransferSender,
+                    LatestMessageFromEmployer = new Message("this is the last message from Employer", DateTime.Now.AddMinutes(-10)),
+                    LatestMessageFromProvider = new Message("This is latestMessage from provider", DateTime.Now.AddMinutes(-11))
                 },
                 new CohortSummary
                 {
                     CohortId = 2,
                     AccountId = 1,
                     ProviderId = 2,
+                    TransferSenderId = 2,
+                    TransferSenderName = "TransferSender2",
                     ProviderName = "Provider2",
                     NumberOfDraftApprentices = 200,
                     IsDraft = false,
-                    WithParty = Party.Provider,
+                    WithParty = Party.TransferSender,
                     CreatedOn = DateTime.Now.AddMinutes(-8),
-                    LatestMessageFromProvider = new Message("This is latestMessage from provider", DateTime.Now.AddMinutes(-8))
+                    LatestMessageFromProvider = new Message("This is latestMessage from provider", DateTime.Now.AddMinutes(-8)),
+                    LatestMessageFromEmployer = new Message("This is latestMessage from Employer", DateTime.Now.AddMinutes(-7))
                 },
                 new CohortSummary
                 {
                     CohortId = 3,
                     AccountId = 1,
                     ProviderId = 2,
+                    TransferSenderId = 2,
+                    TransferSenderName = "TransferSender2",
                     ProviderName = "Provider3",
                     NumberOfDraftApprentices = 300,
                     IsDraft = false,

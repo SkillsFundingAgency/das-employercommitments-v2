@@ -8,7 +8,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
-
+using System;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -38,9 +38,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 BackLink = _linkGenerator.Cohorts(source.AccountHashedId),
                 Cohorts = cohortsResponse.Cohorts
                 .Where(x => x.GetStatus() == CohortStatus.WithTransferSender)
-                .OrderBy(z => z.LatestMessageFromEmployer != null ? z.LatestMessageFromEmployer.SentOn : z.CreatedOn)
+                .OrderBy(GetOrderByDate)
                 .Select(y => new WithTransferSenderCohortSummaryViewModel
                 {
+                    TransferSenderId = y.TransferSenderId.Value,
+                    TransferSenderName = y.TransferSenderName,
                     CohortReference = _encodingService.Encode(y.CohortId, EncodingType.CohortReference),
                     ProviderName = y.ProviderName,
                     NumberOfApprentices = y.NumberOfDraftApprentices,
@@ -55,14 +57,27 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             return reviewViewModel;
         }
 
-        private string GetMessage(Message latestMessageFromEmployer)
+        private DateTime GetOrderByDate(CohortSummary s)
         {
-           if (!string.IsNullOrWhiteSpace(latestMessageFromEmployer?.Text))
+            if (s.LatestMessageFromEmployer != null && s.LatestMessageFromProvider != null)
             {
-                return latestMessageFromEmployer.Text;
+                if (s.LatestMessageFromProvider.SentOn < s.LatestMessageFromEmployer.SentOn)
+                    return s.LatestMessageFromProvider.SentOn;
+                else
+                    return s.LatestMessageFromEmployer.SentOn;
             }
-
-            return "No message added";
+            else if (s.LatestMessageFromEmployer == null && s.LatestMessageFromProvider == null)
+            {
+                return s.CreatedOn;
+            }
+            else if (s.LatestMessageFromEmployer == null)
+            {
+                return s.LatestMessageFromProvider.SentOn;
+            }
+            else 
+            {
+                return s.LatestMessageFromEmployer.SentOn;
+            }
         }
     }
 }
