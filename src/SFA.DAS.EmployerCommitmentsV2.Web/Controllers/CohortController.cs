@@ -287,6 +287,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var viewModel = await _modelMapper.Map<WithTrainingProviderViewModel>(request);
             return View(viewModel);
         }
-        
+
+        [HttpGet]
+        [Route("with-transfer-sender")]
+        public async Task<IActionResult> WithTransferSender(WithTransferSenderRequest request)
+        {
+            var viewModel = await _modelMapper.Map<WithTransferSenderViewModel>(request);
+            return View(viewModel);
+        }
     }
 }

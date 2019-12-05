@@ -12,6 +12,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
                 return CohortStatus.Review;
             else if (!cohort.IsDraft && cohort.WithParty == Party.Provider)
                 return CohortStatus.WithProvider;
+            else if (!cohort.IsDraft && cohort.WithParty == Party.TransferSender)
+                return CohortStatus.WithTransferSender;
             else
                 return CohortStatus.Unknown;
         }
@@ -22,6 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
         Unknown,
         Draft,
         Review,
-        WithProvider
+        WithProvider,
+        WithTransferSender
     }
 }
