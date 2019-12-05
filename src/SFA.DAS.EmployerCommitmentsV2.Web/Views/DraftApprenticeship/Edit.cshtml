@@ -17,7 +17,6 @@
         </div>
 
         <form id="addApprenticeship" novalidate method="post">
-            @Html.AntiForgeryToken()
             <partial name="DraftApprenticeship" for="@Model" />
             <button type="submit" class="govuk-button">Save</button>
 

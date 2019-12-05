@@ -22,7 +22,6 @@
 
                 <h1 class="govuk-heading-xl">Delete apprentice @Model.FullName's record?</h1>
                 <form method="post">
-                    @Html.AntiForgeryToken()
                     @Html.HiddenFor(x => x.AccountHashedId)
                     @Html.HiddenFor(x => x.DraftApprenticeshipHashedId)
                     @Html.HiddenFor(x => x.CohortReference)
