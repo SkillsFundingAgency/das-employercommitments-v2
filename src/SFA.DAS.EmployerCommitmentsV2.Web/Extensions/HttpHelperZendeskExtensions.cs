@@ -5,12 +5,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 {
     public static class HttpHelperZendeskExtensions
     {
-        public static HtmlString SetZenDeskSuggestion(this IHtmlHelper html, string suggestion)
+        public static HtmlString SetZendeskSuggestion(this IHtmlHelper html, string suggestion)
         {
             return new HtmlString($"<script type=\"text/javascript\">zE('webWidget', 'helpCenter:setSuggestions', {{ search: '{EscapeApostrophes(suggestion)}' }});</script>");
         }
 
-        public static IHtmlContent SetZenDeskLabels(this IHtmlHelper html, params string[] labels)
+        public static IHtmlContent SetZendeskLabels(this IHtmlHelper html, params string[] labels)
         {
             var apiCallString = "<script type=\"text/javascript\">zE('webWidget', 'helpCenter:setSuggestions', { labels: [";
 
