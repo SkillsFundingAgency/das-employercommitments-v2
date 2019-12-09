@@ -20,7 +20,7 @@
 
                 <partial name="_ValidationSummary" />
 
-                <h1 class="govuk-heading-xl">Delete apprentice @Model.FullName's record?</h1>
+                <h1 class="govuk-heading-xl">Delete the apprentice @Model.FullName?</h1>
                 <form method="post">
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(x => x.AccountHashedId)
@@ -51,7 +51,7 @@
                                 <div class="govuk-radios__item">
                                     <input asp-for="ConfirmDelete" value="true" type="radio" class="govuk-radios__input" id="confirmDelete-true"/>
                                     <label class="govuk-label govuk-radios__label" for="confirmDelete-true">
-                                        Yes, delete the record
+                                        Yes, delete
                                     </label>
 
                                 </div>
