@@ -68,5 +68,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             Assert.AreEqual(request.ProviderId, result.ProviderId);
         }
+
+        [Test, MoqAutoData]
+        public async Task ThenMapsTransferSenderId(
+            ConfirmProviderViewModel request,
+            AssignRequestMapper mapper)
+        {
+            var result = await mapper.Map(request);
+
+            Assert.AreEqual(request.TransferSenderId, result.TransferSenderId);
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿@using SFA.DAS.CommitmentsV2.Types
-@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @using SFA.DAS.EmployerUrlHelper.Mvc
 @model SentViewModel
 
@@ -28,7 +27,6 @@
         </dl>
         <h2 class="govuk-heading-m">What's next?</h2>
         <p class="govuk-body">Your training provider will review these apprentice details and contact you as soon as possible.</p>
-            
 
         <div class="govuk-inset-text das-inset-text--filled">
             <h3 class="govuk-heading-m govuk-!-margin-bottom-2">Help us improve this section</h3>
@@ -38,8 +36,7 @@
     </div>
 </div>
 
-
-@section Back
-    {
+@section Back 
+{
     <a id="back-link" class="govuk-back-link" href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/home")">Back to Apprentices</a>
 } 

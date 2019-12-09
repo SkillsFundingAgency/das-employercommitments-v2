@@ -96,7 +96,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
     {
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures()
         {
-            RequestMapper = new CreateCohortRequestMapper();
             LinkGeneratorMock = new Mock<ILinkGenerator>();
             TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
             CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
@@ -107,8 +106,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             AuthorizationServiceMock.Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval))
                 .Returns(false);
         }
-
-        public IMapper<AddDraftApprenticeshipViewModel, CreateCohortRequest> RequestMapper { get; }
 
         public Mock<ILinkGenerator> LinkGeneratorMock { get; }
         public ILinkGenerator LinkGenerator => LinkGeneratorMock.Object;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -11,6 +12,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -22,8 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private GetProviderResponse _providerResponse;
         private ApprenticeRequest _source;
         private ApprenticeViewModel _result;
-        private IReadOnlyList<ITrainingProgramme> _courses;
-        private Mock<ITrainingProgrammeApiClient> _trainingProgrammeApiClient;
+        private TrainingProgrammeApiClientMock _trainingProgrammeApiClient;
 
         [SetUp]
         public async Task Arrange()
@@ -33,15 +34,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _providerResponse = autoFixture.Create<GetProviderResponse>();
             _source = autoFixture.Create<ApprenticeRequest>();
             _source.StartMonthYear = "062020";
+            _source.TransferSenderId = string.Empty;
 
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _commitmentsApiClient.Setup(x => x.GetProvider(It.IsAny<long>(),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_providerResponse);
 
-            _courses = autoFixture.Create<List<Standard>>();
-            _trainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
-            _trainingProgrammeApiClient.Setup(x => x.GetAllTrainingProgrammes()).ReturnsAsync(_courses);
+            _trainingProgrammeApiClient = new TrainingProgrammeApiClientMock();
 
             _mapper = new ApprenticeViewModelMapper(
                 _commitmentsApiClient.Object,
@@ -95,8 +95,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void CoursesAreMappedCorrectly()
         {
-            Assert.AreEqual(_courses, _result.Courses);
+            Assert.AreEqual(_trainingProgrammeApiClient.All, _result.Courses);
         }
 
+        [Test]
+        public void TransferSenderIdIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.TransferSenderId, _result.TransferSenderId);
+        }
+
+        [Test]
+        public async Task TransferFundedCohortsAllowStandardCoursesOnly()
+        {
+            _source.TransferSenderId = "test";
+            _result = await _mapper.Map(TestHelper.Clone(_source));
+            Assert.IsFalse(_result.Courses.Any(x => x is Framework));
+        }
     }
 }

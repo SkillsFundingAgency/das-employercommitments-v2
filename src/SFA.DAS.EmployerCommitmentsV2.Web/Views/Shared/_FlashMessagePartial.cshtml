@@ -1,0 +1,28 @@
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@if(TempData.ContainsKey(ITempDataDictionaryExtensions.FlashMessageTempDataKey))
+{
+    var message = TempData[ITempDataDictionaryExtensions.FlashMessageTempDataKey];
+    var level = (ITempDataDictionaryExtensions.FlashMessageLevel) TempData[ITempDataDictionaryExtensions.FlashMessageLevelTempDataKey];
+    
+    <div class="govuk-grid-column-two-thirds das-notification das-notification--@GetCssClassForLevel(level)" tabindex="-1">
+        <p class="das-notification__body">@message</p>
+    </div>
+}
+
+@functions
+{
+    private string GetCssClassForLevel(ITempDataDictionaryExtensions.FlashMessageLevel level)
+    {
+        switch(level)
+        {
+            case ITempDataDictionaryExtensions.FlashMessageLevel.Info:
+                return "info";
+            case ITempDataDictionaryExtensions.FlashMessageLevel.Warning:
+                return "warning";
+            case ITempDataDictionaryExtensions.FlashMessageLevel.Success:
+                return "success";
+            default:
+                throw new ArgumentOutOfRangeException(nameof(level));
+        }
+    }
+}

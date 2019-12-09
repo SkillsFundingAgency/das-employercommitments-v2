@@ -25,24 +25,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
             if (to is SaveDataRequest saveDataRequest)
             {
-                saveDataRequest.UserInfo = GetUserInfo();
+                saveDataRequest.UserInfo = _authenticationService.UserInfo;
             }
             return to;
         }
 
-        protected UserInfo GetUserInfo()
-        {
-            if (_authenticationService.IsUserAuthenticated())
-            {
-                return new UserInfo
-                {
-                    UserId = _authenticationService.UserId,
-                    UserDisplayName = _authenticationService.UserName,
-                    UserEmail = _authenticationService.UserEmail
-                };
-            }
-
-            return null;
-        }
     }
 }
