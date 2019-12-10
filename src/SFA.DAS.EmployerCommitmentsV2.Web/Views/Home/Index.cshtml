@@ -23,10 +23,13 @@
         <h2 class="govuk-heading-m das-card__heading"><a id="ManageApprentices" href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/manage/all")" class="govuk-link">Manage your apprentices</a></h2>
         <p>View approved apprentices, update details of existing apprentices or stop and pause payments to training providers.</p>
     </div>
-    <div class="das-card">
-        <h2 class="govuk-heading-m"><a id="SetPaymentOrder" href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/manage/paymentorder")" class="govuk-link">Set payment order</a></h2>
-        <p>View and change the order in which your providers are paid from your available funds.</p>
-    </div>
+    @if (Model.ShowSetPaymentOrderLink)
+    {
+        <div class="das-card">
+            <h2 class="govuk-heading-m"><a id="SetPaymentOrder" href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/manage/paymentorder")" class="govuk-link">Set payment order</a></h2>
+            <p>View and change the order in which your providers are paid from your available funds.</p>
+        </div>
+    }
 </div>
 <hr class="das-section-break das-section-break--l das-section-break--heavy-grey">
 <div class="das-cards">
@@ -42,7 +45,7 @@
     <div class="govuk-breadcrumbs">
         <ol class="govuk-breadcrumbs__list">
             <li class="govuk-breadcrumbs__list-item">
-                <a class="govuk-breadcrumbs__link" href="@LinkGenerator.EmployerHome(Model.AccountHashedId)">Home</a>
+                <a class="govuk-breadcrumbs__link" id="breadcrumb-home" href="@Url.UsersLink($"/accounts/{Model.AccountHashedId}/teams")">Home</a>
             </li>
             <li class="govuk-breadcrumbs__list-item" aria-current="page">Apprentices</li>
         </ol>
