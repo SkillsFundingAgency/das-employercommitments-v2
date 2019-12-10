@@ -61,7 +61,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         {
             if (s.LatestMessageFromEmployer != null && s.LatestMessageFromProvider != null)
             {
-                if (s.LatestMessageFromProvider.SentOn < s.LatestMessageFromEmployer.SentOn)
+                if (s.LatestMessageFromProvider.SentOn > s.LatestMessageFromEmployer.SentOn)
                     return s.LatestMessageFromProvider.SentOn;
                 else
                     return s.LatestMessageFromEmployer.SentOn;
