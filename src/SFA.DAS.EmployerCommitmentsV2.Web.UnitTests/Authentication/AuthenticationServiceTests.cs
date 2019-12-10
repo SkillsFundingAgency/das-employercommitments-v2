@@ -47,6 +47,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authentication
         }
 
         [Test]
+        public void WhenNotAuthenticated_ThenUserInfoShouldReturnNull()
+        {
+            _fixture.NoAuthenticatedUser();
+            Assert.IsNull(_fixture.Sut.UserInfo);
+        }
+
+        [Test]
         public void WhenAuthenticated_ThenIsUserAuthenticatedShouldReturnTrue()
         {
             _fixture.SetAuthenticatedUser();
@@ -72,6 +79,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authentication
         {
             _fixture.SetAuthenticatedUser();
             Assert.AreEqual("UserEmail", _fixture.Sut.UserEmail);
+        }
+
+        [Test]
+        public void WhenAuthenticated_ThenUserInfoShouldReturnAllValues()
+        {
+            _fixture.SetAuthenticatedUser();
+            Assert.IsNotNull(_fixture.Sut.UserInfo);
+            Assert.AreEqual("UserId", _fixture.Sut.UserInfo.UserId);
+            Assert.AreEqual("UserName", _fixture.Sut.UserInfo.UserDisplayName);
+            Assert.AreEqual("UserEmail", _fixture.Sut.UserInfo.UserEmail);
         }
     }
 

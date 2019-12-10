@@ -68,5 +68,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             viewModel.ProviderId.Should().Be(request.ProviderId);
         }
+
+        [Test, AutoData]
+        public async Task Then_Maps_TransferSenderId(
+            AssignRequest request,
+            AssignViewModelMapper mapper)
+        {
+            var viewModel = await mapper.Map(request);
+
+            viewModel.TransferSenderId.Should().Be(request.TransferSenderId);
+        }
     }
 }
