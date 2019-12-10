@@ -1,5 +1,7 @@
-﻿@using SFA.DAS.EmployerUrlHelper.Mvc
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerUrlHelper.Mvc
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Home.IndexViewModel
+@inject ILinkGenerator LinkGenerator
 
 @{
     ViewData["Title"] = "Apprentices";
@@ -40,7 +42,7 @@
     <div class="govuk-breadcrumbs">
         <ol class="govuk-breadcrumbs__list">
             <li class="govuk-breadcrumbs__list-item">
-                <a class="govuk-breadcrumbs__link" href="#">Home</a>
+                <a class="govuk-breadcrumbs__link" href="@LinkGenerator.EmployerHome(Model.AccountHashedId)">Home</a>
             </li>
             <li class="govuk-breadcrumbs__list-item" aria-current="page">Apprentices</li>
         </ol>
