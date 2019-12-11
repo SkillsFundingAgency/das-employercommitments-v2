@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Home
                 _apiProvidersResponse = new GetApprovedProvidersResponse(new List<long> { 123, 456 });
 
                 _apiClient = new Mock<ICommitmentsApiClient>();
-                _apiClient.Setup(x => x.GetApprovedProviders(It.IsAny<GetApprovedProvidersRequest>(),
+                _apiClient.Setup(x => x.GetApprovedProviders(It.IsAny<long>(),
                         It.IsAny<CancellationToken>()))
                     .ReturnsAsync(_apiProvidersResponse);
 
@@ -75,7 +75,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Home
 
                 _apiProvidersResponse = new GetApprovedProvidersResponse(providers);
 
-                _apiClient.Setup(x => x.GetApprovedProviders(It.IsAny<GetApprovedProvidersRequest>(),
+                _apiClient.Setup(x => x.GetApprovedProviders(It.IsAny<long>(),
                         It.IsAny<CancellationToken>()))
                     .ReturnsAsync(_apiProvidersResponse);
                 return this;

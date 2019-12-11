@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Home
 
         public async Task<IndexViewModel> Map(IndexRequest source)
         {
-            var providers = await _commitmentsApiClient.GetApprovedProviders(new GetApprovedProvidersRequest { AccountId = source.AccountId }, default(CancellationToken));
+            var providers = await _commitmentsApiClient.GetApprovedProviders(source.AccountId, default(CancellationToken));
             return new IndexViewModel
             {
                 AccountHashedId = source.AccountHashedId,
