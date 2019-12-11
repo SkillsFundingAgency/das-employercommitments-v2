@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         public async Task<IActionResult> Cohorts(CohortsRequest request)
         {
-            var model = await _modelMapper.Map<CohortsSummaryViewModel>(request);
+            var model = await _modelMapper.Map<CohortsViewModel>(request);
             return View(model);
         }
 

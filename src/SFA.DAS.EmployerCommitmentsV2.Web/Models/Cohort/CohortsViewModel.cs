@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 {
-    public class CohortsSummaryViewModel
+    public class CohortsViewModel
     {
         public CohortCardLinkViewModel CohortsInDraft { get; set; }
         public CohortCardLinkViewModel CohortsInReview { get; set; }
