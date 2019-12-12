@@ -9,6 +9,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public long AccountId { get; set; }
         public string BackLink { get; set; }
         public IEnumerable<WithTransferSenderCohortSummaryViewModel> Cohorts { get; set; }
-        
     }
 }

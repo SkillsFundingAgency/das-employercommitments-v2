@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using System.Threading;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using System.Threading.Tasks;
 using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
@@ -82,6 +81,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _fixture.MakeTheMessagesNull().SetCreatedOn();
             _fixture.Map();
             _fixture.Verify_Ordered_By_OnDateCreated();
+        }
+
+        [Test]
+        public void Then_OrderBy_LatestMessageByEmployer_Correctly()
+        {
+            _fixture.MakeTheMessagesNull().SetLatestMessageFromEmployer();
+            _fixture.Map();
+            _fixture.Verify_Ordered_By_LatestMessageByEmployer();
+        }
+
+        [Test]
+        public void Then_OrderBy_LatestMessageByProvider_Correctly()
+        {
+            _fixture.MakeTheMessagesNull().SetLatestMessageFromProvider();
+            _fixture.Map();
+            _fixture.Verify_Ordered_By_LatestMessageByProvider();
         }
 
         [Test]
@@ -202,6 +217,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual("1_Encoded", WithTransferSenderViewModel.Cohorts.Last().CohortReference);
         }
 
+        public void Verify_Ordered_By_LatestMessageByEmployer()
+        {
+            Assert.AreEqual("2_Encoded", WithTransferSenderViewModel.Cohorts.First().CohortReference);
+            Assert.AreEqual("1_Encoded", WithTransferSenderViewModel.Cohorts.Last().CohortReference);
+        }
+
+        public void Verify_Ordered_By_LatestMessageByProvider()
+        {
+            Assert.AreEqual("2_Encoded", WithTransferSenderViewModel.Cohorts.First().CohortReference);
+            Assert.AreEqual("1_Encoded", WithTransferSenderViewModel.Cohorts.Last().CohortReference);
+        }
+
         public void Verify_BackLinkUrl_Is_Mapped()
         {
             LinkGenerator.Verify(x => x.CommitmentsLink($"accounts/{AccountHashedId}/apprentices/cohorts"), Times.Once);
@@ -248,6 +275,34 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             GetCohortsResponse.Cohorts.First(x => x.CohortId == 2).CreatedOn = DateTime.Now.AddMinutes(-7);
             GetCohortsResponse.Cohorts.First(x => x.CohortId == 3).CreatedOn = DateTime.Now.AddMinutes(-9);
             GetCohortsResponse.Cohorts.First(x => x.CohortId == 4).CreatedOn = DateTime.Now.AddMinutes(-10);
+            return this;
+        }
+
+        public WhenMappingTransferSenderRequestToViewModelFixture SetLatestMessageFromEmployer()
+        {
+            GetCohortsResponse.Cohorts.First(x => x.CohortId == 1).LatestMessageFromEmployer = 
+                new Message("1st Message", DateTime.Now.AddMinutes(-6));
+            GetCohortsResponse.Cohorts.First(x => x.CohortId == 2).LatestMessageFromEmployer =
+                new Message("2nd Message", DateTime.Now.AddMinutes(-7));
+            GetCohortsResponse.Cohorts.First(x => x.CohortId == 3).LatestMessageFromEmployer = 
+                new Message("3rd Message", DateTime.Now.AddMinutes(-8));
+            GetCohortsResponse.Cohorts.First(x => x.CohortId == 4).LatestMessageFromEmployer = 
+                new Message("4th Message", DateTime.Now.AddMinutes(-9));
+            
+            return this;
+        }
+
+        public WhenMappingTransferSenderRequestToViewModelFixture SetLatestMessageFromProvider()
+        {
+            GetCohortsResponse.Cohorts.First(x => x.CohortId == 1).LatestMessageFromProvider =
+                new Message("1st Message", DateTime.Now.AddMinutes(-6));
+            GetCohortsResponse.Cohorts.First(x => x.CohortId == 2).LatestMessageFromProvider =
+                new Message("2nd Message", DateTime.Now.AddMinutes(-7));
+            GetCohortsResponse.Cohorts.First(x => x.CohortId == 3).LatestMessageFromProvider =
+                new Message("3rd Message", DateTime.Now.AddMinutes(-8));
+            GetCohortsResponse.Cohorts.First(x => x.CohortId == 4).LatestMessageFromProvider =
+                new Message("4th Message", DateTime.Now.AddMinutes(-9));
+
             return this;
         }
 
