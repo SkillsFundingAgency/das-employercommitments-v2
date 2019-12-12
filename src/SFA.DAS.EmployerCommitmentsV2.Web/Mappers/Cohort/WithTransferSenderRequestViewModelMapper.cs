@@ -36,16 +36,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountHashedId = source.AccountHashedId,
                 BackLink = _linkGenerator.Cohorts(source.AccountHashedId),
                 Cohorts = cohortsResponse.Cohorts
-                                            .Where(x => x.GetStatus() == CohortStatus.WithTransferSender)
-                                            .OrderBy(GetOrderByDate)
-                                            .Select(y => new WithTransferSenderCohortSummaryViewModel
-                                            {
-                                                TransferSenderId = y.TransferSenderId.Value,
-                                                TransferSenderName = y.TransferSenderName,
-                                                CohortReference = _encodingService.Encode(y.CohortId, EncodingType.CohortReference),
-                                                ProviderName = y.ProviderName,
-                                                NumberOfApprentices = y.NumberOfDraftApprentices,
-                                            }).ToList()
+                    .Where(x => x.GetStatus() == CohortStatus.WithTransferSender)
+                    .OrderBy(GetOrderByDate)
+                    .Select(y => new WithTransferSenderCohortSummaryViewModel
+                    {
+                        TransferSenderId = y.TransferSenderId.Value,
+                        TransferSenderName = y.TransferSenderName,
+                        CohortReference = _encodingService.Encode(y.CohortId, EncodingType.CohortReference),
+                        ProviderName = y.ProviderName,
+                        NumberOfApprentices = y.NumberOfDraftApprentices,
+                    }).ToList()
             };
 
             if (reviewViewModel.Cohorts?.GroupBy(x => x.TransferSenderId).Count() > 1)
