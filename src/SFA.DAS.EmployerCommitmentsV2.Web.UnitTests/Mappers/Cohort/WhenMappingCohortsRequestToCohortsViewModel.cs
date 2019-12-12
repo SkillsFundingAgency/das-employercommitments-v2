@@ -4,8 +4,6 @@ using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.Encoding;
-using System;
 using SFA.DAS.CommitmentsV2.Types;
 using System.Collections.Generic;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -13,9 +11,7 @@ using System.Threading;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using System.Threading.Tasks;
 using AutoFixture;
-using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerUrlHelper;
-using SFA.DAS.Testing.Builders;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
