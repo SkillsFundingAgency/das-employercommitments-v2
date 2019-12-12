@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
     public class WhenGettingReadyForReviewFixture
     {
-        private readonly ReviewRequest _request;
+        private readonly CohortsByAccountRequest _request;
         private readonly ReviewViewModel _viewModel;
         private IActionResult _result;
         private readonly string _linkGeneratorResult;
@@ -42,11 +42,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             var autoFixture = new Fixture();
 
-            _request = autoFixture.Create<ReviewRequest>();
+            _request = autoFixture.Create<CohortsByAccountRequest>();
             _viewModel = autoFixture.Create<ReviewViewModel>();
 
             var modelMapper = new Mock<IModelMapper>();
-            modelMapper.Setup(x => x.Map<ReviewViewModel>(It.Is<ReviewRequest>(r => r == _request)))
+            modelMapper.Setup(x => x.Map<ReviewViewModel>(It.Is<CohortsByAccountRequest>(r => r == _request)))
                 .ReturnsAsync(_viewModel);
 
             _linkGeneratorResult = autoFixture.Create<string>();

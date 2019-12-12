@@ -3,9 +3,9 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
 {
-    public class DraftRequestValidator : AbstractValidator<DraftRequest>
+    public class CohortsByAccountRequestValidator : AbstractValidator<CohortsByAccountRequest>
     {
-        public DraftRequestValidator()
+        public CohortsByAccountRequestValidator()
         {
             RuleFor(x => x.AccountId).GreaterThan(0);
             RuleFor(x => x.AccountHashedId).NotEmpty();

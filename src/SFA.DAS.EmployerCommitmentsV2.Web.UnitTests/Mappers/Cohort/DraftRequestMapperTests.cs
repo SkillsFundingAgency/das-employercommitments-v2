@@ -88,7 +88,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public Mock<IEncodingService> EncodingService { get; set; }
         public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
         public Mock<ILinkGenerator> LinkGenerator { get; set; }
-        public DraftRequest DraftRequest { get; set; }
+        public CohortsByAccountRequest DraftRequest { get; set; }
         public GetCohortsResponse GetCohortsResponse { get; set; }
         public DraftRequestMapper Mapper { get; set; }
         public DraftViewModel DraftViewModel { get; set; }
@@ -103,7 +103,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             LinkGenerator = new Mock<ILinkGenerator>();
 
-            DraftRequest = new DraftRequest() { AccountId = AccountId, AccountHashedId = AccountHashedId };
+            DraftRequest = new CohortsByAccountRequest() { AccountId = AccountId, AccountHashedId = AccountHashedId };
             GetCohortsResponse = CreateGetCohortsResponse();
 
             CommitmentsApiClient.Setup(c => c.GetCohorts(It.Is<GetCohortsRequest>(r => r.AccountId == AccountId), CancellationToken.None)).Returns(Task.FromResult(GetCohortsResponse));

@@ -12,7 +12,7 @@ using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class WithTrainingProviderRequestViewModelMapper : IMapper<WithTrainingProviderRequest, WithTrainingProviderViewModel>
+    public class WithTrainingProviderRequestViewModelMapper : IMapper<CohortsByAccountRequest, WithTrainingProviderViewModel>
     {
         public const string Title = "Apprentice details with training provider";
         private readonly IEncodingService _encodingService;
@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             _linkGenerator = linkGenerator;
         }
 
-        public async Task<WithTrainingProviderViewModel> Map(WithTrainingProviderRequest source)
+        public async Task<WithTrainingProviderViewModel> Map(CohortsByAccountRequest source)
         {
             var cohortsResponse = await _commitmentsApiClient.GetCohorts(new GetCohortsRequest { AccountId = source.AccountId });
 
@@ -37,16 +37,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountHashedId = source.AccountHashedId,
                 BackLink = _linkGenerator.Cohorts(source.AccountHashedId),
                 Cohorts = cohortsResponse.Cohorts
-                .Where(x => x.GetStatus() == CohortStatus.WithProvider)
-                .OrderBy(z => z.LatestMessageFromEmployer != null ? z.LatestMessageFromEmployer.SentOn : z.CreatedOn)
-                .Select(y => new WithTrainingProviderCohortSummaryViewModel
-                {
-                    ProviderId = y.ProviderId,
-                    CohortReference = _encodingService.Encode(y.CohortId, EncodingType.CohortReference),
-                    ProviderName = y.ProviderName,
-                    NumberOfApprentices = y.NumberOfDraftApprentices,
-                    LastMessage = GetMessage(y.LatestMessageFromEmployer)
-                }).ToList()
+                                            .Where(x => x.GetStatus() == CohortStatus.WithProvider)
+                                            .OrderBy(z => z.LatestMessageFromEmployer != null ? z.LatestMessageFromEmployer.SentOn : z.CreatedOn)
+                                            .Select(y => new WithTrainingProviderCohortSummaryViewModel
+                                            {
+                                                ProviderId = y.ProviderId,
+                                                CohortReference = _encodingService.Encode(y.CohortId, EncodingType.CohortReference),
+                                                ProviderName = y.ProviderName,
+                                                NumberOfApprentices = y.NumberOfDraftApprentices,
+                                                LastMessage = GetMessage(y.LatestMessageFromEmployer)
+                                            }).ToList()
             };
 
             if (reviewViewModel.Cohorts?.GroupBy(x => x.ProviderId).Count() > 1)

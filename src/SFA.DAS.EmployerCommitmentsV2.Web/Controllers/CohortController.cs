@@ -297,7 +297,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("review")]
-        public async Task<IActionResult> Review(ReviewRequest request)
+        public async Task<IActionResult> Review(CohortsByAccountRequest request)
         {
             var reviewViewModel = await _modelMapper.Map<ReviewViewModel>(request);
             return View(reviewViewModel);
@@ -305,7 +305,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("draft")]
-        public async Task<IActionResult> Draft(DraftRequest request)
+        public async Task<IActionResult> Draft(CohortsByAccountRequest request)
         {
             var viewModel = await _modelMapper.Map<DraftViewModel>(request);
             return View(viewModel);
@@ -313,7 +313,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("with-training-provider")]
-        public async Task<IActionResult> WithTrainingProvider(WithTrainingProviderRequest request)
+        public async Task<IActionResult> WithTrainingProvider(CohortsByAccountRequest request)
         {
             var viewModel = await _modelMapper.Map<WithTrainingProviderViewModel>(request);
             return View(viewModel);
@@ -321,7 +321,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("with-transfer-sender")]
-        public async Task<IActionResult> WithTransferSender(WithTransferSenderRequest request)
+        public async Task<IActionResult> WithTransferSender(CohortsByAccountRequest request)
         {
             var viewModel = await _modelMapper.Map<WithTransferSenderViewModel>(request);
             return View(viewModel);
