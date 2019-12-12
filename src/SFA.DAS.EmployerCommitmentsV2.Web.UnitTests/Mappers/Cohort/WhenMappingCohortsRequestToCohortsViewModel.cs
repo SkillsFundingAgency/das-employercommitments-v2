@@ -81,7 +81,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; }
             public Mock<ILinkGenerator> LinkGenerator { get; }
-            public CohortsRequest CohortsRequest { get; }
+            public CohortsByAccountRequest CohortsRequest { get; }
             public CohortsSummaryViewModelMapper Sut { get; }
 
             private Fixture _fixture;
@@ -89,7 +89,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             public WhenMappingCohortsRequestToCohortsViewModelFixture()
             {
                 _fixture = new Fixture();
-                CohortsRequest = _fixture.Create<CohortsRequest>();
+                CohortsRequest = _fixture.Create<CohortsByAccountRequest>();
                 
                 CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
                 CommitmentsApiClient.Setup(x => x.GetCohorts(It.IsAny<GetCohortsRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(CreateGetCohortsResponse());

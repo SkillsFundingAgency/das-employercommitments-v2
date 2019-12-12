@@ -9,7 +9,7 @@ using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class CohortsSummaryViewModelMapper : IMapper<CohortsRequest, CohortsViewModel>
+    public class CohortsSummaryViewModelMapper : IMapper<CohortsByAccountRequest, CohortsViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly ILinkGenerator _linkGenerator;
@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             _linkGenerator = linkGenerator;
         }
 
-        public async Task<CohortsViewModel> Map(CohortsRequest source)
+        public async Task<CohortsViewModel> Map(CohortsByAccountRequest source)
         {
             var cohorts = (await _commitmentsApiClient.GetCohorts(new GetCohortsRequest { AccountId = source.AccountId })).Cohorts;
 

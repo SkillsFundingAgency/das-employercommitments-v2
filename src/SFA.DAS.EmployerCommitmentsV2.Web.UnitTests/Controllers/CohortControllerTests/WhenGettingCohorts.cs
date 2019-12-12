@@ -26,7 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
     public class WhenGettingCohortsFixture
     {
-        private readonly CohortsRequest _request;
+        private readonly CohortsByAccountRequest _request;
         private readonly CohortsViewModel _viewModel;
         private IActionResult _result;
 
@@ -34,11 +34,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             var autoFixture = new Fixture();
 
-            _request = autoFixture.Create<CohortsRequest>();
+            _request = autoFixture.Create<CohortsByAccountRequest>();
             _viewModel = autoFixture.Create<CohortsViewModel>();
 
             var modelMapper = new Mock<IModelMapper>();
-            modelMapper.Setup(x => x.Map<CohortsViewModel>(It.Is<CohortsRequest>(r => r == _request))).ReturnsAsync(_viewModel);
+            modelMapper.Setup(x => x.Map<CohortsViewModel>(It.Is<CohortsByAccountRequest>(r => r == _request))).ReturnsAsync(_viewModel);
 
             CohortController = new CohortController(Mock.Of<ICommitmentsApiClient>(),
                 Mock.Of<ILogger<CohortController>>(),
