@@ -34,15 +34,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountHashedId = source.AccountHashedId,
                 BackLinkUrl = _linkGenerator.Cohorts(source.AccountHashedId),
                 Cohorts = cohortsResponse.Cohorts
-                                            .Where(x => x.GetStatus() == CohortStatus.Review)
-                                            .OrderBy(z => z.CreatedOn)
-                                            .Select(y => new ReviewCohortSummaryViewModel
-                                            {
-                                                CohortReference = _encodingService.Encode(y.CohortId, EncodingType.CohortReference),
-                                                ProviderName = y.ProviderName,
-                                                NumberOfApprentices = y.NumberOfDraftApprentices,
-                                                LastMessage = GetMessage(y.LatestMessageFromProvider)
-                                            }).ToList()
+                    .Where(x => x.GetStatus() == CohortStatus.Review)
+                    .OrderBy(z => z.CreatedOn)
+                    .Select(y => new ReviewCohortSummaryViewModel
+                    {
+                        CohortReference = _encodingService.Encode(y.CohortId, EncodingType.CohortReference),
+                        ProviderName = y.ProviderName,
+                        NumberOfApprentices = y.NumberOfDraftApprentices,
+                        LastMessage = GetMessage(y.LatestMessageFromProvider)
+                    }).ToList()
             };
 
             return reviewViewModel;
