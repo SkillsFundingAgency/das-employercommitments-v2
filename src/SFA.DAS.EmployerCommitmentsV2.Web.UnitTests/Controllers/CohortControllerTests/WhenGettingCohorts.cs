@@ -26,6 +26,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
     public class WhenGettingCohortsFixture
     {
+        public CohortController CohortController { get; set; }
+
         private readonly CohortsByAccountRequest _request;
         private readonly CohortsViewModel _viewModel;
         private IActionResult _result;
@@ -46,8 +48,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 modelMapper.Object,
                 Mock.Of<IAuthorizationService>());
         }
-
-        public CohortController CohortController { get; set; }
 
         public async Task GetCohorts()
         {

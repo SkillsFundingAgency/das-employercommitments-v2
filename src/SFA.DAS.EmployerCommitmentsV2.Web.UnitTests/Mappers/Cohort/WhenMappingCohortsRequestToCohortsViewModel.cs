@@ -161,7 +161,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             private GetCohortsResponse CreateGetCohortsResponse()
             {
-
                 var listInDraft = _fixture.CreateMany<CohortSummary>(5).ToList();
                 PopulateWith(listInDraft, true, Party.Employer);
 
