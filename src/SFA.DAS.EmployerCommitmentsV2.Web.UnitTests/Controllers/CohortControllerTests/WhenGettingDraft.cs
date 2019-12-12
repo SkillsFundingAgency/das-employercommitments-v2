@@ -16,7 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         [Test, MoqAutoData]
         public async Task ThenMapperIsCalled(
             [Frozen] Mock<IModelMapper> modelMapper,
-            DraftRequest request,
+            CohortsByAccountRequest request,
             CohortController controller)
         {
             await controller.Draft(request);
@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         [Test, MoqAutoData]
         public async Task ThenViewIsReturned(
             [Frozen] Mock<IModelMapper> modelMapper,
-            DraftRequest request,
+            CohortsByAccountRequest request,
             DraftViewModel viewModel,
             CohortController controller)
         {

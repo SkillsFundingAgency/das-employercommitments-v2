@@ -33,36 +33,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
     public class WhenGettingCohortsWithTransferSenderFixture
     {
-        private readonly WithTransferSenderRequest _request;
+        private readonly CohortsByAccountRequest _request;
         private readonly WithTransferSenderViewModel _viewModel;
         private IActionResult _result;
-        private readonly string _linkGeneratorResult;
 
         public WhenGettingCohortsWithTransferSenderFixture()
         {
             var autoFixture = new Fixture();
 
-            _request = autoFixture.Create<WithTransferSenderRequest>();
+            _request = autoFixture.Create<CohortsByAccountRequest>();
             _viewModel = autoFixture.Create<WithTransferSenderViewModel>();
 
             var modelMapper = new Mock<IModelMapper>();
-            modelMapper.Setup(x => x.Map<WithTransferSenderViewModel>(It.Is<WithTransferSenderRequest>(r => r == _request)))
+            modelMapper.Setup(x => x.Map<WithTransferSenderViewModel>(It.Is<CohortsByAccountRequest>(r => r == _request)))
                 .ReturnsAsync(_viewModel);
-
-            _linkGeneratorResult = autoFixture.Create<string>();
-            var linkGenerator = new Mock<ILinkGenerator>();
-            linkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>()))
-                .Returns(_linkGeneratorResult);
 
             CohortController = new CohortController(Mock.Of<ICommitmentsApiClient>(),
                 Mock.Of<ILogger<CohortController>>(),
-                linkGenerator.Object,
+                Mock.Of<ILinkGenerator>(),
                 modelMapper.Object,
                 Mock.Of<IAuthorizationService>());
         }
 
         public CohortController CohortController { get; set; }
-
 
         public async Task GetCohortsWithTransferSender()
         {
