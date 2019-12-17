@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
@@ -22,18 +23,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
         public async Task<DeleteDraftApprenticeshipViewModel> Map(DeleteApprenticeshipRequest source)
         {
             var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
-
             if (cohort.WithParty != Party.Employer)
             {
                 throw new CohortEmployerUpdateDeniedException($"Cohort {cohort.CohortId} is not With the Employer");
             }
 
-            var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(source.CohortId, source.DraftApprenticeshipId);
+            // Get all apprenticeships for this cohort and ensure the one we are deleting still exists
+            var draftApprenticeships = (await _commitmentsApiClient.GetDraftApprenticeships(source.CohortId)).DraftApprenticeships;
+            var draftApprenticeship = draftApprenticeships.FirstOrDefault(x => x.Id == source.DraftApprenticeshipId);
+            if (draftApprenticeship == null)
+            {
+                throw new DraftApprenticeshipNotFoundException(
+                    $"DraftApprenticeship Id: {source.DraftApprenticeshipId} not found");
+            }
 
             return new DeleteDraftApprenticeshipViewModel()
             {
                 FirstName = draftApprenticeship.FirstName,
                 LastName = draftApprenticeship.LastName,
+                IsLastApprenticeshipInCohort = draftApprenticeships.Count == 1,
                 AccountHashedId = source.AccountHashedId,
                 DraftApprenticeshipHashedId = source.DraftApprenticeshipHashedId,
                 CohortReference = source.CohortReference,
