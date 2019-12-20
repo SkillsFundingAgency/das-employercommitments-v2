@@ -10,11 +10,8 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
@@ -52,30 +49,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
                 .ForPostRequest()
-                .WithCreatedCohort("ABC123", 123)
-                .WithEnhancedApproval();
+                .WithCreatedCohort("ABC123", 123);
 
             var result = await fixtures.CheckPost();
 
             result.VerifyReturnsRedirectToActionResult().WithActionName("Details");
         }
-
-
-        [Test]
-        public async Task PostAddDraftApprenticeship_WithValidModel_WithoutEnhancedApproval_ShouldRedirectToCohortDetailsV1()
-        {
-            var redirectUrl = "V1CohortDetailsPage";
-
-            var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
-                .ForPostRequest()
-                .WithCreatedCohort("ABC123", 123)
-                .WithReviewCohortLink(redirectUrl);
-
-            var result = await fixtures.CheckPost();
-
-            result.VerifyReturnsRedirect().WithUrl(redirectUrl);
-        }
-
 
         [Test]
         public async Task PostAddDraftApprenticeship_WithValidModel_ShouldSaveCohort()
@@ -103,8 +82,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             ModelMapperMock.Setup(x => x.Map<ApprenticeViewModel>(It.IsAny<ApprenticeRequest>()))
                 .ReturnsAsync(new ApprenticeViewModel());
             AuthorizationServiceMock = new Mock<IAuthorizationService>();
-            AuthorizationServiceMock.Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval))
-                .Returns(false);
         }
 
         public Mock<ILinkGenerator> LinkGeneratorMock { get; }
@@ -160,15 +137,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             CommitmentsApiClientMock.Setup(p => p.GetProvider(1, CancellationToken.None))
                 .ReturnsAsync(response);
-
-            return this;
-        }
-
-        public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithEnhancedApproval()
-        {
-            AuthorizationServiceMock
-                .Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval))
-                .Returns(true);
 
             return this;
         }

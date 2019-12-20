@@ -8,13 +8,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
     {
         public static string Cohorts(this ILinkGenerator linkGenerator, string accountHashedId)
         {
-            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/cohorts");
+            return linkGenerator.CommitmentsV2Link($"{accountHashedId}/unapproved");
         }
 
         public static string CohortDetails(this ILinkGenerator linkGenerator, string accountHashedId,
             string cohortReference)
         {
-            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/{cohortReference}/details");
+            return linkGenerator.CommitmentsV2Link($"{accountHashedId}/unapproved/{cohortReference}");
         }
 
         public static string YourOrganisationsAndAgreements(this ILinkGenerator linkGenerator, string accountHashedId)

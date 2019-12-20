@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                     "with transfer sending employers",
                     _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/with-transfer-sender")),
                 
-                BackLink = _linkGenerator.CommitmentsLink($"accounts/{source.AccountHashedId}/apprentices/home")
+                BackLink = _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved")
             };
         }
     }

@@ -1,8 +1,6 @@
 ﻿using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerUrlHelper;
 
@@ -24,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         {
             var url = _fixture.Sut.Cohorts(accountHashedId);
 
-            Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/cohorts", url);
+            Assert.AreEqual($"{_fixture.CommitmentsV2Link}{accountHashedId}/unapproved", url);
         }
 
         [Test, AutoData]
@@ -32,7 +30,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         {
             var url = _fixture.Sut.CohortDetails(accountHashedId, cohortReference);
 
-            Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/{cohortReference}/details", url);
+            Assert.AreEqual($"{_fixture.CommitmentsV2Link}{accountHashedId}/unapproved/{cohortReference}", url);
         }
 
         [Test, AutoData]
@@ -62,7 +60,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         [Test, AutoData]
         public void DeleteApprentice_BuildsPathCorrectly(string accountHashedId, string cohortReference, string draftApprenticeshipHashedId)
         {
-            _fixture.SetUpForEnhancedApproval(false);
             var url = _fixture.Sut.DeleteApprentice(accountHashedId, cohortReference, draftApprenticeshipHashedId);
 
             Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/{cohortReference}/apprenticeships/{draftApprenticeshipHashedId}/delete", url);
@@ -77,23 +74,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         public string CommitmentsLink => "https://commitments.com/";
         public string CommitmentsV2Link => "https://commitmentsV2.com/";
 
-        public Mock<IAuthorizationService> AuthorizationService;
-
         public ILinkGeneratorExtensionsTestsFixture()
         {
             MockILinkGenerator = new Mock<ILinkGenerator>();
             MockILinkGenerator.Setup(x => x.AccountsLink(It.IsAny<string>())).Returns((string path) => AccountsLink + path);
             MockILinkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns((string path) => CommitmentsLink + path);
             MockILinkGenerator.Setup(x => x.CommitmentsV2Link(It.IsAny<string>())).Returns((string path) => CommitmentsV2Link + path);
-
-            AuthorizationService = new Mock<IAuthorizationService>();
-        }
-
-        public ILinkGeneratorExtensionsTestsFixture SetUpForEnhancedApproval(bool enhancedApproval)
-        {
-            AuthorizationService.Setup(y => y.IsAuthorized(EmployerFeature.EnhancedApproval)).Returns(enhancedApproval);
-
-            return this;
         }
     }
 }

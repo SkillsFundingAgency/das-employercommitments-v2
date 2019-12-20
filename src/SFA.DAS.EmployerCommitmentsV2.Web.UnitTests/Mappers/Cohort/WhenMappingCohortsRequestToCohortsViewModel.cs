@@ -105,7 +105,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             public void VerifyBackLinkIsCorrect(string backLink)
             {
-                Assert.AreEqual($"http://accounts/{CohortsRequest.AccountHashedId}/apprentices/home", backLink);
+                Assert.AreEqual($"http://{CohortsRequest.AccountHashedId}/unapproved", backLink);
             }
 
             public void VerifyCohortsInDraftIsCorrect(CohortsViewModel result)
