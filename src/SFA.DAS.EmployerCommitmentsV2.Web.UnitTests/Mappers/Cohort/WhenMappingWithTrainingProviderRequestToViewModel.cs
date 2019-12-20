@@ -189,7 +189,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
         public void Verify_BackLinkUrl_Is_Mapped()
         {
-            LinkGenerator.Verify(x => x.CommitmentsLink($"accounts/{AccountHashedId}/apprentices/cohorts"), Times.Once);
+            LinkGenerator.Verify(x => x.CommitmentsV2Link($"{AccountHashedId}/unapproved"), Times.Once);
             Assert.AreEqual("BackLinkUrl", WithTrainingProviderViewModel.BackLink);
         }
 

@@ -108,7 +108,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             CommitmentsApiClient.Setup(c => c.GetCohorts(It.Is<GetCohortsRequest>(r => r.AccountId == AccountId), CancellationToken.None)).Returns(Task.FromResult(GetCohortsResponse));
             EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference)).Returns((long y, EncodingType z) => y + "_Encoded");
-            LinkGenerator.Setup(x => x.CommitmentsLink($"accounts/{AccountHashedId}/apprentices/cohorts")).Returns("BackLinkUrl");
+            LinkGenerator.Setup(x => x.CommitmentsV2Link($"{AccountHashedId}/unapproved")).Returns("BackLinkUrl");
 
             Mapper = new DraftRequestMapper(CommitmentsApiClient.Object, EncodingService.Object, LinkGenerator.Object);
         }
@@ -155,7 +155,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
         public void Verify_BackLinkUrl_Is_Mapped()
         {
-            LinkGenerator.Verify(x => x.CommitmentsLink($"accounts/{AccountHashedId}/apprentices/cohorts"), Times.Once);
+            LinkGenerator.Verify(x => x.CommitmentsV2Link($"{AccountHashedId}/unapproved"), Times.Once);
             Assert.AreEqual("BackLinkUrl", DraftViewModel.BackLink);
         }
 
