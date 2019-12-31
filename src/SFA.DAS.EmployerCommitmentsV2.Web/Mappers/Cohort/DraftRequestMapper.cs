@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
@@ -13,14 +13,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     public class DraftRequestMapper : IMapper<CohortsByAccountRequest, DraftViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly ILinkGenerator _linkGenerator;
         private readonly IEncodingService _encodingService;
+        private readonly IUrlHelper _urlHelper;
 
-        public DraftRequestMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, ILinkGenerator linkGenerator)
+        public DraftRequestMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, IUrlHelper urlHelper)
         {
             _commitmentsApiClient = commitmentsApiClient;
-            _linkGenerator = linkGenerator;
             _encodingService = encodingService;
+            _urlHelper = urlHelper;
         }
 
         public async Task<DraftViewModel> Map(CohortsByAccountRequest source)
@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountHashedId = source.AccountHashedId,
                 AccountId = source.AccountId,
                 Cohorts = cohorts,
-                BackLink = _linkGenerator.Cohorts(source.AccountHashedId)
+                BackLink = _urlHelper.Action("Cohorts", "Cohort", new {source.AccountHashedId})
             };
         }
     }

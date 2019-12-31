@@ -11,7 +11,8 @@ using System.Threading;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using System.Threading.Tasks;
 using AutoFixture;
-using SFA.DAS.EmployerUrlHelper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -25,7 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var f = new WhenMappingCohortsRequestToCohortsViewModelFixture();
             var result = await f.Sut.Map(f.CohortsRequest);
 
-            f.VerifyBackLinkIsCorrect(result.BackLink);
+            f.VerifyBackLinkRouteIsCalled(result.BackLink);
         }
 
         [Test]
@@ -76,7 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public class WhenMappingCohortsRequestToCohortsViewModelFixture
         {
             public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; }
-            public Mock<ILinkGenerator> LinkGenerator { get; }
+            public Mock<IUrlHelper> UrlHelper { get; }
             public CohortsByAccountRequest CohortsRequest { get; }
             public CohortsSummaryViewModelMapper Sut { get; }
 
@@ -89,12 +90,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 
                 CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
                 CommitmentsApiClient.Setup(x => x.GetCohorts(It.IsAny<GetCohortsRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(CreateGetCohortsResponse());
-                
-                LinkGenerator = new Mock<ILinkGenerator>();
-                LinkGenerator.Setup(x => x.CommitmentsV2Link(It.IsAny<string>())).Returns<string>(p => $"http://{p}");
-                LinkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns<string>(p => $"http://{p}");
 
-                Sut = new CohortsSummaryViewModelMapper(CommitmentsApiClient.Object, LinkGenerator.Object);
+                UrlHelper = new Mock<IUrlHelper>();
+                UrlHelper.Setup(x => x.Action(It.IsAny<UrlActionContext>())).Returns<UrlActionContext>((ac) => $"http://{ac.Controller}/{ac.Action}/");
+
+                Sut = new CohortsSummaryViewModelMapper(CommitmentsApiClient.Object, UrlHelper.Object);
             }
 
             public WhenMappingCohortsRequestToCohortsViewModelFixture WithNoCohortsFound()
@@ -103,9 +103,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 return this;
             }
 
-            public void VerifyBackLinkIsCorrect(string backLink)
+            public void VerifyBackLinkRouteIsCalled(string backLink)
             {
-                Assert.AreEqual($"http://{CohortsRequest.AccountHashedId}/unapproved", backLink);
+                UrlHelper.Verify(x=>x.Action(It.Is<UrlActionContext>(p=>p.Controller == "Cohort" && p.Action == "Cohorts")));
             }
 
             public void VerifyCohortsInDraftIsCorrect(CohortsViewModel result)
@@ -113,7 +113,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 Assert.IsNotNull(result.CohortsInDraft);
                 Assert.AreEqual(5, result.CohortsInDraft.Count);
                 Assert.AreEqual("drafts", result.CohortsInDraft.Description);
-                Assert.AreEqual($"http://{CohortsRequest.AccountHashedId}/unapproved/draft", result.CohortsInDraft.Url);
+                UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "Draft")));
             }
 
             public void VerifyCohortsInReviewIsCorrect(CohortsViewModel result)
@@ -121,7 +121,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 Assert.IsNotNull(result.CohortsInReview);
                 Assert.AreEqual(4, result.CohortsInReview.Count);
                 Assert.AreEqual("ready to review", result.CohortsInReview.Description);
-                Assert.AreEqual($"http://{CohortsRequest.AccountHashedId}/unapproved/review", result.CohortsInReview.Url);
+                UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "Review")));
             }
 
             public void VerifyCohortsWithProviderIsCorrect(CohortsViewModel result)
@@ -129,7 +129,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 Assert.IsNotNull(result.CohortsWithTrainingProvider);
                 Assert.AreEqual(3, result.CohortsWithTrainingProvider.Count);
                 Assert.AreEqual("with providers", result.CohortsWithTrainingProvider.Description);
-                Assert.AreEqual($"http://{CohortsRequest.AccountHashedId}/unapproved/with-training-provider", result.CohortsWithTrainingProvider.Url);
+                UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "WithTrainingProvider")));
             }
 
             public void VerifyCohortsWithTransferSenderIsCorrect(CohortsViewModel result)
@@ -137,7 +137,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 Assert.IsNotNull(result.CohortsWithTransferSender);
                 Assert.AreEqual(2, result.CohortsWithTransferSender.Count);
                 Assert.AreEqual("with transfer sending employers", result.CohortsWithTransferSender.Description);
-                Assert.AreEqual($"http://{CohortsRequest.AccountHashedId}/unapproved/with-transfer-sender", result.CohortsWithTransferSender.Url);
+                UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "WithTransferSender")));
             }
 
             public void VerifyNoDrillDownLinks(CohortsViewModel result)

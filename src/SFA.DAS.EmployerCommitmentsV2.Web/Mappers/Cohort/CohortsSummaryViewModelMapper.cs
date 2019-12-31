@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
@@ -12,12 +13,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     public class CohortsSummaryViewModelMapper : IMapper<CohortsByAccountRequest, CohortsViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly ILinkGenerator _linkGenerator;
+        private readonly IUrlHelper _urlHelper;
 
-        public CohortsSummaryViewModelMapper(ICommitmentsApiClient commitmentApiClient, ILinkGenerator linkGenerator)
+        public CohortsSummaryViewModelMapper(ICommitmentsApiClient commitmentApiClient, IUrlHelper urlHelper)
         {
             _commitmentsApiClient = commitmentApiClient;
-            _linkGenerator = linkGenerator;
+            _urlHelper = urlHelper;
         }
 
         public async Task<CohortsViewModel> Map(CohortsByAccountRequest source)
@@ -29,21 +30,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 CohortsInDraft = new CohortCardLinkViewModel(
                     cohorts.Count(x => x.GetStatus() == CohortStatus.Draft),
                     "drafts", 
-                    _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/draft")),
+                    _urlHelper.Action("Draft", "Cohort", new { source.AccountHashedId })),
                 CohortsInReview = new CohortCardLinkViewModel(
                     cohorts.Count(x => x.GetStatus() == CohortStatus.Review),
                     "ready to review", 
-                    _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/review")),
+                    _urlHelper.Action("Review", "Cohort", new { source.AccountHashedId })),
                 CohortsWithTrainingProvider = new CohortCardLinkViewModel(
                     cohorts.Count(x => x.GetStatus() == CohortStatus.WithProvider), 
                     "with providers",
-                    _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/with-training-provider")),
+                    _urlHelper.Action("WithTrainingProvider", "Cohort", new { source.AccountHashedId })),
                 CohortsWithTransferSender = new CohortCardLinkViewModel(
                     cohorts.Count(x => x.GetStatus() == CohortStatus.WithTransferSender),
                     "with transfer sending employers",
-                    _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/with-transfer-sender")),
-                
-                BackLink = _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved")
+                    _urlHelper.Action("WithTransferSender", "Cohort", new { source.AccountHashedId })),
+
+                BackLink = _urlHelper.Action("Cohorts", "Cohort", new {source.AccountHashedId})
             };
         }
     }

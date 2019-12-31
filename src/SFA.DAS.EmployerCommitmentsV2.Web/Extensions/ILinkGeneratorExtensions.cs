@@ -1,16 +1,9 @@
-using SFA.DAS.Authorization.Services;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 {
     public static class ILinkGeneratorExtensions
     {
-        public static string Cohorts(this ILinkGenerator linkGenerator, string accountHashedId)
-        {
-            return linkGenerator.CommitmentsV2Link($"{accountHashedId}/unapproved");
-        }
-
         public static string CohortDetails(this ILinkGenerator linkGenerator, string accountHashedId,
             string cohortReference)
         {
