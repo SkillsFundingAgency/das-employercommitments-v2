@@ -9,9 +9,7 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {
@@ -72,7 +70,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public DetailsTestFixture()
         {
             CommitmentsServiceMock = new Mock<ICommitmentsService>();
-            LinkGeneratorMock = new Mock<ILinkGenerator>();
             ViewModel = new Mock<IDraftApprenticeshipViewModel>();
 
             DetailsRequest = new DetailsRequest
@@ -105,14 +102,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 .ReturnsAsync(ViewModel.Object);
 
             Sut = new DraftApprenticeshipController(CommitmentsServiceMock.Object,
-                LinkGeneratorMock.Object,
                 ModelMapperMock.Object,
                 Mock.Of<ICommitmentsApiClient>());
         }
 
         public Mock<ICommitmentsService> CommitmentsServiceMock { get; }
         public Mock<IModelMapper> ModelMapperMock { get; }
-        public Mock<ILinkGenerator> LinkGeneratorMock { get; }
         public CohortDetails CohortDetails { get; private set; }
         public string AccountHashedId => "ACHID";
         public long CohortId => 1;
@@ -124,15 +119,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public List<ErrorDetail> ApiErrors { get; private set; }
         public DetailsRequest DetailsRequest;
         public Mock<IDraftApprenticeshipViewModel> ViewModel;
-
-        public DetailsTestFixture WithCohortLink(string url)
-        {
-            LinkGeneratorMock
-                .Setup(lg => lg.CommitmentsLink(It.IsAny<string>()))
-                .Returns(url);
-
-            return this;
-        }
 
         public DetailsTestFixture WithCohortWithOtherParty()
         {
@@ -148,15 +134,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             return this;
         }
 
-        public DetailsTestFixture WithViewApprenticeLink(string url)
-        {
-            LinkGeneratorMock
-                .Setup(lg => lg.CommitmentsLink(It.IsAny<string>()))
-                .Returns(url);
-
-            return this;
-        }
-
         public DetailsTestFixture WithDraftApprenticeship(EditDraftApprenticeshipDetails details = null)
         {
             var returnValue = details ?? EditDraftApprenticeshipDetails;
@@ -168,15 +145,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             return this;
         }
 
-        public DetailsTestFixture WithUpdateDraftApprenticeshipDomainError()
-        {
-            CommitmentsServiceMock
-                .Setup(cs => cs.UpdateDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<UpdateDraftApprenticeshipRequest>()))
-                .ThrowsAsync(new CommitmentsApiModelException(ApiErrors));
-
-            return this;
-        }
-
         public DetailsTestFixture WithCohort(CohortDetails cohortDetails = null)
         {
             var returnValue = cohortDetails ?? CohortDetails;
@@ -184,30 +152,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             CommitmentsServiceMock
                 .Setup(cs => cs.GetCohortDetail(It.IsAny<long>()))
                 .ReturnsAsync(returnValue);
-
-            return this;
-        }
-        public DetailsTestFixture WithTransferCohort()
-        {
-            var returnValue = new CohortDetails { CohortId = CohortId, HashedCohortId = CohortReference, IsFundedByTransfer = true, WithParty = Party.Employer };
-
-            CommitmentsServiceMock
-                .Setup(cs => cs.GetCohortDetail(It.IsAny<long>()))
-                .ReturnsAsync(returnValue);
-
-            return this;
-        }
-
-        public DetailsTestFixture WithModelStateError()
-        {
-            Sut.ModelState.AddModelError("AKey", "Some Error");
-            return this;
-        }
-
-        public DetailsTestFixture WithOtherParty()
-        {
-            ModelMapperMock.Setup(x => x.Map<EditDraftApprenticeshipViewModel>(It.IsAny<EditDraftApprenticeshipRequest>()))
-                .Throws(new CohortEmployerUpdateDeniedException("Cohort With Other Party"));
 
             return this;
         }

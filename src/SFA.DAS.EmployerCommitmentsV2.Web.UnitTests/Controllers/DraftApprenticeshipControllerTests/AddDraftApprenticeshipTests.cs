@@ -17,7 +17,6 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
@@ -44,8 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 f => f.SetCohortWithOtherParty(),
                 f => f.Get(),
                 (f, r) => r.Should().NotBeNull()
-                    .And.BeOfType<RedirectResult>().Which
-                    .Url.Should().Be(f.CohortDetailsUrl));
+                    .And.BeEquivalentTo(new {ActionName = "Details", ControllerName = "Cohort"}, op => op.ExcludingMissingMembers()));
         }
 
         [Test]
@@ -80,7 +78,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClient { get; set; }
         public Mock<IModelMapper> ModelMapper { get; set; }
-        public Mock<ILinkGenerator> LinkGenerator { get; set; }
         public Mock<IAuthorizationService> AuthorizationService { get; set; }
         public DraftApprenticeshipController Controller { get; set; }
 
@@ -126,11 +123,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             TrainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
             ModelMapper = new Mock<IModelMapper>();
-            LinkGenerator = new Mock<ILinkGenerator>();
             
             Controller = new DraftApprenticeshipController(
                 CommitmentsService.Object, 
-                LinkGenerator.Object,
                 ModelMapper.Object,
                 CommitmentsApiClient.Object);
 
@@ -140,8 +135,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             ModelMapper.Setup(m => m.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(ViewModel)).Returns(Task.FromResult(AddDraftApprenticeshipRequest));
 
             ModelMapper.Setup(m => m.Map<AddDraftApprenticeshipViewModel>(It.IsAny<AddDraftApprenticeshipRequest>())).ReturnsAsync(ViewModel);
-
-            LinkGenerator.Setup(g => g.CommitmentsV2Link(CohortDetailsUrl)).Returns(CohortDetailsUrl);
         }
 
         public Task<IActionResult> Get()

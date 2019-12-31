@@ -75,5 +75,5 @@
 
 @section Back
 {
-    <a class="govuk-back-link" href="@Url.CommitmentsV2Link($"{Model.AccountHashedId}/unapproved/{Model.CohortReference}")">Back</a>
+    <a class="govuk-back-link" href="@Url.Action("Details", "Cohort", new {Model.AccountHashedId, Model.CohortReference})">Back</a>
 }

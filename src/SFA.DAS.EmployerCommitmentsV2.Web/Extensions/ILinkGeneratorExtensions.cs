@@ -4,12 +4,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 {
     public static class ILinkGeneratorExtensions
     {
-        public static string CohortDetails(this ILinkGenerator linkGenerator, string accountHashedId,
-            string cohortReference)
-        {
-            return linkGenerator.CommitmentsV2Link($"{accountHashedId}/unapproved/{cohortReference}");
-        }
-
         public static string YourOrganisationsAndAgreements(this ILinkGenerator linkGenerator, string accountHashedId)
         {
             return linkGenerator.AccountsLink($"accounts/{accountHashedId}/agreements");

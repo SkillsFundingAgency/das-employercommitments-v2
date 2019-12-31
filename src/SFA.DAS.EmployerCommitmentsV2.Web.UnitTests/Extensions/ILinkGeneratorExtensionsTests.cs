@@ -18,14 +18,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         }
 
         [Test, AutoData]
-        public void CohortDetails_BuildsPathCorrectly(string accountHashedId, string cohortReference)
-        {
-            var url = _fixture.Sut.CohortDetails(accountHashedId, cohortReference);
-
-            Assert.AreEqual($"{_fixture.CommitmentsV2Link}{accountHashedId}/unapproved/{cohortReference}", url);
-        }
-
-        [Test, AutoData]
         public void YourOrganisationsAndAgreements_BuildsPathCorrectly(string accountHashedId)
         {
             var url = _fixture.Sut.YourOrganisationsAndAgreements(accountHashedId);
@@ -64,14 +56,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         public ILinkGenerator Sut => MockILinkGenerator.Object;
         public string AccountsLink => "https://accounts.com/";
         public string CommitmentsLink => "https://commitments.com/";
-        public string CommitmentsV2Link => "https://commitmentsV2.com/";
 
         public ILinkGeneratorExtensionsTestsFixture()
         {
             MockILinkGenerator = new Mock<ILinkGenerator>();
             MockILinkGenerator.Setup(x => x.AccountsLink(It.IsAny<string>())).Returns((string path) => AccountsLink + path);
             MockILinkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns((string path) => CommitmentsLink + path);
-            MockILinkGenerator.Setup(x => x.CommitmentsV2Link(It.IsAny<string>())).Returns((string path) => CommitmentsV2Link + path);
         }
     }
 }

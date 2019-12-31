@@ -132,7 +132,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
     public class DeleteDraftApprenticeshipTestsFixture
     {
         public Mock<ICommitmentsApiClient> CommitmentApiClient { get; }
-        public Mock<ILinkGenerator> LinkGeneratorMock { get; }
         public string AccountHashedId => "ACHID";
         public long CohortId => 1;
         public string CohortReference => "CHREF";
@@ -150,9 +149,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             CommitmentApiClient = new Mock<ICommitmentsApiClient>();
             CommitmentApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetCohortResponse());
 
-            LinkGeneratorMock = new Mock<ILinkGenerator>();
-            LinkGeneratorMock.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns<string>(s => s);
-
             var deleteDraftApprenticeshipViewModel = new DeleteDraftApprenticeshipViewModel
             {
                 FirstName = "John",
@@ -167,7 +163,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 .ReturnsAsync(deleteDraftApprenticeshipViewModel);
 
             Sut = new DraftApprenticeshipController(Mock.Of<ICommitmentsService>(),
-                LinkGeneratorMock.Object,
                 ModelMapperMock.Object,
                 CommitmentApiClient.Object);
             Sut.TempData = new Mock<ITempDataDictionary>().Object;

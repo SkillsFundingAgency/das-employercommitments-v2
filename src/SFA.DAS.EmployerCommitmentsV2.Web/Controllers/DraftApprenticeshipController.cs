@@ -9,7 +9,6 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerUrlHelper;
 using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
 using System;
 using SFA.DAS.Http;
@@ -22,17 +21,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     {
         private readonly ICommitmentsService _commitmentsService;
         private readonly IModelMapper _modelMapper;
-        private readonly ILinkGenerator _linkGenerator;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         public const string ApprenticeDeletedMessage = "Apprentice record deleted";
 
         public DraftApprenticeshipController(
             ICommitmentsService commitmentsService,
-            ILinkGenerator linkGenerator,
             IModelMapper modelMapper, ICommitmentsApiClient commitmentsApiClient)
         {
             _commitmentsService = commitmentsService;
-            _linkGenerator = linkGenerator;
             _modelMapper = modelMapper;
             _commitmentsApiClient = commitmentsApiClient;
         }
@@ -48,7 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
             catch (CohortEmployerUpdateDeniedException)
             {
-                return Redirect(_linkGenerator.CohortDetails(request.AccountHashedId, request.CohortReference));
+                return RedirectToAction("Details", "Cohort", new { request.AccountHashedId, request.CohortReference });
             }
         }
 
