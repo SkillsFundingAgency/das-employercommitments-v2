@@ -15,13 +15,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     public class ReviewRequestViewModelMapper : IMapper<CohortsByAccountRequest, ReviewViewModel>
     {
         private readonly IEncodingService _encodingService;
-        private readonly IUrlHelper _urlHelper;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
 
-        public ReviewRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary, IUrlHelper urlHelper)
+        public ReviewRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary)
         {
             _encodingService = encodingSummary;
-            _urlHelper = urlHelper;
             _commitmentsApiClient = commitmentApiClient;
         }
 
@@ -32,7 +30,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var reviewViewModel = new ReviewViewModel
             {
                 AccountHashedId = source.AccountHashedId,
-                BackLinkUrl = _urlHelper.Action("Cohorts", "Cohort", new { source.AccountHashedId }),
                 Cohorts = cohortsResponse.Cohorts
                     .Where(x => x.GetStatus() == CohortStatus.Review)
                     .OrderBy(z => z.CreatedOn)

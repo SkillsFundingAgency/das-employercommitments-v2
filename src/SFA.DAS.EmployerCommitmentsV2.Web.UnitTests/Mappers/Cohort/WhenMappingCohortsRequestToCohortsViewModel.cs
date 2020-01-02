@@ -21,15 +21,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     public class WhenMappingCohortsRequestToCohortsViewModel
     {
         [Test]
-        public async Task TheBackIsPopulatedCorrectly()
-        {
-            var f = new WhenMappingCohortsRequestToCohortsViewModelFixture();
-            var result = await f.Sut.Map(f.CohortsRequest);
-
-            f.VerifyBackLinkRouteIsCalled(result.BackLink);
-        }
-
-        [Test]
         public async Task TheCohortsInDraftIsPopulatedCorrectly()
         {
             var f = new WhenMappingCohortsRequestToCohortsViewModelFixture();
@@ -101,11 +92,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             {
                 CommitmentsApiClient.Setup(x => x.GetCohorts(It.IsAny<GetCohortsRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetCohortsResponse(new List<CohortSummary>()));
                 return this;
-            }
-
-            public void VerifyBackLinkRouteIsCalled(string backLink)
-            {
-                UrlHelper.Verify(x=>x.Action(It.Is<UrlActionContext>(p=>p.Controller == "Cohort" && p.Action == "Cohorts")));
             }
 
             public void VerifyCohortsInDraftIsCorrect(CohortsViewModel result)

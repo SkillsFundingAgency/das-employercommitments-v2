@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.CohortsViewModel
+﻿@using SFA.DAS.EmployerUrlHelper.Mvc
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.CohortsViewModel
 
 @{
     ViewData["Title"] = "Your cohorts - Manage Apprentices";
@@ -22,5 +23,5 @@
 
 @section Back
 {
-    <a id="back-link" class="govuk-back-link" href="@Model.BackLink">Back</a>
+    <a id="back-link" class="govuk-back-link" href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/home")">Back to Apprentices</a>
 }

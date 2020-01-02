@@ -73,22 +73,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             fixture.Verify_AccountHashedId_IsMapped();
         }
-
-        [Test]
-        public void Then_BacklinkUrl_IsMapped()
-        {
-            var fixture = new WhenMappingDraftRequestToViewModelFixture();
-            fixture.Map();
-
-            fixture.Verify_BackLinkUrl_Is_Mapped();
-        }
     }
 
     public class WhenMappingDraftRequestToViewModelFixture
     {
         public Mock<IEncodingService> EncodingService { get; set; }
         public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
-        public Mock<IUrlHelper> UrlHelper { get; set; }
         public CohortsByAccountRequest DraftRequest { get; set; }
         public GetCohortsResponse GetCohortsResponse { get; set; }
         public DraftRequestMapper Mapper { get; set; }
@@ -102,16 +92,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             EncodingService = new Mock<IEncodingService>();
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            UrlHelper = new Mock<IUrlHelper>();
 
             DraftRequest = new CohortsByAccountRequest() { AccountId = AccountId, AccountHashedId = AccountHashedId };
             GetCohortsResponse = CreateGetCohortsResponse();
 
             CommitmentsApiClient.Setup(c => c.GetCohorts(It.Is<GetCohortsRequest>(r => r.AccountId == AccountId), CancellationToken.None)).Returns(Task.FromResult(GetCohortsResponse));
             EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference)).Returns((long y, EncodingType z) => y + "_Encoded");
-            UrlHelper.Setup(x => x.Action(It.IsAny<UrlActionContext>())).Returns("BackLinkUrl");
 
-            Mapper = new DraftRequestMapper(CommitmentsApiClient.Object, EncodingService.Object, UrlHelper.Object);
+            Mapper = new DraftRequestMapper(CommitmentsApiClient.Object, EncodingService.Object);
         }
 
         public WhenMappingDraftRequestToViewModelFixture Map()
@@ -152,12 +140,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             Assert.AreEqual("3_Encoded", DraftViewModel.Cohorts.First().CohortReference);
             Assert.AreEqual("2_Encoded", DraftViewModel.Cohorts.Last().CohortReference);
-        }
-
-        public void Verify_BackLinkUrl_Is_Mapped()
-        {
-            UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p=>p.Controller == "Cohort" && p.Action == "Cohorts")), Times.Once);
-            Assert.AreEqual("BackLinkUrl", DraftViewModel.BackLink);
         }
 
         public void Verify_AccountHashedId_IsMapped()

@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var fixture = new WhenMappingReviewRequestToViewModelFixture();
             fixture.Map();
 
-            fixture.Verify_CohortRefrence_Is_Mapped();
+            fixture.Verify_CohortReference_Is_Mapped();
         }
 
         [Test]
@@ -82,22 +82,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             fixture.Verify_AccountHashedId_IsMapped();
         }
-
-        [Test]
-        public void Then_BacklinkUrl_IsMapped()
-        {
-            var fixture = new WhenMappingReviewRequestToViewModelFixture();
-            fixture.Map();
-
-            fixture.Verify_BackLinkUrl_Is_Mapped();
-        }
     }
 
     public class WhenMappingReviewRequestToViewModelFixture
     {
         public Mock<IEncodingService> EncodingService { get; set; }
         public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
-        public Mock<IUrlHelper> UrlHelper { get; set; }
         public CohortsByAccountRequest ReviewRequest { get; set; }
         public GetCohortsResponse GetCohortsResponse { get; set; }
         public ReviewRequestViewModelMapper Mapper { get; set; }
@@ -111,16 +101,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             EncodingService = new Mock<IEncodingService>();
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            UrlHelper = new Mock<IUrlHelper>();
 
             ReviewRequest = new CohortsByAccountRequest() { AccountId = AccountId, AccountHashedId = AccountHashedId };
             GetCohortsResponse = CreateGetCohortsResponse();
            
             CommitmentsApiClient.Setup(c => c.GetCohorts(It.Is<GetCohortsRequest>(r => r.AccountId == AccountId), CancellationToken.None)).Returns(Task.FromResult(GetCohortsResponse));
             EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference)).Returns((long y, EncodingType z) => y + "_Encoded");
-            UrlHelper.Setup(x => x.Action(It.IsAny<UrlActionContext>())).Returns("BackLinkUrl");
 
-            Mapper = new ReviewRequestViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, UrlHelper.Object);
+            Mapper = new ReviewRequestViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object);
         }
 
         public WhenMappingReviewRequestToViewModelFixture Map()
@@ -137,7 +125,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.IsNotNull(GetCohortInReviewViewModel(2));
         }
 
-        public void Verify_CohortRefrence_Is_Mapped()
+        public void Verify_CohortReference_Is_Mapped()
         {
             EncodingService.Verify(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference), Times.Exactly(2));
 
@@ -167,12 +155,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             Assert.AreEqual("2_Encoded",ReviewViewModel.Cohorts.First().CohortReference);
             Assert.AreEqual("1_Encoded", ReviewViewModel.Cohorts.Last().CohortReference);
-        }
-
-        public void Verify_BackLinkUrl_Is_Mapped()
-        {
-            UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "Cohorts")), Times.Once);
-            Assert.AreEqual("BackLinkUrl", ReviewViewModel.BackLinkUrl);
         }
 
         public void Verify_AccountHashedId_IsMapped()

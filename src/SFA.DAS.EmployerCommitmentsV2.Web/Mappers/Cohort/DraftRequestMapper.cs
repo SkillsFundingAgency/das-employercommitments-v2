@@ -14,13 +14,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
-        private readonly IUrlHelper _urlHelper;
 
-        public DraftRequestMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, IUrlHelper urlHelper)
+        public DraftRequestMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
-            _urlHelper = urlHelper;
         }
 
         public async Task<DraftViewModel> Map(CohortsByAccountRequest source)
@@ -42,8 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             {
                 AccountHashedId = source.AccountHashedId,
                 AccountId = source.AccountId,
-                Cohorts = cohorts,
-                BackLink = _urlHelper.Action("Cohorts", "Cohort", new {source.AccountHashedId})
+                Cohorts = cohorts
             };
         }
     }

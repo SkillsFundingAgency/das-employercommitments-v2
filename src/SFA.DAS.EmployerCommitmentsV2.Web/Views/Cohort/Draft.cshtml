@@ -6,41 +6,42 @@
 
 <div class="govuk-grid-row">
 
-        <div class="govuk-grid-row">
-            <div class="govuk-width-container">
-                <h1 class="govuk-heading-xl">Draft apprentice details</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-width-container">
+            <h1 class="govuk-heading-xl">Draft apprentice details</h1>
 
-                <table class="govuk-table das-table--responsive">
-                    <thead class="govuk-table__head">
+            <table class="govuk-table das-table--responsive">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header das-table-cell-width-25">Training provider</th>
+                        <th scope="col" class="govuk-table__header das-table-cell-width-25">Reference</th>
+                        <th scope="col" class="govuk-table__header das-table-cell-width-25 govuk-table__header--numeric">Number of apprentices</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-25"></th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+
+                    @foreach (var cohort in Model.Cohorts)
+                    {
+
                         <tr class="govuk-table__row">
-                            <th scope="col" class="govuk-table__header das-table-cell-width-25">Training provider</th>
-                            <th scope="col" class="govuk-table__header das-table-cell-width-25">Reference</th>
-                            <th scope="col" class="govuk-table__header das-table-cell-width-25 govuk-table__header--numeric">Number of apprentices</th>
-                            <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-25"></th>
+                            <td class="govuk-table__cell" data-label="Training provider">@cohort.ProviderName</td>
+                            <td class="govuk-table__cell" data-label="Reference">@cohort.CohortReference</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfApprentices</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" data-label="">
+                                @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohort.CohortReference }, new { @class = "govuk-link cohort-details-link" })
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
+                    }
 
-                        @foreach (var cohort in Model.Cohorts)
-                        {
+                </tbody>
+            </table>
 
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell" data-label="Training provider">@cohort.ProviderName</td>
-                                <td class="govuk-table__cell" data-label="Reference">@cohort.CohortReference</td>
-                                <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfApprentices</td>
-                                <td class="govuk-table__cell govuk-table__cell--numeric" data-label="">
-                                    @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohort.CohortReference }, new { @class = "govuk-link cohort-details-link" })</td>
-                            </tr>
-                        }
-
-                    </tbody>
-                </table>
-
-            </div>
         </div>
+    </div>
 </div>
 
 @section Back
 {
-    <a id="back-link" class="govuk-back-link" href="@Model.BackLink" >Back</a>
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Cohorts", "Cohort", new { Model.AccountHashedId})">Back</a>
 }

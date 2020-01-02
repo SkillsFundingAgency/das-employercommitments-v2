@@ -27,6 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
             return new CohortsViewModel
             {
+                AccountHashedId = source.AccountHashedId,
                 CohortsInDraft = new CohortCardLinkViewModel(
                     cohorts.Count(x => x.GetStatus() == CohortStatus.Draft),
                     "drafts", 
@@ -42,9 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 CohortsWithTransferSender = new CohortCardLinkViewModel(
                     cohorts.Count(x => x.GetStatus() == CohortStatus.WithTransferSender),
                     "with transfer sending employers",
-                    _urlHelper.Action("WithTransferSender", "Cohort", new { source.AccountHashedId })),
-
-                BackLink = _urlHelper.Action("Cohorts", "Cohort", new {source.AccountHashedId})
+                    _urlHelper.Action("WithTransferSender", "Cohort", new { source.AccountHashedId }))
             };
         }
     }
