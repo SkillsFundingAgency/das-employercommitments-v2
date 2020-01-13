@@ -8,23 +8,23 @@
 }
 
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>@ViewData["Title"]</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0b0c0c"/>
+    <meta name="theme-color" content="#0b0c0c" />
 
-    <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon"/>
-    <link rel="mask-icon" href="/assets/images/govuk-mask-icon.svg" color="#0b0c0c"/>
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/govuk-apple-touch-icon-180x180.png"/>
-    <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/govuk-apple-touch-icon-167x167.png"/>
-    <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png"/>
-    <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png"/>
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon" />
+    <link rel="mask-icon" href="/assets/images/govuk-mask-icon.svg" color="#0b0c0c" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/govuk-apple-touch-icon-180x180.png" />
+    <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/govuk-apple-touch-icon-167x167.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png" />
 
     <!--[if !IE 8]><!-->
-    <link href="/css/main.css" rel="stylesheet"/>
+    <link href="/css/main.css" rel="stylesheet" />
     <!--<![endif]-->
 
-    <meta property="og:image" content="/assets/images/govuk-opengraph-image.png"/>
+    <meta property="og:image" content="/assets/images/govuk-opengraph-image.png" />
 </head>
 <body class="govuk-template__body">
     <script>
@@ -33,18 +33,20 @@
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
     <partial name="_Header" />
     <partial name="_Menu" model="@accountHashedId" />
-<div class="govuk-width-container">
-    @if (IsSectionDefined("Back"))
-    {
-        @RenderSection("Back")
-    }
-    <main class="govuk-main-wrapper " id="main-content" role="main">
-        <partial name="_FlashMessagePartial"/>
-        @RenderBody()
-    </main>
-</div>
+    <div class="govuk-width-container">
+        @if (IsSectionDefined("Back"))
+        {
+            @RenderSection("Back")
+        }
+        <main class="govuk-main-wrapper " id="main-content" role="main">
+            <partial name="_FlashMessagePartial" />
+            @RenderBody()
+        </main>
+    </div>
 
     <partial name="_Footer" />
+    <partial name="GoogleAnalyticsInfo"/>
+
 
     <script src="/libs/govuk-frontend/all.js"></script>
     <script src="/libs/jquery/jquery.min.js"></script>
@@ -53,7 +55,7 @@
 
     <script>
         window.GOVUKFrontend.initAll();
-            window.DASFrontend.initAll();
+        window.DASFrontend.initAll();
     </script>
 
     @RenderSection("Scripts", required: false)
