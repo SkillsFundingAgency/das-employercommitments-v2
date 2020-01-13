@@ -9,8 +9,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
 
         public string Vpv { get; set; }
         public string Acc { get; set; }
-        public string UkPrn { get; set; }
-
         public IDictionary<string, string> Extras { get; set; } = new Dictionary<string, string>();
     }
 }
