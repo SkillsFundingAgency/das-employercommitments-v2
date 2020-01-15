@@ -9,6 +9,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public string AccountHashedId { get; set; }
         public string DraftApprenticeshipHashedId { get; set; }
         public long? DraftApprenticeshipId { get; set; }
+        public bool IsLastApprenticeshipInCohort { get; set; }
         public string BackLink { get; set; }
         public bool? ConfirmDelete { get; set; }
         [FromQuery]
