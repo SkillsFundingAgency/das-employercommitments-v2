@@ -37,7 +37,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Filters
                 Acc = hashedAccountId
             };
         }
-
-        public string DataLoaded { get; set; }
     }
 }
