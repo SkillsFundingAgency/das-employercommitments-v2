@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Filters
         {
             string hashedAccountId = null;
 
-            var userId = context.HttpContext.User.Claims.First(c => c.Type.Equals(EmployeeClaims.Id)).Value;
+            var userId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(EmployeeClaims.Id))?.Value;
 
             if (context.RouteData.Values.TryGetValue("AccountHashedId", out var accountHashedId))
             {
