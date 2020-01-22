@@ -35,8 +35,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                     "ready to review", 
                     _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/review")),
                 CohortsWithTrainingProvider = new CohortCardLinkViewModel(
-                    cohorts.Count(x => x.GetStatus() == CohortStatus.WithProvider), 
-                    "with providers",
+                    cohorts.Count(x => x.GetStatus() == CohortStatus.WithProvider),
+                    "with training providers",
                     _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/with-training-provider")),
                 CohortsWithTransferSender = new CohortCardLinkViewModel(
                     cohorts.Count(x => x.GetStatus() == CohortStatus.WithTransferSender),
