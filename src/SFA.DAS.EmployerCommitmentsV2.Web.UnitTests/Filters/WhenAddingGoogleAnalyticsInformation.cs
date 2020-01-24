@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Filters
         }
 
         [Test, MoqAutoData]
-        public async Task Then_If_The_Controller_Is_Not_A_Controller_No_Data_Is_Added_To_ViewBag(
+        public async Task And_Context_Is_Non_Controller_Then_No_Data_Is_Added_To_ViewBag(
             Guid userId,
             long accountId,
             [ArrangeActionContext] ActionExecutingContext context,
