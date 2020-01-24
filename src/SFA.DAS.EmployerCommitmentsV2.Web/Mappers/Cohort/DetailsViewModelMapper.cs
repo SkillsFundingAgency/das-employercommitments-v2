@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;

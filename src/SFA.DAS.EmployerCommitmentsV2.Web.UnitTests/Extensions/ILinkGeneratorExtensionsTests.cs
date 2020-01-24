@@ -67,6 +67,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/{cohortReference}/apprenticeships/{draftApprenticeshipHashedId}/delete", url);
         }
+
+        [Test, AutoData]
+        public void EmployerHome_BuildsPathCorrectly(string accountHashedId)
+        {
+            var url = _fixture.Sut.EmployerHome(accountHashedId);
+            Assert.AreEqual($"{_fixture.UsersLink}accounts/{accountHashedId}/teams", url);
+        }
+
     }
 
     public class ILinkGeneratorExtensionsTestsFixture
@@ -76,6 +84,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         public string AccountsLink => "https://accounts.com/";
         public string CommitmentsLink => "https://commitments.com/";
         public string CommitmentsV2Link => "https://commitmentsV2.com/";
+        public string UsersLink => "https://users.com/";
 
         public Mock<IAuthorizationService> AuthorizationService;
 
@@ -85,6 +94,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
             MockILinkGenerator.Setup(x => x.AccountsLink(It.IsAny<string>())).Returns((string path) => AccountsLink + path);
             MockILinkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns((string path) => CommitmentsLink + path);
             MockILinkGenerator.Setup(x => x.CommitmentsV2Link(It.IsAny<string>())).Returns((string path) => CommitmentsV2Link + path);
+            MockILinkGenerator.Setup(x => x.UsersLink(It.IsAny<string>())).Returns((string path) => UsersLink + path);
 
             AuthorizationService = new Mock<IAuthorizationService>();
         }
