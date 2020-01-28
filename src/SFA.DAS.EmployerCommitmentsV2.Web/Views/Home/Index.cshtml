@@ -17,7 +17,7 @@
                 <p>Add apprentices to a new cohort or ask your training provider to add them.</p>
             </div>
             <div class="das-card das-card--underline">
-                <h2 class="govuk-heading-m das-card__heading"><a id="YourCohorts" href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/cohorts")" class="govuk-link">Your cohorts</a></h2>
+                <h2 class="govuk-heading-m das-card__heading"><a id="YourCohorts" href="@Url.Action("Cohorts", "Cohort", new {Model.AccountHashedId})" class="govuk-link">Your cohorts</a></h2>
                 <p>Review, edit, approve and add more apprentices to cohorts you've already started.</p>
             </div>
             <div class="das-card">
