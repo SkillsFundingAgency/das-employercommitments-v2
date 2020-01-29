@@ -1,7 +1,7 @@
 ﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.CohortCardLinkViewModel
 
     <div class="das-card">
-        <a class="das-card-link--bingo" href="@Model.Url">
+        <a id="@Model.LinkId" class="das-card-link--bingo" href="@Model.Url">
             <span class="das-card-figure">@Model.Count</span>
             <span class="govuk-visually-hidden">cohorts</span>
             <span class="das-text-capitalise">@Model.Description</span>

@@ -29,19 +29,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 CohortsInDraft = new CohortCardLinkViewModel(
                     cohorts.Count(x => x.GetStatus() == CohortStatus.Draft),
                     "drafts", 
-                    _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/draft")),
+                    _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/draft"),
+                    CohortStatus.Draft.ToString()),
                 CohortsInReview = new CohortCardLinkViewModel(
                     cohorts.Count(x => x.GetStatus() == CohortStatus.Review),
                     "ready to review", 
-                    _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/review")),
+                    _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/review"),
+                    CohortStatus.Review.ToString()),
                 CohortsWithTrainingProvider = new CohortCardLinkViewModel(
                     cohorts.Count(x => x.GetStatus() == CohortStatus.WithProvider),
                     "with training providers",
-                    _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/with-training-provider")),
+                    _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/with-training-provider"),
+                    CohortStatus.WithProvider.ToString()),
                 CohortsWithTransferSender = new CohortCardLinkViewModel(
                     cohorts.Count(x => x.GetStatus() == CohortStatus.WithTransferSender),
                     "with transfer sending employers",
-                    _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/with-transfer-sender")),
+                    _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}/unapproved/with-transfer-sender"),
+                    CohortStatus.WithTransferSender.ToString()),
                 
                 BackLink = _linkGenerator.CommitmentsV2Link($"{source.AccountHashedId}")
             };
