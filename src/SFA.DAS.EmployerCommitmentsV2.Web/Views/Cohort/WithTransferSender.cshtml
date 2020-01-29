@@ -25,7 +25,7 @@
                     @foreach (var cohort in Model.Cohorts)
                     {
 
-                        <tr class="govuk-table__row">
+                        <tr class="govuk-table__row" data-cohort="@cohort.CohortReference">
                             <td class="govuk-table__cell" data-label="Training provider">@cohort.TransferSenderName</td>
                             <td class="govuk-table__cell" data-label="Training provider">@cohort.ProviderName</td>
                             <td class="govuk-table__cell " data-label="Number of apprentices">@cohort.CohortReference</td>
