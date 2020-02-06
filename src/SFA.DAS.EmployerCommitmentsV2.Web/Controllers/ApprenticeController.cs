@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
@@ -11,6 +12,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
     [Route("{accountHashedId}/apprentices")]
     [SetNavigationSection(NavigationSection.ApprenticesHome)]
+    [DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
     public class ApprenticeController : Controller
     {
         [Route("", Name = RouteNames.ManageApprentices)]
