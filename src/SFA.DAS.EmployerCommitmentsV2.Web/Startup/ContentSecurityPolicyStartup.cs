@@ -15,7 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 {
                     context.Response.Headers["Content-Security-Policy"] =
                         "default-src 'self' 'unsafe-inline' https://*.zdassets.com https://*.zendesk.com wss://*.zendesk.com wss://*.zopim.com; " +
-                        "style-src 'self' 'unsafe-inline' https://*.azureedge.net; " +
+                        "style-src 'self' https://*.azureedge.net; " +
                         "img-src 'self' https://*.azureedge.net *.google-analytics.com https://*.zdassets.com https://*.zendesk.com wss://*.zendesk.com wss://*.zopim.com; " +
                         "script-src 'self' 'unsafe-inline' " +
                         "*.googletagmanager.com *.postcodeanywhere.co.uk *.google-analytics.com *.googleapis.com https://*.zdassets.com https://*.zendesk.com wss://*.zendesk.com wss://*.zopim.com; " +
