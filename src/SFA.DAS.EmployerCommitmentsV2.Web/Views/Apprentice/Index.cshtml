@@ -1,0 +1,18 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ManageApprenticesViewModel
+
+@{
+    ViewData["Title"] = "Manage Your Apprentices";
+}
+
+<h1 class="govuk-heading-xl">Manage your apprentices</h1>
+
+@if (!Model.AnyApprenticeships)
+{
+    <div class="govuk-inset-text das-inset-text--filled das-inset-text--highlight">
+        <p>Your apprentices will appear here once you and the employer approve their details.</p>
+    </div>
+}
+
+@section breadcrumb {
+    <div class="das-js-back-link"></div>
+}
