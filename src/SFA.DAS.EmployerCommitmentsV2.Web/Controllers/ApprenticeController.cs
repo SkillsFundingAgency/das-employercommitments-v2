@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Employer.Shared.UI;
@@ -17,14 +16,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     {
         [Route("", Name = RouteNames.ManageApprentices)]
         [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
-        public IActionResult Index(string accountHashedId)
+        public IActionResult Index(IndexRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var model = new ManageApprenticesViewModel {AccountHashedId = accountHashedId};
+            var model = new IndexViewModel {AccountHashedId = request.HashedAccountId};
 
             return View(model);
         }

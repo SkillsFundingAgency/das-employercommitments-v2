@@ -1,4 +1,4 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ManageApprenticesViewModel
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.IndexViewModel
 
 @{
     ViewData["Title"] = "Manage Your Apprentices";
@@ -6,12 +6,18 @@
 
 <h1 class="govuk-heading-xl">Manage your apprentices</h1>
 
-@if (!Model.AnyApprenticeships)
+@if (Model.FilterModel.TotalNumberOfApprenticeships == 0)
 {
     <div class="govuk-inset-text das-inset-text--filled das-inset-text--highlight">
         <p>Your apprentices will appear here once you and your training provider approve their details.</p>
     </div>
 }
+else
+{
+    
+}
+
+
 @section back {
     <div class="das-js-back-link"></div>
 }

@@ -2,41 +2,24 @@
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
     [TestFixture]
     public class ManageApprenticesTests
     {
-        private ApprenticeController _controller;
-
-        [SetUp]
-        public void Setup()
+        [Test, MoqAutoData]
+        public void ThenTheAccountHashedIdIsPassedToTheViewModel(
+            IndexRequest request,
+            ApprenticeController controller)
         {
-            _controller = new ApprenticeController();
-        }
-
-        [Test]
-        public void AndIsCalledWithInvalidModelStateThenBadResponseShouldBeReturned()
-        {
-            //Arrange
-            _controller.ModelState.AddModelError("test", "test");
             //Act
-            var result = _controller.Index("");
-            //Assert
-            Assert.IsInstanceOf<BadRequestObjectResult>(result);
-        }
+            var result = controller.Index(request);
+            var view = ((ViewResult) result).Model as IndexViewModel;
 
-        [Test]
-        public void ThenTheAccountHashedIdIsPassedToTheViewModel()
-        {
-            //Arrange
-            var expectedAccountHashedId = "TEST";
-            //Act
-            var result = _controller.Index(expectedAccountHashedId);
-            var view = ((ViewResult) result).Model as ManageApprenticesViewModel;
             //Assert
-            Assert.AreEqual(expectedAccountHashedId, view.AccountHashedId);
+            Assert.AreEqual(request.HashedAccountId, view.AccountHashedId);
         }
     }
 }
