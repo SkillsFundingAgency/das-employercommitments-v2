@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Html;
@@ -29,6 +30,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
             };
 
             filterModel.FiltersUsedMessage.Value.Should().Be($"matching <strong>‘{searchTerm}’</strong>");
+        }
+
+        [Test]
+        public void And_Search_Has_Html_Then_Html_Encodes_It()
+        {
+            var htmlSearchTerm = "<script>alert('hi');</script>";
+            var filterModel = new ApprenticesFilterModel
+            {
+                SearchTerm = htmlSearchTerm
+            };
+
+            filterModel.FiltersUsedMessage.Value.Should().Be($"matching <strong>‘{WebUtility.HtmlEncode(htmlSearchTerm)}’</strong>");
         }
 
         [Test, AutoData]

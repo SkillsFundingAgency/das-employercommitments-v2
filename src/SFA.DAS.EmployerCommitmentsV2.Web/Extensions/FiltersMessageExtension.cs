@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Html;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
@@ -36,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             var filters = new List<string>();
             if (!string.IsNullOrWhiteSpace(model.SearchTerm))
             {
-                filters.Add($"‘{model.SearchTerm}’");
+                filters.Add($"‘{WebUtility.HtmlEncode(model.SearchTerm)}’");
             }
 
             if (!string.IsNullOrWhiteSpace(model.SelectedEmployer))
