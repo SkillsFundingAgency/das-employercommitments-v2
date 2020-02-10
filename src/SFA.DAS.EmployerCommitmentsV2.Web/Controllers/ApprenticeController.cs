@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Features;
@@ -14,13 +16,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     [DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
     public class ApprenticeController : Controller
     {
+        private readonly IModelMapper _modelMapper;
+
+        public ApprenticeController(IModelMapper modelMapper)
+        {
+            _modelMapper = modelMapper;
+        }
+
         [Route("", Name = RouteNames.ApprenticesIndex)]
         [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
-        public IActionResult Index(IndexRequest request)
+        public async Task<IActionResult> Index(IndexRequest request)
         {
-            var model = new IndexViewModel {AccountHashedId = request.HashedAccountId};
+            var viewModel = await _modelMapper.Map<IndexViewModel>(request);
+            viewModel.SortedByHeader();
 
-            return View(model);
+            return View(viewModel);
         }
     }
 }
