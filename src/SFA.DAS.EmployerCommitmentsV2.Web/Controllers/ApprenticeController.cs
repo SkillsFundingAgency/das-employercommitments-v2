@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     [DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
     public class ApprenticeController : Controller
     {
-        [Route("", Name = RouteNames.ManageApprentices)]
+        [Route("", Name = RouteNames.ApprenticesIndex)]
         [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         public IActionResult Index(IndexRequest request)
         {
