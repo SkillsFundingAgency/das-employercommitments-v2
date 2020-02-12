@@ -230,7 +230,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 model.StartMonthYear,
                 model.CourseCode,
                 model.ProviderId,
-                model.TransferSenderId
+                model.TransferSenderId,
+                Origin = model.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
             };
 
             switch (model.WhoIsAddingApprentices)

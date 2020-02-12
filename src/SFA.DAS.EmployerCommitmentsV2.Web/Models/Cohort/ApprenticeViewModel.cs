@@ -12,6 +12,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string AccountLegalEntityHashedId { get; set; }
         public string TransferSenderId { get; set; }
         public long? DecodedTransferSenderId { get; set; }
+        public Origin Origin { get; set; }
+        public bool AutoCreatedReservation { get; set; }
     }
 
 }

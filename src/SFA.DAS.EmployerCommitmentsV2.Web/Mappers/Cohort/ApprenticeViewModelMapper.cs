@@ -29,6 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
             var result = new ApprenticeViewModel
             {
+                AccountHashedId = source.AccountHashedId,
                 AccountLegalEntityId = source.AccountLegalEntityId,
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 StartDate = new MonthYearModel(source.StartMonthYear),
@@ -37,7 +38,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 ProviderId = (int)source.ProviderId,
                 ProviderName = provider.Name,
                 Courses = courses,
-                TransferSenderId = source.TransferSenderId
+                TransferSenderId = source.TransferSenderId,
+                Origin = source.Origin,
+                AutoCreatedReservation = source.AutoCreated
             };
 
             return result;

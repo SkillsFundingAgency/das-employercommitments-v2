@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
                 dictionary.Add(nameof(StartMonthYear), StartMonthYear);
             if (!string.IsNullOrWhiteSpace(CourseCode))
                 dictionary.Add(nameof(CourseCode), CourseCode);
-
+            
             return dictionary;
         }
     }
