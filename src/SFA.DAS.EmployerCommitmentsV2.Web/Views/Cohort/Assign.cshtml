@@ -41,7 +41,7 @@
                                     </span>
                                 }
                             </label>
-                            </div>
+                        </div>
                     </div>
                 </fieldset>
             </div>
@@ -50,3 +50,17 @@
         </form>
     </div>
 </div>
+
+@section Back
+{
+    @Html.ActionLink("Back", "ConfirmProvider", "Cohort", new
+    {
+        Model.AccountHashedId,
+        Model.AccountLegalEntityHashedId,
+        Model.CourseCode,
+        Model.ProviderId,
+        Model.ReservationId,
+        Model.TransferSenderId,
+        Model.StartMonthYear
+    }, new { @class = "govuk-back-link", id = "back-link" })
+}
