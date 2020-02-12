@@ -15,6 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 ReservationId = source.ReservationId,
                 StartMonthYear = source.StartMonthYear,
                 CourseCode = source.CourseCode,
+                Origin = source.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
             });
         }
     }

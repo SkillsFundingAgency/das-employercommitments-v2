@@ -1,4 +1,6 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.SelectProviderViewModel
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+@using SFA.DAS.EmployerUrlHelper.Mvc
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.SelectProviderViewModel
 @{
     ViewData["Title"] = "Apprenticeships";
     ViewBag.Title = "Add training provider details";
@@ -11,8 +13,8 @@
         <h1 class="govuk-heading-xl">Add training provider details</h1>
 
         <form method="post">
-            
-            <partial name="_SelectProviderHiddenPartial"/>
+
+            <partial name="_SelectProviderHiddenPartial" />
 
             <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
                 <label class="govuk-heading-s " for="error-message-ProviderId">
@@ -25,7 +27,7 @@
                         <span class="govuk-visually-hidden">Error:</span> Number not recognised. Check the number you've entered is correct or contact your training provider for help.
                     </span>
                 }
-                <input asp-for="ProviderId" class="govuk-input @(ViewData.ModelState.IsValid ? "" : "govuk-input--error")" id="error-message-ProviderId"/>
+                <input asp-for="ProviderId" class="govuk-input @(ViewData.ModelState.IsValid ? "" : "govuk-input--error")" id="error-message-ProviderId" />
             </div>
 
             <details class="govuk-details">
@@ -46,3 +48,23 @@
 
     </div>
 </div>
+
+@section Back {
+    @if (Model.Origin == Origin.Reservations)
+    {
+        @Html.ActionLink("Back", "Index", "Cohort", new
+        {
+            Model.AccountHashedId,
+            Model.AccountLegalEntityHashedId,
+            Model.ReservationId,
+            Model.CourseCode,
+            Model.StartMonthYear
+        }, new {@class = "govuk-back-link", id = "back-link"})
+    }
+    else
+    {
+        //need to work out where to go back to from here: agreement not signed page, transfer sender, legal entity selection
+        //var url = Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/home");
+        //<a href="@url" id="back-link" class="govuk-back-link">Back</a>
+    }
+}

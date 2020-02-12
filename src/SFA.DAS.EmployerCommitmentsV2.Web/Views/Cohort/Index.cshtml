@@ -1,5 +1,7 @@
 ﻿@inject ILinkGenerator LinkGenerator
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+@using SFA.DAS.EmployerUrlHelper.Mvc
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.IndexViewModel
 @{
     ViewData["Title"] = "Apprenticeships";
@@ -26,3 +28,13 @@
         </a>
     </div>
 </div>
+
+
+@section Back
+{
+    @if (Model.Origin == Origin.Reservations)
+    {
+        var url = Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/");
+        <a href="@url" id="back-link" class="govuk-back-link">Back</a>
+    }
+}
