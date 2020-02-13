@@ -33,16 +33,17 @@
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
     <partial name="_Header" />
     <partial name="_Menu" model="@accountHashedId" />
-<div class="govuk-width-container">
-    @if (IsSectionDefined("Back"))
-    {
-        @RenderSection("Back")
-    }
-    <main class="govuk-main-wrapper " id="main-content" role="main">
-        <partial name="_FlashMessagePartial"/>
-        @RenderBody()
-    </main>
-</div>
+    <partial name="_ZenDeskWidget" />
+    <div class="govuk-width-container">
+        @if (IsSectionDefined("Back"))
+        {
+            @RenderSection("Back")
+        }
+        <main class="govuk-main-wrapper " id="main-content" role="main">
+            <partial name="_FlashMessagePartial" />
+            @RenderBody()
+        </main>
+    </div>
 
     <partial name="_Footer" />
 
@@ -53,10 +54,9 @@
 
     <script>
         window.GOVUKFrontend.initAll();
-            window.DASFrontend.initAll();
+        window.DASFrontend.initAll();
     </script>
 
     @RenderSection("Scripts", required: false)
-
 </body>
 </html>
