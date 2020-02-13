@@ -7,12 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="15.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
     <PackageReference Include="SFA.DAS.Authorization.CommitmentPermissions" Version="5.6.7" />
     <PackageReference Include="SFA.DAS.Authorization.EmployerFeatures" Version="5.6.7" />
     <PackageReference Include="SFA.DAS.Authorization.EmployerUserRoles" Version="5.6.7" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="4.1.1034" />
-	<PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="4.1.1034" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="4.1.1034" />
     <PackageReference Include="SFA.DAS.EmployerAccounts.Api.Client" Version="1.6.2086" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.22" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.1" />
