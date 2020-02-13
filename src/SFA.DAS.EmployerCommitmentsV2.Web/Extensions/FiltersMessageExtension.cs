@@ -40,9 +40,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
                 filters.Add($"‘{WebUtility.HtmlEncode(model.SearchTerm)}’");
             }
 
-            if (!string.IsNullOrWhiteSpace(model.SelectedEmployer))
+            if (!string.IsNullOrWhiteSpace(model.SelectedProvider))
             {
-                filters.Add(model.SelectedEmployer);
+                filters.Add(model.SelectedProvider);
             }
 
             if (!string.IsNullOrWhiteSpace(model.SelectedCourse))
@@ -53,11 +53,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             if (model.SelectedStatus.HasValue)
             {
                 filters.Add(model.SelectedStatus.Value.GetDescription());
-            }
-
-            if (model.SelectedStartDate.HasValue)
-            {
-                filters.Add(model.SelectedStartDate.Value.ToGdsFormatWithoutDay());
             }
 
             if (model.SelectedEndDate.HasValue)

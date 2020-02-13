@@ -39,18 +39,18 @@ else
                         <div class="govuk-grid-row">
                             <div class="govuk-grid-column-one-third">
                                 <div class="govuk-form-group">
-                                    <label class="govuk-label" for="selectedEmployer">Employer</label>
-                                    <select class="govuk-select govuk-!-width-full" id="selectedEmployer" name="selectedEmployer">
-                                        <option label="All" aria-label="All employers" value="">All</option>
-                                        @foreach (var employer in Model.FilterModel.EmployerFilters)
+                                    <label class="govuk-label" for="selectedProvider">Training provider</label>
+                                    <select class="govuk-select govuk-!-width-full" id="selectedProvider" name="selectedProvider">
+                                        <option label="All" aria-label="All training providers" value="">All</option>
+                                        @foreach (var provider in Model.FilterModel.ProviderFilters)
                                         {
-                                            if (employer.Replace(" ", null) == Model.FilterModel.SelectedEmployer?.Replace(" ", null))
+                                            if (provider.Replace(" ", null) == Model.FilterModel.SelectedProvider?.Replace(" ", null))
                                             {
-                                                <option label="@employer" value="@employer" selected="selected">@employer</option>
+                                                <option label="@provider" value="@provider" selected="selected">@provider</option>
                                             }
                                             else
                                             {
-                                                <option label="@employer" value="@employer">@employer</option>
+                                                <option label="@provider" value="@provider">@provider</option>
                                             }
                                         }
                                     </select>
@@ -77,45 +77,6 @@ else
                             </div>
                             <div class="govuk-grid-column-one-third">
                                 <div class="govuk-form-group">
-                                    <label class="govuk-label" for="selectedStatus">Status</label>
-                                    <select class="govuk-select govuk-!-width-full" id="selectedStatus" name="selectedStatus">
-                                        <option label="All" aria-label="All statuses" value="">All</option>
-                                        @foreach (var status in Model.FilterModel.StatusFilters)
-                                        {
-                                            if (status == Model.FilterModel.SelectedStatus)
-                                            {
-                                                <option label="@status.GetDescription()" value="@status" selected="selected">@status.GetDescription()</option>
-                                            }
-                                            else
-                                            {
-                                                <option label="@status.GetDescription()" value="@status">@status.GetDescription()</option>
-                                            }
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                        </div><div class="govuk-grid-row">
-                            <div class="govuk-grid-column-one-third">
-                                <div class="govuk-form-group">
-                                    <label class="govuk-label" for="selectedStartDate">Planned start date</label>
-                                    <select class="govuk-select govuk-!-width-full" id="selectedStartDate" name="selectedStartDate">
-                                        <option label="All" aria-label="All start dates" value="">All</option>
-                                        @foreach (var startDate in Model.FilterModel.StartDateFilters)
-                                        {
-                                            if (startDate == Model.FilterModel.SelectedStartDate)
-                                            {
-                                                <option label="@startDate.ToGdsFormatWithoutDay()" value="@startDate.ToString("yyyy-MM-dd")" selected="selected">@startDate.ToString("yyyy-MM-dd")</option>
-                                            }
-                                            else
-                                            {
-                                                <option label="@startDate.ToGdsFormatWithoutDay()" value="@startDate.ToString("yyyy-MM-dd")">@startDate.ToString("yyyy-MM-dd")</option>
-                                            }
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="govuk-grid-column-one-third">
-                                <div class="govuk-form-group">
                                     <label class="govuk-label" for="selectedEndDate">Planned end date</label>
                                     <select class="govuk-select govuk-!-width-full" id="selectedEndDate" name="selectedEndDate">
                                         <option label="All" aria-label="All end dates" value="">All</option>
@@ -128,6 +89,26 @@ else
                                             else
                                             {
                                                 <option label="@endDate.ToGdsFormatWithoutDay()" value="@endDate.ToString("yyyy-MM-dd")">@endDate.ToString("yyyy-MM-dd")</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div><div class="govuk-grid-row">
+                            <div class="govuk-grid-column-one-third">
+                                <div class="govuk-form-group">
+                                    <label class="govuk-label" for="selectedStatus">Status</label>
+                                    <select class="govuk-select govuk-!-width-full" id="selectedStatus" name="selectedStatus">
+                                        <option label="All" aria-label="All statuses" value="">All</option>
+                                        @foreach (var status in Model.FilterModel.StatusFilters)
+                                        {
+                                            if (status == Model.FilterModel.SelectedStatus)
+                                            {
+                                                <option label="@status.GetDescription()" value="@status" selected="selected">@status.GetDescription()</option>
+                                            }
+                                            else
+                                            {
+                                                <option label="@status.GetDescription()" value="@status">@status.GetDescription()</option>
                                             }
                                         }
                                     </select>

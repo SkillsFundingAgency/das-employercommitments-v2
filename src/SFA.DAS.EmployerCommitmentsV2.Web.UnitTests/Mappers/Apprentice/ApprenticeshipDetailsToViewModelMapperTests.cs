@@ -47,7 +47,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await mapper.Map(source);
 
-            //result.ProviderName.Should().Be(source.ProviderName);
+            result.ProviderName.Should().Be(source.ProviderName);
         }
 
         [Test, MoqAutoData]

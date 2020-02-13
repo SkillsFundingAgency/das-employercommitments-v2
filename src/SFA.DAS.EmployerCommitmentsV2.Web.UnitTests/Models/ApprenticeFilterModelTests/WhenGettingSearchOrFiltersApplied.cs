@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
         {
             var filterModel = new ApprenticesFilterModel
             {
-                SelectedEmployer = "asedfas"
+                SelectedProvider = "asedfas"
             };
 
             filterModel.SearchOrFiltersApplied.Should().BeTrue();
@@ -47,17 +47,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
             var filterModel = new ApprenticesFilterModel
             {
                 SelectedStatus = ApprenticeshipStatus.WaitingToStart
-            };
-
-            filterModel.SearchOrFiltersApplied.Should().BeTrue();
-        }
-
-        [Test]
-        public void And_Has_SelectedStartDate_Then_True()
-        {
-            var filterModel = new ApprenticesFilterModel
-            {
-                SelectedStartDate = DateTime.Today
             };
 
             filterModel.SearchOrFiltersApplied.Should().BeTrue();

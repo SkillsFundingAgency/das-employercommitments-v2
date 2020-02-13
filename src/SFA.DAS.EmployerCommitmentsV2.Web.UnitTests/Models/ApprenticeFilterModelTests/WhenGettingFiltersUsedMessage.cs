@@ -50,7 +50,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
         {
             var filterModel = new ApprenticesFilterModel
             {
-                SelectedEmployer = selectedEmployer
+                SelectedProvider = selectedEmployer
             };
 
             filterModel.FiltersUsedMessage.Value.Should().Be($"matching <strong>{selectedEmployer}</strong>");
@@ -81,18 +81,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
         }
 
         [Test, AutoData]
-        public void And_No_Search_And_SelectedStartDate_Then_SelectedStartDate(
-            DateTime selectedStartDate)
-        {
-            var filterModel = new ApprenticesFilterModel
-            {
-                SelectedStartDate = selectedStartDate
-            };
-
-            filterModel.FiltersUsedMessage.Value.Should().Be($"matching <strong>{selectedStartDate.ToGdsFormatWithoutDay()}</strong>");
-        }
-
-        [Test, AutoData]
         public void And_No_Search_And_SelectedEndDate_Then_SelectedEndDate(
             DateTime selectedEndDate)
         {
@@ -105,57 +93,57 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
         }
 
         [Test, AutoData]
-        public void And_Search_And_SelectedEmployer_Then_SearchTerm_And_SelectedEmployer(
+        public void And_Search_And_SelectedProvider_Then_SearchTerm_And_SelectedProvider(
             string searchTerm,
-            string selectedEmployer)
+            string selectedProvider)
         {
             var filterModel = new ApprenticesFilterModel
             {
                 SearchTerm = searchTerm,
-                SelectedEmployer = selectedEmployer
+                SelectedProvider = selectedProvider
             };
 
             filterModel.FiltersUsedMessage.Value
                 .Should().Be($"matching <strong>‘{searchTerm}’</strong>" +
-                             $" and <strong>{selectedEmployer}</strong>");
+                             $" and <strong>{selectedProvider}</strong>");
         }
 
         [Test, AutoData]
-        public void And_Search_And_SelectedEmployer_And_SelectedCourse_Then_SearchTerm_Comma_SelectedEmployer_And_SelectedCourse(
+        public void And_Search_And_SelectedProvider_And_SelectedCourse_Then_SearchTerm_Comma_SelectedProvider_And_SelectedCourse(
             string searchTerm,
-            string selectedEmployer,
+            string selectedProvider,
             string selectedCourse)
         {
             var filterModel = new ApprenticesFilterModel
             {
                 SearchTerm = searchTerm,
-                SelectedEmployer = selectedEmployer,
+                SelectedProvider = selectedProvider,
                 SelectedCourse = selectedCourse
             };
 
             filterModel.FiltersUsedMessage.Value
                 .Should().Be($"matching <strong>‘{searchTerm}’</strong>" +
-                             $", <strong>{selectedEmployer}</strong>" +
+                             $", <strong>{selectedProvider}</strong>" +
                              $" and <strong>{selectedCourse}</strong>");
         }
 
         [Test, AutoData]
-        public void And_SelectedEmployer_And_SelectedCourse_And_SelectedStartDate_Then_SelectedEmployer_Comma_SelectedCourse_And_SelectedStartDate(
+        public void And_SelectedEmployer_And_SelectedCourse_And_SelectedEndDate_Then_SelectedEmployer_Comma_SelectedCourse_And_SelectedEndDate(
             string selectedEmployer,
             string selectedCourse,
-            DateTime selectedStartDate)
+            DateTime selectedEndDate)
         {
             var filterModel = new ApprenticesFilterModel
             {
-                SelectedEmployer = selectedEmployer,
+                SelectedProvider = selectedEmployer,
                 SelectedCourse = selectedCourse,
-                SelectedStartDate = selectedStartDate
+                SelectedEndDate = selectedEndDate
             };
 
             filterModel.FiltersUsedMessage.Value
                 .Should().Be($"matching <strong>{selectedEmployer}</strong>" +
                              $", <strong>{selectedCourse}</strong>" +
-                             $" and <strong>{selectedStartDate.ToGdsFormatWithoutDay()}</strong>");
+                             $" and <strong>{selectedEndDate.ToGdsFormatWithoutDay()}</strong>");
         }
     }
 }

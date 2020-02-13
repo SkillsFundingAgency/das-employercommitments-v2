@@ -16,10 +16,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
             var filterModel = new ApprenticesFilterModel
             {
                 SearchTerm = "asedfas",
-                SelectedEmployer = "asdsad",
+                SelectedProvider = "asdsad",
                 SelectedCourse = "iknjso",
                 SelectedStatus = ApprenticeshipStatus.WaitingToStart,
-                SelectedStartDate = DateTime.Today,
                 SelectedEndDate = DateTime.Today,
                 TotalNumberOfApprenticeshipsFound = Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage * 3,
                 SortField = "gsd",
@@ -37,10 +36,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
                 pageLinks[i].RouteData.Should().BeEquivalentTo(new Dictionary<string, string>
                     {
                         {nameof(filterModel.SearchTerm), filterModel.SearchTerm },
-                        {nameof(filterModel.SelectedEmployer), filterModel.SelectedEmployer},
+                        {nameof(filterModel.SelectedProvider), filterModel.SelectedProvider},
                         {nameof(filterModel.SelectedCourse), filterModel.SelectedCourse},
                         {nameof(filterModel.SelectedStatus), filterModel.SelectedStatus.ToString()},
-                        {nameof(filterModel.SelectedStartDate), filterModel.SelectedStartDate.Value.ToString("yyyy-MM-dd")},
                         {nameof(filterModel.SelectedEndDate), filterModel.SelectedEndDate.Value.ToString("yyyy-MM-dd")},
                         {nameof(filterModel.SortField), filterModel.SortField},
                         {nameof(filterModel.ReverseSort), filterModel.ReverseSort.ToString()},

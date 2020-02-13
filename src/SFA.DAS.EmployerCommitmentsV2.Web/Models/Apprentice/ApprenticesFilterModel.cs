@@ -10,18 +10,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
     {
         public int PageNumber { get; set; } = 1;
         public string SearchTerm { get; set; }
-        public string SelectedEmployer { get; set; }
+        public string SelectedProvider { get; set; }
         public string SelectedCourse { get; set; }
         public ApprenticeshipStatus? SelectedStatus { get; set; }
-        public DateTime? SelectedStartDate { get; set; }
         public DateTime? SelectedEndDate { get; set; }
         public string SortField { get; set; }
         public bool ReverseSort { get; set; }
 
-        public IEnumerable<string> EmployerFilters { get; set; } = new List<string>();
+        public IEnumerable<string> ProviderFilters { get; set; } = new List<string>();
         public IEnumerable<string> CourseFilters { get; set; } = new List<string>();
         public IEnumerable<ApprenticeshipStatus> StatusFilters { get; set; } = new List<ApprenticeshipStatus>();
-        public IEnumerable<DateTime> StartDateFilters { get; set; } = new List<DateTime>();
         public IEnumerable<DateTime> EndDateFilters { get; set; } = new List<DateTime>();
 
         private const int PageSize = Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage;
@@ -36,10 +34,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool ShowSearch => TotalNumberOfApprenticeships >= Constants.ApprenticesSearch.NumberOfApprenticesRequiredForSearch;
 
         public bool SearchOrFiltersApplied => !string.IsNullOrWhiteSpace(SearchTerm)
-                                              || !string.IsNullOrWhiteSpace(SelectedEmployer)
+                                              || !string.IsNullOrWhiteSpace(SelectedProvider)
                                               || !string.IsNullOrWhiteSpace(SelectedCourse)
                                               || SelectedStatus.HasValue
-                                              || SelectedStartDate.HasValue
                                               || SelectedEndDate.HasValue;
 
         public HtmlString FiltersUsedMessage => this.GetFiltersUsedMessage();
@@ -114,9 +111,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                 routeData.Add(nameof(SearchTerm), SearchTerm);
             }
 
-            if (!string.IsNullOrWhiteSpace(SelectedEmployer))
+            if (!string.IsNullOrWhiteSpace(SelectedProvider))
             {
-                routeData.Add(nameof(SelectedEmployer), SelectedEmployer);
+                routeData.Add(nameof(SelectedProvider), SelectedProvider);
             }
 
             if (!string.IsNullOrWhiteSpace(SelectedCourse))
@@ -129,11 +126,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                 routeData.Add(nameof(SelectedStatus), SelectedStatus.Value.ToString());
             }
             
-            if (SelectedStartDate.HasValue)
-            {
-                routeData.Add(nameof(SelectedStartDate), SelectedStartDate.Value.ToString("yyyy-MM-dd"));
-            }
-
             if (SelectedEndDate.HasValue)
             {
                 routeData.Add(nameof(SelectedEndDate), SelectedEndDate.Value.ToString("yyyy-MM-dd"));

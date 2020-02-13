@@ -15,10 +15,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
             filterModel.RouteData.Should().BeEquivalentTo(new Dictionary<string, string>
             {
                 {nameof(filterModel.SearchTerm), filterModel.SearchTerm },
-                {nameof(filterModel.SelectedEmployer), filterModel.SelectedEmployer},
+                {nameof(filterModel.SelectedProvider), filterModel.SelectedProvider},
                 {nameof(filterModel.SelectedCourse), filterModel.SelectedCourse},
                 {nameof(filterModel.SelectedStatus), filterModel.SelectedStatus.ToString()},
-                {nameof(filterModel.SelectedStartDate), filterModel.SelectedStartDate.Value.ToString("yyyy-MM-dd")},
                 {nameof(filterModel.SelectedEndDate), filterModel.SelectedEndDate.Value.ToString("yyyy-MM-dd")}
             });
         }

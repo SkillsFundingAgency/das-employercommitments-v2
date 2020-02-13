@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             {
                 EncodedApprenticeshipId = _encodingService.Encode(source.Id, EncodingType.ApprenticeshipId),
                 ApprenticeName = $"{source.FirstName} {source.LastName}",
-                //ProviderName = source.ProviderName,
+                ProviderName = source.ProviderName,
                 CourseName = source.CourseName,
                 PlannedStartDate = source.StartDate,
                 PlannedEndDate = source.EndDate,
