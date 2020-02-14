@@ -1,9 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -19,7 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 StartMonthYear = source.StartMonthYear,
                 ReservationId = source.ReservationId,
                 TransferSenderId = source.TransferSenderId,
-                Origin = source.Origin
+                Origin = source.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
             };
 
             return Task.FromResult(result);

@@ -80,7 +80,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.Origin, result.Origin);
+            Assert.AreEqual(request.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices, result.Origin);
         }
     }
 }
