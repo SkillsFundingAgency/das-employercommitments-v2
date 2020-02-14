@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Apprenticeships";
+    ViewBag.GaData.Vpv = "/unapproved/apprentices/add";
 }
 
 <div class="govuk-grid-row">
@@ -19,7 +20,7 @@
             @Html.HiddenFor(x => x.ProviderId)
             @Html.HiddenFor(x => x.AccountLegalEntityHashedId)
 
-            <partial name="DraftApprenticeship" for="@Model" />
+            <partial name="_DraftApprenticeship" for="@Model" />
 
             <button type="submit" class="govuk-button">Save and continue</button>
         </form>

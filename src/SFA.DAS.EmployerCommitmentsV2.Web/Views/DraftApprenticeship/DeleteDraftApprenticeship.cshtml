@@ -8,6 +8,8 @@
     var backButtonUrl = (Model.Origin == DeleteDraftApprenticeshipOrigin.CohortDetails)
         ? Url.Action("Details", "Cohort", new { Model.AccountHashedId, Model.CohortReference })
         : Url.Action("Details", new { Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId });
+    
+    ViewBag.GaData.Vpv = "/unapproved/apprentices/delete";
 }
 
 @*<input class="govuk-radios__input" id="ConfirmDelete" name="confirmDelete" type="radio" value="true">*@
