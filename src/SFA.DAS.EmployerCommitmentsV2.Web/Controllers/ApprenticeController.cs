@@ -32,5 +32,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             return View(viewModel);
         }
+
+        [Route("download", Name = RouteNames.ApprenticesDownload)]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        public async Task<IActionResult> Download(DownloadRequest request)
+        {
+            var downloadViewModel = await _modelMapper.Map<DownloadViewModel>(request);
+
+            return File(downloadViewModel.Content, downloadViewModel.ContentType, downloadViewModel.Name);
+        }
     }
 }
