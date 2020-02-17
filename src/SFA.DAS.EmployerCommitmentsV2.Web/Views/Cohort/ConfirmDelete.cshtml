@@ -2,6 +2,10 @@
 @using SFA.DAS.CommitmentsV2.Shared.Extensions
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.ConfirmDeleteViewModel
 
+@{
+    ViewBag.GaData.Vpv = "/unapproved/delete";
+}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
