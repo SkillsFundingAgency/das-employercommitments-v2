@@ -22,7 +22,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     [Route("{AccountHashedId}/unapproved/{cohortReference}/apprentices")]
     public class DraftApprenticeshipController : Controller
     {
-        private readonly ICommitmentsService _commitmentsService;
         private readonly IModelMapper _modelMapper;
         private readonly ILinkGenerator _linkGenerator;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
@@ -30,12 +29,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public const string ApprenticeDeletedMessage = "Apprentice record deleted";
 
         public DraftApprenticeshipController(
-            ICommitmentsService commitmentsService,
             ILinkGenerator linkGenerator,
-            IModelMapper modelMapper, ICommitmentsApiClient commitmentsApiClient,
+            IModelMapper modelMapper,
+            ICommitmentsApiClient commitmentsApiClient,
             IAuthorizationService authorizationService)
         {
-            _commitmentsService = commitmentsService;
             _linkGenerator = linkGenerator;
             _modelMapper = modelMapper;
             _commitmentsApiClient = commitmentsApiClient;
@@ -88,7 +86,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> EditDraftApprenticeship(EditDraftApprenticeshipViewModel model)
         {
             var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
-            await _commitmentsService.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
+            await _commitmentsApiClient.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
 
             if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
             {

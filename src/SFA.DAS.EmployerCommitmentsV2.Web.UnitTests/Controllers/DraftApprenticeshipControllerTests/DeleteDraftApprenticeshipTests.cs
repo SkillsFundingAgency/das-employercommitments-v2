@@ -178,8 +178,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             AuthorizationServiceMock = new Mock<IAuthorizationService>();
 
-            Sut = new DraftApprenticeshipController(Mock.Of<ICommitmentsService>(),
-                LinkGeneratorMock.Object,
+            Sut = new DraftApprenticeshipController(LinkGeneratorMock.Object,
                 ModelMapperMock.Object,
                 CommitmentApiClient.Object,
                 AuthorizationServiceMock.Object);

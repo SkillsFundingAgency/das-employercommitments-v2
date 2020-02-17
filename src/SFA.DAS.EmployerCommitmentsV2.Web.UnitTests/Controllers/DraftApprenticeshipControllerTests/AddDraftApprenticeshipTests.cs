@@ -89,7 +89,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public IReadOnlyList<ITrainingProgramme> Courses { get; set; }
         public string CohortDetailsUrl { get; set; }
         public CommitmentsApiModelException CommitmentsApiModelException { get; set; }
-        public Mock<ICommitmentsService> CommitmentsService { get; set; }
         public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClient { get; set; }
         public Mock<IModelMapper> ModelMapper { get; set; }
@@ -135,7 +134,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             Courses = new List<ITrainingProgramme>();
             CohortDetailsUrl = $"accounts/{Request.AccountHashedId}/apprentices/{Request.CohortReference}/details";
             CommitmentsApiModelException = new CommitmentsApiModelException(new List<ErrorDetail> { new ErrorDetail("Foo", "Bar") });
-            CommitmentsService = new Mock<ICommitmentsService>();
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             TrainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
             ModelMapper = new Mock<IModelMapper>();
@@ -144,14 +142,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             AuthorizationService.Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval)).Returns(false);
             
             Controller = new DraftApprenticeshipController(
-                CommitmentsService.Object, 
                 LinkGenerator.Object,
                 ModelMapper.Object,
                 CommitmentsApiClient.Object,
                 AuthorizationService.Object
                 );
 
-            CommitmentsService.Setup(c => c.GetCohortDetail(Cohort.CohortId)).ReturnsAsync(Cohort);
             TrainingProgrammeApiClient.Setup(c => c.GetAllTrainingProgrammes()).ReturnsAsync(Courses);
             TrainingProgrammeApiClient.Setup(c => c.GetStandardTrainingProgrammes()).ReturnsAsync(StandardCourses);
             ModelMapper.Setup(m => m.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(ViewModel)).Returns(Task.FromResult(AddDraftApprenticeshipRequest));
