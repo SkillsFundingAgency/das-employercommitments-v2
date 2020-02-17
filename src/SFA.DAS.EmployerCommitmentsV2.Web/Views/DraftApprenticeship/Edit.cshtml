@@ -6,6 +6,7 @@
 
 @{
     ViewData["Title"] = "Apprenticeships";
+    ViewBag.GaData.Vpv = "/unapproved/apprentices/edit";
 }
 
 <div class="govuk-grid-row">
@@ -18,7 +19,7 @@
 
         <form id="addApprenticeship" novalidate method="post">
             @Html.AntiForgeryToken()
-            <partial name="DraftApprenticeship" for="@Model" />
+            <partial name="_DraftApprenticeship" for="@Model" />
             <button type="submit" class="govuk-button">Save</button>
 
             @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.EnhancedApproval))
