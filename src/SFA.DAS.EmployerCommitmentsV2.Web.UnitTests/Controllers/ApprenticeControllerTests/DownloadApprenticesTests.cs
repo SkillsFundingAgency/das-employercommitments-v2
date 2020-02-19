@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.IsNotNull(actualFileResult);
             Assert.AreEqual(expectedCsvContent.Content, actualFileResult.FileContents);
             Assert.AreEqual(expectedCsvContent.Name, actualFileResult.FileDownloadName);
-            Assert.AreEqual(expectedCsvContent.ContentType, actualFileResult.ContentType);
+            Assert.AreEqual(Constants.ApprenticesSearch.DownloadContentType, actualFileResult.ContentType);
         }
     }
 }

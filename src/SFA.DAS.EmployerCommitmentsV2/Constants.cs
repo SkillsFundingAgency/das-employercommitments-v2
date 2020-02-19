@@ -6,6 +6,7 @@
         {
             public const int NumberOfApprenticesPerSearchPage = 100;
             public const int NumberOfApprenticesRequiredForSearch = 10;
+            public const string DownloadContentType = "text/csv";
         }
     }
 }
