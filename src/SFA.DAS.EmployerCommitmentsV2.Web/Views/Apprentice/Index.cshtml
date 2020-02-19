@@ -12,5 +12,7 @@
         <p>Your apprentices will appear here once you and your training provider approve their details.</p>
     </div>
 }
-
+@section back
+{
     <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new {Model.AccountHashedId})">Back</a>
+}
