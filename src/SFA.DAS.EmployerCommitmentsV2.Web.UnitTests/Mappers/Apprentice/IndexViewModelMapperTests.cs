@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             IndexViewModelMapper mapper)
         {
             mockEncodingService
-                .Setup(service => service.Decode(webRequest.HashedAccountId, EncodingType.AccountId))
+                .Setup(service => service.Decode(webRequest.AccountHashedId, EncodingType.AccountId))
                 .Returns(decodedAccountId);
 
             await mapper.Map(webRequest);
@@ -64,7 +64,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(clientResponse);
             mockEncodingService
-                .Setup(service => service.Decode(webRequest.HashedAccountId, EncodingType.AccountId))
+                .Setup(service => service.Decode(webRequest.AccountHashedId, EncodingType.AccountId))
                 .Returns(decodedAccountId);
            
             await mapper.Map(webRequest);
@@ -132,7 +132,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.IsNotNull(viewModel);
-            Assert.AreEqual(request.HashedAccountId, viewModel.AccountHashedId);
+            Assert.AreEqual(request.AccountHashedId, viewModel.AccountHashedId);
             viewModel.Apprenticeships.Should().AllBeEquivalentTo(expectedViewModel);
             Assert.AreEqual(apprenticeshipsResponse.TotalApprenticeshipsFound, viewModel.FilterModel.TotalNumberOfApprenticeshipsFound);
             Assert.AreEqual(apprenticeshipsResponse.TotalApprenticeshipsWithAlertsFound, viewModel.FilterModel.TotalNumberOfApprenticeshipsWithAlertsFound);

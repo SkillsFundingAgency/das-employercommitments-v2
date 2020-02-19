@@ -5,7 +5,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
     public class IndexRequest
     {
-        public string HashedAccountId { get; set; }
+        public string AccountHashedId { get; set; }
         public int PageNumber { get; set; }
         public string SortField { get; set; }
         public bool ReverseSort { get; set; }

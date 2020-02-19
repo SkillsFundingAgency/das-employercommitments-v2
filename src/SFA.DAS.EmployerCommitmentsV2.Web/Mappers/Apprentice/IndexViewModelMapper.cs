@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
         public async Task<IndexViewModel> Map(IndexRequest source)
         {
-            var decodedAccountId = _encodingService.Decode(source.HashedAccountId, EncodingType.AccountId);
+            var decodedAccountId = _encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
 
             var response = await _client.GetApprenticeships(new GetApprenticeshipsRequest
             {
@@ -86,7 +86,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
             return new IndexViewModel
             {
-                AccountHashedId = source.HashedAccountId,
+                AccountHashedId = source.AccountHashedId,
                 Apprenticeships = apprenticeships,
                 FilterModel = filterModel,
             };
