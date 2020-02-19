@@ -114,7 +114,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             {
                 Assert.IsNotNull(result.CohortsWithTrainingProvider);
                 Assert.AreEqual(3, result.CohortsWithTrainingProvider.Count);
-                Assert.AreEqual("with providers", result.CohortsWithTrainingProvider.Description);
+                Assert.AreEqual("with training providers", result.CohortsWithTrainingProvider.Description);
                 UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "WithTrainingProvider")));
             }
 

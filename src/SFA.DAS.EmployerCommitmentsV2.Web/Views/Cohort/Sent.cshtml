@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Sent";
+    ViewBag.GaData.Vpv = "/unapproved/sent";
 }
 
 <div class="govuk-grid-row">
@@ -38,5 +39,5 @@
 
 @section Back 
 {
-    <a id="back-link" class="govuk-back-link" href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/home")">Back to Apprentices</a>
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new {Model.AccountHashedId})">Back to Apprentices</a>
 } 

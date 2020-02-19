@@ -8,43 +8,68 @@
 }
 
 <head>
-    <meta charset="utf-8"/>
+    <!-- Google Tag Manager -->
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-KWQBWGJ');
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <meta charset="utf-8" />
     <title>@ViewData["Title"]</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0b0c0c"/>
+    <meta name="theme-color" content="#0b0c0c" />
 
-    <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon"/>
-    <link rel="mask-icon" href="/assets/images/govuk-mask-icon.svg" color="#0b0c0c"/>
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/govuk-apple-touch-icon-180x180.png"/>
-    <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/govuk-apple-touch-icon-167x167.png"/>
-    <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png"/>
-    <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png"/>
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon" />
+    <link rel="mask-icon" href="/assets/images/govuk-mask-icon.svg" color="#0b0c0c" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/govuk-apple-touch-icon-180x180.png" />
+    <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/govuk-apple-touch-icon-167x167.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png" />
 
     <!--[if !IE 8]><!-->
-    <link href="/css/main.css" rel="stylesheet"/>
+    <link href="/css/main.css" rel="stylesheet" />
     <!--<![endif]-->
 
-    <meta property="og:image" content="/assets/images/govuk-opengraph-image.png"/>
+    <meta property="og:image" content="/assets/images/govuk-opengraph-image.png" />
 </head>
 <body class="govuk-template__body">
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KWQBWGJ"
+                height="0" width="0" style="display: none; visibility: hidden">
+        </iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <script>
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
     <partial name="_Header" />
     <partial name="_Menu" model="@accountHashedId" />
-<div class="govuk-width-container">
-    @if (IsSectionDefined("Back"))
-    {
-        @RenderSection("Back")
-    }
-    <main class="govuk-main-wrapper " id="main-content" role="main">
-        <partial name="_FlashMessagePartial"/>
-        @RenderBody()
-    </main>
-</div>
+    <partial name="_ZenDeskWidget" />
+    <div class="govuk-width-container">
+        @if (IsSectionDefined("Back"))
+        {
+            @RenderSection("Back")
+        }
+        <main class="govuk-main-wrapper " id="main-content" role="main">
+            <partial name="_FlashMessagePartial" />
+            @RenderBody()
+        </main>
+    </div>
 
     <partial name="_Footer" />
+    <partial name="_GoogleAnalyticsInfo" />
+
 
     <script src="/libs/govuk-frontend/all.js"></script>
     <script src="/libs/jquery/jquery.min.js"></script>
@@ -53,7 +78,7 @@
 
     <script>
         window.GOVUKFrontend.initAll();
-            window.DASFrontend.initAll();
+        window.DASFrontend.initAll();
     </script>
 
     @RenderSection("Scripts", required: false)

@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/unapproved/with-training-provider";
 }
 
 <div class="govuk-grid-row">
@@ -24,8 +25,7 @@
 
                     @foreach (var cohort in Model.Cohorts)
                     {
-
-                        <tr class="govuk-table__row">
+                        <tr class="govuk-table__row" data-cohort="@cohort.CohortReference">
                             <td class="govuk-table__cell" data-label="Training provider">@cohort.ProviderName</td>
                             <td class="govuk-table__cell" data-label="Reference">@cohort.CohortReference</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfApprentices</td>

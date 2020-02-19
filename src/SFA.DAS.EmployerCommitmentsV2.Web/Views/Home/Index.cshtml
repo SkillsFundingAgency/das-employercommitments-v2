@@ -1,5 +1,57 @@
-﻿@{
-    ViewData["Title"] = "Home";
-}
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerUrlHelper.Mvc
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Home.IndexViewModel
+@inject ILinkGenerator LinkGenerator
 
-Hello World
+@{
+    ViewData["Title"] = "Apprentices";
+    ViewBag.GaData.Vpv = "/unapproved/add";
+}
+<h1 class="govuk-heading-xl">Apprentices</h1>
+
+<hr class="das-section-break das-section-break--l das-section-break--heavy-grey">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="das-cards">
+            <div class="das-card das-card--underline">
+                <h2 class="govuk-heading-m das-card__heading"><a id="AddApprentice" href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/inform")" class="govuk-link">Add an apprentice</a></h2>
+                <p>Add apprentices to a new cohort or ask your training provider to add them.</p>
+            </div>
+            <div class="das-card das-card--underline">
+                <h2 class="govuk-heading-m das-card__heading"><a id="YourCohorts" href="@Url.Action("Cohorts", "Cohort", new {Model.AccountHashedId})" class="govuk-link">Your cohorts</a></h2>
+                <p>Review, edit, approve and add more apprentices to cohorts you've already started.</p>
+            </div>
+            <div class="das-card">
+                <h2 class="govuk-heading-m das-card__heading"><a id="ManageApprentices" href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/manage/all")" class="govuk-link">Manage your apprentices</a></h2>
+                <p>View approved apprentices, update details of existing apprentices or stop and pause payments to training providers.</p>
+            </div>
+            @if (Model.ShowSetPaymentOrderLink)
+            {
+                <div class="das-card">
+                    <h2 class="govuk-heading-m"><a id="SetPaymentOrder" href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/manage/paymentorder")" class="govuk-link">Set payment order</a></h2>
+                    <p>View and change the order in which your providers are paid from your available funds.</p>
+                </div>
+            }
+        </div>
+        <hr class="das-section-break das-section-break--l das-section-break--heavy-grey">
+        <div class="das-cards">
+            <div class="das-card">
+                <h2 class="govuk-heading-m das-card__heading"><a id="ReportPublicSectorTarget" href="@Url.PublicSectorReportingLink($"/accounts/{Model.AccountHashedId}/home")" class="govuk-link">Report public sector apprenticeship target</a></h2>
+                <p>Submit data on your progress towards the public sector apprenticeship target</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Back
+{
+    <div class="govuk-breadcrumbs">
+        <ol class="govuk-breadcrumbs__list">
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link" id="breadcrumb-home" href="@Url.UsersLink($"/accounts/{Model.AccountHashedId}/teams")">Home</a>
+            </li>
+            <li class="govuk-breadcrumbs__list-item" aria-current="page">Apprentices</li>
+        </ol>
+    </div>
+
+}
