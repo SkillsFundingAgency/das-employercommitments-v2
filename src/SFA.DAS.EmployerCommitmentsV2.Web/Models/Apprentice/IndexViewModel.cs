@@ -4,12 +4,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
     public class IndexViewModel
     {
-        public string AccountHashedId { get; set; }
+        public const string HeaderClassName = "das-table__sort";
 
+        public string AccountHashedId { get; set; }
         public IEnumerable<ApprenticeshipDetailsViewModel> Apprenticeships { get; set; }
         public string SortedByHeaderClassName { get; set; }
-        public const string HeaderClassName = "das-table__sort";
-    
+        public ApprenticesFilterModel FilterModel { get; set; }
+        public bool ShowPageLinks  => FilterModel.TotalNumberOfApprenticeshipsFound > Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage;
+
         public void SortedByHeader()
         {
             SortedByHeaderClassName += HeaderClassName;
@@ -22,8 +24,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                 SortedByHeaderClassName += " das-table__sort--asc";
             }
         }
-
-        public ApprenticesFilterModel FilterModel { get; set; }
-        public bool ShowPageLinks  => FilterModel.TotalNumberOfApprenticeshipsFound > Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage;
     }
 }
