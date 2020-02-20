@@ -1,5 +1,3 @@
-using SFA.DAS.Authorization.Services;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
@@ -25,6 +23,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
         public static string PayeSchemes(this ILinkGenerator linkGenerator, string accountHashedId)
         {
             return linkGenerator.AccountsLink($"accounts/{accountHashedId}/schemes");
+        }
+
+        public static string ApprenticeDetails(
+            this ILinkGenerator linkGenerator,
+            string accountHashedId,
+            string hashedApprenticeshipId)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details");
         }
 
         public static string ViewApprentice(this ILinkGenerator linkGenerator, 

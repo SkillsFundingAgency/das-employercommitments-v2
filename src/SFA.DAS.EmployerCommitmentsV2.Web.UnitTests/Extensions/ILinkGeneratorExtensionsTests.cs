@@ -75,6 +75,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
             Assert.AreEqual($"{_fixture.UsersLink}accounts/{accountHashedId}/teams", url);
         }
 
+        [Test, AutoData]
+        public void ApprenticeDetails_BuildsPathCorrectly(
+            string accountHashedId,
+            string hashedApprenticeshipId)
+        {
+            var url = _fixture.Sut.ApprenticeDetails(accountHashedId, hashedApprenticeshipId);
+            Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details", url);
+        }
+
     }
 
     public class ILinkGeneratorExtensionsTestsFixture
