@@ -21,6 +21,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
     public class IndexViewModelMapperTests
     {
         [Test, MoqAutoData]
+        public async Task Then_Defaults_To_Page_One_If_Less_Than_One(
+            [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
+            IndexViewModelMapper mapper)
+        {
+            var request = new IndexRequest { PageNumber = 0 };
+
+            await mapper.Map(request);
+
+            mockApiClient.Verify(client => client.GetApprenticeships(It.Is<ApiRequests.GetApprenticeshipsRequest>(apiRequest =>
+                        apiRequest.PageNumber == 1 &&
+                        apiRequest.PageItemCount == Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test, MoqAutoData]
         public async Task Should_Pass_Params_To_Api_Call(
             IndexRequest webRequest,
             long decodedAccountId,
