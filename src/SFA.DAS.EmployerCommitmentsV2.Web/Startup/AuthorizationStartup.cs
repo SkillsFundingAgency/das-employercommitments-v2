@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.Authorization.CommitmentPermissions.DependencyResolution;
-using SFA.DAS.Authorization.DependencyResolution;
-using SFA.DAS.Authorization.EmployerFeatures.DependencyResolution;
+using SFA.DAS.Authorization.CommitmentPermissions.DependencyResolution.Microsoft;
+using SFA.DAS.Authorization.DependencyResolution.Microsoft;
+using SFA.DAS.Authorization.EmployerFeatures.DependencyResolution.Microsoft;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
