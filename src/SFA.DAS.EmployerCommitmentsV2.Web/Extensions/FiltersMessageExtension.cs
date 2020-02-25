@@ -42,12 +42,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 
             if (!string.IsNullOrWhiteSpace(model.SelectedProvider))
             {
-                filters.Add(model.SelectedProvider);
+                filters.Add(WebUtility.HtmlEncode(model.SelectedProvider));
             }
 
             if (!string.IsNullOrWhiteSpace(model.SelectedCourse))
             {
-                filters.Add(model.SelectedCourse);
+                filters.Add(WebUtility.HtmlEncode(model.SelectedCourse));
             }
 
             if (model.SelectedStatus.HasValue)

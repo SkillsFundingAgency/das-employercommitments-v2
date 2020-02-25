@@ -33,15 +33,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
         }
 
         [Test]
-        public void And_Search_Has_Html_Then_Html_Encodes_It()
+        public void And_Search_And_Filters_Has_Html_Then_Html_Encodes_It()
         {
             var htmlSearchTerm = "<script>alert('hi');</script>";
             var filterModel = new ApprenticesFilterModel
             {
-                SearchTerm = htmlSearchTerm
+                SearchTerm = htmlSearchTerm,
+                SelectedCourse = htmlSearchTerm,
+                SelectedProvider = htmlSearchTerm
             };
 
-            filterModel.FiltersUsedMessage.Value.Should().Be($"matching <strong>‘{WebUtility.HtmlEncode(htmlSearchTerm)}’</strong>");
+            filterModel.FiltersUsedMessage.Value.Should().Be($"matching <strong>‘{WebUtility.HtmlEncode(htmlSearchTerm)}’</strong>, <strong>{WebUtility.HtmlEncode(htmlSearchTerm)}</strong> and <strong>{WebUtility.HtmlEncode(htmlSearchTerm)}</strong>");
         }
 
         [Test, AutoData]
