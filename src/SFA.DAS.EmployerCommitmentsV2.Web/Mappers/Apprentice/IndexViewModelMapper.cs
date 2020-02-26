@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 TotalNumberOfApprenticeships = response.TotalApprenticeships,
                 TotalNumberOfApprenticeshipsFound = response.TotalApprenticeshipsFound,
                 TotalNumberOfApprenticeshipsWithAlertsFound = response.TotalApprenticeshipsWithAlertsFound,
-                PageNumber = source.PageNumber,
+                PageNumber = response.PageNumber,
                 SortField = source.SortField,
                 ReverseSort = source.ReverseSort,
                 SearchTerm = source.SearchTerm,

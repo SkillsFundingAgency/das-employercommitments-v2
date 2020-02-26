@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -153,7 +153,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(apprenticeshipsResponse.TotalApprenticeshipsFound, viewModel.FilterModel.TotalNumberOfApprenticeshipsFound);
             Assert.AreEqual(apprenticeshipsResponse.TotalApprenticeshipsWithAlertsFound, viewModel.FilterModel.TotalNumberOfApprenticeshipsWithAlertsFound);
             Assert.AreEqual(apprenticeshipsResponse.TotalApprenticeships, viewModel.FilterModel.TotalNumberOfApprenticeships);
-            Assert.AreEqual(request.PageNumber, viewModel.FilterModel.PageNumber);
+            Assert.AreEqual(apprenticeshipsResponse.PageNumber, viewModel.FilterModel.PageNumber);
             Assert.AreEqual(request.ReverseSort,viewModel.FilterModel.ReverseSort);
             Assert.AreEqual(request.SortField, viewModel.FilterModel.SortField);
             Assert.AreEqual(filtersResponse.ProviderNames, viewModel.FilterModel.ProviderFilters);
@@ -204,9 +204,50 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.IsTrue(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.Paused));
             Assert.IsTrue(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.Stopped));
             Assert.IsTrue(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.WaitingToStart));
-
             Assert.IsFalse(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.Unknown));
             Assert.IsFalse(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.Completed));
+        }
+
+        [Test, MoqAutoData]
+        public async Task ThenWillSetPageNumberToLastOneIfRequestPageNumberIsTooHigh(
+            IndexRequest request,
+            GetApprenticeshipsResponse apprenticeshipsResponse,
+            GetApprenticeshipsFilterValuesResponse filtersResponse,
+            ApprenticeshipDetailsViewModel expectedViewModel,
+            [Frozen]
+            Mock<IMapper<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse, ApprenticeshipDetailsViewModel>>
+                detailsViewModelMapper,
+            [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
+            IndexViewModelMapper mapper)
+        {
+            //Arrange
+            apprenticeshipsResponse.PageNumber = (int)Math.Ceiling((double)apprenticeshipsResponse.TotalApprenticeshipsFound / Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage);
+            request.PageNumber = apprenticeshipsResponse.PageNumber + 10;
+
+            apprenticeshipsResponse.TotalApprenticeships =
+                Constants.ApprenticesSearch.NumberOfApprenticesRequiredForSearch + 1;
+
+            mockApiClient
+                .Setup(x => x.GetApprenticeships(
+                    It.IsAny<ApiRequests.GetApprenticeshipsRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(apprenticeshipsResponse);
+
+            mockApiClient
+                .Setup(client => client.GetApprenticeshipsFilterValues(
+                    It.IsAny<ApiRequests.GetApprenticeshipFiltersRequest>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(filtersResponse);
+
+            detailsViewModelMapper
+                .Setup(x => x.Map(It.IsAny<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>()))
+                .ReturnsAsync(expectedViewModel);
+
+            //Act
+            var viewModel = await mapper.Map(request);
+
+            //Assert
+            Assert.AreEqual(1, viewModel.FilterModel.PageLinks.Count(x => x.IsCurrent.HasValue && x.IsCurrent.Value));
+            Assert.IsTrue(viewModel.FilterModel.PageLinks.Last().IsCurrent);
         }
     }
 }
