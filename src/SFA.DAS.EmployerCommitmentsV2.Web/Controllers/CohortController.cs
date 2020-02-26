@@ -11,9 +11,7 @@ using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
@@ -51,7 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{cohortReference}")]
-        [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
+        [DasAuthorize(CommitmentOperation.AccessCohort)]
         public async Task<IActionResult> Details(DetailsRequest request)
         {
             var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
@@ -60,7 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{cohortReference}")]
-        [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
+        [DasAuthorize(CommitmentOperation.AccessCohort)]
         [HttpPost]
         public async Task<IActionResult> Details(DetailsViewModel viewModel)
         {
@@ -98,7 +96,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{cohortReference}/delete")]
-        [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
+        [DasAuthorize(CommitmentOperation.AccessCohort)]
         public async Task<IActionResult> ConfirmDelete(DetailsRequest request)
         {
             var viewModel = await _modelMapper.Map<ConfirmDeleteViewModel>(request);
@@ -106,21 +104,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{cohortReference}/delete")]
-        [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
+        [DasAuthorize(CommitmentOperation.AccessCohort)]
         [HttpPost]
         public async Task<IActionResult> Delete([FromServices] IAuthenticationService authenticationService, ConfirmDeleteViewModel viewModel)
         {
             if(viewModel.ConfirmDeletion == true)
             { 
                 await _commitmentsApiClient.DeleteCohort(viewModel.CohortId, authenticationService.UserInfo, CancellationToken.None);
-                return Redirect(_linkGenerator.CommitmentsLink($"/accounts/{viewModel.AccountHashedId}/apprentices/cohorts"));
+                return RedirectToAction("Cohorts", new {viewModel.AccountHashedId});
             }
             return RedirectToAction("Details", new { viewModel.CohortReference, viewModel.AccountHashedId });
         }
 
         [HttpGet]
         [Route("{cohortReference}/sent")]
-        [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
+        [DasAuthorize(CommitmentOperation.AccessCohort)]
         public async Task<IActionResult> Sent(SentRequest request)
         {
             var viewModel = await _modelMapper.Map<SentViewModel>(request);
@@ -129,7 +127,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("{cohortReference}/approved")]
-        [DasAuthorize(CommitmentOperation.AccessCohort, EmployerFeature.EnhancedApproval)]
+        [DasAuthorize(CommitmentOperation.AccessCohort)]
         public async Task<IActionResult> Approved(ApprovedRequest request)
         {
             var viewModel = await _modelMapper.Map<ApprovedViewModel>(request);
@@ -259,13 +257,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var request = await _modelMapper.Map<CreateCohortRequest>(model);
             var newCohort = await _commitmentsApiClient.CreateCohort(request);
 
-            if (_authorizationService.IsAuthorized(EmployerFeature.EnhancedApproval))
-            {
-                return RedirectToAction("Details", new { model.AccountHashedId, newCohort.CohortReference });
-            }
-
-            var reviewYourCohort = _linkGenerator.CohortDetails(model.AccountHashedId, newCohort.CohortReference);
-                return Redirect(reviewYourCohort);
+            return RedirectToAction("Details", new { model.AccountHashedId, newCohort.CohortReference });
         }
 
         [Route("add/message")]

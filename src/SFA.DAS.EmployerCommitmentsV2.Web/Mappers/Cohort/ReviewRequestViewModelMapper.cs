@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
-using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
 
 
@@ -16,13 +16,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly IEncodingService _encodingService;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly ILinkGenerator _linkGenerator;
 
-        public ReviewRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary, ILinkGenerator linkGenerator)
+        public ReviewRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary)
         {
             _encodingService = encodingSummary;
             _commitmentsApiClient = commitmentApiClient;
-            _linkGenerator = linkGenerator;
         }
 
         public async Task<ReviewViewModel> Map(CohortsByAccountRequest source)
@@ -32,7 +30,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var reviewViewModel = new ReviewViewModel
             {
                 AccountHashedId = source.AccountHashedId,
-                BackLinkUrl = _linkGenerator.Cohorts(source.AccountHashedId),
                 Cohorts = cohortsResponse.Cohorts
                     .Where(x => x.GetStatus() == CohortStatus.Review)
                     .OrderBy(z => z.CreatedOn)
@@ -50,7 +47,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         private string GetMessage(Message latestMessageFromProvider)
         {
-           if (!string.IsNullOrWhiteSpace(latestMessageFromProvider?.Text))
+            if (!string.IsNullOrWhiteSpace(latestMessageFromProvider?.Text))
             {
                 return latestMessageFromProvider.Text;
             }
