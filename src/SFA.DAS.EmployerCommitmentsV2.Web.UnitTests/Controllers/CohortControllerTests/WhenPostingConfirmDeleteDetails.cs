@@ -85,8 +85,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             public void VerifyRedirectsToBingoPage(IActionResult result)
             {
-                var redirect = (RedirectResult)result;
-                Assert.AreEqual($"/accounts/{ConfirmDeleteViewModel.AccountHashedId}/apprentices/cohorts", redirect.Url);
+                var redirect = (RedirectToActionResult)result;
+                Assert.AreEqual($"Cohorts", redirect.ActionName);
+                Assert.AreEqual(ConfirmDeleteViewModel.AccountHashedId, redirect.RouteValues["AccountHashedId"]);
             }
             public void VerifyRedirectsToCohortDetailsPage(IActionResult result)
             {
