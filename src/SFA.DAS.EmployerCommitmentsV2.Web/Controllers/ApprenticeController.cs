@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
+using SFA.DAS.CommitmentsV2.Shared.ActionResults;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
@@ -59,7 +60,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var downloadViewModel = await _modelMapper.Map<DownloadViewModel>(request);
 
-            return File(downloadViewModel.Content, Constants.ApprenticesSearch.DownloadContentType, downloadViewModel.Name);
+            return new FileCallbackResult(downloadViewModel.ContentType, async (outputStream, _) =>
+            {
+                var moreData = true;
+                while (moreData)
+                {
+                    using (var stream2 = await downloadViewModel.GetAndCreateContent(downloadViewModel.Request))
+                    {
+                        if (stream2.Length == 0)
+                        {
+                            moreData = false;
+                        }
+
+                        downloadViewModel.Request.PageNumber += 1;
+
+                        stream2.CopyTo(outputStream);
+                    }
+
+                    downloadViewModel.Dispose();
+                }
+
+            })
+            { FileDownloadName = downloadViewModel.Name };
         }
     }
 }

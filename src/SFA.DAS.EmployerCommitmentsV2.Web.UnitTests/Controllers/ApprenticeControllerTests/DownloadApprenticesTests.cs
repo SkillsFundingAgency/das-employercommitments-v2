@@ -3,6 +3,7 @@ using AutoFixture.NUnit3;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Shared.ActionResults;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -15,11 +16,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [Test, MoqAutoData]
         public async Task ThenTheFileContentIsSetCorrectly(
             DownloadRequest request,
-            [Frozen] DownloadViewModel expectedCsvContent,
+            string expectedFileName,
             [Frozen] Mock<IModelMapper> csvMapper,
             ApprenticeController controller)
         {
             //Arrange
+            var expectedCsvContent = new DownloadViewModel
+            {
+                Name = expectedFileName
+            };
             csvMapper.Setup(x =>
                     x.Map<DownloadViewModel>(request))
                 .ReturnsAsync(expectedCsvContent);
@@ -27,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             //Act
             var actual = await controller.Download(request);
 
-            var actualFileResult = actual as FileContentResult;
+            var actualFileResult = actual as FileCallbackResult;
 
             //Assert
             Assert.IsNotNull(actualFileResult);
