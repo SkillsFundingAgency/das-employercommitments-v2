@@ -32,7 +32,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .Setup(service => service.Decode(csvRequest.AccountHashedId, EncodingType.AccountId))
                 .Returns(decodedAccountId);
 
-            await mapper.Map(csvRequest);
+            var mappedResult = await mapper.Map(csvRequest);
+
+            await mappedResult.GetAndCreateContent(mappedResult.Request);
 
             mockApiClient.Verify(client => client.GetApprenticeships(
                 It.Is<GetApprenticeshipsRequest>(apiRequest =>
