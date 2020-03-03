@@ -17,6 +17,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         [Name("Apprenticeship training course")]
         public string CourseName { get ; private set ; }
 
+        [Name("Planned start date")]
+        public string PlannedStartDate { get; private set; }
+
         [Name("Planned end date")]
         public string PlannedEndDate { get ; private set ; }
 
@@ -33,6 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                 ApprenticeName = $"{model.FirstName} {model.LastName}",
                 Provider = model.ProviderName,
                 CourseName = model.CourseName,
+                PlannedStartDate = model.StartDate.ToGdsFormatWithoutDay(),
                 PlannedEndDate = model.EndDate.ToGdsFormatWithoutDay(),
                 Status = model.ApprenticeshipStatus.GetDescription(),
                 Alerts = GenerateAlerts(model.Alerts)
