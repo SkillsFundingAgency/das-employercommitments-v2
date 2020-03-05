@@ -47,34 +47,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 PageItemCount = Constants.ApprenticesSearch.NumberOfApprenticesPerDownloadPage
             };
             
-            downloadViewModel.Request = getApprenticeshipsRequest;
-            downloadViewModel.GetAndCreateContent = Handler;
-            downloadViewModel.Dispose = DisposeService;
-            downloadViewModel.Name = $"{"Manageyourapprentices"}_{_currentDateTime.UtcNow:yyyyMMddhhmmss}.csv";
-            return await Task.FromResult(downloadViewModel);
-        }
-
-        public async Task<MemoryStream> Handler(GetApprenticeshipsRequest getApprenticeshipsRequest)
-        {
             var result = await _client.GetApprenticeships(getApprenticeshipsRequest);
-
-            var totalAllowedPages = Math.Ceiling((decimal)result.TotalApprenticeshipsFound / getApprenticeshipsRequest.PageItemCount);
-
-            if (getApprenticeshipsRequest.PageNumber > totalAllowedPages)
-            {
-                return new MemoryStream();
-            }
-
             var csvContent = result.Apprenticeships.Select(c => (ApprenticeshipDetailsCsvModel)c).ToList();
 
-            return _createCsvService.GenerateCsvContent(csvContent, getApprenticeshipsRequest.PageNumber == 1);
+            downloadViewModel.Content = _createCsvService.GenerateCsvContent(csvContent, true);
+            downloadViewModel.Request = getApprenticeshipsRequest;
+            downloadViewModel.Name = $"{"Manageyourapprentices"}_{_currentDateTime.UtcNow:yyyyMMddhhmmss}.csv";
+            return await Task.FromResult(downloadViewModel);
+            
         }
 
-        public bool DisposeService()
-        {
-            _createCsvService.Dispose();
-
-            return true;
-        }
     }
 }

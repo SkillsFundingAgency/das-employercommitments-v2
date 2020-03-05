@@ -9,8 +9,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
     {
         public string Name { get; set; }
         public string ContentType => "application/octet-stream";
-        public Func<GetApprenticeshipsRequest, Task<MemoryStream>> GetAndCreateContent { get; set; }
         public GetApprenticeshipsRequest Request { get; set; }
-        public Func<bool> Dispose { get; set; }
+        public Stream Content { get; set; }
     }
 }

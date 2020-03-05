@@ -32,9 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .Setup(service => service.Decode(csvRequest.AccountHashedId, EncodingType.AccountId))
                 .Returns(decodedAccountId);
 
-            var mappedResult = await mapper.Map(csvRequest);
-
-            await mappedResult.GetAndCreateContent(mappedResult.Request);
+            await mapper.Map(csvRequest);
 
             mockApiClient.Verify(client => client.GetApprenticeships(
                 It.Is<GetApprenticeshipsRequest>(apiRequest =>
@@ -79,13 +77,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Act
             var content = await mapper.Map(request);
-            var csvContent = await content.GetAndCreateContent(content.Request);
-
+            
             //Assert
             Assert.AreEqual(expectedFileName, content.Name);
-            var actualContent = csvContent.ToArray();
-            Assert.IsNotEmpty(actualContent);
-            Assert.AreEqual(expectedCsvContent, actualContent);
+            Assert.AreEqual(expectedMemoryStream, content.Content);
         }
     }
 }
