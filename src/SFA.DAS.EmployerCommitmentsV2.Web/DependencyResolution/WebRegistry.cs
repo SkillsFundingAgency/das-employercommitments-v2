@@ -1,4 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using Microsoft.AspNetCore.Http;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Services;
 using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
@@ -20,6 +21,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
             For<StubEmployerAccountsApiClient>().Use<StubEmployerAccountsApiClient>().Singleton();
             For<IEmployerAccountsApiClient>().InterceptWith(new FuncInterceptor<IEmployerAccountsApiClient>(
                 (c, o) => c.GetInstance<EmployerCommitmentsV2Configuration>().UseStubEmployerAccountsApiClient ? c.GetInstance<StubEmployerAccountsApiClient>() : o));
+            For(typeof(ICookieStorageService<>)).Use(typeof(CookieStorageService<>)).Singleton();
+            For(typeof(HttpContext)).Use(c => c.GetInstance<IHttpContextAccessor>().HttpContext);
         }
     }
 }

@@ -6,6 +6,7 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Features;
+using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 
@@ -17,16 +18,35 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     public class ApprenticeController : Controller
     {
         private readonly IModelMapper _modelMapper;
+        private readonly ICookieStorageService<IndexRequest> _cookieStorage;
 
-        public ApprenticeController(IModelMapper modelMapper)
+        public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage)
         {
             _modelMapper = modelMapper;
+            _cookieStorage = cookieStorage;
         }
 
         [Route("", Name = RouteNames.ApprenticesIndex)]
         [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         public async Task<IActionResult> Index(IndexRequest request)
         {
+            IndexRequest savedRequest = null;
+
+            if (request.FromSearch)
+            {
+                savedRequest = _cookieStorage.Get(CookieNames.ManageApprentices);
+
+                if (savedRequest != null)
+                {
+                    request = savedRequest;
+                }
+            }
+
+            if (savedRequest == null)
+            {
+                _cookieStorage.Update(CookieNames.ManageApprentices, request);
+            }
+
             var viewModel = await _modelMapper.Map<IndexViewModel>(request);
             viewModel.SortedByHeader();
 
