@@ -2,6 +2,10 @@
 @using SFA.DAS.CommitmentsV2.Shared.Extensions
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.ConfirmDeleteViewModel
 
+@{
+    ViewBag.GaData.Vpv = "/unapproved/delete";
+}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
@@ -75,5 +79,5 @@
 
 @section Back
 {
-    <a class="govuk-back-link" href="@Url.CommitmentsV2Link($"{Model.AccountHashedId}/unapproved/{Model.CohortReference}")">Back</a>
+    <a class="govuk-back-link" href="@Url.Action("Details", "Cohort", new {Model.AccountHashedId, Model.CohortReference})">Back</a>
 }

@@ -6,9 +6,9 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
-using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
 using System;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -17,13 +17,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         public const string Title = "Apprentice details with transfer sending employer";
         private readonly IEncodingService _encodingService;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly ILinkGenerator _linkGenerator;
 
-        public WithTransferSenderRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary, ILinkGenerator linkGenerator)
+        public WithTransferSenderRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary)
         {
             _encodingService = encodingSummary;
             _commitmentsApiClient = commitmentApiClient;
-            _linkGenerator = linkGenerator;
         }
 
         public async Task<WithTransferSenderViewModel> Map(CohortsByAccountRequest source)
@@ -34,7 +32,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             {
                 Title = Title,
                 AccountHashedId = source.AccountHashedId,
-                BackLink = _linkGenerator.Cohorts(source.AccountHashedId),
                 Cohorts = cohortsResponse.Cohorts
                     .Where(x => x.GetStatus() == CohortStatus.WithTransferSender)
                     .OrderBy(GetOrderByDate)

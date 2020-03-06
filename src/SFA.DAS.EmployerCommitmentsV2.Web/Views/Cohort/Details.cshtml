@@ -1,14 +1,14 @@
 ﻿@using SFA.DAS.EmployerUrlHelper.Mvc
 @using SFA.DAS.CommitmentsV2.Shared.Extensions
-@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
-@inject ILinkGenerator LinkGenerator
-@inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService
+@*@inject ILinkGenerator LinkGenerator
+@inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService*@
 
 @{
     ViewData["Title"] = Model.PageTitle;
+    ViewBag.GaData.Vpv = "/unapproved";
 }
 
 <div class="govuk-grid-row">
@@ -113,19 +113,9 @@
                                 <br /><br />
                                 @if (!Model.IsReadOnly)
                                 {
-                                    @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.EnhancedApproval))
-
-                                    {
-                                        <a class="govuk-link delete-apprentice" href="@Url.RouteUrl("DeleteDraftApprenticeship", new { draftApprenticeship.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = DeleteDraftApprenticeshipOrigin.CohortDetails})">
-                                            Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a class="govuk-link delete-apprentice" href="@LinkGenerator.DeleteApprentice(Model.AccountHashedId, Model.CohortReference, draftApprenticeship.DraftApprenticeshipHashedId)">
-                                            Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
-                                        </a>
-                                    }
+                                    <a class="govuk-link delete-apprentice" href="@Url.RouteUrl("DeleteDraftApprenticeship", new { draftApprenticeship.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = DeleteDraftApprenticeshipOrigin.CohortDetails})">
+                                        Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
+                                    </a>
                                 }
                             </td>
                         </tr>
@@ -236,5 +226,5 @@
 
 @section Back
 {
-    <a class="govuk-back-link" href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/cohorts")">Back</a>
+    <a class="govuk-back-link" href="@Url.Action("Cohorts", new {Model.AccountHashedId})">Back</a>
 }

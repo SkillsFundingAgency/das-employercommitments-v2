@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/unapproved/with-training-provider";
 }
 
 <div class="govuk-grid-row">
@@ -44,5 +45,5 @@
 
 @section Back
 {
-    <a id="back-link" class="govuk-back-link" href="@Model.BackLink">Back</a>
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Cohorts", "Cohort", new { Model.AccountHashedId})">Back</a>
 }

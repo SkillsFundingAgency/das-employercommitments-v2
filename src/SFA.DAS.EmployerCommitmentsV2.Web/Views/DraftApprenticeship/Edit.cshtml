@@ -1,11 +1,11 @@
-﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
-@using  SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
+﻿@using  SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.EditDraftApprenticeshipViewModel
-@inject ILinkGenerator LinkGenerator
-@inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService
+@*@inject ILinkGenerator LinkGenerator
+@inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService*@
 
 @{
     ViewData["Title"] = "Apprenticeships";
+    ViewBag.GaData.Vpv = "/unapproved/apprentices/edit";
 }
 
 <div class="govuk-grid-row">
@@ -18,21 +18,12 @@
 
         <form id="addApprenticeship" novalidate method="post">
             @Html.AntiForgeryToken()
-            <partial name="DraftApprenticeship" for="@Model" />
+            <partial name="_DraftApprenticeship" for="@Model" />
             <button type="submit" class="govuk-button">Save</button>
 
-            @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.EnhancedApproval))
-            {
-                <a class="govuk-button govuk-button--warning das-float-right" href="@Url.RouteUrl("DeleteDraftApprenticeship", new { Model.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = DeleteDraftApprenticeshipOrigin.EditDraftApprenticeship })">
-                    Delete
-                </a>
-            }
-            else
-            {
-                <a class="govuk-button govuk-button--warning das-float-right" href="@LinkGenerator.DeleteApprentice(Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId)">
-                    Delete
-                </a>
-            }
+            <a class="govuk-button govuk-button--warning das-float-right" href="@Url.RouteUrl("DeleteDraftApprenticeship", new { Model.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = DeleteDraftApprenticeshipOrigin.EditDraftApprenticeship })">
+                Delete
+            </a>
         </form>
 
     </div>

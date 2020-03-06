@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AspNetCore.IServiceCollection.AddIUrlHelper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.Mvc.Extensions;
@@ -25,6 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .AddDasHealthChecks()
                 .AddDasMaMenuConfiguration(_configuration)
                 .AddDasMvc()
+                .AddUrlHelper()
                 .AddEmployerUrlHelper()
                 .AddMemoryCache();
         }
@@ -43,7 +45,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .UseStaticFiles()
                 .UseDasHealthChecks()
                 .UseAuthentication()
-                .UseDasContentSecurityPolicy()
                 .UseMvc();
         }
     }
