@@ -76,6 +76,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             //Assert
             cookieService.Verify(x => x.Update(CookieNames.ManageApprentices, request, It.IsAny<int>()));
+            cookieService.Verify(x => x.Get(It.IsAny<string>()), Times.Never);
         }
 
         [Test, MoqAutoData]
