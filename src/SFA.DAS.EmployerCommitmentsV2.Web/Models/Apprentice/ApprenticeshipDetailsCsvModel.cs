@@ -10,22 +10,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
     {
         [Name("Apprentice Name")]
         public string ApprenticeName { get ; private set ; }
-
-        [Name("Provider")]
-        public string Provider { get ; private set ; }
-
         [Name("Apprenticeship training course")]
-        public string CourseName { get ; private set ; }
-
+        public string CourseName { get; private set; }
         [Name("Planned start date")]
         public string PlannedStartDate { get; private set; }
-
         [Name("Planned end date")]
         public string PlannedEndDate { get ; private set ; }
-
+        [Name("Provider")]
+        public string Provider { get; private set; }
         [Name("Status")]
         public string Status { get ; private set ; }
-
         [Name("Alerts")]
         public string Alerts { get ; private set ; }
 
