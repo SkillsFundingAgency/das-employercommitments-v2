@@ -46,6 +46,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
             result.PlannedEndDate.Should().Be(source.EndDate.ToString("MMM yyyy"));
         }
 
+
+        [Test, AutoData]
+        public void Then_Maps_PlannedStartDate(
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
+        {
+            ApprenticeshipDetailsCsvModel result = source;
+
+            result.PlannedStartDate.Should().Be(source.StartDate.ToString("MMM yyyy"));
+        }
+
         [Test, AutoData]
         public void Then_Maps_Status(
             GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
