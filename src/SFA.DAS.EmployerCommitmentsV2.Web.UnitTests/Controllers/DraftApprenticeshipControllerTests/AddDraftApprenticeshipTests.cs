@@ -45,8 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 f => f.SetCohortWithOtherParty(),
                 f => f.Get(),
                 (f, r) => r.Should().NotBeNull()
-                    .And.BeOfType<RedirectResult>().Which
-                    .Url.Should().Be(f.CohortDetailsUrl));
+                    .And.BeEquivalentTo(new {ActionName = "Details", ControllerName = "Cohort"}, op => op.ExcludingMissingMembers()));
         }
 
         [Test]
@@ -58,25 +57,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
         
         [Test]
-        public async Task WhenPostingAction_ThenShouldRedirectToCohortDetailsUrl()
-        {
-            await TestAsync(
-                f => f.Post(),
-                (f, r) => r.Should().NotBeNull()
-                    .And.BeOfType<RedirectResult>().Which
-                    .Url.Should().Be(f.CohortDetailsUrl));
-        }
-
-        [Test]
         public async Task WhenPostingAction_WithEnhancedApproval_ThenShouldRedirectToCohortDetailsV2()
         {
             await TestAsync(
-                a => a.WithEnhancedApproval(),
                 f => f.Post(),
                 (f, r) => r.Should().NotBeNull()
                     .And.BeOfType<RedirectToActionResult>().Which.ActionName.Should().Be("Details"));
         }
-
     }
 
     public class AddDraftApprenticeshipTestsFixture
@@ -92,9 +79,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
         public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClient { get; set; }
         public Mock<IModelMapper> ModelMapper { get; set; }
-        public Mock<ILinkGenerator> LinkGenerator { get; set; }
         public Mock<IAuthorizationService> AuthorizationService { get; set; }
         public DraftApprenticeshipController Controller { get; set; }
+        public Mock<ILinkGenerator> LinkGenerator { get; set; }
 
         public AddDraftApprenticeshipTestsFixture()
         {
@@ -142,7 +129,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             AuthorizationService.Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval)).Returns(false);
             
             Controller = new DraftApprenticeshipController(
-                LinkGenerator.Object,
                 ModelMapper.Object,
                 CommitmentsApiClient.Object,
                 AuthorizationService.Object
@@ -153,8 +139,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             ModelMapper.Setup(m => m.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(ViewModel)).Returns(Task.FromResult(AddDraftApprenticeshipRequest));
 
             ModelMapper.Setup(m => m.Map<AddDraftApprenticeshipViewModel>(It.IsAny<AddDraftApprenticeshipRequest>())).ReturnsAsync(ViewModel);
-
-            LinkGenerator.Setup(g => g.CommitmentsLink(CohortDetailsUrl)).Returns(CohortDetailsUrl);
         }
 
         public Task<IActionResult> Get()
@@ -179,12 +163,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             ModelMapper.Setup(x => x.Map<AddDraftApprenticeshipViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
                 .Throws(new CohortEmployerUpdateDeniedException("Cohort With Other Party"));
             
-            return this;
-        }
-
-        public AddDraftApprenticeshipTestsFixture WithEnhancedApproval()
-        {
-            AuthorizationService.Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval)).Returns(true);
             return this;
         }
     }
