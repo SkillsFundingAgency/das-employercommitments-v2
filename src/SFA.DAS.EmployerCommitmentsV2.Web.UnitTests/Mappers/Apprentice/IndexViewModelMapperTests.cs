@@ -86,7 +86,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             await mapper.Map(webRequest);
 
             mockApiClient.Verify(client => client.GetApprenticeshipsFilterValues(
-                It.Is<ApiRequests.GetApprenticeshipFiltersRequest>(request => request.AccountId == decodedAccountId),
+                It.Is<ApiRequests.GetApprenticeshipFiltersRequest>(request => request.EmployerAccountId == decodedAccountId),
                 It.IsAny<CancellationToken>()), 
                 Times.Once);
         }

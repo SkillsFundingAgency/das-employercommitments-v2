@@ -70,7 +70,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             if (response.TotalApprenticeships >= Constants.ApprenticesSearch.NumberOfApprenticesRequiredForSearch)
             {
                 var filters = await _client.GetApprenticeshipsFilterValues(
-                    new GetApprenticeshipFiltersRequest{AccountId = decodedAccountId});
+                    new GetApprenticeshipFiltersRequest{EmployerAccountId = decodedAccountId});
 
                 filterModel.ProviderFilters = filters.ProviderNames;
                 filterModel.CourseFilters = filters.CourseNames;
