@@ -41,6 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     apiRequest.ProviderName == csvRequest.SelectedProvider &&
                     apiRequest.CourseName == csvRequest.SelectedCourse &&
                     apiRequest.Status == csvRequest.SelectedStatus &&
+                    apiRequest.PageNumber == 0 &&
                     apiRequest.EndDate == csvRequest.SelectedEndDate),
                 It.IsAny<CancellationToken>()));
         }
@@ -57,7 +58,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var client = new Mock<ICommitmentsApiClient>();
             var csvService = new Mock<ICreateCsvService>();
             var currentDateTime = new Mock<ICurrentDateTime>();
-            var expectedCsvContent = new byte[] {1, 2, 3, 4};
+            var expectedCsvContent = new byte[] { 1, 2, 3, 4 };
+            var expectedMemoryStream = new MemoryStream(expectedCsvContent);
             currentDateTime.Setup(x => x.UtcNow).Returns(new DateTime(2020, 12, 30));
             var expectedFileName = $"{"Manageyourapprentices"}_{currentDateTime.Object.UtcNow:yyyyMMddhhmmss}.csv";
 
@@ -71,16 +73,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     r.AccountId.Equals(decodedAccountId)), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(clientResponse);
 
-            csvService.Setup(x => x.GenerateCsvContent(It.IsAny<IEnumerable<ApprenticeshipDetailsCsvModel>>(), It.IsAny<bool>()))
-                .Returns(new MemoryStream(expectedCsvContent));
+            csvService.Setup(x => x.GenerateCsvContent(It.IsAny<IEnumerable<ApprenticeshipDetailsCsvModel>>(), true))
+                .Returns(expectedMemoryStream);
 
             //Act
             var content = await mapper.Map(request);
-
+            
             //Assert
-            Assert.IsNotEmpty(content.Content);
-            Assert.AreEqual(expectedCsvContent, content.Content);
             Assert.AreEqual(expectedFileName, content.Name);
+            Assert.AreEqual(expectedMemoryStream, content.Content);
         }
     }
 }

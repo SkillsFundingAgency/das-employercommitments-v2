@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
@@ -33,23 +35,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 _encodingService.Decode(request.AccountHashedId, EncodingType.AccountId);
 
             var downloadViewModel = new DownloadViewModel();
-            var response = await _client.GetApprenticeships(new GetApprenticeshipsRequest
+            var getApprenticeshipsRequest = new GetApprenticeshipsRequest
             {
                 AccountId = decodedAccountId,
                 SearchTerm = request.SearchTerm,
                 ProviderName = request.SelectedProvider,
                 CourseName = request.SelectedCourse,
                 Status = request.SelectedStatus,
-                EndDate = request.SelectedEndDate
-            });
+                EndDate = request.SelectedEndDate,
+                PageNumber = 0
+            };
+            
+            var result = await _client.GetApprenticeships(getApprenticeshipsRequest);
+            var csvContent = result.Apprenticeships.Select(c => (ApprenticeshipDetailsCsvModel)c).ToList();
 
-            var csvContent = response.Apprenticeships
-                .Select(c => (ApprenticeshipDetailsCsvModel)c)
-                .ToList();
-
-            downloadViewModel.Content = _createCsvService.GenerateCsvContent(csvContent, true).ToArray();
+            downloadViewModel.Content = _createCsvService.GenerateCsvContent(csvContent, true);
+            downloadViewModel.Request = getApprenticeshipsRequest;
             downloadViewModel.Name = $"{"Manageyourapprentices"}_{_currentDateTime.UtcNow:yyyyMMddhhmmss}.csv";
-            return downloadViewModel;
+            return await Task.FromResult(downloadViewModel);
+            
         }
+
     }
 }

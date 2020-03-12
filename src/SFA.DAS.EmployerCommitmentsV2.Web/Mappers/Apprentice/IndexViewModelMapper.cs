@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 TotalNumberOfApprenticeships = response.TotalApprenticeships,
                 TotalNumberOfApprenticeshipsFound = response.TotalApprenticeshipsFound,
                 TotalNumberOfApprenticeshipsWithAlertsFound = response.TotalApprenticeshipsWithAlertsFound,
-                PageNumber = source.PageNumber,
+                PageNumber = response.PageNumber,
                 SortField = source.SortField,
                 ReverseSort = source.ReverseSort,
                 SearchTerm = source.SearchTerm,
@@ -70,7 +70,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             if (response.TotalApprenticeships >= Constants.ApprenticesSearch.NumberOfApprenticesRequiredForSearch)
             {
                 var filters = await _client.GetApprenticeshipsFilterValues(
-                    new GetApprenticeshipFiltersRequest{AccountId = decodedAccountId});
+                    new GetApprenticeshipFiltersRequest{EmployerAccountId = decodedAccountId});
 
                 filterModel.ProviderFilters = filters.ProviderNames;
                 filterModel.CourseFilters = filters.CourseNames;
