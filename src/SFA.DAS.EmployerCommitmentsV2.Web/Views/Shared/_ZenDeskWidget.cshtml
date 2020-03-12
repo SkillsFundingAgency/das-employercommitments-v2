@@ -1,3 +1,11 @@
+@using SFA.DAS.EmployerCommitmentsV2.Configuration
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@inject ZenDeskConfiguration ZenDeskConfiguration
+
+@{
+    var snippetUrl = $"https://static.zdassets.com/ekr/snippet.js?key={ZenDeskConfiguration.SnippetKey}";
+}
+
 <script type="text/javascript">
     window.zESettings = {
         webWidget: {
@@ -11,10 +19,11 @@
             },
             helpCenter: {
                 filter: {
-                    section: "360001841359"
+                    section: @ZenDeskConfiguration.SectionId
                 }
             }
         }
     };
 </script>
-<script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=1b1ce288-39ea-4d40-a5e1-3a5e08aadd89"> </script>
+<script id="ze-snippet" src="@snippetUrl"></script>
+@Html.SetZendeskLabels($"App-{ViewBag.Title}")

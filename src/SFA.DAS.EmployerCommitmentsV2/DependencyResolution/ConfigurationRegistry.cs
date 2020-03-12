@@ -23,6 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution
             AddConfiguration<PublicAccountLegalEntityIdHashingConfiguration>(ConfigurationKeys.PublicAccountLegalEntityIdHashingConfiguration);
             AddConfiguration<EncodingConfig>(ConfigurationKeys.Encoding);
             AddConfiguration<AccountApiConfiguration>(ConfigurationKeys.AccountApiConfiguration);
+            AddConfiguration<ZenDeskConfiguration>(ConfigurationKeys.ZenDeskConfiguration);
         }
 
         private void AddConfiguration<T>(string key) where T : class
