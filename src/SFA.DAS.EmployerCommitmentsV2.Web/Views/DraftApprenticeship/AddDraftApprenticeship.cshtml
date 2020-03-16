@@ -28,6 +28,13 @@
     </div>
 </div>
 
+
+@section Back
+{
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Details", "Cohort", new {Model.AccountHashedId, Model.CohortReference})">Back</a>
+}
+
+
 @*
     @section  Scripts
     {
