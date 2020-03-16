@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
         private Mock<IEncodingService> _encodingService;
-        private string encodedTransferSenderId;
+        private string _encodedTransferSenderId;
         private GetCohortResponse _cohort;
 
         private TrainingProgrammeApiClientMock _trainingProgrammeApiClient;
@@ -42,11 +42,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             _trainingProgrammeApiClient = new TrainingProgrammeApiClientMock();
 
-            encodedTransferSenderId = autoFixture.Create<string>();
+            _encodedTransferSenderId = autoFixture.Create<string>();
             _encodingService = new Mock<IEncodingService>();
             _encodingService
                 .Setup(x => x.Encode(It.IsAny<long>(), It.Is<EncodingType>(e => e == EncodingType.PublicAccountId)))
-                .Returns(encodedTransferSenderId);
+                .Returns(_encodedTransferSenderId);
 
             _mapper = new AddDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _trainingProgrammeApiClient.Object, _encodingService.Object);
 
@@ -113,7 +113,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         [Test]
         public void TransferSenderHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(encodedTransferSenderId, _result.TransferSenderHashedId);
+            Assert.AreEqual(_encodedTransferSenderId, _result.TransferSenderHashedId);
         }
        
 
