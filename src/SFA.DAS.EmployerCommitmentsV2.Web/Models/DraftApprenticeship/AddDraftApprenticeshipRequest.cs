@@ -13,5 +13,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public Guid ReservationId { get; set; }
         public string StartMonthYear { get; set; }
         public string CourseCode { get; set; }
+        public bool AutoCreated { get; set; }
     }
 }

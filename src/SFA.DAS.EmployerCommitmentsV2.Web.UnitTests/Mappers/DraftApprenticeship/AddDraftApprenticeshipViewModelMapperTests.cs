@@ -11,6 +11,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Shared;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
 {
@@ -22,6 +23,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private AddDraftApprenticeshipViewModel _result;
 
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
+        private Mock<IEncodingService> _encodingService;
+        private string encodedTransferSenderId;
         private GetCohortResponse _cohort;
 
         private TrainingProgrammeApiClientMock _trainingProgrammeApiClient;
@@ -39,7 +42,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             _trainingProgrammeApiClient = new TrainingProgrammeApiClientMock();
 
-            _mapper = new AddDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _trainingProgrammeApiClient.Object);
+            encodedTransferSenderId = autoFixture.Create<string>();
+            _encodingService = new Mock<IEncodingService>();
+            _encodingService
+                .Setup(x => x.Encode(It.IsAny<long>(), It.Is<EncodingType>(e => e == EncodingType.PublicAccountId)))
+                .Returns(encodedTransferSenderId);
+
+            _mapper = new AddDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _trainingProgrammeApiClient.Object, _encodingService.Object);
 
             _source = autoFixture.Create<AddDraftApprenticeshipRequest>();
             _source.StartMonthYear = "092020";
@@ -94,6 +103,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         {
             Assert.AreEqual(_source.ReservationId, _result.ReservationId);
         }
+
+        [Test]
+        public void AutoCreatedReservationIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.AutoCreated, _result.AutoCreatedReservation);
+        }
+
+        [Test]
+        public void TransferSenderHashedIdIsMappedCorrectly()
+        {
+            Assert.AreEqual(encodedTransferSenderId, _result.TransferSenderHashedId);
+        }
+       
 
         [Test]
         public void ProviderNameIsMappedCorrectly()

@@ -35,7 +35,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 CourseCode = source.CourseCode,
                 ProviderId = (int)source.ProviderId,
                 ProviderName = provider.Name,
-                Courses =  courses
+                Courses =  courses,
+                AutoCreatedReservation = source.AutoCreated
             };
 
             return result;

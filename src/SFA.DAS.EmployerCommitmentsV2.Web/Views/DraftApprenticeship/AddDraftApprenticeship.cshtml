@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipViewModel
+﻿@using SFA.DAS.EmployerUrlHelper.Mvc
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipViewModel
 
 @{
     ViewData["Title"] = "Add apprentice details";
@@ -28,11 +29,18 @@
     </div>
 </div>
 
-
-@*@section Back
+@section Back
 {
-    <a id="back-link" class="govuk-back-link" href="@Url.Action("Details", "Cohort", new {Model.AccountHashedId, Model.CohortReference})">Back</a>
-}*@
+    @if (Model.AutoCreatedReservation)
+    {
+        <a id="back-link" class="govuk-back-link" href="@Url.Action("Details", "Cohort", new {Model.AccountHashedId, Model.CohortReference})">Back</a>
+    }
+    else
+    {
+        var url = Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}");
+        <a href="@url" id="back-link" class="govuk-back-link">Back</a>
+    }
+}
 
 
 @*
