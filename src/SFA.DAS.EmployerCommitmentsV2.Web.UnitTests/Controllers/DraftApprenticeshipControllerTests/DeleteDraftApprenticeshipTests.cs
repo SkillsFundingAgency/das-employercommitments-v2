@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
@@ -141,6 +142,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public DeleteDraftApprenticeshipViewModel DeleteDraftApprenticeshipViewModel { get; set; }
         public DeleteApprenticeshipRequest DeleteDraftApprenticeshipRequest { get; set; }
         public Mock<IModelMapper> ModelMapperMock { get; }
+        public Mock<IAuthorizationService> AuthorizationServiceMock { get; set; }
         public DraftApprenticeshipController Sut { get; }
 
         public DeleteDraftApprenticeshipTestsFixture()
@@ -162,9 +164,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             ModelMapperMock.Setup(x => x.Map<DeleteDraftApprenticeshipViewModel>(It.IsAny<DeleteApprenticeshipRequest>()))
                 .ReturnsAsync(deleteDraftApprenticeshipViewModel);
 
-            Sut = new DraftApprenticeshipController(Mock.Of<ICommitmentsService>(),
+            AuthorizationServiceMock = new Mock<IAuthorizationService>();
+
+            Sut = new DraftApprenticeshipController(
                 ModelMapperMock.Object,
-                CommitmentApiClient.Object);
+                CommitmentApiClient.Object,
+                AuthorizationServiceMock.Object);
             Sut.TempData = new Mock<ITempDataDictionary>().Object;
         }
 

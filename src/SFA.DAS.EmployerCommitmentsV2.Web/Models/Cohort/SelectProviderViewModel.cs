@@ -13,5 +13,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string CourseCode { get; set; }
         public string ProviderId { get; set; }
         public string TransferSenderId { get; set; }
+        public Origin Origin { get; set; }
     }
 }
