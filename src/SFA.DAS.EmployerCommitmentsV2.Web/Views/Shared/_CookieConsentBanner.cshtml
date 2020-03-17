@@ -1,4 +1,5 @@
-﻿<div id="global-cookie-message" data-module="cookie-banner" role="region" aria-label="cookie banner">
+﻿@using SFA.DAS.EmployerUrlHelper.Mvc
+<div id="global-cookie-message" data-module="cookie-banner" role="region" aria-label="cookie banner">
     <div class="das-cookie-banner">
         <div class="das-cookie-banner__wrapper govuk-width-container">
             <h2 class="heading-large das-cookie-banner__header">Cookies</h2>
@@ -9,14 +10,14 @@
                 </div>
                 <div class="das-cookie-banner__button-wrap das-cookie-banner__button-settings">
                     <a class="govuk-button das-button--outline das-cookie-banner__button" role="button" id="btn-cookie-settings"
-                       asp-external-controller="CookieConsent" asp-external-action="Settings" asp-external-subdomain="accounts"
+                       href="@Url.AccountsLink("/CookieConsent/Settings")"
                        class="das-navigation__link">Cookie settings</a>
                 </div>
             </div>
         </div>
         <div class="das-cookie-banner__confirmation govuk-width-container" tabindex="-1">
             <p class="das-cookie-banner__confirmation-message">
-                You've accepted all cookies. You can <a class="govuk-link" asp-external-controller="CookieConsent" asp-external-action="Settings" asp-external-subdomain="accounts" id="link-cookie-settings">change your cookie settings</a> at any time.
+                You've accepted all cookies. You can <a class="govuk-link" href="@Url.AccountsLink("/CookieConsent/Settings")" id="link-cookie-settings">change your cookie settings</a> at any time.
             </p>
             <button class="das-cookie-banner__hide-button" data-hide-cookie-banner="true" id="btn-hide-cookie-banner">Hide</button>
         </div>
