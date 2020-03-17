@@ -53,7 +53,10 @@
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
-    <partial name="_Header" />
+    
+    <partial name="_CookieConsentBanner"/>
+
+<partial name="_Header" />
     <partial name="_Menu" model="@accountHashedId" />
     <partial name="_ZenDeskWidget" />
     <div class="govuk-width-container">
