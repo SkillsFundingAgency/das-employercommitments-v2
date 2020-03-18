@@ -8,15 +8,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         public Task<SelectProviderViewModel> Map(SelectProviderRequest source)
         {
-            return Task.FromResult(new SelectProviderViewModel
+            var result = new SelectProviderViewModel
             {
                 AccountHashedId = source.AccountHashedId,
                 CourseCode = source.CourseCode,
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 StartMonthYear = source.StartMonthYear,
                 ReservationId = source.ReservationId,
-                TransferSenderId =  source.TransferSenderId
-            });
+                TransferSenderId = source.TransferSenderId,
+                Origin = source.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
+            };
+
+            return Task.FromResult(result);
         }
     }
 }

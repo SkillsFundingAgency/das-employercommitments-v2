@@ -1,7 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests
 {
@@ -13,9 +12,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests
             return result.VerifyResponseObjectType<ViewResult>();
         }
 
-        public static RedirectResult VerifyReturnsRedirect(this IActionResult result)
+        public static RedirectToActionResult VerifyReturnsRedirect(this IActionResult result)
         {
-            return result.VerifyResponseObjectType<RedirectResult>();
+            return result.VerifyResponseObjectType<RedirectToActionResult>();
         }
 
         public static RedirectToActionResult VerifyReturnsRedirectToActionResult(this IActionResult result)

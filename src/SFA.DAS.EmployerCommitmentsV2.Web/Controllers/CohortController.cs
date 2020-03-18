@@ -53,7 +53,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> Details(DetailsRequest request)
         {
             var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
-
             return View(viewModel);
         }
 
@@ -228,7 +227,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 model.StartMonthYear,
                 model.CourseCode,
                 model.ProviderId,
-                model.TransferSenderId
+                model.TransferSenderId,
+                Origin = model.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
             };
 
             switch (model.WhoIsAddingApprentices)

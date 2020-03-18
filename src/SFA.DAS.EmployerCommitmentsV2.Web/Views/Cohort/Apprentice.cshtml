@@ -1,7 +1,9 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.ApprenticeViewModel
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+@using SFA.DAS.EmployerUrlHelper.Mvc
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.ApprenticeViewModel
 
 @{
-    ViewData["Title"] = "Apprenticeships";
+    ViewData["Title"] = "Add apprentice details";
     ViewBag.GaData.Vpv = "/unapproved/add/apprentice";
 }
 
@@ -19,6 +21,7 @@
             @Html.HiddenFor(x => x.ProviderId)
             @Html.HiddenFor(x => x.AccountLegalEntityHashedId)
             @Html.HiddenFor(x => x.TransferSenderId)
+            @Html.HiddenFor(x => x.Origin)
 
             <partial name="_DraftApprenticeship" for="@Model" />
 
@@ -27,6 +30,29 @@
 
     </div>
 </div>
+
+@section Back
+{
+    @if (Model.Origin == Origin.Reservations || Model.AutoCreatedReservation)
+    {
+        @Html.ActionLink("Back", "Assign", "Cohort", new
+        {
+            Model.AccountHashedId,
+            Model.AccountLegalEntityHashedId,
+            Model.CourseCode,
+            Model.ProviderId,
+            ReservationId = Model.AutoCreatedReservation ? default(Guid?) : Model.ReservationId,
+            Model.TransferSenderId,
+            StartMonthYear = $"{@Model.StartMonth}{@Model.StartYear}"
+        }, new { @class = "govuk-back-link", id = "back-link" })
+    }
+    else
+    {
+        var url = Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?providerId={Model.ProviderId}&transferSenderId={Model.TransferSenderId}");
+            <a href="@url" id="back-link" class="govuk-back-link">Back</a>
+    }
+}
+
 
 @*
     @section  Scripts

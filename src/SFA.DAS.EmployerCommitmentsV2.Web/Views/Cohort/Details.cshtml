@@ -3,12 +3,10 @@
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
-@*@inject ILinkGenerator LinkGenerator
-@inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService*@
 
 @{
     ViewData["Title"] = Model.PageTitle;
-    ViewBag.GaData.Vpv = "/unapproved";
+    ViewBag.GaData.Vpv = "/unapproved/cohort";
 }
 
 <div class="govuk-grid-row">
