@@ -4,6 +4,11 @@
 
 @{
     var snippetUrl = $"https://static.zdassets.com/ekr/snippet.js?key={ZenDeskConfiguration.SnippetKey}";
+    var label = ViewBag.Title;
+    if (!string.IsNullOrEmpty(ViewBag.ZenDeskLabel))
+    {
+        label = ViewBag.ZenDeskLabel;
+    }
 }
 
 <script type="text/javascript">
@@ -26,4 +31,4 @@
     };
 </script>
 <script id="ze-snippet" src="@snippetUrl"></script>
-@Html.SetZendeskLabels($"App-{ViewBag.Title}")
+@Html.SetZendeskLabels($"App-{label}")
