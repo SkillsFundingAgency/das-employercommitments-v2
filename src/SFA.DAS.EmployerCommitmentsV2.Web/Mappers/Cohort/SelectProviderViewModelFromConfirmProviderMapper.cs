@@ -16,7 +16,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountHashedId = source.AccountHashedId,
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 StartMonthYear = source.StartMonthYear,
-                TransferSenderId = source.TransferSenderId
+                TransferSenderId = source.TransferSenderId,
+                Origin = source.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
             });
         }
     }

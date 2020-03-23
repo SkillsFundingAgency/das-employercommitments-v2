@@ -1,7 +1,7 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.MessageViewModel
 
 @{
-    ViewData["Title"] = "Apprenticeships";
+    ViewData["Title"] = "Message for your training provider";
     ViewBag.GaData.Vpv = "/unapproved/add/message";
 }
 
@@ -21,7 +21,7 @@
 
             <div class="govuk-form-group  @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
                 <label class="govuk-label govuk-!-font-weight-bold" for="Message">Message (optional)</label>
-                @Html.TextAreaFor(m=>m.Message, new {@class = "govuk-textarea", cols = 40, rows = 10  })
+                @Html.TextAreaFor(m => m.Message, new { @class = "govuk-textarea", cols = 40, rows = 10 })
             </div>
 
             <button type="submit" class="govuk-button">Send</button>
@@ -29,3 +29,17 @@
 
     </div>
 </div>
+
+@section Back
+{
+    @Html.ActionLink("Back", "Assign", "Cohort", new
+    {
+        Model.AccountHashedId,
+        Model.AccountLegalEntityHashedId,
+        Model.CourseCode,
+        Model.ProviderId,
+        Model.ReservationId,
+        Model.TransferSenderId,
+        Model.StartMonthYear
+    }, new { @class = "govuk-back-link", id = "back-link" })
+}

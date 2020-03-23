@@ -10,12 +10,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string AccountLegalEntityHashedId { get; set; }
         public string StartMonthYear { get; set; }
         public string CourseCode { get; set; }
+        public Origin Origin { get; set; }
         public virtual Dictionary<string, string> ToDictionary()
         {
             var dictionary = new Dictionary<string, string>
             {
                 {nameof(AccountHashedId), AccountHashedId },
-                {nameof(AccountLegalEntityHashedId), AccountLegalEntityHashedId }
+                {nameof(AccountLegalEntityHashedId), AccountLegalEntityHashedId },
+                {nameof(Origin), Origin.ToString() }
             };
             
             if (ReservationId.HasValue)
@@ -24,7 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
                 dictionary.Add(nameof(StartMonthYear), StartMonthYear);
             if (!string.IsNullOrWhiteSpace(CourseCode))
                 dictionary.Add(nameof(CourseCode), CourseCode);
-
+            
             return dictionary;
         }
     }

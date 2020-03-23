@@ -11,6 +11,9 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
 using System;
+using SFA.DAS.Authorization.Services;
+using SFA.DAS.EmployerCommitmentsV2.Features;
+using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
@@ -19,18 +22,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     [Route("{AccountHashedId}/unapproved/{cohortReference}/apprentices")]
     public class DraftApprenticeshipController : Controller
     {
-        private readonly ICommitmentsService _commitmentsService;
         private readonly IModelMapper _modelMapper;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly IAuthorizationService _authorizationService;
         public const string ApprenticeDeletedMessage = "Apprentice record deleted";
 
         public DraftApprenticeshipController(
-            ICommitmentsService commitmentsService,
-            IModelMapper modelMapper, ICommitmentsApiClient commitmentsApiClient)
+            IModelMapper modelMapper,
+			ICommitmentsApiClient commitmentsApiClient,
+            IAuthorizationService authorizationService)
         {
-            _commitmentsService = commitmentsService;
+
             _modelMapper = modelMapper;
             _commitmentsApiClient = commitmentsApiClient;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -74,7 +79,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> EditDraftApprenticeship(EditDraftApprenticeshipViewModel model)
         {
             var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
-            await _commitmentsService.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
+            await _commitmentsApiClient.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
 
             return RedirectToAction("Details", "Cohort", new { model.AccountHashedId, model.CohortReference });
         }

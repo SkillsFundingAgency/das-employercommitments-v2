@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
@@ -102,6 +100,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public void TransferSenderIdIsMappedCorrectly()
         {
             Assert.AreEqual(_source.TransferSenderId, _result.TransferSenderId);
+        }
+
+        [Test]
+        public void OriginIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.Origin, _result.Origin);
+        }
+
+        [Test]
+        public void AutoCreatedReservationIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.AutoCreated, _result.AutoCreatedReservation);
         }
 
         [Test]

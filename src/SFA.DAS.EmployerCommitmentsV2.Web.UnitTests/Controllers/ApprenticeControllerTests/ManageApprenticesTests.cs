@@ -1,42 +1,194 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using AutoFixture.NUnit3;
+using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
+using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
     [TestFixture]
     public class ManageApprenticesTests
     {
-        private ApprenticeController _controller;
-
-        [SetUp]
-        public void Setup()
-        {
-            _controller = new ApprenticeController();
-        }
-
-        [Test]
-        public void AndIsCalledWithInvalidModelStateThenBadResponseShouldBeReturned()
+        [Test, MoqAutoData]
+        public async Task ThenTheMappedViewModelIsReturned(
+            IndexRequest request,
+            IndexViewModel expectedViewModel,
+            [Frozen] Mock<IModelMapper> apprenticeshipMapper,
+            ApprenticeController controller)
         {
             //Arrange
-            _controller.ModelState.AddModelError("test", "test");
+            apprenticeshipMapper
+                .Setup(mapper => mapper.Map<IndexViewModel>(request))
+                .ReturnsAsync(expectedViewModel);
+
             //Act
-            var result = _controller.Index("");
+            var result = await controller.Index(request) as ViewResult;
+            var actualModel = result.Model as IndexViewModel;
+
             //Assert
-            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            actualModel.Should().BeEquivalentTo(expectedViewModel);
         }
 
-        [Test]
-        public void ThenTheAccountHashedIdIsPassedToTheViewModel()
+        [Test, MoqAutoData]
+        public async Task Then_SortedByHeaderClassName_Set(
+            IndexRequest request,
+            IndexViewModel expectedViewModel,
+            [Frozen] Mock<IModelMapper> apprenticeshipMapper,
+            ApprenticeController controller)
         {
             //Arrange
-            var expectedAccountHashedId = "TEST";
+            expectedViewModel.FilterModel.ReverseSort = false;
+            apprenticeshipMapper
+                .Setup(mapper => mapper.Map<IndexViewModel>(request))
+                .ReturnsAsync(expectedViewModel);
+
             //Act
-            var result = _controller.Index(expectedAccountHashedId);
-            var view = ((ViewResult) result).Model as ManageApprenticesViewModel;
+            var result = await controller.Index(request) as ViewResult;
+            var actualModel = result.Model as IndexViewModel;
+
             //Assert
-            Assert.AreEqual(expectedAccountHashedId, view.AccountHashedId);
+            actualModel.SortedByHeaderClassName.Should().EndWith("das-table__sort--asc");
+        }
+
+        [Test, MoqAutoData]
+        public async Task Then_Will_Update_Search_Details_To_Cookies(
+           IndexRequest request,
+           IndexViewModel expectedViewModel,
+           [Frozen] Mock<IModelMapper> apprenticeshipMapper,
+           [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
+           ApprenticeController controller)
+        {
+            //Arrange
+            request.FromSearch = false;
+
+            apprenticeshipMapper
+                .Setup(mapper => mapper.Map<IndexViewModel>(It.IsAny<IndexRequest>()))
+                .ReturnsAsync(expectedViewModel);
+
+            //Act
+            await controller.Index(request);
+
+            //Assert
+            cookieService.Verify(x => x.Update(CookieNames.ManageApprentices, request, It.IsAny<int>()));
+            cookieService.Verify(x => x.Get(It.IsAny<string>()), Times.Never);
+        }
+
+        [Test, MoqAutoData]
+        public async Task Then_Will_Get_Saved_Search_Details_From_Cookies(
+            IndexRequest request,
+            IndexRequest savedRequest,
+            IndexViewModel expectedViewModel,
+            [Frozen] Mock<IModelMapper> apprenticeshipMapper,
+            [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
+            ApprenticeController controller)
+        {
+            //Arrange
+            request.FromSearch = true;
+
+            apprenticeshipMapper
+                .Setup(mapper => mapper.Map<IndexViewModel>(It.IsAny<IndexRequest>()))
+                .ReturnsAsync(expectedViewModel);
+
+            cookieService
+                .Setup(x => x.Get(CookieNames.ManageApprentices))
+                .Returns(savedRequest);
+
+            //Act
+            await controller.Index(request);
+
+            //Assert
+            cookieService.Verify(x => x.Get(CookieNames.ManageApprentices));
+        }
+
+        [Test, MoqAutoData]
+        public async Task Then_Will_Used_Saved_Search_Details_From_Cookies(
+            IndexRequest request,
+            IndexRequest savedRequest,
+            IndexViewModel expectedViewModel,
+            [Frozen] Mock<IModelMapper> apprenticeshipMapper,
+            [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
+            ApprenticeController controller)
+        {
+            //Arrange
+            request.FromSearch = true;
+
+            apprenticeshipMapper
+                .Setup(mapper => mapper.Map<IndexViewModel>(It.IsAny<IndexRequest>()))
+                .ReturnsAsync(expectedViewModel);
+
+            cookieService
+                .Setup(x => x.Get(CookieNames.ManageApprentices))
+                .Returns(savedRequest);
+
+            //Act
+            await controller.Index(request);
+
+            //Assert
+            apprenticeshipMapper.Verify(mapper => mapper.Map<IndexViewModel>(savedRequest));
+        }
+
+        [Test, MoqAutoData]
+        public async Task Then_Will_Update_Saved_Search_Details_If_From_Cookies(
+            IndexRequest request,
+            IndexRequest savedRequest,
+            IndexViewModel expectedViewModel,
+            [Frozen] Mock<IModelMapper> apprenticeshipMapper,
+            [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
+            ApprenticeController controller)
+        {
+            //Arrange
+            request.FromSearch = true;
+
+            apprenticeshipMapper
+                .Setup(mapper => mapper.Map<IndexViewModel>(It.IsAny<IndexRequest>()))
+                .ReturnsAsync(expectedViewModel);
+
+            cookieService
+                .Setup(x => x.Get(CookieNames.ManageApprentices))
+                .Returns(savedRequest);
+
+            //Act
+            await controller.Index(request);
+
+            //Assert
+            cookieService.Verify(x => x.Update(
+                CookieNames.ManageApprentices, It.IsAny<IndexRequest>(), It.IsAny<int>()), Times.Never);
+        }
+
+        [Test, MoqAutoData]
+        public async Task Then_Will_Used_Current_Search_Details_If_Saved_Details_Not_Available(
+            IndexRequest request,
+            IndexViewModel expectedViewModel,
+            [Frozen] Mock<IModelMapper> apprenticeshipMapper,
+            [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
+            ApprenticeController controller)
+        {
+            //Arrange
+            request.FromSearch = true;
+
+            apprenticeshipMapper
+                .Setup(mapper => mapper.Map<IndexViewModel>(It.IsAny<IndexRequest>()))
+                .ReturnsAsync(expectedViewModel);
+
+            cookieService
+                .Setup(x => x.Get(CookieNames.ManageApprentices))
+                .Returns((IndexRequest)null);
+
+            //Act
+            await controller.Index(request);
+
+            //Assert
+            apprenticeshipMapper.Verify(mapper => mapper.Map<IndexViewModel>(request));
+
+            cookieService.Verify(x => x.Update(
+                CookieNames.ManageApprentices, It.IsAny<IndexRequest>(), It.IsAny<int>()), Times.Once);
+
         }
     }
 }
