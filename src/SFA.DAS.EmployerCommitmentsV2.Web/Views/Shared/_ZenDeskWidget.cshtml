@@ -4,6 +4,7 @@
 
 @{
     var snippetUrl = $"https://static.zdassets.com/ekr/snippet.js?key={ZenDeskConfiguration.SnippetKey}";
+     var cobrowsingSnippetUrl = $"https://embed-euw1.rcrsv.io/{ZenDeskConfiguration.CobrowsingSnippetKey}?zwwi=1";
     var label = ViewBag.Title;
     if (!string.IsNullOrEmpty(ViewBag.ZenDeskLabel))
     {
@@ -31,4 +32,5 @@
     };
 </script>
 <script id="ze-snippet" src="@snippetUrl"></script>
+<script id="co-snippet" src="cobrowsingSnippetUrl"></script>
 @Html.SetZendeskLabels($"App-{label}")
