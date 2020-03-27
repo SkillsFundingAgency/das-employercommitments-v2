@@ -1,3 +1,17 @@
+@using SFA.DAS.EmployerCommitmentsV2.Configuration
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@inject ZenDeskConfiguration ZenDeskConfiguration
+
+@{
+    var snippetUrl = $"https://static.zdassets.com/ekr/snippet.js?key={ZenDeskConfiguration.SnippetKey}";
+    var cobrowsingSnippetUrl = $"https://embed-euw1.rcrsv.io/{ZenDeskConfiguration.CobrowsingSnippetKey}?zwwi=1";
+    var label = ViewBag.Title;
+    if (!string.IsNullOrEmpty(ViewBag.ZenDeskLabel))
+    {
+        label = ViewBag.ZenDeskLabel;
+    }
+}
+
 <script type="text/javascript">
     window.zESettings = {
         webWidget: {
@@ -11,10 +25,12 @@
             },
             helpCenter: {
                 filter: {
-                    section: "360001841359"
+                    section: @ZenDeskConfiguration.SectionId
                 }
             }
         }
     };
 </script>
-<script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=1b1ce288-39ea-4d40-a5e1-3a5e08aadd89"> </script>
+<script id="ze-snippet" src="@snippetUrl"></script>
+<script id="co-snippet" src="@cobrowsingSnippetUrl"></script>
+@Html.SetZendeskLabels($"App-{label}")

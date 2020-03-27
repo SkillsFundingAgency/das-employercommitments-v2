@@ -13,5 +13,6 @@
         public static readonly string PublicAccountLegalEntityIdHashingConfiguration = $"{EmployerCommitmentsV2}:PublicAccountLegalEntityIdHashingConfiguration";
         public const string EmployerUrlConfiguration = "SFA.DAS.EmployerUrlHelper";
         public const string EmployerSharedUiConfiguration = "SFA.DAS.Employer.Shared.UI";
+        public static readonly string ZenDeskConfiguration = $"{EmployerCommitmentsV2}:ZenDesk";
     }
 }
