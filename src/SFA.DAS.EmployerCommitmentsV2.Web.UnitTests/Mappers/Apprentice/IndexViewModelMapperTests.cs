@@ -205,7 +205,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.IsTrue(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.Stopped));
             Assert.IsTrue(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.WaitingToStart));
             Assert.IsFalse(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.Unknown));
-            Assert.IsFalse(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.Completed));
+            Assert.True(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.Completed));
         }
 
         [Test, MoqAutoData]
