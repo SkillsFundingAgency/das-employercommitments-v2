@@ -187,7 +187,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             Assert.AreEqual(_trainingProgrammeApiClient.Standards, _result.Courses);
         }
-
-
     }
 }
