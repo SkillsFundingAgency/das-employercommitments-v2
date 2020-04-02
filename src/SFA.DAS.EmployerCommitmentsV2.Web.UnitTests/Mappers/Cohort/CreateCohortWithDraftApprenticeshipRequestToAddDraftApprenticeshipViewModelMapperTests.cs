@@ -1,17 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -21,10 +22,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private AddDraftApprenticeshipViewModelMapper _mapper;
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
         private GetProviderResponse _providerResponse;
+        private AccountResponse _accountResponse;
         private ApprenticeRequest _source;
         private AddDraftApprenticeshipViewModel _result;
-        private IReadOnlyList<ITrainingProgramme> _courses;
-        private Mock<ITrainingProgrammeApiClient> _trainingProgrammeApiClient;
+        private TrainingProgrammeApiClientMock _trainingProgrammeApiClient;
 
         [SetUp]
         public async Task Arrange()
@@ -32,17 +33,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var autoFixture = new Fixture();
 
             _providerResponse = autoFixture.Create<GetProviderResponse>();
-            _source = autoFixture.Create<ApprenticeRequest>();
-            _source.StartMonthYear = "062020";
+            _accountResponse = autoFixture.Build<AccountResponse>().With(x => x.LevyStatus, ApprenticeshipEmployerType.Levy).Create();
+
+            _source = autoFixture.Build<ApprenticeRequest>()
+                .With(x=>x.StartMonthYear, "062020")
+                .With(x=>x.AccountId, 12345)
+                .Without(x=>x.TransferSenderId).Create();
 
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _commitmentsApiClient.Setup(x => x.GetProvider(It.IsAny<long>(),
-                    It.IsAny<CancellationToken>()))
+            _commitmentsApiClient.Setup(x => x.GetProvider(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_providerResponse);
+            _commitmentsApiClient.Setup(x => x.GetAccount(_source.AccountId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_accountResponse);
 
-            _courses = autoFixture.Create<List<Standard>>();
-            _trainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
-            _trainingProgrammeApiClient.Setup(x => x.GetAllTrainingProgrammes()).ReturnsAsync(_courses);
+            _trainingProgrammeApiClient = new TrainingProgrammeApiClientMock(); ;
 
             _mapper = new AddDraftApprenticeshipViewModelMapper(
                 _commitmentsApiClient.Object,
@@ -96,7 +100,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void CoursesAreMappedCorrectly()
         {
-            Assert.AreEqual(_courses, _result.Courses);
+            Assert.AreEqual(_trainingProgrammeApiClient.All, _result.Courses);
+        }
+
+        [Test]
+        public async Task TransferFundedCohortsAllowStandardCoursesOnlyWhenEmployerIsLevy()
+        {
+            _source.TransferSenderId = "test";
+            _result = await _mapper.Map(TestHelper.Clone(_source));
+            Assert.IsFalse(_result.Courses.Any(x => x is Framework));
+        }
+
+        [TestCase("12345")]
+        [TestCase(null)]
+        public async Task NonLevyCohortsAllowStandardCoursesOnlyRegardlessOfTransferStatus(string transferSenderId)
+        {
+            _source.TransferSenderId = transferSenderId;
+            _accountResponse.LevyStatus = ApprenticeshipEmployerType.NonLevy;
+            _result = await _mapper.Map(TestHelper.Clone(_source));
+            Assert.IsFalse(_result.Courses.Any(x => x is Framework));
         }
 
     }
