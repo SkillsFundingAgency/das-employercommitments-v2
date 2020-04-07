@@ -1,4 +1,9 @@
 ﻿@using SFA.DAS.EmployerUrlHelper.Mvc
+
+@{
+    var accountHashedId = (string)ViewContext.RouteData.Values["accountHashedId"];
+}
+
 <div id="global-cookie-message" data-module="cookie-banner" role="region" aria-label="cookie banner">
     <div class="das-cookie-banner">
         <div class="das-cookie-banner__wrapper govuk-width-container">
@@ -10,14 +15,14 @@
                 </div>
                 <div class="das-cookie-banner__button-wrap das-cookie-banner__button-settings">
                     <a class="govuk-button das-button--outline das-cookie-banner__button" role="button" id="btn-cookie-settings"
-                       href="@Url.AccountsLink("/CookieConsent/Settings")"
+                       href="@Url.AccountsLink($"/{accountHashedId}/CookieConsent/Settings")"
                        class="das-navigation__link">Cookie settings</a>
                 </div>
             </div>
         </div>
         <div class="das-cookie-banner__confirmation govuk-width-container" tabindex="-1">
             <p class="das-cookie-banner__confirmation-message">
-                You've accepted all cookies. You can <a class="govuk-link" href="@Url.AccountsLink("/CookieConsent/Settings")" id="link-cookie-settings">change your cookie settings</a> at any time.
+                You've accepted all cookies. You can <a class="govuk-link" href="@Url.AccountsLink($"/{accountHashedId}/CookieConsent/Settings")" id="link-cookie-settings">change your cookie settings</a> at any time.
             </p>
             <button class="das-cookie-banner__hide-button" data-hide-cookie-banner="true" id="btn-hide-cookie-banner">Hide</button>
         </div>

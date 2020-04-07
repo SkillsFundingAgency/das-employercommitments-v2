@@ -3,7 +3,7 @@
 <html lang="en" class="govuk-template ">
 
 @{
-    string accountHashedId = (string)ViewContext.RouteData.Values["accountHashedId"];
+    var accountHashedId = (string)ViewContext.RouteData.Values["accountHashedId"];
     ViewBag.HideHeaderBorder = true;
 }
 
