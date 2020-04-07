@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private AddDraftApprenticeshipViewModelMapper _mapper;
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
         private GetProviderResponse _providerResponse;
-        private AccountResponse _accountResponse;
+        private AccountLegalEntityResponse _accountLegalEntityResponse;
         private ApprenticeRequest _source;
         private AddDraftApprenticeshipViewModel _result;
         private TrainingProgrammeApiClientMock _trainingProgrammeApiClient;
@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var autoFixture = new Fixture();
 
             _providerResponse = autoFixture.Create<GetProviderResponse>();
-            _accountResponse = autoFixture.Build<AccountResponse>().With(x => x.LevyStatus, ApprenticeshipEmployerType.Levy).Create();
+            _accountLegalEntityResponse = autoFixture.Build<AccountLegalEntityResponse>().With(x => x.LevyStatus, ApprenticeshipEmployerType.Levy).Create();
 
             _source = autoFixture.Build<ApprenticeRequest>()
                 .With(x=>x.StartMonthYear, "062020")
@@ -43,8 +43,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _commitmentsApiClient.Setup(x => x.GetProvider(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_providerResponse);
-            _commitmentsApiClient.Setup(x => x.GetAccount(_source.AccountId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_accountResponse);
+            _commitmentsApiClient.Setup(x => x.GetAccountLegalEntity(_source.AccountLegalEntityId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_accountLegalEntityResponse);
 
             _trainingProgrammeApiClient = new TrainingProgrammeApiClientMock(); ;
 
@@ -116,7 +116,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public async Task NonLevyCohortsAllowStandardCoursesOnlyRegardlessOfTransferStatus(string transferSenderId)
         {
             _source.TransferSenderId = transferSenderId;
-            _accountResponse.LevyStatus = ApprenticeshipEmployerType.NonLevy;
+            _accountLegalEntityResponse.LevyStatus = ApprenticeshipEmployerType.NonLevy;
             _result = await _mapper.Map(TestHelper.Clone(_source));
             Assert.IsFalse(_result.Courses.Any(x => x is Framework));
         }

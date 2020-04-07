@@ -24,9 +24,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         public async Task<AddDraftApprenticeshipViewModel> Map(ApprenticeRequest source)
         {
-            var account = await _commitmentsApiClient.GetAccount(source.AccountId);
+            var ale = await _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
 
-            var courses = !string.IsNullOrWhiteSpace(source.TransferSenderId) || account.LevyStatus == ApprenticeshipEmployerType.NonLevy
+            var courses = !string.IsNullOrWhiteSpace(source.TransferSenderId) || ale.LevyStatus == ApprenticeshipEmployerType.NonLevy
                 ? await _trainingProgrammeApiClient.GetStandardTrainingProgrammes()
                 : await _trainingProgrammeApiClient.GetAllTrainingProgrammes();
 
