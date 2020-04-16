@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
@@ -57,12 +58,75 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
         }
 
         [Test, AutoData]
+        public void Then_Maps_PausedDate(
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
+        {
+            ApprenticeshipDetailsCsvModel result = source;
+
+            result.PausedDate.Should().Be(source.PauseDate.ToString("MMM yyyy"));
+        }
+
+        [Test, AutoData]
+        public void Then_Maps_DateOfBirth(GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
+        {
+            ApprenticeshipDetailsCsvModel result = source;
+
+            result.DateOfBirth.Should().Be(source.DateOfBirth.ToString("dd MMM yyyy"));
+        }
+
+        [Test, AutoData]
+        public void Then_Maps_Empty_If_No_PausedDate(
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
+        {
+            source.PauseDate = DateTime.MinValue;
+            ApprenticeshipDetailsCsvModel result = source;
+
+            result.PausedDate.Should().BeEmpty();
+        }
+
+        [Test, AutoData]
         public void Then_Maps_Status(
             GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
         {
             ApprenticeshipDetailsCsvModel result = source;
 
             result.Status.Should().Be(source.ApprenticeshipStatus.GetDescription());
+        }
+        
+        [Test, AutoData]
+        public void Then_Maps_Reference(
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
+        {
+            ApprenticeshipDetailsCsvModel result = source;
+
+            result.CohortReference.Should().Be(source.CohortReference);
+        }
+
+        [Test, AutoData]
+        public void Then_Maps_Your_Reference(
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
+        {
+            ApprenticeshipDetailsCsvModel result = source;
+
+            result.EmployerRef.Should().Be(source.EmployerRef);
+        }
+
+        [Test, AutoData]
+        public void Then_Maps_Uln(
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
+        {
+            ApprenticeshipDetailsCsvModel result = source;
+
+            result.Uln.Should().Be(source.Uln);
+        }
+
+        [Test, AutoData]
+        public void Then_Maps_TotalAgreedPrice(
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
+        {
+            ApprenticeshipDetailsCsvModel result = source;
+
+            result.TotalAgreedPrice.Should().Be($"{source.TotalAgreedPrice.Value as object:n0}");
         }
 
         [Test, MoqAutoData]
