@@ -71,7 +71,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
         {
             ApprenticeshipDetailsCsvModel result = source;
 
-            result.DateOfBirth.Should().Be(source.DateOfBirth.ToString("dd MMM yyyy"));
+            result.DateOfBirth.Should().Be(source.DateOfBirth.ToString("d MMM yyyy"));
         }
 
         [Test, AutoData]
