@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
     public class ApprenticeshipDetailsCsvModel
     {
-        [Name("Apprentice Name")]
+        [Name("Apprentice name")]
         public string ApprenticeName { get ; private set ; }
         [Name("Apprenticeship training course")]
         public string CourseName { get; private set; }
@@ -18,19 +18,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string PlannedStartDate { get; private set; }
         [Name("Planned end date")]
         public string PlannedEndDate { get ; private set ; }
-        [Name("Paused Date")]
+        [Name("Paused date")]
         public string PausedDate { get; private set; }
         [Name("Training provider")]
         public string Provider { get; private set; }
         [Name("Reference")]
         public string CohortReference { get; private set; }
-        [Name("Uln")]
+        [Name("ULN")]
         public string Uln { get; private set; }
-        [Name("Date of Birth")]
+        [Name("Date of birth")]
         public string DateOfBirth { get; private set; }
         [Name("Total agreed apprenticeship price")]
         public string TotalAgreedPrice { get; private set; }
-        [Name("Your Reference")]
+        [Name("Your reference")]
         public string EmployerRef { get; private set; }
         [Name("Status")]
         public string Status { get ; private set ; }
