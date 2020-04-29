@@ -24,7 +24,7 @@
             <li>make sure the PAYE scheme that each apprentice is paid through is in your account - <a href="@LinkGenerator.PayeSchemes(Model.AccountHashedId)" target="_blank" rel="noreferrer">view PAYE schemes in this account</a></li>
         </ul>
         
-        <a asp-action="SelectProvider" asp-all-route-data="@Model.ToDictionary()" role="button" draggable="false" class="govuk-button govuk-button--start">
+        <a asp-action="SelectProvider" id="continue-button" asp-all-route-data="@Model.ToDictionary()" role="button" draggable="false" class="govuk-button govuk-button--start">
             Start now
         </a>
     </div>
