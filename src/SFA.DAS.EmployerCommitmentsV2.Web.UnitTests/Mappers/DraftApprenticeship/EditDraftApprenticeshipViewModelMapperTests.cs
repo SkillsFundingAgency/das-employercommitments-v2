@@ -163,8 +163,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
         [TestCase(123, true)]
         [TestCase(null, false)]
-        public async Task CoursesAreMappedCorrectly(long? transferSenderId, bool fundedByTransfer)
+        public async Task CoursesAreMappedCorrectlyWhenAccountIsLevy(long? transferSenderId, bool fundedByTransfer)
         {
+            _cohort.LevyStatus = ApprenticeshipEmployerType.Levy;
             _cohort.TransferSenderId = transferSenderId;
 
             _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
@@ -173,6 +174,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                     ? _trainingProgrammeApiClient.Standards
                     : _trainingProgrammeApiClient.All,
                 _result.Courses);
+        }
+
+        [TestCase(123)]
+        [TestCase(null)]
+        public async Task CoursesAreMappedCorrectlyWhenAccountIsNonLevy(long? transferSenderId)
+        {
+            _cohort.LevyStatus = ApprenticeshipEmployerType.NonLevy;
+            _cohort.TransferSenderId = transferSenderId;
+
+            _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
+
+            Assert.AreEqual(_trainingProgrammeApiClient.Standards, _result.Courses);
         }
     }
 }

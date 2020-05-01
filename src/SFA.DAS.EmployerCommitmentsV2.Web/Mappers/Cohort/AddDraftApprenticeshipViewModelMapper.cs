@@ -3,6 +3,7 @@ using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
@@ -23,7 +24,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         public async Task<AddDraftApprenticeshipViewModel> Map(ApprenticeRequest source)
         {
-            var courses = await _trainingProgrammeApiClient.GetAllTrainingProgrammes();
+            var ale = await _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
+
+            var courses = !string.IsNullOrWhiteSpace(source.TransferSenderId) || ale.LevyStatus == ApprenticeshipEmployerType.NonLevy
+                ? await _trainingProgrammeApiClient.GetStandardTrainingProgrammes()
+                : await _trainingProgrammeApiClient.GetAllTrainingProgrammes();
+
             var provider = await _commitmentsApiClient.GetProvider(source.ProviderId);
 
             var result = new AddDraftApprenticeshipViewModel

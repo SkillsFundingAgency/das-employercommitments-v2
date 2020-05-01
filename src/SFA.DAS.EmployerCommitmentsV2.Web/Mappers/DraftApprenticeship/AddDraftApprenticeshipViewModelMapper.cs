@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 StartDate = new MonthYearModel(source.StartMonthYear),
                 CourseCode = source.CourseCode,
                 ProviderName = cohort.ProviderName,
-                Courses = cohort.IsFundedByTransfer
+                Courses = cohort.IsFundedByTransfer || cohort.LevyStatus == ApprenticeshipEmployerType.NonLevy
                     ? await _trainingProgrammeApiClient.GetStandardTrainingProgrammes()
                     : await _trainingProgrammeApiClient.GetAllTrainingProgrammes(),
                 TransferSenderHashedId = cohort.IsFundedByTransfer ? _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId) : string.Empty,
