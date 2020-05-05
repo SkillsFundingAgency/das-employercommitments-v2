@@ -53,6 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             _cohort = autoFixture.Create<GetCohortResponse>();
             _cohort.WithParty = Party.Employer;
+            _cohort.ChangeOfPartyRequestId = null;
             _commitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_cohort);
 
@@ -186,6 +187,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
 
             Assert.AreEqual(_trainingProgrammeApiClient.Standards, _result.Courses);
+        }
+
+        [Test]
+        public async Task CoursesAreMappedCorrectlyWhenCohortIsChangeOfParty()
+        {
+            _cohort.LevyStatus = ApprenticeshipEmployerType.NonLevy;
+            _cohort.ChangeOfPartyRequestId = 123;
+
+            _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
+
+            Assert.AreEqual(_trainingProgrammeApiClient.All, _result.Courses);
         }
 
         [TestCase(true)]
