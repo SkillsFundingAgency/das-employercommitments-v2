@@ -187,5 +187,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             Assert.AreEqual(_trainingProgrammeApiClient.Standards, _result.Courses);
         }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task ThenIsContinuationIsMappedCorrectly(bool isContinuation)
+        {
+            _draftApprenticeshipResponse.IsContinuation = isContinuation;
+            _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
+            Assert.AreEqual(_draftApprenticeshipResponse.IsContinuation, _result.IsContinuation);
+        }
     }
 }
