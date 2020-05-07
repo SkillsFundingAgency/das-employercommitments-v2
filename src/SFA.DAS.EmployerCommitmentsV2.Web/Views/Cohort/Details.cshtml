@@ -134,10 +134,13 @@
 
         @if (!Model.IsReadOnly)
         {
-            <p>
-                <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}")" class="govuk-link add-apprentice">Add another apprentice</a>
-                <a asp-action="ConfirmDelete" asp-route-AccountHashedId="@Model.AccountHashedId" asp-route-CohortReference="@Model.CohortReference" class="govuk-link das-float-right">Delete this group</a>
-            </p>
+            @if (Model.ShowAddAnotherApprenticeOption)
+             {
+                 <p>
+                     <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}")" class="govuk-link add-apprentice">Add another apprentice</a>
+                     <a asp-action="ConfirmDelete" asp-route-AccountHashedId="@Model.AccountHashedId" asp-route-CohortReference="@Model.CohortReference" class="govuk-link das-float-right">Delete this group</a>
+                 </p>
+             }
 
             <hr class="govuk-section-break govuk-section-break--l">
 
