@@ -46,6 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                 .Returns(_cohortReference);
 
             _draftApprenticeshipResponse = autoFixture.Create<GetDraftApprenticeshipResponse>();
+            _draftApprenticeshipResponse.IsContinuation = false;
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _commitmentsApiClient.Setup(x =>
                     x.GetDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
@@ -193,7 +194,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public async Task CoursesAreMappedCorrectlyWhenCohortIsChangeOfParty()
         {
             _cohort.LevyStatus = ApprenticeshipEmployerType.NonLevy;
-            _cohort.ChangeOfPartyRequestId = 123;
+            _draftApprenticeshipResponse.IsContinuation = true;
 
             _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
 
