@@ -46,6 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                 .Returns(_cohortReference);
 
             _draftApprenticeshipResponse = autoFixture.Create<GetDraftApprenticeshipResponse>();
+            _draftApprenticeshipResponse.IsContinuation = false;
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _commitmentsApiClient.Setup(x =>
                     x.GetDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
@@ -53,6 +54,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             _cohort = autoFixture.Create<GetCohortResponse>();
             _cohort.WithParty = Party.Employer;
+            _cohort.ChangeOfPartyRequestId = null;
             _commitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_cohort);
 
@@ -186,6 +188,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
 
             Assert.AreEqual(_trainingProgrammeApiClient.Standards, _result.Courses);
+        }
+
+        [Test]
+        public async Task CoursesAreMappedCorrectlyWhenCohortIsChangeOfParty()
+        {
+            _cohort.LevyStatus = ApprenticeshipEmployerType.NonLevy;
+            _draftApprenticeshipResponse.IsContinuation = true;
+
+            _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
+
+            Assert.AreEqual(_trainingProgrammeApiClient.All, _result.Courses);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task ThenIsContinuationIsMappedCorrectly(bool isContinuation)
+        {
+            _draftApprenticeshipResponse.IsContinuation = isContinuation;
+            _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
+            Assert.AreEqual(_draftApprenticeshipResponse.IsContinuation, _result.IsContinuation);
         }
     }
 }

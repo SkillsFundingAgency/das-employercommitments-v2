@@ -3,7 +3,6 @@ using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.Encoding;
 
@@ -46,7 +45,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 Reference = draftApprenticeship.Reference,
                 AccountHashedId = source.Request.AccountHashedId,
                 ProviderName = cohort.ProviderName,
-                Courses = cohort.IsFundedByTransfer || cohort.LevyStatus == ApprenticeshipEmployerType.NonLevy
+                IsContinuation = draftApprenticeship.IsContinuation,
+                Courses = (cohort.IsFundedByTransfer || cohort.LevyStatus == ApprenticeshipEmployerType.NonLevy) && !draftApprenticeship.IsContinuation
                     ? await _trainingProgrammeApiClient.GetStandardTrainingProgrammes()
                     : await _trainingProgrammeApiClient.GetAllTrainingProgrammes()
             };

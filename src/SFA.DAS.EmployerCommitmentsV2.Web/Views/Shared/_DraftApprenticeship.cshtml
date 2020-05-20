@@ -13,69 +13,105 @@
         </div>
     </fieldset>
 </div>
-<div class="govuk-form-group">
-    <fieldset class="govuk-fieldset">
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-            Apprentice name
-        </legend>
-        <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.FirstName, "govuk-form-group--error")">
-            <label asp-for="FirstName" class="govuk-label">First name</label>
-            @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.FirstName) })
-            <input asp-for="FirstName" class="govuk-input" />
-        </div>
-        <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.LastName, "govuk-form-group--error")">
-            <label asp-for="LastName" class="govuk-label">Last name</label>
-            @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
-            <input asp-for="LastName" class="govuk-input" />
-        </div>
-    </fieldset>
-</div>
-<div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.DateOfBirth, "govuk-form-group--error")">
-    <fieldset class="govuk-fieldset" aria-describedby="dob-hint" role="group">
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-            Date of birth
-        </legend>
+
+@if (Model.IsContinuation)
+{
+    @Html.HiddenFor(x => x.FirstName)
+    @Html.HiddenFor(x => x.LastName)
+    @Html.HiddenFor(x => x.BirthDay)
+    @Html.HiddenFor(x => x.BirthMonth)
+    @Html.HiddenFor(x => x.BirthYear)
+    @Html.HiddenFor(x => x.Uln)
+    @Html.HiddenFor(x => x.CourseCode)
+
+    <dl class="das-definition-list">
+        <dt class="das-definition-list__title">Apprentice name</dt>
+        <dd class="das-definition-list__definition">@Model.FirstName @Model.LastName</dd>
+    </dl>
+
+    <dl class="das-definition-list">
+        <dt class="das-definition-list__title">Date of birth</dt>
+        <dd class="das-definition-list__definition">@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Date.Value.ToGdsFormat() : string.Empty)</dd>
+    </dl>
+
+    <dl class="das-definition-list">
+        <dt class="das-definition-list__title">Unique learner number</dt>
+        <dd class="das-definition-list__definition">@Model.Uln</dd>
+    </dl>
+
+    <dl class="das-definition-list">
+        <dt class="das-definition-list__title">Apprenticeship training course</dt>
+        <dd class="das-definition-list__definition">@Model.Courses.Single(x => x.Id == Model.CourseCode).ExtendedTitle</dd>
+    </dl>
+}
+else
+{
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                Apprentice name
+            </legend>
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.FirstName, "govuk-form-group--error")">
+                <label asp-for="FirstName" class="govuk-label">First name</label>
+                @Html.ValidationMessageFor(m => m.FirstName, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.FirstName)})
+                <input asp-for="FirstName" class="govuk-input"/>
+            </div>
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.LastName, "govuk-form-group--error")">
+                <label asp-for="LastName" class="govuk-label">Last name</label>
+                @Html.ValidationMessageFor(m => m.LastName, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName)})
+                <input asp-for="LastName" class="govuk-input"/>
+            </div>
+        </fieldset>
+    </div>
+    <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.DateOfBirth, "govuk-form-group--error")">
+        <fieldset class="govuk-fieldset" aria-describedby="dob-hint" role="group">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                Date of birth
+            </legend>
+            <span id="dob-hint" class="govuk-hint">
+                For example, 31 3 1980
+            </span>
+            @Html.ValidationMessageFor(m => m.DateOfBirth, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DateOfBirth)})
+            <div class="govuk-date-input">
+                <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                        <label asp-for="BirthDay" class="govuk-label govuk-date-input__label">Day</label>
+                        <input asp-for="BirthDay" min="1" max="31" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number">
+                    </div>
+                </div>
+                <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                        <label asp-for="BirthMonth" class="govuk-label govuk-date-input__label">Month</label>
+                        <input asp-for="BirthMonth" min="1" max="12" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number">
+                    </div>
+                </div>
+                <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                        <label asp-for="BirthYear" class="govuk-label govuk-date-input__label">Year</label>
+                        <input asp-for="BirthYear" min="1900" max="9999" class="govuk-input govuk-date-input__input govuk-input--width-4" type="number">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Uln, "govuk-form-group--error")">
+        <label asp-for="Uln" class="govuk-label govuk-!-font-weight-bold">Unique learner number</label>
         <span id="dob-hint" class="govuk-hint">
-            For example, 31 3 1980
+            <span id="uln">@(Model.Uln == null ? "This will be added by your training provider." : Model.Uln)</span>
+            @Html.HiddenFor(x => x.Uln)
         </span>
-        @Html.ValidationMessageFor(m => m.DateOfBirth, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DateOfBirth) })
-        <div class="govuk-date-input">
-            <div class="govuk-date-input__item">
-                <div class="govuk-form-group">
-                    <label asp-for="BirthDay" class="govuk-label govuk-date-input__label">Day</label>
-                    <input asp-for="BirthDay" min="1" max="31" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number">
-                </div>
-            </div>
-            <div class="govuk-date-input__item">
-                <div class="govuk-form-group">
-                    <label asp-for="BirthMonth" class="govuk-label govuk-date-input__label">Month</label>
-                    <input asp-for="BirthMonth" min="1" max="12" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number">
-                </div>
-            </div>
-            <div class="govuk-date-input__item">
-                <div class="govuk-form-group">
-                    <label asp-for="BirthYear" class="govuk-label govuk-date-input__label">Year</label>
-                    <input asp-for="BirthYear" min="1900" max="9999" class="govuk-input govuk-date-input__input govuk-input--width-4" type="number">
-                </div>
-            </div>
-        </div>
-    </fieldset>
-</div>
-<div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Uln, "govuk-form-group--error")">
-    <label asp-for="Uln" class="govuk-label govuk-!-font-weight-bold">Unique learner number</label>
-    <span id="dob-hint" class="govuk-hint">
-        <span id="uln">@(Model.Uln == null ? "This will be added by your training provider." : Model.Uln)</span>
-        @Html.HiddenFor(x => x.Uln)
-    </span>
-</div>
-<div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
-    <label asp-for="CourseCode" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
-    <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
-    @Html.ValidationMessageFor(m => m.CourseCode, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.CourseCode) })
-    <select class="govuk-select govuk-!-width-three-quarters" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "Id", "ExtendedTitle"))" aria-describedby="course-name-hint">
-        <option value="">Please select an option</option>
-    </select>
-</div>
+    </div>
+    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
+        <label asp-for="CourseCode" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
+        <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
+        @Html.ValidationMessageFor(m => m.CourseCode, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.CourseCode)})
+        <select class="govuk-select govuk-!-width-three-quarters" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "Id", "ExtendedTitle"))" aria-describedby="course-name-hint">
+            <option value="">Please select an option</option>
+        </select>
+    </div>
+
+}
+
 <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.StartDate, "govuk-form-group--error")">
     <fieldset class="govuk-fieldset" aria-describedby="start-date-hint" role="group">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">

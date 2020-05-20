@@ -79,5 +79,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public string Reference { get; set; }
 
         public IReadOnlyList<ITrainingProgramme> Courses { get; set; }
+
+        public bool IsContinuation { get; set; }
     }
 }
