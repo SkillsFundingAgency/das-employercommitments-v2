@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Authorization.ModelBinding;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
@@ -48,6 +49,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
                 }
                 return "No, request changes from training provider";
             }
+        }
+
+        public void VerifyFundingCapIsMappedCorrectlyForChangeOfParty()
+        {
+            throw new NotImplementedException();
         }
     }
 

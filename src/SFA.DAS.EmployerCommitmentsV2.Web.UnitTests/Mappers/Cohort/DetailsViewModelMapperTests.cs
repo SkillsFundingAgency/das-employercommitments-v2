@@ -453,6 +453,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await fixture.Map();
             Assert.AreEqual(fixture.Cohort.IsCompleteForEmployer, result.IsCompleteForEmployer);
         }
+
+        [Test]
+        public async Task FundingCapIsMappedCorrectlyForChangeOfPartyApprentice()
+        {
+            var result = await new DetailsViewModelMapperTestsFixture()
+                .CreateThisNumberOfApprenticeships(1)
+                .SetupChangeOfPartyScenario()
+                .Map();
+
+            Assert.AreEqual(1000, result.Courses.First().DraftApprenticeships.First().FundingBandCap);
+            Assert.AreEqual(true, result.Courses.First().DraftApprenticeships.First().ExceedsFundingBandCap);
+        }
     }
 
     public class DetailsViewModelMapperTestsFixture
@@ -480,7 +492,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             _autoFixture = new Fixture();
 
-            Cohort = _autoFixture.Build<GetCohortResponse>().Without(x => x.TransferSenderId).Create();
+            Cohort = _autoFixture.Build<GetCohortResponse>().Without(x => x.TransferSenderId).Without(x => x.ChangeOfPartyRequestId).Create();
             AccountLegalEntityResponse = _autoFixture.Create<AccountLegalEntityResponse>();
             LegalEntityViewModel = _autoFixture.Create<LegalEntityViewModel>();
 
@@ -592,7 +604,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             return draftApprenticeships;
         }
 
-        private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode, int? cost, DateTime? startDate = null)
+        private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode, int? cost, DateTime? startDate = null, DateTime? originalStartDate = null)
         {
             startDate = startDate ?? DefaultStartDate;
 
@@ -600,6 +612,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             draftApprenticeship.CourseCode = courseCode;
             draftApprenticeship.Cost = cost;
             draftApprenticeship.StartDate = startDate;
+            draftApprenticeship.OriginalStartDate = originalStartDate;
         }
 
         public DetailsViewModelMapperTestsFixture SetIsAgreementSigned(bool isAgreementSigned)
@@ -620,6 +633,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public DetailsViewModelMapperTestsFixture SetTransferSender()
         {
             Cohort.TransferSenderId = _autoFixture.Create<long>();
+            return this;
+        }
+
+        internal DetailsViewModelMapperTestsFixture SetupChangeOfPartyScenario()
+        {
+            Cohort.ChangeOfPartyRequestId = 1;
+            var draftApprenticeship = DraftApprenticeshipsResponse.DraftApprenticeships.First();
+            draftApprenticeship.OriginalStartDate = _fundingPeriods.First().EffectiveFrom;
+            draftApprenticeship.StartDate = _fundingPeriods.Last().EffectiveFrom;
+            draftApprenticeship.Cost = _fundingPeriods.First().FundingCap + 500;
             return this;
         }
     }
