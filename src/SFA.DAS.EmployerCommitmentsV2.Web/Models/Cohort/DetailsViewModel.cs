@@ -51,11 +51,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
                 return "No, request changes from training provider";
             }
         }
-
-        public void VerifyFundingCapIsMappedCorrectlyForChangeOfParty()
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public enum CohortDetailsOptions
