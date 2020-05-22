@@ -375,6 +375,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(expectedShowApprovalOption, result.EmployerCanApprove);
         }
 
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        public async Task ShowAddAnotherApprenticeOptionIsMappedCorrectly(bool isChangeOfParty, bool expectedShowAddAnotherOption)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetIsChangeOfParty(isChangeOfParty);
+            var result = await fixture.Map();
+            Assert.AreEqual(expectedShowAddAnotherOption, result.ShowAddAnotherApprenticeOption);
+        }
+
         [TestCase(true, true)]
         [TestCase(false,  false)]
         public async Task ShowApprovalOptionIsMappedCorrectlyWithoutATransfer(bool isAgreementSigned, bool expectedShowApprovalOption)
@@ -636,13 +646,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             return this;
         }
 
-        internal DetailsViewModelMapperTestsFixture SetupChangeOfPartyScenario()
+        public DetailsViewModelMapperTestsFixture SetupChangeOfPartyScenario()
         {
             Cohort.ChangeOfPartyRequestId = 1;
             var draftApprenticeship = DraftApprenticeshipsResponse.DraftApprenticeships.First();
             draftApprenticeship.OriginalStartDate = _fundingPeriods.First().EffectiveFrom;
             draftApprenticeship.StartDate = _fundingPeriods.Last().EffectiveFrom;
             draftApprenticeship.Cost = _fundingPeriods.First().FundingCap + 500;
+            return this;
+        }
+
+        public DetailsViewModelMapperTestsFixture SetIsChangeOfParty(bool isChangeOfParty)
+        {
+            Cohort.ChangeOfPartyRequestId = isChangeOfParty ? _autoFixture.Create<long>() : default(long?);
+
             return this;
         }
     }
