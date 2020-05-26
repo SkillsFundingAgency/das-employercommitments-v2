@@ -21,7 +21,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         private readonly IEncodingService _encodingService;
         private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
         private readonly IAccountApiClient _accountsApiClient;
-        private bool IsLinkedToChangeOfPartyRequest;
 
         public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, 
             ITrainingProgrammeApiClient trainingProgrammeApiClient, IAccountApiClient accountsApiClient)
@@ -30,7 +29,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             _encodingService = encodingService;
             _trainingProgrammeApiClient = trainingProgrammeApiClient;
             _accountsApiClient = accountsApiClient;
-            IsLinkedToChangeOfPartyRequest = false;
         }
 
         public async Task<DetailsViewModel> Map(DetailsRequest source)
@@ -58,7 +56,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             await Task.WhenAll(cohortTask, draftApprenticeshipsTask);
 
             cohort = await cohortTask;
-            IsLinkedToChangeOfPartyRequest = cohort.IsLinkedToChangeOfPartyRequest;
             var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
 
             var courses = GroupCourses(draftApprenticeships);
@@ -142,7 +139,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         private void SetFundingBandCap(string courseCode, IEnumerable<CohortDraftApprenticeshipViewModel> draftApprenticeships)
         {
-            Parallel.ForEach(draftApprenticeships, async a => a.FundingBandCap = await GetFundingBandCap(courseCode, IsLinkedToChangeOfPartyRequest ? a.OriginalStartDate : a.StartDate));
+            Parallel.ForEach(draftApprenticeships, async a => a.FundingBandCap = await GetFundingBandCap(courseCode, a.OriginalStartDate ?? a.StartDate));
         }
 
         private async Task<int?> GetFundingBandCap(string courseCode, DateTime? startDate)
