@@ -8,5 +8,6 @@
   * SFA.DAS.Employer.Shared.UI
   * SFA.DAS.EmployerUrlHelper
   * SFA.DAS.Encoding
+  * SFA.DAS.Reservations.Api.Client
 * Start Microsoft Azure Storage Emulator
 * Run SFA.DAS.EmployerCommitmentsV2.Web (run under kestrel)
