@@ -7,5 +7,5 @@
   * SFA.DAS.EmployerCommitmentsV2
   * SFA.DAS.EmployerUrlHelper
   * SFA.DAS.Encoding
-* Run Microsoft Azure Storage Emulator
+* Start Microsoft Azure Storage Emulator
 * Run SFA.DAS.EmployerCommitmentsV2.Web (run under kestrel)
