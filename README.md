@@ -3,7 +3,7 @@
 ## Getting Started
 
 * Clone this repo: https://github.com/SkillsFundingAgency/das-employercommitments-v2
-* Obtain cloud config for
+* Obtain cloud config for:
   * SFA.DAS.EmployerCommitmentsV2
   * SFA.DAS.EmployerUrlHelper
   * SFA.DAS.Encoding
