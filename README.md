@@ -1,5 +1,9 @@
 # SFA.DAS.EmployerCommitmentsV2
 
+## Context
+
+Functionality within EmployerCommitmentsV2 requires Commitments Api v2 (https://github.com/SkillsFundingAgency/das-commitments/blob/master/src/CommitmentsV2/readme.md)
+
 ## Getting Started
 
 * Clone this repo: https://github.com/SkillsFundingAgency/das-employercommitments-v2
