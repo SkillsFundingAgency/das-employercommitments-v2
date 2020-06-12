@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                     o.AddAuthorization();
                     o.AddValidation();
                     o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-                    o.Filters.Add(new TypeFilterAttribute(typeof(GoogleAnalyticsFilter)));
+                    o.Filters.Add(new GoogleAnalyticsFilter());
                 })
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
