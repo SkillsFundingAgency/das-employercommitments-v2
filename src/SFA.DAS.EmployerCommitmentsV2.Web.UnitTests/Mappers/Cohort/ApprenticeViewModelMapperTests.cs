@@ -68,7 +68,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void AccountLegalEntityNameIsMappedCorrectly()
         {
-            Assert.AreEqual(_accountLegalEntityResponse.LegalEntityName, _result.AccountLegalEntityName);
+            Assert.AreEqual(_accountLegalEntityResponse.LegalEntityName, _result.LegalEntityName);
         }
 
         [Test]
