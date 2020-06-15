@@ -37,6 +37,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test, MoqAutoData]
+        public async Task Then_Maps_LegalEntityName(
+            ConfirmProviderRequest request,
+            [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
+            ConfirmProviderViewModelMapper mapper)
+        {
+            var viewModel = await mapper.Map(request);
+
+            viewModel.LegalEntityName.Should().Be(request.LegalEntityName);
+        }
+
+        [Test, MoqAutoData]
         public async Task Then_Maps_ReservationId(
             ConfirmProviderRequest request,
             [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,

@@ -13,6 +13,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountHashedId = source.AccountHashedId,
                 CourseCode = source.CourseCode,
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
+                LegalEntityName = source.LegalEntityName,
                 ProviderId = long.Parse(source.ProviderId),
                 ReservationId = source.ReservationId,
                 StartMonthYear = source.StartMonthYear,

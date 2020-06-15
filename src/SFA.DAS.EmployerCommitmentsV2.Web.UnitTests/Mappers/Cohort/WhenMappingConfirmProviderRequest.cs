@@ -62,6 +62,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test, MoqAutoData]
+        public async Task ThenMapsLegalEntityName(
+            SelectProviderViewModel viewModel,
+            long providerId,
+            ConfirmProviderRequestMapper mapper)
+        {
+            viewModel.ProviderId = providerId.ToString();
+
+            var result = await mapper.Map(viewModel);
+
+            Assert.AreEqual(viewModel.LegalEntityName, result.LegalEntityName);
+        }
+
+        [Test, MoqAutoData]
         public async Task ThenMapsStartMonthYear(
             SelectProviderViewModel viewModel,
             long providerId,
