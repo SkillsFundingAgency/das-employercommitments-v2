@@ -44,6 +44,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
+        public async Task LegalEntityNameIsMappedCorrectly()
+        {
+            var fixture = new ConfirmDeleteViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(fixture.Cohort.LegalEntityName, result.LegalEntityName);
+        }
+
+        [Test]
         public async Task DraftApprenticeshipTotalCountIsReportedCorrectly()
         {
             var fixture = new ConfirmDeleteViewModelMapperTestsFixture();
