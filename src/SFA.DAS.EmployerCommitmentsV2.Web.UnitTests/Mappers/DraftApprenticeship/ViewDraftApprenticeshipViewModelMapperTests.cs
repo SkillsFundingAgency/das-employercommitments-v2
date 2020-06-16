@@ -105,6 +105,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         }
 
         [Test]
+        public void ThenLegalEntityNameIsMappedCorrectly()
+        {
+            Assert.AreEqual(_request.Cohort.LegalEntityName, _result.LegalEntityName);
+        }
+
+        [Test]
         public void ThenTrainingCourseIsMappedCorrectly()
         {
             Assert.AreEqual(_trainingProgrammeApiClient.All.First().ExtendedTitle, _result.TrainingCourse);
