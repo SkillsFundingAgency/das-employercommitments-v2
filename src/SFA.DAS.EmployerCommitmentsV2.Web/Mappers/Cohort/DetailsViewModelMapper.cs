@@ -104,7 +104,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                             Cost = a.Cost,
                             DateOfBirth = a.DateOfBirth,
                             EndDate = a.EndDate,
-                            StartDate = a.StartDate
+                            StartDate = a.StartDate,
+                            OriginalStartDate = a.OriginalStartDate
                         })
                 .ToList()
                 })
@@ -138,7 +139,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         private void SetFundingBandCap(string courseCode, IEnumerable<CohortDraftApprenticeshipViewModel> draftApprenticeships)
         {
-            Parallel.ForEach(draftApprenticeships, async a => a.FundingBandCap = await GetFundingBandCap(courseCode, a.StartDate));
+            Parallel.ForEach(draftApprenticeships, async a => a.FundingBandCap = await GetFundingBandCap(courseCode, a.OriginalStartDate ?? a.StartDate));
         }
 
         private async Task<int?> GetFundingBandCap(string courseCode, DateTime? startDate)
