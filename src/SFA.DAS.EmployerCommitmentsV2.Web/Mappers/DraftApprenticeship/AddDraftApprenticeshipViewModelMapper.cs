@@ -39,6 +39,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 CohortId = source.CohortId,
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 AccountLegalEntityId = source.AccountLegalEntityId,
+                LegalEntityName = cohort.LegalEntityName,
                 ReservationId = source.ReservationId,
                 StartDate = new MonthYearModel(source.StartMonthYear),
                 CourseCode = source.CourseCode,
