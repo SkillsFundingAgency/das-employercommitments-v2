@@ -163,6 +163,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             Assert.AreEqual(_cohort.ProviderName, _result.ProviderName);
         }
 
+        [Test]
+        public void LegalEntityNameIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.Cohort.LegalEntityName, _result.LegalEntityName);
+        }
+
         [TestCase(123, true)]
         [TestCase(null, false)]
         public async Task CoursesAreMappedCorrectlyWhenAccountIsLevy(long? transferSenderId, bool fundedByTransfer)
