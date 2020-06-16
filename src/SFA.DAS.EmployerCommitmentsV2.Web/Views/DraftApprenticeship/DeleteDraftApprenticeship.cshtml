@@ -10,6 +10,7 @@
         : Url.Action("Details", new { Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId });
     
     ViewBag.GaData.Vpv = "/unapproved/cohort/apprentices/apprentice/delete";
+    ViewBag.GaData.Org = Model.LegalEntityName;
 }
 
 @*<input class="govuk-radios__input" id="ConfirmDelete" name="confirmDelete" type="radio" value="true">*@

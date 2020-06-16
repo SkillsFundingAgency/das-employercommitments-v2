@@ -14,5 +14,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         [FromQuery]
         public DeleteDraftApprenticeshipOrigin Origin { get; set; }
         public string FullName => $"{FirstName} {LastName}";
+        public string LegalEntityName { get; set; }
     }
 }
