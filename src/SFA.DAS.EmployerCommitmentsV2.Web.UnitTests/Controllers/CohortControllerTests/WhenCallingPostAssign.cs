@@ -1,6 +1,10 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Design;
+using AutoFixture.NUnit3;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using Moq;
 using NUnit.Framework;
@@ -62,6 +66,32 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             result.Should().NotBeNull();
             result.ActionName.Should().Be("Message");
             result.RouteValues.Should().BeEquivalentTo(expectedRouteValues);
+        }
+
+        [Test, MoqAutoData]
+        public void And_Provider_Adding_Apprentices_Then_Legal_Entity_Name_Stored_In_TempData(
+            [Frozen] AssignViewModel viewModel,
+            [Frozen] Mock<ITempDataProvider> tempDataProvider,
+            [Frozen] CohortController controller)
+        {
+            var tempdata = new TempDataDictionary(new DefaultHttpContext(), tempDataProvider.Object);
+            controller.TempData = tempdata;
+            var expectedRouteValues = new RouteValueDictionary(new
+            {
+                viewModel.AccountHashedId,
+                viewModel.AccountLegalEntityHashedId,
+                viewModel.ReservationId,
+                viewModel.StartMonthYear,
+                viewModel.CourseCode,
+                viewModel.ProviderId,
+                viewModel.TransferSenderId,
+                Origin = viewModel.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
+            });
+            viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Provider;
+
+            var result = controller.Assign(viewModel) as RedirectToActionResult;
+
+            Assert.True(controller.TempData.Contains(new KeyValuePair<string, object>(nameof(viewModel.LegalEntityName), viewModel.LegalEntityName)));
         }
 
         [Test, MoqAutoData]
