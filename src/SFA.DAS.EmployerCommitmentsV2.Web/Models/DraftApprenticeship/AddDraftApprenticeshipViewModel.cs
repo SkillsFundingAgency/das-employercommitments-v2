@@ -10,6 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 
         public long AccountLegalEntityId { get; set; }
         public string AccountLegalEntityHashedId { get; set; }
+        public string LegalEntityName { get; set; }
         public string TransferSenderHashedId { get; set; }
         public bool AutoCreatedReservation { get; set; }
     }

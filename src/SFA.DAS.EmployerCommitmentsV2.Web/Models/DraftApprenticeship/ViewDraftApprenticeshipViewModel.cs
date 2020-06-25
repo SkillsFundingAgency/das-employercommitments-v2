@@ -15,5 +15,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public DateTime? EndDate { get; set; }
         public int? Cost { get; set; }
         public string Reference { get; set; }
+        public string LegalEntityName { get; set; }
     }
 }

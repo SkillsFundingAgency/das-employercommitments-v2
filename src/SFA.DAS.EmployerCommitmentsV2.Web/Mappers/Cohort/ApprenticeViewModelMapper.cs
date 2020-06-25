@@ -35,6 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountHashedId = source.AccountHashedId,
                 AccountLegalEntityId = source.AccountLegalEntityId,
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
+                LegalEntityName = ale.LegalEntityName,
                 StartDate = new MonthYearModel(source.StartMonthYear),
                 ReservationId = source.ReservationId,
                 CourseCode = source.CourseCode,

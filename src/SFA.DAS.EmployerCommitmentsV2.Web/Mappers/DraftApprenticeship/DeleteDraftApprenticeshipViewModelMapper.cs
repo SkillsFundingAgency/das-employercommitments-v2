@@ -45,7 +45,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 AccountHashedId = source.AccountHashedId,
                 DraftApprenticeshipHashedId = source.DraftApprenticeshipHashedId,
                 CohortReference = source.CohortReference,
-                Origin = source.Origin
+                Origin = source.Origin,
+                LegalEntityName = cohort.LegalEntityName
             };
         }
     }

@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.NUnit3;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -33,10 +35,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         [Test, AutoData]
         public async Task GetMessage_ValidModel_ShouldReturnMessageViewModelWithMappedValues(MessageRequest request)
         {
+            _fixture.WithLegalEntityNameStoredInTempData();
+
             var result = await _fixture.Sut.Message(request);
 
             var model = result.VerifyReturnsViewModel().WithModel<MessageViewModel>();
             _fixture.VerifyViewModelIsMappedCorrectly(model);
+        }
+
+        [Test, AutoData]
+        public async Task GetMessage_ValidModel_ForProvider_ShouldPopulateLegalEntityNameFromTempData(
+            [Frozen] MessageRequest request)
+        {
+            request.LegalEntityName = null;
+            _fixture.WithLegalEntityNameStoredInTempData();
+
+            var result = await _fixture.Sut.Message(request);
+
+            var model = result.VerifyReturnsViewModel().WithModel<MessageViewModel>();
+            _fixture.VerifyLegalEntityNamePopulatedFromTempData(model);
         }
 
         [Test, AutoData]
@@ -80,7 +97,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
                 MapperResult = new CreateCohortWithOtherPartyRequest();
                 ModelMapperMock = new Mock<IModelMapper>();
-                ModelMapperMock.Setup(x => x.Map<CreateCohortWithOtherPartyRequest>(It.IsAny<object>()))
+                ModelMapperMock
+                    .Setup(x => x.Map<CreateCohortWithOtherPartyRequest>(It.IsAny<object>()))
                     .ReturnsAsync(() => MapperResult);
 
                 MessageViewModel = autoFixture.Create<MessageViewModel>();
@@ -105,6 +123,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             public CreateCohortWithOtherPartyControllerTestFixture WithInvalidModel()
             {
                 Sut.ModelState.AddModelError("AKey", "Some Error");
+                return this;
+            }
+
+            public CreateCohortWithOtherPartyControllerTestFixture WithLegalEntityNameStoredInTempData()
+            {
+                var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+                tempData[nameof(MessageRequest.LegalEntityName)] = MessageViewModel.LegalEntityName;
+                Sut.TempData = tempData;
                 return this;
             }
 
@@ -157,6 +183,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 Assert.AreEqual(MessageViewModel.AccountLegalEntityHashedId, model.AccountLegalEntityHashedId);
                 Assert.AreEqual(MessageViewModel.ReservationId, model.ReservationId);
 
+                return this;
+            }
+
+            public CreateCohortWithOtherPartyControllerTestFixture VerifyLegalEntityNamePopulatedFromTempData(MessageViewModel model)
+            {
+                Assert.AreEqual(MessageViewModel.LegalEntityName, model.LegalEntityName);
                 return this;
             }
         }

@@ -32,6 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountHashedId = source.AccountHashedId,
                 CohortReference = source.CohortReference,
                 ProviderName = cohort.ProviderName,
+                LegalEntityName = cohort.LegalEntityName,
                 Courses = GroupCourses(draftApprenticeships)
             };
         }

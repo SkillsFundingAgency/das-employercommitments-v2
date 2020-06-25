@@ -1,86 +1,101 @@
-﻿using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+﻿using AutoFixture;
+using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Testing.AutoFixture;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
     [TestFixture]
     public class WhenMappingSelectProviderRequestToViewModel
     {
+        private SelectProviderRequest _request;
+        private Mock<ICommitmentsApiClient> _commitmentsApiClientMock;
+        private AccountLegalEntityResponse _commitmentsApiClientResponse;
+        private SelectProviderViewModelMapper _mapper;
 
-        [Test, AutoData]
-        public async Task ThenMapsReservationId(
-            SelectProviderRequest request,
-            SelectProviderViewModelMapper mapper)
+        [SetUp]
+        public void Setup()
         {
-            var result = await mapper.Map(request);
+            var autoFixture = new Fixture();
+            _request = autoFixture.Create<SelectProviderRequest>();
+            _commitmentsApiClientResponse = autoFixture.Create<AccountLegalEntityResponse>();
 
-            Assert.AreEqual(request.ReservationId, result.ReservationId);
+            _commitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
+            _commitmentsApiClientMock
+                .Setup(x => x.GetAccountLegalEntity(_request.AccountLegalEntityId, CancellationToken.None))
+                .ReturnsAsync(_commitmentsApiClientResponse);
+
+            _mapper = new SelectProviderViewModelMapper(_commitmentsApiClientMock.Object);
         }
 
-        [Test, MoqAutoData]
-        public async Task ThenMapsAccountHashedId(
-            SelectProviderRequest request,
-            SelectProviderViewModelMapper mapper)
+        [Test]
+        public async Task ThenMapsReservationId()
         {
-            var result = await mapper.Map(request);
+            var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
+            Assert.AreEqual(_request.ReservationId, result.ReservationId);
         }
 
-        [Test, MoqAutoData]
-        public async Task ThenMapsCourseCode(
-            SelectProviderRequest request,
-            SelectProviderViewModelMapper mapper)
+        [Test]
+        public async Task ThenMapsAccountHashedId()
         {
-            var result = await mapper.Map(request);
+            var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(request.CourseCode, result.CourseCode);
+            Assert.AreEqual(_request.AccountHashedId, result.AccountHashedId);
         }
 
-        [Test, MoqAutoData]
-        public async Task ThenMapsStartMonthYear(
-            SelectProviderRequest request,
-            SelectProviderViewModelMapper mapper)
+        [Test]
+        public async Task ThenMapsLegalEntityName()
         {
-            var result = await mapper.Map(request);
+            var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(request.StartMonthYear, result.StartMonthYear);
+            Assert.AreEqual(_commitmentsApiClientResponse.LegalEntityName, result.LegalEntityName);
         }
 
-        [Test, MoqAutoData]
-        public async Task ThenMapsEmployerAccountLegalEntityPublicHashedId(
-            SelectProviderRequest request,
-            SelectProviderViewModelMapper mapper)
+        [Test]
+        public async Task ThenMapsCourseCode()
         {
-            var result = await mapper.Map(request);
+            var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(request.AccountLegalEntityHashedId, result.AccountLegalEntityHashedId);
+            Assert.AreEqual(_request.CourseCode, result.CourseCode);
         }
 
-
-        [Test, MoqAutoData]
-        public async Task ThenMapsTransferSenderId(
-            SelectProviderRequest request,
-            SelectProviderViewModelMapper mapper)
+        [Test]
+        public async Task ThenMapsStartMonthYear()
         {
-            var result = await mapper.Map(request);
+            var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(request.TransferSenderId, result.TransferSenderId);
+            Assert.AreEqual(_request.StartMonthYear, result.StartMonthYear);
         }
 
-
-        [Test, MoqAutoData]
-        public async Task ThenMapsOrigin(
-            SelectProviderRequest request,
-            SelectProviderViewModelMapper mapper)
+        [Test]
+        public async Task ThenMapsEmployerAccountLegalEntityPublicHashedId()
         {
-            var result = await mapper.Map(request);
+            var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(request.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices, result.Origin);
+            Assert.AreEqual(_request.AccountLegalEntityHashedId, result.AccountLegalEntityHashedId);
+        }
+
+        [Test]
+        public async Task ThenMapsTransferSenderId()
+        {
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(_request.TransferSenderId, result.TransferSenderId);
+        }
+
+        [Test]
+        public async Task ThenMapsOrigin()
+        {
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(_request.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices, result.Origin);
         }
     }
 }

@@ -45,6 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 Reference = draftApprenticeship.Reference,
                 AccountHashedId = source.Request.AccountHashedId,
                 ProviderName = cohort.ProviderName,
+                LegalEntityName = source.Cohort.LegalEntityName,
                 IsContinuation = draftApprenticeship.IsContinuation,
                 Courses = (cohort.IsFundedByTransfer || cohort.LevyStatus == ApprenticeshipEmployerType.NonLevy) && !draftApprenticeship.IsContinuation
                     ? await _trainingProgrammeApiClient.GetStandardTrainingProgrammes()

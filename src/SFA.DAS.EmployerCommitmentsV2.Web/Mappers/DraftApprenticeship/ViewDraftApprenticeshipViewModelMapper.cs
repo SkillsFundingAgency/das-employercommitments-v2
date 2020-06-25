@@ -36,7 +36,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 Cost = draftApprenticeship.Cost,
                 StartDate = draftApprenticeship.StartDate,
                 EndDate = draftApprenticeship.EndDate,
-                Reference = draftApprenticeship.Reference
+                Reference = draftApprenticeship.Reference,
+                LegalEntityName = source.Cohort.LegalEntityName
             };
 
             return await Task.FromResult(result);

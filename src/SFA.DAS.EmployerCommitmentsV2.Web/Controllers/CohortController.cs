@@ -236,6 +236,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 case WhoIsAddingApprentices.Employer:
                     return RedirectToAction("Apprentice", "Cohort", routeValues);
                 case WhoIsAddingApprentices.Provider:
+                    TempData[nameof(model.LegalEntityName)] = model.LegalEntityName;
                     return RedirectToAction("Message", routeValues);
                 default:
                     return RedirectToAction("Error", "Error");
@@ -263,6 +264,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add/message")]
         public async Task<IActionResult> Message(MessageRequest request)
         {
+            request.LegalEntityName = TempData[nameof(request.LegalEntityName)] as string;
             var model = await _modelMapper.Map<MessageViewModel>(request);
             return View(model);
         }

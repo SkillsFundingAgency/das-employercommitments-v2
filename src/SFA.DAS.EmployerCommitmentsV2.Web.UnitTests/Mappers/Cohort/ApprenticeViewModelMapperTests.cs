@@ -66,6 +66,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
+        public void AccountLegalEntityNameIsMappedCorrectly()
+        {
+            Assert.AreEqual(_accountLegalEntityResponse.LegalEntityName, _result.LegalEntityName);
+        }
+
+        [Test]
         public void StartDateIsMappedCorrectly()
         {
             Assert.AreEqual(new MonthYearModel(_source.StartMonthYear).Date, _result.StartDate.Date);

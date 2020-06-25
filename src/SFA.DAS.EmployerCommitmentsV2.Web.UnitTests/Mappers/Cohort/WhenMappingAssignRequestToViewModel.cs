@@ -1,15 +1,19 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
     public class WhenMappingAssignRequestToViewModel
     {
-        [Test, AutoData]
+        [Test, MoqAutoData]
         public async Task Then_Maps_AccountHashedId(
             AssignRequest request,
             AssignViewModelMapper mapper)
@@ -19,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             viewModel.AccountHashedId.Should().Be(request.AccountHashedId);
         }
 
-        [Test, AutoData]
+        [Test, MoqAutoData]
         public async Task Then_Maps_EmployerAccountLegalEntityPublicHashedId(
             AssignRequest request,
             AssignViewModelMapper mapper)
@@ -29,7 +33,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             viewModel.AccountLegalEntityHashedId.Should().Be(request.AccountLegalEntityHashedId);
         }
 
-        [Test, AutoData]
+        [Test, MoqAutoData]
+        public async Task Then_Maps_LegalEntityName(
+            [Frozen] AssignRequest request,
+            [Frozen] AccountLegalEntityResponse response,
+            [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClientMock,
+            AssignViewModelMapper mapper)
+        {
+            commitmentsApiClientMock
+                .Setup(x => x.GetAccountLegalEntity(request.AccountLegalEntityId, default))
+                .ReturnsAsync(response);
+
+            var viewModel = await mapper.Map(request);
+
+            viewModel.LegalEntityName.Should().Be(response.LegalEntityName);
+        }
+
+        [Test, MoqAutoData]
         public async Task Then_Maps_ReservationId(
             AssignRequest request,
             AssignViewModelMapper mapper)
@@ -39,7 +59,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             viewModel.ReservationId.Should().Be(request.ReservationId);
         }
 
-        [Test, AutoData]
+        [Test, MoqAutoData]
         public async Task Then_Maps_StartMonthYear(
             AssignRequest request,
             AssignViewModelMapper mapper)
@@ -49,7 +69,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             viewModel.StartMonthYear.Should().Be(request.StartMonthYear);
         }
 
-        [Test, AutoData]
+        [Test, MoqAutoData]
         public async Task Then_Maps_CourseCode(
             AssignRequest request,
             AssignViewModelMapper mapper)
@@ -59,7 +79,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             viewModel.CourseCode.Should().Be(request.CourseCode);
         }
 
-        [Test, AutoData]
+        [Test, MoqAutoData]
         public async Task Then_Maps_UkPrn(
             AssignRequest request,
             AssignViewModelMapper mapper)
@@ -69,7 +89,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             viewModel.ProviderId.Should().Be(request.ProviderId);
         }
 
-        [Test, AutoData]
+        [Test, MoqAutoData]
         public async Task Then_Maps_TransferSenderId(
             AssignRequest request,
             AssignViewModelMapper mapper)

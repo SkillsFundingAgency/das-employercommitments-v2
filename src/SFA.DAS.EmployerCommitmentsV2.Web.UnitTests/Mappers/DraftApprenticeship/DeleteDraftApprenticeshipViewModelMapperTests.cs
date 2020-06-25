@@ -91,6 +91,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             Assert.AreEqual(f.DeleteApprenticeshipRequest.AccountHashedId, result.AccountHashedId);
             Assert.AreEqual(f.DeleteApprenticeshipRequest.Origin, result.Origin);
             Assert.AreEqual(f.DeleteApprenticeshipRequest.CohortReference, result.CohortReference);
+            Assert.AreEqual(f.GetCohortResponse.LegalEntityName, result.LegalEntityName);
             Assert.IsTrue(result.IsLastApprenticeshipInCohort);
         }
 
