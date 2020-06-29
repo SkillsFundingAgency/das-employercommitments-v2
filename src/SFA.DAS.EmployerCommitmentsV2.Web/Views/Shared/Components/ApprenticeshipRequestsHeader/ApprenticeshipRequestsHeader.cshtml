@@ -1,0 +1,18 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.CohortsViewModel
+
+<a asp-action="" class="govuk-button"> Add new apprentice </a>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-width-container">
+            <h1 class="govuk-heading-xl">Your cohort requests</h1>
+
+            <div class="das-cards das-cards--bingo">
+                @await Html.PartialAsync("_CardLink", Model.CohortsInReview)
+                @await Html.PartialAsync("_CardLink", Model.CohortsWithTrainingProvider)
+                @await Html.PartialAsync("_CardLink", Model.CohortsInDraft)
+                @await Html.PartialAsync("_CardLink", Model.CohortsWithTransferSender)
+            </div>
+        </div>
+    </div>
+</div>
