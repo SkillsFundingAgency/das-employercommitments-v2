@@ -9,7 +9,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string Url { get; set; }
         public string LinkId { get; set; }
 
-        public CohortCardLinkViewModel(int count, string description, string url, string linkId)
+        public bool Selected { get; set; }
+
+        public CohortCardLinkViewModel(int count, string description, string url, string linkId, bool selected = false)
         {
             if (count > 0)
             {
@@ -18,6 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
             Count = count;
             Description = description;
             LinkId = linkId;
+            Selected = selected;
         }
     }
 }
