@@ -106,3 +106,111 @@
 2020-06-29 09:43:18.6743 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
 2020-06-29 09:43:18.6743 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
 2020-06-29 09:43:18.6964 Info Found 35 configuration items
+2020-06-30 13:10:43.9460 Info Message Template Auto Format enabled
+2020-06-30 13:10:44.0239 Info Adding target Console Target[Console]
+2020-06-30 13:10:44.0601 Info Adding target File Target[File]
+2020-06-30 13:10:44.0721 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 13:10:44.0881 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 13:10:44.1019 Info Found 35 configuration items
+2020-06-30 13:14:14.0441 Info Message Template Auto Format enabled
+2020-06-30 13:14:14.1116 Info Adding target Console Target[Console]
+2020-06-30 13:14:14.1442 Info Adding target File Target[File]
+2020-06-30 13:14:14.1442 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 13:14:14.1718 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 13:14:14.1809 Info Found 35 configuration items
+2020-06-30 13:25:29.7859 Info Message Template Auto Format enabled
+2020-06-30 13:25:29.8725 Info Adding target Console Target[Console]
+2020-06-30 13:25:29.9078 Info Adding target File Target[File]
+2020-06-30 13:25:29.9078 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 13:25:29.9316 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 13:25:29.9409 Info Found 35 configuration items
+2020-06-30 13:26:27.8351 Info Message Template Auto Format enabled
+2020-06-30 13:26:27.9265 Info Adding target Console Target[Console]
+2020-06-30 13:26:27.9580 Info Adding target File Target[File]
+2020-06-30 13:26:27.9580 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 13:26:27.9786 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 13:26:27.9868 Info Found 35 configuration items
+2020-06-30 13:30:11.3068 Info Message Template Auto Format enabled
+2020-06-30 13:30:11.3772 Info Adding target Console Target[Console]
+2020-06-30 13:30:11.4032 Info Adding target File Target[File]
+2020-06-30 13:30:11.4112 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 13:30:11.4112 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 13:30:11.4301 Info Found 35 configuration items
+2020-06-30 13:32:17.8703 Info Message Template Auto Format enabled
+2020-06-30 13:32:17.9385 Info Adding target Console Target[Console]
+2020-06-30 13:32:17.9693 Info Adding target File Target[File]
+2020-06-30 13:32:17.9781 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 13:32:17.9884 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 13:32:17.9884 Info Found 35 configuration items
+2020-06-30 13:39:10.3441 Info Message Template Auto Format enabled
+2020-06-30 13:39:10.4170 Info Adding target Console Target[Console]
+2020-06-30 13:39:10.4609 Info Adding target File Target[File]
+2020-06-30 13:39:10.4609 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 13:39:10.4816 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 13:39:10.4917 Info Found 35 configuration items
+2020-06-30 13:50:19.5231 Info Message Template Auto Format enabled
+2020-06-30 13:50:19.5975 Info Adding target Console Target[Console]
+2020-06-30 13:50:19.6262 Info Adding target File Target[File]
+2020-06-30 13:50:19.6262 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 13:50:19.6499 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 13:50:19.6605 Info Found 35 configuration items
+2020-06-30 14:15:03.9424 Info Message Template Auto Format enabled
+2020-06-30 14:15:04.0133 Info Adding target Console Target[Console]
+2020-06-30 14:15:04.0483 Info Adding target File Target[File]
+2020-06-30 14:15:04.0483 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 14:15:04.0696 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 14:15:04.0696 Info Found 35 configuration items
+2020-06-30 14:20:39.6479 Info Message Template Auto Format enabled
+2020-06-30 14:20:39.7187 Info Adding target Console Target[Console]
+2020-06-30 14:20:39.7585 Info Adding target File Target[File]
+2020-06-30 14:20:39.7706 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 14:20:39.7827 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 14:20:39.7827 Info Found 35 configuration items
+2020-06-30 14:39:54.7775 Info Message Template Auto Format enabled
+2020-06-30 14:39:54.8859 Info Adding target Console Target[Console]
+2020-06-30 14:39:54.9758 Info Adding target File Target[File]
+2020-06-30 14:39:54.9931 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 14:39:55.0180 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 14:39:55.0180 Info Found 35 configuration items
+2020-06-30 15:01:13.9954 Info Message Template Auto Format enabled
+2020-06-30 15:01:14.0747 Info Adding target Console Target[Console]
+2020-06-30 15:01:14.1079 Info Adding target File Target[File]
+2020-06-30 15:01:14.1164 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 15:01:14.1268 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 15:01:14.1268 Info Found 35 configuration items
+2020-06-30 16:02:39.8805 Info Message Template Auto Format enabled
+2020-06-30 16:02:39.9751 Info Adding target Console Target[Console]
+2020-06-30 16:02:40.0172 Info Adding target File Target[File]
+2020-06-30 16:02:40.0172 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 16:02:40.0426 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 16:02:40.0526 Info Found 35 configuration items
+2020-06-30 16:06:49.7475 Info Message Template Auto Format enabled
+2020-06-30 16:06:49.8204 Info Adding target Console Target[Console]
+2020-06-30 16:06:49.8576 Info Adding target File Target[File]
+2020-06-30 16:06:49.8735 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 16:06:49.8945 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 16:06:49.9111 Info Found 35 configuration items
+2020-06-30 16:12:29.5491 Info Message Template Auto Format enabled
+2020-06-30 16:12:29.6352 Info Adding target Console Target[Console]
+2020-06-30 16:12:29.6680 Info Adding target File Target[File]
+2020-06-30 16:12:29.6797 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 16:12:29.6938 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 16:12:29.7050 Info Found 35 configuration items
+2020-06-30 16:13:12.5886 Info Message Template Auto Format enabled
+2020-06-30 16:13:12.7149 Info Adding target Console Target[Console]
+2020-06-30 16:13:12.7842 Info Adding target File Target[File]
+2020-06-30 16:13:12.7842 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 16:13:12.8086 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 16:13:12.8214 Info Found 35 configuration items
+2020-06-30 16:20:57.8169 Info Message Template Auto Format enabled
+2020-06-30 16:20:57.8918 Info Adding target Console Target[Console]
+2020-06-30 16:20:57.9217 Info Adding target File Target[File]
+2020-06-30 16:20:57.9312 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 16:20:57.9465 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 16:20:57.9549 Info Found 35 configuration items
+2020-06-30 16:22:05.8821 Info Message Template Auto Format enabled
+2020-06-30 16:22:05.9598 Info Adding target Console Target[Console]
+2020-06-30 16:22:05.9925 Info Adding target File Target[File]
+2020-06-30 16:22:05.9925 Info Configured from an XML element in C:\projects\das-employercommitments-v2\src\SFA.DAS.EmployerCommitmentsV2.Web\bin\Debug\netcoreapp2.2\nlog.Development.config...
+2020-06-30 16:22:06.0143 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: Console
+2020-06-30 16:22:06.0247 Info Found 35 configuration items

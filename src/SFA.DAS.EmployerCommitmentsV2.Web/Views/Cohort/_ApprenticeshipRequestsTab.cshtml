@@ -1,0 +1,21 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.CohortCardLinkViewModel
+
+@if (Model.Selected)
+{
+    <li class="das-tabs-boxes__list-item  das-tabs-boxes__list-item--selected">
+        <span class="das-tabs-boxes__tab" href="@Model.Url" id="@Model.LinkId">
+            <span class="das-tabs-boxes__figure">@Model.Count</span>
+            <span class="das-text-capitalise">@Model.Description</span>
+        </span>
+    </li>
+}
+else
+{
+    <li class="das-tabs-boxes__list-item">
+        <a class="das-tabs-boxes__tab" href="@Model.Url" id="@Model.LinkId">
+            <span class="das-tabs-boxes__figure">@Model.Count</span>
+            <span class="das-tabs-boxes__text das-text-capitalise">@Model.Description</span>
+        </a>
+    </li>
+}
+

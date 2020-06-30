@@ -26,6 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
         {
             return new CohortsViewModel
             {
+                AccountHashedId = accountHashedId,
                 CohortsInDraft = new CohortCardLinkViewModel(
                   cohorts.Count(x => x.GetStatus() == CohortStatus.Draft),
                   "Drafts",
