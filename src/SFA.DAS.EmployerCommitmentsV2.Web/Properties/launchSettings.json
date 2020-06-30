@@ -18,11 +18,10 @@
     "SFA.DAS.EmployerCommitmentsV2.Web": {
       "commandName": "Project",
       "launchBrowser": true,
+      "applicationUrl": "https://localhost:44376;http://localhost:63543",
       "environmentVariables": {
-        "APPSETTING_ConfigurationStorageConnectionString": "UseDevelopmentStorage=true",
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:44376;http://localhost:63543"
+      }
     }
   }
 }

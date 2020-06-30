@@ -6,7 +6,7 @@
 @{
     var accountHashedId = (string)ViewContext.RouteData.Values["accountHashedId"];
     ViewBag.HideHeaderBorder = true;
-    var footerModel = new FooterModel { AccountId = accountHashedId, UsePrivacyV2 = false };
+    var footerModel = new FooterModel { AccountId = accountHashedId, UsePrivacyV2 = true };
 }
 
 <head>
