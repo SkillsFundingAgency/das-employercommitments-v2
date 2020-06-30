@@ -7,7 +7,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string Title { get; set; }
         public long AccountId { get; set; }
         public string AccountHashedId { get; set; }
-        public CohortsSummaryViewModel CohortsSummaryViewModel { get; set; }
+        public CohortsViewModel CohortsSummaryViewModel { get; set; }
         public IEnumerable<WithTrainingProviderCohortSummaryViewModel> Cohorts { get; set; }
     }
 }

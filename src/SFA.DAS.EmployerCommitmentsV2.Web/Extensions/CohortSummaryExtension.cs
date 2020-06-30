@@ -22,9 +22,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
                 return CohortStatus.Unknown;
         }
 
-        public static CohortsSummaryViewModel GetCohortCardLinkViewModel(this CohortSummary[] cohorts, IUrlHelper urlHelper, string accountHashedId, CohortStatus selectedStatus)
+        public static CohortsViewModel GetCohortCardLinkViewModel(this CohortSummary[] cohorts, IUrlHelper urlHelper, string accountHashedId, CohortStatus selectedStatus)
         {
-            return new CohortsSummaryViewModel
+            return new CohortsViewModel
             {
                 CohortsInDraft = new CohortCardLinkViewModel(
                   cohorts.Count(x => x.GetStatus() == CohortStatus.Draft),
