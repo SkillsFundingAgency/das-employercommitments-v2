@@ -1,0 +1,18 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.CohortsSummaryViewModel
+
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-9">
+        Apprentice requests
+    </h1>
+
+    <div class="govuk-grid-column-full">
+        <form method="post">
+            <a href="add--start" role="button" draggable="false" class="govuk-button">
+                Add new apprentice
+            </a>
+        </form>
+
+        @await Html.PartialAsync("_CardLinkTab", Model.CohortsInReview)
+        @await Html.PartialAsync("_CardLinkTab", Model.CohortsWithTrainingProvider)
+        @await Html.PartialAsync("_CardLinkTab", Model.CohortsInDraft)
+        @await Html.PartialAsync("_CardLinkTab", Model.CohortsWithTransferSender)
+    </div>
