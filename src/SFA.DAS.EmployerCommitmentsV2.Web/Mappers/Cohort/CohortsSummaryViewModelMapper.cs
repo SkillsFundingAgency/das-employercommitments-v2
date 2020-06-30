@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         public async Task<CohortsViewModel> Map(CohortsByAccountRequest source)
         {
             var cohorts = (await _commitmentsApiClient.GetCohorts(new GetCohortsRequest { AccountId = source.AccountId })).Cohorts;
-            
+
             return new CohortsViewModel
             {
                 AccountHashedId = source.AccountHashedId,

@@ -1,6 +1,4 @@
-﻿using System.Security.Policy;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 {
     public class CohortCardLinkViewModel
     {
@@ -11,10 +9,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 
         public CohortCardLinkViewModel(int count, string description, string url, string linkId)
         {
-            if (count > 0)
-            {
-                Url = url;
-            }
+            Url = url;
             Count = count;
             Description = description;
             LinkId = linkId;

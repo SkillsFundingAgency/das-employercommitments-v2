@@ -1,12 +1,9 @@
-﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DraftViewModel
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DraftViewModel
 
 @{
     ViewData["Title"] = "Draft apprentice details";
     ViewBag.GaData.Vpv = "/unapproved/draft";
 }
-
-@await Component.InvokeAsync("ApprenticeshipRequestsHeader", new CohortsByAccountRequest { AccountHashedId = Model.AccountHashedId });
 
 <div class="govuk-grid-row">
 
