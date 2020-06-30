@@ -7,12 +7,15 @@
         public string Url { get; set; }
         public string LinkId { get; set; }
 
-        public CohortCardLinkViewModel(int count, string description, string url, string linkId)
+        public bool Selected { get; set; }
+
+        public CohortCardLinkViewModel(int count, string description, string url, string linkId, bool selected = false)
         {
             Url = url;
             Count = count;
             Description = description;
             LinkId = linkId;
+            Selected = selected;
         }
     }
 }
