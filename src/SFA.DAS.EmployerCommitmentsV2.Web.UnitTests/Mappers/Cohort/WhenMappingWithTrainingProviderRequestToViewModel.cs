@@ -127,7 +127,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             CommitmentsApiClient.Setup(c => c.GetCohorts(It.Is<GetCohortsRequest>(r => r.AccountId == AccountId), CancellationToken.None)).Returns(Task.FromResult(GetCohortsResponse));
             EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference)).Returns((long y, EncodingType z) => y + "_Encoded");
 
-            Mapper = new WithTrainingProviderRequestViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object);
+            Mapper = new WithTrainingProviderRequestViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, Mock.Of<IUrlHelper>());
         }
 
         public WhenMappingWithTrainingProviderRequestToViewModelFixture Map()
