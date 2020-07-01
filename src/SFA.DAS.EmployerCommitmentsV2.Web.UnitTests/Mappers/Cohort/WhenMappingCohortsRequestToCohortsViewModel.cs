@@ -56,15 +56,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             f.VerifyCohortsWithTransferSenderIsCorrect(result);
         }
 
-        [Test]
-        public async Task WhenNoCohortsAreFoundThereAreNoDrilldownLinks()
-        {
-            var f = new WhenMappingCohortsRequestToCohortsViewModelFixture().WithNoCohortsFound();
-            var result = await f.Sut.Map(f.CohortsRequest);
-
-            f.VerifyNoDrillDownLinks(result);
-        }
-
         public class WhenMappingCohortsRequestToCohortsViewModelFixture
         {
             public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; }

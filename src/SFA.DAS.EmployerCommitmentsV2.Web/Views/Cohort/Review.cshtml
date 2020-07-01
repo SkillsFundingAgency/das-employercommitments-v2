@@ -26,15 +26,15 @@
                     @foreach (var cohort in Model.Cohorts)
                     {
 
-                    <tr class="govuk-table__row" data-cohort="@cohort.CohortReference">
-                        <td class="govuk-table__cell" data-label="Training provider">@cohort.ProviderName</td>
-                        <td class="govuk-table__cell" data-label="Reference">@cohort.CohortReference</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfApprentices</td>
-                        <td class="govuk-table__cell" data-label="Last Message">@cohort.LastMessage</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" data-label="">
-                            @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohort.CohortReference }, new { @class = "govuk-link cohort-details-link"})
-                        </td>
-                    </tr>
+                        <tr class="govuk-table__row" data-cohort="@cohort.CohortReference">
+                            <td class="govuk-table__cell" data-label="Training provider">@cohort.ProviderName</td>
+                            <td class="govuk-table__cell" data-label="Reference">@cohort.CohortReference</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfApprentices</td>
+                            <td class="govuk-table__cell" data-label="Last Message">@cohort.LastMessage</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" data-label="">
+                                @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohort.CohortReference }, new { @class = "govuk-link cohort-details-link" })
+                            </td>
+                        </tr>
                     }
 
                 </tbody>
@@ -46,5 +46,5 @@
 
 @section Back
 {
-     <a id="back-link" class="govuk-back-link" href="@Url.Action("Cohorts", "Cohort", new { Model.AccountHashedId})">Back</a>
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Cohorts", "Cohort", new { Model.AccountHashedId})">Back</a>
 }
