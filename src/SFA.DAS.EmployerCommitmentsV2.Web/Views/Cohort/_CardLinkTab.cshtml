@@ -1,8 +1,8 @@
 ﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.CohortCardLinkViewModel
 
 @{
-    var styleColor = Model.Selected ? "#005ea5" : "white";
-    var backGroundColor = Model.Selected ? "white" : "#005ea5";
+    var styleColor = Model.IsSelected ? "#005ea5" : "white";
+    var backGroundColor = Model.IsSelected ? "white" : "#005ea5";
 }
 
 <a href="@Model.Url" id="@Model.LinkId">

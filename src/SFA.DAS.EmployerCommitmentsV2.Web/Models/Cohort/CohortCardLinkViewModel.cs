@@ -1,6 +1,4 @@
-﻿using System.Security.Policy;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 {
     public class CohortCardLinkViewModel
     {
@@ -9,7 +7,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string Url { get; set; }
         public string LinkId { get; set; }
 
-        public bool Selected { get; set; }
+        public bool IsSelected { get; set; }
 
         public CohortCardLinkViewModel(int count, string description, string url, string linkId, bool selected = false)
         {
@@ -20,7 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
             Count = count;
             Description = description;
             LinkId = linkId;
-            Selected = selected;
+            IsSelected = selected;
         }
     }
 }
