@@ -7,9 +7,7 @@
         public string Url { get; set; }
         public string LinkId { get; set; }
 
-        public bool IsSelected { get; set; }
-
-        public CohortCardLinkViewModel(int count, string description, string url, string linkId, bool selected = false)
+        public CohortCardLinkViewModel(int count, string description, string url, string linkId)
         {
             if (count > 0)
             {
@@ -18,7 +16,6 @@
             Count = count;
             Description = description;
             LinkId = linkId;
-            IsSelected = selected;
         }
     }
 }
