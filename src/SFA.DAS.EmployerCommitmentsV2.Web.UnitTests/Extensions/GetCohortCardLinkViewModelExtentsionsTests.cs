@@ -50,15 +50,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
             f.VerifyCohortsWithTransferSenderIsCorrect(result);
         }
 
-        [Test]
-        public void WhenNoCohortsAreFoundThereAreNoDrilldownLinks()
-        {
-            var f = new GetCohortCardLinkViewModelTestsFixture().WithNoCohortsFound();
-            var result = f.GetCohortCardLinkViewModel();
-
-            f.VerifyNoDrillDownLinks(result);
-        }
-
         [TestCase(CohortStatus.Draft)]
         [TestCase(CohortStatus.Review)]
         [TestCase(CohortStatus.WithProvider)]
@@ -87,13 +78,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
                 _fixture = new Fixture();
 
                 CohortSummaries = CreateGetCohortsResponse();
-            }
-
-
-            public GetCohortCardLinkViewModelTestsFixture WithNoCohortsFound()
-            {
-                CohortSummaries = new List<CohortSummary>().ToArray();
-                return this;
             }
 
             public void VerifyCohortsInDraftIsCorrect(ApprenticeshipRequestsHeaderViewModel result)
@@ -134,14 +118,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
                 Assert.AreEqual(expectedCohortStatus == CohortStatus.Draft, result.CohortsInDraft.IsSelected);
                 Assert.AreEqual(expectedCohortStatus == CohortStatus.Review, result.CohortsInReview.IsSelected);
                 Assert.AreEqual(expectedCohortStatus == CohortStatus.WithProvider, result.CohortsWithTrainingProvider.IsSelected);
-            }
-
-            public void VerifyNoDrillDownLinks(ApprenticeshipRequestsHeaderViewModel result)
-            {
-                Assert.IsNull(result.CohortsInDraft.Url);
-                Assert.IsNull(result.CohortsInReview.Url);
-                Assert.IsNull(result.CohortsWithTrainingProvider.Url);
-                Assert.IsNull(result.CohortsWithTransferSender.Url);
             }
 
             public ApprenticeshipRequestsHeaderViewModel GetCohortCardLinkViewModel(CohortStatus selectedCohortStatus = CohortStatus.Draft)
