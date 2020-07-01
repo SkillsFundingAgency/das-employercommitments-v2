@@ -11,7 +11,10 @@
 
         public CohortCardLinkViewModel(int count, string description, string url, string linkId, bool selected = false)
         {
-            Url = url;
+            if (count > 0)
+            {
+                Url = url;
+            }
             Count = count;
             Description = description;
             LinkId = linkId;
