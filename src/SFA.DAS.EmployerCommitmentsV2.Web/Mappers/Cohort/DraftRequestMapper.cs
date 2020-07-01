@@ -41,7 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             return new DraftViewModel
             {
                 AccountHashedId = source.AccountHashedId,
-                CohortsSummaryViewModel = apiResponse.Cohorts.GetCohortCardLinkViewModel(_urlHelper, source.AccountHashedId, CohortStatus.Draft),
+                ApprenticeshipRequestsHeaderViewModel = apiResponse.Cohorts.GetCohortCardLinkViewModel(_urlHelper, source.AccountHashedId, CohortStatus.Draft),
                 AccountId = source.AccountId,
                 Cohorts = cohorts
             };

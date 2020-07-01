@@ -10,7 +10,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-width-container">
             @*<h1 class="govuk-heading-xl">Draft apprentice details</h1>*@
-            @await Html.PartialAsync("_CohortSummary", Model.CohortsSummaryViewModel)
+            @await Html.PartialAsync("_CohortSummary", Model.ApprenticeshipRequestsHeaderViewModel)
 
             @if (Model.Cohorts.Count() > 0)
             {
