@@ -8,7 +8,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-width-container">
 
-            @(await Html.PartialAsync("_ApprenticeshipRequestsHeaderPartial", Model.CohortsSummaryViewModel))
+            @(await Html.PartialAsync("_ApprenticeshipRequestsHeaderPartial", Model.ApprenticeshipRequestsHeaderViewModel))
 
             @if (Model.Cohorts.Count() > 0)
             {
@@ -20,6 +20,7 @@
                             <th scope="col" class="govuk-table__header das-table-cell-width-25 govuk-table__header--numeric">Number of apprentices</th>
                             <th scope="col" class="govuk-table__header das-table-cell-width-25">Last Message</th>
                             <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-15"></th>
+
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
