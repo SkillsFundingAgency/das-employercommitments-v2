@@ -49,15 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             f.VerifyCohortsWithTransferSenderIsCorrect(result);
         }
-
-        //[Test]
-        //public void WhenNoCohortsAreFoundThereAreNoDrilldownLinks()
-        //{
-        //    var f = new GetCohortCardLinkViewModelTestsFixture().WithNoCohortsFound();
-        //    var result = f.GetCohortCardLinkViewModel();
-
-        //    f.VerifyNoDrillDownLinks(result);
-        //}
+      
 
         [TestCase(CohortStatus.Draft)]
         [TestCase(CohortStatus.Review)]

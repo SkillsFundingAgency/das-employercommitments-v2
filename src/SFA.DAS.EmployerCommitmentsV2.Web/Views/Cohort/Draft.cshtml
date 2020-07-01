@@ -9,7 +9,6 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-width-container">
-            @*<h1 class="govuk-heading-xl">Draft apprentice details</h1>*@
             @await Html.PartialAsync("_CohortSummary", Model.ApprenticeshipRequestsHeaderViewModel)
 
             @if (Model.Cohorts.Count() > 0)
@@ -43,7 +42,7 @@
             }
             else
             {
-                <p>You currently have 0 draft apprentice requests</p>
+                <p class="govuk-body govuk-!-font-weight-bold">You currently have 0 draft apprentice requests</p>
             }
 
         </div>
@@ -52,5 +51,5 @@
 
 @section Back
 {
-    <a id="back-link" class="govuk-back-link" href="@Url.Action("Cohorts", "Cohort", new { Model.AccountHashedId})">Back</a>
+    <div class="das-js-back-link"></div>
 }
