@@ -8,7 +8,6 @@
 <div class="govuk-grid-row">
     <div class="govuk-width-container">
         @(await Html.PartialAsync("_ApprenticeshipRequestsHeaderPartial", Model.ApprenticeshipRequestsHeaderViewModel))
-        <h1 class="govuk-heading-xl">@Model.Title</h1>
         @if (Model.Cohorts.Count() > 0)
         {
             <table class="govuk-table das-table--responsive">
