@@ -17,10 +17,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         public const string Title = "Apprentice details with transfer sending employer";
         private readonly IEncodingService _encodingService;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly IUrlHelper _urlHelper;
 
-        public WithTransferSenderRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary)
+        public WithTransferSenderRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary, IUrlHelper urlHelper)
         {
             _encodingService = encodingSummary;
+            _urlHelper = urlHelper;
             _commitmentsApiClient = commitmentApiClient;
         }
 
@@ -32,6 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             {
                 Title = Title,
                 AccountHashedId = source.AccountHashedId,
+                ApprenticeshipRequestsHeaderViewModel = cohortsResponse.Cohorts.GetCohortCardLinkViewModel(_urlHelper, source.AccountHashedId, CohortStatus.WithTransferSender),
                 Cohorts = cohortsResponse.Cohorts
                     .Where(x => x.GetStatus() == CohortStatus.WithTransferSender)
                     .OrderBy(GetOrderByDate)
