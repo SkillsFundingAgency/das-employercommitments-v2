@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 {
-    public class CohortCardLinkViewModel
+    public class ApprenticeshipRequestsTabViewModel
     {
         public int Count { get; set; }
         public string Description { get; set; }
@@ -9,7 +9,7 @@
 
         public bool IsSelected { get; set; }
 
-        public CohortCardLinkViewModel(int count, string description, string url, string linkId, bool selected = false)
+        public ApprenticeshipRequestsTabViewModel(int count, string description, string url, string linkId, bool selected = false)
         {
             Url = url;
             Count = count;

@@ -1,0 +1,21 @@
+﻿@using SFA.DAS.EmployerUrlHelper.Mvc
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.ApprenticeshipRequestsHeaderViewModel
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-">
+        <div class="govuk-width-container">
+            <h1 class="govuk-heading-xl">Apprentice requests</h1>
+
+            <a href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/inform")" class="govuk-button"> Add new apprentice </a>
+
+            <div class="das-tabs-boxes">
+                <ul class="das-tabs-boxes__list">
+                    @await Html.PartialAsync("_ApprenticeshipRequestsTab", Model.CohortsInReview)
+                    @await Html.PartialAsync("_ApprenticeshipRequestsTab", Model.CohortsWithTrainingProvider)
+                    @await Html.PartialAsync("_ApprenticeshipRequestsTab", Model.CohortsInDraft)
+                    @await Html.PartialAsync("_ApprenticeshipRequestsTab", Model.CohortsWithTransferSender)
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -34,7 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             {
                 Title = Title,
                 AccountHashedId = source.AccountHashedId,
-                CohortsSummaryViewModel = cohortsResponse.Cohorts.GetCohortCardLinkViewModel(_urlHelper,source.AccountHashedId, CohortStatus.WithProvider),
+                ApprenticeshipRequestsHeaderViewModel = cohortsResponse.Cohorts.GetCohortCardLinkViewModel(_urlHelper,source.AccountHashedId, CohortStatus.WithProvider),
                 Cohorts = cohortsResponse.Cohorts
                  .Where(x => x.GetStatus() == CohortStatus.WithProvider)
                  .OrderBy(z => z.LatestMessageFromEmployer != null ? z.LatestMessageFromEmployer.SentOn : z.CreatedOn)
