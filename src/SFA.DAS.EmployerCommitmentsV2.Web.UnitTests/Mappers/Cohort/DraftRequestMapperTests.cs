@@ -79,6 +79,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     {
         public Mock<IEncodingService> EncodingService { get; set; }
         public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
+        public Mock<IUrlHelper> UrlHelper { get; }
         public CohortsByAccountRequest DraftRequest { get; set; }
         public GetCohortsResponse GetCohortsResponse { get; set; }
         public DraftRequestMapper Mapper { get; set; }
@@ -99,7 +100,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             CommitmentsApiClient.Setup(c => c.GetCohorts(It.Is<GetCohortsRequest>(r => r.AccountId == AccountId), CancellationToken.None)).Returns(Task.FromResult(GetCohortsResponse));
             EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference)).Returns((long y, EncodingType z) => y + "_Encoded");
 
-            Mapper = new DraftRequestMapper(CommitmentsApiClient.Object, EncodingService.Object);
+            UrlHelper = new Mock<IUrlHelper>();
+            UrlHelper.Setup(x => x.Action(It.IsAny<UrlActionContext>())).Returns<UrlActionContext>((ac) => $"http://{ac.Controller}/{ac.Action}/");
+
+            Mapper = new DraftRequestMapper(CommitmentsApiClient.Object, EncodingService.Object, UrlHelper.Object);
         }
 
         public WhenMappingDraftRequestToViewModelFixture Map()

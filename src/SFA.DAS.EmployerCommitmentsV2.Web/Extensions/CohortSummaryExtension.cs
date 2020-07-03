@@ -28,7 +28,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
                 AccountHashedId = accountHashedId,
                 CohortsInDraft = new ApprenticeshipRequestsTabViewModel(
                   cohorts.Count(x => x.GetStatus() == CohortStatus.Draft),
-                  "Drafts",
+                  cohorts.Count(x => x.GetStatus() == CohortStatus.Draft) == 1 ? "Draft" : "Drafts",
                   urlHelper.Action("Draft", "Cohort", new { accountHashedId }),
                   CohortStatus.Draft.ToString(),
                   selectedStatus == CohortStatus.Draft),
