@@ -16,11 +16,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly IEncodingService _encodingService;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly IUrlHelper _urlHelper;
 
-        public ReviewRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary)
+        public ReviewRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary, IUrlHelper urlHelper)
         {
             _encodingService = encodingSummary;
             _commitmentsApiClient = commitmentApiClient;
+            _urlHelper = urlHelper;
         }
 
         public async Task<ReviewViewModel> Map(CohortsByAccountRequest source)
@@ -30,6 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var reviewViewModel = new ReviewViewModel
             {
                 AccountHashedId = source.AccountHashedId,
+                ApprenticeshipRequestsHeaderViewModel = cohortsResponse.Cohorts.GetCohortCardLinkViewModel(_urlHelper, source.AccountHashedId, CohortStatus.Review),
                 Cohorts = cohortsResponse.Cohorts
                     .Where(x => x.GetStatus() == CohortStatus.Review)
                     .OrderBy(z => z.CreatedOn)

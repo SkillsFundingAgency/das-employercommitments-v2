@@ -6,11 +6,12 @@
 }
 
 <div class="govuk-grid-row">
+    <div class="govuk-width-container">
 
-    <div class="govuk-grid-row">
-        <div class="govuk-width-container">
-            <h1 class="govuk-heading-xl">Apprentice details ready for review</h1>
+        @(await Html.PartialAsync("_ApprenticeshipRequestsHeaderPartial", Model.ApprenticeshipRequestsHeaderViewModel))
 
+        @if (Model.Cohorts.Count() > 0)
+        {
             <table class="govuk-table das-table--responsive">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
@@ -21,6 +22,7 @@
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-15"></th>
                     </tr>
                 </thead>
+
                 <tbody class="govuk-table__body">
 
                     @foreach (var cohort in Model.Cohorts)
@@ -39,12 +41,15 @@
 
                 </tbody>
             </table>
-
-        </div>
+        }
+        else
+        {
+            <p class="govuk-body govuk-!-font-weight-bold">You currently have 0 apprentices ready for review</p>
+        }
     </div>
 </div>
 
 @section Back
 {
-    <a id="back-link" class="govuk-back-link" href="@Url.Action("Cohorts", "Cohort", new { Model.AccountHashedId})">Back</a>
+    <div class="das-js-back-link"></div>
 }
