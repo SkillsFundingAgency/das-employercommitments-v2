@@ -6,7 +6,6 @@
         public string Description { get; set; }
         public string Url { get; set; }
         public string LinkId { get; set; }
-
         public bool IsSelected { get; set; }
 
         public ApprenticeshipRequestsTabViewModel(int count, string description, string url, string linkId, bool selected = false)

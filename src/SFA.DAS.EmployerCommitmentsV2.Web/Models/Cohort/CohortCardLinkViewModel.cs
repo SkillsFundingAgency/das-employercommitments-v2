@@ -7,15 +7,15 @@
         public string Url { get; set; }
         public string LinkId { get; set; }
 
-        public bool IsSelected { get; set; }
-
-        public CohortCardLinkViewModel(int count, string description, string url, string linkId, bool selected = false)
+        public CohortCardLinkViewModel(int count, string description, string url, string linkId)
         {
-            Url = url;
+            if (count > 0)
+            {
+                Url = url;
+            }
             Count = count;
             Description = description;
             LinkId = linkId;
-            IsSelected = selected;
         }
     }
 }
