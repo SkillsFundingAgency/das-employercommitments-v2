@@ -16,10 +16,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
     public class WhenGettingCohorts
     {
         [Test]
-        public async Task ThenViewModelShouldBeMappedFromRequest()
+        public void ThenViewModelShouldBeMappedFromRequest()
         {
             var f = new WhenGettingCohortsFixture();
-            await f.GetCohorts();
+            f.GetCohorts();
             f.VerifyViewModelIsMappedFromRequest();
         }
     }
@@ -49,16 +49,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 Mock.Of<IAuthorizationService>());
         }
 
-        public async Task GetCohorts()
+        public void GetCohorts()
         {
-            _result = await CohortController.Cohorts(_request);
+            _result = CohortController.Cohorts(_request);
         }
 
         public void VerifyViewModelIsMappedFromRequest()
         {
-            var viewResult = (ViewResult)_result;
-            Assert.IsInstanceOf<CohortsViewModel>(viewResult.Model);
-            Assert.AreSame(_viewModel, viewResult.Model);
+            _result.VerifyReturnsRedirectToActionResult().WithActionName("Review");
         }
     }
 }
