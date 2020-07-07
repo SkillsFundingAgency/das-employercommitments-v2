@@ -34,24 +34,7 @@
 
 @section Back
 {
-    @if (Model.Origin == Origin.Reservations || Model.AutoCreatedReservation)
-    {
-        @Html.ActionLink("Back", "Assign", "Cohort", new
-        {
-            Model.AccountHashedId,
-            Model.AccountLegalEntityHashedId,
-            Model.CourseCode,
-            Model.ProviderId,
-            ReservationId = Model.AutoCreatedReservation ? default(Guid?) : Model.ReservationId,
-            Model.TransferSenderId,
-            StartMonthYear = $"{@Model.StartMonth}{@Model.StartYear}"
-        }, new { @class = "govuk-back-link", id = "back-link" })
-    }
-    else
-    {
-        var url = Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?providerId={Model.ProviderId}&transferSenderId={Model.TransferSenderId}");
-            <a href="@url" id="back-link" class="govuk-back-link">Back</a>
-    }
+    <div class="das-js-back-link"></div>
 }
 
 

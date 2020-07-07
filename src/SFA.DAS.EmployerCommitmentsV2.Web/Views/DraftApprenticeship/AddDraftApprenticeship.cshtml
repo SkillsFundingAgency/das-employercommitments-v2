@@ -32,15 +32,7 @@
 
 @section Back
 {
-    @if (Model.AutoCreatedReservation)
-    {
-        <a id="back-link" class="govuk-back-link" href="@Url.Action("Details", "Cohort", new {Model.AccountHashedId, Model.CohortReference})">Back</a>
-    }
-    else
-    {
-        var url = Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}");
-        <a href="@url" id="back-link" class="govuk-back-link">Back</a>
-    }
+    <div class="das-js-back-link"></div>
 }
 
 
