@@ -42,11 +42,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             _authorizationService = authorizationService;
         }
 
-        public IActionResult Cohorts(CohortsByAccountRequest request)
-        {
-            return RedirectToAction("Review", new { request.AccountHashedId });
-        }
-
         [Route("{cohortReference}")]
         [DasAuthorize(CommitmentOperation.AccessCohort)]
         public async Task<IActionResult> Details(DetailsRequest request)
