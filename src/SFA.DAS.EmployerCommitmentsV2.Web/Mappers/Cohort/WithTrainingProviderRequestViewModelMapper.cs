@@ -7,7 +7,7 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.Encoding;
-
+using Microsoft.AspNetCore.Mvc;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -16,12 +16,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         public const string Title = "Apprentice details with training provider";
         private readonly IEncodingService _encodingService;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly IUrlHelper _urlHelper;
 
 
-        public WithTrainingProviderRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary)
+        public WithTrainingProviderRequestViewModelMapper(ICommitmentsApiClient commitmentApiClient, IEncodingService encodingSummary, IUrlHelper urlHelper)
         {
             _encodingService = encodingSummary;
             _commitmentsApiClient = commitmentApiClient;
+            _urlHelper = urlHelper;
         }
 
         public async Task<WithTrainingProviderViewModel> Map(CohortsByAccountRequest source)
@@ -32,6 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             {
                 Title = Title,
                 AccountHashedId = source.AccountHashedId,
+                ApprenticeshipRequestsHeaderViewModel = cohortsResponse.Cohorts.GetCohortCardLinkViewModel(_urlHelper,source.AccountHashedId, CohortStatus.WithProvider),
                 Cohorts = cohortsResponse.Cohorts
                  .Where(x => x.GetStatus() == CohortStatus.WithProvider)
                  .OrderBy(z => z.LatestMessageFromEmployer != null ? z.LatestMessageFromEmployer.SentOn : z.CreatedOn)

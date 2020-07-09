@@ -42,10 +42,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             _authorizationService = authorizationService;
         }
 
-        public async Task<IActionResult> Cohorts(CohortsByAccountRequest request)
+        public IActionResult Cohorts(CohortsByAccountRequest request)
         {
-            var model = await _modelMapper.Map<CohortsViewModel>(request);
-            return View(model);
+            return RedirectToAction("Review", new { request.AccountHashedId });
         }
 
         [Route("{cohortReference}")]

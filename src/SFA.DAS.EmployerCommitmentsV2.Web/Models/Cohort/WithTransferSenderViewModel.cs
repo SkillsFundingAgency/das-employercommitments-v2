@@ -8,5 +8,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string AccountHashedId { get; set; }
         public long AccountId { get; set; }
         public IEnumerable<WithTransferSenderCohortSummaryViewModel> Cohorts { get; set; }
+        public ApprenticeshipRequestsHeaderViewModel ApprenticeshipRequestsHeaderViewModel { get; set; }
     }
 }

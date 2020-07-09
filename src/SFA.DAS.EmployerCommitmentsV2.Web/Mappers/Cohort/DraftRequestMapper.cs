@@ -14,11 +14,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
+        private readonly IUrlHelper _urlHelper;
 
-        public DraftRequestMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
+        public DraftRequestMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, IUrlHelper urlHelper)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
+            _urlHelper = urlHelper;
         }
 
         public async Task<DraftViewModel> Map(CohortsByAccountRequest source)
@@ -39,6 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             return new DraftViewModel
             {
                 AccountHashedId = source.AccountHashedId,
+                ApprenticeshipRequestsHeaderViewModel = apiResponse.Cohorts.GetCohortCardLinkViewModel(_urlHelper, source.AccountHashedId, CohortStatus.Draft),
                 AccountId = source.AccountId,
                 Cohorts = cohorts
             };
