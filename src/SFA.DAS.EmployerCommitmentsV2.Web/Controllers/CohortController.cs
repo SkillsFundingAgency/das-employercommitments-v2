@@ -290,7 +290,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
-        [Route("review")]
+        [Route("review", Name = "Review")]
+        [Route("")]
         public async Task<IActionResult> Review(CohortsByAccountRequest request)
         {
             var reviewViewModel = await _modelMapper.Map<ReviewViewModel>(request);
