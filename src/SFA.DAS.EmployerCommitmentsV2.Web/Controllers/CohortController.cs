@@ -104,7 +104,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             if(viewModel.ConfirmDeletion == true)
             { 
                 await _commitmentsApiClient.DeleteCohort(viewModel.CohortId, authenticationService.UserInfo, CancellationToken.None);
-                return RedirectToAction("Cohorts", new {viewModel.AccountHashedId});
+                return RedirectToAction("Review", new {viewModel.AccountHashedId});
             }
             return RedirectToAction("Details", new { viewModel.CohortReference, viewModel.AccountHashedId });
         }

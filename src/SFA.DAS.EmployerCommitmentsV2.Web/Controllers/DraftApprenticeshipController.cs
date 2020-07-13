@@ -120,7 +120,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 return RedirectToAction("Details", "Cohort", new { model.AccountHashedId, model.CohortReference });
             }
-            return RedirectToAction("Cohorts", "Cohort", new { model.AccountHashedId });
+            return RedirectToAction("Review", "Cohort", new { model.AccountHashedId });
         }
 
         private async Task<bool> CohortExists(long? cohortId)
