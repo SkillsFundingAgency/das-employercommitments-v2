@@ -217,7 +217,7 @@
                 <button type="submit" id="continue-button" class="govuk-button">Save and submit</button>
 
                 <p>
-                    <a href="@Url.CommitmentsLink($"accounts/{Model.AccountHashedId}/apprentices/cohorts")" class="govuk-link">Save and exit</a>
+                    <a href="@Url.RouteUrl("Review", new {Model.AccountHashedId })" class="govuk-link">Save and exit</a>
                 </p>
 
             </form>

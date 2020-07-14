@@ -101,7 +101,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
 
         [Test]
-        public async Task PostDeleteApprenticeshipViewModel_WithValidModel_WithConfirmDeleteTrue_ShouldDeleteDraftApprenticeshipAndTheCohortAndRedirectToBingoPage()
+        public async Task PostDeleteApprenticeshipViewModel_WithValidModel_WithConfirmDeleteTrue_ShouldDeleteDraftApprenticeshipAndTheCohortAndRedirectToReviewPage()
         {
             var fixture = new DeleteDraftApprenticeshipTestsFixture()
                 .WithNoCohortFoundAfterDeletion()
@@ -111,7 +111,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             fixture.Verify_CommitmentApiClient_DeleteApprenticeShip_IsCalled_OnlyOnce();
             var redirect = result.VerifyReturnsRedirectToActionResult();
-            Assert.AreEqual("Cohorts", redirect.ActionName);
+            Assert.AreEqual("Review", redirect.ActionName);
             Assert.AreEqual("Cohort", redirect.ControllerName);
         }
  

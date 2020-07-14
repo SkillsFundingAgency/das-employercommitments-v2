@@ -31,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             var f = new WhenPostingConfirmDeleteDetailsTestFixture().SetConfirmDelete(true);
             var result = await f.CohortController.Delete(f.AuthenticationService.Object, f.ConfirmDeleteViewModel);
-            f.VerifyRedirectsToBingoPage(result);
+            f.VerifyRedirectsToReviewPage(result);
         }
 
         [Test]
@@ -83,10 +83,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 CommitmentsApiClient.Verify(x => x.DeleteCohort(ConfirmDeleteViewModel.CohortId, UserInfo, It.IsAny<CancellationToken>()));
             }
 
-            public void VerifyRedirectsToBingoPage(IActionResult result)
+            public void VerifyRedirectsToReviewPage(IActionResult result)
             {
                 var redirect = (RedirectToActionResult)result;
-                Assert.AreEqual($"Cohorts", redirect.ActionName);
+                Assert.AreEqual($"Review", redirect.ActionName);
                 Assert.AreEqual(ConfirmDeleteViewModel.AccountHashedId, redirect.RouteValues["AccountHashedId"]);
             }
             public void VerifyRedirectsToCohortDetailsPage(IActionResult result)

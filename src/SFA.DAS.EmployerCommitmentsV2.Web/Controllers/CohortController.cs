@@ -42,11 +42,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             _authorizationService = authorizationService;
         }
 
-        public IActionResult Cohorts(CohortsByAccountRequest request)
-        {
-            return RedirectToAction("Review", new { request.AccountHashedId });
-        }
-
         [Route("{cohortReference}")]
         [DasAuthorize(CommitmentOperation.AccessCohort)]
         public async Task<IActionResult> Details(DetailsRequest request)
@@ -109,7 +104,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             if(viewModel.ConfirmDeletion == true)
             { 
                 await _commitmentsApiClient.DeleteCohort(viewModel.CohortId, authenticationService.UserInfo, CancellationToken.None);
-                return RedirectToAction("Cohorts", new {viewModel.AccountHashedId});
+                return RedirectToAction("Review", new {viewModel.AccountHashedId});
             }
             return RedirectToAction("Details", new { viewModel.CohortReference, viewModel.AccountHashedId });
         }
@@ -295,7 +290,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
-        [Route("review")]
+        [Route("review", Name = "Review")]
+        [Route("")]
         public async Task<IActionResult> Review(CohortsByAccountRequest request)
         {
             var reviewViewModel = await _modelMapper.Map<ReviewViewModel>(request);
