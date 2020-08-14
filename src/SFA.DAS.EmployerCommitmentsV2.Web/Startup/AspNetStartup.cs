@@ -1,14 +1,11 @@
-﻿using System;
-using AspNetCore.IServiceCollection.AddIUrlHelper;
+﻿using AspNetCore.IServiceCollection.AddIUrlHelper;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.Mvc.Extensions;
-using SFA.DAS.EmployerCommitmentsV2.Web.Configurations;
 using SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution;
 using SFA.DAS.EmployerUrlHelper.DependencyResolution;
-using StackExchange.Redis;
 using StructureMap;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
@@ -16,18 +13,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
     public class AspNetStartup
     {
         private readonly IConfiguration _configuration;
+        public IHostingEnvironment Environment { get; }
 
-        public AspNetStartup(IConfiguration configuration)
+        public AspNetStartup(IConfiguration configuration, IHostingEnvironment environment)
         {
             _configuration = configuration;
+            Environment = environment;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionStrings = new ConnectionStrings();
-            var redis = ConnectionMultiplexer
-                .Connect($"{connectionStrings.SharedRedis}, DefaultDatabase=3");
-
             services
                 .AddDasAuthorization()
                 .AddDasEmployerAuthentication(_configuration)
@@ -36,10 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .AddDasMvc()
                 .AddUrlHelper()
                 .AddEmployerUrlHelper()
-                .AddMemoryCache()
-                .AddDataProtection()
-                .SetApplicationName("das-employercommitments-v2-web")
-                .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
+                .SaveKeysToStackExchangeRedis(_configuration, Environment.IsDevelopment());
         }
 
         public void ConfigureContainer(Registry registry)
