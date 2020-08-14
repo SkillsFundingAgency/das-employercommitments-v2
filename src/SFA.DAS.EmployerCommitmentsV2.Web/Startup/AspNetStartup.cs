@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .AddUrlHelper()
                 .AddEmployerUrlHelper()
                 .AddMemoryCache()
-                .SaveKeysToStackExchangeRedis(_configuration, Environment.IsDevelopment());
+                .SaveKeysToStackExchangeRedis(_configuration, Environment);
         }
 
         public void ConfigureContainer(Registry registry)

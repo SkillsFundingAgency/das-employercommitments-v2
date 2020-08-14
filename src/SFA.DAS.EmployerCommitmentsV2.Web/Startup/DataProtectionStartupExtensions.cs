@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
@@ -7,11 +8,11 @@ using StackExchange.Redis;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
 {
-    public static class PersistDataStorageStartup
+    public static class DataProtectionStartupExtensions
     {
-        public static IServiceCollection SaveKeysToStackExchangeRedis(this IServiceCollection services, IConfiguration configuration, bool isDevelopment)
+        public static IServiceCollection SaveKeysToStackExchangeRedis(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment environment)
         {
-            if (!isDevelopment)
+            if (!environment.IsDevelopment())
             {
                 var redisConnectionString = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
                     .Get<EmployerCommitmentsV2Settings>().RedisConnectionString;
