@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
 {
     public static class DataProtectionStartupExtensions
     {
-        public static IServiceCollection SaveKeysToStackExchangeRedis(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment environment)
+        public static IServiceCollection AddDataProtection(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment environment)
         {
             if (!environment.IsDevelopment())
             {
