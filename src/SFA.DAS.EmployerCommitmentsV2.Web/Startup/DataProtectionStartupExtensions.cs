@@ -14,10 +14,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         {
             if (!environment.IsDevelopment())
             {
-                var redisConnectionString = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
+                var redisConnectionString = configuration.GetSection(ConfigurationKeys.ConnectionStrings)
                     .Get<EmployerCommitmentsV2Settings>().RedisConnectionString;
 
-                var defaultDatabase = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
+                var defaultDatabase = configuration.GetSection(ConfigurationKeys.ConnectionStrings)
                     .Get<EmployerCommitmentsV2Settings>().DefaultDatabase;
 
                 var redis = ConnectionMultiplexer
