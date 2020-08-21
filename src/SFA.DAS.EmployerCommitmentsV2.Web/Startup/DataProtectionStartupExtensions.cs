@@ -17,8 +17,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 var redisConnectionString = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
                     .Get<EmployerCommitmentsV2Settings>().RedisConnectionString;
 
+                var defaultDatabase = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
+                    .Get<EmployerCommitmentsV2Settings>().DefaultDatabase;
+
                 var redis = ConnectionMultiplexer
-                    .Connect($"{redisConnectionString}, DefaultDatabase=3");
+                    .Connect($"{redisConnectionString}, {defaultDatabase}");
 
                 services.AddDataProtection()
                     .SetApplicationName("das-employercommitments-v2")

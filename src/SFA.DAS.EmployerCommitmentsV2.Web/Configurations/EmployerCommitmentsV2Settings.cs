@@ -3,5 +3,6 @@
     public class EmployerCommitmentsV2Settings
     {
         public string RedisConnectionString { get; set; }
+        public string DefaultDatabase { get; set; }
     }
 }
