@@ -14,18 +14,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         {
             if (!environment.IsDevelopment())
             {
-                var redisConnectionString = configuration.GetSection(ConfigurationKeys.ConnectionStrings)
-                    .Get<EmployerCommitmentsV2Settings>().RedisConnectionString;
+                var redisConfiguration = configuration.GetSection(ConfigurationKeys.ConnectionStrings)
+                    .Get<EmployerCommitmentsV2Settings>();
 
-                var dataProtectionKeysDatabase = configuration.GetSection(ConfigurationKeys.ConnectionStrings)
-                    .Get<EmployerCommitmentsV2Settings>().DataProtectionKeysDatabase;
+                if (redisConfiguration != null)
+                {
+                    var redisConnectionString = redisConfiguration.RedisConnectionString;
+                    var dataProtectionKeysDatabase = redisConfiguration.DataProtectionKeysDatabase;
 
-                var redis = ConnectionMultiplexer
-                    .Connect($"{redisConnectionString}, {dataProtectionKeysDatabase}");
+                    var redis = ConnectionMultiplexer
+                        .Connect($"{redisConnectionString}, {dataProtectionKeysDatabase}");
 
-                services.AddDataProtection()
-                    .SetApplicationName("das-employercommitments-v2")
-                    .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
+                    services.AddDataProtection()
+                        .SetApplicationName("das-employercommitments-v2")
+                        .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
+                }
             }
             return services;
         }
