@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Configurations
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Configuration
 {
     public class EmployerCommitmentsV2Settings
     {

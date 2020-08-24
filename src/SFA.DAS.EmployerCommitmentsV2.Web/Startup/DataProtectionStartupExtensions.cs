@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
-using SFA.DAS.EmployerCommitmentsV2.Web.Configurations;
 using StackExchange.Redis;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
@@ -23,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                     var dataProtectionKeysDatabase = redisConfiguration.DataProtectionKeysDatabase;
 
                     var redis = ConnectionMultiplexer
-                        .Connect($"{redisConnectionString}, {dataProtectionKeysDatabase}");
+                        .Connect($"{redisConnectionString},{dataProtectionKeysDatabase}");
 
                     services.AddDataProtection()
                         .SetApplicationName("das-employercommitments-v2")
