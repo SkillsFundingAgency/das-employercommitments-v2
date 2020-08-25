@@ -1,5 +1,6 @@
 ﻿using AspNetCore.IServiceCollection.AddIUrlHelper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.Mvc.Extensions;
@@ -12,10 +13,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
     public class AspNetStartup
     {
         private readonly IConfiguration _configuration;
+        public IHostingEnvironment Environment { get; }
 
-        public AspNetStartup(IConfiguration configuration)
+        public AspNetStartup(IConfiguration configuration, IHostingEnvironment environment)
         {
             _configuration = configuration;
+            Environment = environment;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -28,7 +31,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .AddDasMvc()
                 .AddUrlHelper()
                 .AddEmployerUrlHelper()
-                .AddMemoryCache();
+                .AddMemoryCache()
+                .AddDataProtection(_configuration, Environment);
         }
 
         public void ConfigureContainer(Registry registry)
