@@ -1,0 +1,43 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateViewModel
+
+@{
+    ViewData["Title"] = "Eidt Your Apprentice Enddate";
+    ViewBag.GaData.Vpv = "/apprentices";
+}
+
+<h1 class="govuk-heading-xl">What is the planned end date for this apprenticeship training?</h1>
+<form method="post">
+    <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.EndDate, "govuk-form-group--error")">
+        <fieldset class="govuk-fieldset" aria-describedby="finish-date-hint" role="group">
+            @*<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    What is the planned end date for this apprenticeship training?
+                </legend>*@
+            <span id="finish-date-hint" class="govuk-hint">
+                For example, 06 2018
+            </span>
+            @Html.ValidationMessageFor(m => m.EndDate, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.EndDate) })
+            <div class="govuk-date-input">
+                <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                        <label asp-for="EndMonth" class="govuk-label govuk-date-input__label">Month</label>
+                        <input asp-for="EndMonth" min="1" max="12" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number">
+                    </div>
+                </div>
+                <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                        <label asp-for="EndYear" class="govuk-label govuk-date-input__label">Year</label>
+                        <input asp-for="EndYear" min="1900" max="9999" class="govuk-input govuk-date-input__input govuk-input--width-4" type="number">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+    <button id="save-button" type="submit" class="govuk-button">Save and confirm</button>
+</form>
+    @section back {
+        <a id="back-link" class="govuk-back-link" href="@LinkGenerator.ApprenticeDetails(Model.AccountHashedId,Model.ApprenticeshipHashedId)">Back</a>
+    }
