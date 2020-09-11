@@ -15,6 +15,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.EmployerUrlHelper;
+using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -83,7 +84,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> EditEndDate(EditEndDateViewModel viewModel)
         {
-            var request = await _modelMapper.Map<UpdateEndDateOfCompletedRecordRequest>(viewModel);
+            var request = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.EditEndDateRequest>(viewModel);
             await _commitmentsApiClient.UpdateEndDateOfCompletedRecord(request, CancellationToken.None);
             var url = _linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId);
             return Redirect(url);
