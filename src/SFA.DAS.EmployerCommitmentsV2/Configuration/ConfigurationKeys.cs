@@ -14,5 +14,6 @@
         public const string EmployerUrlConfiguration = "SFA.DAS.EmployerUrlHelper";
         public const string EmployerSharedUiConfiguration = "SFA.DAS.Employer.Shared.UI";
         public static readonly string ZenDeskConfiguration = $"{EmployerCommitmentsV2}:ZenDesk";
+        public static readonly string ConnectionStrings = $"{EmployerCommitmentsV2}:ConnectionStrings";
     }
 }
