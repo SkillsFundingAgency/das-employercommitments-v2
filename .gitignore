@@ -283,3 +283,4 @@ src/SFA.DAS.EmployerFinance.Web/wwwroot/css/*.min.css
 src/SFA.DAS.EmployerFinance.Web/wwwroot/js/*.min.js
 src/SFA.DAS.EmployerFinance.Web/wwwroot/js/*.min.js.map
 src/SFA.DAS.EmployerFinance.Web/wwwroot/js/site.js
+src/SFA.DAS.EmployerCommitmentsV2.Web/internal-nlog.txt
