@@ -89,5 +89,44 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var url = _linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId);
             return Redirect(url);
         }
+
+        [Route("{apprenticeshipHashedId}/details/changestatus")]
+        [HttpGet]
+        public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ChangeStatusRequestViewModel>(request);
+            return View(viewModel);
+        }
+
+        [Route("{apprenticeshipHashedId}/details/changestatus")]
+        [HttpPost]
+        public IActionResult ChangeStatus(ChangeStatusRequestViewModel viewModel)
+        {
+            switch (viewModel.SelectedStatusChange)
+            {
+                case ChangeStatusType.Pause:
+                    return RedirectToAction(nameof(PauseApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                default:
+                    return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+
+            }
+        }
+
+        [Route("{apprenticeshipHashedId}/details/pause")]
+        [HttpGet]
+        public async Task<IActionResult> PauseApprenticeship(PauseRequest request)
+        {
+            var viewModel = await _modelMapper.Map<PauseRequestViewModel>(request);
+            return View(viewModel);
+        }
+
+        [Route("{apprenticeshipHashedId}/details/pause")]
+        [HttpPost]
+        public async Task<IActionResult> PauseApprenticeship(PauseRequestViewModel viewModel)
+        {
+            var pauseRequest = new PauseApprenticeshipRequest { ApprenticeshipId = viewModel.ApprenticeshipId };
+            await _commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
+            return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+        }
     }
 }

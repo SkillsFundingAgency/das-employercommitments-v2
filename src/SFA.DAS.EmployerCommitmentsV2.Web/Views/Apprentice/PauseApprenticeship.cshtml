@@ -1,0 +1,99 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.PauseRequestViewModel
+
+@{
+    string pageTitle;
+    string pageId;
+    string pageHeading;
+    string pageAction;
+
+    pageTitle = "Apprenticeship paused";
+    pageId = "apprentice-paused";
+    pageHeading = "Pause apprenticeship";
+    pageAction = "pause";
+
+    ViewBag.Title = pageTitle;
+    ViewBag.PageId = pageId;
+    ViewBag.Section = "apprentices";
+}
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <form method="post">
+            @Html.AntiForgeryToken()
+            
+            <div class="hgroup">
+                <h1 class="heading-xlarge">@pageHeading</h1>
+            </div>
+                        <p class="govuk-body">
+                            You’re about to pause this apprenticeship and all payments to the training provider. Any payments previously made to the training provider are unaffected.
+                        </p>
+                        <p class="govuk-body">
+                            <a class="govuk-link govuk-body" target="_blank" href="financeDataLink" id="view-transactions-link">View your transactions</a> to confirm all payments are up-to-date before pausing.
+                        </p>
+
+                        <p class="govuk-body">You can return and resume the apprenticeship at any time.</p>
+            <table class="details-list details-list-new">
+                <thead>
+                    <tr>
+                        <th colspan="2" class="visually-hidden">Confirm the apprentice to @pageAction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Name</th>
+                        <td>@Model.ApprenticeName</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Unique learner number</th>
+                        <td>@Model.ULN</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Apprenticeship training course</th>
+                        <td>@Model.Course</td>
+                    </tr>
+                     <tr>
+                            <th scope="row">Date change takes effect</th>
+                            <td>
+                                @Model.PauseDate.ToGdsFormat()
+                            </td>
+                     </tr>
+                </tbody>
+            </table>
+            @*@if (Model.Data.ChangeStatusViewModel.AcademicYearBreakInTraining)
+            {
+                <div class="panel panel-border-wide">
+                    <strong class="bold-small">
+                        You can only resume in this academic year.
+                        @Model.Data.ApprenticeName will resume on @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormat().
+                    </strong>
+
+                </div>
+            }*@
+
+            <div class="form-group @Html.AddClassIfPropertyInError(x => x.PauseConfirmed,  "govuk-form-group--error")">
+                <fieldset>
+                    @Html.ValidationMessage("ChangeConfirmed", "Select whether to " + pageAction + " this apprenticeship status or not", new { id = "error-message-ChangeConfirmed" })
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="PauseConfirmed" name="PauseConfirmed" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="UseThisProvider">
+                                Yes, pause this apprenticeship
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="PauseConfirmed-no" name="PauseConfirmed" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="UseThisProvider-no">
+                                No, go back to apprentice details
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+  
+            <button class="button" type="submit" id="submit-status-change">Save and confirm</button>
+        </form>
+
+    </div>
+    <div class="column-one-thirds"> </div>
+</div>
