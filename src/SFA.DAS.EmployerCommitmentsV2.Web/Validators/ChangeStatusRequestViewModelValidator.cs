@@ -9,7 +9,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
         {
             RuleFor(r => r.AccountHashedId).NotEmpty();
             RuleFor(r => r.ApprenticeshipHashedId).NotEmpty();
-            RuleFor(r => r.SelectedStatusChange).NotNull();
+            RuleFor(r => r.SelectedStatusChange).NotNull().WithMessage("Select whether to change this apprenticeship status or not");
         }
     }
 }

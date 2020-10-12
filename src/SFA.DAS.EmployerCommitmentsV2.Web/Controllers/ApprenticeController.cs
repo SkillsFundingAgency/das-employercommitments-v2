@@ -125,7 +125,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> PauseApprenticeship(PauseRequestViewModel viewModel)
         {
             var pauseRequest = new PauseApprenticeshipRequest { ApprenticeshipId = viewModel.ApprenticeshipId };
+
             await _commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
+
             return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
         }
     }
