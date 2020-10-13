@@ -23,6 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
     {
         Stop,
         Pause,
-        GoBack
+        GoBack,
+        Resume
     }
 }

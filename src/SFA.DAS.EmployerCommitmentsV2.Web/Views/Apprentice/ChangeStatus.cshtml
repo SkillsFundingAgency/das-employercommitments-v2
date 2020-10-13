@@ -46,26 +46,34 @@
                         <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(ChangeStatusRequestViewModel.SelectedStatusChange)].Errors.First().ErrorMessage
                     </span>
                     }
-                    <div class="govuk-radios">
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="SelectedStatusChange-Pause" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.Pause">
-                            <label class="govuk-label govuk-radios__label" for="electedStatusChange-Pause">
-                                Pause this apprenticeship
-                            </label>
-                        </div>
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="SelectedStatusChange-Stop" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.Stop">
-                            <label class="govuk-label govuk-radios__label" for="electedStatusChange-Pause">
-                                Stop this apprenticeship
-                            </label>
-                        </div>
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="SelectedStatusChange-GoBack" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.GoBack">
-                            <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-Pause">
-                                Go back to apprentice details
-                            </label>
-                        </div>
+                <div class="govuk-radios">
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="SelectedStatusChange-Resume" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.Resume">
+                        <label class="govuk-label govuk-radios__label" for="electedStatusChange-Resume">
+                            Resume this apprenticeship
+                        </label>
                     </div>
+
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="SelectedStatusChange-Pause" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.Pause">
+                        <label class="govuk-label govuk-radios__label" for="electedStatusChange-Pause">
+                            Pause this apprenticeship
+                        </label>
+                    </div>
+
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="SelectedStatusChange-Stop" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.Stop">
+                        <label class="govuk-label govuk-radios__label" for="electedStatusChange-Pause">
+                            Stop this apprenticeship
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="SelectedStatusChange-GoBack" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.GoBack">
+                        <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-Pause">
+                            Go back to apprentice details
+                        </label>
+                    </div>
+                </div>
                 </fieldset>
             </div>
 
