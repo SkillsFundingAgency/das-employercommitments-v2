@@ -74,6 +74,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/editenddate", Name = RouteNames.ApprenticeEditEndDate)]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         public async Task<IActionResult> EditEndDate(EditEndDateRequest request)
         {
             var viewModel = await _modelMapper.Map<EditEndDateViewModel>(request);
@@ -81,6 +82,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/editenddate", Name = RouteNames.ApprenticeEditEndDate)]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [HttpPost]
         public async Task<IActionResult> EditEndDate(EditEndDateViewModel viewModel)
         {
@@ -91,6 +93,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/changestatus")]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [HttpGet]
         public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
         {
@@ -99,6 +102,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/changestatus")]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [HttpPost]
         public IActionResult ChangeStatus(ChangeStatusRequestViewModel viewModel)
         {
@@ -113,6 +117,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/pause")]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [HttpGet]
         public async Task<IActionResult> PauseApprenticeship(PauseRequest request)
         {
@@ -121,6 +126,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/pause")]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [HttpPost]
         public async Task<IActionResult> PauseApprenticeship(PauseRequestViewModel viewModel)
         {
