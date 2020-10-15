@@ -8,7 +8,7 @@ using FluentValidation.TestHelper;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture()]
-    public class ChangeStatusRequestValidatorTests
+    public class ChangeStatusRequestViewModelValidatorTests
     {
         [TestCase(ChangeStatusType.Stop)]
         [TestCase(ChangeStatusType.Pause)]
