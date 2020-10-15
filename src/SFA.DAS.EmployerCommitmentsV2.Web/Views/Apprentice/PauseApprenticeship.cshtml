@@ -8,12 +8,10 @@
     string pageTitle;
     string pageId;
     string pageHeading;
-    //string pageAction;
 
     pageTitle = "Apprenticeship paused";
     pageId = "apprentice-paused";
     pageHeading = "Pause apprenticeship";
-    // pageAction = "pause";
 
     ViewBag.Title = pageTitle;
     ViewBag.PageId = pageId;
@@ -59,18 +57,6 @@
                 </div>
 
             </dl>
-
-
-            @*@if (Model.Data.ChangeStatusViewModel.AcademicYearBreakInTraining)
-                {
-                    <div class="panel panel-border-wide">
-                        <strong class="bold-small">
-                            You can only resume in this academic year.
-                            @Model.Data.ApprenticeName will resume on @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormat().
-                        </strong>
-
-                    </div>
-                }*@
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.PauseConfirmed,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
