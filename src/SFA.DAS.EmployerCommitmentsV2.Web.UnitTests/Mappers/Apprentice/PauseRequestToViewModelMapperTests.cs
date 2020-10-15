@@ -28,7 +28,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .ReturnsAsync(GetApprenticeshipResponse());
         }
         [Test, MoqAutoData]
-        public async Task ApprenticeshipId_IsMapped(PauseRequest request)
+        public async Task ApprenticeshipHashedId_IsMapped(PauseRequest request)
         {
             var mapper = new PauseRequestToViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task AccountId_IsMapped(PauseRequest request)
+        public async Task AccountHashedId_IsMapped(PauseRequest request)
         {
             var mapper = new PauseRequestToViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
