@@ -5,7 +5,6 @@ using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Shared.ActionResults;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
@@ -88,6 +87,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             await _commitmentsApiClient.UpdateEndDateOfCompletedRecord(request, CancellationToken.None);
             var url = _linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId);
             return Redirect(url);
+        }
+
+        [Route("{apprenticeshipHashedId}/details/changing-training-provider", Name = RouteNames.ChangeProviderInform)]
+        public async Task<IActionResult> ChangeProviderInform(ChangeProviderInformRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ChangeProviderInformViewModel>(request);
+
+            return View(viewModel);
         }
     }
 }

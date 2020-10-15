@@ -1,0 +1,44 @@
+﻿@using SFA.DAS.CommitmentsV2.Types;
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ChangeProviderInformViewModel;
+
+@{
+    ViewData["Title"] = "Changing training provider - Apprenticeship service - GOV.UK";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-xl"> Changing training provider </h1>
+
+        @if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped)
+        {
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    When you change an apprentice's training provider, their apprenticeship record with the current training provider will be stopped.
+                </strong>
+            </div>
+        }
+
+        <p> Before you request this change, you must contact the new training provider to agree the new training dates and price. </p>
+
+        <p> You should only change your apprentice’s training provider if:</p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li> you’re not happy with their performance </li>
+            <li> they’ve stopped delivering the apprentice’s training course </li>
+            <li> they’re shutting down or have already shut down </li>
+        </ul>
+
+        @if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped)
+        {
+            <button class="govuk-button"> Continue </button>
+        }
+        else
+        {
+            <button class="govuk-button"> Continue </button>
+        }
+
+    </div>
+</div>
