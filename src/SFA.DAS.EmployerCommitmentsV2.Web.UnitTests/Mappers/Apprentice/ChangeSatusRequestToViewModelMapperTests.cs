@@ -1,10 +1,16 @@
 ﻿using AutoFixture;
+using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using SFA.DAS.Testing.AutoFixture;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
@@ -12,34 +18,47 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
     [TestFixture]
     public class WhenMapping_ChangeSatusRequestToViewModelMapperTests
     {
-
         private ChangeStatusRequestToViewModelMapper _mapper;
-        private ChangeStatusRequest _source;
+        private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
 
         [SetUp]
         public void Arrange()
         {
-            var fixture = new Fixture();
+            
 
-            _mapper = new ChangeStatusRequestToViewModelMapper();
-            _source = fixture.Build<ChangeStatusRequest>().Create();
-
+            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+            
+            _mapper = new ChangeStatusRequestToViewModelMapper(_mockCommitmentsApiClient.Object);
+            
+            _mockCommitmentsApiClient.Setup(a => a.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetApprenticeshipResponse
+                {
+                    Status = ApprenticeshipStatus.Completed
+                });
         }
 
-        [Test]
-        public async Task ThenApprenticeshipHashedIdIsMappedCorrectly()
+        [Test, MoqAutoData]
+        public async Task ThenApprenticeshipHashedIdIsMappedCorrectly(ChangeStatusRequest request)
         {
-            var result = await _mapper.Map(_source);
+            var result = await _mapper.Map(request);
 
-            Assert.AreEqual(_source.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
+            Assert.AreEqual(request.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
         }
 
-        [Test]
-        public async Task ThenAccountHashedIdIsMappedCorrectly()
+        [Test, MoqAutoData]
+        public async Task ThenAccountHashedIdIsMappedCorrectly(ChangeStatusRequest request)
         {
-            var result = await _mapper.Map(_source);
+            var result = await _mapper.Map(request);
 
-            Assert.AreEqual(_source.AccountHashedId, result.AccountHashedId);
+            Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
+        }
+
+        [Test, MoqAutoData]
+        public async Task ThenCurrentStatusIsMapped(ChangeStatusRequest request)
+        {
+            var result = await _mapper.Map(request);
+
+            Assert.AreEqual(ApprenticeshipStatus.Completed, result.CurrentStatus);
         }
     }
 }

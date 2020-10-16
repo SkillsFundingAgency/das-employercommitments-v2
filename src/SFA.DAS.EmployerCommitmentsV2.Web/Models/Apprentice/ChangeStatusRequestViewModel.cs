@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Authorization.ModelBinding;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
@@ -15,6 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public long ApprenticeshipId { get; set; }
 
         public ChangeStatusType? SelectedStatusChange { get; set; }
+        public ApprenticeshipStatus CurrentStatus { get; set; }
     }
 
     public enum ChangeStatusType

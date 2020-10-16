@@ -5,7 +5,6 @@ using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Shared.ActionResults;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
@@ -98,6 +97,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
         {
             var viewModel = await _modelMapper.Map<ChangeStatusRequestViewModel>(request);
+
             return View(viewModel);
         }
 
@@ -110,9 +110,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 case ChangeStatusType.Pause:
                     return RedirectToAction(nameof(PauseApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                case ChangeStatusType.Stop:
+                    return Redirect(_linkGenerator.WhenToApplyStopApprentice(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
                 default:
                     return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
-
             }
         }
 
@@ -130,10 +131,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> PauseApprenticeship(PauseRequestViewModel viewModel)
         {
-            var pauseRequest = new PauseApprenticeshipRequest { ApprenticeshipId = viewModel.ApprenticeshipId };
+            if (viewModel.PauseConfirmed.HasValue && viewModel.PauseConfirmed.Value)
+            {
+                var pauseRequest = new PauseApprenticeshipRequest { ApprenticeshipId = viewModel.ApprenticeshipId };
 
-            await _commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
-
+                await _commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
+            }
+            
             return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
         }
     }
