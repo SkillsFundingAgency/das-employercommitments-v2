@@ -73,6 +73,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/editenddate", Name = RouteNames.ApprenticeEditEndDate)]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         public async Task<IActionResult> EditEndDate(EditEndDateRequest request)
         {
             var viewModel = await _modelMapper.Map<EditEndDateViewModel>(request);
@@ -80,6 +81,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/editenddate", Name = RouteNames.ApprenticeEditEndDate)]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [HttpPost]
         public async Task<IActionResult> EditEndDate(EditEndDateViewModel viewModel)
         {
@@ -90,11 +92,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/changing-training-provider", Name = RouteNames.ChangeProviderInform)]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         public async Task<IActionResult> ChangeProviderInform(ChangeProviderInformRequest request)
         {
             var viewModel = await _modelMapper.Map<ChangeProviderInformViewModel>(request);
 
             return View(viewModel);
+        }
+
+        // Placeholder for CON-2516 - url not specified yet
+        [Route("{apprenticeshipHashedId}/details/stopped-error", Name = RouteNames.ApprenticeNotStoppedError)]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        public IActionResult ApprenticeNotStoppedError()
+        {
+            return View();
+        }
+
+        // Placeholder for CON-2505
+        [Route("{apprenticeshipHashedId}/details/enter-new-training-provider-name-or-reference-number", Name = RouteNames.EnterNewTrainingProvider)]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        public IActionResult EnterNewTrainingProvider()
+        {
+            return View();
         }
     }
 }

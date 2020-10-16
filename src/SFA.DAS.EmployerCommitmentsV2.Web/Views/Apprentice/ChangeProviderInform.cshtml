@@ -1,4 +1,7 @@
-﻿@using SFA.DAS.CommitmentsV2.Types;
+﻿@inject ILinkGenerator LinkGenerator;
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ChangeProviderInformViewModel;
 
 @{
@@ -33,12 +36,13 @@
 
         @if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped)
         {
-            <button class="govuk-button"> Continue </button>
+            <a class="govuk-button" asp-route="@RouteNames.ApprenticeNotStoppedError"> Continue </a>
         }
         else
         {
-            <button class="govuk-button"> Continue </button>
+            <a class="govuk-button" asp-route="@RouteNames.EnterNewTrainingProvider"> Continue </a>
         }
 
+        <a class="govuk-link" href="@LinkGenerator.AccountHome(Model.AccountHashedId)">Cancel and return to account home</a>
     </div>
 </div>
