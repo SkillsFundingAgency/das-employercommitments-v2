@@ -92,7 +92,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/changing-training-provider", Name = RouteNames.ChangeProviderInform)]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public async Task<IActionResult> ChangeProviderInform(ChangeProviderInformRequest request)
         {
             var viewModel = await _modelMapper.Map<ChangeProviderInformViewModel>(request);
@@ -102,7 +102,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         // Placeholder for CON-2516 - url not specified yet
         [Route("{apprenticeshipHashedId}/details/stopped-error", Name = RouteNames.ApprenticeNotStoppedError)]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public IActionResult ApprenticeNotStoppedError()
         {
             return View();
@@ -110,7 +110,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         // Placeholder for CON-2505
         [Route("{apprenticeshipHashedId}/details/enter-new-training-provider-name-or-reference-number", Name = RouteNames.EnterNewTrainingProvider)]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public IActionResult EnterNewTrainingProvider()
         {
             return View();
