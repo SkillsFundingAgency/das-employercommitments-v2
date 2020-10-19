@@ -1,10 +1,13 @@
 ﻿@using SFA.DAS.Employer.Shared.UI.Models
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+
 <!DOCTYPE html>
 <html lang="en" class="govuk-template ">
 
 @{
+
     var accountHashedId = (string)ViewContext.RouteData.Values["accountHashedId"];
+    if (string.IsNullOrEmpty(accountHashedId)) { accountHashedId = ViewBag.HashedAccountId; }
     ViewBag.HideHeaderBorder = true;
     var footerModel = new FooterModel { AccountId = accountHashedId, UsePrivacyV2 = true };
 }
@@ -72,7 +75,7 @@
         </main>
     </div>
 
-    <partial name="_Footer" model="@footerModel"/>
+    <partial name="_Footer" model="@footerModel" />
     <partial name="_GoogleAnalyticsInfo" />
 
 
