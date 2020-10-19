@@ -1,15 +1,13 @@
 ﻿@inject ILinkGenerator LinkGenerator
 @using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
-@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ResumeRequestViewModel
 
 @{
     string pageTitle;
     string pageId;
     string pageHeading;
-    //string pageAction;
-
+    
     pageTitle = "Apprenticeship resumed";
     pageId = "apprentice-resumed";
     pageHeading = "Resume apprenticeship";
@@ -32,12 +30,6 @@
             <p class="govuk-body">
                 You’re about to resume this apprenticeship and any payments you've authorised to their training provider.
             </p>
-
-            @*<p class="govuk-body">
-                    <a class="govuk-link govuk-body" target="_blank" href="financeDataLink" id="view-transactions-link">View your transactions</a> to confirm all payments are up-to-date before pausing.
-                </p>
-
-                <p class="govuk-body">You can return and resume the apprenticeship at any time.</p>*@
 
             <dl class="govuk-summary-list">
                 <div class="govuk-summary-list__row">

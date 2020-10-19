@@ -143,6 +143,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
         }
 
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [Route("{apprenticeshipHashedId}/details/resume")]
         [HttpGet]
         public async Task<IActionResult> ResumeApprenticeship(ResumeRequest request)
@@ -151,13 +152,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [Route("{apprenticeshipHashedId}/details/resume")]
         [HttpPost]
         public async Task<IActionResult> ResumeApprenticeship(ResumeRequestViewModel viewModel)
         {
-            var resumeRequest = new ResumeApprenticeshipRequest { ApprenticeshipId = viewModel.ApprenticeshipId };
+            if (viewModel.ResumeConfirmed.HasValue && viewModel.ResumeConfirmed.Value)
+            {
+                var resumeRequest = new ResumeApprenticeshipRequest { ApprenticeshipId = viewModel.ApprenticeshipId };
 
-            await _commitmentsApiClient.ResumeApprenticeship(resumeRequest, CancellationToken.None);
+                await _commitmentsApiClient.ResumeApprenticeship(resumeRequest, CancellationToken.None);
+            }
 
             return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
         }
