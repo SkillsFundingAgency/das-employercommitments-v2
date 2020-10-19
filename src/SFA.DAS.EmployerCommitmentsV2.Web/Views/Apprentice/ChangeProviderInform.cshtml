@@ -8,41 +8,52 @@
     ViewData["Title"] = "Changing training provider - Apprenticeship service - GOV.UK";
 }
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-
-        <h1 class="govuk-heading-xl"> Changing training provider </h1>
-
-        @if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped)
-        {
-            <div class="govuk-warning-text">
-                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                <strong class="govuk-warning-text__text">
-                    <span class="govuk-warning-text__assistive">Warning</span>
-                    When you change an apprentice's training provider, their apprenticeship record with the current training provider will be stopped.
-                </strong>
-            </div>
-        }
-
-        <p> Before you request this change, you must contact the new training provider to agree the new training dates and price. </p>
-
-        <p> You should only change your apprentice’s training provider if:</p>
-
-        <ul class="govuk-list govuk-list--bullet">
-            <li> you’re not happy with their performance </li>
-            <li> they’ve stopped delivering the apprentice’s training course </li>
-            <li> they’re shutting down or have already shut down </li>
-        </ul>
+<div class="das-panel das-panel--featured das-!-text-align-left">
+	<h1 class="das-panel__heading govuk-!-margin-top-0">
+		Changing training provider
+	</h1>
+    <div class="govuk-!-width-two-thirds das-panel__body">
 
         @if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped)
         {
-            <a class="govuk-button" asp-route="@RouteNames.ApprenticeNotStoppedError"> Continue </a>
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon das-warning-text__icon--blue das-warning-text__icon--valign-middle" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text das-!-colour-inherit">
+                <span class="govuk-warning-text__assistive">Warning</span>
+                When you change an apprentice's training provider, their apprenticeship record with the current training provider will be stopped.
+            </strong>
+        </div>
         }
-        else
-        {
-            <a class="govuk-button" asp-route="@RouteNames.EnterNewTrainingProvider"> Continue </a>
-        }
-
-        <a class="govuk-link" href="@LinkGenerator.AccountHome(Model.AccountHashedId)">Cancel and return to account home</a>
+        
+        <p class="govuk-body das-!-colour-inherit">
+			Before you request this change, you must contact the new training provider to agree the new training dates and price.
+		</p>
+		<p class="govuk-body das-!-colour-inherit">
+			You should only change your apprentice's training provider if:
+		</p>
+		<ul class="govuk-list govuk-list--bullet das-!-colour-inherit">
+			<li>
+				you're not happy with their performance
+			</li>
+			<li>
+				they've stopped delivering the apprentice's training course
+			</li>
+			<li>
+				they're shutting down or have already shut down
+			</li>
+		</ul>
     </div>
+
+    @if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped)
+    {
+        <a class="govuk-button das-button--inverted govuk-!-font-weight-bold govuk-!-margin-top-2" asp-route="@RouteNames.ApprenticeNotStoppedError"> Continue </a>
+    }
+    else
+    {
+        <a class="govuk-button das-button--inverted govuk-!-font-weight-bold govuk-!-margin-top-2" asp-route="@RouteNames.EnterNewTrainingProvider"> Continue </a>
+    }
+
+    <p class="govuk-body-s govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+        <a class="das-panel__link" href="@LinkGenerator.AccountHome(Model.AccountHashedId)">Cancel and return to account home</a>
+    </p>
 </div>
