@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public async Task ThenDraftApprenticeshipHashedIdIsMappedCorrectly()
         {
             var result = await _act();
-            Assert.AreEqual(_source.DraftApprenticeshipId, result.DraftApprenticeshipId);
+            Assert.AreEqual(_source.DraftApprenticeshipHashedId, result.DraftApprenticeshipHashedId);
         }
 
         [Test]

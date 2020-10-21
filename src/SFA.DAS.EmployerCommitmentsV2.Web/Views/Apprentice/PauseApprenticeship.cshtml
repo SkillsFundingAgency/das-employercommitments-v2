@@ -1,0 +1,93 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.PauseRequestViewModel
+
+@{
+    string pageTitle;
+    string pageId;
+    string pageHeading;
+
+    pageTitle = "Apprenticeship paused";
+    pageId = "apprentice-paused";
+    pageHeading = "Pause apprenticeship";
+
+    ViewBag.Title = pageTitle;
+    ViewBag.PageId = pageId;
+    ViewBag.Section = "apprentices";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <partial name="_ValidationSummary" />
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+
+            <h1 class="govuk-heading-xl">@pageHeading</h1>
+
+            <p class="govuk-body">
+                You’re about to pause this apprenticeship and all payments to the training provider. Any payments previously made to the training provider are unaffected.
+            </p>
+
+            <p class="govuk-body">
+                <a class="govuk-link govuk-body" target="_blank" href="financeDataLink" id="view-transactions-link">View your transactions</a> to confirm all payments are up-to-date before pausing.
+            </p>
+
+            <p class="govuk-body">You can return and resume the apprenticeship at any time.</p>
+
+            <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Name </dt>
+                    <dd class="govuk-summary-list__value"> @Model.ApprenticeName</dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Unique learner number </dt>
+                    <dd class="govuk-summary-list__value"> @Model.ULN</dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Apprenticeship training course </dt>
+                    <dd class="govuk-summary-list__value"> @Model.Course</dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Date change takes effect </dt>
+                    <dd class="govuk-summary-list__value"> @Model.PauseDate.ToGdsFormat() </dd>
+                </div>
+
+            </dl>
+
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.PauseConfirmed,  "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <span id="error-message-@nameof(PauseRequestViewModel.PauseConfirmed)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(PauseRequestViewModel.PauseConfirmed)].Errors.First().ErrorMessage
+                        </span>
+                    } <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="PauseConfirmed" name="PauseConfirmed" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="PauseConfirmed">
+                                Yes, pause this apprenticeship
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="PauseConfirmed-no" name="PauseConfirmed" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="PauseConfirmed-no">
+                                No, go back to apprentice details
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <button class="govuk-button" type="submit" id="submit-status-change">Save and confirm</button>
+        </form>
+
+    </div>
+</div>
+
+@section back {
+    <a id="back-link" class="govuk-back-link" asp-controller="Apprentice" asp-action="ChangeStatus" asp-route-accountHashedId="@Model.AccountHashedId" asp-route-apprenticeshipHashedId="@Model.ApprenticeshipHashedId">Back</a>
+}
