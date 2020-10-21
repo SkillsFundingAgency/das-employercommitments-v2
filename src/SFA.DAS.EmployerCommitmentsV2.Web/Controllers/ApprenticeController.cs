@@ -92,7 +92,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> ChangeProviderInform(ChangeProviderInformRequest request)
         {
             var viewModel = await _modelMapper.Map<ChangeProviderInformViewModel>(request);
-
+            
             return View(viewModel);
         }
 
@@ -104,10 +104,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View();
         }
 
-        // Placeholder for CON-2505
         [Route("{apprenticeshipHashedId}/details/enter-new-training-provider-name-or-reference-number", Name = RouteNames.EnterNewTrainingProvider)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public IActionResult EnterNewTrainingProvider()
+        public async Task<IActionResult> EnterNewTrainingProvider(EnterNewTrainingProviderRequest request)
+        {
+            var viewModel = await _modelMapper.Map<EnterNewTrainingProviderViewModel>(request);
+
+            return View(viewModel);
+        }
+
+        // Placeholder for CON-2506
+        [Route("{apprenticeshipHashedId}/details/who-will-enter-new-course-dates-price", Name = RouteNames.EnterNewTrainingProvider)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public IActionResult WhoWillEnterNewDetails()
         {
             return View();
         }
