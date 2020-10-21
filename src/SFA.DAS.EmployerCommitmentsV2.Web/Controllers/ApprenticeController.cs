@@ -37,7 +37,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("", Name = RouteNames.ApprenticesIndex)]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         public async Task<IActionResult> Index(IndexRequest request)
         {
             IndexRequest savedRequest = null;
@@ -64,7 +63,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("download", Name = RouteNames.ApprenticesDownload)]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         public async Task<IActionResult> Download(DownloadRequest request)
         {
             var downloadViewModel = await _modelMapper.Map<DownloadViewModel>(request);
@@ -73,7 +71,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/editenddate", Name = RouteNames.ApprenticeEditEndDate)]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         public async Task<IActionResult> EditEndDate(EditEndDateRequest request)
         {
             var viewModel = await _modelMapper.Map<EditEndDateViewModel>(request);
@@ -81,7 +78,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/editenddate", Name = RouteNames.ApprenticeEditEndDate)]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [HttpPost]
         public async Task<IActionResult> EditEndDate(EditEndDateViewModel viewModel)
         {
