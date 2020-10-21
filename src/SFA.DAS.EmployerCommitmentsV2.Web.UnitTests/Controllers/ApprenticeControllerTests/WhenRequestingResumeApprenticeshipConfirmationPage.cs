@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -26,11 +27,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [Test]
         public async Task AndCurrentStatusIsPaused_ThenViewIsReturned()
         {
+            DateTime resumedDate = DateTime.Now;
             _mockModelMapper.Setup(m => m.Map<ResumeRequestViewModel>(It.IsAny<ResumeRequest>()))
-                .ReturnsAsync(new ResumeRequestViewModel());
+                .ReturnsAsync(new ResumeRequestViewModel()
+                {
+                    ResumeDate = resumedDate
+                });
 
             var result = await _controller.ResumeApprenticeship(new ResumeRequest());
 
+            var viewResult = (ViewResult)result;
+            var viewModel = viewResult.Model;
+            Assert.That(viewModel, Is.TypeOf<ResumeRequestViewModel>());
             Assert.IsInstanceOf<ViewResult>(result);
         }
     }
