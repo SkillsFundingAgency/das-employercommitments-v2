@@ -12,11 +12,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var statusCodeReExecuteFeature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
             if (statusCodeReExecuteFeature != null)
             {
-                var OriginalURL =
-                    statusCodeReExecuteFeature.OriginalPathBase
-                    + statusCodeReExecuteFeature.OriginalPath
-                    + statusCodeReExecuteFeature.OriginalQueryString;
-                ViewBag.HashedAccountId = OriginalURL;
+                var hasedAccountId = statusCodeReExecuteFeature.OriginalPath.TrimStart('/');               
+                ViewBag.HashedAccountId = hasedAccountId;
             }
 
             switch (statusCode)
