@@ -3,13 +3,10 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerUrlHelper;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SFA.DAS.Testing.AutoFixture;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
@@ -36,6 +33,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = await _controller.PauseApprenticeship(new PauseRequest());
 
             Assert.IsInstanceOf<ViewResult>(result);
+        }
+
+        [Test, MoqAutoData]
+        public async Task AndCurrentStatusIsLive_ThenPauseRequestViewModelIsPassedToTheView(PauseRequestViewModel _viewModel)
+        {
+            _mockModelMapper.Setup(m => m.Map<PauseRequestViewModel>(It.IsAny<PauseRequest>()))
+                .ReturnsAsync(_viewModel);
+
+            var viewResult = await _controller.PauseApprenticeship(new PauseRequest()) as ViewResult;
+            var viewModel = viewResult.Model;
+
+            var pauseRequestViewModel = (PauseRequestViewModel)viewModel;
+
+            Assert.IsInstanceOf<PauseRequestViewModel>(viewModel);
+            Assert.AreEqual(_viewModel, pauseRequestViewModel);
         }
     }
 }
