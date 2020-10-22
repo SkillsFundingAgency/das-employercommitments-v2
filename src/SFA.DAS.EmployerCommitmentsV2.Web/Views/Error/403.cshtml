@@ -1,4 +1,7 @@
-﻿@{
+﻿@inject ILinkGenerator LinkGenerator
+@using  SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+
+@{
     ViewData["Title"] = "Access denied";
     ViewBag.GaData.Vpv = "/error/403";
 }
@@ -12,4 +15,4 @@
     </div>
 </div>
 
- <a class="govuk-button" href="/">Go back to the service home page</a>
+<a class="govuk-button" href="@LinkGenerator.EmployerAccountsHome()">Go back to the service home page</a>
