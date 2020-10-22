@@ -6,7 +6,6 @@
 @{
 
     var accountHashedId = (string)ViewContext.RouteData.Values["accountHashedId"];
-    if (string.IsNullOrEmpty(accountHashedId)) { accountHashedId = ViewBag.HashedAccountId; }
     ViewBag.HideHeaderBorder = true;
     var footerModel = new FooterModel { AccountId = accountHashedId, UsePrivacyV2 = true };
 }
@@ -60,8 +59,11 @@
 
     <partial name="_CookieConsentBanner" />
 
-    <partial name="_Header" />
-    <partial name="_Menu" model="@accountHashedId" />
+    <partial name="_Header" />    
+    @if (ViewBag.HideNav == null || !ViewBag.HideNav)
+    {
+        <partial name="_Menu" model="@accountHashedId" />
+    }
     <partial name="_ZenDeskWidget" />
     <div class="govuk-width-container">
         @if (IsSectionDefined("Back"))
