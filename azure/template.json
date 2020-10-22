@@ -46,7 +46,7 @@
                 "description": "An array of IPs that are permitted to access the app service."
             }
         },
-        "certificateName": {
+        "keyvaultCertificateName": {
             "type": "string",
             "metadata": {
                 "description": "The name of the certificate stored in the shared keyvault."
@@ -113,7 +113,7 @@
                 },
                 "parameters": {
                     "keyVaultCertificateName": {
-                        "value": "[parameters('certificateName')]"
+                        "value": "[parameters('keyvaultCertificateName')]"
                     },
                     "keyVaultName": {
                         "value": "[parameters('sharedKeyVaultName')]"
@@ -214,6 +214,10 @@
         "AppServiceName": {
             "type": "string",
             "value": "[variables('appServiceName')]"
-        }
+        },
+        "ResourceGroupName": {
+            "type": "string",
+            "value": "[variables('resourceGroupName')]"
+        }        
     }
 }
