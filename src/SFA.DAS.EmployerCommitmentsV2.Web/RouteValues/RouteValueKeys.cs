@@ -7,5 +7,6 @@
         public const string AccountLegalEntityHashedId = "AccountLegalEntityHashedId";
         public const string DraftApprenticeshipHashedId = "DraftApprenticeshipHashedId";
         public const string TransferSenderId = "TransferSenderId";
+        public const string ApprenticeshipHashedId = "ApprenticeshipHashedId";
     }
 }

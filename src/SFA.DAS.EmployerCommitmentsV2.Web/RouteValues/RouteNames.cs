@@ -6,5 +6,6 @@
         public const string ApprenticesIndex = "apprentices-index";
         public const string ApprenticesDownload = "apprentices-download";
         public const string ApprenticeDetail = "apprentice-details";
+        public const string ApprenticeEditEndDate = "apprentice-edit-enddate";
     }
 }
