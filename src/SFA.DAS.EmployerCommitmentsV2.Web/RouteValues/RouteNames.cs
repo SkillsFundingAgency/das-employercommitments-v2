@@ -11,6 +11,6 @@
         public const string ChangeProviderInform = "changing-training-provider-inform";
         public const string ApprenticeNotStoppedError = "aprentice-not-stopped-error";
         public const string EnterNewTrainingProvider = "enter-new-training-provider-name-or-reference-number";
-        public const string WhoWillEnterNewDetails = "who-eill-enter-new-details";
+        public const string ConfirmNewTrainingProviderRequest = "send-request-new-training-provider";
     }
 }

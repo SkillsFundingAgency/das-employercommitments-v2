@@ -104,6 +104,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View();
         }
 
+        [HttpGet]
         [Route("{apprenticeshipHashedId}/details/enter-new-training-provider-name-or-reference-number", Name = RouteNames.EnterNewTrainingProvider)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public async Task<IActionResult> EnterNewTrainingProvider(EnterNewTrainingProviderRequest request)
@@ -113,12 +114,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
-        // Placeholder for CON-2506
-        [Route("{apprenticeshipHashedId}/details/who-will-enter-new-course-dates-price", Name = RouteNames.EnterNewTrainingProvider)]
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/details/enter-new-training-provider-name-or-reference-number", Name = RouteNames.EnterNewTrainingProvider)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public IActionResult WhoWillEnterNewDetails()
+        public async Task<IActionResult> EnterNewTrainingProvider(EnterNewTrainingProviderViewModel viewModel)
         {
-            return View();
+            var request = await _modelMapper.Map<ConfirmNewTrainingProviderRequest>(viewModel);
+
+            return RedirectToRoute(RouteNames.ConfirmNewTrainingProviderRequest, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.Ukprn });
+        }
+
+        // Placeholder for CON-2506
+        [Route("{apprenticeshipHashedId}/details/send-request-new-training-provider", Name = RouteNames.ConfirmNewTrainingProviderRequest)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public async Task<IActionResult> ConfirmNewTrainingProviderRequest(ConfirmNewTrainingProviderRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ConfirmNewTrainingProviderViewModel>(request);
+
+            return View(viewModel);
         }
     }
 }

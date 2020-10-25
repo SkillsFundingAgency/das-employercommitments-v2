@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
-    public class EnterNewTrainingProviderRequest
+    public class ConfirmNewTrainingProviderRequest
     {
         [FromRoute]
         public string AccountHashedId { get; set; }
