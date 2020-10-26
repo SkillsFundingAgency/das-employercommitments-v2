@@ -19,15 +19,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
         public async Task<EnterNewTrainingProviderViewModel> Map(EnterNewTrainingProviderRequest source)
         {
-            var accountId = _encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
-           
-
-            var providers = await _client.GetApprovedProviders(accountId, CancellationToken.None);
+            var providersResponse = await _client.GetAllProviders(CancellationToken.None);
 
             var result = new EnterNewTrainingProviderViewModel
             {
                 AccountHashedId = source.AccountHashedId,
-                ApprenticeshipHashedId = source.ApprenticeshipHashedId
+                ApprenticeshipHashedId = source.ApprenticeshipHashedId,
+                Providers = providersResponse.Providers
             };
 
             return result;

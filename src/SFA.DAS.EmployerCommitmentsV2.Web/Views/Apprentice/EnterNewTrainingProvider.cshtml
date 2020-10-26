@@ -10,9 +10,55 @@
         <h1 class="govuk-heading-xl"> Enter the new training provider's name or reference number (UKPRN) </h1>
 
         <form method="post">
-            <input asp-for="Ukprn" />
-            <button class="govuk-button" type="submit"> Continue </button>
+            @*<input asp-for="Ukprn" />*@
+
+            <div classs="govuk-form-group">
+                <select id="Ukprn" name="Ukprn" class="govuk-select">
+                    <option class="das-js-hide" value="">Select training provider</option>
+                    @foreach (var provider in Model.Providers)
+                    {
+                        <option value="@provider.Ukprn"> @provider.Name</option>
+                    }
+                </select>
+            </div>
+            
+            <button class="govuk-button" id="Ukprn-button" type="submit"> Continue </button>
         </form>
 
     </div>
 </div>
+<script>
+    //document.title = document.getElementById('jsChgTitle').textContent;
+    var idSelectField = 'Ukprn';
+
+    window.onload = function () {
+        var ukprn = jQuery('#Ukprn');
+
+        var gfg = ukprn.closest('.govuk-form-group');
+        if (gfg.hasClass('govuk-form-group--error')) {
+            ukprn.css('border', '4px solid #df3034');
+        }
+
+        var ukprnForm = ukprn.closest('form');
+
+        jQuery('#Ukprn-button').on('click', function (e) {
+            e.preventDefault();
+
+            var ukprnVal = ukprn.val();
+
+            if (ukprnVal) {//has a value
+                ukprnForm.append('<input type="hidden" id="Ukprn-hidden" name="Ukprn-hidden" value="' + ukprnVal + '">').submit();
+            } else {
+                ukprnForm.submit();
+            }
+        });
+        ukprn.attr('type', 'search');
+        document.getElementById('Ukprn').addEventListener('search', function () {
+            ukprn.keyup(function () {
+                if (this.value.length === 3) {
+                    document.getElementById('Ukprn__listbox').scrollTop = 0;
+                }
+            });
+        });//chrome supported to resolve chrome behaviour (resets list if cleared)
+    };
+</script>

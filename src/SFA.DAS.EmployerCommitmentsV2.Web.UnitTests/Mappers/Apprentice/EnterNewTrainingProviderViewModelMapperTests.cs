@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test]
         public async Task WhenRequestingEnterNewTrainingProvider_ThenAccountIdIsDecodedOnce()
         {
-
+           // _mockCommitmentsApiClient.Setup(m => m.GetAllProviders()
 
         }
     }
