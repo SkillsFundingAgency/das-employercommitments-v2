@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class ConfirmNewTrainingProviderViewModelMapper : IMapper<ConfirmNewTrainingProviderRequest, ConfirmNewTrainingProviderViewModel>
+    public class ConfirmNewTrainingProviderViewModelMapper : IMapper<SendNewTrainingProviderRequest, SnedNewTrainingProviderViewModel>
     {
-        public Task<ConfirmNewTrainingProviderViewModel> Map(ConfirmNewTrainingProviderRequest source)
+        public Task<SnedNewTrainingProviderViewModel> Map(SendNewTrainingProviderRequest source)
         {
-            var result = new ConfirmNewTrainingProviderViewModel
+            var result = new SnedNewTrainingProviderViewModel
             {
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
                 AccountHashedId = source.AccountHashedId,

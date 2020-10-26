@@ -7,12 +7,12 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class ConfirmNewTrainingProviderRequestMapper : IMapper<EnterNewTrainingProviderViewModel, ConfirmNewTrainingProviderRequest>
+    public class ConfirmNewTrainingProviderRequestMapper : IMapper<EnterNewTrainingProviderViewModel, SendNewTrainingProviderRequest>
     {
-        public Task<ConfirmNewTrainingProviderRequest> Map(EnterNewTrainingProviderViewModel source)
+        public Task<SendNewTrainingProviderRequest> Map(EnterNewTrainingProviderViewModel source)
         {
 
-            var result = new ConfirmNewTrainingProviderRequest
+            var result = new SendNewTrainingProviderRequest
             {
                 AccountHashedId = source.AccountHashedId,
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,

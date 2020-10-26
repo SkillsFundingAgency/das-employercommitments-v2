@@ -9,6 +9,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         [FromRoute]
         public string ApprenticeshipHashedId { get; set; }
-        public long Ukprn { get; set; }
     }
 }

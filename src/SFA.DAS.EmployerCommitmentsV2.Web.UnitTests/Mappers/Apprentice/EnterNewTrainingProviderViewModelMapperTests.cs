@@ -1,10 +1,12 @@
 ﻿using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using SFA.DAS.Encoding;
 using SFA.DAS.Testing.AutoFixture;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
@@ -12,7 +14,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
     public class EnterNewTrainingProviderViewModelMapperTests
     {
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
-        private Mock<IEncodingService> _mockEncodingService;
 
         private EnterNewTrainingProviderViewModelMapper _mapper;
 
@@ -20,11 +21,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public void Arrange()
         {
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockEncodingService = new Mock<IEncodingService>();
 
+            _mockCommitmentsApiClient.Setup(m => m.GetAllProviders(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(MockGetAllProvidersResponse());
 
-
-            _mapper = new EnterNewTrainingProviderViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object);
+            _mapper = new EnterNewTrainingProviderViewModelMapper(_mockCommitmentsApiClient.Object);
         }
 
         [Test, MoqAutoData]
@@ -44,18 +45,31 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task Ukprn_IsMapped(EnterNewTrainingProviderRequest request)
+        public async Task WhenRequestingEnterNewTrainingProvider_ThenListOfGetAllProvidersCalled(EnterNewTrainingProviderRequest request)
         {
             var result = await _mapper.Map(request);
 
-            Assert.AreEqual(request.Ukprn, result.Ukprn);
+            _mockCommitmentsApiClient.Verify(m => m.GetAllProviders(It.IsAny<CancellationToken>()), Times.Once());
         }
 
-        [Test]
-        public async Task WhenRequestingEnterNewTrainingProvider_ThenAccountIdIsDecodedOnce()
+        [Test, MoqAutoData]
+        public async Task WhenRequestingEnterNewTrainingProvider_ThenListOfTrainingProvidersIsMapped(EnterNewTrainingProviderRequest request)
         {
-           // _mockCommitmentsApiClient.Setup(m => m.GetAllProviders()
+            var result = await _mapper.Map(request);
 
+            Assert.AreEqual(3, result.Providers.Count);
+        }
+        private GetAllProvidersResponse MockGetAllProvidersResponse()
+        {
+            return new GetAllProvidersResponse
+            {
+                Providers = new List<Provider>
+                {
+                    new Provider { Ukprn = 10000001, Name = "Provider 1" },
+                    new Provider { Ukprn = 10000002, Name = "Provider 2" },
+                    new Provider { Ukprn = 10000003, Name = "Provider 3" }
+                }
+            };
         }
     }
 }
