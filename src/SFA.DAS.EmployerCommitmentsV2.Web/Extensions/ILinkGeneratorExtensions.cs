@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 
         public static string EmployerHome(this ILinkGenerator linkGenerator, string accountHashedId)
         {
-            return linkGenerator.UsersLink($"accounts/{accountHashedId}/teams");
+            return linkGenerator.AccountsLink($"accounts/{accountHashedId}/teams");
         }
     }
 }

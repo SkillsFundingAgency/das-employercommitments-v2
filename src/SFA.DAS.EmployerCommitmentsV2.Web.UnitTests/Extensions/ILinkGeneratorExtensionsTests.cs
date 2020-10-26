@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         public void EmployerHome_BuildsPathCorrectly(string accountHashedId)
         {
             var url = _fixture.Sut.EmployerHome(accountHashedId);
-            Assert.AreEqual($"{_fixture.UsersLink}accounts/{accountHashedId}/teams", url);
+            Assert.AreEqual($"{_fixture.AccountsLink}accounts/{accountHashedId}/teams", url);
         }
 
         [Test, AutoData]
