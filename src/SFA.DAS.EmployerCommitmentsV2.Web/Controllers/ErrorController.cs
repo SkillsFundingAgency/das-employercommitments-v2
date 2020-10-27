@@ -6,7 +6,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     {
         [Route("error")]
         public IActionResult Error(int? statusCode)
-        {
+        {            
+            ViewBag.HideNav = true;
+
             switch (statusCode)
             {
                 case 400:
