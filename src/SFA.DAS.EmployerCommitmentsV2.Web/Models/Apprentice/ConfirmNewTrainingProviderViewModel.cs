@@ -1,7 +1,7 @@
 ﻿
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
-    public class SnedNewTrainingProviderViewModel
+    public class SendNewTrainingProviderViewModel
     {
         public string AccountHashedId { get; set; }
         public string ApprenticeshipHashedId { get; set; }

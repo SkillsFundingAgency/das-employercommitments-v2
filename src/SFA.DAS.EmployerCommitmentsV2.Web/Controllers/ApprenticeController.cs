@@ -129,7 +129,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public async Task<IActionResult> SendRequestNewTrainingProvider(SendNewTrainingProviderRequest request)
         {
-            var viewModel = await _modelMapper.Map<SnedNewTrainingProviderViewModel>(request);
+            var viewModel = await _modelMapper.Map<SendNewTrainingProviderViewModel>(request);
 
             return View(viewModel);
         }
