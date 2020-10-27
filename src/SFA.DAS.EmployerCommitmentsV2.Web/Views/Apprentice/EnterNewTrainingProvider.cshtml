@@ -1,13 +1,83 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EnterNewTrainingProviderViewModel
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EnterNewTrainingProviderViewModel
 
-@{ 
+@{
     ViewData["Title"] = "Enter the new training provider's name or reference number (UKPRN) - Apprenticeship service - GOV.UK";
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
 
-        <h1 class="govuk-heading-xl"> Enter the new training provider's name or reference number (UKPRN) </h1>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Ukprn, "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                        <h1 class="govuk-fieldset__heading">
+                            Enter the new training provider's name or reference number (UKPRN)
+                        </h1>
+                    </legend>
+
+                    <div class="govuk-hint">
+                        A UKPRN is the unique, 8-digit number we use to identify a training provider. Ask your training provider if you do not know it.
+                    </div>
+
+                    @Html.ValidationMessageFor(m => m.Ukprn, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Ukprn) })
+
+                    <select id="Ukprn" name="Ukprn" asp-for="Ukprn" class="govuk-select @Html.AddClassIfPropertyInError(x => x.Ukprn, "govuk-select--error")">
+                        <option class="das-js-hide" value="">Select training provider</option>
+                        @foreach (var provider in Model.Providers)
+                        {
+                            <option value="@provider.Ukprn"> @provider.Name (@provider.Ukprn)</option>
+                        }
+                    </select>
+
+                </fieldset>
+            </div>
+
+            <button class="govuk-button" id="Ukprn-button" type="submit"> Continue </button>
+        </form>
 
     </div>
 </div>
+
+<script>
+
+    window.onload = function () {
+        var ukprn = jQuery('#Ukprn');
+
+        var gfg = ukprn.closest('.govuk-form-group');
+        if (gfg.hasClass('govuk-form-group--error')) {
+            ukprn.css('border', '4px solid #df3034');
+        }
+
+        var ukprnForm = ukprn.closest('form');
+
+        jQuery('#Ukprn-button').on('click', function (e) {
+            e.preventDefault();
+
+            var ukprnVal = ukprn.val();
+
+            if (ukprnVal) {//has a value
+                ukprnForm.append('<input type="hidden" id="Ukprn-hidden" name="Ukprn-hidden" value="' + ukprnVal + '">').submit();
+            } else {
+                ukprnForm.submit();
+            }
+        });
+        ukprn.attr('type', 'search');
+        document.getElementById('Ukprn').addEventListener('search', function () {
+            ukprn.keyup(function () {
+                if (this.value.length === 3) {
+                    document.getElementById('Ukprn__listbox').scrollTop = 0;
+                }
+            });
+        });//chrome supported to resolve chrome behaviour (resets list if cleared)
+    };
+</script>
+
+@section Back
+{
+    <div class="das-js-back-link"></div>
+}

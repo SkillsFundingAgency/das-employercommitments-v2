@@ -37,7 +37,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     ApprenticeshipStatus = data.Apprenticeship.Status
                 };
 
-
                 return result;
             }
             catch (Exception e)
@@ -47,8 +46,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             }
         }
 
-        private async Task<(GetApprenticeshipResponse Apprenticeship,
-           GetProviderResponse TrainingProvider)> GetApprenticeshipData(long apprenticeshipId, long providerId)
+        private async Task<(GetApprenticeshipResponse Apprenticeship, GetProviderResponse TrainingProvider)> 
+            GetApprenticeshipData(long apprenticeshipId, long providerId)
         {
             var apprenticeshipTask =  _commitmentApiClient.GetApprenticeship(apprenticeshipId);
             var trainingProviderTask = _commitmentApiClient.GetProvider(providerId);

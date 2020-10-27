@@ -104,6 +104,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View();
         }
 
+
+        [HttpGet]
         [Route("{apprenticeshipHashedId}/change-provider/enter-new-training-provider-name-or-reference-number", Name = RouteNames.EnterNewTrainingProvider)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public async Task<IActionResult> EnterNewTrainingProvider(EnterNewTrainingProviderRequest request)
@@ -113,6 +115,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/change-provider/enter-new-training-provider-name-or-reference-number", Name = RouteNames.EnterNewTrainingProvider)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public async Task<IActionResult> EnterNewTrainingProvider(EnterNewTrainingProviderViewModel viewModel)
+        {
+            var request = await _modelMapper.Map<SendNewTrainingProviderRequest>(viewModel);
+
+            return RedirectToRoute(RouteNames.SendRequestNewTrainingProvider, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.Ukprn });
+        }
 
         [Route("{apprenticeshipHashedId}/change-provider/send-request-new-training-provider", Name = RouteNames.SendRequestNewTrainingProvider)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
