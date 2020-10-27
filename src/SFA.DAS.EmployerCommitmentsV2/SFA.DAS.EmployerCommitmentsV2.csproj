@@ -12,9 +12,9 @@
     <PackageReference Include="SFA.DAS.Authorization.CommitmentPermissions" Version="6.0.59" />
     <PackageReference Include="SFA.DAS.Authorization.EmployerFeatures" Version="6.0.59" />
     <PackageReference Include="SFA.DAS.Authorization.EmployerUserRoles" Version="6.0.59" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="4.1.1730" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="4.1.1730" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Types" Version="4.1.1730" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="4.1.1736" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="4.1.1736" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Types" Version="4.1.1736" />
     <PackageReference Include="SFA.DAS.EmployerAccounts.Api.Client" Version="1.6.2086" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.22" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.61" />

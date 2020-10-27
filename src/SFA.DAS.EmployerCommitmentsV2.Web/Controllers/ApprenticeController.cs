@@ -112,6 +112,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     return RedirectToAction(nameof(PauseApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 case ChangeStatusType.Stop:
                     return Redirect(_linkGenerator.WhenToApplyStopApprentice(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+                case ChangeStatusType.Resume:
+                    return RedirectToAction(nameof(ResumeApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 default:
                     return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
             }
@@ -138,6 +140,30 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 await _commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
             }
             
+            return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+        }
+
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        [Route("{apprenticeshipHashedId}/details/resume")]
+        [HttpGet]
+        public async Task<IActionResult> ResumeApprenticeship(ResumeRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ResumeRequestViewModel>(request);
+            return View(viewModel);
+        }
+
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        [Route("{apprenticeshipHashedId}/details/resume")]
+        [HttpPost]
+        public async Task<IActionResult> ResumeApprenticeship(ResumeRequestViewModel viewModel)
+        {
+            if (viewModel.ResumeConfirmed.HasValue && viewModel.ResumeConfirmed.Value)
+            {
+                var resumeRequest = new ResumeApprenticeshipRequest { ApprenticeshipId = viewModel.ApprenticeshipId };
+
+                await _commitmentsApiClient.ResumeApprenticeship(resumeRequest, CancellationToken.None);
+            }
+
             return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
         }
     }

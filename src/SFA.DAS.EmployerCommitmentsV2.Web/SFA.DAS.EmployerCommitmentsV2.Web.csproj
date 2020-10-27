@@ -25,8 +25,8 @@
     <PackageReference Include="NLog.Schema" Version="4.5.11" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.0" />
     <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="6.0.59" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="4.1.1730" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="4.1.1730" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="4.1.1736" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="4.1.1736" />
     <PackageReference Include="SFA.DAS.Employer.Shared.UI" Version="2.0.15" />
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.77" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.22" />

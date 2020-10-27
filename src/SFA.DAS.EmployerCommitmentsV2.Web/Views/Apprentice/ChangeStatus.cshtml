@@ -1,5 +1,6 @@
 ﻿@inject ILinkGenerator LinkGenerator
 @using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ChangeStatusRequestViewModel
@@ -42,17 +43,29 @@
                 <fieldset class="govuk-fieldset">
                     @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(nameof(ChangeStatusRequestViewModel.SelectedStatusChange)))
                     {
-                    <span id="error-message-@nameof(ChangeStatusRequestViewModel.SelectedStatusChange)" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(ChangeStatusRequestViewModel.SelectedStatusChange)].Errors.First().ErrorMessage
-                    </span>
+                        <span id="error-message-@nameof(ChangeStatusRequestViewModel.SelectedStatusChange)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(ChangeStatusRequestViewModel.SelectedStatusChange)].Errors.First().ErrorMessage
+                        </span>
                     }
                     <div class="govuk-radios">
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="SelectedStatusChange-Pause" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.Pause">
-                            <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-Pause">
-                                Pause this apprenticeship
-                            </label>
-                        </div>
+                        @if (Model.CurrentStatus == ApprenticeshipStatus.Paused)
+                        {
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="SelectedStatusChange-Resume" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.Resume">
+                                <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-Resume">
+                                    Resume this apprenticeship
+                                </label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="SelectedStatusChange-Pause" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.Pause">
+                                <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-Pause">
+                                    Pause this apprenticeship
+                                </label>
+                            </div>
+                        }
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="SelectedStatusChange-Stop" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.Stop">
                             <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-Stop">
