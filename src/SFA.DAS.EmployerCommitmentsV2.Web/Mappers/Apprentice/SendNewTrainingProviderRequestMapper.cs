@@ -7,7 +7,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class ConfirmNewTrainingProviderRequestMapper : IMapper<EnterNewTrainingProviderViewModel, SendNewTrainingProviderRequest>
+    public class SendNewTrainingProviderRequestMapper : IMapper<EnterNewTrainingProviderViewModel, SendNewTrainingProviderRequest>
     {
         public Task<SendNewTrainingProviderRequest> Map(EnterNewTrainingProviderViewModel source)
         {

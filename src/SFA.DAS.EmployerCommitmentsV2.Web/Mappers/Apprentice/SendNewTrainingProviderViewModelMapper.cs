@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class ConfirmNewTrainingProviderViewModelMapper : IMapper<SendNewTrainingProviderRequest, SnedNewTrainingProviderViewModel>
+    public class SendNewTrainingProviderViewModelMapper : IMapper<SendNewTrainingProviderRequest, SnedNewTrainingProviderViewModel>
     {
         public Task<SnedNewTrainingProviderViewModel> Map(SendNewTrainingProviderRequest source)
         {
