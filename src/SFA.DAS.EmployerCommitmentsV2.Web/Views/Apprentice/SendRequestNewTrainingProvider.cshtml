@@ -4,6 +4,7 @@
 @{
     ViewBag.GaData.Vpv = "/change-provider/send-request-new-training-provider";
     ViewBag.GaData.Org = Model.EmployerName;
+    var apprenticeDisplayName = Model.ApprenticeName.EndsWith("s") ? Model.ApprenticeName + "'" : Model.ApprenticeName + "'s";
 }
 
 <div class="govuk-grid-row">
@@ -19,7 +20,7 @@
             @if (Model.ApprenticeshipStatus != SFA.DAS.CommitmentsV2.Types.ApprenticeshipStatus.Stopped)
             {
                 <p class="govuk-body das-!-colour-inherit">
-                    Once you send this request, @Model.ApprenticeName's apprenticeship record and payments to @Model.OldProviderName will be stopped
+                    Once you send this request, @apprenticeDisplayName apprenticeship record and payments to @Model.OldProviderName will be stopped
                 </p>
             }
 
@@ -36,7 +37,7 @@
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="confirm-no" name="Confirm" type="radio" value="false">
                             <label class="govuk-label govuk-radios__label" for="confirm-no">
-                                No, return to @Model.ApprenticeName record
+                                No, return to @apprenticeDisplayName record
                             </label>
                         </div>
                     </div>

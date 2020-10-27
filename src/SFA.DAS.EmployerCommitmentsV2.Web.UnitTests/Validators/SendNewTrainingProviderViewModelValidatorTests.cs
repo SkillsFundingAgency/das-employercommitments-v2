@@ -47,6 +47,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             AssertValidationResult(x => x.Confirm, request, expectedValid);
         }
 
+        [TestCase(default(long), false)]
+        [TestCase(-2342, false)]
+        [TestCase(234, true)]
+        public void ThenApprenticeshipIdIsValidated(long apprenticeshipId, bool expectedValid)
+        {
+            var request = new SendNewTrainingProviderViewModel() { ApprenticeshipId = apprenticeshipId };
+            AssertValidationResult(x => x.ApprenticeshipId, request, expectedValid);
+        }
+
+        [TestCase(default(long), false)]
+        [TestCase(-2342, false)]
+        [TestCase(234, true)]
+        public void ThenAccountIdIsValidated(long accountId, bool expectedValid)
+        {
+            var request = new SendNewTrainingProviderViewModel() { AccountId = accountId };
+            AssertValidationResult(x => x.AccountId, request, expectedValid);
+        }
+
         private void AssertValidationResult<T>(Expression<Func<SendNewTrainingProviderViewModel, T>> property, SendNewTrainingProviderViewModel instance, bool expectedValid)
         {
             var validator = new SendNewTrainingProviderViewModelValidator();
