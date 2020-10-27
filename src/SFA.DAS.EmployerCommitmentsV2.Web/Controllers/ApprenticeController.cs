@@ -122,7 +122,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var request = await _modelMapper.Map<SendNewTrainingProviderRequest>(viewModel);
 
-            return RedirectToRoute(RouteNames.SendRequestNewTrainingProvider, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.Ukprn });
+            return RedirectToRoute(RouteNames.SendRequestNewTrainingProvider, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId });
         }
 
         [Route("{apprenticeshipHashedId}/change-provider/send-request-new-training-provider", Name = RouteNames.SendRequestNewTrainingProvider)]

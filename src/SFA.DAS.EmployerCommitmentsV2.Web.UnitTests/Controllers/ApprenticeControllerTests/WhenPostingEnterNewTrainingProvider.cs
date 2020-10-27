@@ -50,7 +50,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             _mockMapper = new Mock<IModelMapper>();
             _mockMapper.Setup(m => m.Map<SendNewTrainingProviderRequest>(_viewModel))
-                .ReturnsAsync(new SendNewTrainingProviderRequest { AccountHashedId = _viewModel.AccountHashedId, ApprenticeshipHashedId = _viewModel.ApprenticeshipHashedId, Ukprn = _viewModel.Ukprn });
+                .ReturnsAsync(new SendNewTrainingProviderRequest { AccountHashedId = _viewModel.AccountHashedId, ApprenticeshipHashedId = _viewModel.ApprenticeshipHashedId, ProviderId = _viewModel.Ukprn });
 
             _mockLinkGenerator = new Mock<ILinkGenerator>();
             _mockLinkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns<string>(s => s);
