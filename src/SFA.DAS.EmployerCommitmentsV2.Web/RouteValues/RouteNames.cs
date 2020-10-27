@@ -7,5 +7,11 @@
         public const string ApprenticesDownload = "apprentices-download";
         public const string ApprenticeDetail = "apprentice-details";
         public const string ApprenticeEditEndDate = "apprentice-edit-enddate";
+
+        public const string ChangeProviderInform = "changing-training-provider-inform";
+        public const string ApprenticeNotStoppedError = "aprentice-not-stopped-error";
+        public const string EnterNewTrainingProvider = "enter-new-training-provider-name-or-reference-number";
+        public const string WhoWillEnterNewDetails = "who-eill-enter-new-details";
+        public const string SendRequestNewTrainingProvider = "send-request-new-training-provider";
     }
 }

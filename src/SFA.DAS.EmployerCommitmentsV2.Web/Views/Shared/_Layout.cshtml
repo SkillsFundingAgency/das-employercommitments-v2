@@ -79,7 +79,7 @@
     <partial name="_Footer" model="@footerModel" />
     <partial name="_GoogleAnalyticsInfo" />
 
-
+    <script src="/libs/accessible-autocomplete/accessible-autocomplete.min.js"></script>
     <script src="/libs/govuk-frontend/all.js"></script>
     <script src="/libs/jquery/jquery.min.js"></script>
     <script src="/js/das-all.js"></script>
@@ -90,6 +90,39 @@
         window.DASFrontend.initAll();
     </script>
 
+    <script>
+
+        var idSelectField = 'Ukprn';
+
+        var selectEl = document.querySelector('#' + idSelectField);
+
+        if (selectEl) {
+            accessibleAutocomplete.enhanceSelectElement({
+                selectElement: selectEl,
+                minLength: 3,
+                autoselect: true,
+                defaultValue: '',
+                displayMenu: 'overlay',
+                placeholder: '',
+                onConfirm: function (opt) {
+                    var txtInput = document.querySelector('#' + idSelectField);
+                    var searchString = opt || txtInput.value;
+                    var requestedOption = [].filter.call(this.selectElement.options,
+                        function (option) {
+                            return (option.textContent || option.innerText) === searchString
+                        }
+                    )[0];
+                    if (requestedOption) {
+                        requestedOption.selected = true;
+                    } else {
+                        this.selectElement.selectedIndex = 0;
+                    }
+                }
+
+            });
+        }
+       
+    </script>
     @RenderSection("Scripts", required: false)
 
 </body>

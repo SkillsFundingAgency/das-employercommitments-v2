@@ -1,0 +1,54 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.SendNewTrainingProviderViewModel
+
+@{
+    ViewBag.GaData.Vpv = "/change-provider/send-request-new-training-provider";
+    ViewBag.GaData.Org = Model.EmployerName;
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+        <form method="post">
+            @Html.HiddenFor(x => x.NewProviderName)
+            @Html.HiddenFor(x => x.ProviderId)
+            @Html.HiddenFor(x => x.AccountHashedId)
+            @Html.HiddenFor(x => x.ApprenticeshipHashedId)
+            <h1 class="govuk-heading-xl">Are you sure you want to send this request to @Model.NewProviderName?</h1>
+
+            @if (Model.ApprenticeshipStatus != SFA.DAS.CommitmentsV2.Types.ApprenticeshipStatus.Stopped)
+            {
+                <p class="govuk-body das-!-colour-inherit">
+                    Once you send this request, @Model.ApprenticeName's apprenticeship record and payments to @Model.OldProviderName will be stopped
+                </p>
+            }
+
+            <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.Confirm, "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    <div class="govuk-radios">
+                        @Html.ValidationMessageFor(m => m.Confirm, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Confirm) })
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="confirm-yes" name="Confirm" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="confirm-yes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="confirm-no" name="Confirm" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="confirm-no">
+                                No, return to @Model.ApprenticeName record
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <button id="continue-button" class="govuk-button" type="submit">Continue</button>
+        </form>
+    </div>
+</div>
+
+@section Back
+{
+    <div class="das-js-back-link"></div>
+}
+
