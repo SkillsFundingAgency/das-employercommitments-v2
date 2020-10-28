@@ -111,5 +111,81 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             return View();
         }
+
+        [Route("{apprenticeshipHashedId}/details/changestatus")]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        [HttpGet]
+        public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ChangeStatusRequestViewModel>(request);
+
+            return View(viewModel);
+        }
+
+        [Route("{apprenticeshipHashedId}/details/changestatus")]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        [HttpPost]
+        public IActionResult ChangeStatus(ChangeStatusRequestViewModel viewModel)
+        {
+            switch (viewModel.SelectedStatusChange)
+            {
+                case ChangeStatusType.Pause:
+                    return RedirectToAction(nameof(PauseApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                case ChangeStatusType.Stop:
+                    return Redirect(_linkGenerator.WhenToApplyStopApprentice(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+                case ChangeStatusType.Resume:
+                    return RedirectToAction(nameof(ResumeApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                default:
+                    return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+            }
+        }
+
+        [Route("{apprenticeshipHashedId}/details/pause")]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        [HttpGet]
+        public async Task<IActionResult> PauseApprenticeship(PauseRequest request)
+        {
+            var viewModel = await _modelMapper.Map<PauseRequestViewModel>(request);
+            return View(viewModel);
+        }
+
+        [Route("{apprenticeshipHashedId}/details/pause")]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        [HttpPost]
+        public async Task<IActionResult> PauseApprenticeship(PauseRequestViewModel viewModel)
+        {
+            if (viewModel.PauseConfirmed.HasValue && viewModel.PauseConfirmed.Value)
+            {
+                var pauseRequest = new PauseApprenticeshipRequest { ApprenticeshipId = viewModel.ApprenticeshipId };
+
+                await _commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
+            }
+            
+            return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+        }
+
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        [Route("{apprenticeshipHashedId}/details/resume")]
+        [HttpGet]
+        public async Task<IActionResult> ResumeApprenticeship(ResumeRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ResumeRequestViewModel>(request);
+            return View(viewModel);
+        }
+
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        [Route("{apprenticeshipHashedId}/details/resume")]
+        [HttpPost]
+        public async Task<IActionResult> ResumeApprenticeship(ResumeRequestViewModel viewModel)
+        {
+            if (viewModel.ResumeConfirmed.HasValue && viewModel.ResumeConfirmed.Value)
+            {
+                var resumeRequest = new ResumeApprenticeshipRequest { ApprenticeshipId = viewModel.ApprenticeshipId };
+
+                await _commitmentsApiClient.ResumeApprenticeship(resumeRequest, CancellationToken.None);
+            }
+
+            return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+        }
     }
 }
