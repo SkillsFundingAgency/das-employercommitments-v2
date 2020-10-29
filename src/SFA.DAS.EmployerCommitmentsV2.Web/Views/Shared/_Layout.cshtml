@@ -1,9 +1,10 @@
 ﻿@using SFA.DAS.Employer.Shared.UI.Models
-@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+
 <!DOCTYPE html>
 <html lang="en" class="govuk-template ">
 
 @{
+
     var accountHashedId = (string)ViewContext.RouteData.Values["accountHashedId"];
     ViewBag.HideHeaderBorder = true;
     var footerModel = new FooterModel { AccountId = accountHashedId, UsePrivacyV2 = true };
@@ -58,8 +59,11 @@
 
     <partial name="_CookieConsentBanner" />
 
-    <partial name="_Header" />
-    <partial name="_Menu" model="@accountHashedId" />
+    <partial name="_Header" />    
+    @if (ViewBag.HideNav == null || !ViewBag.HideNav)
+    {
+        <partial name="_Menu" model="@accountHashedId" />
+    }
     <partial name="_ZenDeskWidget" />
     <div class="govuk-width-container">
         @if (IsSectionDefined("Back"))
@@ -72,7 +76,7 @@
         </main>
     </div>
 
-    <partial name="_Footer" model="@footerModel"/>
+    <partial name="_Footer" model="@footerModel" />
     <partial name="_GoogleAnalyticsInfo" />
 
     <script src="/libs/accessible-autocomplete/accessible-autocomplete.min.js"></script>

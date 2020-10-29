@@ -22,6 +22,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details");
         }
 
+        public static string WhenToApplyStopApprentice(
+           this ILinkGenerator linkGenerator,
+           string accountHashedId,
+           string hashedApprenticeshipId)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details/statuschange/stop/whentoapply");
+        }
+
         public static string ViewApprentice(this ILinkGenerator linkGenerator, 
             string accountHashedId, 
             string cohortReference, 
@@ -40,7 +48,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 
         public static string EmployerHome(this ILinkGenerator linkGenerator, string accountHashedId)
         {
-            return linkGenerator.UsersLink($"accounts/{accountHashedId}/teams");
+            return linkGenerator.AccountsLink($"accounts/{accountHashedId}/teams");
+        }
+
+        public static string EmployerAccountsHome(this ILinkGenerator linkGenerator)
+        {
+            return linkGenerator.AccountsLink();
         }
     }
 }

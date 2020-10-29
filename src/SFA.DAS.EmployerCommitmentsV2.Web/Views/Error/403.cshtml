@@ -1,7 +1,18 @@
-﻿@{
+﻿@inject ILinkGenerator LinkGenerator
+@using  SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+
+@{
     ViewData["Title"] = "Access denied";
     ViewBag.GaData.Vpv = "/error/403";
 }
 
 <h1 class="govuk-heading-xl">Access denied</h1>
 <p class="govuk-body">Your account does not have sufficient privileges.</p>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p>If you are experiencing difficulty accessing the area of the site you need, first contact an/the account owner to ensure you have the correct role assigned to your account.</p>
+    </div>
+</div>
+
+<a class="govuk-button" href="@LinkGenerator.EmployerAccountsHome()">Go back to the service home page</a>

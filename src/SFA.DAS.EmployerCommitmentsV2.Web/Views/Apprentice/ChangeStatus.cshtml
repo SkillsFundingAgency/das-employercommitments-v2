@@ -1,0 +1,93 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ChangeStatusRequestViewModel
+
+@{
+    ViewBag.Title = "Which status change would you like to make?";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageId = "change-apprentice-status";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+        <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
+
+        <h4 class="govuk-heading-s"> Pause an apprenticeship to:</h4>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>record a break in learning as agreed with the training provider</li>
+            <li>freeze future payments to a training provider for a period of time</li>
+        </ul>
+
+        <h4 class="govuk-heading-s"> Stop an apprenticeship to:</h4>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>change your training provider during the lifetime of a course</li>
+            <li>cancel all future payments</li>
+        </ul>
+
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" arai-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">Warning</span>
+                Do not stop completed apprenticeships.
+            </strong>
+        </div>
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="govuk-form-group  @(ViewData.ModelState.IsValid ? " " : " govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(nameof(ChangeStatusRequestViewModel.SelectedStatusChange)))
+                    {
+                        <span id="error-message-@nameof(ChangeStatusRequestViewModel.SelectedStatusChange)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(ChangeStatusRequestViewModel.SelectedStatusChange)].Errors.First().ErrorMessage
+                        </span>
+                    }
+                    <div class="govuk-radios">
+                        @if (Model.CurrentStatus == ApprenticeshipStatus.Paused)
+                        {
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="SelectedStatusChange-Resume" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.Resume">
+                                <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-Resume">
+                                    Resume this apprenticeship
+                                </label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="SelectedStatusChange-Pause" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.Pause">
+                                <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-Pause">
+                                    Pause this apprenticeship
+                                </label>
+                            </div>
+                        }
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="SelectedStatusChange-Stop" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.Stop">
+                            <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-Stop">
+                                Stop this apprenticeship
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="SelectedStatusChange-GoBack" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.GoBack">
+                            <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-GoBack">
+                                Go back to apprentice details
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <button id="continue-button" type="submit" class="govuk-button">Save and continue</button>
+        </form>
+
+    </div>
+</div>
+
+@section back {
+    <a id="back-link" class="govuk-back-link" href="@LinkGenerator.ApprenticeDetails(Model.AccountHashedId,Model.ApprenticeshipHashedId)">Back</a>
+}
