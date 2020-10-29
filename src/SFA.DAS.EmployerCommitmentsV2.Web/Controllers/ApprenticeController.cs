@@ -71,7 +71,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/editenddate", Name = RouteNames.ApprenticeEditEndDate)]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         public async Task<IActionResult> EditEndDate(EditEndDateRequest request)
         {
             var viewModel = await _modelMapper.Map<EditEndDateViewModel>(request);
@@ -79,7 +78,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/editenddate", Name = RouteNames.ApprenticeEditEndDate)]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [HttpPost]
         public async Task<IActionResult> EditEndDate(EditEndDateViewModel viewModel)
         {
@@ -142,16 +140,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (request.Confirm.Value)
             {
-                return RedirectToAction(nameof(Sent));
+                return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation, new { request.AccountHashedId, request.ApprenticeshipHashedId });
             }
 
             return Redirect(_linkGenerator.ApprenticeDetails(request.AccountHashedId, request.ApprenticeshipHashedId));
         }
 
-        public IActionResult Sent()
+        [Route("{apprenticeshipHashedId}/change-provider/change-provider-requested", Name = RouteNames.ChangeProviderRequestedConfirmation)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public IActionResult ChangeProviderRequested(ChangeProviderRequestedConfirmationRequest request)
         {
-            // Place holder to display information sent.
-            return View();
+            var viewModel = _modelMapper.Map<ChangeProviderRequestedConfirmationViewModel>(request);
+
+            return View(viewModel);
         }
 
         [Route("{apprenticeshipHashedId}/details/changestatus")]
