@@ -87,7 +87,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return Redirect(url);
         }
 
-        [Route("{apprenticeshipHashedId}/change-provider/changing-training-provider", Name = RouteNames.ChangeProviderInform)]
+        [Route("{apprenticeshipHashedId}/details/changing-training-provider", Name = RouteNames.ChangeProviderInform)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public async Task<IActionResult> ChangeProviderInform(ChangeProviderInformRequest request)
         {
