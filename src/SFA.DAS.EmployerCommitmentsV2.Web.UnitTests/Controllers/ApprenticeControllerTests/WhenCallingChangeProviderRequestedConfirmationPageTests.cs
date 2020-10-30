@@ -52,7 +52,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             _controller = new ApprenticeController(_mockMapper.Object,
                 Mock.Of<ICookieStorageService<IndexRequest>>(),
-                Mock.Of<CommitmentsApiClient>(),
+                Mock.Of<ICommitmentsApiClient>(),
                 Mock.Of<ILinkGenerator>());
         }
 
