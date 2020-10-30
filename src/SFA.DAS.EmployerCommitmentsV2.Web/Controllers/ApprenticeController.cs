@@ -37,7 +37,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("", Name = RouteNames.ApprenticesIndex)]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         public async Task<IActionResult> Index(IndexRequest request)
         {
             IndexRequest savedRequest = null;
@@ -64,7 +63,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("download", Name = RouteNames.ApprenticesDownload)]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         public async Task<IActionResult> Download(DownloadRequest request)
         {
             var downloadViewModel = await _modelMapper.Map<DownloadViewModel>(request);
@@ -73,7 +71,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/editenddate", Name = RouteNames.ApprenticeEditEndDate)]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         public async Task<IActionResult> EditEndDate(EditEndDateRequest request)
         {
             var viewModel = await _modelMapper.Map<EditEndDateViewModel>(request);
@@ -81,7 +78,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/editenddate", Name = RouteNames.ApprenticeEditEndDate)]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [HttpPost]
         public async Task<IActionResult> EditEndDate(EditEndDateViewModel viewModel)
         {
@@ -89,6 +85,31 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             await _commitmentsApiClient.UpdateEndDateOfCompletedRecord(request, CancellationToken.None);
             var url = _linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId);
             return Redirect(url);
+        }
+
+        [Route("{apprenticeshipHashedId}/details/changing-training-provider", Name = RouteNames.ChangeProviderInform)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public async Task<IActionResult> ChangeProviderInform(ChangeProviderInformRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ChangeProviderInformViewModel>(request);
+
+            return View(viewModel);
+        }
+
+        // Placeholder for CON-2516 - url not specified yet
+        [Route("{apprenticeshipHashedId}/details/stopped-error", Name = RouteNames.ApprenticeNotStoppedError)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public IActionResult ApprenticeNotStoppedError()
+        {
+            return View();
+        }
+
+        // Placeholder for CON-2505
+        [Route("{apprenticeshipHashedId}/details/enter-new-training-provider-name-or-reference-number", Name = RouteNames.EnterNewTrainingProvider)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public IActionResult EnterNewTrainingProvider()
+        {
+            return View();
         }
 
         [Route("{apprenticeshipHashedId}/details/changestatus")]
