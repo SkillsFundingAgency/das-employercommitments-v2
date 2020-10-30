@@ -1,6 +1,9 @@
-﻿
+﻿@inject ILinkGenerator LinkGenerator;
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ChangeProviderRequestedConfirmationViewModel
 @{
     ViewData["Title"] = "Sent";
+    var apprenticeDisplayName = Model.ApprenticeName.EndsWith("s") ? Model.ApprenticeName + "'" : Model.ApprenticeName + "'s";
 }
 
 <div class="govuk-grid-row">
@@ -11,13 +14,11 @@
 
         <h2 class="govuk-heading-m"> What happens next </h2>
 
-        @*Model.apprenticename*@
-        <p class="govuk-body"> We’ll ask [new training provider name] to enter the new apprenticeship dates and price. Once they've added [apprentice name]’s apprenticeship details, you can sign in to view them. </p>
-        
-        @*provider and apprentice name*@
-        <p class="govuk-body"> If you approve the details, [provider name] will become [apprentice name]’s new training provider.</p>
-   
-        <a class="govuk-link">Return to account home </a>    
+        <p class="govuk-body"> We’ll ask @Model.Provider.Name to enter the new apprenticeship dates and price. Once they've added @apprenticeDisplayName apprenticeship details, you can sign in to view them. </p>
+
+        <p class="govuk-body"> If you approve the details, @Model.Provider.Name will become @apprenticeDisplayName new training provider.</p>
+
+        <a class="govuk-link" href="@LinkGenerator.EmployerHome(Model.AccountHashedId)">Return to account home </a>
     </div>
 </div>
 
