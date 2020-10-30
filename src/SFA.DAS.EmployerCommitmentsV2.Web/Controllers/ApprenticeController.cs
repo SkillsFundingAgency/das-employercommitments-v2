@@ -87,7 +87,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return Redirect(url);
         }
 
-        [Route("{apprenticeshipHashedId}/details/changing-training-provider", Name = RouteNames.ChangeProviderInform)]
+
+        [Route("{apprenticeshipHashedId}/details/changestatus")]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        [HttpGet]
+        public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ChangeStatusRequestViewModel>(request);
+            return View(viewModel);
+        }
+
+        [Route("{apprenticeshipHashedId}/change-provider/changing-training-provider", Name = RouteNames.ChangeProviderInform)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public async Task<IActionResult> ChangeProviderInform(ChangeProviderInformRequest request)
         {
@@ -111,54 +121,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> EnterNewTrainingProvider(EnterNewTrainingProviderRequest request)
         {
             var viewModel = await _modelMapper.Map<EnterNewTrainingProviderViewModel>(request);
-
-            return View(viewModel);
-        }
-
-        [HttpPost]
-        [Route("{apprenticeshipHashedId}/change-provider/enter-new-training-provider-name-or-reference-number", Name = RouteNames.EnterNewTrainingProvider)]
-        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public async Task<IActionResult> EnterNewTrainingProvider(EnterNewTrainingProviderViewModel viewModel)
-        {
-            var request = await _modelMapper.Map<SendNewTrainingProviderRequest>(viewModel);
-
-            return RedirectToRoute(RouteNames.SendRequestNewTrainingProvider, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId });
-        }
-
-        [Route("{apprenticeshipHashedId}/change-provider/send-request-new-training-provider", Name = RouteNames.SendRequestNewTrainingProvider)]
-        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public async Task<IActionResult> SendRequestNewTrainingProvider(SendNewTrainingProviderRequest request)
-        {
-            var viewModel = await _modelMapper.Map<SendNewTrainingProviderViewModel>(request);
-            return View(viewModel);
-        }
-
-        [Route("{apprenticeshipHashedId}/change-provider/send-request-new-training-provider", Name = RouteNames.SendRequestNewTrainingProvider)]
-        [HttpPost]
-        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public IActionResult SendRequestNewTrainingProvider(SendNewTrainingProviderViewModel request)
-        {
-            if (request.Confirm.Value)
-            {
-                return RedirectToRoute(RouteNames.Sent);
-            }
-
-            return Redirect(_linkGenerator.ApprenticeDetails(request.AccountHashedId, request.ApprenticeshipHashedId));
-        }
-
-        [Route("{apprenticeshipHashedId}/change-provider/sent", Name = RouteNames.Sent)]
-        public IActionResult Sent()
-        {
-            // Place holder to display information sent.
-            return View();
-        }
-
-        [Route("{apprenticeshipHashedId}/details/changestatus")]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
-        [HttpGet]
-        public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
-        {
-            var viewModel = await _modelMapper.Map<ChangeStatusRequestViewModel>(request);
 
             return View(viewModel);
         }
@@ -201,7 +163,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
                 await _commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
             }
-            
+
             return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
         }
 
@@ -227,6 +189,46 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/change-provider/enter-new-training-provider-name-or-reference-number", Name = RouteNames.EnterNewTrainingProvider)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public async Task<IActionResult> EnterNewTrainingProvider(EnterNewTrainingProviderViewModel viewModel)
+        {
+            var request = await _modelMapper.Map<SendNewTrainingProviderRequest>(viewModel);
+
+            return RedirectToRoute(RouteNames.SendRequestNewTrainingProvider, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId });
+        }
+
+        [Route("{apprenticeshipHashedId}/change-provider/send-request-new-training-provider", Name = RouteNames.SendRequestNewTrainingProvider)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public async Task<IActionResult> SendRequestNewTrainingProvider(SendNewTrainingProviderRequest request)
+        {
+            var viewModel = await _modelMapper.Map<SendNewTrainingProviderViewModel>(request);
+            return View(viewModel);
+        }
+
+        [Route("{apprenticeshipHashedId}/change-provider/send-request-new-training-provider", Name = RouteNames.SendRequestNewTrainingProvider)]
+        [HttpPost]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public IActionResult SendRequestNewTrainingProvider(SendNewTrainingProviderViewModel request)
+        {
+            if (request.Confirm.Value)
+            {
+                return RedirectToAction(nameof(ChangeOfProviderRequestedConfirmation));
+            }
+
+            return Redirect(_linkGenerator.ApprenticeDetails(request.AccountHashedId, request.ApprenticeshipHashedId));
+        }
+
+        [Route("{apprenticeshipHashedId}/change-provider/change-provider-requested", Name = RouteNames.ChangeProviderRequestedConfirmation)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public IActionResult ChangeOfProviderRequestedConfirmation(ChangeProviderRequestedConfirmationRequest request)
+        {
+            var viewModel = _modelMapper.Map<ChangeProviderRequestedConfirmationViewModel>(request);
+
+            return View(viewModel);
         }
     }
 }
