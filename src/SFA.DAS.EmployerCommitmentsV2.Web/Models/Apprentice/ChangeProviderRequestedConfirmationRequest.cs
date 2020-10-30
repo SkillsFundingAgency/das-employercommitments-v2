@@ -12,7 +12,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         [FromRoute]
         public long ProviderId{ get; set; }
-
-
     }
 }
