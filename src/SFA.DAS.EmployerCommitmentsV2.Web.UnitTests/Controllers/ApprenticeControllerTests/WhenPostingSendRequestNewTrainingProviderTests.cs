@@ -8,6 +8,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.EmployerUrlHelper;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
@@ -22,22 +23,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test]
-        public void VerifyRedirectsToApprenticeDetailsPage()
+        public async Task VerifyRedirectsToApprenticeDetailsPage()
         {
+            //Arrange
             _fixture.SetConfirm(false);
 
-            var result = _fixture.SendRequestNewTrainingProvider();
+            //Act
+            var result = await _fixture.SendRequestNewTrainingProvider();
 
+            //Assert
             _fixture.VerifyRedirectsToApprenticeDetailsPage(result);
         }
 
         [Test]
-        public void VerifyRedirectsToSentAction()
+        public async Task VerifyRedirectsToSentAction()
         {
+            //Arrange
             _fixture.SetConfirm(true);
 
-            var result = _fixture.SendRequestNewTrainingProvider();
+            //Act
+            var result = await _fixture.SendRequestNewTrainingProvider();
 
+            //Assert
             _fixture.VerifyRedirectsToSentAction(result);
         }
     }
@@ -67,9 +74,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 _linkGenerator.Object);
         }
 
-        public IActionResult SendRequestNewTrainingProvider()
+        public async Task<IActionResult> SendRequestNewTrainingProvider()
         {
-           return _controller.SendRequestNewTrainingProvider(_viewModel);
+           return await _controller.SendRequestNewTrainingProvider(_viewModel);
         }
 
         public WhenPostingSendRequestNewTrainingProviderTestsFixture SetConfirm(bool confirm)
