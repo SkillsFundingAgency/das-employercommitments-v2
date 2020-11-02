@@ -8,14 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Apprentice\SendRequestNewTrainingProvider.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\Apprentice\SendRequestNewTrainingProvider.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="nlog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
