@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Authorization.ModelBinding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
-    public class ChangeProviderRequestedConfirmationRequest
+    public class ChangeProviderRequestedConfirmationRequest : IAuthorizationContextModel
     {
         [FromRoute]
         public string AccountHashedId { get; set; }
@@ -12,5 +13,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         [FromRoute]
         public long ProviderId{ get; set; }
+
+        public long ApprenticeshipId { get; set; }
     }
 }

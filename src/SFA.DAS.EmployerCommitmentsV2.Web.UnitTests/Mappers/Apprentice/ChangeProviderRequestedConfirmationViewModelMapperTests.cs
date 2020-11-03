@@ -5,7 +5,6 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using SFA.DAS.Encoding;
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,8 +15,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
     {
 
         private Mock<ICommitmentsApiClient> _mockCommitmentsApi;
-        private Mock<IEncodingService> _mockEncodingService;
         private GetApprenticeshipResponse _apprenticeshipResponse;
+        private GetProviderResponse _providerResponse;
 
         private ChangeProviderRequestedConfirmationViewModelMapper _mapper;
 
@@ -31,13 +30,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                                         .With(a => a.LastName, "LastName")
                                         .Create();
 
+            _providerResponse = autoFixture.Build<GetProviderResponse>()
+                                        .With(p => p.Name, "Test Provider")
+                                        .Create();
+
             _mockCommitmentsApi = new Mock<ICommitmentsApiClient>();
-            _mockEncodingService = new Mock<IEncodingService>();
 
             _mockCommitmentsApi.Setup(c => c.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_apprenticeshipResponse);
+            _mockCommitmentsApi.Setup(c => c.GetProvider(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_providerResponse);
 
-            _mapper = new ChangeProviderRequestedConfirmationViewModelMapper(_mockCommitmentsApi.Object, _mockEncodingService.Object);
+            _mapper = new ChangeProviderRequestedConfirmationViewModelMapper(_mockCommitmentsApi.Object);
         }
 
         [Test, MoqAutoData]
@@ -54,15 +58,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(request);
 
             Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
-        }
-       
-
-        [Test, MoqAutoData]
-        public async Task ApprenticeshipHashedIdIsDecoded(ChangeProviderRequestedConfirmationRequest request)
-        {
-            var result = await _mapper.Map(request);
-
-            _mockEncodingService.Verify(d => d.Decode(It.IsAny<string>(), EncodingType.ApprenticeshipId), Times.Once);
         }
 
         [Test, MoqAutoData]
@@ -81,5 +76,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual($"{_apprenticeshipResponse.FirstName} {_apprenticeshipResponse.LastName}", result.ApprenticeName);
         }
 
+        [Test, MoqAutoData]
+        public async Task ProviderNameIsSet(ChangeProviderRequestedConfirmationRequest request)
+        {
+            var result = await _mapper.Map(request);
+
+            Assert.AreEqual(_providerResponse.Name, result.ProviderName);
+        }
     }
 }
