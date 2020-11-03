@@ -69,7 +69,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task ApprenticeNameIsMapped(ChangeProviderRequestedConfirmationRequest request)
+        public async Task ApprenticeName_IsMapped(ChangeProviderRequestedConfirmationRequest request)
         {
             var result = await _mapper.Map(request);
 
@@ -77,7 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task ProviderNameIsSet(ChangeProviderRequestedConfirmationRequest request)
+        public async Task ProviderName_IsMapped(ChangeProviderRequestedConfirmationRequest request)
         {
             var result = await _mapper.Map(request);
 
