@@ -92,7 +92,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> ChangeProviderInform(ChangeProviderInformRequest request)
         {
             var viewModel = await _modelMapper.Map<ChangeProviderInformViewModel>(request);
-            
+
             return View(viewModel);
         }
 
@@ -103,6 +103,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             return View();
         }
+
 
         [HttpGet]
         [Route("{apprenticeshipHashedId}/change-provider/enter-new-training-provider-name-or-reference-number", Name = RouteNames.EnterNewTrainingProvider)]
@@ -121,17 +122,35 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var request = await _modelMapper.Map<SendNewTrainingProviderRequest>(viewModel);
 
-            return RedirectToRoute(RouteNames.SendRequestNewTrainingProvider, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.Ukprn });
+            return RedirectToRoute(RouteNames.SendRequestNewTrainingProvider, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId });
         }
 
-        // Placeholder for CON-2506
         [Route("{apprenticeshipHashedId}/change-provider/send-request-new-training-provider", Name = RouteNames.SendRequestNewTrainingProvider)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public async Task<IActionResult> SendRequestNewTrainingProvider(SendNewTrainingProviderRequest request)
         {
             var viewModel = await _modelMapper.Map<SendNewTrainingProviderViewModel>(request);
-
             return View(viewModel);
+        }
+
+        [Route("{apprenticeshipHashedId}/change-provider/send-request-new-training-provider", Name = RouteNames.SendRequestNewTrainingProvider)]
+        [HttpPost]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public IActionResult SendRequestNewTrainingProvider(SendNewTrainingProviderViewModel request)
+        {
+            if (request.Confirm.Value)
+            {
+                return RedirectToRoute(RouteNames.Sent);
+            }
+
+            return Redirect(_linkGenerator.ApprenticeDetails(request.AccountHashedId, request.ApprenticeshipHashedId));
+        }
+
+        [Route("{apprenticeshipHashedId}/change-provider/sent", Name = RouteNames.Sent)]
+        public IActionResult Sent()
+        {
+            // Place holder to display information sent.
+            return View();
         }
 
         [Route("{apprenticeshipHashedId}/details/changestatus")]

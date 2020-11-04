@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using SFA.DAS.Authorization.ModelBinding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
-    public class SendNewTrainingProviderRequest
+    public class SendNewTrainingProviderRequest : IAuthorizationContextModel
     {
-        [FromRoute]
         public string AccountHashedId { get; set; }
-
-        [FromRoute]
+        public long AccountId { get; set; }
         public string ApprenticeshipHashedId { get; set; }
-        public long Ukprn { get; set; }
+        public long ApprenticeshipId { get; set; }
+        public long ProviderId { get; set; }
     }
 }
