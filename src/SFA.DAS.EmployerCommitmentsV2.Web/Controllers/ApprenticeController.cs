@@ -92,24 +92,46 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> ChangeProviderInform(ChangeProviderInformRequest request)
         {
             var viewModel = await _modelMapper.Map<ChangeProviderInformViewModel>(request);
-
+            
             return View(viewModel);
         }
 
         // Placeholder for CON-2516 - url not specified yet
-        [Route("{apprenticeshipHashedId}/details/stopped-error", Name = RouteNames.ApprenticeNotStoppedError)]
+        [Route("{apprenticeshipHashedId}/change-provider/stopped-error", Name = RouteNames.ApprenticeNotStoppedError)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public IActionResult ApprenticeNotStoppedError()
         {
             return View();
         }
 
-        // Placeholder for CON-2505
-        [Route("{apprenticeshipHashedId}/details/enter-new-training-provider-name-or-reference-number", Name = RouteNames.EnterNewTrainingProvider)]
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/change-provider/enter-new-training-provider-name-or-reference-number", Name = RouteNames.EnterNewTrainingProvider)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public IActionResult EnterNewTrainingProvider()
+        public async Task<IActionResult> EnterNewTrainingProvider(EnterNewTrainingProviderRequest request)
         {
-            return View();
+            var viewModel = await _modelMapper.Map<EnterNewTrainingProviderViewModel>(request);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/change-provider/enter-new-training-provider-name-or-reference-number", Name = RouteNames.EnterNewTrainingProvider)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public async Task<IActionResult> EnterNewTrainingProvider(EnterNewTrainingProviderViewModel viewModel)
+        {
+            var request = await _modelMapper.Map<SendNewTrainingProviderRequest>(viewModel);
+
+            return RedirectToRoute(RouteNames.SendRequestNewTrainingProvider, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.Ukprn });
+        }
+
+        // Placeholder for CON-2506
+        [Route("{apprenticeshipHashedId}/change-provider/send-request-new-training-provider", Name = RouteNames.SendRequestNewTrainingProvider)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public async Task<IActionResult> SendRequestNewTrainingProvider(SendNewTrainingProviderRequest request)
+        {
+            var viewModel = await _modelMapper.Map<SendNewTrainingProviderViewModel>(request);
+
+            return View(viewModel);
         }
 
         [Route("{apprenticeshipHashedId}/details/changestatus")]
