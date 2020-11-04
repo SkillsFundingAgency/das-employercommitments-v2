@@ -1,4 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System.Threading.Tasks;
 
@@ -6,15 +7,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
     public class ViewChangesViewModelMapper : IMapper<ViewChangesRequest, ViewChangesViewModel>
     {
-        public Task<ViewChangesViewModel> Map(ViewChangesRequest source)
+        private readonly ICommitmentsApiClient _client;
+
+        public ViewChangesViewModelMapper(ICommitmentsApiClient client)
         {
+            _client = client;
+        }
+
+        public async Task<ViewChangesViewModel> Map(ViewChangesRequest source)
+        {
+            var apprenticeship = await _client.GetApprenticeship(source.ApprenticeshipId);
+
             var result = new ViewChangesViewModel
             {
                 AccountHashedId = source.AccountHashedId,
-                ApprenticeshipHashedId = source.ApprenticeshipHashedId
+                ApprenticeshipHashedId = source.ApprenticeshipHashedId,
+                ApprenticeName = $"{apprenticeship.FirstName} {apprenticeship.LastName}"
             };
 
-            return Task.FromResult(result);
+            return result;
         }
     }
 }
