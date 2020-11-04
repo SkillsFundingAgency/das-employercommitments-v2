@@ -19,6 +19,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             AssertValidationResult(x => x.ProviderId, request, expectedValid);
         }
 
+        [TestCase(1, true)]
+        [TestCase(default(long), false)]
+        public void ThenValidatesApprenticeshipId(long apprenticeshipId, bool expectedValid)
+        {
+            var request = new ChangeProviderRequestedConfirmationRequest { ApprenticeshipId = apprenticeshipId};
+
+            AssertValidationResult(x => x.ApprenticeshipId, request, expectedValid);
+        }
+
         [TestCase("", false)]
         [TestCase(" ", false)]
         [TestCase("testString", true)]

@@ -16,15 +16,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
         public async Task<ChangeProviderRequestedConfirmationViewModel> Map(ChangeProviderRequestedConfirmationRequest source)
         {
-            var providerResponse = await _client.GetProvider(source.ProviderId);
-            var apprenticeshipResponse = await _client.GetApprenticeship(source.ApprenticeshipId);
+            var getProviderTask = _client.GetProvider(source.ProviderId);
+            var getApprenticeshipTask = _client.GetApprenticeship(source.ApprenticeshipId);
+
+            await Task.WhenAll(getProviderTask, getApprenticeshipTask);
 
             var result = new ChangeProviderRequestedConfirmationViewModel
             {
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
                 AccountHashedId = source.AccountHashedId, 
-                ProviderName = providerResponse.Name,
-                ApprenticeName = $"{apprenticeshipResponse.FirstName} {apprenticeshipResponse.LastName}"
+                ProviderName = getProviderTask.Result.Name,
+                ApprenticeName = $"{getApprenticeshipTask.Result.FirstName} {getApprenticeshipTask.Result.LastName}"
             };
             
             return result;
