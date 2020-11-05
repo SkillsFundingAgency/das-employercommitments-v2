@@ -183,7 +183,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/view-changes", Name = RouteNames.ViewChanges)]
-        public async Task<IActionResult> ViewChanges(ViewChangesViewModel request)
+        public async Task<IActionResult> ViewChanges(ViewChangesRequest request)
         {
             var viewModel = await _modelMapper.Map<ViewChangesViewModel>(request);
 

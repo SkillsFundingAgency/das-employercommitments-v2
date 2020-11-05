@@ -1,5 +1,6 @@
 ﻿@inject ILinkGenerator LinkGenerator
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.CommitmentsV2.Types
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ViewChangesViewModel
 @{ 
     ViewData["Title"] = "Pending changes - Apprenticeship service - GOV.UK";
@@ -10,18 +11,59 @@
     <div class="govuk-grid-column-two-thirds">
 
         <h1 class="govuk-heading-xl"> Pending changes </h1>
+        
+        @if (Model.CurrentParty == Party.Employer)
+        {
+            <p class="govuk-body">
+                @Model.NewProviderName requested further changes. <a class="govuk-link" asp-controller="Cohort" asp-action="Details" asp-route-accountHashedId="@Model.AccountHashedId" asp-route-cohortReference="@Model.CohortReference">Review the apprentice details</a>.
+            </p>
+        }
 
+        @if (Model.CurrentParty == Party.Provider)
+        {
+            <p class="govuk-body">
+                @Model.NewProviderName are <a class="govuk-link" asp-controller="Cohort" asp-action="Details" asp-route-accountHashedId="@Model.AccountHashedId" asp-route-cohortReference="@Model.CohortReference">reviewing the new details</a>.
+            </p>
+        }
+
+        <h3 class="govuk-heading-m"> @apprenticeDisplayName details</h3>
     </div>
 </div>
 
 <table class="govuk-table">
 
     <thead class="govuk-table__head">
-
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header"></th>
+            <th scope="col" class="govuk-table__header"> Current Details</th>
+            <th scope="col" class="govuk-table__header"> Requested Changes</th>
+        </tr>
     </thead>
+    <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header"> Training Provider</th>
+            <td class="govuk-table__cell"> @Model.CurrentProviderName</td>
+            <td class="govuk-table__cell"> <mark class="das-mark das-mark--green">@Model.NewProviderName</mark> </td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header"> Training start date</th>
+            <td class="govuk-table__cell"> @Model.CurrentStartDate.ToString("MMMM yyyy")</td>
+            <td class="govuk-table__cell"> @(Model.NewStartDate.HasValue ? Model.NewStartDate.Value.ToString("MMMM yyyy") : "No changes")</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header"> Training end date</th>
+            <td class="govuk-table__cell"> @Model.CurrentEndDate.ToString("MMMM yyyy")</td>
+            <td class="govuk-table__cell"> @(Model.NewEndDate.HasValue ? Model.NewEndDate.Value.ToString("MMMM yyyy") : "No changes" )</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header"> Price </th>
+            <td class="govuk-table__cell"> @(String.Format("£{0:N0}", Model.CurrentPrice))</td>
+            <td class="govuk-table__cell"> @(Model.NewPrice.HasValue ? String.Format("£{0:N0}", Model.NewPrice.Value) : "No changes")</td>
+        </tr>
+    </tbody>
 </table>
 
 
 @section back {
-    <a id="back-link" class="govuk-back-link" href="@LinkGenerator.ApprenticeDetails(Model.AccountHashedId, Model.ApprenticeshipHashedId)">Back</a>
+    <a id="back-link" class="govuk-back-link" href="@LinkGenerator.ApprenticeDetails(Model.AccountHashedId, Model.ApprenticeshipHashedId)">Back to apprentice's record</a>
 }
