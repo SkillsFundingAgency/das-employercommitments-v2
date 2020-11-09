@@ -88,7 +88,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var redirect = (RedirectToRouteResult)result;
 
-            Assert.AreEqual(RouteNames.Sent, redirect.RouteName);
+            Assert.AreEqual(RouteNames.ChangeProviderRequestedConfirmation, redirect.RouteName);
         }
     }
 }

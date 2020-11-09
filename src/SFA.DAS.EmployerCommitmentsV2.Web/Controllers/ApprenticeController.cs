@@ -87,6 +87,33 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return Redirect(url);
         }
 
+        [Route("{apprenticeshipHashedId}/details/changestatus")]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        [HttpGet]
+        public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ChangeStatusRequestViewModel>(request);
+            return View(viewModel);
+        }
+
+        [Route("{apprenticeshipHashedId}/details/changestatus")]
+        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
+        [HttpPost]
+        public IActionResult ChangeStatus(ChangeStatusRequestViewModel viewModel)
+        {
+            switch (viewModel.SelectedStatusChange)
+            {
+                case ChangeStatusType.Pause:
+                    return RedirectToAction(nameof(PauseApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                case ChangeStatusType.Stop:
+                    return Redirect(_linkGenerator.WhenToApplyStopApprentice(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+                case ChangeStatusType.Resume:
+                    return RedirectToAction(nameof(ResumeApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                default:
+                    return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+            }
+        }
+
         [Route("{apprenticeshipHashedId}/details/changing-training-provider", Name = RouteNames.ChangeProviderInform)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public async Task<IActionResult> ChangeProviderInform(ChangeProviderInformRequest request)
@@ -140,45 +167,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (request.Confirm.Value)
             {
-                return RedirectToRoute(RouteNames.Sent);
+                return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId });
             }
 
             return Redirect(_linkGenerator.ApprenticeDetails(request.AccountHashedId, request.ApprenticeshipHashedId));
         }
 
-        [Route("{apprenticeshipHashedId}/change-provider/sent", Name = RouteNames.Sent)]
-        public IActionResult Sent()
+        [Route("{apprenticeshipHashedId}/change-provider/change-provider-requested/{providerId}", Name = RouteNames.ChangeProviderRequestedConfirmation)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public async Task<IActionResult> ChangeProviderRequested(ChangeProviderRequestedConfirmationRequest request)
         {
-            // Place holder to display information sent.
-            return View();
-        }
-
-        [Route("{apprenticeshipHashedId}/details/changestatus")]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
-        [HttpGet]
-        public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
-        {
-            var viewModel = await _modelMapper.Map<ChangeStatusRequestViewModel>(request);
+            var viewModel = await _modelMapper.Map<ChangeProviderRequestedConfirmationViewModel>(request);
 
             return View(viewModel);
-        }
-
-        [Route("{apprenticeshipHashedId}/details/changestatus")]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
-        [HttpPost]
-        public IActionResult ChangeStatus(ChangeStatusRequestViewModel viewModel)
-        {
-            switch (viewModel.SelectedStatusChange)
-            {
-                case ChangeStatusType.Pause:
-                    return RedirectToAction(nameof(PauseApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
-                case ChangeStatusType.Stop:
-                    return Redirect(_linkGenerator.WhenToApplyStopApprentice(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
-                case ChangeStatusType.Resume:
-                    return RedirectToAction(nameof(ResumeApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
-                default:
-                    return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
-            }
         }
 
         [Route("{apprenticeshipHashedId}/details/pause")]
@@ -201,7 +202,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
                 await _commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
             }
-            
+
             return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
         }
 
@@ -228,5 +229,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
         }
+        
     }
 }
