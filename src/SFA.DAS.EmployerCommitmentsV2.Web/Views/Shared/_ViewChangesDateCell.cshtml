@@ -1,0 +1,17 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ViewChangesCell<DateTime?>
+
+@if (Model.NewValue.HasValue)
+{
+    if (Model.CurrentValue.Value == Model.NewValue.Value)
+    {
+        <td class="govuk-table__cell"> No changes </td>
+    }
+    else
+    {
+        <td class="govuk-table__cell"> <mark class="das-mark das-mark--green">@(Model.NewValue.Value.ToString("MMMM yyyy"))</mark> </td>
+    }
+}
+else
+{
+    <td class="govuk-table__cell"> Not set yet </td>
+}

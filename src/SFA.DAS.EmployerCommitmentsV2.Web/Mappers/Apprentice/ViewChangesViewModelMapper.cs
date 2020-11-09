@@ -32,11 +32,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             var changeOfProviderRequest = changeOfProviderRequestsTask.Result;
             var priceHistory = priceHistoryTask.Result;
 
-            var request = changeOfProviderRequest.ChangeOfPartyRequests.FirstOrDefault(r => r.Status == ChangeOfPartyRequestStatus.Pending);
+            var changeRequest = changeOfProviderRequest.ChangeOfPartyRequests.FirstOrDefault(r => r.Status == ChangeOfPartyRequestStatus.Pending && r.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider);
 
-            var cohort = await _client.GetCohort(request.CohortId.Value);
-            
-            var newProvider = await _client.GetProvider(request.ProviderId.Value);
+            var cohortTask = _client.GetCohort(changeRequest.CohortId.Value);
+            var newProviderTask = _client.GetProvider(changeRequest.ProviderId.Value);
+
+            await Task.WhenAll(cohortTask, newProviderTask);
 
             var result = new ViewChangesViewModel
             {
@@ -47,13 +48,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 CurrentStartDate = apprenticeship.StartDate,
                 CurrentEndDate = apprenticeship.EndDate,
                 CurrentPrice = (int)GetCurrentPrice(priceHistory),
-                NewProviderName = newProvider.Name,
-                NewStartDate = request.StartDate,
-                NewEndDate = request.EndDate,
-                NewPrice = request.Price,
-                CurrentParty = cohort.WithParty,
-                CohortReference = _encodingService.Encode(request.CohortId.Value, EncodingType.CohortReference)
-
+                NewProviderName = newProviderTask.Result.Name,
+                NewStartDate = changeRequest.StartDate,
+                NewEndDate = changeRequest.EndDate,
+                NewPrice = changeRequest.Price,
+                CurrentParty = cohortTask.Result.WithParty,
+                CohortReference = _encodingService.Encode(changeRequest.CohortId.Value, EncodingType.CohortReference)
             };
 
             return result;
