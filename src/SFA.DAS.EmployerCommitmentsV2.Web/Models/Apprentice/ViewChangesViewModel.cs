@@ -8,9 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
     {
         public string AccountHashedId { get; set; }
         public string ApprenticeshipHashedId { get; set; }
-
         public string ApprenticeName { get; set; }
-
         public string CurrentProviderName { get; set; }
         public DateTime CurrentStartDate { get; set; }
         public DateTime CurrentEndDate { get; set; }
@@ -19,11 +17,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public DateTime? NewStartDate { get; set; }
         public DateTime? NewEndDate { get; set; }
         public int? NewPrice { get; set; }
-
         public Party CurrentParty { get; set; }
         public string CohortReference { get; set; }
-
-       
     }
 
     public class ViewChangesCell<T>
