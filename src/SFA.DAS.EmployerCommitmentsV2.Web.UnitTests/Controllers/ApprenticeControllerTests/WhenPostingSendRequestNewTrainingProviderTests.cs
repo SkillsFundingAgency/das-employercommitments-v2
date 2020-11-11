@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.EmployerUrlHelper;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
@@ -46,6 +48,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             //Assert
             _fixture.VerifyRedirectsToSentAction(result);
+        }
+
+        [Test]
+        public async Task VerifyCommitmentsApiCreateChangeOfPartyRequestCalled()
+        {
+            //Arrange
+            _fixture.SetConfirm(true);
+
+            //Act
+            await _fixture.SendRequestNewTrainingProvider();
+
+            //Assert
+            _fixture.VerifyCommitmentsApiCreateChangeOfPartyRequestCalled();
         }
     }
 
@@ -96,6 +111,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var redirect = (RedirectToRouteResult)result;
 
             Assert.AreEqual(RouteNames.ChangeProviderRequestedConfirmation, redirect.RouteName);
+        }
+
+        public void VerifyCommitmentsApiCreateChangeOfPartyRequestCalled()
+        {
+            _commitmentsApiClient.Verify(p => p.CreateChangeOfPartyRequest(It.IsAny<long>() ,It.IsAny<CreateChangeOfPartyRequestRequest>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }
