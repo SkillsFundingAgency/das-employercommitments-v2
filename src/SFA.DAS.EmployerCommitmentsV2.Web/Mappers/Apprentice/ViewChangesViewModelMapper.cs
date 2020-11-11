@@ -2,6 +2,7 @@
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
 using System.Linq;
@@ -34,10 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
             var changeRequest = changeOfProviderRequest.ChangeOfPartyRequests.FirstOrDefault(r => r.Status == ChangeOfPartyRequestStatus.Pending && r.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider);
 
-            var cohortTask = _client.GetCohort(changeRequest.CohortId.Value);
-            var newProviderTask = _client.GetProvider(changeRequest.ProviderId.Value);
-
-            await Task.WhenAll(cohortTask, newProviderTask);
+            var newProvider = await _client.GetProvider(changeRequest.ProviderId.Value);
 
             var result = new ViewChangesViewModel
             {
@@ -47,23 +45,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 CurrentProviderName = apprenticeship.ProviderName,
                 CurrentStartDate = apprenticeship.StartDate,
                 CurrentEndDate = apprenticeship.EndDate,
-                CurrentPrice = (int)GetCurrentPrice(priceHistory),
-                NewProviderName = newProviderTask.Result.Name,
+                CurrentPrice = priceHistory.PriceEpisodes.GetPrice(),
+                NewProviderName = newProvider.Name,
                 NewStartDate = changeRequest.StartDate,
                 NewEndDate = changeRequest.EndDate,
                 NewPrice = changeRequest.Price,
-                CurrentParty = cohortTask.Result.WithParty,
+                CurrentParty = changeRequest.WithParty.Value,
                 CohortReference = _encodingService.Encode(changeRequest.CohortId.Value, EncodingType.CohortReference)
             };
 
             return result;
-        }
-
-        private decimal GetCurrentPrice(GetPriceEpisodesResponse priceHistory)
-        {
-            var currentPriceDetails = priceHistory.PriceEpisodes.FirstOrDefault(p => p.ToDate == null);
-
-            return currentPriceDetails.Cost;
         }
     }
 }

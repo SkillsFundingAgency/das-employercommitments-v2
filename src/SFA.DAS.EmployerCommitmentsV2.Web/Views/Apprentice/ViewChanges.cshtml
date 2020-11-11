@@ -1,5 +1,6 @@
 ﻿@inject ILinkGenerator LinkGenerator
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ViewChangesViewModel
@@ -16,14 +17,14 @@
         @if (Model.CurrentParty == Party.Employer)
         {
             <p class="govuk-body">
-                @Model.NewProviderName requested further changes. <a class="govuk-link" asp-controller="Cohort" asp-action="Details" asp-route-accountHashedId="@Model.AccountHashedId" asp-route-cohortReference="@Model.CohortReference">Review the apprentice details to update</a>.
+                @Model.NewProviderName requested further changes. <a class="govuk-link" asp-controller="Cohort" asp-action="Details" asp-route-accountHashedId="@Model.AccountHashedId" asp-route-cohortReference="@Model.CohortReference" id="review-requested-changes-link">Review the apprentice details to update</a>.
             </p>
         }
 
         @if (Model.CurrentParty == Party.Provider)
         {
             <p class="govuk-body">
-                @Model.NewProviderName are <a class="govuk-link" asp-controller="Cohort" asp-action="Details" asp-route-accountHashedId="@Model.AccountHashedId" asp-route-cohortReference="@Model.CohortReference">reviewing the request</a>.
+                @Model.NewProviderName are <a class="govuk-link" asp-controller="Cohort" asp-action="Details" asp-route-accountHashedId="@Model.AccountHashedId" asp-route-cohortReference="@Model.CohortReference" id="review-cohort-link">reviewing the request</a>.
             </p>
         }
 
@@ -59,7 +60,7 @@
         </tr>
         <tr class="govuk-table__row">
             <th scope="row" class="govuk-table__header"> Price </th>
-            <td class="govuk-table__cell"> @(String.Format("£{0:N0}", Model.CurrentPrice))</td>
+            <td class="govuk-table__cell"> @Model.CurrentPrice.ToGdsCostFormat() </td>
             @await Html.PartialAsync("_ViewChangesPriceCell", new ViewChangesCell<int?>(Model.CurrentPrice, Model.NewPrice))
         </tr>
     </tbody>

@@ -108,14 +108,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task GetCohortIsCalled()
-        {
-            var result = await _mapper.Map(_request);
-
-            _mockCommitmentsApiClient.Verify(c => c.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-        [Test]
         public async Task WhenMoreThanOnePriceIsFoundInHistory_ThenTheMostRecentIsUsed()
         {
             _priceEpisodesResponse = _autoFixture.Build<GetPriceEpisodesResponse>()
@@ -237,7 +229,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     ProviderId = _providerId,
                     CohortId = _cohortId,
                     Price = _newPrice,
-                    StartDate = _newFromDate
+                    StartDate = _newFromDate,
+                    WithParty = Party.Provider
                 }
             };
         }
@@ -295,7 +288,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     EndDate = _oldToDate,
                     ProviderId = 99999,
                     Price = 1000,
-                    Status = ChangeOfPartyRequestStatus.Approved
+                    Status = ChangeOfPartyRequestStatus.Approved,
+                    WithParty = Party.Provider
                 },
 
                 new ChangeOfPartyRequest
@@ -306,7 +300,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     ProviderId = _providerId,
                     CohortId = _cohortId,
                     Price = _newPrice,
-                    Status = ChangeOfPartyRequestStatus.Pending
+                    Status = ChangeOfPartyRequestStatus.Pending,
+                    WithParty = Party.Provider
                 }
             };
         }
