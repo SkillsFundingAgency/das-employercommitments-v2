@@ -30,12 +30,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             await Task.WhenAll(apprenticeshipTask, changeOfProviderRequestsTask, priceHistoryTask);
 
             var apprenticeship = apprenticeshipTask.Result;
-            var changeOfProviderRequest = changeOfProviderRequestsTask.Result;
+            var changeOfProviderRequests = changeOfProviderRequestsTask.Result;
             var priceHistory = priceHistoryTask.Result;
 
-            var changeRequest = changeOfProviderRequest.ChangeOfPartyRequests.FirstOrDefault(r => r.Status == ChangeOfPartyRequestStatus.Pending && r.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider);
+            var pendingChangeRequest = changeOfProviderRequests.ChangeOfPartyRequests.FirstOrDefault(r => r.Status == ChangeOfPartyRequestStatus.Pending && r.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider);
 
-            var newProvider = await _client.GetProvider(changeRequest.ProviderId.Value);
+            var newProvider = await _client.GetProvider(pendingChangeRequest.ProviderId.Value);
 
             var result = new ViewChangesViewModel
             {
@@ -47,11 +47,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 CurrentEndDate = apprenticeship.EndDate,
                 CurrentPrice = priceHistory.PriceEpisodes.GetPrice(),
                 NewProviderName = newProvider.Name,
-                NewStartDate = changeRequest.StartDate,
-                NewEndDate = changeRequest.EndDate,
-                NewPrice = changeRequest.Price,
-                CurrentParty = changeRequest.WithParty.Value,
-                CohortReference = _encodingService.Encode(changeRequest.CohortId.Value, EncodingType.CohortReference)
+                NewStartDate = pendingChangeRequest.StartDate,
+                NewEndDate = pendingChangeRequest.EndDate,
+                NewPrice = pendingChangeRequest.Price,
+                CurrentParty = pendingChangeRequest.WithParty.Value,
+                CohortReference = _encodingService.Encode(pendingChangeRequest.CohortId.Value, EncodingType.CohortReference)
             };
 
             return result;
