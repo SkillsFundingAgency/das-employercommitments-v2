@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.EmployerUrlHelper;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
@@ -22,23 +25,42 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test]
-        public void VerifyRedirectsToApprenticeDetailsPage()
+        public async Task VerifyRedirectsToApprenticeDetailsPage()
         {
+            //Arrange
             _fixture.SetConfirm(false);
 
-            var result = _fixture.SendRequestNewTrainingProvider();
+            //Act
+            var result = await _fixture.SendRequestNewTrainingProvider();
 
+            //Assert
             _fixture.VerifyRedirectsToApprenticeDetailsPage(result);
         }
 
         [Test]
-        public void VerifyRedirectsToSentAction()
+        public async Task VerifyRedirectsToSentAction()
         {
+            //Arrange
             _fixture.SetConfirm(true);
 
-            var result = _fixture.SendRequestNewTrainingProvider();
+            //Act
+            var result = await _fixture.SendRequestNewTrainingProvider();
 
+            //Assert
             _fixture.VerifyRedirectsToSentAction(result);
+        }
+
+        [Test]
+        public async Task VerifyCommitmentsApiCreateChangeOfPartyRequestCalled()
+        {
+            //Arrange
+            _fixture.SetConfirm(true);
+
+            //Act
+            await _fixture.SendRequestNewTrainingProvider();
+
+            //Assert
+            _fixture.VerifyCommitmentsApiCreateChangeOfPartyRequestCalled();
         }
     }
 
@@ -67,9 +89,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 _linkGenerator.Object);
         }
 
-        public IActionResult SendRequestNewTrainingProvider()
+        public async Task<IActionResult> SendRequestNewTrainingProvider()
         {
-           return _controller.SendRequestNewTrainingProvider(_viewModel);
+           return await _controller.SendRequestNewTrainingProvider(_viewModel);
         }
 
         public WhenPostingSendRequestNewTrainingProviderTestsFixture SetConfirm(bool confirm)
@@ -89,6 +111,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var redirect = (RedirectToRouteResult)result;
 
             Assert.AreEqual(RouteNames.ChangeProviderRequestedConfirmation, redirect.RouteName);
+        }
+
+        public void VerifyCommitmentsApiCreateChangeOfPartyRequestCalled()
+        {
+            _commitmentsApiClient.Verify(p => p.CreateChangeOfPartyRequest(It.IsAny<long>() ,It.IsAny<CreateChangeOfPartyRequestRequest>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

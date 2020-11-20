@@ -8,10 +8,10 @@
         public const string ApprenticeDetail = "apprentice-details";
         public const string ApprenticeEditEndDate = "apprentice-edit-enddate";
 
-        public const string ChangeProviderInform = "changing-training-provider-inform";
+        public const string ChangeProviderInform = "change-provider-inform";
         public const string ApprenticeNotStoppedError = "aprentice-not-stopped-error";
-        public const string EnterNewTrainingProvider = "enter-new-training-provider-name-or-reference-number";
-        public const string SendRequestNewTrainingProvider = "send-request-new-training-provider";
+        public const string EnterNewTrainingProvider = "select-provider";
+        public const string SendRequestNewTrainingProvider = "send-request-new";
         public const string ChangeProviderRequestedConfirmation = "change-provider-requested";
         public const string ViewChanges = "view-changes";
     }
