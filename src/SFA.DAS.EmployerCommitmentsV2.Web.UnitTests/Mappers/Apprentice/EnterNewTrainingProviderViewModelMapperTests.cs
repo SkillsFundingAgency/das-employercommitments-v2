@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using AutoFixture;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
@@ -15,15 +16,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
     {
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
 
+        private GetApprenticeshipResponse _apprenticeshipResponse;
+
         private EnterNewTrainingProviderViewModelMapper _mapper;
 
         [SetUp]
         public void Arrange()
         {
+            var _autoFixture = new Fixture();
+
+            _apprenticeshipResponse = _autoFixture.Build<GetApprenticeshipResponse>().Create();
+
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
             _mockCommitmentsApiClient.Setup(m => m.GetAllProviders(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(MockGetAllProvidersResponse());
+
+            _mockCommitmentsApiClient.Setup(m => m.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_apprenticeshipResponse);
 
             _mapper = new EnterNewTrainingProviderViewModelMapper(_mockCommitmentsApiClient.Object);
         }
@@ -58,6 +68,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(request);
 
             Assert.AreEqual(3, result.Providers.Count);
+        }
+
+        [Test, MoqAutoData]
+        public async Task WhenRequestingEnterNewTrainingProvider_ThenCurrentProviderIsMapped(EnterNewTrainingProviderRequest request)
+        {
+            var result = await _mapper.Map(request);
+
+            _mockCommitmentsApiClient.Verify(c => c.GetApprenticeship(It.Is<long>(id => id == request.ApprenticeshipId), It.IsAny<CancellationToken>()), Times.Once);
+            Assert.AreEqual(_apprenticeshipResponse.ProviderId, result.CurrentProviderId);
         }
         private GetAllProvidersResponse MockGetAllProvidersResponse()
         {

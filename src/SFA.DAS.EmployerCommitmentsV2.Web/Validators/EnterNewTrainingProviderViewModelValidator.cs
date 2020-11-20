@@ -1,9 +1,5 @@
 ﻿using FluentValidation;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
 {
@@ -14,6 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
             RuleFor(r => r.AccountHashedId).NotEmpty();
             RuleFor(r => r.ApprenticeshipHashedId).NotEmpty();
             RuleFor(r => r.Ukprn).GreaterThan(0).WithMessage("Select a training provider");
+            RuleFor(r => r.Ukprn).NotEqual(r => r.CurrentProviderId).WithMessage("Select another training provider - you cannot select the current training provider as the new training provider ");
         }
     }
 }
