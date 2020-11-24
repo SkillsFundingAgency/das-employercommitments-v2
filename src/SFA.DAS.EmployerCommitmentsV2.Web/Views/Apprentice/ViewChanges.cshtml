@@ -5,14 +5,14 @@
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ViewChangesViewModel
 @{
-    ViewData["Title"] = "Pending changes - Apprenticeship service - GOV.UK";
+    ViewData["Title"] = "View changes - Apprenticeship service - GOV.UK";
     var apprenticeDisplayName = Model.ApprenticeName.EndsWith("s") ? Model.ApprenticeName + "'" : Model.ApprenticeName + "'s";
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <h1 class="govuk-heading-xl"> Pending changes </h1>
+        <h1 class="govuk-heading-xl"> View changes </h1>
 
         @if (Model.CurrentParty == Party.Employer)
         {
@@ -37,13 +37,13 @@
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
             <th class="govuk-table__header"></th>
-            <th scope="col" class="govuk-table__header"> Current Details</th>
-            <th scope="col" class="govuk-table__header"> Requested Changes</th>
+            <th scope="col" class="govuk-table__header "> Current details</th>
+            <th scope="col" class="govuk-table__header "> Requested changes</th>
         </tr>
     </thead>
     <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
-            <th scope="row" class="govuk-table__header"> Training Provider</th>
+            <th scope="row" class="govuk-table__header"> Training provider</th>
             <td class="govuk-table__cell"> @Model.CurrentProviderName</td>
             <td class="govuk-table__cell"> <mark class="das-mark das-mark--green">@Model.NewProviderName</mark> </td>
         </tr>
