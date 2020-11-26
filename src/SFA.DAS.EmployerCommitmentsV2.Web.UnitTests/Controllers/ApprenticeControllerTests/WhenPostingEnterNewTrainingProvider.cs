@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -55,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             _mockLinkGenerator = new Mock<ILinkGenerator>();
             _mockLinkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns<string>(s => s);
 
-            _controller = new ApprenticeController(_mockMapper.Object, Mock.Of<ICookieStorageService<IndexRequest>>(), Mock.Of<ICommitmentsApiClient>(), _mockLinkGenerator.Object);
+            _controller = new ApprenticeController(_mockMapper.Object, Mock.Of<ICookieStorageService<IndexRequest>>(), Mock.Of<ICommitmentsApiClient>(), _mockLinkGenerator.Object, Mock.Of<ILogger<ApprenticeController>>());
         
         }
 

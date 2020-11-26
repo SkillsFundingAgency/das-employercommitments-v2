@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -9,8 +10,10 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.EmployerUrlHelper;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetChangeOfPartyRequestsResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
@@ -62,6 +65,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             //Assert
             _fixture.VerifyCommitmentsApiCreateChangeOfPartyRequestCalled();
         }
+
+        [Test]
+        public async Task And_NewProviderIsTheSameAsCurrentProvider_Then_RedirectToError()
+        {
+            _fixture.SetErrorFromCommitmentsApi();
+
+            var actionResult = await _fixture.SendRequestNewTrainingProvider();
+
+            _fixture.VerifyRedirectToError(actionResult);
+        }
     }
 
     public class WhenPostingSendRequestNewTrainingProviderTestsFixture
@@ -84,9 +97,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             _linkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns<string>(s => s);
 
             _controller = new ApprenticeController(Mock.Of<IModelMapper>(),
-               Mock.Of<ICookieStorageService<IndexRequest>>(),
+                Mock.Of<ICookieStorageService<IndexRequest>>(),
                 _commitmentsApiClient.Object,
-                _linkGenerator.Object);
+                _linkGenerator.Object,
+                Mock.Of<ILogger<ApprenticeController>>());
         }
 
         public async Task<IActionResult> SendRequestNewTrainingProvider()
@@ -100,22 +114,38 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             return this;
         }
 
+        public WhenPostingSendRequestNewTrainingProviderTestsFixture SetErrorFromCommitmentsApi()
+        {
+            _commitmentsApiClient.Setup(c => c.CreateChangeOfPartyRequest(It.IsAny<long>(), It.IsAny<CreateChangeOfPartyRequestRequest>(), It.IsAny<CancellationToken>()))
+                .Throws(new Exception());
+
+            return this;
+        }
+
         public void VerifyRedirectsToApprenticeDetailsPage(IActionResult result)
         {
             var redirect = (RedirectResult)result;
+            
             redirect.WithUrl($"accounts/{_viewModel.AccountHashedId}/apprentices/manage/{_viewModel.ApprenticeshipHashedId}/details");
         }
 
         public void VerifyRedirectsToSentAction(IActionResult result)
         {
             var redirect = (RedirectToRouteResult)result;
-
             Assert.AreEqual(RouteNames.ChangeProviderRequestedConfirmation, redirect.RouteName);
         }
 
         public void VerifyCommitmentsApiCreateChangeOfPartyRequestCalled()
         {
             _commitmentsApiClient.Verify(p => p.CreateChangeOfPartyRequest(It.IsAny<long>() ,It.IsAny<CreateChangeOfPartyRequestRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        public void VerifyRedirectToError(IActionResult actionResult)
+        {
+            var redirectResult = actionResult as RedirectToActionResult;
+
+            Assert.AreEqual("Error", redirectResult.ControllerName);
+            Assert.AreEqual("Error", redirectResult.ActionName);
         }
     }
 }

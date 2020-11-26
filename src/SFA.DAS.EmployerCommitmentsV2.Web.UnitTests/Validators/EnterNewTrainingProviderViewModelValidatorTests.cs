@@ -37,5 +37,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 
             Assert.True(result.IsValid);
         }
+
+        [Test, MoqAutoData]
+        public void When_ValidatingNewTrainingProvider_And_UkprnIsTheSameAsCurrentUkprn_Then_ValidatorReturnsInvalid(EnterNewTrainingProviderViewModel viewModel)
+        {
+            viewModel.Ukprn = 100;
+            viewModel.CurrentProviderId = 100;
+
+            var result = _validator.Validate(viewModel);
+
+            Assert.False(result.IsValid);
+        }
     }
 }
