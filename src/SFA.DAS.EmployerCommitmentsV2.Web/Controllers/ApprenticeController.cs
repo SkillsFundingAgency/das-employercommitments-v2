@@ -1,6 +1,8 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -27,13 +29,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ICookieStorageService<IndexRequest> _cookieStorage;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly ILinkGenerator _linkGenerator;
+        private readonly ILogger<ApprenticeController> _logger;
 
-        public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILinkGenerator linkGenerator)
+        public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILinkGenerator linkGenerator, ILogger<ApprenticeController> logger)
         {
             _modelMapper = modelMapper;
             _cookieStorage = cookieStorage;
             _commitmentsApiClient = commitmentsApiClient;
             _linkGenerator = linkGenerator;
+            _logger = logger;
         }
 
         [Route("", Name = RouteNames.ApprenticesIndex)]
@@ -167,9 +171,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (request.Confirm.Value)
             {
-                var apiRequest = await _modelMapper.Map<CreateChangeOfPartyRequestRequest>(request);
-                await _commitmentsApiClient.CreateChangeOfPartyRequest(request.ApprenticeshipId, apiRequest);
-                return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId });
+                try
+                {
+                    var apiRequest = await _modelMapper.Map<CreateChangeOfPartyRequestRequest>(request);
+                    await _commitmentsApiClient.CreateChangeOfPartyRequest(request.ApprenticeshipId, apiRequest);
+                    return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Failed '{nameof(ApprenticeController)}-{nameof(SendRequestNewTrainingProvider)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
+                    return RedirectToAction("Error", "Error");
+                }
             }
 
             return Redirect(_linkGenerator.ApprenticeDetails(request.AccountHashedId, request.ApprenticeshipHashedId));
