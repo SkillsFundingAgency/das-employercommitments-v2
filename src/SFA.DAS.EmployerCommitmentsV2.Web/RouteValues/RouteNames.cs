@@ -13,5 +13,6 @@
         public const string EnterNewTrainingProvider = "select-provider";
         public const string SendRequestNewTrainingProvider = "send-request-new";
         public const string ChangeProviderRequestedConfirmation = "change-provider-requested";
+        public const string ViewChanges = "view-changes";
     }
 }

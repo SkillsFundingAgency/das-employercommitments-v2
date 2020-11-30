@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                Mock.Of<ILogger<ApprenticeController>>());
         }
 
-        public  async Task<IActionResult> SendRequestNewTrainingProvider()
+        public async Task<IActionResult> SendRequestNewTrainingProvider()
         {
             return await _controller.SendRequestNewTrainingProvider(_request);
         }

@@ -196,6 +196,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
+        [Route("{apprenticeshipHashedId}/view-changes", Name = RouteNames.ViewChanges)]
+        public async Task<IActionResult> ViewChanges(ViewChangesRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ViewChangesViewModel>(request);
+
+            return View(viewModel);
+        }
+
         [Route("{apprenticeshipHashedId}/details/pause")]
         [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [HttpGet]

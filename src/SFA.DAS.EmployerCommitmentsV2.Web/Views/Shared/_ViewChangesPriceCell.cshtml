@@ -1,0 +1,18 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ViewChangesCell<int?>
+
+@if (Model.NewValue.HasValue)
+{
+    if (Model.CurrentValue.Value == Model.NewValue.Value)
+    {
+        <td class="govuk-table__cell"> No change </td>
+    }
+    else
+    {
+        <td class="govuk-table__cell"> <mark class="das-mark das-mark--green">@Model.NewValue.Value.ToGdsCostFormat()</mark> </td>
+    }
+}
+else
+{
+    <td class="govuk-table__cell"> Not set yet </td>
+}
