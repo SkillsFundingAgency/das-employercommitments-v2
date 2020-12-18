@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
@@ -45,7 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.HomeController
                 ModelMapper.Setup(x => x.Map<IndexViewModel>(It.Is<IndexRequest>(r => r == Request)))
                     .ReturnsAsync(ViewModel);
 
-                Controller = new HomeController(ModelMapper.Object);
+                Controller = new HomeController(ModelMapper.Object, Mock.Of<ILogger<HomeController>>());
             }
 
             public async Task GetIndex()

@@ -7,11 +7,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("error")]
         public IActionResult Error(int? statusCode)
         {            
-            ViewBag.HideNav = true;
+            ViewBag.HideNav = true;            
 
             switch (statusCode)
             {
                 case 400:
+                case 401:
                 case 403:
                 case 404:
                     return View(statusCode.ToString());
