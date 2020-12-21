@@ -20,6 +20,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
         {
             var dateOnly = date.Date;
 
+            if (effectiveFrom.HasValue && effectiveFrom.Value.FirstOfMonth() > dateOnly)
+                return false;
+            
             if (!effectiveTo.HasValue || effectiveTo.Value >= dateOnly)
                 return true;
 
