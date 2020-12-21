@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
@@ -12,6 +11,7 @@ using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -19,15 +19,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
-        private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
         private readonly IAccountApiClient _accountsApiClient;
 
         public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, 
-            ITrainingProgrammeApiClient trainingProgrammeApiClient, IAccountApiClient accountsApiClient)
+            IAccountApiClient accountsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
-            _trainingProgrammeApiClient = trainingProgrammeApiClient;
             _accountsApiClient = accountsApiClient;
         }
 
@@ -149,14 +147,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 return null;
             }
 
-            var course = await _trainingProgrammeApiClient.GetTrainingProgramme(courseCode);
+            var course = await _commitmentsApiClient.GetTrainingProgramme(courseCode);
 
             if (course == null)
             {
                 return null;
             }
 
-            var cap = course.FundingCapOn(startDate.Value);
+            var cap = course.TrainingProgramme.FundingCapOn(startDate.Value);
 
             if (cap > 0)
             {

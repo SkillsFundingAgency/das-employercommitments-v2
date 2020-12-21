@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
@@ -10,7 +12,6 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Shared;
 using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
@@ -26,21 +27,36 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private Mock<IEncodingService> _encodingService;
         private string _encodedTransferSenderId;
         private GetCohortResponse _cohort;
-
-        private TrainingProgrammeApiClientMock _trainingProgrammeApiClient;
-
+        private List<TrainingProgramme> _allTrainingProgrammes;
+        private List<TrainingProgramme> _standardTrainingProgrammes;
+        
         [SetUp]
         public async Task Arrange()
         {
             var autoFixture = new Fixture();
 
+            _allTrainingProgrammes = autoFixture.CreateMany<TrainingProgramme>().ToList();
+            _standardTrainingProgrammes = autoFixture.CreateMany<TrainingProgramme>().ToList();
+            
             _cohort = autoFixture.Create<GetCohortResponse>();
             _cohort.WithParty = Party.Employer;
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _commitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_cohort);
-
-            _trainingProgrammeApiClient = new TrainingProgrammeApiClientMock();
+            
+            _commitmentsApiClient
+                .Setup(x => x.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse
+                {
+                    TrainingProgrammes = _standardTrainingProgrammes
+                });
+            
+            _commitmentsApiClient
+                .Setup(x => x.GetAllTrainingProgrammes(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetAllTrainingProgrammesResponse
+                {
+                    TrainingProgrammes = _allTrainingProgrammes
+                });
 
             _encodedTransferSenderId = autoFixture.Create<string>();
             _encodingService = new Mock<IEncodingService>();
@@ -48,7 +64,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                 .Setup(x => x.Encode(It.IsAny<long>(), It.Is<EncodingType>(e => e == EncodingType.PublicAccountId)))
                 .Returns(_encodedTransferSenderId);
 
-            _mapper = new AddDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _trainingProgrammeApiClient.Object, _encodingService.Object);
+            _mapper = new AddDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object);
 
             _source = autoFixture.Create<AddDraftApprenticeshipRequest>();
             _source.StartMonthYear = "092020";
@@ -139,8 +155,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _result = await _mapper.Map(_source);
 
             Assert.AreEqual(fundedByTransfer
-                    ?  _trainingProgrammeApiClient.Standards
-                    : _trainingProgrammeApiClient.All,
+                    ?  _standardTrainingProgrammes
+                    : _allTrainingProgrammes,
                 _result.Courses);
         }
 
@@ -153,7 +169,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             _result = await _mapper.Map(_source);
 
-            Assert.AreEqual(_trainingProgrammeApiClient.Standards, _result.Courses);
+            Assert.AreEqual(_standardTrainingProgrammes, _result.Courses);
         }
 
         [Test]

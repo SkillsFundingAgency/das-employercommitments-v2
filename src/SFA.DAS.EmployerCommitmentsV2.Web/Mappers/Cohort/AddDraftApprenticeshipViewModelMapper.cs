@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -12,14 +11,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     public class AddDraftApprenticeshipViewModelMapper : IMapper<ApprenticeRequest, AddDraftApprenticeshipViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
 
         public AddDraftApprenticeshipViewModelMapper(
-            ICommitmentsApiClient commitmentsApiClient,
-            ITrainingProgrammeApiClient trainingProgrammeApiClient)
+            ICommitmentsApiClient commitmentsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
-            _trainingProgrammeApiClient = trainingProgrammeApiClient;
         }
 
         public async Task<AddDraftApprenticeshipViewModel> Map(ApprenticeRequest source)
@@ -27,8 +23,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var ale = await _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
 
             var courses = !string.IsNullOrWhiteSpace(source.TransferSenderId) || ale.LevyStatus == ApprenticeshipEmployerType.NonLevy
-                ? await _trainingProgrammeApiClient.GetStandardTrainingProgrammes()
-                : await _trainingProgrammeApiClient.GetAllTrainingProgrammes();
+                ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
+                : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes;
 
             var provider = await _commitmentsApiClient.GetProvider(source.ProviderId);
 
