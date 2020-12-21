@@ -1,23 +1,21 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
 {
     public static class ErrorPagesStartup
     {
-        public static IApplicationBuilder UseDasErrorPages(this IApplicationBuilder app)
+        public static IApplicationBuilder UseDasErrorPages(this IApplicationBuilder app, IHostingEnvironment environment)
         {
-            var hostingEnvironment = app.ApplicationServices.GetService<IHostingEnvironment>();
-
-            if (hostingEnvironment.IsDevelopment())
+            if (environment.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/error-local-development")
+                   .UseStatusCodePagesWithReExecute("/error-local-development", "?statuscode={0}");
             }
             else
             {
                 app.UseExceptionHandler("/error")
-                    .UseStatusCodePagesWithReExecute("/error", "?statuscode={0}");
+                   .UseStatusCodePagesWithReExecute("/error", "?statuscode={0}");
             }
 
             return app;
