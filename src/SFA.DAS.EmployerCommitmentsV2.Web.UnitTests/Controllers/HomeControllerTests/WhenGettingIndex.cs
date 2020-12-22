@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
