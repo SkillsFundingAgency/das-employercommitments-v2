@@ -9,17 +9,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         {
             //if (environment.IsDevelopment())
             //{
-            //    app.UseExceptionHandler("/error-local-development");
-            //         app.UseHsts();
-            //    //.UseStatusCodePagesWithRedirects("{0}"); -- option1
-            //    //.UseStatusCodePagesWithReExecute("/error-local-development", "?statuscode={0}");
+            //    app.UseDeveloperExceptionPage();
             //}
             //else
             //{
-            //    app.UseExceptionHandler("/error");
-            //    app.UseHsts();
-            //    //.UseStatusCodePagesWithRedirects("{0}");
-            //    //.UseStatusCodePagesWithReExecute("/error", "?statuscode={0}");
+            //    app.UseExceptionHandler("/error")
+            //        .UseStatusCodePagesWithReExecute("/error", "?statuscode={0}");
             //}
 
             app.UseExceptionHandler("/error");
