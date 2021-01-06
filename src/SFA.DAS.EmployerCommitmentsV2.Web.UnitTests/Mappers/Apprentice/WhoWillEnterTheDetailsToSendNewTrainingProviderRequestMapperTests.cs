@@ -2,25 +2,22 @@
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Testing.AutoFixture;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 {
-    public class SendNewTrainingProviderRequestMapperTests
+    public class WhoWillEnterTheDetailsToSendNewTrainingProviderRequestMapperTests
     {
-        private SendNewTrainingProviderRequestMapper _mapper;
+        private WhoWillEnterTheDetailsToSendNewTrainingProviderRequestMapper _mapper;
 
         [SetUp]
         public void Arrange()
         {
-            _mapper = new SendNewTrainingProviderRequestMapper();
+            _mapper = new WhoWillEnterTheDetailsToSendNewTrainingProviderRequestMapper();
         }
 
         [Test, MoqAutoData]
-        public async Task ApprenticeshipHashedId_IsMapped(EnterNewTrainingProviderViewModel viewModel)
+        public async Task ApprenticeshipHashedId_IsMapped(WhoWillEnterTheDetailsViewModel viewModel)
         {
             var result = await _mapper.Map(viewModel);
 
@@ -28,7 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task AccountHashedId_IsMapped(EnterNewTrainingProviderViewModel viewModel)
+        public async Task AccountHashedId_IsMapped(WhoWillEnterTheDetailsViewModel viewModel)
         {
             var result = await _mapper.Map(viewModel);
 
@@ -36,11 +33,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task Ukprn_IsMapped(EnterNewTrainingProviderViewModel viewModel)
+        public async Task Ukprn_IsMapped(WhoWillEnterTheDetailsViewModel viewModel)
         {
             var result = await _mapper.Map(viewModel);
 
-            Assert.AreEqual(viewModel.Ukprn, result.ProviderId);
+            Assert.AreEqual(viewModel.ProviderId, result.ProviderId);
         }
     }
 }

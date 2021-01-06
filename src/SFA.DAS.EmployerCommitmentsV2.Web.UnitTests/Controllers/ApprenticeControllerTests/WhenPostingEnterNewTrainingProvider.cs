@@ -27,18 +27,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test]
-        public async Task ThenRedirectToSendRequestPage()
+        public async Task ThenRedirectToWhoWillEnterTheDetailsPage()
         {
             var result = await _fixture.EnterNewTrainingProvider();
 
-            _fixture.VerifyRedirectsToSendNewTrainingProviderRequest(result);
+            _fixture.VerifyRedirectsToWhoWillEnterTheDetailsPage(result);
         } 
     }
 
     public class WhenPostingEnterNewTrainingProviderFixture
     {
         private readonly Mock<IModelMapper> _mockMapper;
-        private readonly Mock<ILinkGenerator> _mockLinkGenerator;
         private readonly EnterNewTrainingProviderViewModel _viewModel;
 
         private readonly ApprenticeController _controller;
@@ -50,14 +49,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             _viewModel = autoFixture.Create<EnterNewTrainingProviderViewModel>();
 
             _mockMapper = new Mock<IModelMapper>();
-            _mockMapper.Setup(m => m.Map<SendNewTrainingProviderRequest>(_viewModel))
-                .ReturnsAsync(new SendNewTrainingProviderRequest { AccountHashedId = _viewModel.AccountHashedId, ApprenticeshipHashedId = _viewModel.ApprenticeshipHashedId, ProviderId = _viewModel.Ukprn });
+            _mockMapper.Setup(m => m.Map<WhoWillEnterTheDetailsRequest>(_viewModel))
+                .ReturnsAsync(new WhoWillEnterTheDetailsRequest { AccountHashedId = _viewModel.AccountHashedId, ApprenticeshipHashedId = _viewModel.ApprenticeshipHashedId, ProviderId = _viewModel.Ukprn });
 
-            _mockLinkGenerator = new Mock<ILinkGenerator>();
-            _mockLinkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns<string>(s => s);
-
-            _controller = new ApprenticeController(_mockMapper.Object, Mock.Of<ICookieStorageService<IndexRequest>>(), Mock.Of<ICommitmentsApiClient>(), _mockLinkGenerator.Object, Mock.Of<ILogger<ApprenticeController>>());
-        
+            _controller = new ApprenticeController(_mockMapper.Object, 
+                Mock.Of<ICookieStorageService<IndexRequest>>(), 
+                Mock.Of<ICommitmentsApiClient>(), 
+                Mock.Of<ILinkGenerator>(),
+                Mock.Of<ILogger<ApprenticeController>>());
         }
 
         public async Task<IActionResult> EnterNewTrainingProvider()
@@ -65,12 +64,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             return await _controller.EnterNewTrainingProvider(_viewModel);
         }
 
-        public void VerifyRedirectsToSendNewTrainingProviderRequest(IActionResult result)
+        public void VerifyRedirectsToWhoWillEnterTheDetailsPage(IActionResult result)
         {
             var redirect = (RedirectToRouteResult)result;
            
-            Assert.AreEqual(RouteNames.SendRequestNewTrainingProvider, redirect.RouteName);
+            Assert.AreEqual(RouteNames.WhoWillEnterTheDetails, redirect.RouteName);
         }
-
     }
 }

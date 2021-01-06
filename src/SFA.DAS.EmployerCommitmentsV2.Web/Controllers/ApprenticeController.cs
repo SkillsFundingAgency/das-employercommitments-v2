@@ -151,9 +151,43 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public async Task<IActionResult> EnterNewTrainingProvider(EnterNewTrainingProviderViewModel viewModel)
         {
-            var request = await _modelMapper.Map<SendNewTrainingProviderRequest>(viewModel);
+            var request = await _modelMapper.Map<WhoWillEnterTheDetailsRequest>(viewModel);
 
-            return RedirectToRoute(RouteNames.SendRequestNewTrainingProvider, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId });
+            return RedirectToRoute(RouteNames.WhoWillEnterTheDetails, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId });
+        }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/change-provider/who-enter-details", Name = RouteNames.WhoWillEnterTheDetails)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public async Task<IActionResult> WhoWillEnterTheDetails(WhoWillEnterTheDetailsRequest request)
+        {
+            var viewModel = await _modelMapper.Map<WhoWillEnterTheDetailsViewModel>(request);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/change-provider/who-enter-details", Name = RouteNames.WhoWillEnterTheDetails)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public IActionResult WhoWillEnterTheDetails(WhoWillEnterTheDetailsViewModel viewModel)
+        {
+            if (viewModel.EmployerResponsibility == true)
+            {
+                return RedirectToRoute(RouteNames.WhatIsTheNewStartDate, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId, viewModel.EmployerResponsibility });
+            }
+            else
+            {
+                return RedirectToRoute(RouteNames.SendRequestNewTrainingProvider, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId, viewModel.EmployerResponsibility });
+            }
+        }
+
+        // Placeholder for CON-2519
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/change-provider/start-date", Name = RouteNames.WhatIsTheNewStartDate)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public IActionResult WhatIsTheNewStartDate()
+        {
+            return View();
         }
 
         [Route("{apprenticeshipHashedId}/change-provider/send-request", Name = RouteNames.SendRequestNewTrainingProvider)]
