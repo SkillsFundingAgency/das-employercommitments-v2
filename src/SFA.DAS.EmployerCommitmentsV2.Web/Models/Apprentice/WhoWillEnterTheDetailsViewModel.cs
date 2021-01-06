@@ -9,6 +9,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string ProviderName { get; set; }
         public long ProviderId { get; set; }
         public bool? EmployerResponsibility { get; set; }
-
     }
 }
