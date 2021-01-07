@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public void AndEmployerIsSelected_ThenRedirectToWhatIsTheNewStartDateRoute()
         {
             var viewModel = _autoFixture.Build<WhoWillEnterTheDetailsViewModel>()
-                .With(vm => vm.EmployerResponsibility, true)
+                .With(vm => vm.EmployerWillAdd, true)
                 .Create();
 
             var result = _fixture.WhoWillEnterTheDetails(viewModel);
@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public void AndProviderIsSelected_ThenRedirectToSendNewTrainingProviderRequest()
         {
             var viewModel = _autoFixture.Build<WhoWillEnterTheDetailsViewModel>()
-                .With(vm => vm.EmployerResponsibility, false)
+                .With(vm => vm.EmployerWillAdd, false)
                 .Create();
 
             var result = _fixture.WhoWillEnterTheDetails(viewModel);

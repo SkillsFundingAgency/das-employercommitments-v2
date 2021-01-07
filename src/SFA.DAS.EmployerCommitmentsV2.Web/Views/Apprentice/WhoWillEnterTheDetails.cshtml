@@ -14,7 +14,7 @@
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ProviderId" />
 
-            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmployerResponsibility,  "govuk-form-group--error")">
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmployerWillAdd,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl govuk-!-padding-bottom-6">
                         <h1 class="govuk-fieldset__heading">
@@ -28,8 +28,8 @@
 
                     @if (!ViewData.ModelState.IsValid)
                     {
-                        <span id="error-message-@nameof(WhoWillEnterTheDetailsViewModel.EmployerResponsibility)" class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(WhoWillEnterTheDetailsViewModel.EmployerResponsibility)].Errors.First().ErrorMessage
+                        <span id="error-message-@nameof(WhoWillEnterTheDetailsViewModel.EmployerWillAdd)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(WhoWillEnterTheDetailsViewModel.EmployerWillAdd)].Errors.First().ErrorMessage
                         </span>
                     }
 

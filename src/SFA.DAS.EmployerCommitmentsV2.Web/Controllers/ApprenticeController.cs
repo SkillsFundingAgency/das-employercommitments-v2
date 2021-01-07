@@ -177,13 +177,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public IActionResult WhoWillEnterTheDetails(WhoWillEnterTheDetailsViewModel viewModel)
         {
-            if (viewModel.EmployerResponsibility == true)
+            if (viewModel.EmployerWillAdd == true)
             {
-                return RedirectToRoute(RouteNames.WhatIsTheNewStartDate, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId, viewModel.EmployerResponsibility });
+                return RedirectToRoute(RouteNames.WhatIsTheNewStartDate, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId });
             }
             else
             {
-                return RedirectToRoute(RouteNames.SendRequestNewTrainingProvider, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId, viewModel.EmployerResponsibility });
+                return RedirectToRoute(RouteNames.SendRequestNewTrainingProvider, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId });
             }
         }
 
