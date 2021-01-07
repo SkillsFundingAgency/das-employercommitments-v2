@@ -181,13 +181,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
         }
 
-        // Placeholder for CON-2519
         [HttpGet]
         [Route("{apprenticeshipHashedId}/change-provider/start-date", Name = RouteNames.WhatIsTheNewStartDate)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public IActionResult WhatIsTheNewStartDate()
+        public async Task<IActionResult> WhatIsTheNewStartDate(WhatIsTheNewStartDateRequest request)
         {
-            return View();
+            var viewModel = await _modelMapper.Map<WhatIsTheNewStartDateViewModel>(request);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/change-provider/start-date", Name = RouteNames.WhatIsTheNewStartDate)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public IActionResult WhatIsTheNewStartDate(WhatIsTheNewStartDateViewModel viewModel)
+        {
+            return View(viewModel);
         }
 
         [Route("{apprenticeshipHashedId}/change-provider/send-request", Name = RouteNames.SendRequestNewTrainingProvider)]
