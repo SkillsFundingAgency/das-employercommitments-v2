@@ -13,8 +13,6 @@
         <form method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ProviderId" />
-            <input type="hidden" asp-for="AccountHashedId" />
-            <input type="hidden" asp-for="ApprenticeshipHashedId" />
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmployerResponsibility,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
