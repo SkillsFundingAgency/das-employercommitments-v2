@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -55,7 +56,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 Mock.Of<ICookieStorageService<IndexRequest>>(),
                 Mock.Of<ICommitmentsApiClient>(),
                 Mock.Of<ILinkGenerator>(),
-                Mock.Of<ILogger<ApprenticeController>>());
+                Mock.Of<ILogger<ApprenticeController>>(),
+                Mock.Of<IAuthorizationService>());
         }
 
         public async Task<IActionResult> WhoWillEnterTheDetails()

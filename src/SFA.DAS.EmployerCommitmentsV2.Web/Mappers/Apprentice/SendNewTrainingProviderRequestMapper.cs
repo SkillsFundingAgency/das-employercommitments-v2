@@ -1,18 +1,18 @@
-﻿using System.Threading.Tasks;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class WhoWillEnterTheDetailsToSendNewTrainingProviderRequestMapper : IMapper<WhoWillEnterTheDetailsViewModel, SendNewTrainingProviderRequest>
+    public class SendNewTrainingProviderRequestMapper : IMapper<EnterNewTrainingProviderViewModel, SendNewTrainingProviderRequest>
     {
-        public Task<SendNewTrainingProviderRequest> Map(WhoWillEnterTheDetailsViewModel source)
+        public Task<SendNewTrainingProviderRequest> Map(EnterNewTrainingProviderViewModel source)
         {
             var result = new SendNewTrainingProviderRequest
             {
                 AccountHashedId = source.AccountHashedId,
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
-                ProviderId = source.ProviderId
+                ProviderId = source.Ukprn
             };
 
             return Task.FromResult(result);

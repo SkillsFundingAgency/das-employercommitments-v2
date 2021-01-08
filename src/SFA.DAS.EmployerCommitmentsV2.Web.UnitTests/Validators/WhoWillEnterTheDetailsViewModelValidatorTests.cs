@@ -24,8 +24,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [Test]
         public void WhenValidatingWhoWillEnterTheDetails_AndSelectionIsNotMade_ThenValidatorReturnsInvalid()
         {
-            var viewModel = _autoFixture.Build<WhoWillEnterTheDetailsViewModel>().Create();
-            viewModel.EmployerResponsibility = null;
+            var viewModel = _autoFixture.Create<WhoWillEnterTheDetailsViewModel>();
+            viewModel.EmployerWillAdd = null;
 
             var result = _validator.Validate(viewModel);
 
@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         public void WhenValidatingWhoWillEnterTheDetails_AndSelectionIsMade_ThenValidatorReturnsValid(bool employerResponsibility)
         {
             var viewModel = _autoFixture.Build<WhoWillEnterTheDetailsViewModel>()
-                .With(vm => vm.EmployerResponsibility, employerResponsibility).Create();
+                .With(vm => vm.EmployerWillAdd, employerResponsibility).Create();
 
             var result = _validator.Validate(viewModel);
 
