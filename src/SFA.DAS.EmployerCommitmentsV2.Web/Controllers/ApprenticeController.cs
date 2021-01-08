@@ -156,6 +156,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return RedirectToRoute(RouteNames.SendRequestNewTrainingProvider, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId });
         }
 
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/change-provider/end-date", Name = RouteNames.WhatIsTheNewEndDate)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public async Task<IActionResult> WhatIsTheNewEndDate(WhatIsTheNewEndDateRequest request)
+        {
+            var viewModel = await _modelMapper.Map<WhatIsTheNewEndDateViewModel>(request);
+            return View(viewModel);
+        }
+
         [Route("{apprenticeshipHashedId}/change-provider/send-request", Name = RouteNames.SendRequestNewTrainingProvider)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public async Task<IActionResult> SendRequestNewTrainingProvider(SendNewTrainingProviderRequest request)
@@ -251,6 +260,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
         }
-        
     }
 }

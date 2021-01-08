@@ -13,6 +13,7 @@
         public const string EnterNewTrainingProvider = "select-provider";
         public const string SendRequestNewTrainingProvider = "send-request-new";
         public const string ChangeProviderRequestedConfirmation = "change-provider-requested";
+        public const string WhatIsTheNewEndDate = "what-is-the-new-end-date";
         public const string ViewChanges = "view-changes";
     }
 }
