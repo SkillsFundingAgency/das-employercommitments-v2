@@ -34,7 +34,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test]
-        public async Task AndTheFeatureToggleIsDisabled_ThenRedirectToWhoWillEnterTheDetailsPage()
+
+        public async Task AndTheFeatureToggleIsDisabled_ThenRedirectToSendRequestPage()
         {
             var result = await _fixture.EnterNewTrainingProvider(false);
 
