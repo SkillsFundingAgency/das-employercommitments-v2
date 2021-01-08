@@ -11,6 +11,8 @@
         public const string ChangeProviderInform = "change-provider-inform";
         public const string ApprenticeNotStoppedError = "aprentice-not-stopped-error";
         public const string EnterNewTrainingProvider = "select-provider";
+        public const string WhoWillEnterTheDetails = "who-will-enter-the-details";
+        public const string WhatIsTheNewStartDate = "what-is-the-new-start-date";
         public const string SendRequestNewTrainingProvider = "send-request-new";
         public const string ChangeProviderRequestedConfirmation = "change-provider-requested";
         public const string WhatIsTheNewEndDate = "what-is-the-new-end-date";
