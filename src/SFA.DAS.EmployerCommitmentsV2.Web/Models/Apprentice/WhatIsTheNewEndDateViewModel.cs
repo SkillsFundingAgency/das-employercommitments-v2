@@ -8,18 +8,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
     {
         public WhatIsTheNewEndDateViewModel()
         {
-            EndDate = new MonthYearModel("");
+            NewEndDate = new MonthYearModel("");
         }
 
+        public string AccountHashedId { get; set; }
+        public string ApprenticeshipHashedId { get; set; }
         public string ProviderName { get; set; }
-        public DateTime StartDate { get; set; }
-        public MonthYearModel EndDate { get; }
+        public long ProviderId { get; set; }
+        public int? NewStartMonth { get; set; }
+        public int? NewStartYear { get; set; }
+        public DateTime NewStartDate { get; set; }
+        public int? NewPrice { get; }
+        public bool Edit { get; set; }
+        public MonthYearModel NewEndDate { get; }
 
         [Display(Name = "Month")]
-        public int? EndMonth { get => EndDate.Month; set => EndDate.Month = value; }
+        public int? NewEndMonth { get => NewEndDate.Month; set => NewEndDate.Month = value; }
 
         [Display(Name = "Year")]
-        public int? EndYear { get => EndDate.Year; set => EndDate.Year = value; }
+        public int? NewEndYear { get => NewEndDate.Year; set => NewEndDate.Year = value; }
 
     }
 }
