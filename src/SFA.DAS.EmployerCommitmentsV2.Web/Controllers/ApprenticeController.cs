@@ -241,24 +241,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public async Task<IActionResult> WhatIsTheNewPrice(EmployerLedChangeOfProviderRequest request)
         {
-            var model = await _modelMapper.Map<WhatIsTheNewPriceViewModel>(request);
-            return View(model);
+            var viewModel = await _modelMapper.Map<WhatIsTheNewPriceViewModel>(request);
+            
+            return View(viewModel);
         }
 
         [HttpPost]
         [Route("{apprenticeshipHashedId}/change-provider/price", Name = RouteNames.WhatIsTheNewPrice)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public IActionResult WhatIsTheNewPrice(WhatIsTheNewPriceViewModel vm)
+        public IActionResult WhatIsTheNewPrice(WhatIsTheNewPriceViewModel viewModel)
         {
-            /*var request = await _modelMapper.Map<ConfirmRequest>(viewModel);
-            return RedirectToRoute(RouteNames.ApprenticeConfirm, new { request.EmployerId, request.ApprenticeshipHashedId, request.EmployerAccountLegalEntityPublicHashedId, request.StartDate, request.EndDate, request.Price });*/
-
-            if (vm.Edit)
-            {
-                return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, new { vm.AccountHashedId, vm.ApprenticeshipHashedId, vm.ProviderId, vm.NewStartMonth, vm.NewStartYear, vm.NewEndMonth, vm.NewEndYear, vm.NewPrice });
-            }
-
-            return RedirectToRoute(RouteNames.WhatIsTheNewEndDate, new { vm.AccountHashedId, vm.ApprenticeshipHashedId, vm.ProviderId, vm.NewStartMonth, vm.NewStartYear });
+            return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId, viewModel.NewStartMonth, viewModel.NewStartYear, viewModel.NewEndMonth, viewModel.NewEndYear, viewModel.NewPrice });
         }
 
         [Route("{apprenticeshipHashedId}/view-changes", Name = RouteNames.ViewChanges)]
