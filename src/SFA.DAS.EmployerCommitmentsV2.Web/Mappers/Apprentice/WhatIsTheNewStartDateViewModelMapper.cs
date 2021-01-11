@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             {
                 AccountHashedId = source.AccountHashedId,
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
-                ProviderName = apprenticeship.ProviderName,
+                ProviderName = source.ProviderName,
                 ProviderId = source.ProviderId,
                 StopDate = apprenticeship.StopDate.Value,
                 Edit = source.Edit ?? false

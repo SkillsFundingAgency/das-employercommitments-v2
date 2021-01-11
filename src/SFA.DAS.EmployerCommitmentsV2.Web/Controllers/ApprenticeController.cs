@@ -179,7 +179,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (viewModel.EmployerWillAdd == true)
             {
-                return RedirectToRoute(RouteNames.WhatIsTheNewStartDate, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId });
+                return RedirectToRoute(RouteNames.WhatIsTheNewStartDate, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId, viewModel.ProviderName });
             }
             else
             {
@@ -204,10 +204,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (vm.Edit)
             {
-                return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, new { vm.AccountHashedId, vm.ApprenticeshipHashedId, vm.ProviderId, vm.NewStartMonth, vm.NewStartYear, vm.NewEndMonth, vm.NewEndYear, vm.NewPrice });
+                return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, new { vm.ProviderName, vm.AccountHashedId, vm.ApprenticeshipHashedId, vm.ProviderId, vm.NewStartMonth, vm.NewStartYear, vm.NewEndMonth, vm.NewEndYear, vm.NewPrice });
             }
 
-            return RedirectToRoute(RouteNames.WhatIsTheNewEndDate, new { vm.AccountHashedId, vm.ApprenticeshipHashedId, vm.ProviderId, vm.NewStartMonth, vm.NewStartYear});
+            return RedirectToRoute(RouteNames.WhatIsTheNewEndDate, new { vm.ProviderName, vm.AccountHashedId, vm.ApprenticeshipHashedId, vm.ProviderId, vm.NewStartMonth, vm.NewStartYear});
         }
 
         [HttpGet]
