@@ -1,15 +1,14 @@
 ﻿using AutoFixture;
-using AutoFixture.NUnit3;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerUrlHelper;
-using SFA.DAS.Testing.AutoFixture;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
@@ -56,7 +55,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                Mock.Of<ICookieStorageService<IndexRequest>>(),
                Mock.Of<ICommitmentsApiClient>(),
                Mock.Of<ILinkGenerator>(), 
-               Mock.Of<ILogger<ApprenticeController>>());
+               Mock.Of<ILogger<ApprenticeController>>(),
+               Mock.Of<IAuthorizationService>());
         }
 
         public async Task<IActionResult> SendRequestNewTrainingProvider()
