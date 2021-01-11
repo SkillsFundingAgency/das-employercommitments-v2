@@ -117,7 +117,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         private void PopulateFundingBandExcessModels(List<DetailsViewCourseGroupingModel> courseGroups)
         {
-            Parallel.ForEach(courseGroups, group => SetFundingBandCap(group.CourseCode, group.DraftApprenticeships));
+            var results = courseGroups.Select(courseGroup => SetFundingBandCap(courseGroup.CourseCode, courseGroup.DraftApprenticeships)).ToList();
+
+            Task.WhenAll(results).Wait();
+            
             foreach (var courseGroup in courseGroups)
             {
                 var apprenticesExceedingFundingBand = courseGroup.DraftApprenticeships.Where(x => x.ExceedsFundingBandCap).ToList();
@@ -135,19 +138,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             }
         }
 
-        private void SetFundingBandCap(string courseCode, IEnumerable<CohortDraftApprenticeshipViewModel> draftApprenticeships)
+        private async Task SetFundingBandCap(string courseCode, IEnumerable<CohortDraftApprenticeshipViewModel> draftApprenticeships)
         {
-            Parallel.ForEach(draftApprenticeships, async a => a.FundingBandCap = await GetFundingBandCap(courseCode, a.OriginalStartDate ?? a.StartDate));
+            var course =  await _commitmentsApiClient.GetTrainingProgramme(courseCode);
+            
+            foreach (var draftApprenticeship in draftApprenticeships)
+            {
+                draftApprenticeship.FundingBandCap = GetFundingBandCap(course, draftApprenticeship.OriginalStartDate ?? draftApprenticeship.StartDate);
+            }
         }
 
-        private async Task<int?> GetFundingBandCap(string courseCode, DateTime? startDate)
+        private int? GetFundingBandCap(GetTrainingProgrammeResponse course, DateTime? startDate)
         {
             if (startDate == null)
             {
                 return null;
             }
-
-            var course = await _commitmentsApiClient.GetTrainingProgramme(courseCode);
 
             if (course == null)
             {
