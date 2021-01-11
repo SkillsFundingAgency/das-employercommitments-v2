@@ -11,6 +11,7 @@
         <form method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ProviderId" />
+            <input type="hidden" asp-for="ProviderName" />
             <input type="hidden" asp-for="StopDate" />
             <input type="hidden" asp-for="NewEndMonth" />
             <input type="hidden" asp-for="NewEndYear" />
@@ -36,13 +37,13 @@
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
                                 <label asp-for="NewStartMonth" class="govuk-label govuk-date-input__label">Month</label>
-                                <input asp-for="NewStartMonth" min="1" max="12" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number">
+                                <input asp-for="NewStartMonth" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number">
                             </div>
                         </div>
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
                                 <label asp-for="NewStartYear" class="govuk-label govuk-date-input__label">Year</label>
-                                <input asp-for="NewStartYear" min="1900" max="9999" class="govuk-input govuk-date-input__input govuk-input--width-4" type="number">
+                                <input asp-for="NewStartYear" class="govuk-input govuk-date-input__input govuk-input--width-4" type="number">
                             </div>
                         </div>
                     </div>

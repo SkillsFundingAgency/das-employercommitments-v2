@@ -9,28 +9,64 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     public class WhatIsTheNewStartDateViewModelValidatorTests
     {
-        private DateTime _stopDate = new DateTime(2020, 12, 10);
+        private readonly DateTime _stopDate = new DateTime(2020, 12, 10);
 
-        // this could be broken down to test each scenario and excepted outcome
-        [TestCase(12, 2000, true)]
-        [TestCase(13, 2000, false)]
-        [TestCase(null, 2000, false)]
-        [TestCase(1, null, false)]
-        [TestCase(null, null, false)]
-        public void ValidateRealDate(int? month, int? year, bool expectedValid)
+        private const string NoDateEnteredError = "Enter the start date with the new training provider";
+        private const string YearNotEnteredError = "The start date must include a year";
+        private const string MonthNotEnteredError = "The start date must include a month";
+        private const string NotARealDateError = "The start date must be a real date";
+        private readonly string NewStartDateBeforeStopDateError;
+
+        public WhatIsTheNewStartDateViewModelValidatorTests()
         {
-            var model = new WhatIsTheNewStartDateViewModel { NewStartMonth = month, NewStartYear = year };
-
-            AssertValidationResult(x => x.NewStartDate, model, expectedValid);
+            NewStartDateBeforeStopDateError = $"The start date must be on or after {_stopDate.ToString("MMMM yyyy")}";
         }
 
-        [TestCase(12, 2020, true)]
-        public void ValidateNewStartDateIsOnOrAfterStopDate(int? month, int? year, bool expectedValid)
+        [Test]
+        public void WhenNeitherMonthOrYearAreEntered_ThenValidationFails()
         {
+            var model = new WhatIsTheNewStartDateViewModel { NewStartMonth = null, NewStartYear = null, StopDate = _stopDate };
 
+            AssertValidationResult(x => x.NewStartDate, model, false, NoDateEnteredError);
         }
 
-        private void AssertValidationResult<T>(Expression<Func<WhatIsTheNewStartDateViewModel, T>> property, WhatIsTheNewStartDateViewModel instance, bool expectedValid)
+        [Test]
+        public void WhenMonthIsEnteredButYearIsNot_ThenValidationFails()
+        {
+            var model = new WhatIsTheNewStartDateViewModel { NewStartMonth = 6, NewStartYear = null, StopDate = _stopDate };
+
+            AssertValidationResult(x => x.NewStartDate, model, false, YearNotEnteredError);
+        }
+
+        [Test]
+        public void WhenYearIsEnteredButMonthIsNot_ThenValidationFails()
+        {
+            var model = new WhatIsTheNewStartDateViewModel { NewStartMonth = null, NewStartYear = 2021, StopDate = _stopDate };
+
+            AssertValidationResult(x => x.NewStartDate, model, false, MonthNotEnteredError);
+        }
+
+        [TestCase(13, 2020)]
+        [TestCase(0, 2020)]
+        [TestCase(-1, 2020)]
+        [TestCase(6, -2020)]
+        public void WhenInvalidMonthOrYearIsEntered_ThenValidationFails(int month, int year)
+        {
+            var model = new WhatIsTheNewStartDateViewModel { NewStartMonth = month, NewStartYear = year, StopDate = _stopDate };
+
+            AssertValidationResult(x => x.NewStartDate, model, false, NotARealDateError);
+        }
+
+        [TestCase(12, 2020)]
+        [TestCase(1, 2021)]
+        public void WhenNewStartDateIsValidDateThatIsOnOrAfterStopDate_ThenValidationPasses(int? month, int? year)
+        {
+            var model = new WhatIsTheNewStartDateViewModel { NewStartMonth = month, NewStartYear = year, StopDate = _stopDate };
+
+            AssertValidationResult(x => x.NewStartDate, model, true);
+        }
+
+        private void AssertValidationResult<T>(Expression<Func<WhatIsTheNewStartDateViewModel, T>> property, WhatIsTheNewStartDateViewModel instance, bool expectedValid, string expectedErrorMessage = null)
         {
             var validator = new WhatIsTheNewStartDateViewModelValidator();
 
@@ -40,7 +76,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             }
             else
             {
-                validator.ShouldHaveValidationErrorFor(property, instance);
+                validator.ShouldHaveValidationErrorFor(property, instance).WithErrorMessage(expectedErrorMessage);
             }
         }
     }

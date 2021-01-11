@@ -16,19 +16,39 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
             _monthYear = new MonthYearModel("") { Month = 3, Year = 2020 };
         }
 
-        //Expand to separate tests to explain cases better
-        [TestCase(2019, 1, 1, true)]
-        [TestCase(2020, 1, 1, true)] 
-        [TestCase(2020, 3, 1, true)]
-        [TestCase(2020, 3, 31, true )]
-        [TestCase(2020, 5, 1, false)]
-        public void IsGreaterThanOrEqualToDateTimeMonthYear(int year, int month, int day, bool expectedResult)
+        [TestCase(2019, 1, 1)]
+        [TestCase(2020, 1, 1)]
+        public void WhenDateTimeIsBeforeMonthYearModel_IsEqualToOrAfterMonthYearOfDateTime_ReturnsTrue(int year, int month, int day)
         {
-            var date = new DateTime(year, month, day);
+            var dateTime = new DateTime(year, month, day);
 
-            var actualResult = _monthYear.IsGreaterThanOrEqualToDateTimeMonthYear(date);
+            var actualResult = _monthYear.IsEqualToOrAfterMonthYearOfDateTime(dateTime);
 
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(true, actualResult);
+        }
+
+        [TestCase(2020, 3, 1)]
+        [TestCase(2020, 3, 31)]
+        [TestCase(2020, 3, 31, 23, 59, 59)]
+        public void WhenDateTimeIsAnywhereWithinMonthYearModel_IsEqualToOrAfterMonthYearOfDateTime_ReturnsTrue(int year, int month, int day, int hour = 0, int min = 0, int sec = 0)
+        {
+            var dateTime = new DateTime(year, month, day, hour, min, sec);
+
+            var actualResult = _monthYear.IsEqualToOrAfterMonthYearOfDateTime(dateTime);
+
+            Assert.AreEqual(true, actualResult);
+        }
+
+        [TestCase(2020, 4, 1)]
+        [TestCase(2020, 4, 30)]
+        [TestCase(2021, 3, 31)]
+        public void WhenDateTimeIsAfterMonthYearModel_IsEqualToOrAfterMonthYearOfDateTime_ReturnsFalse(int year, int month, int day)
+        {
+            var dateTime = new DateTime(year, month, day);
+
+            var actualResult = _monthYear.IsEqualToOrAfterMonthYearOfDateTime(dateTime);
+
+            Assert.AreEqual(false, actualResult);
         }
     }
 }

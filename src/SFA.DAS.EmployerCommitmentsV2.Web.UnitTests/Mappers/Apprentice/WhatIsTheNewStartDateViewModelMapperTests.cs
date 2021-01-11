@@ -59,6 +59,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task ProviderName_IsMapped()
+        {
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(_request.ProviderName, result.ProviderName);
+        }
+
+        [Test]
         public async Task WhenRequestingTheWhatIsTheNewStartDatePage_ThenTheGetApprenticeshipIsCalled()
         {
             var result = await _mapper.Map(_request);
@@ -72,14 +80,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             Assert.AreEqual(_apprenticeshipResponse.StopDate, result.StopDate);
-        }
-
-        [Test]
-        public async Task ProviderName_IsMapped()
-        {
-            var result = await _mapper.Map(_request);
-
-            Assert.AreEqual(_apprenticeshipResponse.ProviderName, result.ProviderName);
         }
 
         [TestCase(true, true)]
