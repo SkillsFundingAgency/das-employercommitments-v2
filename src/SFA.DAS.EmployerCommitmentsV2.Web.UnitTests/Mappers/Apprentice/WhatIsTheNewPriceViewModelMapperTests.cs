@@ -77,7 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_apprenticeshipResponse.ProviderName, result.ProviderName);
+            Assert.AreEqual(_request.ProviderName, result.ProviderName);
         }
 
         [TestCase(true, true)]
