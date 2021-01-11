@@ -34,7 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             var result = _fixture.WhatIsTheNewEndDate(_viewModel);
 
-            _fixture.VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(result as RedirectToRouteResult);
+            _fixture.VerifyRedirectsToTheWhatIsTheNewPricePage(result as RedirectToRouteResult);
         }
 
         [Test]
