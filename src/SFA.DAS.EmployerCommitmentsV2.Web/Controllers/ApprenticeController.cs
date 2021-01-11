@@ -190,7 +190,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpGet]
         [Route("{apprenticeshipHashedId}/change-provider/start-date", Name = RouteNames.WhatIsTheNewStartDate)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public async Task<IActionResult> WhatIsTheNewStartDate(WhatIsTheNewStartDateRequest request)
+        public async Task<IActionResult> WhatIsTheNewStartDate(EmployerLedChangeOfProviderRequest request)
         {
             var viewModel = await _modelMapper.Map<WhatIsTheNewStartDateViewModel>(request);
 
@@ -200,8 +200,31 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         [Route("{apprenticeshipHashedId}/change-provider/start-date", Name = RouteNames.WhatIsTheNewStartDate)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public IActionResult WhatIsTheNewStartDate(WhatIsTheNewStartDateViewModel viewModel)
+        public IActionResult WhatIsTheNewStartDate(WhatIsTheNewStartDateViewModel vm)
         {
+            if (vm.Edit)
+            {
+                return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, new { vm.AccountHashedId, vm.ApprenticeshipHashedId, vm.ProviderId, vm.NewStartMonth, vm.NewStartYear, vm.NewEndMonth, vm.NewEndYear, vm.NewPrice });
+            }
+
+            return RedirectToRoute(RouteNames.WhatIsTheNewEndDate, new { vm.AccountHashedId, vm.ApprenticeshipHashedId, vm.ProviderId, vm.NewStartMonth, vm.NewStartYear});
+        }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/change-provider/end-date", Name = RouteNames.WhatIsTheNewEndDate)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public IActionResult WhatIsTheNewEndDate(EmployerLedChangeOfProviderRequest request)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/change-provider/confirm-details-and-send-request", Name = RouteNames.ConfirmDetailsAndSendRequest)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public async Task<IActionResult> ConfirmDetailsAndSendRequestPage(EmployerLedChangeOfProviderRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ConfirmDetailsAndSendViewModel>(request); 
+
             return View(viewModel);
         }
 

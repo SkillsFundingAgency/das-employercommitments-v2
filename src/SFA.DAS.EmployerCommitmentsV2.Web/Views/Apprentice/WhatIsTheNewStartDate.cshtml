@@ -11,8 +11,10 @@
         <form method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ProviderId" />
-            <input type="hidden" asp-for="AccountHashedId" />
-            <input type="hidden" asp-for="ApprenticeshipHashedId" />
+            <input type="hidden" asp-for="StopDate" />
+            <input type="hidden" asp-for="NewEndMonth" />
+            <input type="hidden" asp-for="NewEndYear" />
+            <input type="hidden" asp-for="NewPrice" />
 
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
@@ -23,7 +25,7 @@
                     </legend>
 
                     <p class="govuk-body">
-                        This date must be on or after the stop date @(Model.StopDate)
+                        This date must be on or after the stop date (@(Model.StopDate.ToString("MMMM yyyy")))
                     </p>
 
                     <span class="govuk-hint">
@@ -44,8 +46,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 </fieldset>
             </div>
 

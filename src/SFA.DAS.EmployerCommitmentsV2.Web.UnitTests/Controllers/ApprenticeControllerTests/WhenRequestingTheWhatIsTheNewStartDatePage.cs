@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -35,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
     public class WhenRequestingTheWhatIsTheNewStartDatePageTestFixture
     {
-        private readonly WhatIsTheNewStartDateRequest _request;
+        private readonly EmployerLedChangeOfProviderRequest _request;
         private readonly WhatIsTheNewStartDateViewModel _viewModel;
 
         private readonly Mock<IModelMapper> _mockMapper;
@@ -46,7 +47,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var autoFixture = new Fixture();
 
-            _request = autoFixture.Create<WhatIsTheNewStartDateRequest>();
+            _request = autoFixture.Create<EmployerLedChangeOfProviderRequest>();
             _viewModel = autoFixture.Create<WhatIsTheNewStartDateViewModel>();
 
             _mockMapper = new Mock<IModelMapper>();
@@ -57,7 +58,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 Mock.Of<ICookieStorageService<IndexRequest>>(),
                 Mock.Of<ICommitmentsApiClient>(),
                 Mock.Of<ILinkGenerator>(),
-                Mock.Of<ILogger<ApprenticeController>>());
+                Mock.Of<ILogger<ApprenticeController>>(),
+                Mock.Of<IAuthorizationService>());
         }
 
         public async Task<IActionResult> WhatIsTheNewStartDate()

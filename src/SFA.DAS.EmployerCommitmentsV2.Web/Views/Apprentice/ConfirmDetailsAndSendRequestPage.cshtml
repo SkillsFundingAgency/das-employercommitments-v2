@@ -1,0 +1,8 @@
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ConfirmDetailsAndSendViewModel
+
+<p> Confirm details and send request page</p>
+
+
+<p> start date : @($"{new DateTime(Model.NewStartYear.Value, Model.NewStartMonth.Value, 1)}")</p>
+<a id="change-dates-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.WhatIsTheNewStartDate, new { NewStartMonth = Model.NewStartMonth, NewStartYear = Model.NewStartYear, NewEndMonth = Model.NewEndMonth, NewEndYear = Model.NewEndYear, Price = Model.NewPrice, Edit = true})">Change start date</a>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -17,7 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         private Fixture _autoFixture;
         private WhenPostingWhatIsTheNewStartDateTestFixture _fixture;
 
-        private WhatIsTheNewStartDateViewModel _viewModel
+        private WhatIsTheNewStartDateViewModel _viewModel;
 
         [SetUp]
         public void Arrange()
@@ -32,11 +33,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [Test]
         public void ThenRedirectToTheWhatIsTheNewStopDatePage()
         {
-            _viewModel.Edit = null;
+            _viewModel.Edit = false;
 
             var result = _fixture.WhatIsTheNewStartDate(_viewModel);
 
-            _fixture.VerifyRedirectsToTheWhatIsTheNewStopDatePage(result);
+            _fixture.VerifyRedirectsToTheWhatIsTheNewEndDatePage(result as RedirectToRouteResult);
         }
 
         [Test]
@@ -46,7 +47,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             var result = _fixture.WhatIsTheNewStartDate(_viewModel);
 
-            _fixture.VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(result);
+            _fixture.VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(result as RedirectToRouteResult);
         }
     }
 
@@ -60,7 +61,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                Mock.Of<ICookieStorageService<IndexRequest>>(),
                Mock.Of<ICommitmentsApiClient>(),
                Mock.Of<ILinkGenerator>(),
-               Mock.Of<ILogger<ApprenticeController>>());
+               Mock.Of<ILogger<ApprenticeController>>(),
+               Mock.Of<IAuthorizationService>());
         }
 
         public IActionResult WhatIsTheNewStartDate(WhatIsTheNewStartDateViewModel viewModel)
@@ -68,11 +70,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             return _controller.WhatIsTheNewStartDate(viewModel);
         }
 
-        public void VerifyRedirectsToTheWhatIsTheNewStopDatePage(IActionResult result)
+        public void VerifyRedirectsToTheWhatIsTheNewEndDatePage(IActionResult result)
         {
             var redirectResult = (RedirectToRouteResult)result;
 
-            Assert.AreEqual(RouteNames.WhatIsTheNewStopDate, redirectResult.RouteName);
+            Assert.AreEqual(RouteNames.WhatIsTheNewEndDate, redirectResult.RouteName);
         }
 
         public void VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(IActionResult result)
