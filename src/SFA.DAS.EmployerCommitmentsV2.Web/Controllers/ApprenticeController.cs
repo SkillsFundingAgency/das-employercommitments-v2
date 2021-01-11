@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -29,9 +30,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ICookieStorageService<IndexRequest> _cookieStorage;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly ILinkGenerator _linkGenerator;
-        private readonly ILogger<ApprenticeController> _logger;
+        private readonly ILogger<ApprenticeController> _logger;       
 
-        public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILinkGenerator linkGenerator, ILogger<ApprenticeController> logger)
+        public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILinkGenerator linkGenerator, ILogger<ApprenticeController> logger) 
         {
             _modelMapper = modelMapper;
             _cookieStorage = cookieStorage;
@@ -194,6 +195,31 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var viewModel = await _modelMapper.Map<ChangeProviderRequestedConfirmationViewModel>(request);
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/change-provider/price", Name = RouteNames.WhatIsTheNewPrice)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public async Task<IActionResult> WhatIsTheNewPrice(EmployerLedChangeOfProviderRequest request)
+        {
+            var model = await _modelMapper.Map<WhatIsTheNewPriceViewModel>(request);
+            return View(model);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/change-provider/price", Name = RouteNames.WhatIsTheNewPrice)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public IActionResult WhatIsTheNewPrice(WhatIsTheNewPriceViewModel vm)
+        {
+            /*var request = await _modelMapper.Map<ConfirmRequest>(viewModel);
+            return RedirectToRoute(RouteNames.ApprenticeConfirm, new { request.EmployerId, request.ApprenticeshipHashedId, request.EmployerAccountLegalEntityPublicHashedId, request.StartDate, request.EndDate, request.Price });*/
+
+            if (vm.Edit)
+            {
+                return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, new { vm.AccountHashedId, vm.ApprenticeshipHashedId, vm.ProviderId, vm.NewStartMonth, vm.NewStartYear, vm.NewEndMonth, vm.NewEndYear, vm.NewPrice });
+            }
+
+            return RedirectToRoute(RouteNames.WhatIsTheNewEndDate, new { vm.AccountHashedId, vm.ApprenticeshipHashedId, vm.ProviderId, vm.NewStartMonth, vm.NewStartYear });
         }
 
         [Route("{apprenticeshipHashedId}/view-changes", Name = RouteNames.ViewChanges)]

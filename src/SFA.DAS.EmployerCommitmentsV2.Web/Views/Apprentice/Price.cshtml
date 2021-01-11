@@ -1,0 +1,34 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using  SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.WhatIsTheNewPriceViewModel
+
+@{
+    ViewBag.Title = "What is the agreed price of completing the training with @Model.ProviderName?"; /*TODO : need to bring the new training provider name*/
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+        <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
+        <form novalidate method="post">
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.NewStartDate)
+            @*@Html.HiddenFor(x => x.NewEndDate)*@
+            <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.NewPrice, "govuk-form-group--error ")">
+                <p>This is the price you agreed with [new training provider name] to complete the remainder of the apprenticeship training and assessment..</p>
+                <label class="govuk-label" for="price">Enter the price in whole pounds.</label>
+                <span class="govuk-hint">For example, 5000</span>
+                @Html.ValidationMessageFor(m => m.NewPrice, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.NewPrice) })
+                <input asp-for="NewPrice" class="govuk-input govuk-!-width-one-third @Html.AddClassIfPropertyInError(x=>x.NewPrice, "govuk-input--error input-validation-error")" />
+            </div>
+            <button id="save-and-continue-button" class="govuk-button" type="submit" data-module="govuk-button">
+                Continue
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Back
+{
+    <div class="das-js-back-link"></div>
+}
