@@ -11,6 +11,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public long Ukprn { get; set; }
         public long CurrentProviderId { get; set; }
         public List<Provider> Providers { get; set; }
-        public long ApprenticeshipId { get; set; }
     }
 }

@@ -219,7 +219,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{apprenticeshipHashedId}/change-provider/confirm-details-and-send-request", Name = RouteNames.ConfirmDetailsAndSendRequest)]
+        [Route("{apprenticeshipHashedId}/change-provider/confirm-details", Name = RouteNames.ConfirmDetailsAndSendRequest)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public async Task<IActionResult> ConfirmDetailsAndSendRequestPage(EmployerLedChangeOfProviderRequest request)
         {

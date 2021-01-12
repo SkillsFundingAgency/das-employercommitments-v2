@@ -1,8 +1,96 @@
-﻿@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ConfirmDetailsAndSendViewModel
 
-<p> Confirm details and send request page</p>
+@{
+    ViewData["Title"] = "Confirm details and send request to new training provider - Apprenticeship service - GOV.UK";
 
+    var queryData = new
+    {
+        NewStartMonth = Model.NewStartDate.Month,
+        NewStartYear = Model.NewStartDate.Year,
+        NewEndMonth = Model.NewEndDate.Month,
+        NewEndYear = Model.NewEndDate.Year,
+        NewPrice = Model.NewPrice,
+        Edit = true
+    };
+}
 
-<p> start date : @($"{new DateTime(Model.NewStartYear.Value, Model.NewStartMonth.Value, 1)}")</p>
-<a id="change-dates-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.WhatIsTheNewStartDate, new { NewStartMonth = Model.NewStartMonth, NewStartYear = Model.NewStartYear, NewEndMonth = Model.NewEndMonth, NewEndYear = Model.NewEndYear, Price = Model.NewPrice, Edit = true})">Change start date</a>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl"> Confirm details and send request to @Model.ProviderName</h1>
+
+        <p class="govuk-body">
+            @Model.ProviderName will need to check these details and confirm that they're happy to take on your apprentice.
+        </p>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <table class="govuk-table">
+            <caption class="govuk-table__caption">@Model.ApprenticeFullName details</caption>
+
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header"></th>
+                    <th scope="col" class="govuk-table__header "> Current details</th>
+                    <th scope="col" class="govuk-table__header "> Requested changes</th>
+                    <th scope="col" class="govuk-table__header "> </th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header"> Stop date </th>
+                    <td class="govuk-table__cell"> Not applicable </td>
+                    <td class="govuk-table__cell"> <mark class="das-mark das-mark--green"> Newdate 2000 </mark> </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link"> Change </a> </td>
+                </tr>
+
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header"> Training provider </th>
+                    <td class="govuk-table__cell"> @Model.CurrentProviderName </td>
+                    <td class="govuk-table__cell"> <mark class="das-mark das-mark--green"> @Model.ProviderName </mark> </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link" href="#"> Change </a> </td>
+                </tr>
+
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header"> Training start date </th>
+                    <td class="govuk-table__cell"> @Model.CurrentStartDate.ToString("MMMM yyyy") </td>
+                    @await Html.PartialAsync("_ViewChangesDateCell", new ViewChangesCell<DateTime?>(Model.CurrentStartDate, Model.NewStartDate))
+                    <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link" href="@Url.RouteUrl(RouteNames.WhatIsTheNewStartDate, queryData)"> Change </a> </td>
+                </tr>
+
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header"> Training end date </th>
+                    <td class="govuk-table__cell"> @Model.CurrentEndDate.ToString("MMMM yyyy") </td>
+                    @await Html.PartialAsync("_ViewChangesDateCell", new ViewChangesCell<DateTime?>(Model.CurrentEndDate, Model.NewEndDate))
+                    <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link" href="@Url.RouteUrl(RouteNames.WhatIsTheNewStartDate, queryData)"> Change </a> </td>
+                </tr>
+
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header"> Price </th>
+                    <td class="govuk-table__cell"> @Model.CurrentPrice </td>
+                    @await Html.PartialAsync("_ViewChangesPriceCell", new ViewChangesCell<int?>(Model.CurrentPrice, Model.NewPrice))
+                    <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link" href="@Url.RouteUrl(RouteNames.WhatIsTheNewStartDate, queryData)"> Change </a> </td>
+                </tr>
+            </tbody>
+            
+        </table>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <form method="post">
+            <input type="hidden" asp-for="NewPrice" />
+            <button class="govuk-button" type="submit"> Confirm and send </button>
+        </form>
+    </div>
+</div>
+
+@section Back
+{
+    <div class="das-js-back-link"></div>
+}
