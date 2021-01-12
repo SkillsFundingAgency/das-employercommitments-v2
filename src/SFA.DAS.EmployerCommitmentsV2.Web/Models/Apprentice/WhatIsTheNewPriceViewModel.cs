@@ -11,9 +11,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string ProviderName { get; set; }
         public long ProviderId { get; set; }
         public DateTime StopDate { get; set; }     
-        public string NewStartDate { get; set; }
-        public string NewEndDate { get; set; }        
+        public string NewStartMonthYear { get; set; } 
+        public string NewEndMonthYear { get; set; }        
         public bool Edit { get; set; }        
         public int? NewPrice { get; set; }
+        public DateTime NewStartDate { get; set; }
+        public DateTime NewEndDate { get; set; }
     }
 }

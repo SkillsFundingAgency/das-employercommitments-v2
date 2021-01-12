@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System;
 using System.Threading.Tasks;
@@ -26,9 +27,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 ProviderName = source.ProviderName,
                 ProviderId = source.ProviderId,
                 StopDate = apprenticeship.StopDate.Value,
-                NewStartDate = new DateTime(source.NewStartYear.Value, source.NewStartMonth.Value, 1).ToString(),
-                NewEndDate = new DateTime(source.NewEndYear.Value, source.NewEndMonth.Value, 1).ToString(),
-                Edit = source.IsEdit ?? false
+                NewStartMonthYear = $"{source.NewStartMonth.Value}{source.NewStartYear.Value}",
+                NewEndMonthYear = $"{source.NewEndMonth.Value}{source.NewEndYear.Value}",
+                Edit = source.IsEdit ?? false,
+                NewStartDate = new DateTime(source.NewStartYear.Value, source.NewStartMonth.Value, 1),
+                NewEndDate = new DateTime(source.NewEndYear.Value, source.NewEndMonth.Value, 1)
             };
         }
     }

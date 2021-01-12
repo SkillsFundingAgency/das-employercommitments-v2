@@ -1,67 +1,115 @@
-﻿using FluentValidation.TestHelper;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using System;
-using System.Linq.Expressions;
+using AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     public class WhatIsTheNewPriceViewModelValidatorTests
     {
-        [TestCase(0, false)]
-        [TestCase(1, true)]
-        public void ThenProviderIdIsValidated(long providerId, bool expectedValid)
-        {
-            var request = new WhatIsTheNewPriceViewModel { ProviderId = providerId };
+        private WhatIsTheNewPriceViewModelValidator _validator;
+        private Fixture _autoFixture;
 
-            AssertValidationResult(x => x.ProviderId, request, expectedValid);
+        [SetUp]
+        public void Arrange()
+        {
+            _autoFixture = new Fixture();
+            _autoFixture.Customize<WhatIsTheNewPriceViewModel>(c =>
+                c.With(m => m.NewPrice, 1500)
+                    .With(m => m.NewStartMonthYear, "022020")
+                    .With(m => m.NewEndMonthYear, "092020"));
+
+            _validator = new WhatIsTheNewPriceViewModelValidator();
         }
 
-        [TestCase(null, false)]
-        [TestCase("", false)]
+        [TestCase("5143541", true)]
         [TestCase(" ", false)]
-        [TestCase("XYZ", true)]
-        public void Validate_EmployerAccountLegalEntityPublicHashedId_ShouldBeValidated(string accountHashedId, bool expectedValid)
-        {
-            var model = new WhatIsTheNewPriceViewModel { AccountHashedId = accountHashedId };
-
-            AssertValidationResult(request => request.AccountHashedId, model, expectedValid);
-        }
-
         [TestCase("", false)]
-        [TestCase(" ", false)]
-        [TestCase("AB76V", true)]
-        public void Validate_ApprenticeshipHashedId_ShouldBeValidated(string apprenticeshipHashedId, bool expectedValid)
-        {
-            var model = new WhatIsTheNewPriceViewModel { ApprenticeshipHashedId = apprenticeshipHashedId };
-            AssertValidationResult(request => request.ApprenticeshipHashedId, model, expectedValid);
-        }        
-
         [TestCase(null, false)]
-        [TestCase(0, false)]
-        [TestCase(1, true)]
-        [TestCase(100000, true)]
-        [TestCase(100001, false)]
-        public void Validate_Price_ShouldBeValidated(int? price, bool expectedValid)
+        public void WhenValidatingWhatIsThePrice_ValidateTheAccountHashedId(string accountHashedId, bool expectedValid)
         {
-            var model = new WhatIsTheNewPriceViewModel { NewPrice = price };
-            AssertValidationResult(request => request.NewPrice, model, expectedValid);
+            //Arrange
+            var viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();
+            viewModel.AccountHashedId = accountHashedId;
+
+            //Act
+            var result = _validator.Validate(viewModel);
+
+            //Assert
+            Assert.AreEqual(expectedValid, result.IsValid);
         }
 
-        private void AssertValidationResult<T>(Expression<Func<WhatIsTheNewPriceViewModel, T>> property, WhatIsTheNewPriceViewModel instance, bool expectedValid)
+        [TestCase("5143541", true)]
+        [TestCase(" ", false)]
+        [TestCase("", false)]
+        [TestCase(null, false)]
+        public void WhenValidatingWhatIsThePrice_ValidateTheApprenticeshipHashedId(string apprenticeshipHashedId, bool expectedValid)
         {
-            var validator = new WhatIsTheNewPriceViewModelValidator();            
+            //Arrange
+            var viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();
+            viewModel.ApprenticeshipHashedId = apprenticeshipHashedId;
 
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
+            //Act
+            var result = _validator.Validate(viewModel);
+
+            //Assert
+            Assert.AreEqual(expectedValid, result.IsValid);
         }
-     
+
+
+        [TestCase(null, false, "Enter the agreed price of completing the training with the new provider")]
+        [TestCase(0, false, "The agreed price of completing the training with the new provider must be more than 0")]
+        [TestCase(100050, false, "The agreed price of completing the training with the new provider must be less than 100000")]
+        [TestCase(1500, true, null)]
+        public void WhenValidatingWhatIsThePrice_ValidateTheNewPrice(int? newPrice, bool expectedValid, string errorMessage)
+        {
+            //Arrange
+            var viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();
+            viewModel.NewPrice = newPrice;
+
+            //Act
+            var result = _validator.Validate(viewModel);
+
+            //Assert
+            Assert.AreEqual(expectedValid, result.IsValid);
+            if (errorMessage != null) Assert.IsTrue(result.Errors.Any(e => e.ErrorMessage == errorMessage));
+        }
+       
+        [TestCase("012021", "062021", true, null)]
+        [TestCase("132021", "062021", false, "The specified condition was not met for 'New Start Month Year'.")]
+        [TestCase("012021", "162021", false, "The specified condition was not met for 'New End Month Year'.")]
+        public void WhenValidatingWhatIsThePrice_ValidateTheNewEndMonthYearAndTheNewStartMonthYear(string newStartMonthYear, string newEndMonthYear, bool expectedValid, string errorMessage)
+        {
+            //Arrange
+            var viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();
+            viewModel.NewStartMonthYear = newStartMonthYear;
+            viewModel.NewEndMonthYear = newEndMonthYear;
+
+            //Act
+            var result = _validator.Validate(viewModel);
+
+            //Assert
+            Assert.AreEqual(expectedValid, result.IsValid);
+            if (errorMessage != null) Assert.IsTrue(result.Errors.Any(e => e.ErrorMessage == errorMessage));
+        }
+       
+        //[TestCase("012021", "062020", false, "New End Month Year must be greater than New Start Month Year")]
+        //public void WhenValidatingWhatIsThePrice_ValidateTheNewEndMonthYearIsAfterTheNewStartMonthYear(string newStartMonthYear, string newEndMonthYear, bool expectedValid, string errorMessage)
+        //{
+        //    //Arrange
+        //    var viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();
+        //    viewModel.NewStartMonthYear = newStartMonthYear;
+        //    viewModel.NewEndMonthYear = newEndMonthYear;
+
+        //    //Act
+        //    var result = _validator.Validate(viewModel);
+
+        //    //Assert
+        //    Assert.AreEqual(expectedValid, result.IsValid);
+        //    if (errorMessage != null) Assert.IsTrue(result.Errors.Any(e => e.ErrorMessage == errorMessage));
+        //}
+
     }
 }
