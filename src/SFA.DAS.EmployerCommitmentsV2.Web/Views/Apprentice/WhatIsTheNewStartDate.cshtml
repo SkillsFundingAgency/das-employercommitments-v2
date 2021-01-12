@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.WhatIsTheNewStartDateViewModel
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.WhatIsTheNewStartDateViewModel
 
 @{
     ViewData["Title"] = "What is the start date with the new training provider? - Apprenticeship service - GOV.UK";
@@ -17,7 +18,7 @@
             <input type="hidden" asp-for="NewEndYear" />
             <input type="hidden" asp-for="NewPrice" />
 
-            <div class="govuk-form-group">
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.NewStartDate,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl govuk-!-padding-bottom-6">
                         <h1 class="govuk-fieldset__heading">
