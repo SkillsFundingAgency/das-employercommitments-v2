@@ -1,6 +1,5 @@
 ﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 using System;
@@ -39,18 +38,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             AssertValidationResult(request => request.ApprenticeshipHashedId, model, expectedValid);
         }
 
-        //TODO : Test
-        //[TestCase("", false)]
-        //[TestCase(" ", false)]
-        ////[TestCase("XXXXXXX", false)]
-        ////[TestCase("1220", false)]
-        //[TestCase("122021", true)]
-        //[TestCase("012021", true)]
-        //public void Validate_StartDate_ShouldBeValidated(string startDate, bool expectedValid)
-        //{
-        //    var model = new WhatIsTheNewPriceViewModel { NewStartDate = new MonthYearModel(startDate) };
-        //    AssertValidationResult(request => request.NewStartDate, model, expectedValid);
-        //}
+        [TestCase("", false)]
+        [TestCase(" ", false)]
+        [TestCase("XXXXXXX", false)]
+        [TestCase("1220", false)]
+        [TestCase("12002", true)]
+        [TestCase("012002", true)]
+        public void Validate_StartDate_ShouldBeValidated(string startDate, bool expectedValid)
+        {
+            var model = new WhatIsTheNewPriceViewModel { NewStartDate = startDate };
+            AssertValidationResult(request => request.NewStartDate, model, expectedValid);
+        }
+
+        [TestCase("", false)]
+        [TestCase(" ", false)]
+        [TestCase("XXXXXXX", false)]
+        [TestCase("1220", false)]
+        [TestCase("12002", true)]
+        [TestCase("012002", true)]
+        public void Validate_EndDate_ShouldBeValidated(string endDate, bool expectedValid)
+        {
+            var model = new WhatIsTheNewPriceViewModel { NewEndDate = endDate };
+            AssertValidationResult(request => request.NewEndDate, model, expectedValid);
+        }
 
         [TestCase(null, false)]
         [TestCase(0, false)]
@@ -65,7 +75,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 
         private void AssertValidationResult<T>(Expression<Func<WhatIsTheNewPriceViewModel, T>> property, WhatIsTheNewPriceViewModel instance, bool expectedValid)
         {
-            var validator = new WhatIsTheNewPriceViewModelValidator();
+            var validator = new WhatIsTheNewPriceViewModelValidator();            
 
             if (expectedValid)
             {
@@ -76,5 +86,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
                 validator.ShouldHaveValidationErrorFor(property, instance);
             }
         }
+     
     }
 }

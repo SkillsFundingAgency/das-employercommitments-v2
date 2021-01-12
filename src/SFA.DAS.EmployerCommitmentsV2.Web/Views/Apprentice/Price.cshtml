@@ -3,27 +3,47 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.WhatIsTheNewPriceViewModel
 
 @{
-    ViewBag.Title = "What is the agreed price of completing the training with @Model.ProviderName?"; /*TODO : need to bring the new training provider name*/
+    ViewBag.Title = "What is the agreed price of completing the training with  new training provider name? ";
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <partial name="_ValidationSummary" />
-        <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
-        <form novalidate method="post">
+        <partial name="_ValidationSummary" />        
+        
+        <form method="post">
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(x => x.NewStartDate)
-            @*@Html.HiddenFor(x => x.NewEndDate)*@
-            <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.NewPrice, "govuk-form-group--error ")">
-                <p>This is the price you agreed with [new training provider name] to complete the remainder of the apprenticeship training and assessment..</p>
-                <label class="govuk-label" for="price">Enter the price in whole pounds.</label>
-                <span class="govuk-hint">For example, 5000</span>
-                @Html.ValidationMessageFor(m => m.NewPrice, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.NewPrice) })
-                <input asp-for="NewPrice" class="govuk-input govuk-!-width-one-third @Html.AddClassIfPropertyInError(x=>x.NewPrice, "govuk-input--error input-validation-error")" />
+            <input type="hidden" asp-for="ProviderId" />
+            <input type="hidden" asp-for="ProviderName" />
+            <input type="hidden" asp-for="AccountHashedId" />
+            <input type="hidden" asp-for="ApprenticeshipHashedId" />
+            <input type="hidden" asp-for="NewStartDate" />
+            <input type="hidden" asp-for="NewEndDate" />
+            <input type="hidden" asp-for="Edit" />
+
+
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.NewPrice,  "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl govuk-!-padding-bottom-6">
+                        <h1 class="govuk-fieldset__heading">
+                            What is the agreed price of completing the training with @Model.ProviderName?
+                        </h1>
+                    </legend>
+
+                    <p class="govuk-body">
+                        This is the price you agreed with @Model.ProviderName to complete the remainder of the apprenticeship training and assessment.
+                    </p>
+
+                    <span class="govuk-hint">
+                        For example, 5000
+                    </span>
+
+                    @Html.ValidationMessageFor(m => m.NewPrice, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.NewPrice) })
+                    <input asp-for="NewPrice" class="govuk-input govuk-!-width-one-third @Html.AddClassIfPropertyInError(x=>x.NewPrice, "govuk-input--error input-validation-error")" />
+
+                </fieldset>
             </div>
-            <button id="save-and-continue-button" class="govuk-button" type="submit" data-module="govuk-button">
-                Continue
-            </button>
+
+            <button class="govuk-button" type="submit"> Continue </button>
         </form>
     </div>
 </div>

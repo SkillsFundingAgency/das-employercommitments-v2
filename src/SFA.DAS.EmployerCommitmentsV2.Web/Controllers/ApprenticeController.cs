@@ -251,7 +251,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public IActionResult WhatIsTheNewPrice(WhatIsTheNewPriceViewModel viewModel)
         {
-            return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId, viewModel.NewStartMonth, viewModel.NewStartYear, viewModel.NewEndMonth, viewModel.NewEndYear, viewModel.NewPrice });
+            return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId, viewModel.NewStartDate, viewModel.NewEndDate, viewModel.NewPrice });
         }
 
         [Route("{apprenticeshipHashedId}/view-changes", Name = RouteNames.ViewChanges)]
