@@ -16,16 +16,15 @@
 
         @if (Model.ProviderAddDetails)
         {
-            <p class="govuk-body">We'll ask @Model.ProviderName to check the details of this change. If they make any changes, it will come back to you.</p>
-            <p class="govuk-body">You and @Model.ProviderName must both approve the apprentice’s details.</p>
+            <p class="govuk-body">We’ll ask @Model.ProviderName to enter the new apprenticeship dates and price. Once they've added @apprenticeDisplayName’s apprenticeship details, you can sign in to view them.</p>
         }
         else
         {
-            <p class="govuk-body">We’ll ask @Model.ProviderName to enter the new apprenticeship dates and price. Once they've added @apprenticeDisplayName’s apprenticeship details, you can sign in to view them.</p>
+            <p class="govuk-body">We'll ask @Model.ProviderName to check the details of this change. If they make any changes, it will come back to you.</p>
+            <p class="govuk-body">You and @Model.ProviderName must both approve the apprentice’s details.</p>
         }
-
+        
         <p class="govuk-body"> Once you both approve them, @Model.ProviderName will become @apprenticeDisplayName’s new training provider.</p>
-
         <a class="govuk-body govuk-link" href="@LinkGenerator.EmployerHome(Model.AccountHashedId)" id="account-home-link">Return to account home </a>
     </div>
 </div>

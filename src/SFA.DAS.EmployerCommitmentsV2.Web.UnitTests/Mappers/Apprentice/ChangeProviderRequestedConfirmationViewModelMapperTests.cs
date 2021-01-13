@@ -83,5 +83,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             Assert.AreEqual(_providerResponse.Name, result.ProviderName);
         }
+
+        [Test, MoqAutoData]
+        public async Task ProviderAddDetails_IsMapped(ChangeProviderRequestedConfirmationRequest request)
+        {
+            var result = await _mapper.Map(request);
+
+            Assert.AreEqual(request.ProviderAddDetails, result.ProviderAddDetails);
+        }
+
     }
 }
