@@ -1,4 +1,6 @@
-﻿using AutoFixture;
+﻿using System;
+using System.Data;
+using AutoFixture;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -8,6 +10,8 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 {
@@ -90,6 +94,47 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(request);
 
             Assert.AreEqual(request.ProviderAddDetails, result.ProviderAddDetails);
+        }
+
+        [Theory]
+        [MoqInlineAutoData(ApprenticeshipStatus.Stopped, true)]
+        [MoqInlineAutoData(ApprenticeshipStatus.Live, false)]
+        [MoqInlineAutoData(ApprenticeshipStatus.WaitingToStart, false)]
+        public async Task ApprenticeshipStopped_IsMapped_Correctly(  ApprenticeshipStatus status, bool expectedResult,
+            [Frozen] ChangeProviderRequestedConfirmationRequest request,
+            [Frozen] DateTime stopDate)
+        {
+            _apprenticeshipResponse.StopDate = stopDate;
+            _apprenticeshipResponse.Status = status;
+
+            _mockCommitmentsApi.Setup(c => c.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_apprenticeshipResponse);
+            _mockCommitmentsApi.Setup(c => c.GetProvider(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_providerResponse);
+
+            _mapper = new ChangeProviderRequestedConfirmationViewModelMapper(_mockCommitmentsApi.Object);
+
+            var result = await _mapper.Map(request);
+
+            Assert.AreEqual(expectedResult,result.ApprenticeshipStopped);
+        }
+
+        [Test, MoqAutoData]
+        public async Task When_StopDateHasNoValue_ApprenticeshipStopped_IsSetToFalse(ChangeProviderRequestedConfirmationRequest request)
+        {
+            _apprenticeshipResponse.StopDate = default(DateTime?);
+            _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
+
+            _mockCommitmentsApi.Setup(c => c.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_apprenticeshipResponse);
+            _mockCommitmentsApi.Setup(c => c.GetProvider(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_providerResponse);
+
+            _mapper = new ChangeProviderRequestedConfirmationViewModelMapper(_mockCommitmentsApi.Object);
+
+            var result = await _mapper.Map(request);
+
+            Assert.IsFalse(result.ApprenticeshipStopped);
         }
 
     }

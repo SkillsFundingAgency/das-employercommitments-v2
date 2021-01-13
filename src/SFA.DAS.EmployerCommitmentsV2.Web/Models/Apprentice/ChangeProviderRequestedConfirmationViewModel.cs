@@ -8,5 +8,7 @@
         public string ProviderName { get; set; }
         public string ApprenticeName { get; set; }
         public bool ProviderAddDetails { get; set; }
+
+        public bool ApprenticeshipStopped { get; set; }
     }
 }

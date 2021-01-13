@@ -2,6 +2,7 @@
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System.Threading.Tasks;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
@@ -27,7 +28,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 AccountHashedId = source.AccountHashedId,
                 ProviderName = getProviderTask.Result.Name,
                 ApprenticeName = $"{getApprenticeshipTask.Result.FirstName} {getApprenticeshipTask.Result.LastName}",
-                ProviderAddDetails = source.ProviderAddDetails.GetValueOrDefault()
+                ProviderAddDetails = source.ProviderAddDetails.GetValueOrDefault(),
+                ApprenticeshipStopped = getApprenticeshipTask.Result.Status == ApprenticeshipStatus.Stopped &&
+                                        getApprenticeshipTask.Result.StopDate.HasValue
             };
 
             return result;
