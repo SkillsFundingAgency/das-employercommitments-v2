@@ -1,6 +1,4 @@
-﻿using SFA.DAS.Authorization.ModelBinding;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
     public class ChangeProviderRequestedConfirmationViewModel 
     {
@@ -9,5 +7,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         public string ProviderName { get; set; }
         public string ApprenticeName { get; set; }
+        public bool ProviderAddDetails { get; set; }
     }
 }

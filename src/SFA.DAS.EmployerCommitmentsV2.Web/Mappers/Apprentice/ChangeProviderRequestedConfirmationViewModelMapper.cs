@@ -24,11 +24,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             var result = new ChangeProviderRequestedConfirmationViewModel
             {
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
-                AccountHashedId = source.AccountHashedId, 
+                AccountHashedId = source.AccountHashedId,
                 ProviderName = getProviderTask.Result.Name,
-                ApprenticeName = $"{getApprenticeshipTask.Result.FirstName} {getApprenticeshipTask.Result.LastName}"
+                ApprenticeName = $"{getApprenticeshipTask.Result.FirstName} {getApprenticeshipTask.Result.LastName}",
+                ProviderAddDetails = source.ProviderAddDetails.GetValueOrDefault()
             };
-            
+
             return result;
         }
     }
