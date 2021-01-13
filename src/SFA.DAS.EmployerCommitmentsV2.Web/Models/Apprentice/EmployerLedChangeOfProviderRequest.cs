@@ -20,9 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public int? NewStartYear { get; set; }
         public int? NewEndMonth { get; set; }
         public int? NewEndYear { get; set; }
-        public int? NewPrice { get; set; }
-        //public string NewStartDate => new DateTime(NewStartYear.Value, NewStartMonth.Value, 1).ToString();
-        //public string NewEndDate => new DateTime(NewEndYear.Value, NewEndMonth.Value, 1).ToString();
+        public int? NewPrice { get; set; }       
         public bool? IsEdit { get; set; }
     }
 }

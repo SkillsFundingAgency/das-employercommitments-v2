@@ -58,14 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public IActionResult WhatIsTheNewPrice(WhatIsTheNewPriceViewModel viewModel)
         {
             return _controller.WhatIsTheNewPrice(viewModel);
-        }
-
-        public void VerifyRedirectsToTheWhatIsTheNewPricePage(IActionResult result)
-        {
-            var redirectResult = (RedirectToRouteResult)result;
-
-            Assert.AreEqual(RouteNames.WhatIsTheNewPrice, redirectResult.RouteName);
-        }
+        }     
 
         public void VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(IActionResult result)
         {

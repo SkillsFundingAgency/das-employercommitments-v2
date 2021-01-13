@@ -43,47 +43,59 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test]
         public async Task ApprenticeshipHashedId_IsMapped()
         {
+            //Act
             var result = await _mapper.Map(_request);
 
+            //Assert
             Assert.AreEqual(_request.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
         }
 
         [Test]
         public async Task AccountHashedId_IsMapped()
         {
+            //Act
             var result = await _mapper.Map(_request);
 
+            //Assert
             Assert.AreEqual(_request.AccountHashedId, result.AccountHashedId);
         }
 
         [Test]
         public async Task ProviderId_IsMapped()
         {
+            //Act
             var result = await _mapper.Map(_request);
 
+            //Assert
             Assert.AreEqual(_request.ProviderId, result.ProviderId);
         }
         [Test]
         public async Task WhenRequestingTheWhatIsTheNewStartDatePage_ThenTheGetApprenticeshipIsCalled()
         {
+            //Act
             var result = await _mapper.Map(_request);
 
+            //Assert
             _mockCommitmentsApiClient.Verify(m => m.GetApprenticeship(_request.ApprenticeshipId, It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Test]
         public async Task StopDate_IsMapped()
         {
+            //Act
             var result = await _mapper.Map(_request);
 
+            //Assert
             Assert.AreEqual(_apprenticeshipResponse.StopDate, result.StopDate);
         }
 
         [Test]
         public async Task ProviderName_IsMapped()
         {
+            //Act
             var result = await _mapper.Map(_request);
 
+            //Assert
             Assert.AreEqual(_request.ProviderName, result.ProviderName);
         }
 
@@ -91,10 +103,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [TestCase(null, false)]
         public async Task EditFlag_IsMapped(bool? edit, bool expectedResult)
         {
+            //Arrange
             _request.IsEdit = edit;
 
+            //Act
             var result = await _mapper.Map(_request);
 
+            //Assert
             Assert.AreEqual(expectedResult, result.Edit);
         }
     }
