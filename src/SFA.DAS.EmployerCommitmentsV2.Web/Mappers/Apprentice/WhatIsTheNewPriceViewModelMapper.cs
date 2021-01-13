@@ -30,8 +30,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 NewStartMonthYear = $"{source.NewStartMonth.Value}{source.NewStartYear.Value}",
                 NewEndMonthYear = $"{source.NewEndMonth.Value}{source.NewEndYear.Value}",
                 Edit = source.IsEdit ?? false,
-                NewStartDate = new DateTime(source.NewStartYear.Value, source.NewStartMonth.Value, 1),
-                NewEndDate = new DateTime(source.NewEndYear.Value, source.NewEndMonth.Value, 1)
+                NewStartMonth = source.NewStartMonth,
+                NewStartYear = source.NewStartYear,
+                NewEndMonth = source.NewEndMonth,
+                NewEndYear = source.NewEndYear
             };
         }
     }

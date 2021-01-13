@@ -19,7 +19,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             _autoFixture.Customize<WhatIsTheNewPriceViewModel>(c =>
                 c.With(m => m.NewPrice, 1500)
                     .With(m => m.NewStartMonthYear, "022020")
-                    .With(m => m.NewEndMonthYear, "092020"));
+                    .With(m => m.NewEndMonthYear, "092020")
+                    .With(m => m.NewStartMonth, 1)
+                    .With(m => m.NewStartYear, 2020)
+                    .With(m => m.NewEndMonth, 9)
+                    .With(m => m.NewEndYear, 2020));
 
             _validator = new WhatIsTheNewPriceViewModelValidator();
         }
@@ -94,22 +98,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             Assert.AreEqual(expectedValid, result.IsValid);
             if (errorMessage != null) Assert.IsTrue(result.Errors.Any(e => e.ErrorMessage == errorMessage));
         }
-       
-        //[TestCase("012021", "062020", false, "New End Month Year must be greater than New Start Month Year")]
-        //public void WhenValidatingWhatIsThePrice_ValidateTheNewEndMonthYearIsAfterTheNewStartMonthYear(string newStartMonthYear, string newEndMonthYear, bool expectedValid, string errorMessage)
-        //{
-        //    //Arrange
-        //    var viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();
-        //    viewModel.NewStartMonthYear = newStartMonthYear;
-        //    viewModel.NewEndMonthYear = newEndMonthYear;
 
-        //    //Act
-        //    var result = _validator.Validate(viewModel);
+        [TestCase("012021", "062020", false, "The new planned training end date must be after  new planned start date")]
+        public void WhenValidatingWhatIsThePrice_ValidateTheNewEndMonthYearIsAfterTheNewStartMonthYear(string newStartMonthYear, string newEndMonthYear, bool expectedValid, string errorMessage)
+        {
+            //Arrange
+            var viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();            
+            viewModel.NewStartMonth = 1;
+            viewModel.NewStartYear = 2021;
+            viewModel.NewEndMonth = 6;
+            viewModel.NewEndYear = 2020;
 
-        //    //Assert
-        //    Assert.AreEqual(expectedValid, result.IsValid);
-        //    if (errorMessage != null) Assert.IsTrue(result.Errors.Any(e => e.ErrorMessage == errorMessage));
-        //}
+            //Act
+            var result = _validator.Validate(viewModel);
+
+            //Assert
+            Assert.AreEqual(expectedValid, result.IsValid);
+            if (errorMessage != null) Assert.IsTrue(result.Errors.Any(e => e.ErrorMessage == errorMessage));
+        }
 
     }
 }
