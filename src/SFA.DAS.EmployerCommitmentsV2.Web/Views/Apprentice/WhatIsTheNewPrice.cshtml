@@ -2,8 +2,8 @@
 @using  SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.WhatIsTheNewPriceViewModel
 
-@{
-    ViewBag.Title = "What is the agreed price of completing the training with  new training provider name? ";
+@{    
+    ViewBag.Title = $"What is the agreed price of completing the training with {Model.ProviderName}? ";
 }
 
 <div class="govuk-grid-row">
@@ -38,17 +38,17 @@
                     </span>
 
                     @Html.ValidationMessageFor(m => m.NewPrice, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.NewPrice) })
-                    <input asp-for="NewPrice" class="govuk-input govuk-!-width-one-third @Html.AddClassIfPropertyInError(x=>x.NewPrice, "govuk-input--error input-validation-error")" />
+                    <input id="input-newprice" asp-for="NewPrice" class="govuk-input govuk-!-width-one-third @Html.AddClassIfPropertyInError(x=>x.NewPrice, "govuk-input--error input-validation-error")" />
 
                 </fieldset>
             </div>
 
-            <button class="govuk-button" type="submit"> Continue </button>
+            <button id="continue-button" class="govuk-button" type="submit"> Continue </button>
         </form>
     </div>
 </div>
 
 @section Back
 {
-    <div class="das-js-back-link"></div>
+    <div id="back-link" class="das-js-back-link"></div>
 }
