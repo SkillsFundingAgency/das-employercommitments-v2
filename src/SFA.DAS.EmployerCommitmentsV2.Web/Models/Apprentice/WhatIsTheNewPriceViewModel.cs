@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.Authorization.ModelBinding;
-using SFA.DAS.CommitmentsV2.Shared.Models;
 using System;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
@@ -9,7 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string AccountHashedId { get; set; }
         public string ApprenticeshipHashedId { get; set; }
         public string ProviderName { get; set; }
-        public long ProviderId { get; set; }
+        public long? ProviderId { get; set; }
         public int? NewStartMonth { get; set; }
         public int? NewStartYear { get; set; }
         public int? NewEndMonth { get; set; }

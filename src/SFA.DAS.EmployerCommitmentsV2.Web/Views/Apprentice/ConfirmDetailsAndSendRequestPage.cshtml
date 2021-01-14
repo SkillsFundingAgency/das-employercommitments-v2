@@ -72,14 +72,14 @@
                     <th scope="row" class="govuk-table__header"> Training end date </th>
                     <td class="govuk-table__cell"> @Model.CurrentEndDate.ToString("MMMM yyyy") </td>
                     @await Html.PartialAsync("_ViewChangesDateCell", new ViewChangesCell<DateTime?>(Model.CurrentEndDate, Model.NewEndDate))
-                    <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link" href="@Url.RouteUrl(RouteNames.WhatIsTheNewStartDate, queryData)"> Change </a> </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link" href="@Url.RouteUrl(RouteNames.WhatIsTheNewEndDate, queryData)"> Change </a> </td>
                 </tr>
 
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header"> Price </th>
                     <td class="govuk-table__cell"> @Model.CurrentPrice.ToGdsCostFormat() </td>
                     @await Html.PartialAsync("_ViewChangesPriceCell", new ViewChangesCell<int?>(Model.CurrentPrice, Model.NewPrice))
-                    <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link" href="@Url.RouteUrl(RouteNames.WhatIsTheNewStartDate, queryData)"> Change </a> </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link" href="@Url.RouteUrl(RouteNames.WhatIsTheNewPrice, queryData)"> Change </a> </td>
                 </tr>
             </tbody>
 

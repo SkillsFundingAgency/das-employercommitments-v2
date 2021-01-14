@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 AccountHashedId = source.AccountHashedId,
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
                 ProviderName = source.ProviderName,
-                ProviderId = source.ProviderId,
+                ProviderId = source.ProviderId.Value,
                 EmployerWillAdd = source.EmployerWillAdd,
                 StopDate = apprenticeship.StopDate.Value,
                 NewStartMonth = source.NewStartMonth,
