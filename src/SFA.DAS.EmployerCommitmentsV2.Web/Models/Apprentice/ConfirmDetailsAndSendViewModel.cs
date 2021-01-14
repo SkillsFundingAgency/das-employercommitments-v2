@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Authorization.ModelBinding;
+using System;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
@@ -11,8 +12,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public long ProviderId { get; set; }
         public bool? EmployerWillAdd { get; set; }
         public bool Edit { get; set; }
-       
-        public bool? EmployerWillAdd { get; set; }
         public string ApprenticeFullName { get; set; }
         public DateTime? ApprenticeshipStopDate { get; set; }
         public string CurrentProviderName { get; set; }
