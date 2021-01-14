@@ -95,47 +95,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             Assert.AreEqual(request.ProviderAddDetails, result.ProviderAddDetails);
         }
-
-        [Theory]
-        [MoqInlineAutoData(ApprenticeshipStatus.Stopped, true)]
-        [MoqInlineAutoData(ApprenticeshipStatus.Live, false)]
-        [MoqInlineAutoData(ApprenticeshipStatus.WaitingToStart, false)]
-        public async Task ApprenticeshipStopped_IsMapped_Correctly(  ApprenticeshipStatus status, bool expectedResult,
-            [Frozen] ChangeProviderRequestedConfirmationRequest request,
-            [Frozen] DateTime stopDate)
-        {
-            _apprenticeshipResponse.StopDate = stopDate;
-            _apprenticeshipResponse.Status = status;
-
-            _mockCommitmentsApi.Setup(c => c.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_apprenticeshipResponse);
-            _mockCommitmentsApi.Setup(c => c.GetProvider(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_providerResponse);
-
-            _mapper = new ChangeProviderRequestedConfirmationViewModelMapper(_mockCommitmentsApi.Object);
-
-            var result = await _mapper.Map(request);
-
-            Assert.AreEqual(expectedResult,result.ApprenticeshipStopped);
-        }
-
-        [Test, MoqAutoData]
-        public async Task When_StopDateHasNoValue_ApprenticeshipStopped_IsSetToFalse(ChangeProviderRequestedConfirmationRequest request)
-        {
-            _apprenticeshipResponse.StopDate = default(DateTime?);
-            _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
-
-            _mockCommitmentsApi.Setup(c => c.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_apprenticeshipResponse);
-            _mockCommitmentsApi.Setup(c => c.GetProvider(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_providerResponse);
-
-            _mapper = new ChangeProviderRequestedConfirmationViewModelMapper(_mockCommitmentsApi.Object);
-
-            var result = await _mapper.Map(request);
-
-            Assert.IsFalse(result.ApprenticeshipStopped);
-        }
-
+        
     }
 }

@@ -29,8 +29,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 ProviderName = getProviderTask.Result.Name,
                 ApprenticeName = $"{getApprenticeshipTask.Result.FirstName} {getApprenticeshipTask.Result.LastName}",
                 ProviderAddDetails = source.ProviderAddDetails.GetValueOrDefault(),
-                ApprenticeshipStopped = getApprenticeshipTask.Result.Status == ApprenticeshipStatus.Stopped &&
-                                        getApprenticeshipTask.Result.StopDate.HasValue
             };
 
             return result;
