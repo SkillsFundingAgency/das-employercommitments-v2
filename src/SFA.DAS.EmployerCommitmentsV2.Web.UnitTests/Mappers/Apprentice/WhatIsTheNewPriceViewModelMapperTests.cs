@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
     {
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
 
-        private EmployerLedChangeOfProviderRequest _request;
+        private ChangeOfProviderRequest _request;
         private GetApprenticeshipResponse _apprenticeshipResponse;
 
         private WhatIsTheNewPriceViewModelMapper _mapper;
@@ -26,7 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             var test = DateTime.UtcNow.Year;
 
-            _request = _autoFixture.Create<EmployerLedChangeOfProviderRequest>();
+            _request = _autoFixture.Create<ChangeOfProviderRequest>();
             _request.NewStartYear = DateTime.UtcNow.Year;
             _request.NewStartMonth = DateTime.UtcNow.Month;
             _request.NewEndYear = DateTime.UtcNow.AddYears(1).Year;
@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            _mockCommitmentsApiClient.Verify(m => m.GetApprenticeship(_request.ApprenticeshipId, It.IsAny<CancellationToken>()), Times.Once());
+            _mockCommitmentsApiClient.Verify(m => m.GetApprenticeship(_request.ApprenticeshipId.Value, It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task EditFlag_IsMapped(bool? edit, bool expectedResult)
         {
             //Arrange
-            _request.IsEdit = edit;
+            _request.Edit = edit;
 
             //Act
             var result = await _mapper.Map(_request);

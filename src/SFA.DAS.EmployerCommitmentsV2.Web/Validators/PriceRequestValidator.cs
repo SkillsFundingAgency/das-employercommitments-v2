@@ -3,7 +3,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
 {
-    public class PriceRequestValidator : AbstractValidator<EmployerLedChangeOfProviderRequest>
+    public class PriceRequestValidator : AbstractValidator<ChangeOfProviderRequest>
     {
         public PriceRequestValidator()
         {

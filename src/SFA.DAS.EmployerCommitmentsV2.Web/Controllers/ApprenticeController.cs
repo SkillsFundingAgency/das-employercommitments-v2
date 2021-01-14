@@ -221,7 +221,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpGet]
         [Route("{apprenticeshipHashedId}/change-provider/end-date", Name = RouteNames.WhatIsTheNewEndDate)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public async Task<IActionResult> WhatIsTheNewEndDate(EmployerLedChangeOfProviderRequest request)
+        public async Task<IActionResult> WhatIsTheNewEndDate(ChangeOfProviderRequest request)
         {
             var viewModel = await _modelMapper.Map<WhatIsTheNewEndDateViewModel>(request);
             return View(viewModel);
@@ -313,7 +313,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpGet]
         [Route("{apprenticeshipHashedId}/change-provider/price", Name = RouteNames.WhatIsTheNewPrice)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public async Task<IActionResult> WhatIsTheNewPrice(EmployerLedChangeOfProviderRequest request)
+        public async Task<IActionResult> WhatIsTheNewPrice(ChangeOfProviderRequest request)
         {
             var viewModel = await _modelMapper.Map<WhatIsTheNewPriceViewModel>(request);
             

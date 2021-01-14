@@ -5,9 +5,9 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class WhatIsTheNewEndDateViewModelMapper : IMapper<EmployerLedChangeOfProviderRequest,WhatIsTheNewEndDateViewModel>
+    public class WhatIsTheNewEndDateViewModelMapper : IMapper<ChangeOfProviderRequest,WhatIsTheNewEndDateViewModel>
     {
-        public Task<WhatIsTheNewEndDateViewModel> Map(EmployerLedChangeOfProviderRequest source)
+        public Task<WhatIsTheNewEndDateViewModel> Map(ChangeOfProviderRequest source)
         {
             return Task.FromResult(new WhatIsTheNewEndDateViewModel
             {

@@ -34,7 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
     public class WhenCallingGetWhatIsTheNewPriceTestsFixture
     {
-        private readonly EmployerLedChangeOfProviderRequest _request;
+        private readonly ChangeOfProviderRequest _request;
         private readonly WhatIsTheNewPriceViewModel _viewModel;
 
         private readonly ApprenticeController _controller;
@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var autoFixture = new Fixture();
             var mockMapper = new Mock<IModelMapper>();
 
-            _request = autoFixture.Create<EmployerLedChangeOfProviderRequest>();
+            _request = autoFixture.Create<ChangeOfProviderRequest>();
             _viewModel = autoFixture.Create<WhatIsTheNewPriceViewModel>();
 
             mockMapper.Setup(m => m.Map<WhatIsTheNewPriceViewModel>(_request))

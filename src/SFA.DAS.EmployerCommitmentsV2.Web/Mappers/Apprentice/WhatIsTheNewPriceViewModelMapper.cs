@@ -1,13 +1,11 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using System;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class WhatIsTheNewPriceViewModelMapper : IMapper<EmployerLedChangeOfProviderRequest, WhatIsTheNewPriceViewModel>
+    public class WhatIsTheNewPriceViewModelMapper : IMapper<ChangeOfProviderRequest, WhatIsTheNewPriceViewModel>
     {
         private readonly ICommitmentsApiClient _client;
 
@@ -16,9 +14,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             _client = client;
         }
 
-        public async Task<WhatIsTheNewPriceViewModel> Map(EmployerLedChangeOfProviderRequest source)
+        public async Task<WhatIsTheNewPriceViewModel> Map(ChangeOfProviderRequest source)
         {
-            var apprenticeship = await _client.GetApprenticeship(source.ApprenticeshipId);
+            var apprenticeship = await _client.GetApprenticeship(source.ApprenticeshipId.Value);
 
             return new WhatIsTheNewPriceViewModel
             {
@@ -29,7 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 StopDate = apprenticeship.StopDate.Value,
                 NewStartMonthYear = $"{source.NewStartMonth.Value}{source.NewStartYear.Value}",
                 NewEndMonthYear = $"{source.NewEndMonth.Value}{source.NewEndYear.Value}",
-                Edit = source.IsEdit ?? false,
+                Edit = source.Edit ?? false,
                 NewStartMonth = source.NewStartMonth,
                 NewStartYear = source.NewStartYear,
                 NewEndMonth = source.NewEndMonth,
