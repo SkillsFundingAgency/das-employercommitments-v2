@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -208,7 +207,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> WhatIsTheNewStartDate(WhatIsTheNewStartDateViewModel vm)
         {
             var request = await _modelMapper.Map<ChangeOfProviderRequest>(vm);
-
+          
             if (vm.Edit)
             {
                 return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, request);
@@ -262,7 +261,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
+        [Route("{apprenticeshipHashedId}/change-provider/price", Name = RouteNames.WhatIsTheNewPrice)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public async Task<IActionResult> WhatIsTheNewPrice(ChangeOfProviderRequest request)
+        {
+            var viewModel = await _modelMapper.Map<WhatIsTheNewPriceViewModel>(request);
 
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/change-provider/price", Name = RouteNames.WhatIsTheNewPrice)]
+        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
+        public IActionResult WhatIsTheNewPrice(WhatIsTheNewPriceViewModel viewModel)
+        {
+            return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, new { viewModel.ProviderName, viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId, viewModel.NewStartMonth, viewModel.NewStartYear, viewModel.NewEndMonth, viewModel.NewEndYear, viewModel.NewPrice });
+        }
+
+        [HttpGet]
         [Route("{apprenticeshipHashedId}/change-provider/confirm-details", Name = RouteNames.ConfirmDetailsAndSendRequest)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public async Task<IActionResult> ConfirmDetailsAndSendRequestPage(ChangeOfProviderRequest request)
@@ -308,24 +324,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var viewModel = await _modelMapper.Map<ChangeProviderRequestedConfirmationViewModel>(request);
 
             return View(viewModel);
-        }
-
-        [HttpGet]
-        [Route("{apprenticeshipHashedId}/change-provider/price", Name = RouteNames.WhatIsTheNewPrice)]
-        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public async Task<IActionResult> WhatIsTheNewPrice(ChangeOfProviderRequest request)
-        {
-            var viewModel = await _modelMapper.Map<WhatIsTheNewPriceViewModel>(request);
-            
-            return View(viewModel);
-        }
-
-        [HttpPost]
-        [Route("{apprenticeshipHashedId}/change-provider/price", Name = RouteNames.WhatIsTheNewPrice)]
-        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public IActionResult WhatIsTheNewPrice(WhatIsTheNewPriceViewModel viewModel)
-        {
-            return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, new { viewModel.ProviderName, viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId, viewModel.NewStartMonth, viewModel.NewStartYear,  viewModel.NewEndMonth,  viewModel.NewEndYear,  viewModel.NewPrice });
         }
 
         [Route("{apprenticeshipHashedId}/view-changes", Name = RouteNames.ViewChanges)]

@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(request);
 
-            _mockCommitmentsApiClient.Verify(m => m.GetProvider(request.ProviderId, It.IsAny<CancellationToken>()), Times.Once());
+            _mockCommitmentsApiClient.Verify(m => m.GetProvider(request.ProviderId.Value, It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Test, MoqAutoData]
