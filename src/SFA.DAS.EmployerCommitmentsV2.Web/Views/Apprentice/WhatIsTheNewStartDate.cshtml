@@ -13,6 +13,7 @@
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ProviderId" />
             <input type="hidden" asp-for="ProviderName" />
+            <input type="hidden" asp-for="EmployerWillAdd" />
             <input type="hidden" asp-for="StopDate" />
             <input type="hidden" asp-for="NewEndMonth" />
             <input type="hidden" asp-for="NewEndYear" />
@@ -26,7 +27,7 @@
                         </h1>
                     </legend>
 
-                    <p class="govuk-body">
+                    <p class="govuk-body" id="help-text">
                         This date must be on or after the stop date (@(Model.StopDate.ToString("MMMM yyyy")))
                     </p>
 
@@ -38,20 +39,20 @@
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
                                 <label asp-for="NewStartMonth" class="govuk-label govuk-date-input__label">Month</label>
-                                <input asp-for="NewStartMonth" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number">
+                                <input asp-for="NewStartMonth" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number" id="new-start-month">
                             </div>
                         </div>
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
                                 <label asp-for="NewStartYear" class="govuk-label govuk-date-input__label">Year</label>
-                                <input asp-for="NewStartYear" class="govuk-input govuk-date-input__input govuk-input--width-4" type="number">
+                                <input asp-for="NewStartYear" class="govuk-input govuk-date-input__input govuk-input--width-4" type="number" id="new-start-year">
                             </div>
                         </div>
                     </div>
                 </fieldset>
             </div>
 
-            <button class="govuk-button" type="submit"> Continue </button>
+            <button class="govuk-button" type="submit" id="continue-button"> Continue </button>
         </form>
     </div>
 </div>
