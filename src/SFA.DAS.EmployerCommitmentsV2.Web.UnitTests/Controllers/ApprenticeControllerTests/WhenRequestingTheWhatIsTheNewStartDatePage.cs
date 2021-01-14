@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
     public class WhenRequestingTheWhatIsTheNewStartDatePageTestFixture
     {
-        private readonly EmployerLedChangeOfProviderRequest _request;
+        private readonly ChangeOfProviderRequest _request;
         private readonly WhatIsTheNewStartDateViewModel _viewModel;
 
         private readonly Mock<IModelMapper> _mockMapper;
@@ -47,7 +47,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var autoFixture = new Fixture();
 
-            _request = autoFixture.Create<EmployerLedChangeOfProviderRequest>();
+            _request = autoFixture.Create<ChangeOfProviderRequest>();
             _viewModel = autoFixture.Create<WhatIsTheNewStartDateViewModel>();
 
             _mockMapper = new Mock<IModelMapper>();

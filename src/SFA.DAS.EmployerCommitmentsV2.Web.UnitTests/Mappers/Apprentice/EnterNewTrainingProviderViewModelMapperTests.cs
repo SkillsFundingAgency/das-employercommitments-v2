@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task ApprenticeshipHashedId_IsMapped(EnterNewTrainingProviderRequest request)
+        public async Task ApprenticeshipHashedId_IsMapped(ChangeOfProviderRequest request)
         {
             var result = await _mapper.Map(request);
 
@@ -47,7 +47,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task AccountHashedId_IsMapped(EnterNewTrainingProviderRequest request)
+        public async Task AccountHashedId_IsMapped(ChangeOfProviderRequest request)
         {
             var result = await _mapper.Map(request);
 
@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task WhenRequestingEnterNewTrainingProvider_ThenListOfGetAllProvidersCalled(EnterNewTrainingProviderRequest request)
+        public async Task WhenRequestingEnterNewTrainingProvider_ThenListOfGetAllProvidersCalled(ChangeOfProviderRequest request)
         {
             var result = await _mapper.Map(request);
 
@@ -63,7 +63,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task WhenRequestingEnterNewTrainingProvider_ThenListOfTrainingProvidersIsMapped(EnterNewTrainingProviderRequest request)
+        public async Task WhenRequestingEnterNewTrainingProvider_ThenListOfTrainingProvidersIsMapped(ChangeOfProviderRequest request)
         {
             var result = await _mapper.Map(request);
 
@@ -71,7 +71,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task WhenRequestingEnterNewTrainingProvider_ThenCurrentProviderIsMapped(EnterNewTrainingProviderRequest request)
+        public async Task WhenRequestingEnterNewTrainingProvider_ThenCurrentProviderIsMapped(ChangeOfProviderRequest request)
         {
             var result = await _mapper.Map(request);
 

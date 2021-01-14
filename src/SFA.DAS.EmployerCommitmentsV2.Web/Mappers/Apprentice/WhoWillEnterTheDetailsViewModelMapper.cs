@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class WhoWillEnterTheDetailsViewModelMapper : IMapper<WhoWillEnterTheDetailsRequest, WhoWillEnterTheDetailsViewModel>
+    public class WhoWillEnterTheDetailsViewModelMapper : IMapper<ChangeOfProviderRequest, WhoWillEnterTheDetailsViewModel>
     {
         private readonly ICommitmentsApiClient _client;
 
@@ -17,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             _client = client;
         }
 
-        public async Task<WhoWillEnterTheDetailsViewModel> Map(WhoWillEnterTheDetailsRequest source)
+        public async Task<WhoWillEnterTheDetailsViewModel> Map(ChangeOfProviderRequest source)
         {
             var provider = await _client.GetProvider(source.ProviderId);
 

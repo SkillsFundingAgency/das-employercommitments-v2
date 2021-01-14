@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class EnterNewTrainingProviderViewModelMapper : IMapper<EnterNewTrainingProviderRequest, EnterNewTrainingProviderViewModel>
+    public class EnterNewTrainingProviderViewModelMapper : IMapper<ChangeOfProviderRequest, EnterNewTrainingProviderViewModel>
     {
         private readonly ICommitmentsApiClient _client;
 
@@ -14,10 +14,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             _client = client;
         }
 
-        public async Task<EnterNewTrainingProviderViewModel> Map(EnterNewTrainingProviderRequest source)
+        public async Task<EnterNewTrainingProviderViewModel> Map(ChangeOfProviderRequest source)
         {
             var providersResponseTask = _client.GetAllProviders();
-            var apprenticeshipTask = _client.GetApprenticeship(source.ApprenticeshipId);
+            var apprenticeshipTask = _client.GetApprenticeship(source.ApprenticeshipId.Value);
 
             await Task.WhenAll(providersResponseTask, apprenticeshipTask);
 
@@ -29,7 +29,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 AccountHashedId = source.AccountHashedId,
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
                 Providers = providersResponse.Providers,
-                CurrentProviderId = apprenticeship.ProviderId
+                CurrentProviderId = apprenticeship.ProviderId,
+                NewStartMonth = source.NewStartMonth,
+                NewStartYear = source.NewStartYear,
+                NewEndMonth = source.NewEndMonth,
+                NewEndYear = source.NewEndYear,
+                NewPrice = source.NewPrice,
+                Edit = source.Edit ?? false
             };
 
             return result;

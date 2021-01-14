@@ -10,6 +10,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.EmployerUrlHelper;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
@@ -31,21 +32,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test]
-        public void ThenRedirectToTheWhatIsTheNewStopDatePage()
+        public async Task ThenRedirectToTheWhatIsTheNewStopDatePage()
         {
             _viewModel.Edit = false;
 
-            var result = _fixture.WhatIsTheNewStartDate(_viewModel);
+            var result = await _fixture.WhatIsTheNewStartDate(_viewModel);
 
             _fixture.VerifyRedirectsToTheWhatIsTheNewEndDatePage(result as RedirectToRouteResult);
         }
 
         [Test]
-        public void AndUserIsChangingTheirAnswer_ThenRedirectToTheConfirmationPage()
+        public async Task AndUserIsChangingTheirAnswer_ThenRedirectToTheConfirmationPage()
         {
             _viewModel.Edit = true;
 
-            var result = _fixture.WhatIsTheNewStartDate(_viewModel);
+            var result = await _fixture.WhatIsTheNewStartDate(_viewModel);
 
             _fixture.VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(result as RedirectToRouteResult);
         }
@@ -65,9 +66,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                Mock.Of<IAuthorizationService>());
         }
 
-        public IActionResult WhatIsTheNewStartDate(WhatIsTheNewStartDateViewModel viewModel)
+        public async Task<IActionResult> WhatIsTheNewStartDate(WhatIsTheNewStartDateViewModel viewModel)
         {
-            return _controller.WhatIsTheNewStartDate(viewModel);
+            return await _controller.WhatIsTheNewStartDate(viewModel);
         }
 
         public void VerifyRedirectsToTheWhatIsTheNewEndDatePage(IActionResult result)

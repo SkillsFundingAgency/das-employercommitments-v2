@@ -60,9 +60,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             _mockMapper = new Mock<IModelMapper>();
             _mockMapper.Setup(m => m.Map<WhoWillEnterTheDetailsRequest>(_viewModel))
-                .ReturnsAsync(new WhoWillEnterTheDetailsRequest { AccountHashedId = _viewModel.AccountHashedId, ApprenticeshipHashedId = _viewModel.ApprenticeshipHashedId, ProviderId = _viewModel.Ukprn });
+                .ReturnsAsync(new WhoWillEnterTheDetailsRequest { AccountHashedId = _viewModel.AccountHashedId, ApprenticeshipHashedId = _viewModel.ApprenticeshipHashedId, ProviderId = _viewModel.ProviderId });
             _mockMapper.Setup(m => m.Map<SendNewTrainingProviderRequest>(_viewModel))
-                            .ReturnsAsync(new SendNewTrainingProviderRequest { AccountHashedId = _viewModel.AccountHashedId, ApprenticeshipHashedId = _viewModel.ApprenticeshipHashedId, ProviderId = _viewModel.Ukprn });
+                            .ReturnsAsync(new SendNewTrainingProviderRequest { AccountHashedId = _viewModel.AccountHashedId, ApprenticeshipHashedId = _viewModel.ApprenticeshipHashedId, ProviderId = _viewModel.ProviderId });
 
             _mockAuthorizationService = new Mock<IAuthorizationService>();
 

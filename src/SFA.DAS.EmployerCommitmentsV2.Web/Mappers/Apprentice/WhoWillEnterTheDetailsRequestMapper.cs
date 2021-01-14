@@ -12,7 +12,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             {
                 AccountHashedId = source.AccountHashedId,
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
-                ProviderId = source.Ukprn
+                ProviderId = source.ProviderId
             };
 
             return Task.FromResult(result);

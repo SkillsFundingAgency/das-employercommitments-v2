@@ -36,15 +36,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     {
         private readonly Mock<IModelMapper> _mockMapper;
 
-        private EnterNewTrainingProviderRequest _request;
-        private EnterNewTrainingProviderViewModel _viewModel;
+        private readonly ChangeOfProviderRequest _request;
+        private readonly EnterNewTrainingProviderViewModel _viewModel;
         
         private ApprenticeController _controller;
 
         public WhenCallingGetEnterNewTrainingProviderTestsFixture()
         {
             var autoFixture = new Fixture();
-            _request = autoFixture.Create<EnterNewTrainingProviderRequest>();
+            _request = autoFixture.Create<ChangeOfProviderRequest>();
             _viewModel = autoFixture.Create<EnterNewTrainingProviderViewModel>();
 
             _mockMapper = new Mock<IModelMapper>();

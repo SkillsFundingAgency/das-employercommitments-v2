@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
     {
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
 
-        private EmployerLedChangeOfProviderRequest _request;
+        private ChangeOfProviderRequest _request;
         private GetApprenticeshipResponse _apprenticeshipResponse;
 
         private WhatIsTheNewStartDateViewModelMapper _mapper;
@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var _autoFixture = new Fixture();
 
-            _request = _autoFixture.Create<EmployerLedChangeOfProviderRequest>();
+            _request = _autoFixture.Create<ChangeOfProviderRequest>();
             _apprenticeshipResponse = _autoFixture.Create<GetApprenticeshipResponse>();
 
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
@@ -71,7 +71,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            _mockCommitmentsApiClient.Verify(m => m.GetApprenticeship(_request.ApprenticeshipId, It.IsAny<CancellationToken>()), Times.Once());
+            _mockCommitmentsApiClient.Verify(m => m.GetApprenticeship(_request.ApprenticeshipId.Value, It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Test]

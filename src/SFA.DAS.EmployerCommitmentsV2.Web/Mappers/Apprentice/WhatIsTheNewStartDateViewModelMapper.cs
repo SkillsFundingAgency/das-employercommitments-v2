@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class WhatIsTheNewStartDateViewModelMapper : IMapper<EmployerLedChangeOfProviderRequest, WhatIsTheNewStartDateViewModel>
+    public class WhatIsTheNewStartDateViewModelMapper : IMapper<ChangeOfProviderRequest, WhatIsTheNewStartDateViewModel>
     {
 
         private readonly ICommitmentsApiClient _client;
@@ -15,9 +15,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             _client = client;
         }
 
-        public async Task<WhatIsTheNewStartDateViewModel> Map(EmployerLedChangeOfProviderRequest source)
+        public async Task<WhatIsTheNewStartDateViewModel> Map(ChangeOfProviderRequest source)
         {
-            var apprenticeship = await _client.GetApprenticeship(source.ApprenticeshipId);
+            var apprenticeship = await _client.GetApprenticeship(source.ApprenticeshipId.Value);
             
             return new WhatIsTheNewStartDateViewModel
             {
@@ -26,6 +26,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 ProviderName = source.ProviderName,
                 ProviderId = source.ProviderId,
                 StopDate = apprenticeship.StopDate.Value,
+                NewStartMonth = source.NewStartMonth,
+                NewStartYear = source.NewStartYear,
+                NewEndMonth = source.NewEndMonth,
+                NewEndYear = source.NewEndYear,
+                NewPrice = source.NewPrice,
                 Edit = source.Edit ?? false
             };
         }

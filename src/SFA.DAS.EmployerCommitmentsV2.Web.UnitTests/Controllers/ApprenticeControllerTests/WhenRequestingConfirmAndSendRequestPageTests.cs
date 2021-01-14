@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     {
         private readonly Mock<IModelMapper> _mockMapper;
 
-        private readonly EmployerLedChangeOfProviderRequest _request;
+        private readonly ChangeOfProviderRequest _request;
         private readonly ConfirmDetailsAndSendViewModel _viewModel;
 
         private readonly ApprenticeController _controller;
@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public WhenRequestingConfirmAndSendRequestPageTestsFixture()
         {
             var autoFixture = new Fixture();
-            _request = autoFixture.Create<EmployerLedChangeOfProviderRequest>();
+            _request = autoFixture.Create<ChangeOfProviderRequest>();
             _viewModel = autoFixture.Create<ConfirmDetailsAndSendViewModel>();
 
             _mockMapper = new Mock<IModelMapper>();
