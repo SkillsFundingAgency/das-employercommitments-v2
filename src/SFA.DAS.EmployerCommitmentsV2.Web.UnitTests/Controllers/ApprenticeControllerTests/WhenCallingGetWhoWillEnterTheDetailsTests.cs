@@ -34,7 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
     public class WhenCallingGetWhoWillEnterTheDetailsTestsFixture
     {
-        private readonly WhoWillEnterTheDetailsRequest _request;
+        private readonly ChangeOfProviderRequest _request;
         private readonly WhoWillEnterTheDetailsViewModel _viewModel;
 
         private readonly Mock<IModelMapper> _mockMapper;
@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var autoFixture = new Fixture();
 
-            _request = autoFixture.Create<WhoWillEnterTheDetailsRequest>();
+            _request = autoFixture.Create<ChangeOfProviderRequest>();
             _viewModel = autoFixture.Create<WhoWillEnterTheDetailsViewModel>();
 
             _mockMapper = new Mock<IModelMapper>();

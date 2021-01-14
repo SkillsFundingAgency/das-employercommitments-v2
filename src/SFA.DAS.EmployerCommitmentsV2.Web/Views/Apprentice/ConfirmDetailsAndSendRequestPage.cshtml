@@ -1,5 +1,7 @@
-﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ConfirmDetailsAndSendViewModel
 
 @{
@@ -7,11 +9,14 @@
 
     var queryData = new
     {
+        ProviderId = Model.ProviderId,
+        ProviderName = Model.ProviderName,
         NewStartMonth = Model.NewStartDate.Month,
         NewStartYear = Model.NewStartDate.Year,
         NewEndMonth = Model.NewEndDate.Month,
         NewEndYear = Model.NewEndDate.Year,
         NewPrice = Model.NewPrice,
+        EmployerWillAdd = Model.EmployerWillAdd,
         Edit = true
     };
 }
@@ -19,6 +24,14 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl"> Confirm details and send request to @Model.ProviderName</h1>
+
+        @if (Model.NewPrice.Value > Model.MaxFunding)
+        {
+            <div class="govuk-inset-text">
+                <p class="govuk-heading-s"> This apprenticeship is over the funding band maximum </p>
+                <p class="govuk-body"> The new agreed apprenticeship price is over the @Model.MaxFunding.ToGdsCostFormat() <a class="govuk-link" href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" id="funding-band-link">maximum value of the funding band</a> for this apprenticeship. You will need to pay the difference - this cannot be funded from your account. </p>
+            </div>
+        }
 
         <p class="govuk-body">
             @Model.ProviderName will need to check these details and confirm that they're happy to take on your apprentice.
@@ -42,17 +55,10 @@
             <tbody class="govuk-table__body">
 
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header"> Stop date </th>
-                    <td class="govuk-table__cell"> Not applicable </td>
-                    <td class="govuk-table__cell"> <mark class="das-mark das-mark--green"> Newdate 2000 </mark> </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link"> Change </a> </td>
-                </tr>
-
-                <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header"> Training provider </th>
                     <td class="govuk-table__cell"> @Model.CurrentProviderName </td>
                     <td class="govuk-table__cell"> <mark class="das-mark das-mark--green"> @Model.ProviderName </mark> </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link" href="#"> Change </a> </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link" href="@Url.RouteUrl(RouteNames.EnterNewTrainingProvider, queryData)"> Change </a> </td>
                 </tr>
 
                 <tr class="govuk-table__row">
@@ -71,12 +77,12 @@
 
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header"> Price </th>
-                    <td class="govuk-table__cell"> @Model.CurrentPrice </td>
+                    <td class="govuk-table__cell"> @Model.CurrentPrice.ToGdsCostFormat() </td>
                     @await Html.PartialAsync("_ViewChangesPriceCell", new ViewChangesCell<int?>(Model.CurrentPrice, Model.NewPrice))
                     <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link" href="@Url.RouteUrl(RouteNames.WhatIsTheNewStartDate, queryData)"> Change </a> </td>
                 </tr>
             </tbody>
-            
+
         </table>
     </div>
 </div>
@@ -84,7 +90,11 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <form method="post">
+            <input type="hidden" asp-for="ProviderId" />
+            <input type="hidden" asp-for="NewStartDate" />
+            <input type="hidden" asp-for="NewEndDate" />
             <input type="hidden" asp-for="NewPrice" />
+
             <button class="govuk-button" type="submit"> Confirm and send </button>
         </form>
     </div>

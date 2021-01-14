@@ -1,5 +1,4 @@
-﻿
-
+﻿using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -10,18 +9,23 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class ConfirmDetailsAndSendViewModelMapper : IMapper<EmployerLedChangeOfProviderRequest, ConfirmDetailsAndSendViewModel>
+    public class ConfirmDetailsAndSendViewModelMapper : IMapper<ChangeOfProviderRequest, ConfirmDetailsAndSendViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
 
-        public ConfirmDetailsAndSendViewModelMapper(ICommitmentsApiClient client)
+        public ConfirmDetailsAndSendViewModelMapper(ICommitmentsApiClient commitmentsApiClient, ITrainingProgrammeApiClient trainingProgrammeApiClient)
         {
-            _commitmentsApiClient = client;
+            _commitmentsApiClient = commitmentsApiClient;
+            _trainingProgrammeApiClient = trainingProgrammeApiClient;
         }
-        public async Task<ConfirmDetailsAndSendViewModel> Map(EmployerLedChangeOfProviderRequest source)
+
+        public async Task<ConfirmDetailsAndSendViewModel> Map(ChangeOfProviderRequest source)
         {
-            var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId, CancellationToken.None);
-            var priceHistory = await _commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId, CancellationToken.None);
+            var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId.Value, CancellationToken.None);
+            var priceHistory = await _commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId.Value, CancellationToken.None);
+
+            var course = await _trainingProgrammeApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
 
             var result = new ConfirmDetailsAndSendViewModel
             {
@@ -37,7 +41,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 CurrentProviderName = apprenticeship.ProviderName,
                 CurrentStartDate = apprenticeship.StartDate,
                 CurrentEndDate = apprenticeship.EndDate,
-                CurrentPrice = (int)priceHistory.PriceEpisodes.FirstOrDefault(p => p.ToDate == null).Cost
+                CurrentPrice = (int)priceHistory.PriceEpisodes.FirstOrDefault(p => p.ToDate == null).Cost,
+                EmployerWillAdd = source.EmployerWillAdd,
+                MaxFunding = course.CurrentFundingCap
             };
 
             return result;
