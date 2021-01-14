@@ -1,5 +1,63 @@
-﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
-<p> End date </p>
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.WhatIsTheNewEndDateViewModel
+
+@{
+    ViewData["Title"] = "What is the new planned training end date with the new training provider? - Apprenticeship service - GOV.UK";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ProviderId" />
+            <input type="hidden" asp-for="ProviderName" />
+            <input type="hidden" asp-for="AccountHashedId" />
+            <input type="hidden" asp-for="ApprenticeshipHashedId" />
+            <input type="hidden" asp-for="NewStartMonth" />
+            <input type="hidden" asp-for="NewStartYear" />
+            <input type="hidden" asp-for="Edit" />
+
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.NewEndDate,  "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl govuk-!-padding-bottom-6">
+                        <h1 class="govuk-fieldset__heading">
+                            What is the new planned training end date with @Model.ProviderName?
+                        </h1>
+                    </legend>
+
+                    <p class="govuk-body">
+                        This date must be after the new start date (@Model.NewStartDate.ToString("MMMM yyyy")).
+                    </p>
+
+                    <span class="govuk-hint">
+                        For example, 04 2020
+                    </span>
+
+                    <div class="govuk-date-input">
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label asp-for="NewEndMonth" class="govuk-label govuk-date-input__label">Month</label>
+                                <input asp-for="NewEndMonth" min="1" max="12" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number">
+                            </div>
+                        </div>
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label asp-for="NewEndYear" class="govuk-label govuk-date-input__label">Year</label>
+                                <input asp-for="NewEndYear" min="1900" max="9999" class="govuk-input govuk-date-input__input govuk-input--width-4" type="number">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <button class="govuk-button" type="submit"> Continue </button>
+        </form>
+    </div>
+</div>
+
+@section Back
+{
+    <div class="das-js-back-link"></div>
+}

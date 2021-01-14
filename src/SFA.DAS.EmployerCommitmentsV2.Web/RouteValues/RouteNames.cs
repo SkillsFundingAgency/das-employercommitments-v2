@@ -17,6 +17,9 @@
         public const string ConfirmDetailsAndSendRequest = "confirm-details-and-send-request";
         public const string SendRequestNewTrainingProvider = "send-request-new";
         public const string ChangeProviderRequestedConfirmation = "change-provider-requested";
+        public const string WhatIsTheNewEndDate = "what-is-the-new-end-date";
+        public const string WhatIsTheNewPrice = "what-is-the-new-price";
+        public const string ConfirmDetailsAndSendRequest = "confirm-details-and-send-request";
         public const string ViewChanges = "view-changes";
     }
 }
