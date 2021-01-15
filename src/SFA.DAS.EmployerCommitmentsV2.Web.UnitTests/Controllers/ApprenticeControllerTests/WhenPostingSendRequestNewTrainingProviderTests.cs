@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
@@ -79,7 +80,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
     public class WhenPostingSendRequestNewTrainingProviderTestsFixture
     {
-        private readonly Mock<IModelMapper> _modelMapper;
         private readonly Mock<ICommitmentsApiClient> _commitmentsApiClient;
         private readonly Mock<ILinkGenerator> _linkGenerator;
         private ApprenticeController _controller;
@@ -91,8 +91,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             _viewModel = autoFixture.Create<SendNewTrainingProviderViewModel>();
 
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _modelMapper = new Mock<IModelMapper>();
-
             _linkGenerator = new Mock<ILinkGenerator>();
             _linkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns<string>(s => s);
 
@@ -100,7 +98,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 Mock.Of<ICookieStorageService<IndexRequest>>(),
                 _commitmentsApiClient.Object,
                 _linkGenerator.Object,
-                Mock.Of<ILogger<ApprenticeController>>());
+                Mock.Of<ILogger<ApprenticeController>>(),
+                Mock.Of<IAuthorizationService>());
         }
 
         public async Task<IActionResult> SendRequestNewTrainingProvider()
