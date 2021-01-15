@@ -10,18 +10,16 @@
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
 
+        <h1 class="govuk-heading-xl">
+            Who will enter the new course dates and price?
+        </h1>
+
         <form method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ProviderId" />
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmployerWillAdd,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl govuk-!-padding-bottom-6">
-                        <h1 class="govuk-fieldset__heading">
-                            Who will enter the new course dates and price?
-                        </h1>
-                    </legend>
-
                     <p class="govuk-body govuk-!-padding-bottom-6">
                         If your training provider adds the new course dates and price, you'll need to check and agree to them before any payments are made.
                     </p>
@@ -34,12 +32,12 @@
                     }
 
                     <div class="govuk-radios">
-                        <div class="govuk-radios__item">
+                        <div class="govuk-radios__item" id="radio-item-yes">
                             <input class="govuk-radios__input" type="radio" id="EmployerWillAdd-yes" name="EmployerWillAdd" value="true">
                             <label class="govuk-label govuk-radios__label" for="EmployerWillAdd-yes"> I'll add them now</label>
                         </div>
 
-                        <div class="govuk-radios__item">
+                        <div class="govuk-radios__item" id="radio-item-no">
                             <input class="govuk-radios__input" type="radio" id="EmployerWillAdd-no" name="EmployerWillAdd" value="false">
                             <label class="govuk-label govuk-radios__label" for="EmployerWillAdd-no">@Model.ProviderName will add them later</label>
                         </div>
@@ -48,7 +46,7 @@
                 </fieldset>
             </div>
 
-            <button class="govuk-button" type="submit"> Continue </button>
+            <button class="govuk-button" type="submit" id="continue-btn"> Continue </button>
         </form>
     </div>
 </div>
