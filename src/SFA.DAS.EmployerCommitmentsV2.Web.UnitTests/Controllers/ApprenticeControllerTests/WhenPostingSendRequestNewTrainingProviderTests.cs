@@ -14,7 +14,6 @@ using SFA.DAS.EmployerUrlHelper;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetChangeOfPartyRequestsResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {

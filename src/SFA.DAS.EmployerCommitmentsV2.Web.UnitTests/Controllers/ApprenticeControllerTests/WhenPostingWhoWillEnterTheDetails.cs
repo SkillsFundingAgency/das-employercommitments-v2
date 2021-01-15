@@ -52,20 +52,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
     }
 
-    public class WhenPostingWhoWillEnterTheDetailsTestFixture
+    public class WhenPostingWhoWillEnterTheDetailsTestFixture : ApprenticeControllerTestFixtureBase
     {
-
-        private readonly ApprenticeController _controller;
-
-        public WhenPostingWhoWillEnterTheDetailsTestFixture()
+        
+        public WhenPostingWhoWillEnterTheDetailsTestFixture() : base()
         {
 
-            _controller = new ApprenticeController(Mock.Of<IModelMapper>(), 
-                Mock.Of<ICookieStorageService<IndexRequest>>(), 
-                Mock.Of<ICommitmentsApiClient>(), 
-                Mock.Of<ILinkGenerator>(), 
-                Mock.Of<ILogger<ApprenticeController>>(),
-                Mock.Of<IAuthorizationService>());
         }
 
         public async Task<IActionResult> WhoWillEnterTheDetails(WhoWillEnterTheDetailsViewModel viewModel)

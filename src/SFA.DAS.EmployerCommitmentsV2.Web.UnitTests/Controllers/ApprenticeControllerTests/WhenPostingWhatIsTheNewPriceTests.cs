@@ -1,15 +1,8 @@
 ﻿using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
-using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
-using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
@@ -36,24 +29,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             _fixture.VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(result as RedirectToRouteResult);
         }
-
     }
 
-    public class WhenPostingWhatIsTheNewPriceTestsFixture
+    public class WhenPostingWhatIsTheNewPriceTestsFixture : ApprenticeControllerTestFixtureBase
     {
-
-        private readonly ApprenticeController _controller;
-
-        public WhenPostingWhatIsTheNewPriceTestsFixture()
-        {
-
-            _controller = new ApprenticeController(Mock.Of<IModelMapper>(),
-                Mock.Of<ICookieStorageService<IndexRequest>>(),
-                Mock.Of<ICommitmentsApiClient>(),
-                Mock.Of<ILinkGenerator>(),
-                Mock.Of<ILogger<ApprenticeController>>(),
-                Mock.Of<IAuthorizationService>());
-        }
+        public WhenPostingWhatIsTheNewPriceTestsFixture() : base () { }
 
         public IActionResult WhatIsTheNewPrice(WhatIsTheNewPriceViewModel viewModel)
         {

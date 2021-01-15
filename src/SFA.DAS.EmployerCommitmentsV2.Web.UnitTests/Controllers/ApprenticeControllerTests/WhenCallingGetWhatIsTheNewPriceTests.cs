@@ -32,30 +32,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
     }
 
-    public class WhenCallingGetWhatIsTheNewPriceTestsFixture
+    public class WhenCallingGetWhatIsTheNewPriceTestsFixture : ApprenticeControllerTestFixtureBase
     {
         private readonly ChangeOfProviderRequest _request;
         private readonly WhatIsTheNewPriceViewModel _viewModel;
 
-        private readonly ApprenticeController _controller;
 
-        public WhenCallingGetWhatIsTheNewPriceTestsFixture()
+        public WhenCallingGetWhatIsTheNewPriceTestsFixture() : base()
         {
-            var autoFixture = new Fixture();
-            var mockMapper = new Mock<IModelMapper>();
+            _request = _autoFixture.Create<ChangeOfProviderRequest>();
+            _viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();
 
-            _request = autoFixture.Create<ChangeOfProviderRequest>();
-            _viewModel = autoFixture.Create<WhatIsTheNewPriceViewModel>();
-
-            mockMapper.Setup(m => m.Map<WhatIsTheNewPriceViewModel>(_request))
+            _mockMapper.Setup(m => m.Map<WhatIsTheNewPriceViewModel>(_request))
                 .ReturnsAsync(_viewModel);
-
-            _controller = new ApprenticeController(mockMapper.Object,
-                Mock.Of<ICookieStorageService<IndexRequest>>(),
-                Mock.Of<ICommitmentsApiClient>(),
-                Mock.Of<ILinkGenerator>(),
-                Mock.Of<ILogger<ApprenticeController>>(),
-                Mock.Of<IAuthorizationService>());
         }
 
         public async Task<IActionResult> WhatIsTheNewPrice()

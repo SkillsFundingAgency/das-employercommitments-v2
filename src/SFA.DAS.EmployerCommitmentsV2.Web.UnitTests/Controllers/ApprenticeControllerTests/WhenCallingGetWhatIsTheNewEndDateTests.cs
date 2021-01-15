@@ -32,30 +32,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
     }
 
-    public class WhenCallingGetWhatIsTheNewEndDateTestsFixture
+    public class WhenCallingGetWhatIsTheNewEndDateTestsFixture : ApprenticeControllerTestFixtureBase
     {
         private readonly ChangeOfProviderRequest _request;
         private readonly WhatIsTheNewEndDateViewModel _viewModel;
-
-        private readonly ApprenticeController _controller;
-
-        public WhenCallingGetWhatIsTheNewEndDateTestsFixture()
+        
+        public WhenCallingGetWhatIsTheNewEndDateTestsFixture() : base()
         {
-            var autoFixture = new Fixture();
-            var mockMapper = new Mock<IModelMapper>();
+            _request = _autoFixture.Create<ChangeOfProviderRequest>();
+            _viewModel = _autoFixture.Create<WhatIsTheNewEndDateViewModel>();
 
-            _request = autoFixture.Create<ChangeOfProviderRequest>();
-            _viewModel = autoFixture.Create<WhatIsTheNewEndDateViewModel>();
-
-            mockMapper.Setup(m => m.Map<WhatIsTheNewEndDateViewModel>(_request))
+            _mockMapper.Setup(m => m.Map<WhatIsTheNewEndDateViewModel>(_request))
                 .ReturnsAsync(_viewModel);
-
-            _controller = new ApprenticeController(mockMapper.Object,
-                Mock.Of<ICookieStorageService<IndexRequest>>(),
-                Mock.Of<ICommitmentsApiClient>(),
-                Mock.Of<ILinkGenerator>(),
-                Mock.Of<ILogger<ApprenticeController>>(),
-                Mock.Of<IAuthorizationService>());
         }
 
         public async Task<IActionResult> WhatIsTheNewEndDate()
