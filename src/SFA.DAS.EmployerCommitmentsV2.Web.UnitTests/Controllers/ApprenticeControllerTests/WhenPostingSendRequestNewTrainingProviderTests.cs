@@ -82,9 +82,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             _fixture.SetConfirm(true);
 
-            var actionResult = await _fixture.SendRequestNewTrainingProvider();
+            var actionResult = (RedirectToRouteResult)await _fixture.SendRequestNewTrainingProvider();
 
-            _fixture.VerifyProviderAddDetailsIsSetToTrue(actionResult);
+            Assert.AreEqual(actionResult.RouteName, RouteNames.ChangeProviderRequestedConfirmation);
+            Assert.AreEqual(actionResult.RouteValues[nameof(ChangeProviderRequestedConfirmationRequest.ProviderAddDetails)], true);
         }
     }
 
@@ -156,24 +157,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.AreEqual("Error", redirectResult.ControllerName);
             Assert.AreEqual("Error", redirectResult.ActionName);
         }
-
-        public void VerifyProviderAddDetailsIsSetToTrue(IActionResult result)
-        {
-            var redirect = (RedirectToRouteResult)result;
-            Assert.AreEqual(RouteNames.ChangeProviderRequestedConfirmation, redirect.RouteName);
-
-            redirect.RouteValues.TryGetValue(nameof(ChangeProviderRequestedConfirmationRequest.ProviderAddDetails), out object providerAddDetailRouteValue);
-
-            var hasProviderAddDetailsRouteValue = providerAddDetailRouteValue is bool;
-
-            Assert.IsTrue(hasProviderAddDetailsRouteValue);
-
-            if (hasProviderAddDetailsRouteValue)
-            {
-                Assert.IsTrue((bool)providerAddDetailRouteValue);
-            }
-
-        }
-
+        
     }
 }
