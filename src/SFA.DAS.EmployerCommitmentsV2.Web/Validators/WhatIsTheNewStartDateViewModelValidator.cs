@@ -27,6 +27,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
                 .Must((r, newStartDate) => newStartDate.IsEqualToOrAfterMonthYearOfDateTime(r.StopDate))
                 .WithMessage(r => $"The start date must be on or after {r.StopDate:MMMM yyyy}")
                 .When(r => r.NewStartDate.IsValid);
+
+            RuleFor(r => r.NewStartDate)
+                .Must((r, newStartDate) => newStartDate.IsBeforeMonthYearOfDateTime(r.NewEndDate.Value))
+                .WithMessage(r => $"The start date must be before {r.NewEndDate:MMMM yyyy}")
+                .When(r => r.NewEndDate.HasValue);
         }
     }
 }

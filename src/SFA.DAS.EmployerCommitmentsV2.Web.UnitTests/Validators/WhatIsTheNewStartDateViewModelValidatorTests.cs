@@ -16,6 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         private const string MonthNotEnteredError = "The start date must include a month";
         private const string NotARealDateError = "The start date must be a real date";
         private readonly string NewStartDateBeforeStopDateError;
+        private string NewStartDateAfterNewEndDateError;
 
         public WhatIsTheNewStartDateViewModelValidatorTests()
         {
@@ -62,6 +63,44 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         public void WhenNewStartDateIsValidDateThatIsOnOrAfterStopDate_ThenValidationPasses(int? month, int? year)
         {
             var model = new WhatIsTheNewStartDateViewModel { NewStartMonth = month, NewStartYear = year, StopDate = _stopDate };
+
+            AssertValidationResult(x => x.NewStartDate, model, true);
+        }
+
+        [TestCase(11, 2020)]
+        public void WhenNewStartDateIsBeforeStopDate_ThenValidationFails(int? month, int? year)
+        {
+            var model = new WhatIsTheNewStartDateViewModel { NewStartMonth = month, NewStartYear = year, StopDate = _stopDate };
+
+            AssertValidationResult(x => x.NewStartDate, model, true, NewStartDateBeforeStopDateError);
+        }
+
+        [Test]
+        public void WhenNewEndDateIsNotNull_AndStartDateIsAfterEndDate_ThenInvalid()
+        {
+            var model = new WhatIsTheNewStartDateViewModel
+            {
+                NewStartMonth = _stopDate.AddMonths(2).Month,
+                NewStartYear = _stopDate.AddMonths(2).Year,
+                NewEndDate = _stopDate.AddMonths(1).Date
+            };
+
+            NewStartDateAfterNewEndDateError = $"The start date must be before {model.NewEndDate.Value:MMMM yyyy}";
+
+            AssertValidationResult(x => x.NewStartDate, model, false, NewStartDateAfterNewEndDateError);
+        }
+
+        [Test]
+        public void WhenNewEndDateIsNotNull_AndStartDateIsBeforeEndDate_ThenValalid()
+        {
+            var model = new WhatIsTheNewStartDateViewModel
+            {
+                NewStartMonth = _stopDate.AddMonths(1).Month,
+                NewStartYear = _stopDate.AddMonths(1).Year,
+                NewEndDate = _stopDate.AddMonths(2).Date
+            };
+
+            NewStartDateAfterNewEndDateError = $"The start date must be before {model.NewEndDate.Value:MMMM yyyy}";
 
             AssertValidationResult(x => x.NewStartDate, model, true);
         }

@@ -55,10 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     public class WhenPostingWhoWillEnterTheDetailsTestFixture : ApprenticeControllerTestFixtureBase
     {
         
-        public WhenPostingWhoWillEnterTheDetailsTestFixture() : base()
-        {
-
-        }
+        public WhenPostingWhoWillEnterTheDetailsTestFixture() : base() { }
 
         public async Task<IActionResult> WhoWillEnterTheDetails(WhoWillEnterTheDetailsViewModel viewModel)
         {

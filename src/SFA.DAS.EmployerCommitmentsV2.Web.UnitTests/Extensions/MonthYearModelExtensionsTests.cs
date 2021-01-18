@@ -50,5 +50,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             Assert.AreEqual(false, actualResult);
         }
+
+        [Test]
+        public void WhenDateTimeIsBeforeMonthYearModel_IsBeforeMonthYearOfDateTime_ReturnsTrue()
+        {
+            var dateTime = new DateTime(2020, 6, 1);
+
+            var actualResult = _monthYear.IsBeforeMonthYearOfDateTime(dateTime);
+
+            Assert.True(actualResult);
+        }
+
+        [TestCase(2020, 3, 1)]
+        [TestCase(2020, 1, 1)]
+        public void WhenDateTimeIsEqualToOrAfterMonthYearModel_IsBeforeMonthYearOfDateTime_ReturnsFalse(int year, int month, int day)
+        {
+            var dateTime = new DateTime(year, month, day);
+
+            var actualResult = _monthYear.IsBeforeMonthYearOfDateTime(dateTime);
+
+            Assert.False(actualResult);
+        }
     }
 }

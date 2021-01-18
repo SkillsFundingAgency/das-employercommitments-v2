@@ -7,6 +7,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
     {
         public DateTime StopDate { get; set; }
         public MonthYearModel NewStartDate { get; }
+        public DateTime? NewEndDate { get; set; }
 
         public WhatIsTheNewStartDateViewModel()
         {

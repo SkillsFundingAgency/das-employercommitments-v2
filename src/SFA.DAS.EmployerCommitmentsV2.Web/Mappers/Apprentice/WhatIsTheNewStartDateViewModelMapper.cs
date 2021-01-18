@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using System;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
@@ -31,6 +32,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 NewStartYear = source.NewStartYear,
                 NewEndMonth = source.NewEndMonth,
                 NewEndYear = source.NewEndYear,
+                NewEndDate = (source.NewEndMonth.HasValue && source.NewEndYear.HasValue) 
+                    ? new DateTime(source.NewEndYear.Value, source.NewEndMonth.Value, 1) 
+                    : (DateTime?)null,
                 NewPrice = source.NewPrice,
                 Edit = source.Edit ?? false
             };
