@@ -15,6 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         protected Fixture _autoFixture;
 
         protected readonly Mock<IModelMapper> _mockMapper;
+        protected readonly Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
         protected readonly Mock<IAuthorizationService> _mockAuthorizationService;
 
         protected readonly ApprenticeController _controller;
@@ -24,11 +25,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             _autoFixture = new Fixture();
 
             _mockMapper = new Mock<IModelMapper>();
+            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _mockAuthorizationService = new Mock<IAuthorizationService>();
 
             _controller = new ApprenticeController(_mockMapper.Object,
                 Mock.Of<ICookieStorageService<IndexRequest>>(),
-                Mock.Of<ICommitmentsApiClient>(),
+                _mockCommitmentsApiClient.Object,
                 Mock.Of<ILinkGenerator>(),
                 Mock.Of<ILogger<ApprenticeController>>(),
                 _mockAuthorizationService.Object);

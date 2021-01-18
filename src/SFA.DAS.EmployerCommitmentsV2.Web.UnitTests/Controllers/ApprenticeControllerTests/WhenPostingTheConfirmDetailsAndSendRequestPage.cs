@@ -54,31 +54,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
     }
 
-    public class WhenPostingTheConfirmDetailsAndSendRequestPageTestsFixture
+    public class WhenPostingTheConfirmDetailsAndSendRequestPageTestsFixture : ApprenticeControllerTestFixtureBase
     {
-        private readonly Mock<ICommitmentsApiClient> _commitmentsApiClient;
-        
-        private ConfirmDetailsAndSendViewModel _viewModel;
+        private readonly ConfirmDetailsAndSendViewModel _viewModel;
 
-        private ApprenticeController _controller;
-
-        public WhenPostingTheConfirmDetailsAndSendRequestPageTestsFixture()
+        public WhenPostingTheConfirmDetailsAndSendRequestPageTestsFixture() : base()
         {
-            var autoFixture = new Fixture();
-
-            _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-
-            _viewModel = autoFixture.Build<ConfirmDetailsAndSendViewModel>()
+            _viewModel = _autoFixture.Build<ConfirmDetailsAndSendViewModel>()
                 .With(x => x.NewStartDate, new DateTime(2020, 1, 1))
                 .With(x => x.NewEndDate, new DateTime(2022, 1, 1))
                 .Create();
-
-            _controller = new ApprenticeController(Mock.Of<IModelMapper>(),
-                Mock.Of<ICookieStorageService<IndexRequest>>(),
-                _commitmentsApiClient.Object,
-                Mock.Of<ILinkGenerator>(),
-                Mock.Of<ILogger<ApprenticeController>>(),
-                Mock.Of<IAuthorizationService>());
         }
         public async Task<IActionResult> ConfirmDetailsAndSendRequest()
         {
@@ -87,7 +72,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         public WhenPostingTheConfirmDetailsAndSendRequestPageTestsFixture SetErrorFromCommitmentsApi()
         {
-            _commitmentsApiClient.Setup(c => c.CreateChangeOfPartyRequest(It.IsAny<long>(), It.IsAny<CreateChangeOfPartyRequestRequest>(), It.IsAny<CancellationToken>()))
+            _mockCommitmentsApiClient.Setup(c => c.CreateChangeOfPartyRequest(It.IsAny<long>(), It.IsAny<CreateChangeOfPartyRequestRequest>(), It.IsAny<CancellationToken>()))
                 .Throws(new Exception());
 
             return this;
@@ -95,7 +80,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         public void VerifyCommitmentsApiCreateChangeOfPartyRequestCalled()
         {
-            _commitmentsApiClient.Verify(p => p.CreateChangeOfPartyRequest(It.IsAny<long>(), It.IsAny<CreateChangeOfPartyRequestRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+            _mockCommitmentsApiClient.Verify(p => p.CreateChangeOfPartyRequest(It.IsAny<long>(), It.IsAny<CreateChangeOfPartyRequestRequest>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         public void VerifyRedirectsToSentAction(IActionResult result)
