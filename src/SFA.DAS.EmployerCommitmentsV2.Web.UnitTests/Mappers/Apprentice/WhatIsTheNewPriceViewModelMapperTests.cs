@@ -104,7 +104,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task EditFlag_IsMapped(bool? edit, bool expectedResult)
         {
             //Arrange
-            _request.IsEdit = edit;
+            _request.Edit = edit;
 
             //Act
             var result = await _mapper.Map(_request);

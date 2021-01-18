@@ -213,14 +213,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpGet]
         [Route("{apprenticeshipHashedId}/change-provider/end-date", Name = RouteNames.WhatIsTheNewEndDate)]
         [DasAuthorize(EmployerFeature.ChangeOfProvider)]
-        public IActionResult WhatIsTheNewEndDate(EmployerLedChangeOfProviderRequest request)
-        {
-            return View();
-        }
-
-        [HttpGet]
-        [Route("{apprenticeshipHashedId}/change-provider/end-date", Name = RouteNames.WhatIsTheNewEndDate)]
-        [DasAuthorize(EmployerFeature.ChangeOfProvider)]
         public async Task<IActionResult> WhatIsTheNewEndDate(EmployerLedChangeOfProviderRequest request)
         {
             var viewModel = await _modelMapper.Map<WhatIsTheNewEndDateViewModel>(request);
