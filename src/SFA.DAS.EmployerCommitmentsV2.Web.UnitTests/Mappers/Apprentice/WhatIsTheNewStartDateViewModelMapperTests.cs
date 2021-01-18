@@ -82,6 +82,61 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(_apprenticeshipResponse.StopDate, result.StopDate);
         }
 
+        [TestCase(12)]
+        [TestCase(null)]
+        public async Task NewStartMonth_IsMapped(int? newStartMonth)
+        {
+            _request.NewEndMonth = newStartMonth;
+
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(_request.NewStartMonth, result.NewStartMonth);
+        }
+
+        [TestCase(2020)]
+        [TestCase(null)]
+        public async Task NewStartYear_IsMapped(int? newStartYear)
+        {
+            _request.NewEndMonth = newStartYear;
+
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(_request.NewStartYear, result.NewStartYear);
+        }
+
+        [TestCase(12)]
+        [TestCase(null)]
+        public async Task NewEndMonth_IsMapped(int? newEndMonth)
+        {
+            _request.NewEndMonth = newEndMonth;
+
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(_request.NewEndMonth, result.NewEndMonth);
+        }
+
+        [TestCase(2020)]
+        [TestCase(null)]
+        public async Task NewEndYear_IsMapped(int? newEndYear)
+        {
+            _request.NewEndMonth = newEndYear;
+
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(_request.NewEndYear, result.NewEndYear);
+        }
+
+        [TestCase(500)]
+        [TestCase(null)]
+        public async Task NewPrice_IsMapped(int? newPrice)
+        {
+            _request.NewEndMonth = newPrice;
+
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(_request.NewPrice, result.NewPrice);
+        }
+
         [TestCase(true, true)]
         [TestCase(null, false)]
         public async Task EditFlag_IsMapped(bool? edit, bool expectedResult)
