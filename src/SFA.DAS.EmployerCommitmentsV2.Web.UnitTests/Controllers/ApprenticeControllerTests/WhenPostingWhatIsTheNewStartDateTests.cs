@@ -52,18 +52,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
     }
 
-    public class WhenPostingWhatIsTheNewStartDateTestFixture
+    public class WhenPostingWhatIsTheNewStartDateTestFixture : ApprenticeControllerTestFixtureBase
     {
-        private readonly ApprenticeController _controller;
+        private ChangeOfProviderRequest _request;
 
-        public WhenPostingWhatIsTheNewStartDateTestFixture()
+        public WhenPostingWhatIsTheNewStartDateTestFixture() : base() 
         {
-            _controller = new ApprenticeController(Mock.Of<IModelMapper>(),
-               Mock.Of<ICookieStorageService<IndexRequest>>(),
-               Mock.Of<ICommitmentsApiClient>(),
-               Mock.Of<ILinkGenerator>(),
-               Mock.Of<ILogger<ApprenticeController>>(),
-               Mock.Of<IAuthorizationService>());
+            _request = _autoFixture.Build<ChangeOfProviderRequest>()
+                .With(x => x.NewStartMonth, 1)
+                .With(x => x.NewStartYear, 2020)
+                .With(x => x.NewEndMonth, 1)
+                .With(x => x.NewEndYear, 2022)
+                .With(x => x.NewPrice, 500)
+                .Create();
+
+            _mockMapper.Setup(m => m.Map<ChangeOfProviderRequest>(It.IsAny<WhatIsTheNewStartDateViewModel>()))
+                .ReturnsAsync(_request);
         }
 
         public async Task<IActionResult> WhatIsTheNewStartDate(WhatIsTheNewStartDateViewModel viewModel)
@@ -76,13 +80,35 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var redirectResult = (RedirectToRouteResult)result;
 
             Assert.AreEqual(RouteNames.WhatIsTheNewEndDate, redirectResult.RouteName);
+
+            var routeValues = redirectResult.RouteValues;
+
+            Assert.AreEqual(_request.ProviderId, routeValues["ProviderId"]);
+            Assert.AreEqual(_request.ApprenticeshipHashedId, routeValues["ApprenticeshipHashedId"]);
+            Assert.AreEqual(_request.AccountHashedId, routeValues["AccountHashedId"]);
+            Assert.AreEqual(_request.NewStartMonth, routeValues["NewStartMonth"]);
+            Assert.AreEqual(_request.NewStartYear, routeValues["NewStartYear"]);
+            Assert.AreEqual(null, routeValues["NewEndMonth"]);
+            Assert.AreEqual(null, routeValues["NewEndYear"]);
+            Assert.AreEqual(null, routeValues["NewPrice"]);
         }
 
         public void VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(IActionResult result)
         {
             var redirectResult = (RedirectToRouteResult)result;
-
+            
             Assert.AreEqual(RouteNames.ConfirmDetailsAndSendRequest, redirectResult.RouteName);
+
+            var routeValues = redirectResult.RouteValues;
+
+            Assert.AreEqual(_request.ProviderId, routeValues["ProviderId"]);
+            Assert.AreEqual(_request.ApprenticeshipHashedId, routeValues["ApprenticeshipHashedId"]);
+            Assert.AreEqual(_request.AccountHashedId, routeValues["AccountHashedId"]);
+            Assert.AreEqual(_request.NewStartMonth, routeValues["NewStartMonth"]);
+            Assert.AreEqual(_request.NewStartYear, routeValues["NewStartYear"]);
+            Assert.AreEqual(_request.NewEndMonth, routeValues["NewEndMonth"]);
+            Assert.AreEqual(_request.NewEndYear, routeValues["NewEndYear"]);
+            Assert.AreEqual(_request.NewPrice, routeValues["NewPrice"]);
         }
     }
 }
