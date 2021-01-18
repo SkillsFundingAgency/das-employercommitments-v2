@@ -1,8 +1,6 @@
 ﻿using AutoFixture;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-//using NUnit.Framework;
 using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
@@ -35,17 +33,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 Mock.Of<ILogger<ApprenticeController>>(),
                 _mockAuthorizationService.Object);
         }
-
-        //public void VerifyViewModel<T>(IActionResult actionResult, T expectedViewModel)
-        //{
-        //    var result = actionResult as ViewResult;
-        //    var viewModel = result.Model;
-
-        //    Assert.IsInstanceOf<T>(viewModel);
-
-        //    var viewModelResult = (T)viewModel;
-
-        //    Assert.AreEqual(expectedViewModel, viewModelResult);
-        //}
     }
 }
