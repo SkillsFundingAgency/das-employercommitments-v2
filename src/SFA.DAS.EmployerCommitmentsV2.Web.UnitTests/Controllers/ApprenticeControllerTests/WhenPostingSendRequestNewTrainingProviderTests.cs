@@ -75,6 +75,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             _fixture.VerifyRedirectToError(actionResult);
         }
+
+        [Test]
+        public async Task RedirectingToConfirmationPage_Set_ProviderAddDetails_ToTrue()
+        {
+            _fixture.SetConfirm(true);
+
+            var actionResult = await _fixture.SendRequestNewTrainingProvider();
+
+            _fixture.VerifyProviderAddDetailsIsSetToTrue(actionResult);
+        }
     }
 
     public class WhenPostingSendRequestNewTrainingProviderTestsFixture
@@ -105,7 +115,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         public async Task<IActionResult> SendRequestNewTrainingProvider()
         {
-           return await _controller.SendRequestNewTrainingProvider(_viewModel);
+            return await _controller.SendRequestNewTrainingProvider(_viewModel);
         }
 
         public WhenPostingSendRequestNewTrainingProviderTestsFixture SetConfirm(bool confirm)
@@ -125,7 +135,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public void VerifyRedirectsToApprenticeDetailsPage(IActionResult result)
         {
             var redirect = (RedirectResult)result;
-            
+
             redirect.WithUrl($"accounts/{_viewModel.AccountHashedId}/apprentices/manage/{_viewModel.ApprenticeshipHashedId}/details");
         }
 
@@ -137,7 +147,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         public void VerifyCommitmentsApiCreateChangeOfPartyRequestCalled()
         {
-            _commitmentsApiClient.Verify(p => p.CreateChangeOfPartyRequest(It.IsAny<long>() ,It.IsAny<CreateChangeOfPartyRequestRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+            _commitmentsApiClient.Verify(p => p.CreateChangeOfPartyRequest(It.IsAny<long>(), It.IsAny<CreateChangeOfPartyRequestRequest>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         public void VerifyRedirectToError(IActionResult actionResult)
@@ -147,5 +157,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.AreEqual("Error", redirectResult.ControllerName);
             Assert.AreEqual("Error", redirectResult.ActionName);
         }
+
+        public void VerifyProviderAddDetailsIsSetToTrue(IActionResult result)
+        {
+            var redirect = (RedirectToRouteResult)result;
+            Assert.AreEqual(RouteNames.ChangeProviderRequestedConfirmation, redirect.RouteName);
+
+            redirect.RouteValues.TryGetValue(nameof(ChangeProviderRequestedConfirmationRequest.ProviderAddDetails), out object providerAddDetailRouteValue);
+
+            var hasProviderAddDetailsRouteValue = providerAddDetailRouteValue is bool;
+
+            Assert.IsTrue(hasProviderAddDetailsRouteValue);
+
+            if (hasProviderAddDetailsRouteValue)
+            {
+                Assert.IsTrue((bool)providerAddDetailRouteValue);
+            }
+
+        }
+
     }
 }
