@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 StopDate = apprenticeship.StopDate.Value,
                 NewStartMonthYear = $"{source.NewStartMonth.Value}{source.NewStartYear.Value}",
                 NewEndMonthYear = $"{source.NewEndMonth.Value}{source.NewEndYear.Value}",
-                Edit = source.IsEdit ?? false,
+                Edit = source.Edit ?? false,
                 NewStartMonth = source.NewStartMonth,
                 NewStartYear = source.NewStartYear,
                 NewEndMonth = source.NewEndMonth,
