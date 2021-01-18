@@ -35,6 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public async Task ThenRedirectToTheWhatIsTheNewStopDatePage()
         {
             _viewModel.Edit = false;
+            _fixture.SetupAdvanceToStopDate();
 
             var result = await _fixture.WhatIsTheNewStartDate(_viewModel);
 
@@ -45,7 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public async Task AndUserIsChangingTheirAnswer_ThenRedirectToTheConfirmationPage()
         {
             _viewModel.Edit = true;
-
+            _fixture.SetupReturnToCheckYourAnswers();
             var result = await _fixture.WhatIsTheNewStartDate(_viewModel);
 
             _fixture.VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(result as RedirectToRouteResult);
@@ -56,19 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     {
         private ChangeOfProviderRequest _request;
 
-        public WhenPostingWhatIsTheNewStartDateTestFixture() : base() 
-        {
-            _request = _autoFixture.Build<ChangeOfProviderRequest>()
-                .With(x => x.NewStartMonth, 1)
-                .With(x => x.NewStartYear, 2020)
-                .With(x => x.NewEndMonth, 1)
-                .With(x => x.NewEndYear, 2022)
-                .With(x => x.NewPrice, 500)
-                .Create();
-
-            _mockMapper.Setup(m => m.Map<ChangeOfProviderRequest>(It.IsAny<WhatIsTheNewStartDateViewModel>()))
-                .ReturnsAsync(_request);
-        }
+        public WhenPostingWhatIsTheNewStartDateTestFixture() : base() { }
 
         public async Task<IActionResult> WhatIsTheNewStartDate(WhatIsTheNewStartDateViewModel viewModel)
         {
@@ -109,6 +98,39 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.AreEqual(_request.NewEndMonth, routeValues["NewEndMonth"]);
             Assert.AreEqual(_request.NewEndYear, routeValues["NewEndYear"]);
             Assert.AreEqual(_request.NewPrice, routeValues["NewPrice"]);
+        }
+
+        public WhenPostingWhatIsTheNewStartDateTestFixture SetupAdvanceToStopDate()
+        {
+            _request = _autoFixture.Build<ChangeOfProviderRequest>()
+                .With(x => x.NewStartMonth, 1)
+                .With(x => x.NewStartYear, 2020)
+                .Create();
+
+            _request.NewEndMonth = null;
+            _request.NewEndYear = null;
+            _request.NewPrice = null;
+
+            _mockMapper.Setup(m => m.Map<ChangeOfProviderRequest>(It.IsAny<WhatIsTheNewStartDateViewModel>()))
+                .ReturnsAsync(_request);
+
+            return this;
+        }
+
+        public WhenPostingWhatIsTheNewStartDateTestFixture SetupReturnToCheckYourAnswers()
+        {
+            _request = _autoFixture.Build<ChangeOfProviderRequest>()
+                .With(x => x.NewStartMonth, 1)
+                .With(x => x.NewStartYear, 2020)
+                .With(x => x.NewEndMonth, 1)
+                .With(x => x.NewEndYear, 2022)
+                .With(x => x.NewPrice, 500)
+                .Create();
+
+            _mockMapper.Setup(m => m.Map<ChangeOfProviderRequest>(It.IsAny<WhatIsTheNewStartDateViewModel>()))
+                .ReturnsAsync(_request);
+
+            return this;
         }
     }
 }

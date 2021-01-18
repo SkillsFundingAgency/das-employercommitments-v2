@@ -24,7 +24,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var _autoFixture = new Fixture();
 
-            _request = _autoFixture.Create<ChangeOfProviderRequest>();
+            _request = _autoFixture.Build<ChangeOfProviderRequest>()
+               .With(x => x.NewStartMonth, 1)
+               .With(x => x.NewStartYear, 2020)
+               .With(x => x.NewEndMonth, 1)
+               .With(x => x.NewEndYear, 2022)
+               .Create();
             _apprenticeshipResponse = _autoFixture.Create<GetApprenticeshipResponse>();
 
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
@@ -97,7 +102,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [TestCase(null)]
         public async Task NewStartYear_IsMapped(int? newStartYear)
         {
-            _request.NewEndMonth = newStartYear;
+            _request.NewEndYear = newStartYear;
 
             var result = await _mapper.Map(_request);
 
@@ -119,7 +124,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [TestCase(null)]
         public async Task NewEndYear_IsMapped(int? newEndYear)
         {
-            _request.NewEndMonth = newEndYear;
+            _request.NewEndYear = newEndYear;
 
             var result = await _mapper.Map(_request);
 
@@ -130,7 +135,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [TestCase(null)]
         public async Task NewPrice_IsMapped(int? newPrice)
         {
-            _request.NewEndMonth = newPrice;
+            _request.NewPrice = newPrice;
 
             var result = await _mapper.Map(_request);
 

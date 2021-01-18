@@ -72,7 +72,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             var model = new WhatIsTheNewStartDateViewModel { NewStartMonth = month, NewStartYear = year, StopDate = _stopDate };
 
-            AssertValidationResult(x => x.NewStartDate, model, true, NewStartDateBeforeStopDateError);
+            AssertValidationResult(x => x.NewStartDate, model, false, NewStartDateBeforeStopDateError);
         }
 
         [Test]
