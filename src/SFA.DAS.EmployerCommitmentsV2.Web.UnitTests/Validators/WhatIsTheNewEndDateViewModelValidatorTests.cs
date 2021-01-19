@@ -51,11 +51,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         }
 
         [TestCase(null, null, false, "Enter the new planned training end date with the new training provider")]
-        [TestCase(null, 2020, false, "Enter the new planned training end date with the new training provider")]
         [TestCase(null, 2020, false, "The new planned training end date must include a month")]
-        [TestCase(01, null, false, "Enter the new planned training end date with the new training provider")]
+        [TestCase(null, 2020, false, "The new planned training end date must include a month")]
+        [TestCase(01, null, false, "The new planned training end date must include a year")]
         [TestCase(01, null, false, "The new planned training end date must include a year")]
         [TestCase(01, 2020, true, null)]
+        [TestCase(13, 999, false, "The new planned training end date must be a real date")]
         public void WhenValidatingWhatIsTheEndDate_ValidateTheNewEndDate(int? newEndDateMonth, int? newEndDateYear, bool expectedValid, string errorMessage)
         {
             var viewModel = _autoFixture.Create<WhatIsTheNewEndDateViewModel>();
@@ -65,7 +66,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var result = _validator.Validate(viewModel);
             Assert.AreEqual(expectedValid, result.IsValid);
 
-            if(errorMessage != null) Assert.IsTrue(result.Errors.Any(e => e.ErrorMessage == errorMessage));
+            if(errorMessage != null) Assert.AreEqual(errorMessage, result.Errors.Single().ErrorMessage);
         }
 
         [TestCase(01, 2020, "2020-01-01", false, "The new planned training end date must be after January 2020")]
@@ -82,7 +83,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var result = _validator.Validate(viewModel);
             Assert.AreEqual(expectedValid, result.IsValid);
 
-            if (errorMessage != null) Assert.IsTrue(result.Errors.Any(e => e.ErrorMessage == errorMessage));
+            if (errorMessage != null) Assert.AreEqual(errorMessage, result.Errors.Single().ErrorMessage);
         }
     }
 }
