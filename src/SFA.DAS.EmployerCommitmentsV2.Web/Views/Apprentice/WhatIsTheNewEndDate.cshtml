@@ -8,6 +8,10 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
+        
+        <h1 class="govuk-heading-xl">
+            What is the new planned training end date with @Model.ProviderName?
+        </h1>
 
         <form method="post">
             @Html.AntiForgeryToken()
@@ -22,12 +26,7 @@
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.NewEndDate,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl govuk-!-padding-bottom-6">
-                        <h1 class="govuk-fieldset__heading">
-                            What is the new planned training end date with @Model.ProviderName?
-                        </h1>
-                    </legend>
-
+                    
                     <p class="govuk-body">
                         This date must be after the new start date (@Model.NewStartDate.ToString("MMMM yyyy")).
                     </p>
