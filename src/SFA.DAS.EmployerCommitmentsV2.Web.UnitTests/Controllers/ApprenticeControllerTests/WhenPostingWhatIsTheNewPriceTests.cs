@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
@@ -21,11 +22,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }   
 
         [Test]
-        public void AndUserIsChangingTheirAnswer_ThenRedirectToTheConfirmationPage()
+        public async Task AndUserIsChangingTheirAnswer_ThenRedirectToTheConfirmationPage()
         {
             _viewModel.Edit = true;
 
-            var result = _fixture.WhatIsTheNewPrice(_viewModel);
+            var result = await _fixture.WhatIsTheNewPrice(_viewModel);
 
             _fixture.VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(result as RedirectToRouteResult);
         }
@@ -35,9 +36,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     {
         public WhenPostingWhatIsTheNewPriceTestsFixture() : base () { }
 
-        public IActionResult WhatIsTheNewPrice(WhatIsTheNewPriceViewModel viewModel)
+        public async Task<IActionResult> WhatIsTheNewPrice(WhatIsTheNewPriceViewModel viewModel)
         {
-            return _controller.WhatIsTheNewPrice(viewModel);
+            return await _controller.WhatIsTheNewPrice(viewModel);
         }     
 
         public void VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(IActionResult result)

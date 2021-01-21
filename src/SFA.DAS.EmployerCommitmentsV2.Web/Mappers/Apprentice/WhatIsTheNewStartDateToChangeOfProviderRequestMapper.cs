@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class WhatIsTheNewStartDateToChangeOfProviderRequest : IMapper<WhatIsTheNewStartDateViewModel, ChangeOfProviderRequest>
+    public class WhatIsTheNewStartDateToChangeOfProviderRequestMapper : IMapper<WhatIsTheNewStartDateViewModel, ChangeOfProviderRequest>
     {
         public Task<ChangeOfProviderRequest> Map(WhatIsTheNewStartDateViewModel source)
         {

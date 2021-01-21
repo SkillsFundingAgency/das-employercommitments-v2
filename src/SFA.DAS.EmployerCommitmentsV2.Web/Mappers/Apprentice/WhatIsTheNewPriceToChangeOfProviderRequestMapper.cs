@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class WhoWillEnterTheDetailToChangeOfProviderRequestMapper : IMapper<WhoWillEnterTheDetailsViewModel, ChangeOfProviderRequest>
+    public class WhatIsTheNewPriceToChangeOfProviderRequestMapper : IMapper<WhatIsTheNewPriceViewModel, ChangeOfProviderRequest>
     {
-        public Task<ChangeOfProviderRequest> Map(WhoWillEnterTheDetailsViewModel source)
+        public Task<ChangeOfProviderRequest> Map(WhatIsTheNewPriceViewModel source)
         {
             var result = new ChangeOfProviderRequest
             {

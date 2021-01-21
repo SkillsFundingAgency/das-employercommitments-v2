@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
@@ -21,21 +22,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test]
-        public void ThenRedirectToTheWhatIsTheNewStopDatePage()
+        public async Task ThenRedirectToTheWhatIsTheNewStopDatePage()
         {
             _viewModel.Edit = false;
 
-            var result = _fixture.WhatIsTheNewEndDate(_viewModel);
+            var result = await _fixture.WhatIsTheNewEndDate(_viewModel);
 
             _fixture.VerifyRedirectsToTheWhatIsTheNewPricePage(result as RedirectToRouteResult);
         }
 
         [Test]
-        public void AndUserIsChangingTheirAnswer_ThenRedirectToTheConfirmationPage()
+        public async Task AndUserIsChangingTheirAnswer_ThenRedirectToTheConfirmationPage()
         {
             _viewModel.Edit = true;
 
-            var result = _fixture.WhatIsTheNewEndDate(_viewModel);
+            var result = await _fixture.WhatIsTheNewEndDate(_viewModel);
 
             _fixture.VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(result as RedirectToRouteResult);
         }
@@ -45,9 +46,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     {
         public WhenPostingWhatIsTheNewEndDateTestsFixture() : base() { }
 
-        public IActionResult WhatIsTheNewEndDate(WhatIsTheNewEndDateViewModel viewModel)
+        public async Task<IActionResult> WhatIsTheNewEndDate(WhatIsTheNewEndDateViewModel viewModel)
         {
-            return _controller.WhatIsTheNewEndDate(viewModel);
+            return await _controller.WhatIsTheNewEndDate(viewModel);
         }
 
         public void VerifyRedirectsToTheWhatIsTheNewPricePage(IActionResult result)
