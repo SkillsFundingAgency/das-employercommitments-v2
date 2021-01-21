@@ -10,8 +10,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public DateTime CurrentStartDate { get; set; }
         public DateTime CurrentEndDate { get; set; }
         public int CurrentPrice { get; set; }
-        public int MaxFunding { get; set; }
+        public int? MaxFunding { get; set; }
         public DateTime NewStartDate { get; set; }
         public DateTime NewEndDate { get; set; }
+        public bool ExceedsMaxFunding
+        {
+            get
+            {
+                if (MaxFunding.HasValue)
+                {
+                    return NewPrice > MaxFunding.Value;
+                }
+
+                return false;
+            }
+        }
     }
 }

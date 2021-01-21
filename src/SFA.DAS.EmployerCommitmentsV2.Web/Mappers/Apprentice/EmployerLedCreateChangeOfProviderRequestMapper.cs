@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             return Task.FromResult(new CreateChangeOfPartyRequestRequest
             {
                 ChangeOfPartyRequestType = ChangeOfPartyRequestType.ChangeProvider,
-                NewPartyId = source.ProviderId,
+                NewPartyId = source.ProviderId.Value,
                 NewStartDate = source.NewStartDate,
                 NewEndDate = source.NewEndDate,
                 NewPrice = source.NewPrice

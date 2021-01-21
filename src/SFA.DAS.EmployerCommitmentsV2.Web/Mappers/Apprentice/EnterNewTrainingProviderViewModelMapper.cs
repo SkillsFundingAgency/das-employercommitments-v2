@@ -30,6 +30,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
                 Providers = providersResponse.Providers,
                 CurrentProviderId = apprenticeship.ProviderId,
+                ProviderId = source.ProviderId,
                 NewStartMonth = source.NewStartMonth,
                 NewStartYear = source.NewStartYear,
                 NewEndMonth = source.NewEndMonth,

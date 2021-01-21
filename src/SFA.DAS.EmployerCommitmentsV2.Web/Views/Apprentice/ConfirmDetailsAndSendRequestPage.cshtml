@@ -5,7 +5,7 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ConfirmDetailsAndSendViewModel
 
 @{
-    ViewData["Title"] = "Confirm details and send request to new training provider - Apprenticeship service - GOV.UK";
+    ViewData["Title"] = $"Confirm details and send request to {Model.ProviderName} - Apprenticeship service - GOV.UK";
 
     var queryData = new
     {
@@ -25,11 +25,11 @@
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl"> Confirm details and send request to @Model.ProviderName</h1>
 
-        @if (Model.NewPrice.Value > Model.MaxFunding)
+        @if (Model.ExceedsMaxFunding)
         {
             <div class="govuk-inset-text">
                 <p class="govuk-heading-s"> This apprenticeship is over the funding band maximum </p>
-                <p class="govuk-body"> The new agreed apprenticeship price is over the @Model.MaxFunding.ToGdsCostFormat() <a class="govuk-link" href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" id="funding-band-link">maximum value of the funding band</a> for this apprenticeship. You will need to pay the difference - this cannot be funded from your account. </p>
+                <p class="govuk-body"> The new agreed apprenticeship price is over the @Model.MaxFunding.Value.ToGdsCostFormat() <a class="govuk-link" href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" id="funding-band-link">maximum value of the funding band</a> for this apprenticeship. You will need to pay the difference - this cannot be funded from your account. </p>
             </div>
         }
 

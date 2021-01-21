@@ -99,6 +99,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(_request.ProviderName, result.ProviderName);
         }
 
+        [Test]
+        public async Task NewPrice_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(_request.NewPrice, result.NewPrice);
+        }
+
         [TestCase(true, true)]
         [TestCase(null, false)]
         public async Task EditFlag_IsMapped(bool? edit, bool expectedResult)

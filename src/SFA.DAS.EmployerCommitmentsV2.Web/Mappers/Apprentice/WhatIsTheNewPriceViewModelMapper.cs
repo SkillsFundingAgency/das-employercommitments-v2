@@ -31,7 +31,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 NewStartMonth = source.NewStartMonth,
                 NewStartYear = source.NewStartYear,
                 NewEndMonth = source.NewEndMonth,
-                NewEndYear = source.NewEndYear
+                NewEndYear = source.NewEndYear,
+                NewPrice = source.NewPrice
             };
         }
     }

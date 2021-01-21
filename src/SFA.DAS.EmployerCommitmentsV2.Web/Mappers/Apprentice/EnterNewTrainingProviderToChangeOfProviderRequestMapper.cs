@@ -16,7 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         }
         public async Task<ChangeOfProviderRequest> Map(EnterNewTrainingProviderViewModel source)
         {
-            var provider = await _commitmentsApiClient.GetProvider(source.ProviderId, CancellationToken.None);
+            var provider = await _commitmentsApiClient.GetProvider(source.ProviderId.Value, CancellationToken.None);
             
             return new ChangeOfProviderRequest
             {

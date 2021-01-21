@@ -7,6 +7,7 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _request = autoFixture.Build<ChangeOfProviderRequest>()
                 .With(x => x.NewStartMonth,1)
                 .With(x => x.NewStartYear, 2020)
-                .With(x => x.NewEndMonth,1)
+                .With(x => x.NewEndMonth,2)
                 .With(x => x.NewEndYear,2022)
                 .With(x => x.NewPrice, 1500)
                 .Create();
@@ -44,11 +45,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .With(x => x.CourseCode, "ABC").Create();
 
             _priceEpisodeResponse = autoFixture.Build<GetPriceEpisodesResponse>()
-                .With(x => x.PriceEpisodes, new List<PriceEpisode> { new PriceEpisode { Cost = 2000, ToDate = null } })
+                .With(x => x.PriceEpisodes, new List<PriceEpisode> {
+                    new PriceEpisode { Cost = 1000, ToDate = DateTime.Now.AddMonths(-1)},
+                    new PriceEpisode { Cost = 2000, ToDate = null } })
                 .Create();
 
-            _standardSummary = autoFixture.Build<StandardSummary>()
-                .With(x => x.CurrentFundingCap, 1000).Create();
+            _standardSummary = autoFixture.Create<StandardSummary>();
+            _standardSummary.EffectiveFrom = new DateTime(2018, 1, 1);
+            _standardSummary.EffectiveTo = new DateTime(2022, 1, 1);
+            _standardSummary.FundingPeriods = SetPriceBand(1000, DateTime.Now);
 
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _mockTrainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
@@ -80,6 +85,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task Current_PriceEpisodeIsMapped()
+        {
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(2000, result.CurrentPrice);
+        }
+
+        [Test]
         public async Task GetApprenticeshipCapIsCalled()
         {
             var result = await _mapper.Map(_request);
@@ -87,5 +100,36 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _mockCommitmentsApiClient.Verify(c => c.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
         }
 
+        [Test]
+        public async Task FundingBandCap_IsMapped() 
+        {
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(1000, result.MaxFunding);
+        }
+
+        [TestCase(2000, true)]
+        [TestCase(500, false)]
+        public async Task ExceedsMaxFunding_IsMapped(int newPrice, bool expectsExceedsMaxFunding)
+        {
+            _request.NewPrice = newPrice;
+
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(expectsExceedsMaxFunding, result.ExceedsMaxFunding);
+        }
+
+        public List<FundingPeriod> SetPriceBand(int fundingCap, DateTime startDate)
+        {
+            return new List<FundingPeriod>
+            {
+                new FundingPeriod
+                {
+                        EffectiveFrom = new DateTime(2019, 1, 1),
+                        EffectiveTo = DateTime.Now.AddMonths(1),
+                        FundingCap = fundingCap
+                }
+            };
+        }
     }
 }

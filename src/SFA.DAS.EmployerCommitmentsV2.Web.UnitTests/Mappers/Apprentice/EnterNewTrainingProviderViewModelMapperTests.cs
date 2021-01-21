@@ -55,6 +55,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
+        public async Task NewProviderId_IsMapped(ChangeOfProviderRequest request)
+        {
+            var result = await _mapper.Map(request);
+
+            Assert.AreEqual(request.ProviderId, result.ProviderId);
+        }
+
+        [Test, MoqAutoData]
         public async Task WhenRequestingEnterNewTrainingProvider_ThenListOfGetAllProvidersCalled(ChangeOfProviderRequest request)
         {
             var result = await _mapper.Map(request);
