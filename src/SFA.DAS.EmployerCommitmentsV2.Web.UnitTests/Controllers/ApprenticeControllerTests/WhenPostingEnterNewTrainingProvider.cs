@@ -29,6 +29,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test]
+        public async Task AndTheFeatureToggleIsEnabled_AndInEditMode_ThenRedirectToWhoWillEnterTheDetailsPage()
+        {
+            var result = await _fixture.EnterNewTrainingProvider(true, true);
+
+            _fixture.VerifyRedirectsToWhoWillEnterTheDetailsPage(result);
+        }
+
+        [Test]
         public async Task AndTheFeatureToggleIsDisabled_ThenRedirectToSendRequestPage()
         {
             var result = await _fixture.EnterNewTrainingProvider(false);
@@ -51,10 +59,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 .ReturnsAsync(new SendNewTrainingProviderRequest { AccountHashedId = _viewModel.AccountHashedId, ApprenticeshipHashedId = _viewModel.ApprenticeshipHashedId, ProviderId = _viewModel.ProviderId.Value });
         }
 
-        public async Task<IActionResult> EnterNewTrainingProvider(bool changeProviderFeatureToggleEnabled)
+        public async Task<IActionResult> EnterNewTrainingProvider(bool changeProviderFeatureToggleEnabled, bool edit = false)
         {
             _mockAuthorizationService.Setup(a => a.IsAuthorized(EmployerFeature.ChangeOfProvider))
                 .Returns(changeProviderFeatureToggleEnabled);
+
+            _viewModel.Edit = edit;
 
             return await _controller.EnterNewTrainingProvider(_viewModel);
         }
