@@ -9,6 +9,10 @@
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
 
+        <h1 class="govuk-heading-xl">
+            What is the start date with @(Model.ProviderName)?
+        </h1>
+
         <form method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ProviderId" />
@@ -21,17 +25,12 @@
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.NewStartDate,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl govuk-!-padding-bottom-6">
-                        <h1 class="govuk-fieldset__heading">
-                            What is the start date with @(Model.ProviderName)?
-                        </h1>
-                    </legend>
 
                     <p class="govuk-body" id="help-text">
-                        This date must be on or after the stop date (@(Model.StopDate.ToString("MMMM yyyy")))
+                        This date must be on or after the stop date (@(Model.StopDate.ToString("MMMM yyyy"))).
                     </p>
 
-                    <span class="govuk-hint">
+                    <span class="govuk-hint" id="hint-text">
                         For example, 04 2020
                     </span>
 
