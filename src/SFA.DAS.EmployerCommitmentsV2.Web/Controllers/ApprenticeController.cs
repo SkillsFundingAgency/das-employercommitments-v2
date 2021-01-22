@@ -183,11 +183,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (vm.EmployerWillAdd == true)
             {
-                if (vm.Edit)
-                {
-                    return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, request);
-                }
-
                 return RedirectToRoute(RouteNames.WhatIsTheNewStartDate, request);
             }
             else
