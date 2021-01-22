@@ -1,16 +1,10 @@
 ﻿using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
-using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
-using SFA.DAS.EmployerUrlHelper;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -86,8 +80,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public void VerifyRedirectsToSentAction(IActionResult result)
         {
             var redirect = (RedirectToRouteResult)result;
+            
             Assert.AreEqual(RouteNames.ChangeProviderRequestedConfirmation, redirect.RouteName);
 
+            var routeValues = redirect.RouteValues;
+
+            Assert.AreEqual(_viewModel.ProviderId, routeValues["ProviderId"]);
+            Assert.AreEqual(_viewModel.ApprenticeshipHashedId, routeValues["ApprenticeshipHashedId"]);
+            Assert.AreEqual(_viewModel.AccountHashedId, routeValues["AccountHashedId"]);
         }
 
         public void VerifyRedirectToError(IActionResult actionResult)

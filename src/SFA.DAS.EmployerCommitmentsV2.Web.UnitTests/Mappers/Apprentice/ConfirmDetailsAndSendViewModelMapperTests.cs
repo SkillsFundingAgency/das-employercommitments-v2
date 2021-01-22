@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _standardSummary = autoFixture.Create<StandardSummary>();
             _standardSummary.EffectiveFrom = new DateTime(2018, 1, 1);
             _standardSummary.EffectiveTo = new DateTime(2022, 1, 1);
-            _standardSummary.FundingPeriods = SetPriceBand(1000, DateTime.Now);
+            _standardSummary.FundingPeriods = SetPriceBand(1000);
 
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _mockTrainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
@@ -119,7 +119,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(expectsExceedsMaxFunding, result.ExceedsMaxFunding);
         }
 
-        public List<FundingPeriod> SetPriceBand(int fundingCap, DateTime startDate)
+        public List<FundingPeriod> SetPriceBand(int fundingCap)
         {
             return new List<FundingPeriod>
             {
