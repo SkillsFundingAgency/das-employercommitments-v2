@@ -24,12 +24,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
                 .When(z => z.StopMonth.HasValue && z.StopYear.HasValue);
 
             RuleFor(r => r.StopDate)
-               .Must((r, StopDate) => StopDate.IsBeforeMonthYearOfDateTime(r.StartDate))
-               .WithMessage(r => $"The stop month cannot be before the apprenticeship started");
+               .Must((r, StopDate) => StopDate.IsEqualToOrAfterMonthYearOfDateTime(r.StartDate))
+               .WithMessage(r => $"The stop month cannot be before the apprenticeship started")
+               .When(r => r.StopDate.IsValid);
 
             RuleFor(r => r.StopDate)
                 .Must((r, StopDate) => StopDate.IsNotInFutueMonthYear())
-                .WithMessage(r => $"The stop date cannot be in the future");
+                .WithMessage(r => $"The stop date cannot be in the future")
+                .When(r => r.StopDate.IsValid);
 
         }
     }

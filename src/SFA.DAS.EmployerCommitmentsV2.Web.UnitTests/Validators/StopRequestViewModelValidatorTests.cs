@@ -1,9 +1,7 @@
 ﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using SFA.DAS.Testing.AutoFixture;
 using System;
 using System.Linq.Expressions;
 
@@ -12,18 +10,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
     [TestFixture]
     public class StopRequestViewModelValidatorTests
     {
-        private readonly DateTime _stopDate = new DateTime(2020, 12, 10);
+        private readonly DateTime _startDate = new DateTime(2020, 12, 10);
 
         private const string NoDateEnteredError = "Enter the stop date for this apprenticeship";
         private const string YearNotEnteredError = "Enter the stop date for this apprenticeship";
         private const string MonthNotEnteredError = "Enter the stop date for this apprenticeship";
         private const string NotARealDateError = "The stop date must be a real date";
-        private readonly string StopDateBeforeStopDateError;
-        private string StopDateAfterNewEndDateError;
+        private const string StopDateIsInFutureError = "The stop date cannot be in the future";
+        private readonly string StopDateBeforeStartDateError = "The stop month cannot be before the apprenticeship started";
 
         public StopRequestViewModelValidatorTests()
         {
-            StopDateBeforeStopDateError = $"The start date must be on or after {_stopDate.ToString("MMMM yyyy")}";
         }
 
         [Test]
@@ -61,49 +58,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             AssertValidationResult(x => x.StopDate, model, false, NotARealDateError);
         }
 
-        [TestCase(12, 2020)]
-        [TestCase(1, 2021)]
-        public void WhenStopDateIsValidDateThatIsOnOrAfterStopDate_ThenValidationPasses(int? month, int? year)
+        [Test]
+        public void WhenStopDateIsInFuture_ThenValidationFails()
         {
-            var model = new StopRequestViewModel { StopMonth = month, StopYear = year };
+            var futureStopDate = DateTime.Now.AddMonths(1);
+            var model = new StopRequestViewModel { StopMonth = futureStopDate.Month, StopYear = futureStopDate.Year };
 
-            AssertValidationResult(x => x.StopDate, model, true);
+            AssertValidationResult(x => x.StopDate, model, false, StopDateIsInFutureError);
         }
 
         [TestCase(11, 2020)]
-        public void WhenStopDateIsBeforeStopDate_ThenValidationFails(int? month, int? year)
+        [TestCase(10, 2020)]
+        public void WhenStopDateIsBeforeStartDate_ThenValidationFails(int? month, int? year)
         {
-            var model = new StopRequestViewModel { StopMonth = month, StopYear = year };
+            var model = new StopRequestViewModel { StopMonth = month, StopYear = year, StartDate = _startDate };
 
-            AssertValidationResult(x => x.StopDate, model, false, StopDateBeforeStopDateError);
+            AssertValidationResult(x => x.StopDate, model, false, StopDateBeforeStartDateError);
         }
 
-        [Test]
-        public void WhenNewEndDateIsNotNull_AndStartDateIsAfterEndDate_ThenInvalid()
+        [TestCase(12, 2020)]
+        public void WhenStopDateIsEqualToStartDate_ThenValidates(int? month, int? year)
         {
-            var model = new StopRequestViewModel
-            {
-                StopMonth = _stopDate.AddMonths(2).Month,
-                StopYear = _stopDate.AddMonths(2).Year,
-                StartDate = _stopDate.AddMonths(1).Date
-            };
-
-            StopDateAfterNewEndDateError = $"The start date must be before {model.StartDate:MMMM yyyy}";
-
-            AssertValidationResult(x => x.StopDate, model, false, StopDateAfterNewEndDateError);
-        }
-
-        [Test]
-        public void WhenNewEndDateIsNotNull_AndStartDateIsBeforeEndDate_ThenValalid()
-        {
-            var model = new StopRequestViewModel
-            {
-                StopMonth = _stopDate.AddMonths(1).Month,
-                StopYear = _stopDate.AddMonths(1).Year,
-                StartDate = _stopDate.AddMonths(2).Date
-            };
-
-            StopDateAfterNewEndDateError = $"The start date must be before {model.StartDate:MMMM yyyy}";
+            var model = new StopRequestViewModel { StopMonth = month, StopYear = year, StartDate = _startDate };
 
             AssertValidationResult(x => x.StopDate, model, true);
         }
