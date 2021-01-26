@@ -15,9 +15,9 @@
     </h1>
     <div class="govuk-!-width-two-thirds das-panel__body">
 
-        @if (Model.ApprenticeshipStatus != ApprenticeshipStatus.WaitingToStart ||
-            Model.ApprenticeshipStatus != ApprenticeshipStatus.Live ||
-            Model.ApprenticeshipStatus != ApprenticeshipStatus.Paused)
+        @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart ||
+            Model.ApprenticeshipStatus == ApprenticeshipStatus.Live ||
+            Model.ApprenticeshipStatus == ApprenticeshipStatus.Paused)
         {
             <div class="govuk-warning-text">
                 <span class="govuk-warning-text__icon das-warning-text__icon--blue das-warning-text__icon--valign-middle" aria-hidden="true">!</span>
