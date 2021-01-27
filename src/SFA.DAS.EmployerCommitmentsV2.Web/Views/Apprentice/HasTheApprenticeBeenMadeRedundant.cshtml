@@ -1,0 +1,67 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.MadeRedundantViewModel
+
+@{
+    string pageTitle;
+    string pageId;
+    string pageHeading;
+
+    pageId = "apprentice-made-redundant";
+    pageTitle = pageHeading = $"Has {Model.ApprenticeName} been made redundant?";
+
+    ViewBag.Title = pageTitle;
+    ViewBag.PageId = pageId;
+    ViewBag.Section = "apprentices";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <partial name="_ValidationSummary" />
+
+        <form method="post">
+            <input type="hidden" asp-for="IsCoPJourney" />
+            <input type="hidden" asp-for="StopMonth" />
+            <input type="hidden" asp-for="StopYear" />
+
+            @Html.AntiForgeryToken()
+
+            <h1 class="govuk-heading-xl">@pageHeading</h1>
+
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.MadeRedundant,  "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <span id="error-message-@nameof(MadeRedundantViewModel.MadeRedundant)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(MadeRedundantViewModel.MadeRedundant)].Errors.First().ErrorMessage
+                        </span>
+                    }
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="MadeRedundantConfirmed" name="MadeRedundant" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="MadeRedundantConfirmed">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="MadeRedundantConfirmed-no" name="MadeRedundant" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="MadeRedundantConfirmed-no">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <button class="govuk-button" type="submit" id="submit">Save and continue</button>
+        </form>
+
+    </div>
+</div>
+
+@section Back
+{
+    <div class="das-js-back-link"></div>
+}

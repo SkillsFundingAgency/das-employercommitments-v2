@@ -113,7 +113,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 case ChangeStatusType.Pause:
                     return RedirectToAction(nameof(PauseApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 case ChangeStatusType.Stop:
-                    return Redirect(_linkGenerator.WhenToApplyStopApprentice(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+                    return RedirectToAction(nameof(StopApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 case ChangeStatusType.Resume:
                     return RedirectToAction(nameof(ResumeApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 default:
@@ -253,10 +253,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("{apprenticeshipHashedId}/details/stop")]
         [HttpPost]
-        public async Task<IActionResult> StopApprenticeship(StopRequestViewModel request)
+        public IActionResult StopApprenticeship(StopRequestViewModel viewModel)
         {
-            var viewModel = await _modelMapper.Map<StopRequestViewModel>(request);
+            return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney, viewModel.StopMonth, viewModel.StopYear });
+        }
+
+        [Route("{apprenticeshipHashedId}/details/madeRedundant", Name = RouteNames.HasTheApprenticeBeenMadeRedundant)]
+        [HttpGet]
+        public async Task<IActionResult> HasTheApprenticeBeenMadeRedundant(MadeRedundantRequest request)
+        {
+            var viewModel = await _modelMapper.Map<MadeRedundantViewModel>(request);
             return View(viewModel);
+        }
+
+        [Route("{apprenticeshipHashedId}/details/madeRedundant", Name = RouteNames.HasTheApprenticeBeenMadeRedundant)]
+        [HttpPost]
+        public IActionResult HasTheApprenticeBeenMadeRedundant(MadeRedundantViewModel viewModel)
+        {
+            return RedirectToAction("ConfirmStop", new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney, viewModel.StopMonth, viewModel.StopYear, viewModel.MadeRedundant });
         }
 
         [Route("{apprenticeshipHashedId}/details/pause")]
