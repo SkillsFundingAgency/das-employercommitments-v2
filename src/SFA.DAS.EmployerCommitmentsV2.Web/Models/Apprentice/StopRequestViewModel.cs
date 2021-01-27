@@ -17,9 +17,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         public long ApprenticeshipId { get; set; }
 
-        public int? StopMonth { get => StartDate.Month; set => StopDate.Month = value; }
+        public int? StopMonth { get => StopDate.Month; set => StopDate.Month = value; }
         
-        public int? StopYear { get => StartDate.Year; set => StopDate.Year = value; }
+        public int? StopYear { get => StopDate.Year; set => StopDate.Year = value; }
 
         public MonthYearModel StopDate { get; set; }
 
