@@ -6,6 +6,8 @@
 
 @{
     ViewData["Title"] = $"Confirm details and send request to {Model.ProviderName} - Apprenticeship service - GOV.UK";
+    
+    var apprenticeDisplayName = Model.ApprenticeFullName.EndsWith("s") ? Model.ApprenticeFullName + "'" : Model.ApprenticeFullName + "'s";
 
     var queryData = new
     {
@@ -29,7 +31,7 @@
         {
             <div class="govuk-inset-text">
                 <p class="govuk-heading-s"> This apprenticeship is over the funding band maximum </p>
-                <p class="govuk-body"> The new agreed apprenticeship price is over the @Model.MaxFunding.Value.ToGdsCostFormat() <a class="govuk-link" href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" id="funding-band-link">maximum value of the funding band</a> for this apprenticeship. You will need to pay the difference - this cannot be funded from your account. </p>
+                <p class="govuk-body"> The new agreed apprenticeship price is over the @Model.MaxFunding.Value.ToGdsCostFormat() <a class="govuk-link" href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="_blank" id="funding-band-link">maximum value of the funding band</a> for this apprenticeship. You will need to pay the difference - this cannot be funded from your account. </p>
             </div>
         }
 
@@ -42,7 +44,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <table class="govuk-table">
-            <caption class="govuk-table__caption">@Model.ApprenticeFullName details</caption>
+            <caption class="govuk-table__caption">@apprenticeDisplayName details</caption>
 
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
@@ -54,7 +56,7 @@
             </thead>
             <tbody class="govuk-table__body">
 
-                <tr class="govuk-table__row" id="training-provier-table-row">
+                <tr class="govuk-table__row" id="training-provider-table-row">
                     <th scope="row" class="govuk-table__header"> Training provider </th>
                     <td class="govuk-table__cell"> @Model.CurrentProviderName </td>
                     <td class="govuk-table__cell"> <mark class="das-mark das-mark--green"> @Model.ProviderName </mark> </td>
