@@ -57,13 +57,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public void AndStopIsSelected_ThenRedirectToV1WhenToApplyStopAction(ChangeStatusRequestViewModel viewModel)
         {
             viewModel.SelectedStatusChange = ChangeStatusType.Stop;
-
-            _mockLinkGenerator.Setup(p => p.CommitmentsLink($"accounts/{viewModel.AccountHashedId}/apprentices/manage/{viewModel.ApprenticeshipHashedId}/details/statuschange/stop/whentoapply"))
-                .Returns(_apprenticeshipStopUrl);
-
-            var response = _controller.ChangeStatus(viewModel) as RedirectResult;
-
-            Assert.AreEqual(_apprenticeshipStopUrl, response.Url);
+            var response = _controller.ChangeStatus(viewModel);
+            response.VerifyReturnsRedirectToActionResult().WithActionName("StopApprenticeship");
         }
     }
 }
