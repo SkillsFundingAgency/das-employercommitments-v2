@@ -18,6 +18,7 @@
             @Html.AntiForgeryToken()
 
             <input type="hidden" asp-for="IsCoPJourney" />
+            <input type="hidden" asp-for="StartDate" />
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.StopDate,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
