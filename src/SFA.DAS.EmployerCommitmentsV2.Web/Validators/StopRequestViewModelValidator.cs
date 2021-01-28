@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
                .When(r => r.StopDate.IsValid);
 
             RuleFor(r => r.StopDate)
-                .Must((r, StopDate) => StopDate.IsNotInFutueMonthYear())
+                .Must((r, StopDate) => StopDate.IsNotInFutureMonthYear())
                 .WithMessage(r => $"The stop date cannot be in the future")
                 .When(r => r.StopDate.IsValid);
 
