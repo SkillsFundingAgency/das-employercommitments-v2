@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 CurrentEndDate = apprenticeship.EndDate,
                 CurrentPrice = decimal.ToInt32(priceHistory.PriceEpisodes.GetPrice()),
                 EmployerWillAdd = source.EmployerWillAdd,
-                MaxFunding = GetFundingBandCap(course, newStartDate),
+                MaxFunding = GetFundingBandCap(course, apprenticeship.StartDate),
             };
 
             return result;
