@@ -15,6 +15,7 @@
         public const string WhatIsTheNewStartDate = "what-is-the-new-start-date";
         public const string SendRequestNewTrainingProvider = "send-request-new";
         public const string ChangeProviderRequestedConfirmation = "change-provider-requested";
+        public const string HasTheApprenticeBeenMadeRedundant = "HasTheApprenticeBeenMadeRedundant";
         public const string ViewChanges = "view-changes";
     }
 }
