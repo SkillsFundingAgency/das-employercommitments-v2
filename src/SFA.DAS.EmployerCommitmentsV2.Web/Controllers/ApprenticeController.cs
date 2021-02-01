@@ -251,6 +251,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
+
         [Route("{apprenticeshipHashedId}/details/stop")]
         [HttpPost]
         public IActionResult StopApprenticeship(StopRequestViewModel viewModel)
@@ -265,6 +266,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var viewModel = await _modelMapper.Map<MadeRedundantViewModel>(request);
             return View(viewModel);
         }
+    
 
         [Route("{apprenticeshipHashedId}/details/madeRedundant", Name = RouteNames.HasTheApprenticeBeenMadeRedundant)]
         [HttpPost]

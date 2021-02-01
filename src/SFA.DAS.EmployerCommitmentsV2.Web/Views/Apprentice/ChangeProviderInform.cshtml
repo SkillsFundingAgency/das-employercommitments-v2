@@ -1,6 +1,7 @@
 ﻿@inject ILinkGenerator LinkGenerator;
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ChangeProviderInformViewModel;
 
@@ -14,13 +15,15 @@
     </h1>
     <div class="govuk-!-width-two-thirds das-panel__body">
 
-        @if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped)
+        @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart ||
+            Model.ApprenticeshipStatus == ApprenticeshipStatus.Live ||
+            Model.ApprenticeshipStatus == ApprenticeshipStatus.Paused)
         {
             <div class="govuk-warning-text">
                 <span class="govuk-warning-text__icon das-warning-text__icon--blue das-warning-text__icon--valign-middle" aria-hidden="true">!</span>
                 <strong class="govuk-warning-text__text das-!-colour-inherit">
                     <span class="govuk-warning-text__assistive">Warning</span>
-                    When you change an apprentice's training provider, their apprenticeship record with the current training provider will be stopped.
+                    You need to stop the apprenticeship record with the current training provider before you can change training providers.
                 </strong>
             </div>
         }
@@ -43,14 +46,37 @@
             </li>
         </ul>
     </div>
+    
+    
+    @{
 
-    @if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped)
-    {
-        <a class="govuk-button das-button--inverted govuk-!-font-weight-bold govuk-!-margin-top-2" asp-route="@RouteNames.ApprenticeNotStoppedError"> Continue </a>
-    }
-    else
-    {
-        <a class="govuk-button das-button--inverted govuk-!-font-weight-bold govuk-!-margin-top-2" asp-route="@RouteNames.EnterNewTrainingProvider"> Continue </a>
+        switch (Model.ApprenticeshipStatus)
+        {
+            case ApprenticeshipStatus.WaitingToStart:
+                <a class="govuk-button das-button--inverted govuk-!-font-weight-bold govuk-!-margin-top-2"
+                   href="@LinkGenerator.HasLearnerBeenMadeRedundant(Model.ApprenticeshipHashedId, ChangeStatusType.Stop.ToString().ToLower())">
+                     Continue
+                </a>
+                break;
+            case ApprenticeshipStatus.Live:
+                <a class="govuk-button das-button--inverted govuk-!-font-weight-bold govuk-!-margin-top-2"
+                   href="@LinkGenerator.WhenToApplyStopApprentice(Model.ApprenticeshipHashedId, ChangeStatusType.Stop.ToString().ToLower())">
+                    Continue
+                </a>
+                break;
+            case ApprenticeshipStatus.Paused:
+                <a class="govuk-button das-button--inverted govuk-!-font-weight-bold govuk-!-margin-top-2"
+                   href="@LinkGenerator.WhenToApplyStopApprentice(Model.ApprenticeshipHashedId, ChangeStatusType.Stop.ToString().ToLower())">
+                    Continue
+                </a>
+                break;
+            case ApprenticeshipStatus.Stopped:
+                <a class="govuk-button das-button--inverted govuk-!-font-weight-bold govuk-!-margin-top-2"
+                   asp-route="@RouteNames.EnterNewTrainingProvider">
+                     Continue
+                </a>
+                break;
+        }
     }
 
     <p class="govuk-body-s govuk-!-margin-top-0 govuk-!-margin-bottom-0">
