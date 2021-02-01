@@ -243,6 +243,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
+        [Route("{apprenticeshipHashedId}/details/stop")]
+        [HttpGet]
+        public async Task<IActionResult> StopApprenticeship(StopRequest request)
+        {
+            var viewModel = await _modelMapper.Map<StopRequestViewModel>(request);
+            return View(viewModel);
+        }
+
+
+        [Route("{apprenticeshipHashedId}/details/stop")]
+        [HttpPost]
+        public IActionResult StopApprenticeship(StopRequestViewModel viewModel)
+        {
+            return RedirectToAction("HasTheApprenticeBeenMadeRedundant", new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney, viewModel.StopMonth, viewModel.StopYear });
+        }
+    
+
         [Route("{apprenticeshipHashedId}/details/pause")]
         [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [HttpGet]
