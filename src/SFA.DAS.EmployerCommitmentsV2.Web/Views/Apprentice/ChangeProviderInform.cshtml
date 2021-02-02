@@ -16,8 +16,8 @@
     <div class="govuk-!-width-two-thirds das-panel__body">
 
         @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart ||
-            Model.ApprenticeshipStatus == ApprenticeshipStatus.Live ||
-            Model.ApprenticeshipStatus == ApprenticeshipStatus.Paused)
+          Model.ApprenticeshipStatus == ApprenticeshipStatus.Live ||
+          Model.ApprenticeshipStatus == ApprenticeshipStatus.Paused)
         {
             <div class="govuk-warning-text">
                 <span class="govuk-warning-text__icon das-warning-text__icon--blue das-warning-text__icon--valign-middle" aria-hidden="true">!</span>
@@ -46,34 +46,49 @@
             </li>
         </ul>
     </div>
-    
-    
+
+
     @{
 
         switch (Model.ApprenticeshipStatus)
         {
             case ApprenticeshipStatus.WaitingToStart:
                 <a class="govuk-button das-button--inverted govuk-!-font-weight-bold govuk-!-margin-top-2"
-                   href="@LinkGenerator.HasLearnerBeenMadeRedundant(Model.ApprenticeshipHashedId, ChangeStatusType.Stop.ToString().ToLower())">
-                     Continue
+                   href="@Url.RouteUrl(RouteNames.HasTheApprenticeBeenMadeRedundant,
+                             new {
+                                 IsCoPJourney = true,
+                                 Model.ApprenticeshipHashedId,
+                                 Model.AccountHashedId
+                             })">
+                    Continue
                 </a>
                 break;
             case ApprenticeshipStatus.Live:
                 <a class="govuk-button das-button--inverted govuk-!-font-weight-bold govuk-!-margin-top-2"
-                   href="@LinkGenerator.WhenToApplyStopApprentice(Model.ApprenticeshipHashedId, ChangeStatusType.Stop.ToString().ToLower())">
+                   href="@Url.RouteUrl(RouteNames.WhenToApplyStopApprentice,
+                             new {
+                                 IsCoPJourney = true,
+                                 Model.ApprenticeshipHashedId,
+                                 Model.AccountHashedId
+                             })">
                     Continue
                 </a>
                 break;
             case ApprenticeshipStatus.Paused:
                 <a class="govuk-button das-button--inverted govuk-!-font-weight-bold govuk-!-margin-top-2"
-                   href="@LinkGenerator.WhenToApplyStopApprentice(Model.ApprenticeshipHashedId, ChangeStatusType.Stop.ToString().ToLower())">
+                   href="@Url.RouteUrl(RouteNames.WhenToApplyStopApprentice,
+                             new {
+                                 IsCoPJourney = true,
+                                 Model.ApprenticeshipHashedId,
+                                 Model.AccountHashedId
+                             })">
                     Continue
                 </a>
                 break;
             case ApprenticeshipStatus.Stopped:
                 <a class="govuk-button das-button--inverted govuk-!-font-weight-bold govuk-!-margin-top-2"
                    asp-route="@RouteNames.EnterNewTrainingProvider">
-                     Continue
+                    Continue
                 </a>
                 break;
         }

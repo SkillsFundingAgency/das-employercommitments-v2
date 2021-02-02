@@ -17,5 +17,6 @@
         public const string ChangeProviderRequestedConfirmation = "change-provider-requested";
         public const string HasTheApprenticeBeenMadeRedundant = "HasTheApprenticeBeenMadeRedundant";
         public const string ViewChanges = "view-changes";
+        public const string WhenToApplyStopApprentice = "WhenToApplyStopApprentice";
     }
 }
