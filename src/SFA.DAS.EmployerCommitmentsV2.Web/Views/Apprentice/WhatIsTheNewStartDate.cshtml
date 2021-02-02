@@ -1,6 +1,63 @@
-﻿
-@*
-    Placeholder for CON-2519
-*@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.WhatIsTheNewStartDateViewModel
 
-<p> Enter start date </p>
+@{
+    ViewData["Title"] = "What is the start date with the new training provider? - Apprenticeship service - GOV.UK";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+
+        <h1 class="govuk-heading-xl">
+            What is the start date with @(Model.ProviderName)?
+        </h1>
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ProviderId" />
+            <input type="hidden" asp-for="ProviderName" />
+            <input type="hidden" asp-for="EmployerWillAdd" />
+            <input type="hidden" asp-for="StopDate" />
+            <input type="hidden" asp-for="NewEndMonth" />
+            <input type="hidden" asp-for="NewEndYear" />
+            <input type="hidden" asp-for="NewEndDate" />
+            <input type="hidden" asp-for="NewPrice" />
+
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.NewStartDate,  "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+
+                    <p class="govuk-body" id="help-text">
+                        This date must be on or after the stop date (@(Model.StopDate.ToString("MMMM yyyy"))).
+                    </p>
+
+                    <span class="govuk-hint" id="hint-text">
+                        For example, 04 2020
+                    </span>
+
+                    <div class="govuk-date-input">
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label asp-for="NewStartMonth" class="govuk-label govuk-date-input__label">Month</label>
+                                <input asp-for="NewStartMonth" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number" id="new-start-month">
+                            </div>
+                        </div>
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label asp-for="NewStartYear" class="govuk-label govuk-date-input__label">Year</label>
+                                <input asp-for="NewStartYear" class="govuk-input govuk-date-input__input govuk-input--width-4" type="number" id="new-start-year">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <button class="govuk-button" type="submit" id="continue-button"> Continue </button>
+        </form>
+    </div>
+</div>
+
+@section Back
+{
+    <div class="das-js-back-link"></div>
+}

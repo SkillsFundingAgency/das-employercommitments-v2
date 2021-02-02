@@ -12,8 +12,15 @@
         <form method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="CurrentProviderId" />
+            <input type="hidden" asp-for="EmployerWillAdd" />
+            <input type="hidden" asp-for="NewStartMonth" />
+            <input type="hidden" asp-for="NewStartYear" />
+            <input type="hidden" asp-for="NewEndMonth" />
+            <input type="hidden" asp-for="NewEndYear" />
+            <input type="hidden" asp-for="NewPrice" />
+            <input type="hidden" asp-for="Edit" />
 
-            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Ukprn, "govuk-form-group--error")">
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                         <h1 class="govuk-fieldset__heading">
@@ -25,9 +32,9 @@
                         A UKPRN is the unique, 8-digit number we use to identify a training provider. Ask your training provider if you do not know it.
                     </div>
 
-                    @Html.ValidationMessageFor(m => m.Ukprn, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Ukprn) })
+                    @Html.ValidationMessageFor(m => m.ProviderId, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ProviderId) })
 
-                    <select id="Ukprn" name="Ukprn" asp-for="Ukprn" class="govuk-select @Html.AddClassIfPropertyInError(x => x.Ukprn, "govuk-select--error")">
+                    <select id="Ukprn" name="ProviderId" asp-for="ProviderId" class="govuk-select @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-select--error")">
                         <option class="das-js-hide" value="">Select training provider</option>
                         @foreach (var provider in Model.Providers)
                         {
