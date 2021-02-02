@@ -1,0 +1,59 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.WhoWillEnterTheDetailsViewModel
+
+@{
+    ViewData["Title"] = "Who will enter the new course dates and price? - Apprenticeship service - GOV.UK";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+
+        <h1 class="govuk-heading-xl">
+            Who will enter the new course dates and price?
+        </h1>
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ProviderId" />
+            <input type="hidden" asp-for="ProviderName" />
+
+
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmployerWillAdd,  "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    <p class="govuk-body govuk-!-padding-bottom-6">
+                        If your training provider adds the new course dates and price, you'll need to check and agree to them before any payments are made.
+                    </p>
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <span id="error-message-@nameof(WhoWillEnterTheDetailsViewModel.EmployerWillAdd)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(WhoWillEnterTheDetailsViewModel.EmployerWillAdd)].Errors.First().ErrorMessage
+                        </span>
+                    }
+
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item" id="radio-item-yes">
+                            <input class="govuk-radios__input" type="radio" id="EmployerWillAdd-yes" name="EmployerWillAdd" value="true">
+                            <label class="govuk-label govuk-radios__label" for="EmployerWillAdd-yes"> I'll add them now</label>
+                        </div>
+
+                        <div class="govuk-radios__item" id="radio-item-no">
+                            <input class="govuk-radios__input" type="radio" id="EmployerWillAdd-no" name="EmployerWillAdd" value="false">
+                            <label class="govuk-label govuk-radios__label" for="EmployerWillAdd-no">@Model.ProviderName will add them later</label>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+
+            <button class="govuk-button" type="submit" id="continue-btn"> Continue </button>
+        </form>
+    </div>
+</div>
+
+@section Back
+{
+    <div class="das-js-back-link"></div>
+}

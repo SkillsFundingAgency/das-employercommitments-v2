@@ -32,7 +32,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                                         .With(a => a.Status, ApprenticeshipStatus.Stopped)
                                         .Create();
 
-
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _mockCommitmentsApiClient.Setup(a => a.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_apprenticeshipResponse);
@@ -40,7 +39,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _mockEncodingService = new Mock<IEncodingService>();
             _mockEncodingService.Setup(d => d.Decode(It.IsAny<string>(), EncodingType.ApprenticeshipId))
                 .Returns(ApprenticeshipId);
-
 
             _mapper = new ChangeProviderInformViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object);
         }
