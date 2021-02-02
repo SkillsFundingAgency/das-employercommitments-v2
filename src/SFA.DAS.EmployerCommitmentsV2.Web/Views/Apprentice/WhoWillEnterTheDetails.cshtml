@@ -17,6 +17,8 @@
         <form method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ProviderId" />
+            <input type="hidden" asp-for="ProviderName" />
+
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmployerWillAdd,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">

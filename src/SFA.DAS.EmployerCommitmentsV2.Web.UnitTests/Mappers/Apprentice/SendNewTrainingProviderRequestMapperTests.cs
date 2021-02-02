@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(viewModel);
 
-            Assert.AreEqual(viewModel.Ukprn, result.ProviderId);
+            Assert.AreEqual(viewModel.ProviderId, result.ProviderId);
         }
     }
 }
