@@ -6,12 +6,11 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Features;
@@ -72,12 +71,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public AddDraftApprenticeshipRequest Request { get; set; }
         public AddDraftApprenticeshipViewModel ViewModel { get; set; }
         public CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest AddDraftApprenticeshipRequest { get; set; }
-        public IReadOnlyList<ITrainingProgramme> StandardCourses { get; set; }
-        public IReadOnlyList<ITrainingProgramme> Courses { get; set; }
+        public IEnumerable<TrainingProgramme> StandardCourses { get; set; }
+        public IEnumerable<TrainingProgramme> Courses { get; set; }
         public string CohortDetailsUrl { get; set; }
         public CommitmentsApiModelException CommitmentsApiModelException { get; set; }
         public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
-        public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClient { get; set; }
         public Mock<IModelMapper> ModelMapper { get; set; }
         public Mock<IAuthorizationService> AuthorizationService { get; set; }
         public DraftApprenticeshipController Controller { get; set; }
@@ -117,12 +115,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             };
 
             AddDraftApprenticeshipRequest = new CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest();
-            StandardCourses = new List<ITrainingProgramme>();
-            Courses = new List<ITrainingProgramme>();
+            StandardCourses = new List<TrainingProgramme>();
+            Courses = new List<TrainingProgramme>();
             CohortDetailsUrl = $"accounts/{Request.AccountHashedId}/apprentices/{Request.CohortReference}/details";
             CommitmentsApiModelException = new CommitmentsApiModelException(new List<ErrorDetail> { new ErrorDetail("Foo", "Bar") });
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            TrainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
             ModelMapper = new Mock<IModelMapper>();
             LinkGenerator = new Mock<ILinkGenerator>();
             AuthorizationService = new Mock<IAuthorizationService>();
@@ -134,8 +131,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 AuthorizationService.Object
                 );
 
-            TrainingProgrammeApiClient.Setup(c => c.GetAllTrainingProgrammes()).ReturnsAsync(Courses);
-            TrainingProgrammeApiClient.Setup(c => c.GetStandardTrainingProgrammes()).ReturnsAsync(StandardCourses);
+            CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammes(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammesResponse{TrainingProgrammes = Courses});
+            CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammeStandards(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse{TrainingProgrammes = StandardCourses});
             ModelMapper.Setup(m => m.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(ViewModel)).Returns(Task.FromResult(AddDraftApprenticeshipRequest));
 
             ModelMapper.Setup(m => m.Map<AddDraftApprenticeshipViewModel>(It.IsAny<AddDraftApprenticeshipRequest>())).ReturnsAsync(ViewModel);

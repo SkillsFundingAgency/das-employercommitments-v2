@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
@@ -12,6 +11,7 @@ using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -19,15 +19,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
-        private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
         private readonly IAccountApiClient _accountsApiClient;
 
         public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, 
-            ITrainingProgrammeApiClient trainingProgrammeApiClient, IAccountApiClient accountsApiClient)
+            IAccountApiClient accountsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
-            _trainingProgrammeApiClient = trainingProgrammeApiClient;
             _accountsApiClient = accountsApiClient;
         }
 
@@ -119,7 +117,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         private void PopulateFundingBandExcessModels(List<DetailsViewCourseGroupingModel> courseGroups)
         {
-            Parallel.ForEach(courseGroups, group => SetFundingBandCap(group.CourseCode, group.DraftApprenticeships));
+            var results = courseGroups.Select(courseGroup => SetFundingBandCap(courseGroup.CourseCode, courseGroup.DraftApprenticeships)).ToList();
+
+            Task.WhenAll(results).Wait();
+            
             foreach (var courseGroup in courseGroups)
             {
                 var apprenticesExceedingFundingBand = courseGroup.DraftApprenticeships.Where(x => x.ExceedsFundingBandCap).ToList();
@@ -137,26 +138,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             }
         }
 
-        private void SetFundingBandCap(string courseCode, IEnumerable<CohortDraftApprenticeshipViewModel> draftApprenticeships)
+        private async Task SetFundingBandCap(string courseCode, IEnumerable<CohortDraftApprenticeshipViewModel> draftApprenticeships)
         {
-            Parallel.ForEach(draftApprenticeships, async a => a.FundingBandCap = await GetFundingBandCap(courseCode, a.OriginalStartDate ?? a.StartDate));
+            var course =  await _commitmentsApiClient.GetTrainingProgramme(courseCode);
+            
+            foreach (var draftApprenticeship in draftApprenticeships)
+            {
+                draftApprenticeship.FundingBandCap = GetFundingBandCap(course, draftApprenticeship.OriginalStartDate ?? draftApprenticeship.StartDate);
+            }
         }
 
-        private async Task<int?> GetFundingBandCap(string courseCode, DateTime? startDate)
+        private int? GetFundingBandCap(GetTrainingProgrammeResponse course, DateTime? startDate)
         {
             if (startDate == null)
             {
                 return null;
             }
 
-            var course = await _trainingProgrammeApiClient.GetTrainingProgramme(courseCode);
-
             if (course == null)
             {
                 return null;
             }
 
-            var cap = course.FundingCapOn(startDate.Value);
+            var cap = course.TrainingProgramme.FundingCapOn(startDate.Value);
 
             if (cap > 0)
             {
