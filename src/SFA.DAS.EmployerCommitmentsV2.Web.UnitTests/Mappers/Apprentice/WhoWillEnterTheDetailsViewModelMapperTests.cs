@@ -31,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task ApprenticeshipHashedId_IsMapped(WhoWillEnterTheDetailsRequest request)
+        public async Task ApprenticeshipHashedId_IsMapped(ChangeOfProviderRequest request)
         {
             var result = await _mapper.Map(request);
 
@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task AccountHashedId_IsMapped(WhoWillEnterTheDetailsRequest request)
+        public async Task AccountHashedId_IsMapped(ChangeOfProviderRequest request)
         {
             var result = await _mapper.Map(request);
 
@@ -47,7 +47,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task ProviderId_IsMapped(WhoWillEnterTheDetailsRequest request)
+        public async Task ProviderId_IsMapped(ChangeOfProviderRequest request)
         {
             var result = await _mapper.Map(request);
 
@@ -55,15 +55,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
-        public async Task WhenRequestingTheWhoWillEnterTheDetailsPage_ThenTheGetProviderRequestIsCalled(WhoWillEnterTheDetailsRequest request)
+        public async Task WhenRequestingTheWhoWillEnterTheDetailsPage_ThenTheGetProviderRequestIsCalled(ChangeOfProviderRequest request)
         {
             var result = await _mapper.Map(request);
 
-            _mockCommitmentsApiClient.Verify(m => m.GetProvider(request.ProviderId, It.IsAny<CancellationToken>()), Times.Once());
+            _mockCommitmentsApiClient.Verify(m => m.GetProvider(request.ProviderId.Value, It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Test, MoqAutoData]
-        public async Task WhenRequestingTheWhoWillEnterTheDetailsPage_ThenTheProviderNameIsReturnedAndMapped(WhoWillEnterTheDetailsRequest request)
+        public async Task WhenRequestingTheWhoWillEnterTheDetailsPage_ThenTheProviderNameIsReturnedAndMapped(ChangeOfProviderRequest request)
         {
             var result = await _mapper.Map(request);
 

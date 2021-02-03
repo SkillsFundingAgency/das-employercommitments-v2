@@ -14,7 +14,6 @@ using SFA.DAS.EmployerUrlHelper;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetChangeOfPartyRequestsResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
@@ -76,6 +75,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             _fixture.VerifyRedirectToError(actionResult);
         }
+
+        [Test]
+        public async Task RedirectingToConfirmationPage_Set_ProviderAddDetails_ToTrue()
+        {
+            _fixture.SetConfirm(true);
+
+            var actionResult = (RedirectToRouteResult)await _fixture.SendRequestNewTrainingProvider();
+
+            Assert.AreEqual(actionResult.RouteName, RouteNames.ChangeProviderRequestedConfirmation);
+            Assert.AreEqual(actionResult.RouteValues[nameof(ChangeProviderRequestedConfirmationRequest.ProviderAddDetails)], true);
+        }
     }
 
     public class WhenPostingSendRequestNewTrainingProviderTestsFixture
@@ -104,7 +114,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         public async Task<IActionResult> SendRequestNewTrainingProvider()
         {
-           return await _controller.SendRequestNewTrainingProvider(_viewModel);
+            return await _controller.SendRequestNewTrainingProvider(_viewModel);
         }
 
         public WhenPostingSendRequestNewTrainingProviderTestsFixture SetConfirm(bool confirm)
@@ -124,7 +134,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public void VerifyRedirectsToApprenticeDetailsPage(IActionResult result)
         {
             var redirect = (RedirectResult)result;
-            
+
             redirect.WithUrl($"accounts/{_viewModel.AccountHashedId}/apprentices/manage/{_viewModel.ApprenticeshipHashedId}/details");
         }
 
@@ -136,7 +146,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         public void VerifyCommitmentsApiCreateChangeOfPartyRequestCalled()
         {
-            _commitmentsApiClient.Verify(p => p.CreateChangeOfPartyRequest(It.IsAny<long>() ,It.IsAny<CreateChangeOfPartyRequestRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+            _commitmentsApiClient.Verify(p => p.CreateChangeOfPartyRequest(It.IsAny<long>(), It.IsAny<CreateChangeOfPartyRequestRequest>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         public void VerifyRedirectToError(IActionResult actionResult)
@@ -146,5 +156,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.AreEqual("Error", redirectResult.ControllerName);
             Assert.AreEqual("Error", redirectResult.ActionName);
         }
+        
     }
 }

@@ -10,6 +10,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.EmployerUrlHelper;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
@@ -27,49 +28,38 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test]
-        public void AndEmployerIsSelected_ThenRedirectToWhatIsTheNewStartDateRoute()
+        public async Task AndEmployerIsSelected_ThenRedirectToWhatIsTheNewStartDateRoute()
         {
             var viewModel = _autoFixture.Build<WhoWillEnterTheDetailsViewModel>()
                 .With(vm => vm.EmployerWillAdd, true)
                 .Create();
 
-            var result = _fixture.WhoWillEnterTheDetails(viewModel);
+            var result = await _fixture.WhoWillEnterTheDetails(viewModel);
 
             _fixture.VerifyRedirectsToWhatIsTheNewStartDateRoute(result);
         }
 
         [Test]
-        public void AndProviderIsSelected_ThenRedirectToSendNewTrainingProviderRequest()
+        public async Task AndProviderIsSelected_ThenRedirectToSendNewTrainingProviderRequest()
         {
             var viewModel = _autoFixture.Build<WhoWillEnterTheDetailsViewModel>()
                 .With(vm => vm.EmployerWillAdd, false)
                 .Create();
 
-            var result = _fixture.WhoWillEnterTheDetails(viewModel);
+            var result = await _fixture.WhoWillEnterTheDetails(viewModel);
 
             _fixture.VerifyRedirectsToSendRequestNewTrainingProviderRoute(result);
         }
     }
 
-    public class WhenPostingWhoWillEnterTheDetailsTestFixture
+    public class WhenPostingWhoWillEnterTheDetailsTestFixture : ApprenticeControllerTestFixtureBase
     {
+        
+        public WhenPostingWhoWillEnterTheDetailsTestFixture() : base() { }
 
-        private readonly ApprenticeController _controller;
-
-        public WhenPostingWhoWillEnterTheDetailsTestFixture()
+        public async Task<IActionResult> WhoWillEnterTheDetails(WhoWillEnterTheDetailsViewModel viewModel)
         {
-
-            _controller = new ApprenticeController(Mock.Of<IModelMapper>(), 
-                Mock.Of<ICookieStorageService<IndexRequest>>(), 
-                Mock.Of<ICommitmentsApiClient>(), 
-                Mock.Of<ILinkGenerator>(), 
-                Mock.Of<ILogger<ApprenticeController>>(),
-                Mock.Of<IAuthorizationService>());
-        }
-
-        public IActionResult WhoWillEnterTheDetails(WhoWillEnterTheDetailsViewModel viewModel)
-        {
-            return _controller.WhoWillEnterTheDetails(viewModel);
+            return await _controller.WhoWillEnterTheDetails(viewModel);
         }
 
         public void VerifyRedirectsToWhatIsTheNewStartDateRoute(IActionResult result)

@@ -1,5 +1,4 @@
-﻿
-using SFA.DAS.CommitmentsV2.Types;
+﻿using SFA.DAS.CommitmentsV2.Types;
 using System;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
@@ -19,17 +18,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public int? NewPrice { get; set; }
         public Party CurrentParty { get; set; }
         public string CohortReference { get; set; }
-    }
-
-    public class ViewChangesCell<T>
-    {
-        public T CurrentValue { get; set; }
-        public T NewValue { get; set; }
-
-        public ViewChangesCell(T currentValue, T newValue)
-        {
-            CurrentValue = currentValue;
-            NewValue = newValue;
-        }
     }
 }
