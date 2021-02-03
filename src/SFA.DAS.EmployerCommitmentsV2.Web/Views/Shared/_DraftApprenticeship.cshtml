@@ -175,7 +175,7 @@ else
         Enter the price, including any end-point assessment costs, in whole pounds. For example, for £1,500 enter 1500
     </span>
     @Html.ValidationMessageFor(m => m.Cost, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Cost) })
-    <input asp-for="Cost" class="govuk-input govuk-input--width-5" />
+    <input asp-for="Cost" class="govuk-input govuk-input--width-5" inputmode="numeric" pattern="[0-9]*" maxlength = "7" min="1" max="9999999"  />
 </div>
 
 <div class="govuk-character-count" data-module="character-count" data-maxlength="20">

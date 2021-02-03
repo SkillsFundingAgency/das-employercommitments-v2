@@ -81,6 +81,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public int? EndYear { get => EndDate.Year; set => EndDate.Year = value; }
 
         [Display(Name = "Total agreed apprenticeship price (excluding VAT)")]
+        [SuppressArgumentException(nameof(Cost), "The apprenticeship price is not valid")]
         public int? Cost { get; set; }
 
         [Display(Name = "Reference (optional)")]
