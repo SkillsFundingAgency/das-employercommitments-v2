@@ -113,7 +113,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 case ChangeStatusType.Pause:
                     return RedirectToAction(nameof(PauseApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 case ChangeStatusType.Stop:
-                    return RedirectToAction(nameof(StopApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                    var redirectToActionName = viewModel.CurrentStatus == CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart ? nameof(HasTheApprenticeBeenMadeRedundant) : nameof(StopApprenticeship);
+                    return RedirectToAction(redirectToActionName, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 case ChangeStatusType.Resume:
                     return RedirectToAction(nameof(ResumeApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 default:

@@ -57,8 +57,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public void AndStopIsSelected_ThenRedirectToV1WhenToApplyStopAction(ChangeStatusRequestViewModel viewModel)
         {
             viewModel.SelectedStatusChange = ChangeStatusType.Stop;
+            viewModel.CurrentStatus = CommitmentsV2.Types.ApprenticeshipStatus.Live;
             var response = _controller.ChangeStatus(viewModel);
             response.VerifyReturnsRedirectToActionResult().WithActionName("StopApprenticeship");
+        }
+
+        [Test, MoqAutoData]
+        public void AndStopIsSelected_ThenRedirectToV1WhenToHasTheApprenticeBeenMadeRedundant(ChangeStatusRequestViewModel viewModel)
+        {
+            viewModel.SelectedStatusChange = ChangeStatusType.Stop;
+            viewModel.CurrentStatus = CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart;
+            var response = _controller.ChangeStatus(viewModel);
+            response.VerifyReturnsRedirectToActionResult().WithActionName("HasTheApprenticeBeenMadeRedundant");
         }
     }
 }
