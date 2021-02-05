@@ -26,9 +26,14 @@
 
             <h1 class="govuk-heading-xl">@pageHeading</h1>
 
-            <p class="govuk-body">
-                This apprenticeship record cannot be restared once stopped.
-            </p>
+            <div class="notice">
+                <i class="icon icon-important">
+                    <span class="visually-hidden">Warning</span>
+                </i>
+                <strong class="bold-small">
+                    This apprenticeship record cannot be restarted once stopped.
+                </strong>
+            </div>
 
             <dl class="govuk-summary-list">
                 <div class="govuk-summary-list__row">
@@ -45,7 +50,7 @@
                 </div>
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key"> Proposed stop date </dt>
-                    <dd class="govuk-summary-list__value"> @Model.StopDate.ToGdsFormat() </dd>
+                    <dd class="govuk-summary-list__value"> @Model.StopDate.ToGdsFormatWithoutDay() </dd>
                 </div>
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key"> Made redundant </dt>

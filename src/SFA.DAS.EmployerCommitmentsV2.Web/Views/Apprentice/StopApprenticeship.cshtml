@@ -22,7 +22,12 @@
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.StopDate,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
-
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <span id="error-message-@nameof(SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.StopRequestViewModel.StopDate)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.StopRequestViewModel.StopDate)].Errors.First().ErrorMessage
+                        </span>
+                    }
                     <p class="govuk-body" id="help-text">
                         The earliest date you can enter is this apprenticeship's start date of (@(Model.StartDate.ToString("MMMM yyyy"))). Any outstanding payments will be made for activity up to this date.
                     </p>
@@ -48,7 +53,7 @@
                 </fieldset>
             </div>
 
-            <button class="govuk-button" type="submit" id="continue-button"> Continue </button>
+            <button class="govuk-button" type="submit" id="continue-button"> Save and continue </button>
         </form>
     </div>
 </div>
