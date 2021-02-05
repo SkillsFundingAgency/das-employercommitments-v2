@@ -33,7 +33,7 @@
                     @if (!ViewData.ModelState.IsValid)
                     {
                         <span id="error-message-@nameof(SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.StopRequestViewModel.StopDate)" class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.StopRequestViewModel.StopDate)].Errors.First().ErrorMessage
+                             @ViewData.ModelState[nameof(SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.StopRequestViewModel.StopDate)].Errors.First().ErrorMessage
                         </span>
                     }
 
