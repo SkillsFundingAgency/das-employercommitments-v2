@@ -23,7 +23,7 @@
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.StopDate,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
                     <p class="govuk-body" id="help-text">
-                        The earliest date you can enter is this apprenticeship's start date of (@(Model.StartDate.ToString("MMMM yyyy"))). Any outstanding payments will be made for activity up to this date.
+                        The earliest date you can enter is this apprenticeship's start date of @(Model.StartDate.ToString("MMMM yyyy")). Any outstanding payments will be made for activity up to this date.
                     </p>
 
                     <span class="govuk-hint" id="hint-text">
