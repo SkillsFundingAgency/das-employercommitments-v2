@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using SFA.DAS.CommitmentsV2.Services.Shared;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Services;
 using SFA.DAS.EmployerAccounts.Api.Client;
@@ -23,6 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
                 (c, o) => c.GetInstance<EmployerCommitmentsV2Configuration>().UseStubEmployerAccountsApiClient ? c.GetInstance<StubEmployerAccountsApiClient>() : o));
             For(typeof(ICookieStorageService<>)).Use(typeof(CookieStorageService<>)).Singleton();
             For(typeof(HttpContext)).Use(c => c.GetInstance<IHttpContextAccessor>().HttpContext);
+            For<IAcademicYearDateProvider>().Use<AcademicYearDateProvider>().Singleton();
         }
     }
 }
