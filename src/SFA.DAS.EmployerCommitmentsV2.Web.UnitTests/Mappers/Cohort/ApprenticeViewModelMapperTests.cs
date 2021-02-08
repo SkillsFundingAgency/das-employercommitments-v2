@@ -1,17 +1,17 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -24,13 +24,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private AccountLegalEntityResponse _accountLegalEntityResponse;
         private ApprenticeRequest _source;
         private ApprenticeViewModel _result;
-        private TrainingProgrammeApiClientMock _trainingProgrammeApiClient;
+        private TrainingProgramme _courseStandard;
+        private TrainingProgramme _course;
+        private List<TrainingProgramme> _allTrainingProgrammes;
+        private List<TrainingProgramme> _standardTrainingProgrammes;
 
         [SetUp]
         public async Task Arrange()
         {
             var autoFixture = new Fixture();
 
+            _course = autoFixture.Create<TrainingProgramme>();
+            _courseStandard = autoFixture.Create<TrainingProgramme>();
             _providerResponse = autoFixture.Create<GetProviderResponse>();
             _accountLegalEntityResponse = autoFixture.Build<AccountLegalEntityResponse>().With(x=>x.LevyStatus, ApprenticeshipEmployerType.Levy).Create();
             _source = autoFixture.Create<ApprenticeRequest>();
@@ -43,12 +48,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 .ReturnsAsync(_providerResponse);
             _commitmentsApiClient.Setup(x => x.GetAccountLegalEntity(_source.AccountLegalEntityId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_accountLegalEntityResponse);
+            _standardTrainingProgrammes = new List<TrainingProgramme>{_courseStandard};
+            _commitmentsApiClient
+                .Setup(x => x.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse
+                {
+                    TrainingProgrammes = _standardTrainingProgrammes
+                });
+            _allTrainingProgrammes = new List<TrainingProgramme>{_courseStandard, _course};
+            _commitmentsApiClient
+                .Setup(x => x.GetAllTrainingProgrammes(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetAllTrainingProgrammesResponse
+                {
+                    TrainingProgrammes = _allTrainingProgrammes
+                });
 
-            _trainingProgrammeApiClient = new TrainingProgrammeApiClientMock();
 
             _mapper = new ApprenticeViewModelMapper(
-                _commitmentsApiClient.Object,
-                _trainingProgrammeApiClient.Object);
+                _commitmentsApiClient.Object);
 
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }
@@ -104,7 +121,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void CoursesAreMappedCorrectly()
         {
-            Assert.AreEqual(_trainingProgrammeApiClient.All, _result.Courses);
+            Assert.AreEqual(_allTrainingProgrammes, _result.Courses);
         }
 
         [Test]
@@ -130,7 +147,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             _source.TransferSenderId = "test";
             _result = await _mapper.Map(TestHelper.Clone(_source));
-            Assert.IsFalse(_result.Courses.Any(x => x is Framework));
+            _result.Courses.Should().BeEquivalentTo(_standardTrainingProgrammes);
         }
 
         [TestCase("12345")]
@@ -140,7 +157,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _source.TransferSenderId = transferSenderId;
             _accountLegalEntityResponse.LevyStatus = ApprenticeshipEmployerType.NonLevy;
             _result = await _mapper.Map(TestHelper.Clone(_source));
-            Assert.IsFalse(_result.Courses.Any(x => x is Framework));
+            _result.Courses.Should().BeEquivalentTo(_standardTrainingProgrammes);
         }
     }
 }

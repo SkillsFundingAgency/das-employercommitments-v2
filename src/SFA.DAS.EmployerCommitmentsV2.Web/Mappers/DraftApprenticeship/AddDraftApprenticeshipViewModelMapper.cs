@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
@@ -13,15 +12,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
     public class AddDraftApprenticeshipViewModelMapper : IMapper<AddDraftApprenticeshipRequest, AddDraftApprenticeshipViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
         private readonly IEncodingService _encodingService;
 
         public AddDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient,
-            ITrainingProgrammeApiClient trainingProgrammeApiClient,
             IEncodingService encodingService)
         {
             _commitmentsApiClient = commitmentsApiClient;
-            _trainingProgrammeApiClient = trainingProgrammeApiClient;
             _encodingService = encodingService;
         }
 
@@ -45,8 +41,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 CourseCode = source.CourseCode,
                 ProviderName = cohort.ProviderName,
                 Courses = cohort.IsFundedByTransfer || cohort.LevyStatus == ApprenticeshipEmployerType.NonLevy
-                    ? await _trainingProgrammeApiClient.GetStandardTrainingProgrammes()
-                    : await _trainingProgrammeApiClient.GetAllTrainingProgrammes(),
+                    ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
+                    : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes,    
                 TransferSenderHashedId = cohort.IsFundedByTransfer ? _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId) : string.Empty,
                 AutoCreatedReservation = source.AutoCreated
             };

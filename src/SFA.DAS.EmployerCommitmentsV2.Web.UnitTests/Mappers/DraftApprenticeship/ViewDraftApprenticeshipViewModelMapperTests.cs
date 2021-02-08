@@ -1,14 +1,13 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
 {
@@ -17,10 +16,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
     {
         private ViewDraftApprenticeshipViewModelMapper _mapper;
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
-        private TrainingProgrammeApiClientMock _trainingProgrammeApiClient;
         private ViewDraftApprenticeshipRequest _request;
         private ViewDraftApprenticeshipViewModel _result;
         private GetDraftApprenticeshipResponse _draftApprenticeship;
+        private TrainingProgramme _course;
 
         [SetUp]
         public async Task Arrange()
@@ -28,18 +27,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             var autoFixture = new Fixture();
             _request = autoFixture.Create<ViewDraftApprenticeshipRequest>();
 
-            _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-
-            _trainingProgrammeApiClient = new TrainingProgrammeApiClientMock();
-
             _draftApprenticeship = autoFixture.Create<GetDraftApprenticeshipResponse>();
-            _draftApprenticeship.CourseCode = _trainingProgrammeApiClient.All.First().Id;
+            _course = autoFixture.Create<TrainingProgramme>();
+            
+            _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
+            _commitmentsApiClient
+                .Setup(x => x.GetTrainingProgramme(_draftApprenticeship.CourseCode, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetTrainingProgrammeResponse
+                {
+                    TrainingProgramme = _course
+                });
+
 
             _commitmentsApiClient.Setup(x =>
                     x.GetDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_draftApprenticeship);
 
-            _mapper = new ViewDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _trainingProgrammeApiClient.Object);
+            _mapper = new ViewDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object);
 
             _result = await _mapper.Map(_request) as ViewDraftApprenticeshipViewModel;
         }
@@ -113,7 +117,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         [Test]
         public void ThenTrainingCourseIsMappedCorrectly()
         {
-            Assert.AreEqual(_trainingProgrammeApiClient.All.First().ExtendedTitle, _result.TrainingCourse);
+            Assert.AreEqual(_course.Name, _result.TrainingCourse);
         }
     }
 }
