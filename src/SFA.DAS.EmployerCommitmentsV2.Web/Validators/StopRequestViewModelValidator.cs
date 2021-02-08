@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
 
             RuleFor(r => r.StopDate)
                .Must((r, StopDate) => StopDate.IsEqualToOrAfterMonthYearOfDateTime(r.StartDate))
-               .WithMessage(r => $"The stop month cannot be before the apprenticeship started")
+               .WithMessage(r => $"The stop date cannot be before the apprenticeship started")
                .When(r => r.StopDate.IsValid);
 
             RuleFor(r => r.StopDate)

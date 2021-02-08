@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         private const string MonthNotEnteredError = "Enter the stop date for this apprenticeship";
         private const string NotARealDateError = "The stop date must be a real date";
         private const string StopDateIsInFutureError = "The stop date cannot be in the future";
-        private readonly string StopDateBeforeStartDateError = "The stop month cannot be before the apprenticeship started";
+        private readonly string StopDateBeforeStartDateError = "The stop date cannot be before the apprenticeship started";
 
         public StopRequestViewModelValidatorTests()
         {
