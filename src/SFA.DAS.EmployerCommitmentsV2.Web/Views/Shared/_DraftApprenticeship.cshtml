@@ -41,7 +41,7 @@
 
     <dl class="das-definition-list">
         <dt class="das-definition-list__title">Apprenticeship training course</dt>
-        <dd class="das-definition-list__definition">@Model.Courses.Single(x => x.Id == Model.CourseCode).ExtendedTitle</dd>
+        <dd class="das-definition-list__definition">@Model.Courses.Single(x => x.CourseCode == Model.CourseCode).Name</dd>
     </dl>
 }
 else
@@ -108,7 +108,7 @@ else
         <label asp-for="CourseCode" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
         <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
         @Html.ValidationMessageFor(m => m.CourseCode, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.CourseCode)})
-        <select class="govuk-select govuk-!-width-three-quarters" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "Id", "ExtendedTitle"))" aria-describedby="course-name-hint">
+        <select class="govuk-select govuk-!-width-three-quarters" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "CourseCode", "Name"))" aria-describedby="course-name-hint">
             <option value="">Please select an option</option>
         </select>
     </div>

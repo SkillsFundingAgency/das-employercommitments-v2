@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Attributes;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
 {
@@ -87,7 +87,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         [Display(Name = "Reference (optional)")]
         public string Reference { get; set; }
 
-        public IReadOnlyList<ITrainingProgramme> Courses { get; set; }
+        public IEnumerable<TrainingProgramme> Courses { get; set; }
 
         public bool IsContinuation { get; set; }
     }

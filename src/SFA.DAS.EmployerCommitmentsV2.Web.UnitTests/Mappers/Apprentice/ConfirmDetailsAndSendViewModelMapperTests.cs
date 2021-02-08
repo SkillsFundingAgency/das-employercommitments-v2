@@ -1,8 +1,6 @@
 ﻿using AutoFixture;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
@@ -11,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.CommitmentsV2.Types;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetPriceEpisodesResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
@@ -18,15 +17,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
     public class ConfirmDetailsAndSendViewModelMapperTests
     {
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
-        private Mock<ITrainingProgrammeApiClient> _mockTrainingProgrammeApiClient;
 
         private ChangeOfProviderRequest _request;
 
         private GetApprenticeshipResponse _apprenticeshipResponse;
         private GetPriceEpisodesResponse _priceEpisodeResponse;
-        private StandardSummary _standardSummary;
-
+        
         private ConfirmDetailsAndSendViewModelMapper _mapper;
+        private TrainingProgramme _standardSummary;
 
         [SetUp]
         public void Arrange()
@@ -50,22 +48,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     new PriceEpisode { Cost = 2000, ToDate = null } })
                 .Create();
 
-            _standardSummary = autoFixture.Create<StandardSummary>();
+            _standardSummary = autoFixture.Create<TrainingProgramme>();
             _standardSummary.EffectiveFrom = new DateTime(2018, 1, 1);
             _standardSummary.EffectiveTo = new DateTime(2022, 1, 1);
             _standardSummary.FundingPeriods = SetPriceBand(1000);
 
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockTrainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
 
             _mockCommitmentsApiClient.Setup(c => c.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_apprenticeshipResponse);
             _mockCommitmentsApiClient.Setup(c => c.GetPriceEpisodes(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_priceEpisodeResponse);
-            _mockTrainingProgrammeApiClient.Setup(t => t.GetTrainingProgramme(_apprenticeshipResponse.CourseCode))
-                .ReturnsAsync(_standardSummary);
+            _mockCommitmentsApiClient.Setup(t => t.GetTrainingProgramme(_apprenticeshipResponse.CourseCode, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetTrainingProgrammeResponse
+                {
+                    TrainingProgramme = _standardSummary
+                });
 
-            _mapper = new ConfirmDetailsAndSendViewModelMapper(_mockCommitmentsApiClient.Object, _mockTrainingProgrammeApiClient.Object);
+            _mapper = new ConfirmDetailsAndSendViewModelMapper(_mockCommitmentsApiClient.Object);
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            _mockTrainingProgrammeApiClient.Verify(t => t.GetTrainingProgramme(_apprenticeshipResponse.CourseCode), Times.Once());
+            _mockCommitmentsApiClient.Verify(t => t.GetTrainingProgramme(_apprenticeshipResponse.CourseCode, It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Test]
@@ -119,11 +119,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(expectsExceedsMaxFunding, result.ExceedsMaxFunding);
         }
 
-        public List<FundingPeriod> SetPriceBand(int fundingCap)
+        public List<TrainingProgrammeFundingPeriod> SetPriceBand(int fundingCap)
         {
-            return new List<FundingPeriod>
+            return new List<TrainingProgrammeFundingPeriod>
             {
-                new FundingPeriod
+                new TrainingProgrammeFundingPeriod
                 {
                         EffectiveFrom = new DateTime(2019, 1, 1),
                         EffectiveTo = DateTime.Now.AddMonths(1),
