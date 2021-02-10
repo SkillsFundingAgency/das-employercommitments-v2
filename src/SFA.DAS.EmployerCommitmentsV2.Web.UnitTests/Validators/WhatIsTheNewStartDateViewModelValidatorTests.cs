@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             _mockAcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
 
-            _mockAcademicYearDateProvider.Setup(p => p.CurrentAcademicYearStartDate).Returns(new DateTime(2019, 8, 1));
+            _mockAcademicYearDateProvider.Setup(p => p.CurrentAcademicYearEndDate).Returns(new DateTime(2020, 7, 31));
         }
 
         [Test]
