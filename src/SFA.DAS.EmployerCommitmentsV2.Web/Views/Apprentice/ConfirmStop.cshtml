@@ -1,0 +1,95 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ConfirmStopRequestViewModel
+
+@{
+    string pageTitle;
+    string pageHeading;
+
+    pageHeading = pageTitle = "Confirm apprenticeship stop";
+    ViewBag.Title = pageTitle;
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <partial name="_ValidationSummary" />
+
+        <form method="post">
+            <input type="hidden" asp-for="IsCoPJourney" />
+            <input type="hidden" asp-for="StopMonth" />
+            <input type="hidden" asp-for="StopYear" />
+            <input type="hidden" asp-for="StopDate" />
+
+            @Html.AntiForgeryToken()
+
+            <h1 class="govuk-heading-xl">@pageHeading</h1>
+
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    This apprenticeship record cannot be restarted once stopped.
+                </strong>
+            </div>
+
+            <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Name </dt>
+                    <dd class="govuk-summary-list__value"> @Model.ApprenticeName</dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Unique learner number </dt>
+                    <dd class="govuk-summary-list__value"> @Model.ULN</dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Apprenticeship training course </dt>
+                    <dd class="govuk-summary-list__value"> @Model.Course</dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Proposed stop date </dt>
+                    <dd class="govuk-summary-list__value"> @Model.StopDate.ToGdsFormatWithoutDay() </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Made redundant </dt>
+                    <dd class="govuk-summary-list__value"> @(Model.MadeRedundant.Value ? "Yes" : "No") </dd>
+                </div>
+
+            </dl>
+
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.StopConfirmed,  "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <span id="error-message-@nameof(ConfirmStopRequestViewModel.StopConfirmed)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(ConfirmStopRequestViewModel.StopConfirmed)].Errors.First().ErrorMessage
+                        </span>
+                    }
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="StopConfirmed" name="StopConfirmed" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="StopConfirmed">
+                                Yes, stop this apprenticeship
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="StopConfirmed-no" name="StopConfirmed" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="StopConfirmed-no">
+                                No, go back to apprentice details
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <button class="govuk-button" type="submit" id="submit-status-change">Save and confirm</button>
+        </form>
+
+    </div>
+</div>
+
+@section Back
+{
+    <div class="das-js-back-link"></div>
+}

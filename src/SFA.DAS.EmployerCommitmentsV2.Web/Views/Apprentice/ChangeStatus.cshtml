@@ -39,6 +39,7 @@
         <form method="post">
             @Html.AntiForgeryToken()
 
+            <input type="hidden" asp-for="CurrentStatus" />
             <div class="govuk-form-group  @(ViewData.ModelState.IsValid ? " " : " govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
                     @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(nameof(ChangeStatusRequestViewModel.SelectedStatusChange)))
