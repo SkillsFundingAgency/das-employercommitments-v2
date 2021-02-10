@@ -55,5 +55,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
         {
             return linkGenerator.AccountsLink();
         }
+
+        public static string HasLearnerBeenMadeRedundant(this ILinkGenerator linkGenerator,
+        string hashedApprenticeshipId,
+        string changeType)
+        {
+            return linkGenerator.CommitmentsLink($"{hashedApprenticeshipId}/details/statuschange/{changeType}/maderedundant");
+        }
+
     }
 }
