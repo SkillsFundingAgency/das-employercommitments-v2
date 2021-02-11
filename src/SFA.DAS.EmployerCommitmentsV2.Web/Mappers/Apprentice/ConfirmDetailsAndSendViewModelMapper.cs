@@ -1,24 +1,21 @@
-﻿using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Apprenticeships.Api.Types;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
     public class ConfirmDetailsAndSendViewModelMapper : IMapper<ChangeOfProviderRequest, ConfirmDetailsAndSendViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
 
-        public ConfirmDetailsAndSendViewModelMapper(ICommitmentsApiClient commitmentsApiClient, ITrainingProgrammeApiClient trainingProgrammeApiClient)
+        public ConfirmDetailsAndSendViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
-            _trainingProgrammeApiClient = trainingProgrammeApiClient;
         }
 
         public async Task<ConfirmDetailsAndSendViewModel> Map(ChangeOfProviderRequest source)
@@ -26,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId.Value, CancellationToken.None);
             var priceHistory = await _commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId.Value, CancellationToken.None);
 
-            var course = await _trainingProgrammeApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
+            var course = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
             var newStartDate = new DateTime(source.NewStartYear.Value, source.NewStartMonth.Value, 1);
 
             var result = new ConfirmDetailsAndSendViewModel
@@ -45,13 +42,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 CurrentEndDate = apprenticeship.EndDate,
                 CurrentPrice = decimal.ToInt32(priceHistory.PriceEpisodes.GetPrice()),
                 EmployerWillAdd = source.EmployerWillAdd,
-                MaxFunding = GetFundingBandCap(course, apprenticeship.StartDate),
+                MaxFunding = GetFundingBandCap(course.TrainingProgramme, apprenticeship.StartDate),
             };
 
             return result;
         }
 
-        private int? GetFundingBandCap(ITrainingProgramme course, DateTime? startDate)
+        private int? GetFundingBandCap(TrainingProgramme course, DateTime? startDate)
         {
             if (course == null)
             {

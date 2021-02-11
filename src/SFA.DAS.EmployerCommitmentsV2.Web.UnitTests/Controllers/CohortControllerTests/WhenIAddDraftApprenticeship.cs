@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
@@ -76,7 +75,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures()
         {
             LinkGeneratorMock = new Mock<ILinkGenerator>();
-            TrainingProgrammeApiClientMock = new Mock<ITrainingProgrammeApiClient>();
             CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
             ModelMapperMock = new Mock<IModelMapper>();
             ModelMapperMock.Setup(x => x.Map<ApprenticeViewModel>(It.IsAny<ApprenticeRequest>()))
@@ -92,8 +90,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
         public Mock<IAuthorizationService> AuthorizationServiceMock { get; set; }
         public IAuthorizationService AuthorizationService => AuthorizationServiceMock.Object;
-
-        public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClientMock { get; }
 
         public ApprenticeRequest GetRequest { get; private set; }
         public ApprenticeViewModel PostRequest { get; private set; }

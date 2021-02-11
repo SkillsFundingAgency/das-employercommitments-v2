@@ -113,7 +113,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 case ChangeStatusType.Pause:
                     return RedirectToAction(nameof(PauseApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 case ChangeStatusType.Stop:
-                    return Redirect(_linkGenerator.WhenToApplyStopApprentice(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+                    var redirectToActionName = viewModel.CurrentStatus == CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart ? nameof(HasTheApprenticeBeenMadeRedundant) : nameof(StopApprenticeship);
+                    return RedirectToAction(redirectToActionName, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 case ChangeStatusType.Resume:
                     return RedirectToAction(nameof(ResumeApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 default:
@@ -306,7 +307,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 {
                     var apiRequest = await _modelMapper.Map<CreateChangeOfPartyRequestRequest>(request);
                     await _commitmentsApiClient.CreateChangeOfPartyRequest(request.ApprenticeshipId, apiRequest);
-                    return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId });
+                    return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId , ProviderAddDetails = true});
                 }
                 catch (Exception ex)
                 {
@@ -333,6 +334,69 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var viewModel = await _modelMapper.Map<ViewChangesViewModel>(request);
 
             return View(viewModel);
+        }
+
+        [Route("{apprenticeshipHashedId}/details/stop",Name = RouteNames.WhenToApplyStopApprentice)]
+        [HttpGet]
+        public async Task<IActionResult> StopApprenticeship(StopRequest request)
+        {
+            var viewModel = await _modelMapper.Map<StopRequestViewModel>(request);
+            return View(viewModel);
+        }
+
+
+        [Route("{apprenticeshipHashedId}/details/stop")]
+        [HttpPost]
+        public IActionResult StopApprenticeship(StopRequestViewModel viewModel)
+        {
+            return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney, viewModel.StopMonth, viewModel.StopYear });
+        }
+
+        [Route("{apprenticeshipHashedId}/details/madeRedundant", Name = RouteNames.HasTheApprenticeBeenMadeRedundant)]
+        [HttpGet]
+        public async Task<IActionResult> HasTheApprenticeBeenMadeRedundant(MadeRedundantRequest request)
+        {
+            var viewModel = await _modelMapper.Map<MadeRedundantViewModel>(request);
+            return View(viewModel);
+        }
+    
+
+        [Route("{apprenticeshipHashedId}/details/madeRedundant")]
+        [HttpPost]
+        public IActionResult HasTheApprenticeBeenMadeRedundant(MadeRedundantViewModel viewModel)
+        {
+            return RedirectToAction(nameof(ConfirmStop), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney, viewModel.StopMonth, viewModel.StopYear, viewModel.MadeRedundant });
+        }
+
+        [Route("{apprenticeshipHashedId}/details/confirmStop")]
+        [HttpGet]
+        public async Task<IActionResult> ConfirmStop(ConfirmStopRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ConfirmStopRequestViewModel>(request);
+            return View(viewModel);
+        }
+
+        [Route("{apprenticeshipHashedId}/details/confirmStop")]
+        [HttpPost]
+        public async Task<IActionResult> ConfirmStop(ConfirmStopRequestViewModel viewModel)
+        {
+            if (viewModel.StopConfirmed.HasValue && viewModel.StopConfirmed.Value)
+            {
+                var stopApprenticeshipRequest = await _modelMapper.Map<StopApprenticeshipRequest>(viewModel);
+
+                await _commitmentsApiClient.StopApprenticeship(viewModel.ApprenticeshipId, stopApprenticeshipRequest, CancellationToken.None);
+
+                if (viewModel.IsCoPJourney)
+                {
+                    return RedirectToAction(nameof(EnterNewTrainingProvider), new
+                    {
+                        viewModel.AccountHashedId,
+                        viewModel.ApprenticeshipHashedId
+                    });
+                }
+            }
+
+            return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
         }
 
         [Route("{apprenticeshipHashedId}/details/pause")]

@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
@@ -13,15 +12,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
-        private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
 
         public EditDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient,
-            IEncodingService encodingService,
-            ITrainingProgrammeApiClient trainingProgrammeApiClient)
+            IEncodingService encodingService)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
-            _trainingProgrammeApiClient = trainingProgrammeApiClient;
         }
 
         public async Task<IDraftApprenticeshipViewModel> Map(EditDraftApprenticeshipRequest source)
@@ -48,8 +44,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 LegalEntityName = source.Cohort.LegalEntityName,
                 IsContinuation = draftApprenticeship.IsContinuation,
                 Courses = (cohort.IsFundedByTransfer || cohort.LevyStatus == ApprenticeshipEmployerType.NonLevy) && !draftApprenticeship.IsContinuation
-                    ? await _trainingProgrammeApiClient.GetStandardTrainingProgrammes()
-                    : await _trainingProgrammeApiClient.GetAllTrainingProgrammes()
+                    ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
+                    : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes
             };
         }
     }

@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
@@ -483,7 +481,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public DetailsRequest Source;
         public DetailsViewModel Result;
         public Mock<ICommitmentsApiClient> CommitmentsApiClient;
-        public Mock<ITrainingProgrammeApiClient> TrainingProgrammeApiClient;
         public Mock<IAccountApiClient> AccountApiClient;
         public Mock<IEncodingService> EncodingService;
         public GetCohortResponse Cohort;
@@ -493,8 +490,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public LegalEntityViewModel LegalEntityViewModel;
 
         private Fixture _autoFixture;
-        private ITrainingProgramme _trainingProgramme;
-        private List<FundingPeriod> _fundingPeriods;
+        private TrainingProgramme _trainingProgramme;
+        private List<TrainingProgrammeFundingPeriod> _fundingPeriods;
         private DateTime _startFundingPeriod = new DateTime(2019, 10, 1);
         private DateTime _endFundingPeriod = new DateTime(2019, 10, 30);
 
@@ -521,21 +518,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             AccountApiClient = new Mock<IAccountApiClient>();
             AccountApiClient.Setup(x => x.GetLegalEntity(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(LegalEntityViewModel);
 
-            _fundingPeriods = new List<FundingPeriod>
+            _fundingPeriods = new List<TrainingProgrammeFundingPeriod>
             {
-                new FundingPeriod{ EffectiveFrom = _startFundingPeriod, EffectiveTo = _endFundingPeriod, FundingCap = 1000},
-                new FundingPeriod{ EffectiveFrom = _startFundingPeriod.AddMonths(1), EffectiveTo = _endFundingPeriod.AddMonths(1), FundingCap = 500}
+                new TrainingProgrammeFundingPeriod{ EffectiveFrom = _startFundingPeriod, EffectiveTo = _endFundingPeriod, FundingCap = 1000},
+                new TrainingProgrammeFundingPeriod{ EffectiveFrom = _startFundingPeriod.AddMonths(1), EffectiveTo = _endFundingPeriod.AddMonths(1), FundingCap = 500}
             };
-            _trainingProgramme = new Standard { EffectiveFrom = DefaultStartDate, EffectiveTo = DefaultStartDate.AddYears(1), FundingPeriods = _fundingPeriods };
+            _trainingProgramme = new TrainingProgramme { EffectiveFrom = DefaultStartDate, EffectiveTo = DefaultStartDate.AddYears(1), FundingPeriods = _fundingPeriods };
 
-            TrainingProgrammeApiClient = new Mock<ITrainingProgrammeApiClient>();
-            TrainingProgrammeApiClient.Setup(x => x.GetTrainingProgramme(It.IsAny<string>()))
-                .ReturnsAsync(_trainingProgramme);
+            CommitmentsApiClient.Setup(x => x.GetTrainingProgramme(It.IsAny<string>(), CancellationToken.None))
+                .ReturnsAsync(new GetTrainingProgrammeResponse{TrainingProgramme = _trainingProgramme});
 
             EncodingService = new Mock<IEncodingService>();
             SetEncodingOfApprenticeIds();
 
-            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, TrainingProgrammeApiClient.Object, AccountApiClient.Object);
+            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, AccountApiClient.Object);
             Source = _autoFixture.Create<DetailsRequest>();
         }
 

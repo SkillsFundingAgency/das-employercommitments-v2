@@ -21,9 +21,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         }
 
         [Test, MoqAutoData]
-        public void WhenValidatingNewTrainingProvider_AndAnUkprnIsNotGiven_ThenValidatorReturnsInvalid(EnterNewTrainingProviderViewModel viewModel)
+        public void WhenValidatingNewTrainingProvider_AndAnUkprnIsZero_ThenValidatorReturnsInvalid(EnterNewTrainingProviderViewModel viewModel)
         {
             viewModel.ProviderId = 0;
+            var result = _validator.Validate(viewModel);
+
+            Assert.False(result.IsValid);
+            Assert.AreEqual(ExpectedUkprnErrorMessage, result.Errors.First().ErrorMessage);
+        }
+
+        [Test, MoqAutoData]
+        public void WhenValidatingNewTrainingProvider_AndAnUkprnIsNotGiven_ThenValidatorReturnsInvalid(EnterNewTrainingProviderViewModel viewModel)
+        {
+            viewModel.ProviderId = null;
             var result = _validator.Validate(viewModel);
 
             Assert.False(result.IsValid);

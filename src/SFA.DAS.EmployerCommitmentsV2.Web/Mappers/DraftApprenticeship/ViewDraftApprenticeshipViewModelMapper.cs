@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
@@ -9,12 +8,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
     public class ViewDraftApprenticeshipViewModelMapper : IMapper<ViewDraftApprenticeshipRequest, IDraftApprenticeshipViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly ITrainingProgrammeApiClient _trainingProgrammeApiClient;
 
-        public ViewDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient, ITrainingProgrammeApiClient trainingProgrammeApiClient)
+        public ViewDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
-            _trainingProgrammeApiClient = trainingProgrammeApiClient;
         }
 
         public async Task<IDraftApprenticeshipViewModel> Map(ViewDraftApprenticeshipRequest source)
@@ -22,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
             var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(source.Request.CohortId, source.Request.DraftApprenticeshipId);
 
             var trainingCourse = string.IsNullOrWhiteSpace(draftApprenticeship.CourseCode) ? null
-                :await _trainingProgrammeApiClient.GetTrainingProgramme(draftApprenticeship.CourseCode);
+                : await _commitmentsApiClient.GetTrainingProgramme(draftApprenticeship.CourseCode);
             
             var result = new ViewDraftApprenticeshipViewModel
             {
@@ -32,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 LastName = draftApprenticeship.LastName,
                 Uln = draftApprenticeship.Uln,
                 DateOfBirth = draftApprenticeship.DateOfBirth,
-                TrainingCourse = trainingCourse == null ? "" : trainingCourse.ExtendedTitle,
+                TrainingCourse = trainingCourse?.TrainingProgramme.Name,
                 Cost = draftApprenticeship.Cost,
                 StartDate = draftApprenticeship.StartDate,
                 EndDate = draftApprenticeship.EndDate,
