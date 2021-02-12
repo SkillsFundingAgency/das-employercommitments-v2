@@ -245,9 +245,13 @@ else
             {
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell" data-label="Apprentice name">
-                        <a class="govuk-link" 
+                        <a class="govuk-link"
                            href="@LinkGenerator.ApprenticeDetails(Model.AccountHashedId, apprenticeship.EncodedApprenticeshipId)">
-                            @apprenticeship.ApprenticeName
+                            @apprenticeship.ApprenticeName V1 Link
+                        </a>
+                        <a class="govuk-link"
+                           href="@Url.RouteUrl(RouteNames.ApprenticeDetail, new ApprenticeshipDetailsRequest {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = apprenticeship.EncodedApprenticeshipId })">
+                            @apprenticeship.ApprenticeName V2 Link
                         </a>
                     </td>
                     <td class="govuk-table__cell" data-label="Apprenticeship training course">

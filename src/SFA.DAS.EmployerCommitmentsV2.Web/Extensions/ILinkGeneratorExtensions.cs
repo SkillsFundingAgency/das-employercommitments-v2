@@ -22,6 +22,30 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details");
         }
 
+        public static string ReviewChanges(
+            this ILinkGenerator linkGenerator,
+            string accountHashedId,
+            string hashedApprenticeshipId)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/changes/review");
+        }
+
+        public static string ViewChanges(
+            this ILinkGenerator linkGenerator,
+            string accountHashedId,
+            string hashedApprenticeshipId)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/changes/view");
+        }
+
+        public static string EditStopDate(
+             this ILinkGenerator linkGenerator,
+             string accountHashedId,
+             string hashedApprenticeshipId)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details/editstopdate");
+        }
+
         public static string WhenToApplyStopApprentice(
            this ILinkGenerator linkGenerator,
            string accountHashedId,
