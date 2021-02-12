@@ -77,7 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 CompletionDate = apprenticeship.CompletionDate,
                 TrainingName = getTrainingProgrammeTask.TrainingProgramme.Name, // apprenticeshipUpdates.ApprenticeshipUpdates.FirstOrDefault().TrainingName, // TO DO : not sure whether can take first record 
                 Cost = priceEpisodes.PriceEpisodes.GetPrice(),
-                PaymentStatus = apprenticeship.Status,
+                ApprenticeshipStatus = apprenticeship.Status,
                 Status = statusText,
                 ProviderName = apprenticeship.ProviderName,
                 PendingChanges = pendingChange,
@@ -92,7 +92,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 TrainingType = getTrainingProgrammeTask.TrainingProgramme.ProgrammeType, // apprenticeshipUpdates.ApprenticeshipUpdates.FirstOrDefault().TrainingType,// TO DO : not sure whether can take first record
                 //ReservationId = apprenticeship. // TO DO : where to get should be from apprenticeshipId
                 // MadeRedundant //TO DO : waiting for the story con-3100 to merged 
-                ChangeProviderLink = $"{source.AccountHashedId}/apprentices/{source.ApprenticeshipHashedId}/change-provider", // TO DO : get the link correct
+                //ChangeProviderLink = $"{source.AccountHashedId}/apprentices/{source.ApprenticeshipHashedId}/change-provider", // TO DO : get the link correct
                 HasPendingChangeOfProviderRequest = pendingChangeOfProviderRequest != null,
                 PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty,
                 HasApprovedChangeOfProviderRequest = approvedChangeOfProviderRequest != null,

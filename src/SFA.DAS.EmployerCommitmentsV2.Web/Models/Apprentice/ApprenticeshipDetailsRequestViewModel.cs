@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public decimal? Cost { get; set; }
 
         //public PaymentStatus PaymentStatus { get; set; }
-        public ApprenticeshipStatus PaymentStatus { get; set; }
+        public ApprenticeshipStatus ApprenticeshipStatus { get; set; }
 
         public string Status { get; set; }
 
@@ -80,11 +80,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         public string ViewChangesLink { get; internal set; }
 
-        public bool ShowChangeTrainingProviderLink => (PaymentStatus == ApprenticeshipStatus.Stopped &&
+        public bool ShowChangeTrainingProviderLink => (ApprenticeshipStatus == ApprenticeshipStatus.Stopped &&
                                                       !HasPendingChangeOfProviderRequest &&
                                                       !HasPendingChangeOfEmployerRequest &&
                                                       !(HasApprovedChangeOfEmployerRequest && !IsContinuation) &&
-                                                      !string.IsNullOrEmpty(ChangeProviderLink) &&
+                                                      //!string.IsNullOrEmpty(ChangeProviderLink) &&
                                                       string.IsNullOrEmpty(HashedNewApprenticeshipId));
 
         public bool HasApprovedChangeOfProviderRequest { get; set; }

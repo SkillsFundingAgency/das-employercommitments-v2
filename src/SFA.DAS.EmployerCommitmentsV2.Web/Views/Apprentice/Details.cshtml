@@ -44,7 +44,7 @@
         }
 
         @if (Model.HasPendingChangeOfProviderRequest
-    && Model.PendingChangeOfProviderRequestWithParty.HasValue)
+   && Model.PendingChangeOfProviderRequestWithParty.HasValue)
         {
             <div class="govuk-inset-text">
                 @if (Model.PendingChangeOfProviderRequestWithParty.Value == Party.Employer)
@@ -87,14 +87,14 @@
                 @if (!string.IsNullOrWhiteSpace(Model.HashedNewApprenticeshipId))
                 {
                     <p class="das-notification__body">
-                        <a id="continuation-link" class="govuk-link" href="@Url.Action("ApprenticeshipDetails", new { hashedApprenticeshipId = Model.HashedNewApprenticeshipId })">View the new apprentice record</a>
+                        <a id="continuation-link" class="govuk-link" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest{ AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.HashedNewApprenticeshipId })">View the new apprentice record</a>
                     </p>
                 }
 
                 @if (!string.IsNullOrWhiteSpace(Model.HashedPreviousApprenticeshipId))
                 {
                     <p class="das-notification__body">
-                        <a id="previous-apprentice-link" class="govuk-link" href="@Url.Action("ApprenticeshipDetails", new { hashedApprenticeshipId = Model.HashedPreviousApprenticeshipId })">View the old apprentice record</a>
+                        <a id="previous-apprentice-link" class="govuk-link" href="@Url.Action("ApprenticeshipDetails", new  ApprenticeshipDetailsRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedPreviousApprenticeshipId })">View the old apprentice record</a>
                     </p>
                 }
             </div>
@@ -129,7 +129,7 @@
         <h1 class="govuk-heading-xl" id="learnerName">@Model.FirstName @Model.LastName</h1>
 
         @{ if (!Model.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) &&
-                             Model.PaymentStatus != ApprenticeshipStatus.Completed)
+                               Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
             {
                 <p class="govuk-body">
                     Edit details if there's a change in apprentice or apprenticeship circumstances.
@@ -150,7 +150,7 @@
                         }
                     </td>
                 </tr>
-                @if (@Model.PaymentStatus == ApprenticeshipStatus.Paused)
+                @if (@Model.ApprenticeshipStatus == ApprenticeshipStatus.Paused)
                 {
                     <tr>
                         <th scope="row" class="govuk-table__header">Apprenticeship pause date</th>
@@ -164,7 +164,7 @@
                     </tr>
                 }
 
-                @if (@Model.PaymentStatus == ApprenticeshipStatus.Completed)
+                @if (@Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
                 {
                     <tr>
                         <th scope="row" class="govuk-table__header">Completion payment month</th>
@@ -179,7 +179,7 @@
                 }
 
 
-                @if (Model.PaymentStatus == ApprenticeshipStatus.Stopped)
+                @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Stopped)
                 {
                     <tr>
                         <th scope="row" class="govuk-table__header">Stopped date</th>
@@ -192,9 +192,9 @@
 
                         @if (Model.CanEditStopDate)
                         {
-                        <td id="editStopDateLink" class="govuk-table__cell govuk-table__cell--numeric">                            
-                            <a id="edit-stopped-link" class="govuk-link" href="@LinkGenerator.EditStopDate(Model.AccountHashedId, Model.HashedApprenticeshipId)">Edit</a>
-                        </td>
+                            <td id="editStopDateLink" class="govuk-table__cell govuk-table__cell--numeric">
+                                <a id="edit-stopped-link" class="govuk-link" href="@LinkGenerator.EditStopDate(Model.AccountHashedId, Model.HashedApprenticeshipId)">Edit</a>
+                            </td>
                         }
                         else
                         {
@@ -218,14 +218,14 @@
                     <td class="govuk-table__cell">@Model.ProviderName</td>
                     @if (Model.ShowChangeTrainingProviderLink)
                     {
-                <td class="govuk-table__cell govuk-table__cell--numeric">
-                    @Html.RouteLink("Change", "change-provider-inform")
-                                        @*<a id="changeTrainingProviderLink" href="@Html.RouteLink("Change", "change-provider-inform")" aria-label="Changing training provider">Change</a>*@
-                                    </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            @Html.RouteLink("Change", "change-provider-inform")
+                            @*<a id="changeTrainingProviderLink" href="@Html.RouteLink("Change", "change-provider-inform")" aria-label="Changing training provider">Change</a>*@
+                        </td>
                     }
                     else
                     {
-                        <td class="govuk-table__cell"></td>
+                        <td class="govuk-table__cell">None Present</td>
                     }
                 </tr>
                 <tr>
@@ -294,7 +294,7 @@
                         }
                     </td>
                     <td class="govuk-table__cell">
-                        @if (Model.PaymentStatus == ApprenticeshipStatus.Completed)
+                        @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
                         {
                             <a id="editEndDateLink" href="@Model.EditApprenticeshipEndDateLink" aria-label="Edit end date">Edit</a>
                         }
@@ -318,6 +318,111 @@
                         <td class="govuk-table__cell"></td>
                     </tr>
                 }
+            </tbody>
+        </table>
+
+
+
+        <table class="govuk-table  govuk-!-margin-bottom-8">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header govuk-!-width-one-third">Test Data for DEV </th>
+                    <td class="govuk-table__cell govuk-!-width-two-thirds">@Model.TrainingName </td>
+                    <td class="govuk-table__cell govuk-!-width-two-thirds"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">HashedApprenticeshipId</th>
+                    <td class="govuk-table__cell">
+                        @Model.HashedApprenticeshipId
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">AccountHashedId</th>
+                    <td class="govuk-table__cell">@Model.AccountHashedId</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">ULN</th>
+                    <td class="govuk-table__cell">@Model.ULN</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">ApprenticeshipStatus </th>
+                    <td class="govuk-table__cell">@Model.ApprenticeshipStatus @Model.Status</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">PendingChanges</th>
+                    <td class="govuk-table__cell">@Model.PendingChanges</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">CohortReference</th>
+                    <td class="govuk-table__cell">@Model.CohortReference</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">EnableEdit</th>
+                    <td class="govuk-table__cell">@Model.EnableEdit</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">CanEditStatus</th>
+                    <td class="govuk-table__cell">@Model.CanEditStatus</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">CanEditStopDate</th>
+                    <td class="govuk-table__cell">@Model.CanEditStopDate</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">HasPendingChangeOfProviderRequest</th>
+                    <td class="govuk-table__cell">@Model.HasPendingChangeOfProviderRequest</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">PendingChangeOfProviderRequestWithParty</th>
+                    <td class="govuk-table__cell">@Model.PendingChangeOfProviderRequestWithParty</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">HasApprovedChangeOfProviderRequest</th>
+                    <td class="govuk-table__cell">@Model.HasApprovedChangeOfProviderRequest</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">HashedNewApprenticeshipId</th>
+                    <td class="govuk-table__cell">@Model.HashedNewApprenticeshipId</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">IsContinuation</th>
+                    <td class="govuk-table__cell">@Model.IsContinuation</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">HashedPreviousApprenticeshipId</th>
+                    <td class="govuk-table__cell">@Model.HashedPreviousApprenticeshipId</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">HasPendingChangeOfEmployerRequest</th>
+                    <td class="govuk-table__cell">@Model.HasPendingChangeOfEmployerRequest</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">PendingChangeOfEmployerRequestWithParty</th>
+                    <td class="govuk-table__cell">@Model.PendingChangeOfEmployerRequestWithParty</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">approvedChangeOfEmployerRequest</th>
+                    <td class="govuk-table__cell">@Model.HasApprovedChangeOfEmployerRequest</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+
             </tbody>
         </table>
 
