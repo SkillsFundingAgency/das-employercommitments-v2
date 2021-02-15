@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -16,6 +18,7 @@ using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
+using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -199,6 +202,39 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             }
         }
 
+        [Test]
+        public async Task Then_Funding_Cap_Is_Null_When_No_Course_Found()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().SetNoCourse();
+            
+            var result = await fixture.Map();
+            
+            foreach (var draftApprenticeship in fixture.DraftApprenticeshipsResponse.DraftApprenticeships)
+            {
+                var draftApprenticeshipResult =
+                    result.Courses.SelectMany(c => c.DraftApprenticeships).Single(x => x.Id == draftApprenticeship.Id);
+
+                Assert.AreEqual(null, draftApprenticeshipResult.FundingBandCap);
+            }
+        }
+
+        [Test]
+        public async Task Then_Funding_Cap_Is_Null_When_No_Course_Set()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().SetNoCourseSet();
+            
+            var result = await fixture.Map();
+            
+            foreach (var draftApprenticeship in fixture.DraftApprenticeshipsResponse.DraftApprenticeships)
+            {
+                var draftApprenticeshipResult =
+                    result.Courses.SelectMany(c => c.DraftApprenticeships).Single(x => x.Id == draftApprenticeship.Id);
+
+                Assert.AreEqual(null, draftApprenticeshipResult.FundingBandCap);
+            }
+            fixture.CommitmentsApiClient.Verify(x=>x.GetTrainingProgramme(It.IsAny<string>(), CancellationToken.None), Times.Never);
+        }
+        
         [Test]
         public async Task FundingBandCapsAreNullForCoursesStarting2MonthsAhead()
         {
@@ -525,8 +561,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             };
             _trainingProgramme = new TrainingProgramme { EffectiveFrom = DefaultStartDate, EffectiveTo = DefaultStartDate.AddYears(1), FundingPeriods = _fundingPeriods };
 
-            CommitmentsApiClient.Setup(x => x.GetTrainingProgramme(It.IsAny<string>(), CancellationToken.None))
+            CommitmentsApiClient.Setup(x => x.GetTrainingProgramme(It.Is<string>(c=>!string.IsNullOrEmpty(c)), CancellationToken.None))
                 .ReturnsAsync(new GetTrainingProgrammeResponse{TrainingProgramme = _trainingProgramme});
+            CommitmentsApiClient.Setup(x => x.GetTrainingProgramme("no-course", CancellationToken.None))
+                .ThrowsAsync(new RestHttpClientException(new HttpResponseMessage(HttpStatusCode.NotFound){RequestMessage = new HttpRequestMessage(),
+                    ReasonPhrase = "Url not found"}, "Course not found" ));
 
             EncodingService = new Mock<IEncodingService>();
             SetEncodingOfApprenticeIds();
@@ -656,6 +695,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             Cohort.ChangeOfPartyRequestId = isChangeOfParty ? _autoFixture.Create<long>() : default(long?);
 
+            return this;
+        }
+
+        public DetailsViewModelMapperTestsFixture SetNoCourse()
+        {
+            DraftApprenticeshipsResponse.DraftApprenticeships = DraftApprenticeshipsResponse.DraftApprenticeships.Select(c =>
+            {
+                c.CourseCode = "no-course";
+                return c;
+            }).ToList();
+            return this;
+        }
+
+        public DetailsViewModelMapperTestsFixture SetNoCourseSet()
+        {
+            DraftApprenticeshipsResponse.DraftApprenticeships = DraftApprenticeshipsResponse.DraftApprenticeships.Select(c =>
+            {
+                c.CourseCode = "";
+                return c;
+            }).ToList();
             return this;
         }
     }
