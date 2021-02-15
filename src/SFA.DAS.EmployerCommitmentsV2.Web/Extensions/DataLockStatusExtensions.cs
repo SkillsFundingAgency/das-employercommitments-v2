@@ -8,23 +8,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 {
     public static class DataLockStatusExtensions
     {     
-        public static bool HasDataLockCourseTriaged(this IReadOnlyCollection<DataLock> dataLocks)
+        public static bool? HasDataLockCourseTriaged(this IReadOnlyCollection<DataLock> dataLocks)
         {
-            //TO DO : Check null stuff dataLocks?
-            return dataLocks.Any(x => x.TriageStatus == TriageStatus.Unknown && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
+            return dataLocks?.Any(x => x.TriageStatus == TriageStatus.Unknown && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
         }
 
-        public static bool HasDataLockCourseChangeTriaged(this IReadOnlyCollection<DataLock> dataLocks)
+        public static bool? HasDataLockCourseChangeTriaged(this IReadOnlyCollection<DataLock> dataLocks)
         {
-            //TO DO : Check null stuff dataLocks?
-            return dataLocks.Any(x => x.TriageStatus == TriageStatus.Change && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
-            
+            return dataLocks?.Any(x => x.TriageStatus == TriageStatus.Change && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());            
         }
 
-        public static bool HasDataLockPriceTriaged(this IReadOnlyCollection<DataLock> dataLocks)
+        public static bool? HasDataLockPriceTriaged(this IReadOnlyCollection<DataLock> dataLocks)
         {
-            //TO DO : Check null stuff dataLocks?
-            return dataLocks.Any(x => x.TriageStatus == TriageStatus.Change && x.DataLockStatus == Status.Fail
+            return dataLocks?.Any(x => x.TriageStatus == TriageStatus.Change && x.DataLockStatus == Status.Fail
             && !x.IsResolved && x.ErrorCode.HasFlag(DataLockErrorCode.Dlock07));
         }
 

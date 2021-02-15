@@ -44,7 +44,7 @@
         }
 
         @if (Model.HasPendingChangeOfProviderRequest
-   && Model.PendingChangeOfProviderRequestWithParty.HasValue)
+ && Model.PendingChangeOfProviderRequestWithParty.HasValue)
         {
             <div class="govuk-inset-text">
                 @if (Model.PendingChangeOfProviderRequestWithParty.Value == Party.Employer)
@@ -54,14 +54,11 @@
                         There are changes to this apprentice's details that you need to review.
                     </p>
                     <p class="govuk-body-s">
-                        @*{accountHashedId}/apprentices/{apprenticeshipHashedId}/view-changes*@
-                        @*_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/view-changes"*@
                         <a id="changeOfPartyViewChangesLink" href="@Url.RouteUrl("view-changes")">Review changes</a>
                     </p>
                 }
                 else
                 {
-                    @*TESTED*@
                     <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Changes pending</h2>
                     <p class="govuk-body-s govuk-!-margin-bottom-1">
                         There are changes to this apprentice's details that are waiting for approval by the training provider.
@@ -108,8 +105,8 @@
                     The apprentice's training provider has asked you to stop this apprentice
                     and then add them to a new cohort using updated training details.
                 </p>
-                <p class="govuk-body-s">
-                    <a href="@Url.RouteUrl("RequestRestart")" aria-label="View details" class="">View details</a>
+                <p class="govuk-body-s">                    
+                    <a id="request-restart-view-details-link" href="@LinkGenerator.RequestRestart(Model.AccountHashedId, Model.HashedApprenticeshipId)" aria-label="View details">View details</a>
                 </p>
             </div>
         }
@@ -122,14 +119,16 @@
                 <p class="govuk-body-s govuk-!-margin-bottom-1">
                     There are changes to this apprentice's details that you need to review.
                 </p>
-                <p class="govuk-body-s"><a href="@Url.RouteUrl("RequestChanges")" aria-label="View details" class="">Review changes</a></p>
+                <p class="govuk-body-s">
+                    <a id="request-restart-review-changes-link" href="@LinkGenerator.RequestRestart(Model.AccountHashedId, Model.HashedApprenticeshipId)" aria-label="Review changes">Review changes</a>
+                </p>
             </div>
         }
 
         <h1 class="govuk-heading-xl" id="learnerName">@Model.FirstName @Model.LastName</h1>
 
         @{ if (!Model.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) &&
-                               Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
+                                 Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
             {
                 <p class="govuk-body">
                     Edit details if there's a change in apprentice or apprenticeship circumstances.
@@ -146,7 +145,7 @@
                     <td id="editStatusLink" class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
                         @if (Model.CanEditStatus)
                         {
-                            @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
+                            <a id="edit-status-link" href="@LinkGenerator.ChangeApprenticeStatus(Model.AccountHashedId, Model.HashedApprenticeshipId)">Edit status</a>
                         }
                     </td>
                 </tr>
@@ -220,7 +219,8 @@
                     {
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             @Html.RouteLink("Change", "change-provider-inform")
-                            @*<a id="changeTrainingProviderLink" href="@Html.RouteLink("Change", "change-provider-inform")" aria-label="Changing training provider">Change</a>*@
+                            <a id="changeTrainingProviderLink" class="govuk-link" href="@Url.Action("ChangeProviderInform", new  ChangeProviderInformRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change</a>
+                            <a id="changeTrainingProviderLink1" href="@Html.RouteLink("Change", "change-provider-inform")" aria-label="Changing training provider">Change RouteLink</a>
                         </td>
                     }
                     else
@@ -239,8 +239,8 @@
         <h2 class="govuk-heading-m">
             Apprentice details
             @if (Model.EnableEdit)
-            {
-                <a href="@Url.RouteUrl("EditApprenticeship")" class="float-right">Edit</a>
+            {                
+                <a id="edit-apprentice-link" href="@LinkGenerator.EditApprenticeship(Model.AccountHashedId, Model.HashedApprenticeshipId)">Edit</a>
             }
         </h2>
         <table class="govuk-table govuk-!-margin-bottom-8">
@@ -295,8 +295,8 @@
                     </td>
                     <td class="govuk-table__cell">
                         @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
-                        {
-                            <a id="editEndDateLink" href="@Model.EditApprenticeshipEndDateLink" aria-label="Edit end date">Edit</a>
+                        {                            
+                            <a id="editEndDateLink" class="govuk-link" href="@Url.Action("EditEndDate", new  EditEndDateRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedPreviousApprenticeshipId })">Edit</a>
                         }
                     </td>
                 </tr>
@@ -422,6 +422,84 @@
                     <td class="govuk-table__cell">@Model.HasApprovedChangeOfEmployerRequest</td>
                     <td class="govuk-table__cell"></td>
                 </tr>
+                @*Links*@
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Review changes Link</th>
+                    <td class="govuk-table__cell"><a id="review-changes-link" href="@LinkGenerator.ReviewChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)">Review changes</a></td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">View changes Link</th>
+                    <td class="govuk-table__cell">
+                        <a id="view-changes-link" href="@LinkGenerator.ViewChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)">View changes</a>
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Review Changes Link (changeOfPartyViewChangesLink)</th>
+                    <td class="govuk-table__cell">
+                        <a id="changeOfPartyViewChangesLink" href="@Url.RouteUrl("view-changes")">Review changes</a>
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">View the new apprentice record Link</th>
+                    <td class="govuk-table__cell">
+                        <a id="continuation-link" class="govuk-link" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest{ AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.HashedNewApprenticeshipId })">View the new apprentice record</a>
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">View the old apprentice record Link</th>
+                    <td class="govuk-table__cell">
+                        <a id="previous-apprentice-link" class="govuk-link" href="@Url.Action("ApprenticeshipDetails", new  ApprenticeshipDetailsRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedPreviousApprenticeshipId })">View the old apprentice record</a>
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Request Restart Link</th>
+                    <td class="govuk-table__cell">
+                        <a id="request-restart-review-changes-link" href="@LinkGenerator.RequestRestart(Model.AccountHashedId, Model.HashedApprenticeshipId)" aria-label="Review changes">Review changes</a>
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Edit Status Link</th>
+                    <td class="govuk-table__cell">
+                        <a id="edit-status-link" href="@LinkGenerator.ChangeApprenticeStatus(Model.AccountHashedId, Model.HashedApprenticeshipId)">Edit status</a>
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Edit Stopped Link</th>
+                    <td class="govuk-table__cell">
+                        <a id="edit-stopped-link" class="govuk-link" href="@LinkGenerator.EditStopDate(Model.AccountHashedId, Model.HashedApprenticeshipId)">Edit</a>
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Change Training Provider Link</th>
+                    <td class="govuk-table__cell">
+                        @Html.RouteLink("Change", "change-provider-inform")
+                        <a id="changeTrainingProviderLink" class="govuk-link" href="@Url.Action("ChangeProviderInform", new  ChangeProviderInformRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change</a>
+                        <a id="changeTrainingProviderLink1" href="@Html.RouteLink("Change", "change-provider-inform")" aria-label="Changing training provider">Change RouteLink</a>
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">EditApprenticeship Link</th>
+                    <td class="govuk-table__cell">
+                        <a id="edit-apprentice-link" href="@LinkGenerator.EditApprenticeship(Model.AccountHashedId, Model.HashedApprenticeshipId)">Edit</a>
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Planned Tranining Finish Date Link</th>
+                    <td class="govuk-table__cell">
+                        <a id="editEndDateLink" class="govuk-link" href="@Url.Action("EditEndDate", new  EditEndDateRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedPreviousApprenticeshipId })">Edit</a>
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
 
             </tbody>
         </table>
@@ -437,4 +515,9 @@
 
         return $"£{cost.Value:n0}";
     }
+}
+
+@section Back
+{
+    <div class="das-js-back-link"></div>
 }

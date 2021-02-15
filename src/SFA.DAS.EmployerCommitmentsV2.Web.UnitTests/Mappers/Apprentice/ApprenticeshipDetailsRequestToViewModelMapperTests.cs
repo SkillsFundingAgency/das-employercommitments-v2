@@ -8,13 +8,13 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
-using SFA.DAS.Testing.AutoFixture;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetApprenticeshipUpdatesResponse;
+using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetChangeOfPartyRequestsResponse;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetPriceEpisodesResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
@@ -33,7 +33,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         private ApprenticeshipDetailsRequest _request;
         private ApprenticeshipDetailsRequestToViewModelMapper _mapper;
-
 
 
         [SetUp]
@@ -86,7 +85,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
        [Test]
-        public async Task GetFundingCapIsCalled()
+        public async Task GetTrainingProgrammeIsCalled()
         {
             //Act
             var result = await _mapper.Map(_request);
@@ -94,6 +93,58 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Assert
             _mockCommitmentsApiClient.Verify(t => t.GetTrainingProgramme(_apprenticeshipResponse.CourseCode, It.IsAny<CancellationToken>()), Times.Once());
         }
+
+        [Test]
+        public async Task GetApprenticeshipIsCalled()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            _mockCommitmentsApiClient.Verify(t => t.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Test]
+        public async Task GetPriceEpisodesIsCalled()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            _mockCommitmentsApiClient.Verify(t => t.GetPriceEpisodes(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Test]
+        public async Task GetApprenticeshipUpdatesIsCalled()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            _mockCommitmentsApiClient.Verify(t => t.GetApprenticeshipUpdates(It.IsAny<long>(), It.IsAny<GetApprenticeshipUpdatesRequest>(), It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Test]
+        public async Task GetApprenticeshipDatalocksStatusIsCalled()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            _mockCommitmentsApiClient.Verify(t => t.GetApprenticeshipDatalocksStatus(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Test]
+        public async Task GetChangeOfPartyRequestsIsCalled()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            _mockCommitmentsApiClient.Verify(t => t.GetChangeOfPartyRequests(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+
 
         [Test]
         public async Task HashedApprenticeshipId_IsMapped()
@@ -233,7 +284,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [TestCase(ApprenticeshipStatus.WaitingToStart, "Waiting to start")]
         [TestCase(ApprenticeshipStatus.Stopped, "Stopped")]
         [TestCase(ApprenticeshipStatus.Completed, "Completed")]
-        public async Task ThenStatusTextIsMappedCorrectly(ApprenticeshipStatus status, string  statusText)
+        public async Task StatusText_IsMapped(ApprenticeshipStatus status, string  statusText)
         {
             //Arrange
             _apprenticeshipResponse.Status = status;
@@ -290,38 +341,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.AreEqual(CohortReference, result.CohortReference);
-        }
+        }  
 
-        [Test]
-        public async Task dataLockCourseTriaged_IsMapped()
+
+        [TestCase(DataLockErrorCode.Dlock03, false)]
+        [TestCase(DataLockErrorCode.Dlock04, false)]
+        [TestCase(DataLockErrorCode.Dlock05, false)]
+        [TestCase(DataLockErrorCode.Dlock06, false)]
+        [TestCase(DataLockErrorCode.Dlock07, false)]
+        public async Task EnableEdit_IsMapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
-            _dataLocksResponse.DataLocks = new List<GetDataLocksResponse.DataLock>
-            { new GetDataLocksResponse.DataLock
+            _apprenticeshipUpdatesResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
+            {
+                new ApprenticeshipUpdate()
                 {
-                    Id = 1,
-                    TriageStatus = TriageStatus.Unknown,
-                    DataLockStatus = Status.Fail,
-                    IsResolved = false
-                },
+                    OriginatingParty = Party.None
+                }
             };
-
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            Assert.AreEqual(_apprenticeshipResponse.EmployerReference, result.EmployerReference);
-        }
-
-
-        [TestCase(false, DataLockErrorCode.Dlock03, false)]
-        [TestCase(false, DataLockErrorCode.Dlock04, false)]
-        [TestCase(false, DataLockErrorCode.Dlock05, false)]
-        [TestCase(true, DataLockErrorCode.Dlock06, false)]        
-        public async Task With_Single_Datalock_Then_AvailableTriageOption_Is_Mapped_Correctly(bool hasHadDataLockSuccess, DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
-        {
-            //Arrange
-            _apprenticeshipResponse.HasHadDataLockSuccess = hasHadDataLockSuccess;
             _dataLocksResponse.DataLocks = new List<GetDataLocksResponse.DataLock>
             { new GetDataLocksResponse.DataLock
                 {
@@ -329,7 +366,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     TriageStatus = TriageStatus.Unknown,
                     DataLockStatus = Status.Fail,
                     IsResolved = false,
-                    ErrorCode = DataLockErrorCode.Dlock03
+                    ErrorCode = dataLockErrorCode
                 },
             };
 
@@ -338,17 +375,37 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.AreEqual(expectedTriageOption, result.EnableEdit);
-        }
+        }       
+        
 
-        //[TestCase(false, DataLockErrorCode.Dlock03, false)]
-        //[TestCase(false, DataLockErrorCode.Dlock04, false)]
-        [TestCase(false, DataLockErrorCode.Dlock05, false)]
-        [TestCase(true, DataLockErrorCode.Dlock06, false)]
-        [TestCase(true, DataLockErrorCode.Dlock07, false)]
-        public async Task With_Single_Datalock_Then_AvailableTriageOption_Is_Mapped_Correctly123(bool hasHadDataLockSuccess, DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
+          [Test]
+        public async Task EnableEditEnabled_IsMapped()
         {
             //Arrange
-            _apprenticeshipResponse.HasHadDataLockSuccess = hasHadDataLockSuccess;
+            _apprenticeshipUpdatesResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
+                {
+                    new ApprenticeshipUpdate()
+                    {
+                        OriginatingParty = Party.None
+                    }
+                };
+            _dataLocksResponse.DataLocks = null;          
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(true, result.EnableEdit);
+        }
+
+        [TestCase(DataLockErrorCode.Dlock03, false)]
+        [TestCase(DataLockErrorCode.Dlock04, false)]
+        [TestCase(DataLockErrorCode.Dlock05, false)]
+        [TestCase(DataLockErrorCode.Dlock06, false)]
+        [TestCase(DataLockErrorCode.Dlock07, false)]
+        public async Task DataLock_TriageStatus_Mapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
+        {
+            //Arrange
             _dataLocksResponse.DataLocks = new List<GetDataLocksResponse.DataLock>
             { new GetDataLocksResponse.DataLock
                 {
@@ -356,16 +413,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     TriageStatus = TriageStatus.Change,
                     DataLockStatus = Status.Fail,
                     IsResolved = false,
-                    ErrorCode = DataLockErrorCode.Dlock07
+                    ErrorCode = dataLockErrorCode
                 },
             };
+
 
             //Act
             var result = await _mapper.Map(_request);
 
             //Assert
             Assert.AreEqual(expectedTriageOption, result.EnableEdit);
-        }
+        } 
 
 
         [TestCase(ApprenticeshipStatus.Live, true)]
@@ -449,22 +507,151 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
 
-        /*[TestCase(ApprenticeshipStatus.Live, true)]
-        [TestCase(ApprenticeshipStatus.Paused, true)]
-        [TestCase(ApprenticeshipStatus.WaitingToStart, true)]
-        [TestCase(ApprenticeshipStatus.Stopped, false)]
-        [TestCase(ApprenticeshipStatus.Completed, false)]
-        public async Task EnableEdit_IsMapped(ApprenticeshipStatus status, bool expectedAllowEditApprentice)
+        [TestCase(ChangeOfPartyRequestStatus.Approved, true)]
+        [TestCase(ChangeOfPartyRequestStatus.Rejected, false)]
+        [TestCase(ChangeOfPartyRequestStatus.Withdrawn, false)]
+        [TestCase(ChangeOfPartyRequestStatus.Pending, false)]
+        public async Task HasApprovedChangeOfProviderRequest_IsMapped(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool pendingChangeRequest)
         {
             //Arrange
-            _apprenticeshipResponse.Status = status;
+            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest>()
+            {
+                new GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest
+                {
+                    Id = 1,
+                    ChangeOfPartyType = ChangeOfPartyRequestType.ChangeProvider,
+                    OriginatingParty = Party.Employer,
+                    Status = changeOfPartyRequestStatus,
+                    WithParty = Party.Provider
+                }
+            };
 
             //Act
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(expectedAllowEditApprentice, result.EnableEdit);
-        }*/
+            Assert.AreEqual(pendingChangeRequest, result.HasApprovedChangeOfProviderRequest);
+        }
 
+        [TestCase(ChangeOfPartyRequestStatus.Approved, false)]
+        [TestCase(ChangeOfPartyRequestStatus.Rejected, false)]
+        [TestCase(ChangeOfPartyRequestStatus.Withdrawn, false)]
+        [TestCase(ChangeOfPartyRequestStatus.Pending, true)]
+        public async Task HasPendingChangeOfEmployerRequest_IsMapped(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool pendingChangeRequest)
+        {
+            //Arrange
+            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest>()
+            {
+                new GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest
+                {
+                    Id = 1,
+                    ChangeOfPartyType = ChangeOfPartyRequestType.ChangeEmployer,
+                    OriginatingParty = Party.Employer,
+                    Status = changeOfPartyRequestStatus,
+                    WithParty = Party.Provider
+                }
+            };
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(pendingChangeRequest, result.HasPendingChangeOfEmployerRequest);
+        }
+
+
+        [TestCase(ChangeOfPartyRequestStatus.Approved, true)]
+        [TestCase(ChangeOfPartyRequestStatus.Rejected, false)]
+        [TestCase(ChangeOfPartyRequestStatus.Withdrawn, false)]
+        [TestCase(ChangeOfPartyRequestStatus.Pending, false)]
+        public async Task HasApprovedChangeOfEmployerRequest_IsMapped(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool pendingChangeRequest)
+        {
+            //Arrange
+            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest>()
+            {
+                new GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest
+                {
+                    Id = 1,
+                    ChangeOfPartyType = ChangeOfPartyRequestType.ChangeEmployer,
+                    OriginatingParty = Party.Employer,
+                    Status = changeOfPartyRequestStatus,
+                    WithParty = Party.Provider
+                }
+            };
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(pendingChangeRequest, result.HasApprovedChangeOfEmployerRequest);
+        }
+
+        [TestCase(ChangeOfPartyRequestStatus.Approved, true)]
+        [TestCase(ChangeOfPartyRequestStatus.Pending, false)]
+        [TestCase(ChangeOfPartyRequestStatus.Rejected, true)]
+        [TestCase(ChangeOfPartyRequestStatus.Withdrawn, true)]
+        public async Task ShowChangeTrainingProviderLink_IsMapped(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool flag)
+        {
+            //Arrange 
+            _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
+            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<ChangeOfPartyRequest>
+            {
+               new ChangeOfPartyRequest
+                    {
+                        Status = changeOfPartyRequestStatus,
+                        ChangeOfPartyType = ChangeOfPartyRequestType.ChangeProvider
+                    }
+            };
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(result.ShowChangeTrainingProviderLink, flag);
+        }
+
+        [TestCase(ChangeOfPartyRequestStatus.Pending, false)]
+        public async Task Then_CoE_request_not_yet_approved_dont_show_ChangeProviderLink(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool flag)
+        {
+            //Arrange 
+            _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
+            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<ChangeOfPartyRequest>
+            {
+               new ChangeOfPartyRequest
+                    {
+                        Status = changeOfPartyRequestStatus,
+                        ChangeOfPartyType = ChangeOfPartyRequestType.ChangeEmployer
+                    }
+            };
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(result.ShowChangeTrainingProviderLink, flag);
+        }
+
+
+        [TestCase(ChangeOfPartyRequestStatus.Approved, false)]
+        public async Task Then_CoE_request_approved_by_parties_apprenticeship_moved_from_me_dont_show_ChangeProviderLink(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool flag)
+        {
+            //Arrange 
+            _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
+            _apprenticeshipResponse.ContinuationOfId = null; /* apprenticeship has moved from me to another employer*/
+            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<ChangeOfPartyRequest>
+            {
+               new ChangeOfPartyRequest
+                    {
+                        Status = changeOfPartyRequestStatus,
+                        ChangeOfPartyType = ChangeOfPartyRequestType.ChangeEmployer
+                    }
+            };
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(result.ShowChangeTrainingProviderLink, flag);
+        }
     }
 }

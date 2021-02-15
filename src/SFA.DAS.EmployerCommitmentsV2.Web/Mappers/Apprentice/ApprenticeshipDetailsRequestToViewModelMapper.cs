@@ -49,11 +49,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             PendingChanges pendingChange = GetPendingChanges(apprenticeshipUpdates);
 
             var statusText = MapApprenticeshipStatus(apprenticeship.Status);
-
-            /*TO DO : check null stuff*/
-            bool dataLockCourseTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseTriaged();
-            bool dataLockCourseChangedTraiged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseChangeTriaged();
-            bool dataLockPriceTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockPriceTriaged();
+            
+            bool? dataLockCourseTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseTriaged();
+            bool? dataLockCourseChangedTraiged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseChangeTriaged();
+            bool? dataLockPriceTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockPriceTriaged();
 
             bool enableEdit = EnableEdit(apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged);
 
@@ -75,24 +74,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 StopDate = apprenticeship.StopDate,
                 PauseDate = apprenticeship.PauseDate,
                 CompletionDate = apprenticeship.CompletionDate,
-                TrainingName = getTrainingProgrammeTask.TrainingProgramme.Name, // apprenticeshipUpdates.ApprenticeshipUpdates.FirstOrDefault().TrainingName, // TO DO : not sure whether can take first record 
                 Cost = priceEpisodes.PriceEpisodes.GetPrice(),
                 ApprenticeshipStatus = apprenticeship.Status,
                 Status = statusText,
                 ProviderName = apprenticeship.ProviderName,
-                PendingChanges = pendingChange,
-                // TO DO : taking first record need to check  and Check Whether theis property is required
-                //Alerts = MapRecordStatus(apprenticeshipUpdates.ApprenticeshipUpdates.FirstOrDefault().OriginatingParty, dataLockCourseTriaged, dataLockPriceTriaged || dataLockCourseChangedTraiged),  // Check whether this is required
+                PendingChanges = pendingChange,                
                 EmployerReference = apprenticeship.EmployerReference,
                 CohortReference = _encodingService.Encode(apprenticeship.CohortId, EncodingType.CohortReference),
                 EnableEdit = enableEdit,
                 CanEditStatus = !(new List<ApprenticeshipStatus> { ApprenticeshipStatus.Completed, ApprenticeshipStatus.Stopped }).Contains(apprenticeship.Status),
                 CanEditStopDate = (apprenticeship.Status == ApprenticeshipStatus.Stopped),
                 EndpointAssessorName = apprenticeship.EndpointAssessorName,
-                TrainingType = getTrainingProgrammeTask.TrainingProgramme.ProgrammeType, // apprenticeshipUpdates.ApprenticeshipUpdates.FirstOrDefault().TrainingType,// TO DO : not sure whether can take first record
-                //ReservationId = apprenticeship. // TO DO : where to get should be from apprenticeshipId
-                // MadeRedundant //TO DO : waiting for the story con-3100 to merged 
-                //ChangeProviderLink = $"{source.AccountHashedId}/apprentices/{source.ApprenticeshipHashedId}/change-provider", // TO DO : get the link correct
+                MadeRedundant = apprenticeship.MadeRedundant,                
                 HasPendingChangeOfProviderRequest = pendingChangeOfProviderRequest != null,
                 PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty,
                 HasApprovedChangeOfProviderRequest = approvedChangeOfProviderRequest != null,
@@ -107,18 +100,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 HasPendingChangeOfEmployerRequest = pendingChangeOfEmployerRequest != null,
                 PendingChangeOfEmployerRequestWithParty = pendingChangeOfEmployerRequest?.WithParty,
                 HasApprovedChangeOfEmployerRequest = approvedChangeOfEmployerRequest != null
-
             };
 
             return result;
         }
 
-        private static bool EnableEdit(CommitmentsV2.Api.Types.Responses.GetApprenticeshipResponse apprenticeship, PendingChanges pendingChange, bool dataLockCourseTriaged, bool dataLockCourseChangedTraiged, bool dataLockPriceTriaged)
-        {
+        private static bool EnableEdit(CommitmentsV2.Api.Types.Responses.GetApprenticeshipResponse apprenticeship, PendingChanges pendingChange, bool? dataLockCourseTriaged, 
+            bool? dataLockCourseChangedTraiged, bool? dataLockPriceTriaged)
+        {   
             return pendingChange == PendingChanges.None
-                            && !dataLockCourseTriaged
-                            && !dataLockCourseChangedTraiged
-                            && !dataLockPriceTriaged
+                            && (dataLockCourseTriaged.HasValue == false)
+                            && (dataLockCourseChangedTraiged.HasValue == false)
+                            && (dataLockPriceTriaged.HasValue == false)
                             && new[] { ApprenticeshipStatus.WaitingToStart, ApprenticeshipStatus.Live, ApprenticeshipStatus.Paused }.Contains(apprenticeship.Status);
         }
 
@@ -130,31 +123,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             if (apprenticeshipUpdates.ApprenticeshipUpdates.Any(x => x.OriginatingParty == Party.Provider))
                 pendingChange = PendingChanges.ReadyForApproval;
             return pendingChange;
-        }
-
-        private IEnumerable<string> MapRecordStatus(Party? pendingUpdateOriginator, bool dataLockCourseTriaged, bool changeRequested)
-        {
-            const string changesPending = "Changes pending";
-            const string changesForReview = "Changes for review";
-            const string changesRequested = "Changes requested";
-
-            var statuses = new List<string>();
-
-            if (pendingUpdateOriginator != null)
-            {
-                var t = pendingUpdateOriginator == Party.Employer
-                    ? changesPending : changesForReview;
-                statuses.Add(t);
-            }
-
-            if (dataLockCourseTriaged)
-                statuses.Add(changesRequested);
-
-            if (changeRequested)
-                statuses.Add(changesForReview);
-
-            return statuses.Distinct();
-        }
+        }       
 
         private string MapApprenticeshipStatus(ApprenticeshipStatus paymentStatus)
         {
