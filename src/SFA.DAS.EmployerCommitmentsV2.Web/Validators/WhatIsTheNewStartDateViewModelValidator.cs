@@ -42,7 +42,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
             RuleFor(r => r.NewStartDate)
                 .Must((r, newStartDate) => newStartDate.IsEqualToOrBeforeMonthYearOfDateTime(_academicYearDateProvider.CurrentAcademicYearEndDate.AddYears(1)))
                 .WithMessage(r => "The start date must be no later than one year after the end of the current teaching year")
-                .When(r => r.NewStartDate.IsValid && r.NewStartMonth.HasValue && r.NewStartYear.HasValue);
+                .When(r => r.NewStartDate.IsValid && r.NewStartMonth.HasValue && r.NewStartYear.HasValue)
+                .Unless(r => r.NewEndDate.HasValue && r.NewStartDate.IsEqualToOrAfterMonthYearOfDateTime(r.NewEndDate.Value));
         }
     }
 }
