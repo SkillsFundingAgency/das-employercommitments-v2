@@ -63,12 +63,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details/statuschange");
         }
 
-        public static string RequestRestart(
+        public static string DatalockRestart(
          this ILinkGenerator linkGenerator,
          string accountHashedId,
          string hashedApprenticeshipId)
-        {
-            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/datalock/RequestRestart");
+        {   
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/datalock/restart");
+        }
+
+        public static string DatalockChanges(
+        this ILinkGenerator linkGenerator,
+        string accountHashedId,
+        string hashedApprenticeshipId)
+        {   
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/datalock/changes");
         }
 
         public static string WhenToApplyStopApprentice(

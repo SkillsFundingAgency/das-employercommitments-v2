@@ -22,7 +22,7 @@ else if (Model.PendingChanges == PendingChanges.WaitingForApproval)
 }
 
 
-@if (Model.HasApprovedChangeOfProviderRequest || Model.IsChangeOfProviderContinuation)
+@if (Model.HasApprovedChangeOfProviderRequest || Model.IsContinuation )
 {
     <partial name="DetailsPartials/_ApprovedChangesOfPartyRequestBanner" />
 }
