@@ -348,7 +348,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [TestCase(DataLockErrorCode.Dlock04, false)]
         [TestCase(DataLockErrorCode.Dlock05, false)]
         [TestCase(DataLockErrorCode.Dlock06, false)]
-//        [TestCase(DataLockErrorCode.Dlock07, false)]
         public async Task EnableEdit_IsMapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
@@ -363,7 +362,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             { new GetDataLocksResponse.DataLock
                 {
                     Id = 1,
-                    TriageStatus = TriageStatus.Unknown,
+                    TriageStatus = TriageStatus.Restart,
                     DataLockStatus = Status.Fail,
                     IsResolved = false,
                     ErrorCode = dataLockErrorCode
@@ -375,28 +374,59 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.AreEqual(expectedTriageOption, result.EnableEdit);
-        }       
-        
+        }
 
-         /* [Test]
-        public async Task EnableEditEnabled_IsMapped()
+
+    
+        [TestCase(DataLockErrorCode.Dlock07, false)]
+        public async Task EnableEdit1_IsMapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
             _apprenticeshipUpdatesResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
+            {
+                new ApprenticeshipUpdate()
                 {
-                    new ApprenticeshipUpdate()
-                    {
-                        OriginatingParty = Party.None
-                    }
-                };
-            _dataLocksResponse.DataLocks = null;          
+                    OriginatingParty = Party.None
+                }
+            };
+            _dataLocksResponse.DataLocks = new List<GetDataLocksResponse.DataLock>
+            { new GetDataLocksResponse.DataLock
+                {
+                    Id = 1,
+                    TriageStatus = TriageStatus.Change,
+                    DataLockStatus = Status.Fail,
+                    IsResolved = false,
+                    ErrorCode = dataLockErrorCode
+                },
+            };
 
             //Act
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(true, result.EnableEdit);
-        }*/
+            Assert.AreEqual(expectedTriageOption, result.EnableEdit);
+        }
+
+
+        /* [Test]
+       public async Task EnableEditEnabled_IsMapped()
+       {
+           //Arrange
+           _apprenticeshipUpdatesResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
+               {
+                   new ApprenticeshipUpdate()
+                   {
+                       OriginatingParty = Party.None
+                   }
+               };
+           _dataLocksResponse.DataLocks = null;          
+
+           //Act
+           var result = await _mapper.Map(_request);
+
+           //Assert
+           Assert.AreEqual(true, result.EnableEdit);
+       }*/
 
         [TestCase(DataLockErrorCode.Dlock03, false)]
         [TestCase(DataLockErrorCode.Dlock04, false)]

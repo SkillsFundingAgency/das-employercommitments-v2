@@ -47,10 +47,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             PendingChanges pendingChange = GetPendingChanges(apprenticeshipUpdates);
 
             var statusText = MapApprenticeshipStatus(apprenticeship.Status);
-            
-            bool? dataLockCourseTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseTriaged();
-            bool? dataLockCourseChangedTraiged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseChangeTriaged();
-            bool? dataLockPriceTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockPriceTriaged();
+
+            //bool? dataLockCourseTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseTriaged();
+            //bool? dataLockCourseChangedTraiged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseChangeTriaged();
+            //bool? dataLockPriceTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockPriceTriaged();
+
+            bool dataLockCourseTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseTriaged();
+            bool dataLockCourseChangedTraiged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseChangeTriaged();
+            bool dataLockPriceTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockPriceTriaged();
 
             bool enableEdit = EnableEdit(apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged);
 
@@ -101,26 +105,44 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 HasPendingChangeOfEmployerRequest = pendingChangeOfEmployerRequest != null,
                 PendingChangeOfEmployerRequestWithParty = pendingChangeOfEmployerRequest?.WithParty,
                 HasApprovedChangeOfEmployerRequest = approvedChangeOfEmployerRequest != null,
-                PendingDataLockChange = dataLockPriceTriaged.Value || dataLockCourseChangedTraiged.Value,
-                PendingDataLockRestart = dataLockCourseTriaged.Value,
+                PendingDataLockChange = dataLockPriceTriaged || dataLockCourseChangedTraiged,
+                PendingDataLockRestart = dataLockCourseTriaged,
                 //TO DO : Remove later
                 DataLockCourseTriaged = dataLockCourseTriaged,
                 DataLockPriceTriaged = dataLockPriceTriaged,
-                DataLockCourseChangedTraiged = dataLockCourseChangedTraiged
+                DataLockCourseChangedTraiged = dataLockCourseChangedTraiged,
+                DBApprenticeShipId = apprenticeship.Id
             };
 
             return result;
         }
 
-        private static bool EnableEdit(CommitmentsV2.Api.Types.Responses.GetApprenticeshipResponse apprenticeship, PendingChanges pendingChange, bool? dataLockCourseTriaged, 
-            bool? dataLockCourseChangedTraiged, bool? dataLockPriceTriaged)
+        private static bool EnableEdit(CommitmentsV2.Api.Types.Responses.GetApprenticeshipResponse apprenticeship, PendingChanges pendingChange, 
+            bool dataLockCourseTriaged, bool dataLockCourseChangedTraiged, bool dataLockPriceTriaged)
         {
+            /*
+             V1 stuff
+             EnableEdit = pendingChange == PendingChanges.None
+                            && !apprenticeship.DataLockCourseTriaged
+                            && !apprenticeship.DataLockCourseChangeTriaged
+                            && !apprenticeship.DataLockPriceTriaged
+                            && new []{ PaymentStatus.Active, PaymentStatus.Paused  }.Contains(apprenticeship.PaymentStatus),
+
+             V2 working 
             return pendingChange == PendingChanges.None
                             && (dataLockCourseTriaged ?? false)
                             && (dataLockCourseChangedTraiged ?? false)
                             && (dataLockPriceTriaged ?? false)
                             && new[] { ApprenticeshipStatus.WaitingToStart, ApprenticeshipStatus.Live, ApprenticeshipStatus.Paused }.Contains(apprenticeship.Status);
-        }   
+             */
+
+            return pendingChange == PendingChanges.None
+                            && !dataLockCourseTriaged
+                            && !dataLockCourseChangedTraiged
+                            && !dataLockPriceTriaged
+                            && new[] { ApprenticeshipStatus.WaitingToStart, ApprenticeshipStatus.Live, ApprenticeshipStatus.Paused }.Contains(apprenticeship.Status);
+
+        }
 
         private static PendingChanges GetPendingChanges(CommitmentsV2.Api.Types.Responses.GetApprenticeshipUpdatesResponse apprenticeshipUpdates)
         {

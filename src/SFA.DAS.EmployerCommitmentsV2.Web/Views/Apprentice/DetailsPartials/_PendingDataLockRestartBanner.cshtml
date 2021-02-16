@@ -1,5 +1,7 @@
 ﻿@inject ILinkGenerator LinkGenerator
 
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
 
 <div class="govuk-inset-text">
@@ -9,6 +11,6 @@
         and then add them to a new cohort using updated training details.
     </p>
     <p class="govuk-body-s">
-        <a href="@Url.RouteUrl("RequestRestart")" aria-label="View details" class="">View details</a>
+        <a id="request-restart-view-details-link" href="@LinkGenerator.RequestRestart(Model.AccountHashedId, Model.HashedApprenticeshipId)" aria-label="View details">View details</a>
     </p>
 </div>

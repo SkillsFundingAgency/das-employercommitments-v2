@@ -53,6 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool? DataLockCourseTriaged { get; set; }
         public bool? DataLockCourseChangedTraiged { get; set; }
         public bool? DataLockPriceTriaged { get; set; }
+        public long DBApprenticeShipId { get; set; }
     }
     
     public enum PendingChanges

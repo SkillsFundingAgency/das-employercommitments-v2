@@ -1,4 +1,5 @@
 ﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
 
@@ -10,5 +11,7 @@
     <p class="govuk-body-s govuk-!-margin-bottom-1">
         There are changes to this apprentice's details that you need to review.
     </p>
-    <p class="govuk-body-s"><a href="@Url.RouteUrl("RequestChanges")" aria-label="View details" class="">Review changes</a></p>
+    <p class="govuk-body-s">
+        <a id="request-restart-review-changes-link" href="@LinkGenerator.RequestRestart(Model.AccountHashedId, Model.HashedApprenticeshipId)" aria-label="Review changes">Review changes</a>
+    </p>
 </div>
