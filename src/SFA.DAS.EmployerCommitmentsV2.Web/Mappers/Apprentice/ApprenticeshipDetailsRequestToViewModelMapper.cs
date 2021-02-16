@@ -27,9 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
         public async Task<ApprenticeshipDetailsRequestViewModel> Map(ApprenticeshipDetailsRequest source)
         {
-            var accountId = _encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
-            var apprenticeshipId = _encodingService.Decode(source.ApprenticeshipHashedId, EncodingType.ApprenticeshipId);
-
+            var apprenticeshipId = source.ApprenticeshipId;
             var apprenticeshipTask = _commitmentsApiClient.GetApprenticeship(apprenticeshipId, CancellationToken.None);
             var priceEpisodesTask = _commitmentsApiClient.GetPriceEpisodes(apprenticeshipId, CancellationToken.None);
             var apprenticeshipUpdatesTask = _commitmentsApiClient.GetApprenticeshipUpdates(apprenticeshipId, new GetApprenticeshipUpdatesRequest() { Status = ApprenticeshipUpdateStatus.Pending }, CancellationToken.None);
@@ -60,6 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             var approvedChangeOfProviderRequest = changeofPartyRequests.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();
             var pendingChangeOfEmployerRequest = changeofPartyRequests.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
             var approvedChangeOfEmployerRequest = changeofPartyRequests.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();
+            bool? IsChangeOfProviderContinuation = changeofPartyRequests.ChangeOfPartyRequests?.Any(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider);
 
             var result = new ApprenticeshipDetailsRequestViewModel
             {
@@ -87,7 +86,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 CanEditStatus = !(new List<ApprenticeshipStatus> { ApprenticeshipStatus.Completed, ApprenticeshipStatus.Stopped }).Contains(apprenticeship.Status),
                 CanEditStopDate = (apprenticeship.Status == ApprenticeshipStatus.Stopped),
                 EndpointAssessorName = apprenticeship.EndpointAssessorName,
-                MadeRedundant = apprenticeship.MadeRedundant,                
+               // MadeRedundant = apprenticeship.MadeRedundant,                
                 HasPendingChangeOfProviderRequest = pendingChangeOfProviderRequest != null,
                 PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty,
                 HasApprovedChangeOfProviderRequest = approvedChangeOfProviderRequest != null,
@@ -95,7 +94,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                         ? _encodingService.Encode(approvedChangeOfProviderRequest.NewApprenticeshipId.Value, EncodingType.ApprenticeshipId)
                         : null,
                 IsContinuation = apprenticeship.ContinuationOfId.HasValue,
-                IsChangeOfProviderContinuation = apprenticeship.IsContinuation,  // TO DO Check : Whether IsChangeOfProviderContinuation is required??
+                IsChangeOfProviderContinuation = IsChangeOfProviderContinuation.Value, //apprenticeship.IsContinuation,  // TO DO Check : Whether IsChangeOfProviderContinuation is required??
                 HashedPreviousApprenticeshipId = apprenticeship.ContinuationOfId.HasValue
                         ? _encodingService.Encode(apprenticeship.ContinuationOfId.Value, EncodingType.ApprenticeshipId)
                         : null,
@@ -109,11 +108,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
         private static bool EnableEdit(CommitmentsV2.Api.Types.Responses.GetApprenticeshipResponse apprenticeship, PendingChanges pendingChange, bool? dataLockCourseTriaged, 
             bool? dataLockCourseChangedTraiged, bool? dataLockPriceTriaged)
-        {   
+        {
             return pendingChange == PendingChanges.None
-                            && (dataLockCourseTriaged.HasValue == false)
-                            && (dataLockCourseChangedTraiged.HasValue == false)
-                            && (dataLockPriceTriaged.HasValue == false)
+                            && (dataLockCourseTriaged.Value == false)
+                            && (dataLockCourseChangedTraiged.Value == false)
+                            && (dataLockPriceTriaged.Value == false)
                             && new[] { ApprenticeshipStatus.WaitingToStart, ApprenticeshipStatus.Live, ApprenticeshipStatus.Paused }.Contains(apprenticeship.Status);
         }
 

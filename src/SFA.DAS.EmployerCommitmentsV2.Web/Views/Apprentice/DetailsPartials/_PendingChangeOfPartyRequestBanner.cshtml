@@ -1,8 +1,5 @@
-﻿nject ILinkGenerator LinkGenerator
-@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+﻿@inject ILinkGenerator LinkGenerator
 @using SFA.DAS.CommitmentsV2.Types
-@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
-
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
 
 
@@ -14,14 +11,11 @@
         There are changes to this apprentice's details that you need to review.
     </p>
     <p class="govuk-body-s">
-        @*{accountHashedId}/apprentices/{apprenticeshipHashedId}/view-changes*@
-        @*_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/view-changes"*@
         <a id="changeOfPartyViewChangesLink" href="@Url.RouteUrl("view-changes")">Review changes</a>
     </p>
         }
         else
         {
-    @*TESTED*@
     <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Changes pending</h2>
     <p class="govuk-body-s govuk-!-margin-bottom-1">
         There are changes to this apprentice's details that are waiting for approval by the training provider.
