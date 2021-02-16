@@ -305,7 +305,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (viewModel.CancelRequest.Value)
             {
-                return RedirectToRoute(RouteNames.ApprenticeDetail, new { ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId, AccountHashedId = viewModel.AccountHashedId });
+                return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
             }
 
             var request = await _modelMapper.Map<ChangeOfProviderRequest>(viewModel);

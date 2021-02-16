@@ -31,10 +31,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public async Task AndYesIsSelected_ThenRedirectToApprenticeDetailsPage()
         {
             _viewModel.CancelRequest = true;
-
+            
             var result = await _fixture.CancelChangeOfProviderRequest(_viewModel);
 
-            _fixture.VerifyRedirectsToApprenticeDetailsPage(result as RedirectToRouteResult, _viewModel);
+            _fixture.VerifyRedirectsToApprenticeDetailsPage(result as RedirectResult);
         }
 
         [Test]
@@ -51,6 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     public class WhenPostingCancelChangeOfProviderRequestTestsFixture : ApprenticeControllerTestFixtureBase
     {
         private readonly ChangeOfProviderRequest _request;
+        private const string ApprenticeDetailsV1Url = "https://employercommitmentsv1/apprentice/details";
 
         public WhenPostingCancelChangeOfProviderRequestTestsFixture() : base() 
         {
@@ -58,22 +59,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             _mockMapper.Setup(m => m.Map<ChangeOfProviderRequest>(It.IsAny<CancelChangeOfProviderRequestViewModel>()))
                 .ReturnsAsync(_request);
-        }
 
+            _mockLinkGenerator.Setup(g => g.CommitmentsLink(It.IsAny<string>())).Returns(ApprenticeDetailsV1Url);
+        }
 
         public async Task<IActionResult> CancelChangeOfProviderRequest(CancelChangeOfProviderRequestViewModel viewModel)
         {
             return await _controller.CancelChangeOfProviderRequest(viewModel);
         }
 
-        public void VerifyRedirectsToApprenticeDetailsPage(IActionResult result, CancelChangeOfProviderRequestViewModel viewModel)
+        public void VerifyRedirectsToApprenticeDetailsPage(RedirectResult result)
         {
-            var redirectResult = (RedirectToRouteResult)result;
-
-            Assert.AreEqual(RouteNames.ApprenticeDetail, redirectResult.RouteName);
-
-            Assert.AreEqual(viewModel.ApprenticeshipHashedId, redirectResult.RouteValues["ApprenticeshipHashedId"]);
-            Assert.AreEqual(viewModel.AccountHashedId, redirectResult.RouteValues["AccountHashedId"]);
+            Assert.AreEqual(ApprenticeDetailsV1Url, result.Url);
         }
 
         public void VerifyRedirectsToConfirmAndSendPage(IActionResult result)
