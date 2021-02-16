@@ -348,7 +348,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [TestCase(DataLockErrorCode.Dlock04, false)]
         [TestCase(DataLockErrorCode.Dlock05, false)]
         [TestCase(DataLockErrorCode.Dlock06, false)]
-        [TestCase(DataLockErrorCode.Dlock07, false)]
+//        [TestCase(DataLockErrorCode.Dlock07, false)]
         public async Task EnableEdit_IsMapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
@@ -378,7 +378,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }       
         
 
-          [Test]
+         /* [Test]
         public async Task EnableEditEnabled_IsMapped()
         {
             //Arrange
@@ -396,7 +396,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.AreEqual(true, result.EnableEdit);
-        }
+        }*/
 
         [TestCase(DataLockErrorCode.Dlock03, false)]
         [TestCase(DataLockErrorCode.Dlock04, false)]
