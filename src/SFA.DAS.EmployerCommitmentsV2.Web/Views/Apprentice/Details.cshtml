@@ -111,8 +111,7 @@
                     <td class="govuk-table__cell">@Model.ProviderName</td>
                     @if (Model.ShowChangeTrainingProviderLink)
                     {
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            @Html.RouteLink("Change", "change-provider-inform")
+                        <td class="govuk-table__cell govuk-table__cell--numeric">                            
                             <a id="changeTrainingProviderLink" class="govuk-link" href="@Url.Action("ChangeProviderInform", new  ChangeProviderInformRequest{ AccountHashedId = Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change</a>
                         </td>
                     }
@@ -189,7 +188,7 @@
                     <td class="govuk-table__cell">
                         @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
                         {
-                            <a id="editEndDateLink" class="govuk-link" href="@Url.Action("EditEndDate", new  EditEndDateRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedPreviousApprenticeshipId })">Edit</a>
+                            <a id="editEndDateLink" class="govuk-link" href="@Url.Action("EditEndDate", new  EditEndDateRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit</a>
                         }
                     </td>
                 </tr>
@@ -392,7 +391,48 @@
                     </td>
                     <td class="govuk-table__cell"></td>
                 </tr>
-
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">PendingDataLockChange</th>
+                    <td class="govuk-table__cell">
+                        @Model.PendingDataLockChange
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">PendingDataLockRestart</th>
+                    <td class="govuk-table__cell">
+                        @Model.PendingDataLockRestart
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">IsChangeOfProviderContinuation</th>
+                    <td class="govuk-table__cell">
+                        @Model.IsChangeOfProviderContinuation
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">DataLockCourseTriaged</th>
+                    <td class="govuk-table__cell">
+                        @Model.DataLockCourseTriaged
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">DataLockPriceTriaged</th>
+                    <td class="govuk-table__cell">
+                        @Model.DataLockPriceTriaged
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">DataLockCourseChangedTraiged</th>
+                    <td class="govuk-table__cell">
+                        @Model.DataLockCourseChangedTraiged
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
             </tbody>
         </table>
 

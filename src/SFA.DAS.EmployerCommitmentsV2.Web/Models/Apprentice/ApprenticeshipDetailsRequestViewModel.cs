@@ -49,6 +49,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool HasPendingChangeOfEmployerRequest { get; set; }
         public Party? PendingChangeOfEmployerRequestWithParty { get; set; }
         public bool HasApprovedChangeOfEmployerRequest { get; set; }
+        //TO DO Remove later
+        public bool? DataLockCourseTriaged { get; set; }
+        public bool? DataLockCourseChangedTraiged { get; set; }
+        public bool? DataLockPriceTriaged { get; set; }
     }
     
     public enum PendingChanges

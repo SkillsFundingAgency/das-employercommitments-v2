@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
     {     
         public static bool? HasDataLockCourseTriaged(this IReadOnlyCollection<DataLock> dataLocks)
         {
-            return dataLocks?.Any(x => x.TriageStatus == TriageStatus.Unknown && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
+            return dataLocks?.Any(x => x.TriageStatus == TriageStatus.Restart && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
         }
 
         public static bool? HasDataLockCourseChangeTriaged(this IReadOnlyCollection<DataLock> dataLocks)
