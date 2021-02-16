@@ -351,7 +351,8 @@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Request Restart Link</th>
                     <td class="govuk-table__cell">
-                        <a id="request-restart-review-changes-link" href="@LinkGenerator.RequestRestart(Model.AccountHashedId, Model.HashedApprenticeshipId)" aria-label="Review changes">Review changes</a>
+                        <a id="request-restart-review-changes-link" href="@LinkGenerator.DatalockRestart(Model.AccountHashedId, Model.HashedApprenticeshipId)" aria-label="Review changes">Review changes</a>
+                        <a id="request-changes-link" href="@LinkGenerator.DatalockChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)" aria-label="Review changes">Review changes</a>
                     </td>
                     <td class="govuk-table__cell"></td>
                 </tr>
