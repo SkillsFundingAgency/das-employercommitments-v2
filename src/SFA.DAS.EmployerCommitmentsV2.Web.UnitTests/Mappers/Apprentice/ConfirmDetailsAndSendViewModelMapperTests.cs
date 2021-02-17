@@ -40,7 +40,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .Create();
 
             _apprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>()
-                .With(x => x.CourseCode, "ABC").Create();
+                .With(x => x.CourseCode, "ABC")
+                .With(x => x.StartDate, new DateTime(2020, 1, 1))
+                .With(x => x.StartDate, new DateTime(2021, 1, 1))
+                .Create();
 
             _priceEpisodeResponse = autoFixture.Build<GetPriceEpisodesResponse>()
                 .With(x => x.PriceEpisodes, new List<PriceEpisode> {
