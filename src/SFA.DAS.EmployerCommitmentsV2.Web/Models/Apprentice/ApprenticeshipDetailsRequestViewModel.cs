@@ -37,7 +37,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public Party? PendingChangeOfProviderRequestWithParty { get; set; }
         public string HashedNewApprenticeshipId { get; set; }
         public bool IsContinuation { get; set; }
-        public bool IsChangeOfProviderContinuation { get; set; }
         public string HashedPreviousApprenticeshipId { get; set; }
         public bool ShowChangeTrainingProviderLink => (ApprenticeshipStatus == ApprenticeshipStatus.Stopped &&
                                                       !HasPendingChangeOfProviderRequest &&

@@ -8,7 +8,7 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
 
 @{
-    ViewBag.Title = "Apprentice detail";
+    ViewBag.Title = "Apprentice detail - Manage Apprentices";
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "apprentices-detail";
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/apprentice-details";
@@ -17,12 +17,42 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <partial name="DetailsPartials/_Banner" />
+        @if (Model.PendingChanges == PendingChanges.ReadyForApproval)
+        {
+            <partial name="DetailsPartials/_PendingChangeReadyForApprovalBanner" />
+
+        }
+        else if (Model.PendingChanges == PendingChanges.WaitingForApproval)
+        {
+            <partial name="DetailsPartials/_PendingChangesWaitingForApprovalBanner" />
+        }
+
+        @if (Model.HasPendingChangeOfProviderRequest && Model.PendingChangeOfProviderRequestWithParty.HasValue)
+        {
+            <partial name="DetailsPartials/_PendingChangeOfPartyRequestBanner" />
+        }
+
+
+        @if (Model.HasApprovedChangeOfProviderRequest || Model.IsContinuation)
+        {
+            <partial name="DetailsPartials/_ApprovedChangesOfPartyRequestBanner" />
+        }
+
+        @if (Model.PendingDataLockRestart)
+        {
+            <partial name="DetailsPartials/_PendingDataLockRestartBanner" />
+        }
+
+        @if (Model.PendingDataLockChange)
+        {
+            <partial name="DetailsPartials/_PendingDataLockChangeBanner" />
+
+        }
 
         <h1 class="govuk-heading-xl" id="learnerName">@Model.FirstName @Model.LastName</h1>
 
         @{ if (!Model.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) &&
-                                  Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
+                                   Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
             {
                 <p class="govuk-body">
                     Edit details if there's a change in apprentice or apprenticeship circumstances.
@@ -111,7 +141,7 @@
                     <td class="govuk-table__cell">@Model.ProviderName</td>
                     @if (Model.ShowChangeTrainingProviderLink)
                     {
-                        <td class="govuk-table__cell govuk-table__cell--numeric">                            
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
                             <a id="changeTrainingProviderLink" class="govuk-link" href="@Url.Action("ChangeProviderInform", new  ChangeProviderInformRequest{ AccountHashedId = Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change</a>
                         </td>
                     }
@@ -405,14 +435,7 @@
                         @Model.PendingDataLockRestart
                     </td>
                     <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">IsChangeOfProviderContinuation</th>
-                    <td class="govuk-table__cell">
-                        @Model.IsChangeOfProviderContinuation
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
+                </tr>              
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">DataLockCourseTriaged</th>
                     <td class="govuk-table__cell">

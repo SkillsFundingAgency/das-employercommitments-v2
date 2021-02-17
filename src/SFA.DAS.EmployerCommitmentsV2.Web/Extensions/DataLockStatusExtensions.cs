@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.CommitmentsV2.Types;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetDataLocksResponse;
@@ -8,50 +7,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 {
     public static class DataLockStatusExtensions
     {
-        //public static bool? HasDataLockCourseTriaged(this IReadOnlyCollection<DataLock> dataLocks)
-        //{
-        //    return dataLocks?.Any(x => x.TriageStatus == TriageStatus.Restart && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
-        //}
-
-        //public static bool? HasDataLockCourseChangeTriaged(this IReadOnlyCollection<DataLock> dataLocks)
-        //{
-        //    return dataLocks?.Any(x => x.TriageStatus == TriageStatus.Change && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
-        //}
-
-        //public static bool? HasDataLockPriceTriaged(this IReadOnlyCollection<DataLock> dataLocks)
-        //{
-        //    return dataLocks?.Any(x => x.TriageStatus == TriageStatus.Change && x.DataLockStatus == Status.Fail
-        //    && !x.IsResolved && x.ErrorCode.HasFlag(DataLockErrorCode.Dlock07));
-        //}
-
-
         public static bool HasDataLockCourseTriaged(this IReadOnlyCollection<DataLock> dataLocks)
         {
-            // return dataLocks?.Any(x => x.TriageStatus == TriageStatus.Restart && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
-
-            if (dataLocks != null)
-            {
-                return dataLocks.Any(x => x.TriageStatus == TriageStatus.Restart && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
-            }
-
-            return false;
+            return dataLocks.Any(x => x.TriageStatus == TriageStatus.Restart && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
         }
 
         public static bool HasDataLockCourseChangeTriaged(this IReadOnlyCollection<DataLock> dataLocks)
         {
-            if (dataLocks != null)
-                return dataLocks.Any(x => x.TriageStatus == TriageStatus.Change && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
-
-            return false;
+            return dataLocks.Any(x => x.TriageStatus == TriageStatus.Change && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
         }
 
         public static bool HasDataLockPriceTriaged(this IReadOnlyCollection<DataLock> dataLocks)
         {
-            if (dataLocks != null)
-                return dataLocks.Any(x => x.TriageStatus == TriageStatus.Change && x.DataLockStatus == Status.Fail
-            && !x.IsResolved && x.ErrorCode.HasFlag(DataLockErrorCode.Dlock07));
-
-            return false;
+            return dataLocks.Any(x => x.TriageStatus == TriageStatus.Change && x.DataLockStatus == Status.Fail && !x.IsResolved && x.ErrorCode.HasFlag(DataLockErrorCode.Dlock07));
         }
 
 

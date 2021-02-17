@@ -348,7 +348,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [TestCase(DataLockErrorCode.Dlock04, false)]
         [TestCase(DataLockErrorCode.Dlock05, false)]
         [TestCase(DataLockErrorCode.Dlock06, false)]
-        public async Task EnableEdit_IsMapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
+        public async Task EnableEdit_HasDataLockCourseChangeTriaged_IsMapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
             _apprenticeshipUpdatesResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
@@ -379,7 +379,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
     
         [TestCase(DataLockErrorCode.Dlock07, false)]
-        public async Task EnableEdit1_IsMapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
+        public async Task EnableEdit_HasDataLockPriceTriaged_IsMapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
             _apprenticeshipUpdatesResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
@@ -406,27 +406,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Assert
             Assert.AreEqual(expectedTriageOption, result.EnableEdit);
         }
-
-
-        /* [Test]
-       public async Task EnableEditEnabled_IsMapped()
-       {
-           //Arrange
-           _apprenticeshipUpdatesResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
-               {
-                   new ApprenticeshipUpdate()
-                   {
-                       OriginatingParty = Party.None
-                   }
-               };
-           _dataLocksResponse.DataLocks = null;          
-
-           //Act
-           var result = await _mapper.Map(_request);
-
-           //Assert
-           Assert.AreEqual(true, result.EnableEdit);
-       }*/
+       
 
         [TestCase(DataLockErrorCode.Dlock03, false)]
         [TestCase(DataLockErrorCode.Dlock04, false)]
