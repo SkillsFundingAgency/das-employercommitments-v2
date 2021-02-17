@@ -8,8 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
     {
         public string HashedApprenticeshipId { get; set; }
         public string AccountHashedId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string ApprenticeName { get; set; }       
         public string ULN { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public DateTime? StartDate { get; set; }
@@ -47,12 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool HasApprovedChangeOfProviderRequest { get; set; }
         public bool HasPendingChangeOfEmployerRequest { get; set; }
         public Party? PendingChangeOfEmployerRequestWithParty { get; set; }
-        public bool HasApprovedChangeOfEmployerRequest { get; set; }
-        //TO DO Remove later
-        public bool? DataLockCourseTriaged { get; set; }
-        public bool? DataLockCourseChangedTraiged { get; set; }
-        public bool? DataLockPriceTriaged { get; set; }
-        public long DBApprenticeShipId { get; set; }
+        public bool HasApprovedChangeOfEmployerRequest { get; set; }        
     }
     
     public enum PendingChanges

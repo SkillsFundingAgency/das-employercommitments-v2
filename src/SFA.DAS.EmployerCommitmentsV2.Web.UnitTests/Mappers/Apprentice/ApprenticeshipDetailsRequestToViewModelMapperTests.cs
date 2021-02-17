@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -81,7 +82,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _mockEncodingService = new Mock<IEncodingService>();
 
-            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object);
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
         }
 
        [Test]
@@ -168,23 +169,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task FirstName_IsMapped()
+        public async Task ApprenticeName_IsMapped()
         {
             //Act
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.FirstName, result.FirstName);
-        }
-
-        [Test]
-        public async Task LastName_IsMapped()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            Assert.AreEqual(_apprenticeshipResponse.LastName, result.LastName);
+            Assert.AreEqual(_apprenticeshipResponse.FirstName + " " + _apprenticeshipResponse.LastName, result.ApprenticeName);
         }
 
         [Test]

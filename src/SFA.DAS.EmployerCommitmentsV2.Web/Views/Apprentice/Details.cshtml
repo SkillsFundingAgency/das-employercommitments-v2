@@ -49,10 +49,10 @@
 
         }
 
-        <h1 class="govuk-heading-xl" id="learnerName">@Model.FirstName @Model.LastName</h1>
+        <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
 
         @{ if (!Model.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) &&
-                                   Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
+                                    Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
             {
                 <p class="govuk-body">
                     Edit details if there's a change in apprentice or apprenticeship circumstances.
@@ -64,12 +64,12 @@
         <table id="app-status" class="govuk-table govuk-!-margin-bottom-8">
             <tbody>
                 <tr>
-                    <th scope="row" class="govuk-table__header govuk-!-width-one-third">Status</th>
-                    <td class="govuk-table__cell govuk-!-width-one-third">@Model.Status</td>
-                    <td id="editStatusLink" class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
+                    <th scope="row" class="govuk-table__header das-table-cell-width-45">Status</th>
+                    <td class="govuk-table__cell das-table-cell-width-40">@Model.Status</td>
+                    <td id="editStatusLink" class="govuk-table__cell das-table-cell-width-15 govuk-table__cell--numeric">
                         @if (Model.CanEditStatus)
                         {
-                            <a id="edit-status-link" href="@LinkGenerator.ChangeApprenticeStatus(Model.AccountHashedId, Model.HashedApprenticeshipId)">Edit status</a>
+                            <a id="edit-status-link" href="@LinkGenerator.ChangeApprenticeStatus(Model.AccountHashedId, Model.HashedApprenticeshipId)" class="govuk-link">Edit status</a>
                         }
                     </td>
                 </tr>
@@ -77,13 +77,12 @@
                 {
                     <tr>
                         <th scope="row" class="govuk-table__header">Apprenticeship pause date</th>
-                        <td id="pauseDate" class="govuk-table__cell">
+                        <td id="pauseDate" class="govuk-table__cell" colspan="2">
                             @if (Model.PauseDate.HasValue)
                             {
                                 @Model.PauseDate.Value.ToGdsFormat()
                             }
-                        </td>
-                        <td class="govuk-table__cell"></td>
+                        </td>                        
                     </tr>
                 }
 
@@ -91,13 +90,12 @@
                 {
                     <tr>
                         <th scope="row" class="govuk-table__header">Completion payment month</th>
-                        <td id="completionDate" class="govuk-table__cell">
+                        <td id="completionDate" class="govuk-table__cell" colspan="2">
                             @if (Model.CompletionDate.HasValue)
                             {
                                 @Model.CompletionDate.Value.ToGdsFormatLongMonthNameWithoutDay();
                             }
-                        </td>
-                        <td class="govuk-table__cell"></td>
+                        </td>                        
                     </tr>
                 }
 
@@ -129,10 +127,9 @@
                     {
                         <tr>
                             <th scope="row" class="govuk-table__header">Made redundant</th>
-                            <td id="madeRedundant" class="govuk-table__cell">
+                            <td id="madeRedundant" class="govuk-table__cell" colspan="2">
                                 @(Model.MadeRedundant.Value ? "Yes" : "No")
                             </td>
-                            <td class="govuk-table__cell"></td>
                         </tr>
                     }
                 }
@@ -142,7 +139,7 @@
                     @if (Model.ShowChangeTrainingProviderLink)
                     {
                         <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <a id="changeTrainingProviderLink" class="govuk-link" href="@Url.Action("ChangeProviderInform", new  ChangeProviderInformRequest{ AccountHashedId = Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change</a>
+                            <a id="change-training-provider-link" class="govuk-link" href="@Url.Action("ChangeProviderInform", new  ChangeProviderInformRequest{ AccountHashedId = Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change</a>
                         </td>
                     }
                     else
@@ -152,32 +149,38 @@
                 </tr>
                 <tr>
                     <th scope="row" class="govuk-table__header">Cohort reference</th>
-                    <td class="govuk-table__cell">@Model.CohortReference</td>
+                    <td id="cohort-reference" class="govuk-table__cell">@Model.CohortReference</td>
                     <td class="govuk-table__cell"></td>
                 </tr>
             </tbody>
         </table>
 
-        <h2 class="govuk-heading-m">
-            Apprentice details
-            @if (Model.EnableEdit)
-            {
-                <a id="edit-apprentice-link" href="@LinkGenerator.EditApprenticeship(Model.AccountHashedId, Model.HashedApprenticeshipId)" class="float-right">Edit</a>
-            }
-        </h2>
+
+
+        <div class="govuk-grid-row govuk-!-margin-bottom-2">
+            <div class="govuk-grid-column-two-thirds">
+                <h2 class="govuk-heading-m">Apprentice details</h2>
+            </div>
+            <div class="govuk-grid-column-one-third das-!-text-align-right--from-tablet">
+                @if (Model.EnableEdit)
+                {
+                    <a id="edit-apprentice-link" href="@LinkGenerator.EditApprenticeship(Model.AccountHashedId, Model.HashedApprenticeshipId)" class="govuk-link govuk-body">Edit</a>
+                }
+            </div>
+        </div>       
         <table class="govuk-table govuk-!-margin-bottom-8">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header govuk-!-width-one-third">Name</th>
-                    <td class="govuk-table__cell govuk-!-width-two-thirds">@Model.FirstName @Model.LastName</td>
+                    <th scope="row" class="govuk-table__header  das-table-cell-width-45"">Name</th>
+                    <td id="apprentice-name" class="govuk-table__cell das-table-cell-width-55">@Model.ApprenticeName</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Unique learner number</th>
-                    <td class="govuk-table__cell">@Model.ULN</td>
+                    <td id="uln" class="govuk-table__cell">@Model.ULN</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Date of birth</th>
-                    <td class="govuk-table__cell">
+                    <td id="date-of-birth" class="govuk-table__cell">
                         @if (Model.DateOfBirth.HasValue)
                         {
                             @Model.DateOfBirth.Value.ToGdsFormat()
@@ -193,23 +196,21 @@
         <table class="govuk-table  govuk-!-margin-bottom-8">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header govuk-!-width-one-third">Apprenticeship training course </th>
-                    <td class="govuk-table__cell govuk-!-width-two-thirds">@Model.TrainingName </td>
-                    <td class="govuk-table__cell govuk-!-width-two-thirds"></td>
+                    <th scope="row" class="govuk-table__header das-table-cell-width-45">Apprenticeship training course </th>
+                    <td class="govuk-table__cell das-table-cell-width-55" colspan="2" >@Model.TrainingName </td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Planned training start date</th>
-                    <td class="govuk-table__cell">
+                    <td id="start-date" class="govuk-table__cell" colspan="2">
                         @if (@Model.StartDate.HasValue)
                         {
                             @Model.StartDate.Value.ToGdsFormatLongMonthWithoutDay()
                         }
                     </td>
-                    <td class="govuk-table__cell"></td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Planned training finish date</th>
-                    <td class="govuk-table__cell">
+                    <td id="end-date" class="govuk-table__cell">
                         @if (Model.EndDate.HasValue)
                         {
                             @Model.EndDate.Value.ToGdsFormatLongMonthWithoutDay()
@@ -218,255 +219,27 @@
                     <td class="govuk-table__cell">
                         @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
                         {
-                            <a id="editEndDateLink" class="govuk-link" href="@Url.Action("EditEndDate", new  EditEndDateRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit</a>
+                            <a id="edit-end-date-link" class="govuk-link" href="@Url.Action("EditEndDate", new  EditEndDateRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit</a>
                         }
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Total agreed apprenticeship price</th>
-                    <td class="govuk-table__cell">@Model.Cost.FormatCost() excluding VAT</td>
-                    <td class="govuk-table__cell"></td>
+                    <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost() excluding VAT</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Reference </th>
-                    <td class="govuk-table__cell">@Model.EmployerReference</td>
-                    <td class="govuk-table__cell"></td>
+                    <td id="employer-reference" class="govuk-table__cell" colspan="2">@Model.EmployerReference</td>
                 </tr>
                 @if (Model.TrainingType == ProgrammeType.Standard)
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">End-point assessor</th>
-                        <td class="govuk-table__cell">@(Model.EndpointAssessorName ?? "The end-point assessor has not been declared")</td>
-                        <td class="govuk-table__cell"></td>
+                        <td id="end-point-assessor" class="govuk-table__cell" colspan="2">@(Model.EndpointAssessorName ?? "The end-point assessor has not been declared")</td>
                     </tr>
                 }
             </tbody>
         </table>
-
-
-
-        <table class="govuk-table  govuk-!-margin-bottom-8">
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header govuk-!-width-one-third">Test Data for DEV </th>
-                    <td class="govuk-table__cell govuk-!-width-two-thirds">@Model.TrainingName </td>
-                    <td class="govuk-table__cell govuk-!-width-two-thirds"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">HashedApprenticeshipId</th>
-                    <td class="govuk-table__cell">
-                        @Model.HashedApprenticeshipId
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">AccountHashedId</th>
-                    <td class="govuk-table__cell">@Model.AccountHashedId</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">ULN</th>
-                    <td class="govuk-table__cell">@Model.ULN</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">ApprenticeshipStatus </th>
-                    <td class="govuk-table__cell">@Model.ApprenticeshipStatus @Model.Status</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">PendingChanges</th>
-                    <td class="govuk-table__cell">@Model.PendingChanges</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">CohortReference</th>
-                    <td class="govuk-table__cell">@Model.CohortReference</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">EnableEdit</th>
-                    <td class="govuk-table__cell">@Model.EnableEdit</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">CanEditStatus</th>
-                    <td class="govuk-table__cell">@Model.CanEditStatus</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">CanEditStopDate</th>
-                    <td class="govuk-table__cell">@Model.CanEditStopDate</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">HasPendingChangeOfProviderRequest</th>
-                    <td class="govuk-table__cell">@Model.HasPendingChangeOfProviderRequest</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">PendingChangeOfProviderRequestWithParty</th>
-                    <td class="govuk-table__cell">@Model.PendingChangeOfProviderRequestWithParty</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">HasApprovedChangeOfProviderRequest</th>
-                    <td class="govuk-table__cell">@Model.HasApprovedChangeOfProviderRequest</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">HashedNewApprenticeshipId</th>
-                    <td class="govuk-table__cell">@Model.HashedNewApprenticeshipId</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">IsContinuation</th>
-                    <td class="govuk-table__cell">@Model.IsContinuation</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">HashedPreviousApprenticeshipId</th>
-                    <td class="govuk-table__cell">@Model.HashedPreviousApprenticeshipId</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">HasPendingChangeOfEmployerRequest</th>
-                    <td class="govuk-table__cell">@Model.HasPendingChangeOfEmployerRequest</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">PendingChangeOfEmployerRequestWithParty</th>
-                    <td class="govuk-table__cell">@Model.PendingChangeOfEmployerRequestWithParty</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">approvedChangeOfEmployerRequest</th>
-                    <td class="govuk-table__cell">@Model.HasApprovedChangeOfEmployerRequest</td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                @*Links*@
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">Review changes Link</th>
-                    <td class="govuk-table__cell"><a id="review-changes-link" href="@LinkGenerator.ReviewChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)">Review changes</a></td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">View changes Link</th>
-                    <td class="govuk-table__cell">
-                        <a id="view-changes-link" href="@LinkGenerator.ViewChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)">View changes</a>
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">Review Changes Link (changeOfPartyViewChangesLink)</th>
-                    <td class="govuk-table__cell">
-                        <a id="changeOfPartyViewChangesLink" href="@Url.RouteUrl("view-changes")">Review changes</a>
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">View the new apprentice record Link</th>
-                    <td class="govuk-table__cell">
-                        <a id="continuation-link" class="govuk-link" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest{ AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.HashedNewApprenticeshipId })">View the new apprentice record</a>
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">View the old apprentice record Link</th>
-                    <td class="govuk-table__cell">
-                        <a id="previous-apprentice-link" class="govuk-link" href="@Url.Action("ApprenticeshipDetails", new  ApprenticeshipDetailsRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedPreviousApprenticeshipId })">View the old apprentice record</a>
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">Request Restart Link</th>
-                    <td class="govuk-table__cell">
-                        <a id="request-restart-review-changes-link" href="@LinkGenerator.DatalockRestart(Model.AccountHashedId, Model.HashedApprenticeshipId)" aria-label="Review changes">Review changes</a>
-                        <a id="request-changes-link" href="@LinkGenerator.DatalockChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)" aria-label="Review changes">Review changes</a>
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">Edit Status Link</th>
-                    <td class="govuk-table__cell">
-                        <a id="edit-status-link" href="@LinkGenerator.ChangeApprenticeStatus(Model.AccountHashedId, Model.HashedApprenticeshipId)">Edit status</a>
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">Edit Stopped Link</th>
-                    <td class="govuk-table__cell">
-                        <a id="edit-stopped-link" class="govuk-link" href="@LinkGenerator.EditStopDate(Model.AccountHashedId, Model.HashedApprenticeshipId)">Edit</a>
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">Change Training Provider Link</th>
-                    <td class="govuk-table__cell">
-                        @Html.RouteLink("Change", "change-provider-inform")
-                        <a id="changeTrainingProviderLink" class="govuk-link" href="@Url.Action("ChangeProviderInform", new  ChangeProviderInformRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change</a>
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">EditApprenticeship Link</th>
-                    <td class="govuk-table__cell">
-                        <a id="edit-apprentice-link" href="@LinkGenerator.EditApprenticeship(Model.AccountHashedId, Model.HashedApprenticeshipId)">Edit</a>
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">Planned Tranining Finish Date Link</th>
-                    <td class="govuk-table__cell">
-                        <a id="editEndDateLink" class="govuk-link" href="@Url.Action("EditEndDate", new  EditEndDateRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedPreviousApprenticeshipId })">Edit</a>
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">PendingDataLockChange</th>
-                    <td class="govuk-table__cell">
-                        @Model.PendingDataLockChange
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">PendingDataLockRestart</th>
-                    <td class="govuk-table__cell">
-                        @Model.PendingDataLockRestart
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>              
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">DataLockCourseTriaged</th>
-                    <td class="govuk-table__cell">
-                        @Model.DataLockCourseTriaged
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">DataLockPriceTriaged</th>
-                    <td class="govuk-table__cell">
-                        @Model.DataLockPriceTriaged
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">DataLockCourseChangedTraiged</th>
-                    <td class="govuk-table__cell">
-                        @Model.DataLockCourseChangedTraiged
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">DBApprenticeShipId</th>
-                    <td class="govuk-table__cell">
-                        @Model.DBApprenticeShipId
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
-            </tbody>
-        </table>
-
     </div>
 </div>
 
