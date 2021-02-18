@@ -22,6 +22,63 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details");
         }
 
+        public static string ReviewChanges(
+            this ILinkGenerator linkGenerator,
+            string accountHashedId,
+            string hashedApprenticeshipId)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/changes/review");
+        }
+
+        public static string ViewChanges(
+            this ILinkGenerator linkGenerator,
+            string accountHashedId,
+            string hashedApprenticeshipId)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/changes/view");
+        }
+
+        public static string EditStopDate(
+             this ILinkGenerator linkGenerator,
+             string accountHashedId,
+             string hashedApprenticeshipId)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details/editstopdate");
+        }
+
+        public static string EditApprenticeship(
+             this ILinkGenerator linkGenerator,
+             string accountHashedId,
+             string hashedApprenticeshipId)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/edit");
+        }
+
+
+        public static string ChangeApprenticeStatus(
+             this ILinkGenerator linkGenerator,
+             string accountHashedId,
+             string hashedApprenticeshipId)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details/statuschange");
+        }
+
+        public static string DatalockRestart(
+         this ILinkGenerator linkGenerator,
+         string accountHashedId,
+         string hashedApprenticeshipId)
+        {   
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/datalock/restart");
+        }
+
+        public static string DatalockChanges(
+        this ILinkGenerator linkGenerator,
+        string accountHashedId,
+        string hashedApprenticeshipId)
+        {   
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/datalock/changes");
+        }
+
         public static string WhenToApplyStopApprentice(
            this ILinkGenerator linkGenerator,
            string accountHashedId,

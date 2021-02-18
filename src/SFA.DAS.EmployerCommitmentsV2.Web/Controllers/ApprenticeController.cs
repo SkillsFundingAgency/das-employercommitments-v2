@@ -446,5 +446,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
         }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
+        public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
+
+            return View("details",viewModel);
+        }
     }
 }

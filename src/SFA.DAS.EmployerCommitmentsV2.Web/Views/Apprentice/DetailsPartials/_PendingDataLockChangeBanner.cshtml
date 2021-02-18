@@ -1,0 +1,17 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+
+<div class="govuk-inset-text">
+    <h2 class="govuk-heading-s govuk-!-margin-bottom-1">
+        Changes for review
+    </h2>
+    <p class="govuk-body-s govuk-!-margin-bottom-1">
+        There are changes to this apprentice's details that you need to review.
+    </p>
+    <p class="govuk-body-s">
+        <a id="datalock-changes-link" href="@LinkGenerator.DatalockChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)" aria-label="Review changes" class="govuk-link">Review changes</a>
+    </p>
+</div>
