@@ -34,16 +34,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
                 .WithMessage(r => $"The start date must be on or after {r.StopDate:MMMM yyyy}")
                 .When(r => r.NewStartDate.IsValid);
 
-            RuleFor(r => r.NewStartDate)
-                .Must((r, newStartDate) => newStartDate.IsBeforeMonthYearOfDateTime(r.NewEndDate.Value))
-                .WithMessage(r => $"The start date must be before {r.NewEndDate:MMMM yyyy}")
-                .When(r => r.NewEndDate.HasValue && r.NewStartMonth.HasValue && r.NewStartYear.HasValue);
+            When(r => r.NewStartMonth.HasValue && r.NewStartYear.HasValue && r.NewStartDate.IsValid, () =>
+            {
+                RuleFor(r => r.NewStartDate)
+                   .Must((r, newStartDate) => newStartDate.IsBeforeMonthYearOfDateTime(r.NewEndDate.Value))
+                   .WithMessage(r => $"The start date must be before {r.NewEndDate:MMMM yyyy}")
+                   .When(r => r.NewEndDate.HasValue);
 
-            RuleFor(r => r.NewStartDate)
-                .Must((r, newStartDate) => newStartDate.IsEqualToOrBeforeMonthYearOfDateTime(_academicYearDateProvider.CurrentAcademicYearEndDate.AddYears(1)))
-                .WithMessage(r => "The start date must be no later than one year after the end of the current teaching year")
-                .When(r => r.NewStartDate.IsValid && r.NewStartMonth.HasValue && r.NewStartYear.HasValue)
-                .Unless(r => r.NewEndDate.HasValue && r.NewStartDate.IsEqualToOrAfterMonthYearOfDateTime(r.NewEndDate.Value));
+                RuleFor(r => r.NewStartDate)
+                    .Must((r, newStartDate) => newStartDate.IsEqualToOrBeforeMonthYearOfDateTime(_academicYearDateProvider.CurrentAcademicYearEndDate.AddYears(1)))
+                    .WithMessage(r => "The start date must be no later than one year after the end of the current teaching year")
+                    .Unless(StartDateAfterStopDate);
+            });
+        }
+
+        private bool StartDateAfterStopDate(WhatIsTheNewStartDateViewModel model)
+        {
+            if (model.NewEndDate.HasValue)
+            {
+                return model.NewStartDate.IsEqualToOrAfterMonthYearOfDateTime(model.NewEndDate.Value);
+            }
+
+            return false;
         }
     }
 }
