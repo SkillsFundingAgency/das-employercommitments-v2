@@ -37,11 +37,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [Test, MoqAutoData]
         public async Task AndConfirmResumeIsSelected_ThenCommitmentsApiResumeApprenticeshipIsCalled(ResumeRequestViewModel request)
         {
-            _mockLinkGenerator.Setup(p => p.CommitmentsLink($"accounts/{request.AccountHashedId}/apprentices/manage/{request.ApprenticeshipHashedId}/details"))
-                .Returns(_apprenticeshipDetailsUrl);
+            //Act
+            var result = await _controller.ResumeApprenticeship(request) as RedirectToActionResult;
 
-            await _controller.ResumeApprenticeship(request);
-
+            //Assert
             _mockCommitmentsApiClient.Verify(p => 
                 p.ResumeApprenticeship(It.IsAny<ResumeApprenticeshipRequest>(), It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -49,40 +48,40 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [Test, MoqAutoData]
         public async Task AndConfirmResumeIsSelected_ThenRedirectToApprenticeDetailsPage(ResumeRequestViewModel request)
         {
+            //Arrange
             request.ResumeConfirmed = true;
 
-            _mockLinkGenerator.Setup(p => p.CommitmentsLink($"accounts/{request.AccountHashedId}/apprentices/manage/{request.ApprenticeshipHashedId}/details"))
-                .Returns(_apprenticeshipDetailsUrl);
+            //Act
+            var result = await _controller.ResumeApprenticeship(request) as RedirectToActionResult;
 
-            var result = await _controller.ResumeApprenticeship(request) as RedirectResult;
-
-            Assert.AreEqual(_apprenticeshipDetailsUrl, result.Url);
+            //Assert
+            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
         }
 
         [Test, MoqAutoData]
         public async Task AndGoBackIsSelected_ThenCommitmentsApiResumeApprenticeshipIsNotCalled(ResumeRequestViewModel request)
         {
+            //Arrange
             request.ResumeConfirmed = false;
 
-            _mockLinkGenerator.Setup(p => p.CommitmentsLink($"accounts/{request.AccountHashedId}/apprentices/manage/{request.ApprenticeshipHashedId}/details"))
-                .Returns(_apprenticeshipDetailsUrl);
+            //Act
+            var result = await _controller.ResumeApprenticeship(request) as RedirectToActionResult;
 
-            await _controller.ResumeApprenticeship(request);
-
+            //Assert
             _mockCommitmentsApiClient.Verify(p => p.ResumeApprenticeship(It.IsAny<ResumeApprenticeshipRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test, MoqAutoData]
         public async Task AndGoBackIsSelected_ThenRedirectToApprenticeDetailsPage(ResumeRequestViewModel request)
         {
+            //Arrange
             request.ResumeConfirmed = false;
 
-            _mockLinkGenerator.Setup(p => p.CommitmentsLink($"accounts/{request.AccountHashedId}/apprentices/manage/{request.ApprenticeshipHashedId}/details"))
-                .Returns(_apprenticeshipDetailsUrl);
+            //Act
+            var result = await _controller.ResumeApprenticeship(request) as RedirectToActionResult;
 
-            var result = await _controller.ResumeApprenticeship(request) as RedirectResult;
-
-            Assert.AreEqual(_apprenticeshipDetailsUrl, result.Url);
+            //Assert
+            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
         }
     }
 }

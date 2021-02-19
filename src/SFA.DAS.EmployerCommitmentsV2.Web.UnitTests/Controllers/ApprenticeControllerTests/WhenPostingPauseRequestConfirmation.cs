@@ -36,52 +36,51 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         [Test, MoqAutoData]
         public async Task AndConfirmPauseIsSelected_ThenCommitmentsApiPauseApprenticeshipIsCalled(PauseRequestViewModel request)
-        {
-            _mockLinkGenerator.Setup(p => p.CommitmentsLink($"accounts/{request.AccountHashedId}/apprentices/manage/{request.ApprenticeshipHashedId}/details"))
-                .Returns(_apprenticeshipDetailsUrl);
+        {  
+            //Act
+            var result = await _controller.PauseApprenticeship(request) as RedirectToActionResult;
 
-            var result = await _controller.PauseApprenticeship(request);
-
+           //Assert
             _mockCommitmentsApiClient.Verify(p => p.PauseApprenticeship(It.IsAny<PauseApprenticeshipRequest>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test, MoqAutoData]
         public async Task AndConfirmPauseIsSelected_ThenRedirectToApprenticeDetailsPage(PauseRequestViewModel request)
         {
+            //Arrange
             request.PauseConfirmed = true;
 
-            _mockLinkGenerator.Setup(p => p.CommitmentsLink($"accounts/{request.AccountHashedId}/apprentices/manage/{request.ApprenticeshipHashedId}/details"))
-                .Returns(_apprenticeshipDetailsUrl);
+            //Act
+            var result = await _controller.PauseApprenticeship(request) as RedirectToActionResult;
 
-            var result = await _controller.PauseApprenticeship(request) as RedirectResult;
-
-            Assert.AreEqual(_apprenticeshipDetailsUrl, result.Url);
+            //Assert
+            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
         }
 
         [Test, MoqAutoData]
         public async Task AndGoBackIsSelected_ThenCommitmentsApiPauseApprenticeshipIsNotCalled(PauseRequestViewModel request)
         {
+            //Arrange
             request.PauseConfirmed = false;
 
-            _mockLinkGenerator.Setup(p => p.CommitmentsLink($"accounts/{request.AccountHashedId}/apprentices/manage/{request.ApprenticeshipHashedId}/details"))
-                .Returns(_apprenticeshipDetailsUrl);
+            //Act
+            var result = await _controller.PauseApprenticeship(request) as RedirectToActionResult;
 
-            var result = await _controller.PauseApprenticeship(request);
-
+            //Assert
             _mockCommitmentsApiClient.Verify(p => p.PauseApprenticeship(It.IsAny<PauseApprenticeshipRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test, MoqAutoData]
         public async Task AndGoBackIsSelected_ThenRedirectToApprenticeDetailsPage(PauseRequestViewModel request)
         {
+            //Arrange
             request.PauseConfirmed = false;
 
-            _mockLinkGenerator.Setup(p => p.CommitmentsLink($"accounts/{request.AccountHashedId}/apprentices/manage/{request.ApprenticeshipHashedId}/details"))
-                .Returns(_apprenticeshipDetailsUrl);
+            //Act
+            var result = await _controller.PauseApprenticeship(request) as RedirectToActionResult;
 
-            var result = await _controller.PauseApprenticeship(request) as RedirectResult;
-
-            Assert.AreEqual(_apprenticeshipDetailsUrl, result.Url);
+            //Assert
+            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
         }
     }
 }

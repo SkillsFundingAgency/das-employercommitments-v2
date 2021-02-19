@@ -45,12 +45,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             viewModel.SelectedStatusChange = ChangeStatusType.GoBack;
 
-            _mockLinkGenerator.Setup(p => p.CommitmentsLink($"accounts/{viewModel.AccountHashedId}/apprentices/manage/{viewModel.ApprenticeshipHashedId}/details"))
-                .Returns(_apprenticeshipDetailsUrl);
+            var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
-            var response = _controller.ChangeStatus(viewModel) as RedirectResult;
-
-            Assert.AreEqual(_apprenticeshipDetailsUrl, response.Url);
+            Assert.AreEqual("ApprenticeshipDetails", response.ActionName);
         }
 
         [Test, MoqAutoData]
