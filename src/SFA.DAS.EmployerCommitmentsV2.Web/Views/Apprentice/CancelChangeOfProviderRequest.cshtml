@@ -1,0 +1,69 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.CancelChangeOfProviderRequestViewModel
+
+@{ 
+    ViewData["Title"] = "Are you sure you want to cancel this request? - Apprenticeship service - GOV.UK";
+    var apprenticeDisplayName = Model.ApprenticeName.EndsWith("s") ? Model.ApprenticeName + "'" : Model.ApprenticeName + "'s";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+
+        <h1 class="govuk-heading-xl">
+            Are you sure you want to cancel this request?
+        </h1>
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ProviderId" />
+            <input type="hidden" asp-for="ProviderName" />
+            <input type="hidden" asp-for="EmployerWillAdd" />
+            <input type="hidden" asp-for="NewStartMonth" />
+            <input type="hidden" asp-for="NewStartYear" />
+            <input type="hidden" asp-for="NewEndMonth" />
+            <input type="hidden" asp-for="NewEndYear" />
+            <input type="hidden" asp-for="NewPrice" />
+
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CancelRequest,  "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    <p class="govuk-body">
+                        If you select yes, we will not save any changes you made.
+                    </p>
+
+                    <p class="govuk-body govuk-!-padding-bottom-6">
+                        @Model.OldProviderName will continue as @apprenticeDisplayName training provider.
+                    </p>
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <span id="error-message-@nameof(Model.CancelRequest)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(Model.CancelRequest)].Errors.First().ErrorMessage
+                        </span>
+                    }
+
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item" id="radio-item-yes">
+                            <input class="govuk-radios__input" type="radio" id="CancelRequest-yes" name="CancelRequest" value="true">
+                            <label class="govuk-label govuk-radios__label" for="CancelRequest-yes">Yes</label>
+                        </div>
+
+                        <div class="govuk-radios__item" id="radio-item-no">
+                            <input class="govuk-radios__input" type="radio" id="CancelRequest-no" name="CancelRequest" value="false">
+                            <label class="govuk-label govuk-radios__label" for="CancelRequest-no">No</label>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+
+            <button class="govuk-button" type="submit" id="continue-button"> Continue </button>
+            
+        </form>
+    </div>
+</div>
+
+@section Back
+{
+    <div class="das-js-back-link"></div>
+}
