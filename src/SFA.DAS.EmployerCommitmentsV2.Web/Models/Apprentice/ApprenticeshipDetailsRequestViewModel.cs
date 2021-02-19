@@ -28,8 +28,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string CohortReference { get; set; }
         public bool EnableEdit { get; set; }
         public bool PendingDataLockRestart { get; set; }
-        public bool PendingDataLockChange { get; set; }
-        public bool CanEditStopDate { get; set; }
+        public bool PendingDataLockChange { get; set; }        
         public string EndpointAssessorName { get; set; }
         public bool? MadeRedundant { get; set; }
         public bool HasPendingChangeOfProviderRequest { get; set; }

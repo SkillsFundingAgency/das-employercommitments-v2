@@ -433,23 +433,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(expectedAllowEditApprentice, result.CanEditStatus);
         }
 
-        [TestCase(ApprenticeshipStatus.Live, false)]
-        [TestCase(ApprenticeshipStatus.Paused, false)]
-        [TestCase(ApprenticeshipStatus.WaitingToStart, false)]
-        [TestCase(ApprenticeshipStatus.Stopped, true)]
-        [TestCase(ApprenticeshipStatus.Completed, false)]
-        public async Task CanEditStopDate_IsMapped(ApprenticeshipStatus status, bool expectedAllowEditApprentice)
-        {
-            //Arrange
-            _apprenticeshipResponse.Status = status;
-
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert            
-            Assert.AreEqual(expectedAllowEditApprentice, result.CanEditStopDate);
-        }
-
         [Test]
         public async Task EndpointAssessorName_IsMapped()
         {

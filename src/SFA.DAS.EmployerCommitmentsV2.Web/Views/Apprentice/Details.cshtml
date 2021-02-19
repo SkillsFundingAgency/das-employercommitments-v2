@@ -109,18 +109,10 @@
                             {
                                 @Model.StopDate.Value.ToGdsFormatLongMonthWithoutDay()
                             }
-                        </td>
-
-                        @if (Model.CanEditStopDate)
-                        {
+                        </td>                     
                         <td id="editStopDateLink" class="govuk-table__cell govuk-table__cell--numeric">                        
                             <a id="edit-stopped-link" class="govuk-link" href="@Url.Action("StopApprenticeship", new StopRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit</a>
-                        </td>
-                        }
-                        else
-                        {
-                            <td class="govuk-table__cell"></td>
-                        }
+                        </td>                       
                     </tr>
 
                     @if (Model.MadeRedundant.HasValue)
