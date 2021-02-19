@@ -24,29 +24,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
     {
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
         private Mock<IEncodingService> _mockEncodingService;
-
         private GetApprenticeshipResponse _apprenticeshipResponse;
         private GetPriceEpisodesResponse _priceEpisodesResponse;
         private GetApprenticeshipUpdatesResponse _apprenticeshipUpdatesResponse;
         private GetDataLocksResponse _dataLocksResponse;
         private GetChangeOfPartyRequestsResponse _changeOfPartyRequestsResponse;
         private GetTrainingProgrammeResponse _trainingProgrammeResponse;
-
         private ApprenticeshipDetailsRequest _request;
         private ApprenticeshipDetailsRequestToViewModelMapper _mapper;
-
 
         [SetUp]
         public void SetUp()
         {
             //Arrange
             var autoFixture = new Fixture();
-
             _request = autoFixture.Build<ApprenticeshipDetailsRequest>()
                 .With(x => x.AccountHashedId, "123")
                 .With(x => x.ApprenticeshipHashedId, "456")
                 .Create();
-
             _apprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>()
                 .With(x => x.CourseCode, "ABC")
                 .With(x => x.DateOfBirth, autoFixture.Create<DateTime>())
@@ -55,18 +50,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                  .With(x => x.PriceEpisodes, new List<PriceEpisode> {
                     new PriceEpisode { Cost = 1000, ToDate = DateTime.Now.AddMonths(-1)}})
                 .Create();
-
             _apprenticeshipUpdatesResponse = autoFixture.Build<GetApprenticeshipUpdatesResponse>()
                 .With(x => x.ApprenticeshipUpdates, new List<ApprenticeshipUpdate> { 
                     new ApprenticeshipUpdate { OriginatingParty = Party.Employer } })
-                .Create();
-            
+                .Create();       
             _dataLocksResponse = autoFixture.Build<GetDataLocksResponse>().Create();
             _changeOfPartyRequestsResponse = autoFixture.Build<GetChangeOfPartyRequestsResponse>().Create();
             _trainingProgrammeResponse = autoFixture.Build<GetTrainingProgrammeResponse>().Create();
-
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-
             _mockCommitmentsApiClient.Setup(r => r.GetApprenticeship(It.IsAny<long>(), CancellationToken.None))
                 .ReturnsAsync(_apprenticeshipResponse);
             _mockCommitmentsApiClient.Setup(c => c.GetPriceEpisodes(It.IsAny<long>(), CancellationToken.None))
@@ -79,9 +70,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .ReturnsAsync(_changeOfPartyRequestsResponse);
             _mockCommitmentsApiClient.Setup(t => t.GetTrainingProgramme(_apprenticeshipResponse.CourseCode, It.IsAny<CancellationToken>()))
                .ReturnsAsync(_trainingProgrammeResponse);
-
             _mockEncodingService = new Mock<IEncodingService>();
-
             _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
         }
 

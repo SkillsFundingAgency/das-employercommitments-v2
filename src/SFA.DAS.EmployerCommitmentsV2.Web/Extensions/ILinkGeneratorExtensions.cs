@@ -36,15 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             string hashedApprenticeshipId)
         {
             return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/changes/view");
-        }
-
-        public static string EditStopDate(
-             this ILinkGenerator linkGenerator,
-             string accountHashedId,
-             string hashedApprenticeshipId)
-        {
-            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details/editstopdate");
-        }
+        }       
 
         public static string EditApprenticeship(
              this ILinkGenerator linkGenerator,
@@ -52,15 +44,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
              string hashedApprenticeshipId)
         {
             return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/edit");
-        }
-
-
-        public static string ChangeApprenticeStatus(
-             this ILinkGenerator linkGenerator,
-             string accountHashedId,
-             string hashedApprenticeshipId)
-        {
-            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details/statuschange");
         }
 
         public static string DatalockRestart(

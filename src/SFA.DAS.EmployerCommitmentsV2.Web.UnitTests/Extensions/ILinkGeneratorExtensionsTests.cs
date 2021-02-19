@@ -65,6 +65,45 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
             Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details", url);
         }
 
+        [Test, AutoData]
+        public void ApprenticeReviewChanges_BuildsPathCorrectly(string accountHashedId, string hashedApprenticeshipId)
+        {            
+            var url = _fixture.Sut.ReviewChanges(accountHashedId, hashedApprenticeshipId);
+
+            Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/changes/review", url);
+        }
+
+        [Test, AutoData]
+        public void ApprenticeViewChanges_BuildsPathCorrectly(string accountHashedId, string hashedApprenticeshipId)
+        {
+            var url = _fixture.Sut.ViewChanges(accountHashedId, hashedApprenticeshipId);
+
+            Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/changes/view", url);
+        }   
+
+        [Test, AutoData]
+        public void EditApprentice_BuildsPathCorrectly(string accountHashedId, string hashedApprenticeshipId)
+        {
+            var url = _fixture.Sut.EditApprenticeship(accountHashedId, hashedApprenticeshipId);
+
+            Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/edit", url);
+        }     
+
+        [Test, AutoData]
+        public void DatalockRestart_BuildsPathCorrectly(string accountHashedId, string hashedApprenticeshipId)
+        {
+            var url = _fixture.Sut.DatalockRestart(accountHashedId, hashedApprenticeshipId);
+
+            Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/datalock/restart", url);
+        }
+
+        [Test, AutoData]
+        public void DatalockChanges_BuildsPathCorrectly(string accountHashedId, string hashedApprenticeshipId)
+        {
+            var url = _fixture.Sut.DatalockChanges(accountHashedId, hashedApprenticeshipId);
+
+            Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/datalock/changes", url);
+        }
     }
 
     public class ILinkGeneratorExtensionsTestsFixture

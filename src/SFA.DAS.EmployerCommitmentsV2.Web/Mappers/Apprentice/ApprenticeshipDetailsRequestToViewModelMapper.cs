@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 var apprenticeshipDataLocksStatus = apprenticeshipDataLocksStatusTask.Result;
                 var changeofPartyRequests = changeofPartyRequestsTask.Result;
 
-                var getTrainingProgrammeTask = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode, CancellationToken.None);
+                var getTrainingProgramme = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode, CancellationToken.None);
                 PendingChanges pendingChange = GetPendingChanges(apprenticeshipUpdates);
 
                 var statusText = MapApprenticeshipStatus(apprenticeship.Status);
@@ -76,8 +76,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     StopDate = apprenticeship.StopDate,
                     PauseDate = apprenticeship.PauseDate,
                     CompletionDate = apprenticeship.CompletionDate,
-                    TrainingName = getTrainingProgrammeTask.TrainingProgramme.Name,
-                    TrainingType = getTrainingProgrammeTask.TrainingProgramme.ProgrammeType,
+                    TrainingName = getTrainingProgramme.TrainingProgramme.Name,
+                    TrainingType = getTrainingProgramme.TrainingProgramme.ProgrammeType,
                     Cost = priceEpisodes.PriceEpisodes.GetPrice(),
                     ApprenticeshipStatus = apprenticeship.Status,
                     Status = statusText,
@@ -86,7 +86,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     EmployerReference = apprenticeship.EmployerReference,
                     CohortReference = _encodingService.Encode(apprenticeship.CohortId, EncodingType.CohortReference),
                     EnableEdit = enableEdit,
-                    CanEditStatus = !(new List<ApprenticeshipStatus> { ApprenticeshipStatus.Completed, ApprenticeshipStatus.Stopped }).Contains(apprenticeship.Status),
+                    CanEditStatus = (apprenticeship.Status == ApprenticeshipStatus.Live || 
+                                     apprenticeship.Status == ApprenticeshipStatus.WaitingToStart || 
+                                     apprenticeship.Status == ApprenticeshipStatus.Paused),
                     CanEditStopDate = (apprenticeship.Status == ApprenticeshipStatus.Stopped),
                     EndpointAssessorName = apprenticeship.EndpointAssessorName,
                     MadeRedundant = apprenticeship.MadeRedundant,
