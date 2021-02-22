@@ -296,6 +296,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/change-provider/cancel", Name = RouteNames.CancelChangeOfProviderRequest)]
+        public async Task<IActionResult> CancelChangeOfProviderRequest(ChangeOfProviderRequest request)
+        {
+            var viewModel = await _modelMapper.Map<CancelChangeOfProviderRequestViewModel>(request);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/change-provider/cancel", Name = RouteNames.CancelChangeOfProviderRequest)]
+        public async Task<IActionResult> CancelChangeOfProviderRequest(CancelChangeOfProviderRequestViewModel viewModel)
+        {
+            if (viewModel.CancelRequest.Value)
+            {
+                return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+            }
+
+            var request = await _modelMapper.Map<ChangeOfProviderRequest>(viewModel);
+
+            return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, request);
+        }
+
         [Route("{apprenticeshipHashedId}/change-provider/send-request", Name = RouteNames.SendRequestNewTrainingProvider)]
         public async Task<IActionResult> SendRequestNewTrainingProvider(SendNewTrainingProviderRequest request)
         {
