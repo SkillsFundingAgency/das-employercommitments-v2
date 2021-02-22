@@ -90,7 +90,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var request = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.EditEndDateRequest>(viewModel);
             await _commitmentsApiClient.UpdateEndDateOfCompletedRecord(request, CancellationToken.None);
-            return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+            return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
         }
 
         [Route("{apprenticeshipHashedId}/details/changestatus")]
@@ -116,8 +116,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     return RedirectToAction(redirectToActionName, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 case ChangeStatusType.Resume:
                     return RedirectToAction(nameof(ResumeApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
-                default:
-                    return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                default:                    
+                    return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest {AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
             }
         }
 
@@ -314,8 +314,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     return RedirectToAction("Error", "Error");
                 }
             }
-
-            return RedirectToAction(nameof(ApprenticeshipDetails), new { request.AccountHashedId, request.ApprenticeshipHashedId });
+            
+            return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = request.AccountHashedId, ApprenticeshipHashedId = request.ApprenticeshipHashedId });
         }
 
         [HttpGet]
@@ -395,7 +395,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 }
             }
 
-            return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+            return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
         }
 
         [Route("{apprenticeshipHashedId}/details/pause")]
@@ -419,7 +419,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 await _commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
             }
 
-            return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+            return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });            
         }
 
         [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
@@ -453,15 +453,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
 
             return View("details", viewModel);
-        }
-
-        [HttpGet]
-        [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
-        public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request)
-        {
-            var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
-
-            return View("details",viewModel);
         }
     }
 }
