@@ -41,15 +41,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _request = autoFixture.Build<ApprenticeshipDetailsRequest>()
                 .With(x => x.AccountHashedId, "123")
                 .With(x => x.ApprenticeshipHashedId, "456")
-                .Create();
+                .Create();           
             _apprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>()
                 .With(x => x.CourseCode, "ABC")
                 .With(x => x.DateOfBirth, autoFixture.Create<DateTime>())
-                .Create();
+                .Create();            
             _priceEpisodesResponse = autoFixture.Build<GetPriceEpisodesResponse>()
                  .With(x => x.PriceEpisodes, new List<PriceEpisode> {
                     new PriceEpisode { Cost = 1000, ToDate = DateTime.Now.AddMonths(-1)}})
-                .Create();
+                .Create();            
             _apprenticeshipUpdatesResponse = autoFixture.Build<GetApprenticeshipUpdatesResponse>()
                 .With(x => x.ApprenticeshipUpdates, new List<ApprenticeshipUpdate> { 
                     new ApprenticeshipUpdate { OriginatingParty = Party.Employer } })
@@ -57,6 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _dataLocksResponse = autoFixture.Build<GetDataLocksResponse>().Create();
             _changeOfPartyRequestsResponse = autoFixture.Build<GetChangeOfPartyRequestsResponse>().Create();
             _trainingProgrammeResponse = autoFixture.Build<GetTrainingProgrammeResponse>().Create();
+            
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _mockCommitmentsApiClient.Setup(r => r.GetApprenticeship(It.IsAny<long>(), CancellationToken.None))
                 .ReturnsAsync(_apprenticeshipResponse);
@@ -134,8 +135,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _mockCommitmentsApiClient.Verify(t => t.GetChangeOfPartyRequests(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
         }
 
-
-
         [Test]
         public async Task HashedApprenticeshipId_IsMapped()
         {
@@ -145,7 +144,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Assert
             Assert.AreEqual(_request.ApprenticeshipHashedId, result.HashedApprenticeshipId);
         }
-
 
         [Test]
         public async Task AccountHashedId_IsMapped()
@@ -176,7 +174,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Assert
             Assert.AreEqual(_apprenticeshipResponse.Uln, result.ULN);
         }
-
 
         [Test]
         public async Task DateOfBirth_IsMapped()
@@ -257,7 +254,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Assert
             Assert.AreEqual(_priceEpisodesResponse.PriceEpisodes.First().Cost, result.Cost);
         }
-  
 
         [TestCase(ApprenticeshipStatus.Live, "Live")]
         [TestCase(ApprenticeshipStatus.Paused, "Paused")]
@@ -306,7 +302,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(_apprenticeshipResponse.EmployerReference, result.EmployerReference);
         }
 
-
         [Test]
         public async Task CohortReference_IsMapped()
         {
@@ -321,8 +316,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.AreEqual(CohortReference, result.CohortReference);
-        }  
-
+        }
 
         [TestCase(DataLockErrorCode.Dlock03, false)]
         [TestCase(DataLockErrorCode.Dlock04, false)]
@@ -355,9 +349,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Assert
             Assert.AreEqual(expectedTriageOption, result.EnableEdit);
         }
-
-
-    
+        
         [TestCase(DataLockErrorCode.Dlock07, false)]
         public async Task EnableEdit_HasDataLockPriceTriaged_IsMapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
@@ -385,8 +377,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.AreEqual(expectedTriageOption, result.EnableEdit);
-        }
-       
+        }     
 
         [TestCase(DataLockErrorCode.Dlock03, false)]
         [TestCase(DataLockErrorCode.Dlock04, false)]
@@ -413,8 +404,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.AreEqual(expectedTriageOption, result.EnableEdit);
-        } 
-
+        }
 
         [TestCase(ApprenticeshipStatus.Live, true)]
         [TestCase(ApprenticeshipStatus.Paused, true)]
@@ -479,7 +469,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(pendingChangeRequest, result.HasPendingChangeOfProviderRequest);
         }
 
-
         [TestCase(ChangeOfPartyRequestStatus.Approved, true)]
         [TestCase(ChangeOfPartyRequestStatus.Rejected, false)]
         [TestCase(ChangeOfPartyRequestStatus.Withdrawn, false)]
@@ -531,7 +520,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Assert
             Assert.AreEqual(pendingChangeRequest, result.HasPendingChangeOfEmployerRequest);
         }
-
 
         [TestCase(ChangeOfPartyRequestStatus.Approved, true)]
         [TestCase(ChangeOfPartyRequestStatus.Rejected, false)]
@@ -603,7 +591,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Assert
             Assert.AreEqual(result.ShowChangeTrainingProviderLink, flag);
         }
-
 
         [TestCase(ChangeOfPartyRequestStatus.Approved, false)]
         public async Task Then_CoE_request_approved_by_parties_apprenticeship_moved_from_me_dont_show_ChangeProviderLink(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool flag)

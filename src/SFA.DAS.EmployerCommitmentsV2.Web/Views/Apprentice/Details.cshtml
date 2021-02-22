@@ -4,7 +4,6 @@
 @using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 
-
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
 
 @{
@@ -20,7 +19,6 @@
         @if (Model.PendingChanges == PendingChanges.ReadyForApproval)
         {
             <partial name="DetailsPartials/_PendingChangeReadyForApprovalBanner" />
-
         }
         else if (Model.PendingChanges == PendingChanges.WaitingForApproval)
         {
@@ -31,7 +29,6 @@
         {
             <partial name="DetailsPartials/_PendingChangeOfPartyRequestBanner" />
         }
-
 
         @if (Model.HasApprovedChangeOfProviderRequest || Model.IsContinuation)
         {
@@ -99,7 +96,6 @@
                     </tr>
                 }
 
-
                 @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Stopped)
                 {
                     <tr>
@@ -146,8 +142,6 @@
                 </tr>
             </tbody>
         </table>
-
-
 
         <div class="govuk-grid-row govuk-!-margin-bottom-2">
             <div class="govuk-grid-column-two-thirds">
@@ -234,7 +228,6 @@
         </table>
     </div>
 </div>
-
 
 @section Back
 {

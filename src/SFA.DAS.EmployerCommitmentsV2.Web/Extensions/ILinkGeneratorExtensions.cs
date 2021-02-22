@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             string hashedApprenticeshipId)
         {
             return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/changes/view");
-        }       
+        }    
 
         public static string EditApprenticeship(
              this ILinkGenerator linkGenerator,

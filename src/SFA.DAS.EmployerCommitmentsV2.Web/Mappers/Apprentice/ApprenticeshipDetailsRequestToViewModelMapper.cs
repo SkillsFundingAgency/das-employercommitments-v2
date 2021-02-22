@@ -41,7 +41,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
                 await Task.WhenAll(apprenticeshipTask, priceEpisodesTask, apprenticeshipUpdatesTask, apprenticeshipDataLocksStatusTask, changeofPartyRequestsTask);
 
-
                 var apprenticeship = apprenticeshipTask.Result;
                 var priceEpisodes = priceEpisodesTask.Result;
                 var apprenticeshipUpdates = apprenticeshipUpdatesTask.Result;
@@ -136,7 +135,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             if (apprenticeshipUpdates.ApprenticeshipUpdates.Any(x => x.OriginatingParty == Party.Provider))
                 pendingChange = PendingChanges.ReadyForApproval;
             return pendingChange;
-        }       
+        }      
 
         private string MapApprenticeshipStatus(ApprenticeshipStatus paymentStatus)
         {

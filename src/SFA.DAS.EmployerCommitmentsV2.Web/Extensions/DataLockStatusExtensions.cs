@@ -22,7 +22,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             return dataLocks.Any(x => x.TriageStatus == TriageStatus.Change && x.DataLockStatus == Status.Fail && !x.IsResolved && x.ErrorCode.HasFlag(DataLockErrorCode.Dlock07));
         }
 
-
         public static bool WithCourseError(this DataLock dataLockStatus)
         {
             return dataLockStatus.ErrorCode.HasFlag(DataLockErrorCode.Dlock03)
@@ -30,6 +29,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
                    || dataLockStatus.ErrorCode.HasFlag(DataLockErrorCode.Dlock05)
                    || dataLockStatus.ErrorCode.HasFlag(DataLockErrorCode.Dlock06);
         }
-
     }
 }

@@ -31,7 +31,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         private readonly ApprenticeshipDetailsRequest _request;
         private readonly ApprenticeshipDetailsRequestViewModel _viewModel;
 
-
         public WhenCallingApprenticeshipDetailsTestsFixture() : base()
         {
             _request = _autoFixture.Create<ApprenticeshipDetailsRequest>();

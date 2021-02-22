@@ -2,27 +2,25 @@
 @using SFA.DAS.CommitmentsV2.Types
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
 
-
 <div class="govuk-inset-text govuk-!-margin-top-0">
     @if (Model.PendingChangeOfProviderRequestWithParty.Value == Party.Employer)
-        {
-            <h2 class="govuk-heading-s govuk-!-margin-bottom-1"> Changes for review</h2>
-            <p class="govuk-body-s govuk-!-margin-bottom-1">
-                There are changes to this apprentice's details that you need to review.
-            </p>
-            <p class="govuk-body-s">
-                <a id="change-of-party-review-changes-link" class="govuk-link" href="@Url.RouteUrl("view-changes")">Review changes</a>
-            </p>
-        }
-        else
-        {
-            <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Changes pending</h2>
-            <p class="govuk-body-s govuk-!-margin-bottom-1">
-                There are changes to this apprentice's details that are waiting for approval by the training provider.
-            </p>
-            <p class="govuk-body-s">
-                <a id="change-of-party-view-changes-link" class="govuk-link" href="@Url.RouteUrl("view-changes")">View changes</a>
-            </p>
-        }
-
+    {
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-1"> Changes for review</h2>
+        <p class="govuk-body-s govuk-!-margin-bottom-1">
+            There are changes to this apprentice's details that you need to review.
+        </p>
+        <p class="govuk-body-s">
+            <a id="change-of-party-review-changes-link" class="govuk-link" href="@Url.RouteUrl("view-changes")">Review changes</a>
+        </p>
+    }
+    else
+    {
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Changes pending</h2>
+        <p class="govuk-body-s govuk-!-margin-bottom-1">
+            There are changes to this apprentice's details that are waiting for approval by the training provider.
+        </p>
+        <p class="govuk-body-s">
+            <a id="change-of-party-view-changes-link" class="govuk-link" href="@Url.RouteUrl("view-changes")">View changes</a>
+        </p>
+    }
 </div>
