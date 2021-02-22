@@ -9,6 +9,7 @@ using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Features;
@@ -32,6 +33,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ILinkGenerator _linkGenerator;
         private readonly ILogger<ApprenticeController> _logger;
         private readonly IAuthorizationService _authorizationService;
+        public const string ApprenticePausedMessage = "Apprenticeship paused";
+        public const string ApprenticeResumeMessage = "Apprenticeship resumed";
+        public const string ApprenticeStoppedMessage = "Apprenticeship stopped";
 
         public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILinkGenerator linkGenerator, ILogger<ApprenticeController> logger, IAuthorizationService authorizationService)
         {
@@ -110,11 +114,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             switch (viewModel.SelectedStatusChange)
             {
                 case ChangeStatusType.Pause:
+                    TempData.AddFlashMessage(ApprenticePausedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
                     return RedirectToAction(nameof(PauseApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 case ChangeStatusType.Stop:
+                    TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
                     var redirectToActionName = viewModel.CurrentStatus == CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart ? nameof(HasTheApprenticeBeenMadeRedundant) : nameof(StopApprenticeship);
                     return RedirectToAction(redirectToActionName, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 case ChangeStatusType.Resume:
+                    TempData.AddFlashMessage(ApprenticeResumeMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
                     return RedirectToAction(nameof(ResumeApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 default:  
                     return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest {AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
@@ -451,6 +458,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request)
         {
             var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
+            if (viewModel.ApprenticeshipStatus == ApprenticeshipStatus.Stopped)
+            {
+                TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
+            }
 
             return View("details", viewModel);
         }
