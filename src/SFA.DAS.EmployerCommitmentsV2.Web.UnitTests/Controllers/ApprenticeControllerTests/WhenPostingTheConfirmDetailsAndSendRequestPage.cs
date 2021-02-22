@@ -88,6 +88,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.AreEqual(_viewModel.ProviderId, routeValues["ProviderId"]);
             Assert.AreEqual(_viewModel.ApprenticeshipHashedId, routeValues["ApprenticeshipHashedId"]);
             Assert.AreEqual(_viewModel.AccountHashedId, routeValues["AccountHashedId"]);
+            Assert.AreEqual(_viewModel.StoppedDuringCoP, routeValues["StoppedDuringCoP"]);
         }
 
         public void VerifyRedirectToError(IActionResult actionResult)

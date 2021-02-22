@@ -114,5 +114,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             Assert.AreEqual(_apprenticeshipDetailsUrl, result.Url);
         }
+
+        [Test, MoqAutoData]
+        public async Task AndApprenticeshipIsStoppedDuringChangeOfProvider_ThenSetStoppedDuringChangeOfProvider_IsTrue(ConfirmStopRequestViewModel viewModel)
+        {
+            viewModel.StopConfirmed = true;
+            viewModel.IsCoPJourney = true;
+            var result = await _controller.ConfirmStop(viewModel);
+
+            var redirectResult = (RedirectToActionResult)result;
+            var routeValues = redirectResult.RouteValues;
+
+            Assert.AreEqual(true, routeValues["StoppedDuringCoP"]);
+        }
+
+
     }
 }

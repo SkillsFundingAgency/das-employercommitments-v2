@@ -281,7 +281,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 var apiRequest = await _modelMapper.Map<CreateChangeOfPartyRequestRequest>(viewModel);
                 await _commitmentsApiClient.CreateChangeOfPartyRequest(viewModel.ApprenticeshipId, apiRequest);
-                return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId });
+                return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation, new
+                {
+                    viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId, viewModel.StoppedDuringCoP
+                });
             }
             catch (Exception ex)
             {
@@ -414,7 +417,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     return RedirectToAction(nameof(EnterNewTrainingProvider), new
                     {
                         viewModel.AccountHashedId,
-                        viewModel.ApprenticeshipHashedId
+                        viewModel.ApprenticeshipHashedId,
+                        StoppedDuringCoP = true
                     });
                 }
             }

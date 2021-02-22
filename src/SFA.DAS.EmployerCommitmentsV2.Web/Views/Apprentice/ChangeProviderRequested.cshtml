@@ -14,6 +14,17 @@
 
         <h2 class="govuk-heading-m"> What happens next </h2>
 
+        @if (Model.StoppedDuringCoP)
+        {
+            <p class="govuk-body">
+                We've stopped @apprenticeDisplayName apprenticeship record with their current training provider.
+            </p>
+
+            <p class="govuk-body">
+                We will create a new record in your apprenticeship service account once you both approve the details.
+            </p>
+        }
+
         @if (Model.ProviderAddDetails)
         {
             <p class="govuk-body">We’ll ask @Model.ProviderName to enter the new apprenticeship dates and price. Once they've added @apprenticeDisplayName apprenticeship details, you can sign in to view them.</p>
