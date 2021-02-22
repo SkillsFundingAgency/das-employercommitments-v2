@@ -15,6 +15,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             return monthYearModel.Date.Value < new DateTime(datetime.Year, datetime.Month, 1);
         }
 
+        public static bool IsEqualToOrBeforeMonthYearOfDateTime(this MonthYearModel monthYearModel, DateTime datetime)
+        {
+            return monthYearModel.Date.Value <= new DateTime(datetime.Year, datetime.Month, 1);
+        }
+
         public static bool IsNotInFutureMonthYear(this MonthYearModel monthYearModel)
         {
             var dateTimeNow = DateTime.UtcNow;
@@ -23,4 +28,3 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
         }
     }
 }
-
