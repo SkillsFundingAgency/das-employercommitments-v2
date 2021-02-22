@@ -1,5 +1,7 @@
 ﻿using FluentValidation.TestHelper;
+using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 using System;
@@ -15,12 +17,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         private const string YearNotEnteredError = "The start date must include a year";
         private const string MonthNotEnteredError = "The start date must include a month";
         private const string NotARealDateError = "The start date must be a real date";
+        private const string NewStartDateExceedsMaxError = "The start date must be no later than one year after the end of the current teaching year";
         private readonly string NewStartDateBeforeStopDateError;
         private string NewStartDateAfterNewEndDateError;
+
+        private Mock<IAcademicYearDateProvider> _mockAcademicYearDateProvider;
 
         public WhatIsTheNewStartDateViewModelValidatorTests()
         {
             NewStartDateBeforeStopDateError = $"The start date must be on or after {_stopDate.ToString("MMMM yyyy")}";
+        }
+
+        [SetUp]
+        public void Arrange()
+        {
+            _mockAcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
+
+            _mockAcademicYearDateProvider.Setup(p => p.CurrentAcademicYearEndDate).Returns(new DateTime(2020, 7, 31));
         }
 
         [Test]
@@ -76,6 +89,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         }
 
         [Test]
+        public void WhenNewStartDateAfterCurrentAcademicEndDatePlusOneYear_ThenValidationFails()
+        {
+            var model = new WhatIsTheNewStartDateViewModel { NewStartMonth = 8, NewStartYear = 2022, StopDate = _stopDate };
+
+            AssertValidationResult(x => x.NewStartDate, model, false, NewStartDateExceedsMaxError);
+        }
+
+        [Test]
         public void WhenNewEndDateIsNotNull_AndStartDateIsAfterEndDate_ThenInvalid()
         {
             var model = new WhatIsTheNewStartDateViewModel
@@ -91,7 +112,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         }
 
         [Test]
-        public void WhenNewEndDateIsNotNull_AndStartDateIsBeforeEndDate_ThenValalid()
+        public void WhenNewEndDateIsNotNull_AndStartDateIsBeforeEndDate_ThenValid()
         {
             var model = new WhatIsTheNewStartDateViewModel
             {
@@ -100,14 +121,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
                 NewEndDate = _stopDate.AddMonths(2).Date
             };
 
-            NewStartDateAfterNewEndDateError = $"The start date must be before {model.NewEndDate.Value:MMMM yyyy}";
-
             AssertValidationResult(x => x.NewStartDate, model, true);
         }
 
         private void AssertValidationResult<T>(Expression<Func<WhatIsTheNewStartDateViewModel, T>> property, WhatIsTheNewStartDateViewModel instance, bool expectedValid, string expectedErrorMessage = null)
         {
-            var validator = new WhatIsTheNewStartDateViewModelValidator();
+            var validator = new WhatIsTheNewStartDateViewModelValidator(_mockAcademicYearDateProvider.Object);
 
             if (expectedValid)
             {

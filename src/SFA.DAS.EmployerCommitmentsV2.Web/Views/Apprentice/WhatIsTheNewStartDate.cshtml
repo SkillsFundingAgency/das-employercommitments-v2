@@ -23,6 +23,7 @@
             <input type="hidden" asp-for="NewEndYear" />
             <input type="hidden" asp-for="NewEndDate" />
             <input type="hidden" asp-for="NewPrice" />
+            <input type="hidden" asp-for="Edit" />
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.NewStartDate,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
@@ -35,17 +36,19 @@
                         For example, 04 2020
                     </span>
 
+                    @Html.ValidationMessageFor(m => m.NewStartDate, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.NewStartDate) })
+                    
                     <div class="govuk-date-input">
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
                                 <label asp-for="NewStartMonth" class="govuk-label govuk-date-input__label">Month</label>
-                                <input asp-for="NewStartMonth" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number" id="new-start-month">
+                                <input asp-for="NewStartMonth" class="govuk-input govuk-date-input__input govuk-input--width-2 @Html.AddClassIfPropertyInError(x=>x.NewStartDate, "govuk-input--error input-validation-error")" type="number" id="new-start-month">
                             </div>
                         </div>
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
                                 <label asp-for="NewStartYear" class="govuk-label govuk-date-input__label">Year</label>
-                                <input asp-for="NewStartYear" class="govuk-input govuk-date-input__input govuk-input--width-4" type="number" id="new-start-year">
+                                <input asp-for="NewStartYear" class="govuk-input govuk-date-input__input govuk-input--width-4 @Html.AddClassIfPropertyInError(x=>x.NewStartDate, "govuk-input--error input-validation-error")" type="number" id="new-start-year">
                             </div>
                         </div>
                     </div>
