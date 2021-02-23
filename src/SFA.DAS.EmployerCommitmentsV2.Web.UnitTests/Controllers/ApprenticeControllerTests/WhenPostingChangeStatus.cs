@@ -9,6 +9,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing.AutoFixture;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
@@ -28,6 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 _mockLinkGenerator.Object, 
                 Mock.Of<ILogger<ApprenticeController>>(),
                 Mock.Of<IAuthorizationService>());
+            _controller.TempData = new Mock<ITempDataDictionary>().Object;
         }
 
         [Test, MoqAutoData]
