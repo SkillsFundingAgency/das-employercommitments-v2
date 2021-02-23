@@ -6,9 +6,9 @@
 
 @{
     ViewData["Title"] = $"Confirm details and send request to {Model.ProviderName} - Apprenticeship service - GOV.UK";
-    
-    var apprenticeDisplayName = Model.ApprenticeFullName.EndsWith("s") ? Model.ApprenticeFullName + "'" : Model.ApprenticeFullName + "'s";
 
+    var apprenticeDisplayName = Model.ApprenticeFullName.EndsWith("s") ? Model.ApprenticeFullName + "'" : Model.ApprenticeFullName + "'s";
+   
     var queryData = new
     {
         ProviderId = Model.ProviderId,
@@ -98,6 +98,10 @@
             <input type="hidden" asp-for="NewPrice" />
 
             <button class="govuk-button" type="submit" id="confirm-and-send-button"> Confirm and send </button>
+
+            <div class="govuk-body">
+                <a href="@Url.RouteUrl(RouteNames.CancelChangeOfProviderRequest, queryData)" class="govuk-link" id="cancel-request-link">Cancel request</a>
+            </div>
         </form>
     </div>
 </div>

@@ -27,7 +27,7 @@
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.NewEndDate,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
-                    
+
                     <p class="govuk-body">
                         This date must be after the new start date (@Model.NewStartDate.ToString("MMMM yyyy")).
                     </p>
@@ -36,17 +36,19 @@
                         For example, 04 2020
                     </span>
 
+                    @Html.ValidationMessageFor(m => m.NewEndDate, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.NewEndDate) })
+
                     <div class="govuk-date-input">
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
                                 <label asp-for="NewEndMonth" class="govuk-label govuk-date-input__label">Month</label>
-                                <input asp-for="NewEndMonth" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number">
+                                <input asp-for="NewEndMonth" class="govuk-input govuk-date-input__input govuk-input--width-2 @Html.AddClassIfPropertyInError(x=>x.NewEndDate, "govuk-input--error input-validation-error")" type="number">
                             </div>
                         </div>
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
                                 <label asp-for="NewEndYear" class="govuk-label govuk-date-input__label">Year</label>
-                                <input asp-for="NewEndYear" class="govuk-input govuk-date-input__input govuk-input--width-4" type="number">
+                                <input asp-for="NewEndYear" class="govuk-input govuk-date-input__input govuk-input--width-4 @Html.AddClassIfPropertyInError(x=>x.NewEndDate, "govuk-input--error input-validation-error")" type="number">
                             </div>
                         </div>
                     </div>
