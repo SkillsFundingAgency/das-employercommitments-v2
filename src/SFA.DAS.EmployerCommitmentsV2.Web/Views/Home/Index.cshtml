@@ -28,7 +28,7 @@
             @if (Model.ShowSetPaymentOrderLink)
             {
                 <div class="das-card">
-                    <h2 class="govuk-heading-m"><a id="SetPaymentOrder" href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/manage/paymentorder")" class="govuk-link">Set payment order</a></h2>
+                    <h2 class="govuk-heading-m"><a id="SetPaymentOrder" href="@Url.CommitmentsV2Link($"/accounts/{Model.AccountHashedId}/apprentices/manage/paymentorder")" class="govuk-link">Set payment order</a></h2>
                     <p>View and change the order in which your providers are paid from your available funds.</p>
                 </div>
             }

@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Home;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Home
 {
@@ -18,11 +18,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Home
 
         public async Task<IndexViewModel> Map(IndexRequest source)
         {
-            var providers = await _commitmentsApiClient.GetApprovedProviders(source.AccountId, default(CancellationToken));
+            var response = await _commitmentsApiClient.GetProviderPaymentsPriority(source.AccountId, default(CancellationToken));
             return new IndexViewModel
             {
                 AccountHashedId = source.AccountHashedId,
-                ShowSetPaymentOrderLink = providers.ProviderIds.Count() > 1
+                ShowSetPaymentOrderLink = response.ProviderPaymentPriorities.Count() > 1
             };
         }
     }
