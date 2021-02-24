@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -12,6 +13,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -140,7 +142,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         private async Task SetFundingBandCap(string courseCode, IEnumerable<CohortDraftApprenticeshipViewModel> draftApprenticeships)
         {
-            var course =  await _commitmentsApiClient.GetTrainingProgramme(courseCode);
+            GetTrainingProgrammeResponse course = null;
+            if (!string.IsNullOrEmpty(courseCode))
+            {
+                try
+                {
+                    course =  await _commitmentsApiClient.GetTrainingProgramme(courseCode);
+                }
+                catch (RestHttpClientException e)
+                {
+                    if (e.StatusCode != HttpStatusCode.NotFound)
+                    {
+                        throw;
+                    }
+                }    
+            }
             
             foreach (var draftApprenticeship in draftApprenticeships)
             {
