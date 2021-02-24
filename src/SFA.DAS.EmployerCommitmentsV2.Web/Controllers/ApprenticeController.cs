@@ -33,9 +33,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ILinkGenerator _linkGenerator;
         private readonly ILogger<ApprenticeController> _logger;
         private readonly IAuthorizationService _authorizationService;
-        public const string ApprenticePausedMessage = "Apprenticeship paused";
-        public const string ApprenticeResumeMessage = "Apprenticeship resumed";
-        public const string ApprenticeStoppedMessage = "Apprenticeship stopped";
+        private const string ApprenticePausedMessage = "Apprenticeship paused";
+        private const string ApprenticeResumeMessage = "Apprenticeship resumed";
+        private const string ApprenticeStoppedMessage = "Apprenticeship stopped";
 
         public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILinkGenerator linkGenerator, ILogger<ApprenticeController> logger, IAuthorizationService authorizationService)
         {
