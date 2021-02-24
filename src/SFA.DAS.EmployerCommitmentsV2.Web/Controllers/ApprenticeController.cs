@@ -422,6 +422,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
         }
 
+        [Route(" {apprenticeshipHashedId}/change-provider/confirmStop")]
+        [HttpGet]
+        public async Task<IActionResult> CopConfirmStopRequest(CopConfirmStopRequest request)
+        {
+            var viewModel = await _modelMapper.Map<CopConfirmStopRequestViewModel>(request);
+            return View(viewModel);
+        }
+
+
         [Route("{apprenticeshipHashedId}/details/pause")]
         [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [HttpGet]
