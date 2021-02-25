@@ -411,7 +411,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
                 if (viewModel.IsCoPJourney)
                 {
-                    return RedirectToAction(nameof(EnterNewTrainingProvider), new
+                    return RedirectToAction(nameof(ApprenticeshipStoppedInform), new
                     {
                         viewModel.AccountHashedId,
                         viewModel.ApprenticeshipHashedId
@@ -422,14 +422,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
         }
 
-        [Route(" {apprenticeshipHashedId}/change-provider/confirmStop")]
+        [Route("{apprenticeshipHashedId}/change-provider/apprenticeshipStopped")]
         [HttpGet]
-        public async Task<IActionResult> CopConfirmStopRequest(CopConfirmStopRequest request)
+        public IActionResult ApprenticeshipStoppedInform()
         {
-            var viewModel = await _modelMapper.Map<CopConfirmStopRequestViewModel>(request);
-            return View(viewModel);
+            return View();
         }
-
 
         [Route("{apprenticeshipHashedId}/details/pause")]
         [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
