@@ -9,19 +9,11 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing.AutoFixture;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
     public class WhenPostingChangeStatus : ApprenticeControllerTestBase
     {
-        private const string ApprenticeStoppedMessage = "Apprenticeship stopped";
-        private const string ApprenticeResumeMessage = "Apprenticeship resumed";
-        public const string ApprenticePausedMessage = "Apprenticeship paused";
-        private const string FlashMessage = "FlashMessage";
-        private const string FlashMessageLevel = "FlashMessageLevel";
-
         [SetUp]
         public void Arrange()
         {
@@ -30,13 +22,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _mockLinkGenerator = new Mock<ILinkGenerator>();
 
-            _controller = new ApprenticeController(_mockModelMapper.Object, 
-                _mockCookieStorageService.Object, 
+            _controller = new ApprenticeController(_mockModelMapper.Object,
+                _mockCookieStorageService.Object,
                 _mockCommitmentsApiClient.Object,
-                _mockLinkGenerator.Object, 
+                _mockLinkGenerator.Object,
                 Mock.Of<ILogger<ApprenticeController>>(),
                 Mock.Of<IAuthorizationService>());
-            _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
         }
 
         [Test, MoqAutoData]
@@ -44,15 +35,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             //Arrange
             viewModel.SelectedStatusChange = ChangeStatusType.Pause;
-           
+
             //Act
             var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("PauseApprenticeship", response.ActionName);
-            Assert.IsTrue(_controller.TempData.Values.Contains(ApprenticePausedMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
+            Assert.AreEqual("PauseApprenticeship", response.ActionName);           
         }
 
         [Test, MoqAutoData]
@@ -79,10 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("StopApprenticeship", response.ActionName);
-            Assert.IsTrue(_controller.TempData.Values.Contains(ApprenticeStoppedMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
+            Assert.AreEqual("StopApprenticeship", response.ActionName);           
         }
 
         [Test, MoqAutoData]
@@ -97,9 +82,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             //Assert
             Assert.AreEqual("HasTheApprenticeBeenMadeRedundant", response.ActionName);
-            Assert.IsTrue(_controller.TempData.Values.Contains(ApprenticeStoppedMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
         }
 
         [Test, MoqAutoData]
@@ -112,10 +94,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("ResumeApprenticeship", response.ActionName);
-            Assert.IsTrue(_controller.TempData.Values.Contains(ApprenticeResumeMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
+            Assert.AreEqual("ResumeApprenticeship", response.ActionName);         
         }
     }
 }

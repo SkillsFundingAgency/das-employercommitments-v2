@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -18,6 +20,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     [TestFixture]
     public class WhenPostingResumeRequestConfirmation : ApprenticeControllerTestBase
     {
+        private const string ApprenticeResumeMessage = "Apprenticeship resumed";
+        private const string FlashMessage = "FlashMessage";
+        private const string FlashMessageLevel = "FlashMessageLevel";
+
         [SetUp]
         public void Arrange()
         {
@@ -32,6 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 _mockLinkGenerator.Object, 
                 Mock.Of<ILogger<ApprenticeController>>(),
                 Mock.Of<IAuthorizationService>());
+            _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
         }
 
         [Test, MoqAutoData]
@@ -59,6 +66,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test, MoqAutoData]
+        public async Task AndConfirmResumeIsSelected_ThenRedirectToApprenticeDetailsPageWithFlashMessage(ResumeRequestViewModel request)
+        {
+            //Arrange
+            request.ResumeConfirmed = true;
+
+            //Act
+            var result = await _controller.ResumeApprenticeship(request) as RedirectToActionResult;
+
+            //Assert
+            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
+            Assert.IsTrue(_controller.TempData.Values.Contains(ApprenticeResumeMessage));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessage));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
+        }
+
+        [Test, MoqAutoData]
         public async Task AndGoBackIsSelected_ThenCommitmentsApiResumeApprenticeshipIsNotCalled(ResumeRequestViewModel request)
         {
             //Arrange
@@ -82,6 +105,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             //Assert
             Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
+        }
+
+        [Test, MoqAutoData]
+        public async Task AndGoBackIsSelected_ThenRedirectToApprenticeDetailsPageWithoutFlashMessage(ResumeRequestViewModel request)
+        {
+            //Arrange
+            request.ResumeConfirmed = false;
+
+            //Act
+            var result = await _controller.ResumeApprenticeship(request) as RedirectToActionResult;
+
+            //Assert
+            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
+            Assert.IsFalse(_controller.TempData.Values.Contains(ApprenticeResumeMessage));
+            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessage));
+            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessageLevel));
         }
     }
 }

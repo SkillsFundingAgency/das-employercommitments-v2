@@ -114,14 +114,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             switch (viewModel.SelectedStatusChange)
             {
                 case ChangeStatusType.Pause:
-                    TempData.AddFlashMessage(ApprenticePausedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
                     return RedirectToAction(nameof(PauseApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 case ChangeStatusType.Stop:
-                    TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
                     var redirectToActionName = viewModel.CurrentStatus == CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart ? nameof(HasTheApprenticeBeenMadeRedundant) : nameof(StopApprenticeship);
                     return RedirectToAction(redirectToActionName, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 case ChangeStatusType.Resume:
-                    TempData.AddFlashMessage(ApprenticeResumeMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
                     return RedirectToAction(nameof(ResumeApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 default:  
                     return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest {AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
@@ -445,10 +442,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             if (viewModel.PauseConfirmed.HasValue && viewModel.PauseConfirmed.Value)
             {
                 var pauseRequest = new PauseApprenticeshipRequest { ApprenticeshipId = viewModel.ApprenticeshipId };
-
+                
                 await _commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
+                
+                TempData.AddFlashMessage(ApprenticePausedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
             }
-
+            
             return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });            
         }
 
@@ -471,8 +470,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 var resumeRequest = new ResumeApprenticeshipRequest { ApprenticeshipId = viewModel.ApprenticeshipId };
 
                 await _commitmentsApiClient.ResumeApprenticeship(resumeRequest, CancellationToken.None);
-            }
 
+                TempData.AddFlashMessage(ApprenticeResumeMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
+            }
+            
             return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
         }
 
