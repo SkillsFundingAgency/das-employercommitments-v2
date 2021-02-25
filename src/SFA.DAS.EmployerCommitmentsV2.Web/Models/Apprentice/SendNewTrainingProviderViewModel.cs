@@ -16,5 +16,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string NewProviderName { get; set; }
         public ApprenticeshipStatus ApprenticeshipStatus { get; set; }
         public bool? Confirm { get; set; }
+        public bool? StoppedDuringCoP { get; set; }
     }
 }

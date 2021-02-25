@@ -12,7 +12,6 @@
             <h1 class="govuk-panel__title"> Change of training provider requested </h1>
         </div>
 
-        <h2 class="govuk-heading-m"> What happens next </h2>
 
         @if (Model.StoppedDuringCoP)
         {
@@ -24,6 +23,8 @@
                 We will create a new record in your apprenticeship service account once you both approve the details.
             </p>
         }
+
+        <h2 class="govuk-heading-m"> What happens next </h2>
 
         @if (Model.ProviderAddDetails)
         {
