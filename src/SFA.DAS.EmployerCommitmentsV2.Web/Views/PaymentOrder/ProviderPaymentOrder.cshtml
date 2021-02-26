@@ -26,17 +26,19 @@
                     <ol class="govuk-list govuk-list--number govuk-!-width-two-thirds govuk-!-margin-top-6 govuk-!-margin-bottom-9">
                         @for (int priority = 1; priority <= Model.ProviderPaymentOrder.Count(); priority++)
                         {
+                            string id = $"provider-payment-order-{priority}";
+
                             <li class="govuk-!-margin-bottom-4">
                                 <label class="govuk-visually-hidden" for="providerList">Select a provider to set order of payment</label>
-                                <select asp-for="ProviderPaymentOrder[priority-1]" asp-items="Model.ProviderSelectListItems()" aria-label="Select a provider" class="govuk-select das-select--select2"></select>
+                                <select id="@id" asp-for="ProviderPaymentOrder[priority-1]" asp-items="Model.ProviderSelectListItems()" aria-label="Select a provider" class="govuk-select das-select--select2"></select>
                             </li>
                         }
                     </ol>
                 </fieldset>
             </div>
             <div class="govuk-button-group">
-                <input type="submit" class="govuk-button" data-module="govuk-button" value="Save and continue" />
-                <a asp-action="Index" asp-controller="Home" asp-route-accountHashedId="@Model.AccountHashedId" class="govuk-link" data-module="govuk-button">
+                <input id="save-button" type="submit" class="govuk-button" data-module="govuk-button" value="Save and continue" />
+                <a id="cancel-link" asp-action="Index" asp-controller="Home" asp-route-accountHashedId="@Model.AccountHashedId" class="govuk-link" data-module="govuk-button">
                     Cancel and return
                 </a>
             </div>
