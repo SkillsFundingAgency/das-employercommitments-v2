@@ -8,13 +8,13 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.EmployerManageApprentices;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
 using SFA.DAS.Testing.AutoFixture;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.EmployerManageApprenticesControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderControllerTests
 {
     public class WhenCallingPostPaymentOrder
     {
@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.EmployerManage
         public async Task And_UpdateProviderPaymentsPriority_Succeeds_Then_Redirect_To_Home(
             Mock<IAuthenticationService> mockAuthenticationService,
             Mock<ICommitmentsApiClient> mockCommitmentsApiClient,
-            EmployerManageApprenticesController controller)
+            PaymentOrderController controller)
         {
             PaymentOrderViewModel viewModel = new PaymentOrderViewModel
             {
@@ -66,7 +66,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.EmployerManage
         [Test, MoqAutoData]
         public async Task And_UpdateProviderPaymentsPriority_Fails_Then_Redirect_To_Error(
             Mock<IAuthenticationService> mockAuthenticationService,
-            EmployerManageApprenticesController controller)
+            PaymentOrderController controller)
         {
             PaymentOrderViewModel viewModel = new PaymentOrderViewModel
             {

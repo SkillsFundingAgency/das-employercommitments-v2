@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.EmployerManageApprentices;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
 using System.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators

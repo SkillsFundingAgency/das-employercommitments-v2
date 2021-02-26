@@ -6,10 +6,10 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.EmployerManageApprentices;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.EmployerManageApprenticesControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderControllerTests
 
 {
     public class WhenCallingGetPaymentOrder
@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.EmployerManage
             PaymentOrderRequest request,
             PaymentOrderViewModel viewModel,
             [Frozen] Mock<IModelMapper> mockMapper,
-            EmployerManageApprenticesController controller)
+            PaymentOrderController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map<PaymentOrderViewModel>(request))

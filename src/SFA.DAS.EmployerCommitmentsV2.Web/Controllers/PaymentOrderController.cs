@@ -7,7 +7,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.EmployerManageApprentices;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,15 +16,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
     [DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
     [Route("accounts/{accountHashedId}/apprentices/manage")]
-    public class EmployerManageApprenticesController : Controller
+    public class PaymentOrderController : Controller
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly ILogger<EmployerManageApprenticesController> _logger;
+        private readonly ILogger<PaymentOrderController> _logger;
         private readonly IModelMapper _modelMapper;
 
-        public EmployerManageApprenticesController(
+        public PaymentOrderController(
             ICommitmentsApiClient commitmentsApiClient,
-            ILogger<EmployerManageApprenticesController> logger,
+            ILogger<PaymentOrderController> logger,
             IModelMapper modelMapper)
         {
             _commitmentsApiClient = commitmentsApiClient;
@@ -64,7 +64,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex,
-                    $"Failed to set payment order '{nameof(EmployerManageApprenticesController)}-{nameof(PaymentOrder)}'");
+                    $"Failed to set payment order '{nameof(PaymentOrderController)}-{nameof(PaymentOrder)}'");
             }
 
             return RedirectToAction("Error", "Error");
