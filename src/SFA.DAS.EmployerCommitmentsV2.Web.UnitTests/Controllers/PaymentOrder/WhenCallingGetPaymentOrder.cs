@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
                 .Setup(mapper => mapper.Map<PaymentOrderViewModel>(request))
                 .ReturnsAsync(viewModel);
 
-            var result = await controller.PaymentOrder(request) as ViewResult;
+            var result = await controller.ProviderPaymentOrder(request) as ViewResult;
 
             result.ViewName.Should().BeNull();
             var model = result.Model as PaymentOrderViewModel;

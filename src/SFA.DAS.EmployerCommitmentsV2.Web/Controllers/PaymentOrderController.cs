@@ -33,8 +33,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
-        [Route("paymentorder", Name = "PaymentOrder")]
-        public async Task<ActionResult> PaymentOrder(PaymentOrderRequest request)
+        [Route("paymentorder", Name = "ProviderPaymentOrder")]
+        public async Task<ActionResult> ProviderPaymentOrder(PaymentOrderRequest request)
         {
             var viewModel = await _modelMapper.Map<PaymentOrderViewModel>(request);
             return View(viewModel);
@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("paymentorder")]
         [HttpPost]
-        public async Task<IActionResult> PaymentOrder([FromServices] IAuthenticationService authenticationService, PaymentOrderViewModel viewModel)
+        public async Task<IActionResult> ProviderPaymentOrder([FromServices] IAuthenticationService authenticationService, PaymentOrderViewModel viewModel)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex,
-                    $"Failed to set payment order '{nameof(PaymentOrderController)}-{nameof(PaymentOrder)}'");
+                    $"Failed to set payment order '{nameof(PaymentOrderController)}-{nameof(ProviderPaymentOrder)}'");
             }
 
             return RedirectToAction("Error", "Error");

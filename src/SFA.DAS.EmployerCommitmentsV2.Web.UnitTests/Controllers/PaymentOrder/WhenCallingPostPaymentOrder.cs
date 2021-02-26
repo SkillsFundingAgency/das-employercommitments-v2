@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
                 viewModel.AccountHashedId
             });
 
-            var result = (await controller.PaymentOrder(mockAuthenticationService.Object, viewModel)) as RedirectToActionResult;
+            var result = (await controller.ProviderPaymentOrder(mockAuthenticationService.Object, viewModel)) as RedirectToActionResult;
 
             result.Should().NotBeNull();
             result.ActionName.Should().Be("Index");
@@ -85,7 +85,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
                     UserEmail = "tester@test.com"
                 });
 
-            var result = (await controller.PaymentOrder(mockAuthenticationService.Object, viewModel)) as RedirectToActionResult;
+            var result = (await controller.ProviderPaymentOrder(mockAuthenticationService.Object, viewModel)) as RedirectToActionResult;
 
             result.Should().NotBeNull();
             result.ActionName.Should().Be("Error");
