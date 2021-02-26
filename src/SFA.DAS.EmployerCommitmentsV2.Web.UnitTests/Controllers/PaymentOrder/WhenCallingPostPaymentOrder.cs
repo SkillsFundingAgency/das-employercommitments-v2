@@ -1,12 +1,12 @@
-﻿using FluentAssertions;
+﻿using AutoFixture.NUnit3;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
 using SFA.DAS.Testing.AutoFixture;
@@ -20,19 +20,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
     {
         [Test, MoqAutoData]
         public async Task And_UpdateProviderPaymentsPriority_Succeeds_Then_Redirect_To_Home(
-            Mock<IAuthenticationService> mockAuthenticationService,
             Mock<ICommitmentsApiClient> mockCommitmentsApiClient,
+            UpdateProviderPaymentsPriorityRequest request,
+            PaymentOrderViewModel viewModel,
+            [Frozen] Mock<IModelMapper> mockMapper,
             PaymentOrderController controller)
         {
-            PaymentOrderViewModel viewModel = new PaymentOrderViewModel
-            {
-                ProviderPaymentOrder = new string[]
-                {
-                    "12345678",
-                    "23456789",
-                    "34567890"
-                }
-            };
+            mockMapper
+                .Setup(mapper => mapper.Map<UpdateProviderPaymentsPriorityRequest>(viewModel))
+                .ReturnsAsync(request);
 
             mockCommitmentsApiClient
                 .Setup(r => r.UpdateProviderPaymentsPriority(
@@ -41,21 +37,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
                     It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
-            mockAuthenticationService
-                .SetupGet(p => p.UserInfo)
-                .Returns(new UserInfo
-                {
-                    UserId = Guid.NewGuid().ToString(),
-                    UserDisplayName = "Test, Tester",
-                    UserEmail = "tester@test.com"
-                });
-
             var expectedRouteValues = new RouteValueDictionary(new
             {
                 viewModel.AccountHashedId
             });
 
-            var result = (await controller.ProviderPaymentOrder(mockAuthenticationService.Object, viewModel)) as RedirectToActionResult;
+            var result = (await controller.ProviderPaymentOrder(viewModel)) as RedirectToActionResult;
 
             result.Should().NotBeNull();
             result.ActionName.Should().Be("Index");
@@ -65,27 +52,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
 
         [Test, MoqAutoData]
         public async Task And_UpdateProviderPaymentsPriority_Fails_Then_Redirect_To_Error(
-            Mock<IAuthenticationService> mockAuthenticationService,
+            PaymentOrderViewModel viewModel,
+            [Frozen] Mock<IModelMapper> mockMapper,
             PaymentOrderController controller)
         {
-            PaymentOrderViewModel viewModel = new PaymentOrderViewModel
-            {
-                ProviderPaymentOrder = new string[]
-                {
-                    "not a number"
-                }
-            };
+            mockMapper
+                .Setup(mapper => mapper.Map<UpdateProviderPaymentsPriorityRequest>(viewModel))
+                .ThrowsAsync(new Exception("Some error"));
 
-            mockAuthenticationService
-                .SetupGet(p => p.UserInfo)
-                .Returns(new UserInfo
-                {
-                    UserId = Guid.NewGuid().ToString(),
-                    UserDisplayName = "Test, Tester",
-                    UserEmail = "tester@test.com"
-                });
-
-            var result = (await controller.ProviderPaymentOrder(mockAuthenticationService.Object, viewModel)) as RedirectToActionResult;
+            var result = (await controller.ProviderPaymentOrder(viewModel)) as RedirectToActionResult;
 
             result.Should().NotBeNull();
             result.ActionName.Should().Be("Error");

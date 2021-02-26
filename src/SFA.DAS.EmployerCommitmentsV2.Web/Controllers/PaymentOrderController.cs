@@ -42,23 +42,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("paymentorder")]
         [HttpPost]
-        public async Task<IActionResult> ProviderPaymentOrder([FromServices] IAuthenticationService authenticationService, PaymentOrderViewModel viewModel)
+        public async Task<IActionResult> ProviderPaymentOrder(PaymentOrderViewModel viewModel)
         {
             try
             {
-                await _commitmentsApiClient.UpdateProviderPaymentsPriority(viewModel.AccountId,
-                        new UpdateProviderPaymentsPriorityRequest
-                        {
-                            ProviderPriorities = viewModel.ProviderPaymentOrder
-                                .Select((p, index) => new UpdateProviderPaymentsPriorityRequest.ProviderPaymentPriorityUpdateItem
-                                {
-                                    ProviderId = long.Parse(p),
-                                    PriorityOrder = index + 1
-                                })
-                                .ToList(),
-                            UserInfo = authenticationService.UserInfo
-                        });
-
+                var request = await _modelMapper.Map<UpdateProviderPaymentsPriorityRequest>(viewModel);
+                await _commitmentsApiClient.UpdateProviderPaymentsPriority(viewModel.AccountId, request);
+                
                 return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).ControllerName(), new { viewModel.AccountHashedId });
             }
             catch (Exception ex)
