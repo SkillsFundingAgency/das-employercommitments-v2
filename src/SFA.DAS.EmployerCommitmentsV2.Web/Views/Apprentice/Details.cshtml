@@ -49,7 +49,7 @@
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
 
         @{ if (!Model.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) &&
-                                    Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
+                                     Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
             {
                 <p class="govuk-body">
                     Edit details if there's a change in apprentice or apprenticeship circumstances.
@@ -79,7 +79,7 @@
                             {
                                 @Model.PauseDate.Value.ToGdsFormat()
                             }
-                        </td>                        
+                        </td>
                     </tr>
                 }
 
@@ -92,7 +92,7 @@
                             {
                                 @Model.CompletionDate.Value.ToGdsFormatLongMonthNameWithoutDay();
                             }
-                        </td>                        
+                        </td>
                     </tr>
                 }
 
@@ -105,10 +105,10 @@
                             {
                                 @Model.StopDate.Value.ToGdsFormatLongMonthWithoutDay()
                             }
-                        </td>                     
-                        <td id="editStopDateLink" class="govuk-table__cell govuk-table__cell--numeric">                        
+                        </td>
+                        <td id="editStopDateLink" class="govuk-table__cell govuk-table__cell--numeric">
                             <a id="edit-stopped-link" class="govuk-link" href="@Url.Action("StopApprenticeship", new StopRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit</a>
-                        </td>                       
+                        </td>
                     </tr>
 
                     @if (Model.MadeRedundant.HasValue)
@@ -153,11 +153,11 @@
                     <a id="edit-apprentice-link" href="@LinkGenerator.EditApprenticeship(Model.AccountHashedId, Model.HashedApprenticeshipId)" class="govuk-link govuk-body">Edit</a>
                 }
             </div>
-        </div>       
+        </div>
         <table class="govuk-table govuk-!-margin-bottom-8">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header  das-table-cell-width-45"">Name</th>
+                    <th scope="row" class="govuk-table__header  das-table-cell-width-45" ">Name</th>
                     <td id="apprentice-name" class="govuk-table__cell das-table-cell-width-55">@Model.ApprenticeName</td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -183,7 +183,7 @@
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header das-table-cell-width-45">Apprenticeship training course </th>
-                    <td class="govuk-table__cell das-table-cell-width-55" colspan="2" >@Model.TrainingName </td>
+                    <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.TrainingName </td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Planned training start date</th>
@@ -229,7 +229,6 @@
     </div>
 </div>
 
-@section Back
-{
-    <div class="das-js-back-link"></div>
+@section back {
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Back to manage your apprentices</a>
 }
