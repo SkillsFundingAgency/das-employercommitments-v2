@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -18,6 +20,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     [TestFixture]
     public class WhenPostingPauseRequestConfirmation : ApprenticeControllerTestBase
     {
+        public const string ApprenticePausedMessage = "Apprenticeship paused";
+        private const string FlashMessage = "FlashMessage";
+        private const string FlashMessageLevel = "FlashMessageLevel";
+
         [SetUp]
         public void Arrange()
         {
@@ -32,6 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 _mockLinkGenerator.Object, 
                 Mock.Of<ILogger<ApprenticeController>>(),
                 Mock.Of<IAuthorizationService>());
+            _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
         }
 
         [Test, MoqAutoData]
@@ -58,6 +65,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test, MoqAutoData]
+        public async Task AndConfirmPauseIsSelected_ThenRedirectToApprenticeDetailsPageWithFlashMessage(PauseRequestViewModel request)
+        {
+            //Arrange
+            request.PauseConfirmed = true;
+
+            //Act
+            var result = await _controller.PauseApprenticeship(request) as RedirectToActionResult;
+
+            //Assert
+            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
+            Assert.IsTrue(_controller.TempData.Values.Contains(ApprenticePausedMessage));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessage));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
+        }
+
+        [Test, MoqAutoData]
         public async Task AndGoBackIsSelected_ThenCommitmentsApiPauseApprenticeshipIsNotCalled(PauseRequestViewModel request)
         {
             //Arrange
@@ -81,6 +104,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             //Assert
             Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
+        }
+
+        [Test, MoqAutoData]
+        public async Task AndGoBackIsSelected_ThenRedirectToApprenticeDetailsPageWithoutFlashMessage(PauseRequestViewModel request)
+        {
+            //Arrange
+            request.PauseConfirmed = false;
+
+            //Act
+            var result = await _controller.PauseApprenticeship(request) as RedirectToActionResult;
+
+            //Assert
+            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
+            Assert.IsFalse(_controller.TempData.Values.Contains(ApprenticePausedMessage));
+            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessage));
+            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessageLevel));
         }
     }
 }

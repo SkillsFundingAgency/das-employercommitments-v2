@@ -13,7 +13,7 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
     public class WhenPostingChangeStatus : ApprenticeControllerTestBase
-    { 
+    {
         [SetUp]
         public void Arrange()
         {
@@ -22,10 +22,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _mockLinkGenerator = new Mock<ILinkGenerator>();
 
-            _controller = new ApprenticeController(_mockModelMapper.Object, 
-                _mockCookieStorageService.Object, 
+            _controller = new ApprenticeController(_mockModelMapper.Object,
+                _mockCookieStorageService.Object,
                 _mockCommitmentsApiClient.Object,
-                _mockLinkGenerator.Object, 
+                _mockLinkGenerator.Object,
                 Mock.Of<ILogger<ApprenticeController>>(),
                 Mock.Of<IAuthorizationService>());
         }
@@ -33,39 +33,68 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [Test, MoqAutoData]
         public void AndPauseIsSelected_ThenRedirectToPauseApprenticeshipAction(ChangeStatusRequestViewModel viewModel)
         {
+            //Arrange
             viewModel.SelectedStatusChange = ChangeStatusType.Pause;
-           
+
+            //Act
             var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
-            Assert.AreEqual("PauseApprenticeship", response.ActionName);
+            //Assert
+            Assert.AreEqual("PauseApprenticeship", response.ActionName);           
         }
 
         [Test, MoqAutoData]
         public void AndGoBackIsSelected_ThenRedirectToPauseApprenticeshipAction(ChangeStatusRequestViewModel viewModel)
         {
+            //Arrange
             viewModel.SelectedStatusChange = ChangeStatusType.GoBack;
 
+            //Act
             var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
+            //Assert
             Assert.AreEqual("ApprenticeshipDetails", response.ActionName);
         }
 
         [Test, MoqAutoData]
         public void AndStopIsSelected_ThenRedirectToV1WhenToApplyStopAction(ChangeStatusRequestViewModel viewModel)
         {
+            //Arrange
             viewModel.SelectedStatusChange = ChangeStatusType.Stop;
             viewModel.CurrentStatus = CommitmentsV2.Types.ApprenticeshipStatus.Live;
-            var response = _controller.ChangeStatus(viewModel);
-            response.VerifyReturnsRedirectToActionResult().WithActionName("StopApprenticeship");
+
+            //Act
+            var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
+
+            //Assert
+            Assert.AreEqual("StopApprenticeship", response.ActionName);           
         }
 
         [Test, MoqAutoData]
         public void AndStopIsSelected_ThenRedirectToV1WhenToHasTheApprenticeBeenMadeRedundant(ChangeStatusRequestViewModel viewModel)
         {
+            //Arrange
             viewModel.SelectedStatusChange = ChangeStatusType.Stop;
             viewModel.CurrentStatus = CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart;
-            var response = _controller.ChangeStatus(viewModel);
-            response.VerifyReturnsRedirectToActionResult().WithActionName("HasTheApprenticeBeenMadeRedundant");
+
+            //Act
+            var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
+
+            //Assert
+            Assert.AreEqual("HasTheApprenticeBeenMadeRedundant", response.ActionName);
+        }
+
+        [Test, MoqAutoData]
+        public void AndPauseIsSelected_ThenRedirectToResumeApprenticeshipAction(ChangeStatusRequestViewModel viewModel)
+        {
+            //Arrange
+            viewModel.SelectedStatusChange = ChangeStatusType.Resume;
+
+            //Act
+            var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
+
+            //Assert
+            Assert.AreEqual("ResumeApprenticeship", response.ActionName);         
         }
     }
 }
