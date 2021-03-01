@@ -412,6 +412,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
                 await _commitmentsApiClient.StopApprenticeship(viewModel.ApprenticeshipId, stopApprenticeshipRequest, CancellationToken.None);
 
+                TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
+
                 if (viewModel.IsCoPJourney)
                 {
                     return RedirectToAction(nameof(EnterNewTrainingProvider), new
