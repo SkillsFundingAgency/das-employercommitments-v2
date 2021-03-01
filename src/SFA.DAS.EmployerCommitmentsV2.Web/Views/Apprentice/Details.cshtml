@@ -230,5 +230,5 @@
 </div>
 
 @section back {
-    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Back to manage your apprentices</a>
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", new IndexRequest { AccountHashedId = Model.AccountHashedId, FromSearch = true})">Back to manage your apprentices</a>
 }

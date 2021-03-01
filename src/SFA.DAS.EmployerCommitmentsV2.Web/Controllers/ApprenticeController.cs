@@ -412,7 +412,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
                 await _commitmentsApiClient.StopApprenticeship(viewModel.ApprenticeshipId, stopApprenticeshipRequest, CancellationToken.None);
 
-                TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
+                TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
 
                 if (viewModel.IsCoPJourney)
                 {
@@ -447,7 +447,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 
                 await _commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
                 
-                TempData.AddFlashMessage(ApprenticePausedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
+                TempData.AddFlashMessage(ApprenticePausedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
             
             return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });            
@@ -473,7 +473,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
                 await _commitmentsApiClient.ResumeApprenticeship(resumeRequest, CancellationToken.None);
 
-                TempData.AddFlashMessage(ApprenticeResumeMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
+                TempData.AddFlashMessage(ApprenticeResumeMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
             
             return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
@@ -486,7 +486,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
             if (viewModel.ApprenticeshipStatus == ApprenticeshipStatus.Stopped)
             {
-                TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
+                TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
 
             return View("details", viewModel);
