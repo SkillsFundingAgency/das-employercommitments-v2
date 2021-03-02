@@ -4,7 +4,7 @@
     var message = TempData[ITempDataDictionaryExtensions.FlashMessageTempDataKey];
     var level = (ITempDataDictionaryExtensions.FlashMessageLevel) TempData[ITempDataDictionaryExtensions.FlashMessageLevelTempDataKey];
     
-<div class="govuk-grid-column-two-thirds das-notification das-notification--@GetCssClassForLevel(level)" tabindex="-1">    
+<div class="govuk-grid-column-two-thirds das-notification govuk-!-margin-bottom-4 das-notification--@GetCssClassForLevel(level)" tabindex="-1">    
     <h3 class="das-notification__heading">@message</h3>
 </div>
 }
