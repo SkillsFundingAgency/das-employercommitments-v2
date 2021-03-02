@@ -74,6 +74,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         }
 
         [Test, AutoData]
+        public void ApprenticeEditStopDate_BuildsPathCorrectly(string accountHashedId, string hashedApprenticeshipId)
+        {
+            var url = _fixture.Sut.EditStopDate(accountHashedId, hashedApprenticeshipId);
+
+            Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details/editstopdate", url);
+        }
+
+        [Test, AutoData]
         public void ApprenticeViewChanges_BuildsPathCorrectly(string accountHashedId, string hashedApprenticeshipId)
         {
             var url = _fixture.Sut.ViewChanges(accountHashedId, hashedApprenticeshipId);

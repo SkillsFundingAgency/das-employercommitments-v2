@@ -14,6 +14,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             return linkGenerator.AccountsLink($"accounts/{accountHashedId}/schemes");
         }
 
+        public static string EditStopDate(
+          this ILinkGenerator linkGenerator,
+          string accountHashedId,
+          string hashedApprenticeshipId)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/details/editstopdate");
+        }
+
         public static string ApprenticeDetails(
             this ILinkGenerator linkGenerator,
             string accountHashedId,
