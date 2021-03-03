@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -45,17 +46,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Home
         {
             private IndexViewModelMapper _mapper;
             private Mock<ICommitmentsApiClient> _apiClient;
+            private Mock<ILogger<IndexViewModelMapper>> _logger;
             private GetProviderPaymentsPriorityResponse _apiProvidersResponse;
             private IndexRequest _request;
             private IndexViewModel _result;
 
             public IndexViewModelMapperTestsFixture()
             {
-                var autoFixture = new Fixture();                
+                var autoFixture = new Fixture();
 
                 _apiClient = new Mock<ICommitmentsApiClient>();
+                _logger = new Mock<ILogger<IndexViewModelMapper>>();
 
-                _mapper = new IndexViewModelMapper(_apiClient.Object);
+                _mapper = new IndexViewModelMapper(_apiClient.Object, _logger.Object);
                 _request = autoFixture.Create<IndexRequest>();
             }
 

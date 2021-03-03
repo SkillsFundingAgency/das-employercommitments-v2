@@ -1,6 +1,8 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using Microsoft.Extensions.Logging;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Home;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,20 +12,30 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Home
     public class IndexViewModelMapper : IMapper<IndexRequest, IndexViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly ILogger<IndexViewModelMapper> _logger;
 
-        public IndexViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
+        public IndexViewModelMapper(ICommitmentsApiClient commitmentsApiClient, ILogger<IndexViewModelMapper> logger)
         {
             _commitmentsApiClient = commitmentsApiClient;
+            _logger = logger;
         }
 
         public async Task<IndexViewModel> Map(IndexRequest source)
         {
-            var response = await _commitmentsApiClient.GetProviderPaymentsPriority(source.AccountId, default(CancellationToken));
-            return new IndexViewModel
+            try
             {
-                AccountHashedId = source.AccountHashedId,
-                ShowSetPaymentOrderLink = response.ProviderPaymentPriorities.Count() > 1
-            };
+                var response = await _commitmentsApiClient.GetProviderPaymentsPriority(source.AccountId, default(CancellationToken));
+                return new IndexViewModel
+                {
+                    AccountHashedId = source.AccountHashedId,
+                    ShowSetPaymentOrderLink = response.ProviderPaymentPriorities.Count() > 1
+                };
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Unable to map index view model");
+                throw;
+            }
         }
     }
 }
