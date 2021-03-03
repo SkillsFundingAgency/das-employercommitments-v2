@@ -9,7 +9,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string AccountHashedId { get; set; }
         [FromRoute]
         public string ApprenticeshipHashedId { get; set; }
-        [FromRoute]
+        [FromQuery]
         public bool? StoppedDuringCoP { get; set; }
         public long? ApprenticeshipId { get; set; }
         public long? ProviderId { get; set; }
