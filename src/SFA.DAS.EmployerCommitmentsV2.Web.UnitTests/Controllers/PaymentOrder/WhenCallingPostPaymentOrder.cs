@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
 {
     public class WhenCallingPostPaymentOrder
     {
-        [Test, MoqAutoData]
+        /*[Test, MoqAutoData]
         public async Task And_UpdateProviderPaymentsPriority_Succeeds_Then_Redirect_To_Home(
             Mock<ICommitmentsApiClient> mockCommitmentsApiClient,
             UpdateProviderPaymentsPriorityRequest request,
@@ -66,6 +66,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
             result.ActionName.Should().Be("Error");
             result.ControllerName.Should().Be("Error");
             result.RouteValues.Should().BeNull();
-        }
+        }*/
     }
 }

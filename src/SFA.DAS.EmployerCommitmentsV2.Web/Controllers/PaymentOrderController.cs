@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    [DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
+    /*[DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
     [Route("accounts/{accountHashedId}/apprentices/manage")]
     public class PaymentOrderController : Controller
     {
@@ -59,5 +59,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             return RedirectToAction("Error", "Error");
         }
-    }
+    }*/
 }

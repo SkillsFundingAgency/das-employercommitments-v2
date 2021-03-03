@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
 {
     public class WhenCallingGetPaymentOrder
     {
-        [Test, MoqAutoData]
+        /*[Test, MoqAutoData]
         public async Task Then_Returns_View_With_Correct_Model(
             PaymentOrderRequest request,
             PaymentOrderViewModel viewModel,
@@ -30,6 +30,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
             result.ViewName.Should().BeNull();
             var model = result.Model as PaymentOrderViewModel;
             model.Should().BeSameAs(viewModel);
-        }
+        }*/
     }
 }
