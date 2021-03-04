@@ -1,0 +1,14 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+<div class="govuk-inset-text">
+    <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Changes for review</h2>
+    <p class="govuk-body-s govuk-!-margin-bottom-1">
+        The training provider has made a change which needs to be reviewed and approved by the employer;
+    </p>
+    <p class="govuk-body-s">
+        <a id="review-changes-banner-link" href="@LinkGenerator.ReviewChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)" class="govuk-link">Review changes</a>
+    </p>
+</div>

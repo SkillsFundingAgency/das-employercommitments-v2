@@ -1,5 +1,7 @@
 ﻿using AutoFixture;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -19,7 +21,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     [TestFixture]
     public class WhenPostingConfirmStopApprenticeship : ApprenticeControllerTestBase
     {
-       
+        private const string ApprenticeStoppedMessage = "Apprenticeship stopped";
+        private const string FlashMessage = "FlashMessage";
+        private const string FlashMessageLevel = "FlashMessageLevel";
+
         [SetUp]
         public void Arrange()
         {
@@ -38,6 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 _mockLinkGenerator.Object, 
                 Mock.Of<ILogger<ApprenticeController>>(),
                 Mock.Of<IAuthorizationService>());
+            _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
         }
 
         [Test, MoqAutoData]
@@ -54,65 +60,96 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [Test, MoqAutoData]
         public async Task AndTheApprenticeship_IsStopped_CommitmentApi_IsCalled(ConfirmStopRequestViewModel viewModel)
         {
+            //Arrange
             viewModel.StopConfirmed = true;
-            await _controller.ConfirmStop(viewModel);
 
+            //Act
+            var result = await _controller.ConfirmStop(viewModel) as RedirectToActionResult;
+
+            //Assert
             _mockCommitmentsApiClient.Verify(x => x.StopApprenticeship(viewModel.ApprenticeshipId, It.IsAny<StopApprenticeshipRequest>(), CancellationToken.None), Times.Once);
         }
 
         [Test, MoqAutoData]
         public async Task AndTheApprenticeship_IsNotStopped_CommitmentApi_IsNotCalled(ConfirmStopRequestViewModel viewModel)
         {
+            //Arrange
             viewModel.StopConfirmed = false;
-            _mockLinkGenerator.Setup(p => p.CommitmentsLink($"accounts/{viewModel.AccountHashedId}/apprentices/manage/{viewModel.ApprenticeshipHashedId}/details"))
-                                .Returns(_apprenticeshipDetailsUrl);
-            await _controller.ConfirmStop(viewModel);
 
+            //Act
+            var result = await _controller.ConfirmStop(viewModel) as RedirectToActionResult;
+
+            //Assert
             _mockCommitmentsApiClient.Verify(x => x.StopApprenticeship(It.IsAny<long>(), It.IsAny<StopApprenticeshipRequest>(), CancellationToken.None), Times.Never);
         }
 
         [Test, MoqAutoData]
         public async Task AndTheApprenticeship_IsStopped_and_Mapper_IsCalled(ConfirmStopRequestViewModel viewModel)
         {
+            //Arrange
             viewModel.StopConfirmed = true;
-            await _controller.ConfirmStop(viewModel);
 
+            //Act
+            var result = await _controller.ConfirmStop(viewModel) as RedirectToActionResult;
+
+            //Assert
             _mockModelMapper.Verify(x => x.Map<StopApprenticeshipRequest>(viewModel), Times.Once);
         }
 
         [Test, MoqAutoData]
         public async Task AndTheApprenticeship_IsNotStopped__and_Mapper_IsNotCalled(ConfirmStopRequestViewModel viewModel)
         {
+            //Arrange
             viewModel.StopConfirmed = false;
-            _mockLinkGenerator.Setup(p => p.CommitmentsLink($"accounts/{viewModel.AccountHashedId}/apprentices/manage/{viewModel.ApprenticeshipHashedId}/details"))
-                                .Returns(_apprenticeshipDetailsUrl);
-            await _controller.ConfirmStop(viewModel);
 
+            //Act
+            var result = await _controller.ConfirmStop(viewModel) as RedirectToActionResult;
+
+            //Assert
             _mockModelMapper.Verify(x => x.Map<StopApprenticeshipRequest>(viewModel), Times.Never);
         }
 
         [Test, MoqAutoData]
         public async Task AndTheApprenticeship_IsNotStopped_And_IsCopJourney_ThenRedirectsToApprenticeshipDetails(ConfirmStopRequestViewModel viewModel)
         {
+            //Arrange
             viewModel.StopConfirmed = false;
-            _mockLinkGenerator.Setup(p => p.CommitmentsLink($"accounts/{viewModel.AccountHashedId}/apprentices/manage/{viewModel.ApprenticeshipHashedId}/details"))
-             .Returns(_apprenticeshipDetailsUrl);
 
-            var result = await _controller.ConfirmStop(viewModel) as RedirectResult; ;
+            //Act
+            var result = await _controller.ConfirmStop(viewModel) as RedirectToActionResult;
 
-            Assert.AreEqual(_apprenticeshipDetailsUrl, result.Url);
+            //Assert
+            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
         }
 
         [Test, MoqAutoData]
         public async Task AndTheApprenticeship_IsNotStopped_And_IsNotCopJourney_ThenRedirectsToApprenticeshipDetails(ConfirmStopRequestViewModel viewModel)
         {
+            //Arrange
             viewModel.StopConfirmed = false;
-            _mockLinkGenerator.Setup(p => p.CommitmentsLink($"accounts/{viewModel.AccountHashedId}/apprentices/manage/{viewModel.ApprenticeshipHashedId}/details"))
-             .Returns(_apprenticeshipDetailsUrl);
 
-            var result = await _controller.ConfirmStop(viewModel) as RedirectResult; ;
+            //Act
+            var result = await _controller.ConfirmStop(viewModel) as RedirectToActionResult;
 
-            Assert.AreEqual(_apprenticeshipDetailsUrl, result.Url);
+            //Assert
+            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
+        }
+
+        [Test, MoqAutoData]
+        public async Task AndTheApprenticeship_IsStopped_ThenRedirectToApprenticeDetailsPageWithFlashMessage(ConfirmStopRequestViewModel request)
+        {
+            //Arrange
+            request.StopConfirmed = true;
+            request.IsCoPJourney = false;
+
+            //Act
+            var result = await _controller.ConfirmStop(request) as RedirectToActionResult;
+
+            //Assert
+            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
+            Assert.IsTrue(_controller.TempData.Values.Contains(ApprenticeStoppedMessage));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessage));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
         }
     }
 }
