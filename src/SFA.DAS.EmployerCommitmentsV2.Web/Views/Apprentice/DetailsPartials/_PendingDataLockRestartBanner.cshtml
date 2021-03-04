@@ -1,0 +1,14 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+<div class="govuk-inset-text">
+    <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Changes requested</h2>
+    <p class="govuk-body-s govuk-!-margin-bottom-1">
+        The apprentice's training provider has asked you to stop this apprentice
+        and then add them to a new cohort using updated training details.
+    </p>
+    <p class="govuk-body-s">
+        <a id="datalock-restart-link" href="@LinkGenerator.DatalockRestart(Model.AccountHashedId, Model.HashedApprenticeshipId)" aria-label="View details" class="govuk-link">View details</a>
+    </p>
+</div>

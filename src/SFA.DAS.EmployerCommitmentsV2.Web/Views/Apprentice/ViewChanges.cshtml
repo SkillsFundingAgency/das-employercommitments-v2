@@ -67,5 +67,5 @@
 </table>
 
 @section back {
-    <a id="back-link" class="govuk-back-link" href="@LinkGenerator.ApprenticeDetails(Model.AccountHashedId, Model.ApprenticeshipHashedId)">Back to apprentice's record</a>
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">Back to apprentice's record</a>
 }

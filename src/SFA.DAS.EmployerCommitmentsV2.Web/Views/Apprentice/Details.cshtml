@@ -1,0 +1,233 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+@{
+    ViewBag.Title = "Apprentice detail - Manage Apprentices";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageId = "apprentices-detail";
+    ViewBag.GaData.Vpv = "/accounts/apprentices/manage/apprentice-details";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        @if (Model.PendingChanges == PendingChanges.ReadyForApproval)
+        {
+            <partial name="DetailsPartials/_PendingChangeReadyForApprovalBanner" />
+        }
+        else if (Model.PendingChanges == PendingChanges.WaitingForApproval)
+        {
+            <partial name="DetailsPartials/_PendingChangesWaitingForApprovalBanner" />
+        }
+
+        @if (Model.HasPendingChangeOfProviderRequest && Model.PendingChangeOfProviderRequestWithParty.HasValue)
+        {
+            <partial name="DetailsPartials/_PendingChangeOfPartyRequestBanner" />
+        }
+
+        @if (Model.HasApprovedChangeOfProviderRequest || Model.IsContinuation)
+        {
+            <partial name="DetailsPartials/_ApprovedChangesOfPartyRequestBanner" />
+        }
+
+        @if (Model.PendingDataLockRestart)
+        {
+            <partial name="DetailsPartials/_PendingDataLockRestartBanner" />
+        }
+
+        @if (Model.PendingDataLockChange)
+        {
+            <partial name="DetailsPartials/_PendingDataLockChangeBanner" />
+
+        }
+
+        <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
+
+        @{ if (!Model.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) &&
+                                     Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
+            {
+                <p class="govuk-body">
+                    Edit details if there's a change in apprentice or apprenticeship circumstances.
+                </p>
+            }
+        }
+
+        <table id="app-status" class="govuk-table govuk-!-margin-bottom-8">
+            <tbody>
+                <tr>
+                    <th scope="row" class="govuk-table__header das-table-cell-width-45">Status</th>
+                    <td class="govuk-table__cell das-table-cell-width-40">@Model.Status</td>
+                    <td id="editStatusLink" class="govuk-table__cell das-table-cell-width-15 govuk-table__cell--numeric">
+                        @if (Model.CanEditStatus)
+                        {
+                            <a id="edit-status-link" href="@Url.Action("ChangeStatus", new ChangeStatusRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link">Edit status</a>
+                        }
+                    </td>
+                </tr>
+                @if (@Model.ApprenticeshipStatus == ApprenticeshipStatus.Paused)
+                {
+                    <tr>
+                        <th scope="row" class="govuk-table__header">Apprenticeship pause date</th>
+                        <td id="pauseDate" class="govuk-table__cell" colspan="2">
+                            @if (Model.PauseDate.HasValue)
+                            {
+                                @Model.PauseDate.Value.ToGdsFormat()
+                            }
+                        </td>
+                    </tr>
+                }
+
+                @if (@Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
+                {
+                    <tr>
+                        <th scope="row" class="govuk-table__header">Completion payment month</th>
+                        <td id="completionDate" class="govuk-table__cell" colspan="2">
+                            @if (Model.CompletionDate.HasValue)
+                            {
+                                @Model.CompletionDate.Value.ToGdsFormatLongMonthNameWithoutDay();
+                            }
+                        </td>
+                    </tr>
+                }
+
+                @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Stopped)
+                {
+                    <tr>
+                        <th scope="row" class="govuk-table__header">Stopped date</th>
+                        <td id="stopDate" class="govuk-table__cell">
+                            @if (Model.StopDate.HasValue)
+                            {
+                                @Model.StopDate.Value.ToGdsFormatLongMonthWithoutDay()
+                            }
+                        </td>
+                        <td id="editStopDateLink" class="govuk-table__cell govuk-table__cell--numeric">
+                            <a id="edit-stopped-link" class="govuk-link" href="@LinkGenerator.EditStopDate(Model.AccountHashedId, Model.HashedApprenticeshipId)">Edit</a>
+                        </td>
+                    </tr>
+
+                    @if (Model.MadeRedundant.HasValue)
+                    {
+                        <tr>
+                            <th scope="row" class="govuk-table__header">Made redundant</th>
+                            <td id="madeRedundant" class="govuk-table__cell" colspan="2">
+                                @(Model.MadeRedundant.Value ? "Yes" : "No")
+                            </td>
+                        </tr>
+                    }
+                }
+                <tr>
+                    <th scope="row" class="govuk-table__header">Training provider</th>
+                    <td class="govuk-table__cell">@Model.ProviderName</td>
+                    @if (Model.ShowChangeTrainingProviderLink)
+                    {
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <a id="change-training-provider-link" class="govuk-link" href="@Url.Action("ChangeProviderInform", new  ChangeProviderInformRequest{ AccountHashedId = Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change</a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="govuk-table__cell"></td>
+                    }
+                </tr>
+                <tr>
+                    <th scope="row" class="govuk-table__header">Cohort reference</th>
+                    <td id="cohort-reference" class="govuk-table__cell">@Model.CohortReference</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="govuk-grid-row govuk-!-margin-bottom-2">
+            <div class="govuk-grid-column-two-thirds">
+                <h2 class="govuk-heading-m">Apprentice details</h2>
+            </div>
+            <div class="govuk-grid-column-one-third das-!-text-align-right--from-tablet">
+                @if (Model.EnableEdit)
+                {
+                    <a id="edit-apprentice-link" href="@LinkGenerator.EditApprenticeship(Model.AccountHashedId, Model.HashedApprenticeshipId)" class="govuk-link govuk-body">Edit</a>
+                }
+            </div>
+        </div>
+        <table class="govuk-table govuk-!-margin-bottom-8">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header  das-table-cell-width-45" ">Name</th>
+                    <td id="apprentice-name" class="govuk-table__cell das-table-cell-width-55">@Model.ApprenticeName</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Unique learner number</th>
+                    <td id="uln" class="govuk-table__cell">@Model.ULN</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Date of birth</th>
+                    <td id="date-of-birth" class="govuk-table__cell">
+                        @if (Model.DateOfBirth.HasValue)
+                        {
+                            @Model.DateOfBirth.Value.ToGdsFormat()
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="govuk-heading-m">
+            Apprenticeship details
+        </h2>
+        <table class="govuk-table  govuk-!-margin-bottom-8">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header das-table-cell-width-45">Apprenticeship training course </th>
+                    <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.TrainingName </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Planned training start date</th>
+                    <td id="start-date" class="govuk-table__cell" colspan="2">
+                        @if (@Model.StartDate.HasValue)
+                        {
+                            @Model.StartDate.Value.ToGdsFormatLongMonthWithoutDay()
+                        }
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Planned training finish date</th>
+                    <td id="end-date" class="govuk-table__cell">
+                        @if (Model.EndDate.HasValue)
+                        {
+                            @Model.EndDate.Value.ToGdsFormatLongMonthWithoutDay()
+                        }
+                    </td>
+                    <td class="govuk-table__cell">
+                        @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
+                        {
+                            <a id="edit-end-date-link" class="govuk-link" href="@Url.Action("EditEndDate", new  EditEndDateRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit</a>
+                        }
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Total agreed apprenticeship price</th>
+                    <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost() excluding VAT</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Reference </th>
+                    <td id="employer-reference" class="govuk-table__cell" colspan="2">@Model.EmployerReference</td>
+                </tr>
+                @if (Model.TrainingType == ProgrammeType.Standard)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">End-point assessor</th>
+                        <td id="end-point-assessor" class="govuk-table__cell" colspan="2">@(Model.EndpointAssessorName ?? "The end-point assessor has not been declared")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section back {
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", new IndexRequest { AccountHashedId = Model.AccountHashedId, FromSearch = true})">Back to manage your apprentices</a>
+}

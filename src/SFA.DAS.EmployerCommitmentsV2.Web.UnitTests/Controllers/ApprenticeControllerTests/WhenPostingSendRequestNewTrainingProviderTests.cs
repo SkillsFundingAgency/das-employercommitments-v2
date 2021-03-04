@@ -133,9 +133,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         public void VerifyRedirectsToApprenticeDetailsPage(IActionResult result)
         {
-            var redirect = (RedirectResult)result;
-
-            redirect.WithUrl($"accounts/{_viewModel.AccountHashedId}/apprentices/manage/{_viewModel.ApprenticeshipHashedId}/details");
+            var redirect = (RedirectToActionResult)result;
+            Assert.AreEqual("ApprenticeshipDetails", redirect.ActionName);
         }
 
         public void VerifyRedirectsToSentAction(IActionResult result)

@@ -1,0 +1,16 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+<div class="govuk-inset-text">
+    <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Changes pending</h2>
+    <p class="govuk-body-s govuk-!-margin-bottom-1">
+        The employer has made a change which needs to be approved by the training provider
+    </p>
+    <p class="govuk-body-s">
+        <a id="view-changes-banner-link" href="@LinkGenerator.ViewChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)" class="govuk-link">View changes</a>
+    </p>
+</div>
