@@ -35,7 +35,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 NewEndYear = source.NewEndYear,
                 NewPrice = source.NewPrice,
                 ApprenticeName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
-                OldProviderName = apprenticeship.ProviderName
+                OldProviderName = apprenticeship.ProviderName,
+                StoppedDuringCoP = source.StoppedDuringCoP
             };
         }
     }

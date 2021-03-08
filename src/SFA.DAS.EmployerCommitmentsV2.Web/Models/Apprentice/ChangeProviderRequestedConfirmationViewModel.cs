@@ -7,5 +7,6 @@
         public string ProviderName { get; set; }
         public string ApprenticeName { get; set; }
         public bool ProviderAddDetails { get; set; }
+        public bool StoppedDuringCoP { get; set; }
     }
 }

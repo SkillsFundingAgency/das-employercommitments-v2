@@ -15,7 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public virtual int? NewEndMonth { get; set; }
         public virtual int? NewEndYear { get; set; }
         public int? NewPrice { get; set; }
-
         public bool Edit { get; set; }
+        public bool? StoppedDuringCoP { get; set; }
     }
 }
