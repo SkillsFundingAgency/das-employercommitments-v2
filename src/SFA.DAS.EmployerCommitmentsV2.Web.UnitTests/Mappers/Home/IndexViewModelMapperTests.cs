@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -26,6 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Home
         [Test]
         public async Task AccountHashedIdIsMappedCorrectly()
         {
+            _fixture.SetupProviders(2);
             await _fixture.Map();
             _fixture.VerifyAccountHashedIdIsMappedCorrectly();
         }
@@ -44,7 +46,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Home
         {
             private IndexViewModelMapper _mapper;
             private Mock<ICommitmentsApiClient> _apiClient;
-            private GetApprovedProvidersResponse _apiProvidersResponse;
+            private Mock<ILogger<IndexViewModelMapper>> _logger;
+            private GetProviderPaymentsPriorityResponse _apiProvidersResponse;
             private IndexRequest _request;
             private IndexViewModel _result;
 
@@ -52,32 +55,36 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Home
             {
                 var autoFixture = new Fixture();
 
-                _apiProvidersResponse = new GetApprovedProvidersResponse(new List<long> { 123, 456 });
-
                 _apiClient = new Mock<ICommitmentsApiClient>();
-                _apiClient.Setup(x => x.GetApprovedProviders(It.IsAny<long>(),
-                        It.IsAny<CancellationToken>()))
-                    .ReturnsAsync(_apiProvidersResponse);
+                _logger = new Mock<ILogger<IndexViewModelMapper>>();
 
-                _mapper = new IndexViewModelMapper(_apiClient.Object);
+                _mapper = new IndexViewModelMapper(_apiClient.Object, _logger.Object);
                 _request = autoFixture.Create<IndexRequest>();
-                
             }
 
             public IndexViewModelMapperTestsFixture SetupProviders(int numberOfProviders)
             {
-                var providers = new List<long>();
+                var providerPaymentPriorities = new List<GetProviderPaymentsPriorityResponse.ProviderPaymentPriorityItem>();
 
-                for (var i = 0; i < numberOfProviders;i++)
+                for (var i = 0; i < numberOfProviders; i++)
                 {
-                    providers.Add(i);
+                    providerPaymentPriorities.Add(new GetProviderPaymentsPriorityResponse.ProviderPaymentPriorityItem
+                    {
+                        ProviderId = i + 10000,
+                        ProviderName = $"Test{i}",
+                        PriorityOrder = i
+                    });
                 }
 
-                _apiProvidersResponse = new GetApprovedProvidersResponse(providers);
+                _apiProvidersResponse = new GetProviderPaymentsPriorityResponse
+                {
+                    ProviderPaymentPriorities = providerPaymentPriorities
+                };
 
-                _apiClient.Setup(x => x.GetApprovedProviders(It.IsAny<long>(),
+                _apiClient.Setup(x => x.GetProviderPaymentsPriority(It.IsAny<long>(),
                         It.IsAny<CancellationToken>()))
                     .ReturnsAsync(_apiProvidersResponse);
+                
                 return this;
             }
 

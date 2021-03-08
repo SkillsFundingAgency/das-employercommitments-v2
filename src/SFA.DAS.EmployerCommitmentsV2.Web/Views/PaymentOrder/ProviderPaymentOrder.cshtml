@@ -1,0 +1,62 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder.PaymentOrderViewModel
+
+@{
+    ViewBag.Title = "Default payment order";
+    ViewBag.GaData.Vpv = "/accounts/apprentices/manage/payment-order";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+
+        <h1 class="govuk-heading-xl">Set payment order</h1>
+        <p>The training provider listed first will be paid from your available funds.</p>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="AccountHashedId">
+
+            <div class="govuk-form-group  @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(nameof(Model.ProviderPaymentOrder)))
+                    {
+                        <span id="error-message-@nameof(Model.ProviderPaymentOrder)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(Model.ProviderPaymentOrder)].Errors.First().ErrorMessage
+                        </span>
+                    }
+
+                    <ol class="govuk-list govuk-list--number govuk-!-width-two-thirds govuk-!-margin-top-6 govuk-!-margin-bottom-9">
+                        @for (int priority = 1; priority <= Model.ProviderPaymentOrder.Count(); priority++)
+                        {
+                            string id = $"provider-payment-order-{priority}";
+
+                            <li class="govuk-!-margin-bottom-4">
+                                <label class="govuk-visually-hidden" for="providerList">Select a provider to set order of payment</label>
+                                <select id="@id" asp-for="ProviderPaymentOrder[priority-1]" asp-items="Model.ProviderSelectListItems()" aria-label="Select a provider" class="govuk-select das-select--select2"></select>
+                            </li>
+                        }
+                    </ol>
+                </fieldset>
+            </div>
+            <div class="govuk-button-group">
+                <input id="save-button" type="submit" class="govuk-button" data-module="govuk-button" value="Save and continue" />
+                <a id="cancel-link" asp-action="Index" asp-controller="Home" asp-route-accountHashedId="@Model.AccountHashedId" class="govuk-link" data-module="govuk-button">
+                    Cancel and return
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Back
+{
+    <div class="das-js-back-link"></div>
+}
+
+@section Scripts
+{
+    <script src="/libs/select2/select2.min.js"></script>
+    <script>
+        $(function () {
+            $(".das-select--select2").select2({ minimumResultsForSearch: Infinity })
+        });
+    </script>
+}
