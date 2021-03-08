@@ -613,5 +613,82 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Assert
             Assert.AreEqual(result.ShowChangeTrainingProviderLink, flag);
         }
+
+
+        [TestCase(ApprenticeshipStatus.Live, true)]
+        [TestCase(ApprenticeshipStatus.Stopped, true)]
+        [TestCase(ApprenticeshipStatus.Paused, true)]
+        [TestCase(ApprenticeshipStatus.WaitingToStart, true)]
+        public async Task Given_No_Change_Of_Parity_ShowChangeProviderLinkAsync(ApprenticeshipStatus apprenticeshipStatus, bool expected)
+        {
+            //Arrange
+            _apprenticeshipResponse.Status = apprenticeshipStatus;
+            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<ChangeOfPartyRequest>
+            {
+                new ChangeOfPartyRequest
+                {
+                    Id = 1,
+                    Status = ChangeOfPartyRequestStatus.Approved,
+                    ChangeOfPartyType = ChangeOfPartyRequestType.ChangeEmployer,
+                    OriginatingParty = Party.Employer,
+                    WithParty = Party.Provider
+                }
+            };
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(result.ShowChangeTrainingProviderLink, expected);
+        }
+
+
+        [TestCase(ApprenticeshipStatus.Live, false)]
+        [TestCase(ApprenticeshipStatus.Stopped, false)]
+        public async Task Then_Given_ThereIsChangeOfParity_DoNotShowChangeProviderLinkAsync(ApprenticeshipStatus apprenticeshipStatus, bool expected)
+        {
+            //Arrange
+            _apprenticeshipResponse.Status = apprenticeshipStatus;
+            _apprenticeshipResponse.ContinuationOfId = null; /* apprenticeship has moved from me to another employer*/
+            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<ChangeOfPartyRequest>
+            {
+                new ChangeOfPartyRequest
+                {
+                    Id = 1,
+                    Status = ChangeOfPartyRequestStatus.Pending,
+                    ChangeOfPartyType = ChangeOfPartyRequestType.ChangeEmployer,
+                    OriginatingParty = Party.Employer,
+                    WithParty = Party.Provider
+                }
+            };
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(result.ShowChangeTrainingProviderLink, expected);
+        }
+
+        [TestCase(ApprenticeshipStatus.Completed, false)]
+        public async Task Then_BasedOnApprenticeStatus_DoNotShowChangeProviderLinkAsync(ApprenticeshipStatus apprenticeshipStatus, bool expected)
+        {
+            //Arrange
+            _apprenticeshipResponse.Status = apprenticeshipStatus;
+            _apprenticeshipResponse.ContinuationOfId = null; /* apprenticeship has moved from me to another employer*/
+            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<ChangeOfPartyRequest>
+            {
+                new ChangeOfPartyRequest
+                {
+                    Status = ChangeOfPartyRequestStatus.Approved,
+                    ChangeOfPartyType = ChangeOfPartyRequestType.ChangeEmployer
+                }
+            };
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(result.ShowChangeTrainingProviderLink, expected);
+        }
     }
 }
