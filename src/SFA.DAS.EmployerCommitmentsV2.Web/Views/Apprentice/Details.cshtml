@@ -149,7 +149,7 @@
             <div class="govuk-grid-column-one-third das-!-text-align-right--from-tablet">
                 @if (Model.EnableEdit)
                 {
-                    <a id="edit-apprentice-link" href="@LinkGenerator.EditApprenticeship(Model.AccountHashedId, Model.HashedApprenticeshipId)" class="govuk-link govuk-body">Edit</a>
+                    <a id="edit-apprentice-link" href="@Url.Action("EditApprenticeship", new EditApprenticeshipRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link govuk-body">Edit</a>
                 }
             </div>
         </div>
