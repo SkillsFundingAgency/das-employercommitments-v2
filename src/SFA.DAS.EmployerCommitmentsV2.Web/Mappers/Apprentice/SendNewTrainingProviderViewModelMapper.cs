@@ -34,7 +34,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     OldProviderName = data.Apprenticeship.ProviderName,
                     NewProviderName = data.TrainingProvider.Name,
                     ProviderId = source.ProviderId,
-                    ApprenticeshipStatus = data.Apprenticeship.Status
+                    ApprenticeshipStatus = data.Apprenticeship.Status,
+                    StoppedDuringCoP = source.StoppedDuringCoP
                 };
 
                 return result;
