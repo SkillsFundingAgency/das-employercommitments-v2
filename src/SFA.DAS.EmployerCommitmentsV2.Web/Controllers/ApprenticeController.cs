@@ -419,7 +419,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
                 if (viewModel.IsCoPJourney)
                 {
-                    return RedirectToAction(nameof(EnterNewTrainingProvider), new
+                    return RedirectToAction(nameof(ApprenticeshipStoppedInform), new
                     {
                         viewModel.AccountHashedId,
                         viewModel.ApprenticeshipHashedId,
@@ -429,6 +429,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
+        }
+
+        [Route("{apprenticeshipHashedId}/change-provider/apprenticeshipStopped")]
+        [HttpGet]
+        public IActionResult ApprenticeshipStoppedInform()
+        {
+            return View();
         }
 
         [Route("{apprenticeshipHashedId}/details/pause")]
