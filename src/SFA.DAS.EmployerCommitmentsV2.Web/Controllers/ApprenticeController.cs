@@ -500,5 +500,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             return View(viewModel);
         }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/edit")]
+        public IActionResult EditApprenticeship(EditApprenticeshipRequestViewModel request)
+        {
+            // var viewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
+
+            return RedirectToAction("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = request.AccountHashedId, ApprenticeshipHashedId = request.HashedApprenticeshipId });
+        }
     }
 }

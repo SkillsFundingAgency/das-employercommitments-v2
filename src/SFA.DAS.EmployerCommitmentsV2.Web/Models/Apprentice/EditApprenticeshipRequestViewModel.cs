@@ -111,5 +111,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         [Display(Name = "Reference (optional)")]
         public string Reference { get; set; }
+        public bool IsLockedForUpdate { get; set; }
+
+        public bool IsUpdateLockedForStartDateAndCourse { get; set; }
+        public bool IsEndDateLockedForUpdate { get; internal set; }
     }
 }
