@@ -19,7 +19,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 NewStartYear = source.NewStartYear,
                 NewEndMonth = source.NewEndMonth,
                 NewEndYear = source.NewEndYear,
-                NewPrice = source.NewPrice
+                NewPrice = source.NewPrice,
+                StoppedDuringCoP = source.StoppedDuringCoP                
             };
 
             return Task.FromResult(result);

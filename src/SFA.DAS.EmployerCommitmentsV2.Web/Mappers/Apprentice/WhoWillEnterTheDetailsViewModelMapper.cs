@@ -23,7 +23,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 AccountHashedId = source.AccountHashedId,
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
                 ProviderName = provider.Name,
-                ProviderId = source.ProviderId.Value
+                ProviderId = source.ProviderId.Value,
+                StoppedDuringCoP = source.StoppedDuringCoP
             };
         }
     }

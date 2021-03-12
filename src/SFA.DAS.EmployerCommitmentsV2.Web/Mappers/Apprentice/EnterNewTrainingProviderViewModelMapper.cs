@@ -36,7 +36,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 NewEndMonth = source.NewEndMonth,
                 NewEndYear = source.NewEndYear,
                 NewPrice = source.NewPrice,
-                Edit = source.Edit ?? false
+                Edit = source.Edit ?? false,
+                StoppedDuringCoP = source.StoppedDuringCoP
             };
 
             return result;

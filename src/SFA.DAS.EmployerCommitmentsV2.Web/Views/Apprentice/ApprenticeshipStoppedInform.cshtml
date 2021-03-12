@@ -1,0 +1,20 @@
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+
+@{
+    ViewData["Title"] = "Changing training provider - Apprenticeship stopped";
+}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-xl">
+                Apprenticeship record stopped
+            </h1>
+            <p class="govuk-body">
+                You can now continue to change training provider.
+            </p>
+            <a id="continue-button" class="govuk-button"
+               asp-route="@RouteNames.EnterNewTrainingProvider" asp-route-stoppedDuringCoP="true" >
+                Continue
+            </a>
+        </div>
+    </div>

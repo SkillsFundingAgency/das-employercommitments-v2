@@ -95,6 +95,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             Assert.AreEqual(request.ProviderAddDetails, result.ProviderAddDetails);
         }
-        
+
+        [Test, MoqAutoData]
+        public async Task StoppedDuringCoP_IsMapped(ChangeProviderRequestedConfirmationRequest request)
+        {
+            var result = await _mapper.Map(request);
+
+            Assert.AreEqual(request.StoppedDuringCoP, result.StoppedDuringCoP);
+        }
+
     }
 }

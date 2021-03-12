@@ -52,7 +52,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = await _controller.ConfirmStop(viewModel);
 
             var redirect =  result.VerifyReturnsRedirectToActionResult();
-            Assert.AreEqual(redirect.ActionName, "EnterNewTrainingProvider");
+            Assert.AreEqual(redirect.ActionName, "ApprenticeshipStoppedInform");
             Assert.AreEqual(redirect.RouteValues["AccountHashedId"], viewModel.AccountHashedId);
             Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], viewModel.ApprenticeshipHashedId);
         }
@@ -151,5 +151,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessage));
             Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
         }
+
+        [Test, MoqAutoData]
+        public async Task AndApprenticeshipIsStoppedDuringChangeOfProvider_ThenSetStoppedDuringChangeOfProvider_IsTrue(ConfirmStopRequestViewModel viewModel)
+        {
+            viewModel.StopConfirmed = true;
+            viewModel.IsCoPJourney = true;
+            var result = await _controller.ConfirmStop(viewModel);
+
+            var redirectResult = (RedirectToActionResult)result;
+            var routeValues = redirectResult.RouteValues;
+
+            Assert.AreEqual(true, routeValues["StoppedDuringCoP"]);
+        }
+
+
     }
 }

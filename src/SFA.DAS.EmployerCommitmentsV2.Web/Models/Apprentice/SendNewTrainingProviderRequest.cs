@@ -9,5 +9,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string ApprenticeshipHashedId { get; set; }
         public long ApprenticeshipId { get; set; }
         public long ProviderId { get; set; }
+        public bool? StoppedDuringCoP { get; set; }
     }
 }

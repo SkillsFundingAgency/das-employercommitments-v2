@@ -284,7 +284,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 var apiRequest = await _modelMapper.Map<CreateChangeOfPartyRequestRequest>(viewModel);
                 await _commitmentsApiClient.CreateChangeOfPartyRequest(viewModel.ApprenticeshipId, apiRequest);
-                return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId });
+                return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation, new
+                {
+                    viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.ProviderId, viewModel.StoppedDuringCoP
+                });
             }
             catch (Exception ex)
             {
@@ -333,7 +336,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 {
                     var apiRequest = await _modelMapper.Map<CreateChangeOfPartyRequestRequest>(request);
                     await _commitmentsApiClient.CreateChangeOfPartyRequest(request.ApprenticeshipId, apiRequest);
-                    return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId , ProviderAddDetails = true});
+                    return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId, request.StoppedDuringCoP, ProviderAddDetails = true});
                 }
                 catch (Exception ex)
                 {
@@ -416,15 +419,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
                 if (viewModel.IsCoPJourney)
                 {
-                    return RedirectToAction(nameof(EnterNewTrainingProvider), new
+                    return RedirectToAction(nameof(ApprenticeshipStoppedInform), new
                     {
                         viewModel.AccountHashedId,
-                        viewModel.ApprenticeshipHashedId
+                        viewModel.ApprenticeshipHashedId,
+                        StoppedDuringCoP = true
                     });
                 }
             }
 
             return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
+        }
+
+        [Route("{apprenticeshipHashedId}/change-provider/apprenticeshipStopped")]
+        [HttpGet]
+        public IActionResult ApprenticeshipStoppedInform()
+        {
+            return View();
         }
 
         [Route("{apprenticeshipHashedId}/details/pause")]
