@@ -61,7 +61,7 @@
 
     <partial name="_CookieConsentBanner" />
 
-    <partial name="_Header" />    
+    <partial name="_Header" />
     @if (ViewBag.HideNav == null || !ViewBag.HideNav)
     {
         <partial name="_Menu" model="@accountHashedId" />
@@ -78,8 +78,10 @@
         </main>
     </div>
 
-    <partial name="_Footer" model="@footerModel" />
+    <partial name="_Footer" model="@footerModel" />    
     <partial name="_GoogleAnalyticsInfo" />
+    <p>accountHashedId : @accountHashedId</p>
+   @{ (string)ViewContext.RouteData.Values["accountHashedId"]}
 
     <script src="/libs/accessible-autocomplete/accessible-autocomplete.min.js"></script>
     <script src="/libs/govuk-frontend/all.js"></script>
@@ -127,20 +129,20 @@
             $('#' + idSelectField).attr('type', 'search');
 
             form.on('submit',
-                function() {
-                    $('.autocomplete__input').each(function() {
+                function () {
+                    $('.autocomplete__input').each(function () {
                         var that = $(this);
-                            if (that.val().length === 0) {
-                                var fieldId = that.attr('id'),
-                                    selectField = $('#' + fieldId + '-select');
-                                selectField[0].selectedIndex = 0;
-                            }
+                        if (that.val().length === 0) {
+                            var fieldId = that.attr('id'),
+                                selectField = $('#' + fieldId + '-select');
+                            selectField[0].selectedIndex = 0;
+                        }
                     });
                 });
         }
 
     </script>
-    
+
     @RenderSection("Scripts", required: false)
 
 </body>
