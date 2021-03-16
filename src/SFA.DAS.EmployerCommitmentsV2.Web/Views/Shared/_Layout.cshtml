@@ -94,22 +94,18 @@
 
     <script>
 
-        var idSelectField = 'Ukprn';
-        var selectEl = document.getElementById(idSelectField);
-
-        if (selectEl) {
-
-            var form = $('#' + idSelectField).closest('form');
-
+        var selectElements = $('.das-autocomplete')
+        selectElements.each(function () {
+            var form = $(this).closest('form');
             accessibleAutocomplete.enhanceSelectElement({
-                selectElement: selectEl,
+                selectElement: this,
                 minLength: 3,
                 autoselect: true,
                 defaultValue: '',
                 displayMenu: 'overlay',
-                placeholder: '',
+                placeholder: $(this).data('placeholder') || '',
                 onConfirm: function (opt) {
-                    var txtInput = document.querySelector('#' + idSelectField);
+                    var txtInput = document.querySelector('#' + this.id);
                     var searchString = opt || txtInput.value;
                     var requestedOption = [].filter.call(this.selectElement.options,
                         function (option) {
@@ -123,21 +119,17 @@
                     }
                 }
             });
-
-            $('#' + idSelectField).attr('type', 'search');
-
-            form.on('submit',
-                function() {
-                    $('.autocomplete__input').each(function() {
-                        var that = $(this);
-                            if (that.val().length === 0) {
-                                var fieldId = that.attr('id'),
-                                    selectField = $('#' + fieldId + '-select');
-                                selectField[0].selectedIndex = 0;
-                            }
-                    });
+            form.on('submit', function() {
+                $('.autocomplete__input').each(function() {
+                    var that = $(this);
+                    if (that.val().length === 0) {
+                        var fieldId = that.attr('id'),
+                        selectField = $('#' + fieldId + '-select');
+                        selectField[0].selectedIndex = 0;
+                    }
                 });
-        }
+            });
+        })
 
     </script>
     
