@@ -27,8 +27,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             // TODO : convert them into task 
             var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId, CancellationToken.None);
             var priceEpisodes = await _commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId, CancellationToken.None);
-            var courses = await _commitmentsApiClient.GetAllTrainingProgrammes(CancellationToken.None);
+            
             var commitment = await _commitmentsApiClient.GetCohort(apprenticeship.CohortId);
+            var courseDetails = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
+            var accountDetails = await _commitmentsApiClient.GetAccount(source.AccountId);
+            
+            //TODO: Check if it is a transfer sender scenario, should we only show the Standard courses.
+            //TODO: check for Change of party scenario, i.e. it changed from levy to non-levy employer and training programme is Framework. 
+            var courses = accountDetails.LevyStatus == ApprenticeshipEmployerType.Levy 
+                ? (await _commitmentsApiClient.GetAllTrainingProgrammes(CancellationToken.None)).TrainingProgrammes
+                : (await _commitmentsApiClient.GetAllTrainingProgrammeStandards(CancellationToken.None)).TrainingProgrammes;
 
             var isLockedForUpdate = (apprenticeship.Status == ApprenticeshipStatus.Live &&
                                      (apprenticeship.HasHadDataLockSuccess || _currentDateTime.UtcNow > _academicYearDateProvider.LastAcademicYearFundingPeriod &&
@@ -45,11 +53,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 CourseCode = apprenticeship.CourseCode,
                 Cost = priceEpisodes.PriceEpisodes.GetPrice(),
                 Reference = apprenticeship.EmployerReference,
-                Courses = courses.TrainingProgrammes,
+                Courses = courses,
                 IsContinuation = false,//true,//apprenticeship.IsContinuation,
                 IsLockedForUpdate = false,//isLockedForUpdate,
                 IsUpdateLockedForStartDateAndCourse = false,// commitment.IsFundedByTransfer && !apprenticeship.HasHadDataLockSuccess,
-                IsEndDateLockedForUpdate = false //IsEndDateLocked(isLockedForUpdate, apprenticeship.HasHadDataLockSuccess, apprenticeship.Status)
+                IsEndDateLockedForUpdate = false, //IsEndDateLocked(isLockedForUpdate, apprenticeship.HasHadDataLockSuccess, apprenticeship.Status)
+                TrainingName = courseDetails.TrainingProgramme.Name,
             };
 
             return result;

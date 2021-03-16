@@ -7,6 +7,7 @@ using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
@@ -514,11 +515,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpPost]
         [Route("{apprenticeshipHashedId}/edit")]
-        public IActionResult EditApprenticeship(EditApprenticeshipRequestViewModel request)
+        public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequestViewModel request)
         {
-            // var viewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
+           await _commitmentsApiClient.ValidateApprenticeshipForEdit(new ValidateApprenticeshipForEditRequest
+            {
+                EmployerAccountId = request.AccountId,
+                ApprenticeshipId = request.ApprenticeshipId,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                DateOfBirth = request.DateOfBirth.Date,
+                ULN = request.ULN,
+                Cost = request.Cost,
+                EmployerReference = request.EmployerReference,
+                StartDate = request.StartDate.Date,
+                EndDate = request.EndDate.Date,
+                TrainingCode = request.CourseCode
+            });
 
-            return RedirectToAction("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = request.AccountHashedId, ApprenticeshipHashedId = request.HashedApprenticeshipId });
+            return RedirectToAction("ApprenticeshipDetails", new { request.AccountHashedId, ApprenticeshipHashedId = request.HashedApprenticeshipId });
         }
     }
 }

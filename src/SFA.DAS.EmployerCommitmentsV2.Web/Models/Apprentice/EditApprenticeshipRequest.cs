@@ -8,6 +8,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         [FromRoute]
         public string AccountHashedId { get; set; }
 
+        public long AccountId { get; set; }
+
         [FromRoute]
         public string ApprenticeshipHashedId { get; set; }
 
