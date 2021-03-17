@@ -54,10 +54,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 Cost = priceEpisodes.PriceEpisodes.GetPrice(),
                 Reference = apprenticeship.EmployerReference,
                 Courses = courses,
-                IsContinuation = false,//true,//apprenticeship.IsContinuation,
-                IsLockedForUpdate = false,//isLockedForUpdate,
-                IsUpdateLockedForStartDateAndCourse = false,// commitment.IsFundedByTransfer && !apprenticeship.HasHadDataLockSuccess,
-                IsEndDateLockedForUpdate = false, //IsEndDateLocked(isLockedForUpdate, apprenticeship.HasHadDataLockSuccess, apprenticeship.Status)
+                IsContinuation = apprenticeship.IsContinuation,
+                IsLockedForUpdate = isLockedForUpdate,
+                IsUpdateLockedForStartDateAndCourse = commitment.IsFundedByTransfer && !apprenticeship.HasHadDataLockSuccess,
+                IsEndDateLockedForUpdate = IsEndDateLocked(isLockedForUpdate, apprenticeship.HasHadDataLockSuccess, apprenticeship.Status),
                 TrainingName = courseDetails.TrainingProgramme.Name,
             };
 
