@@ -7,7 +7,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
     public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprenticeshipRequest, EditApprenticeshipRequestViewModel>
@@ -24,23 +23,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         }
         public async Task<EditApprenticeshipRequestViewModel> Map(EditApprenticeshipRequest source)
         {
-            // TODO : convert them into task 
-            var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId, CancellationToken.None);
-            var priceEpisodes = await _commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId, CancellationToken.None);
-            
-            var commitment = await _commitmentsApiClient.GetCohort(apprenticeship.CohortId);
-            var courseDetails = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
-            var accountDetails = await _commitmentsApiClient.GetAccount(source.AccountId);
-            
-            //TODO: Check if it is a transfer sender scenario, should we only show the Standard courses.
-            //TODO: check for Change of party scenario, i.e. it changed from levy to non-levy employer and training programme is Framework. 
-            var courses = accountDetails.LevyStatus == ApprenticeshipEmployerType.Levy 
-                ? (await _commitmentsApiClient.GetAllTrainingProgrammes(CancellationToken.None)).TrainingProgrammes
-                : (await _commitmentsApiClient.GetAllTrainingProgrammeStandards(CancellationToken.None)).TrainingProgrammes;
+            var apprenticeshipTask = _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId, CancellationToken.None);
+            var priceEpisodesTask = _commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId, CancellationToken.None);
+            var accountDetailsTask = _commitmentsApiClient.GetAccount(source.AccountId);
+
+            var apprenticeship = await apprenticeshipTask;
+            var commitmentTask = _commitmentsApiClient.GetCohort(apprenticeship.CohortId);
+            var courseDetailsTask = _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
+
+            var accountDetails = await accountDetailsTask;
+            var priceEpisodes = await priceEpisodesTask;
+            var commitment = await commitmentTask;
+            var courseDetails = await courseDetailsTask;
+
+            var courses = accountDetails.LevyStatus == ApprenticeshipEmployerType.NonLevy || commitment.IsFundedByTransfer
+                ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards(CancellationToken.None)).TrainingProgrammes
+                : (await _commitmentsApiClient.GetAllTrainingProgrammes(CancellationToken.None)).TrainingProgrammes;
 
             var isLockedForUpdate = (apprenticeship.Status == ApprenticeshipStatus.Live &&
-                                     (apprenticeship.HasHadDataLockSuccess || _currentDateTime.UtcNow > _academicYearDateProvider.LastAcademicYearFundingPeriod &&
-                                     !IsWithInFundingPeriod(apprenticeship.StartDate)))
+                                     (apprenticeship.HasHadDataLockSuccess || !IsWithInFundingPeriod(apprenticeship.StartDate)))
                                     ||
                                     (commitment.IsFundedByTransfer
                                      && apprenticeship.HasHadDataLockSuccess && apprenticeship.Status == ApprenticeshipStatus.WaitingToStart);
@@ -59,6 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 IsUpdateLockedForStartDateAndCourse = commitment.IsFundedByTransfer && !apprenticeship.HasHadDataLockSuccess,
                 IsEndDateLockedForUpdate = IsEndDateLocked(isLockedForUpdate, apprenticeship.HasHadDataLockSuccess, apprenticeship.Status),
                 TrainingName = courseDetails.TrainingProgramme.Name,
+                HashedApprenticeshipId = source.ApprenticeshipHashedId
             };
 
             return result;
@@ -66,6 +68,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
         private bool IsEndDateLocked(bool isLockedForUpdate, bool hasHadDataLockSuccess, ApprenticeshipStatus status)
         {
+            // thoughts on this - the only reason for if condition I can think of is because
+            // NotTransferSender :  IsLockedForUpdate becomes true only if it is live. In this case we want to lock the field even if it is waiting for start and we hadAdatalockSuccess
+            // TransferSender    : IsLockedForUpdate become true, in case it is Transfer sender and it has received a datalock success even in the case of waiting for start.
+            // this condition is valid when it is a not a transfer sender scenario & it is waiting to start, in that case we will lock the end date as well.
+            // But this will also cause this field to become editable, if has received a data lock and status is not waiting to start
             var result = isLockedForUpdate;
             if (hasHadDataLockSuccess)
             {

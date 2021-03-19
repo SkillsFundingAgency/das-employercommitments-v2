@@ -48,30 +48,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public decimal? Cost { get; set; }
 
         public ApprenticeshipStatus ApprenticeshipStatus { get; set; }
-        public string Status { get; set; }
-        public string ProviderName { get; set; }
-        public PendingChanges PendingChanges { get; set; }
-        public bool CanEditStatus { get; set; }
         public string EmployerReference { get; set; }
-        public string CohortReference { get; set; }
-        public bool EnableEdit { get; set; }
-        public bool PendingDataLockRestart { get; set; }
-        public bool PendingDataLockChange { get; set; }        
-        public string EndpointAssessorName { get; set; }
-        public bool? MadeRedundant { get; set; }
-        public bool HasPendingChangeOfProviderRequest { get; set; }
-        public Party? PendingChangeOfProviderRequestWithParty { get; set; }
-        public string HashedNewApprenticeshipId { get; set; }
         public bool IsContinuation { get; set; }
-        public string HashedPreviousApprenticeshipId { get; set; }
-        public bool HasApprovedChangeOfProviderRequest { get; set; }
-        public bool HasPendingChangeOfEmployerRequest { get; set; }
-        public Party? PendingChangeOfEmployerRequestWithParty { get; set; }
-        public bool HasApprovedChangeOfEmployerRequest { get; set; }
-
         [Display(Name = "Date of birth")]
         [DataType(DataType.Date)]
-        public DateModel DateOfBirth { get; }
+        public DateModel DateOfBirth { get; set; }
 
         [Display(Name = "Day")]
         [SuppressArgumentException(nameof(DateOfBirth), "The date of birth is not valid")]
@@ -101,7 +82,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public int? StartYear { get => StartDate.Year; set => StartDate.Year = value; }
 
         [Display(Name = "Projected finish date")]
-        public MonthYearModel EndDate { get; }
+        public MonthYearModel EndDate { get; set; }
 
         [Display(Name = "Month")]
         [SuppressArgumentException(nameof(EndDate), "The end date is not valid")]

@@ -496,6 +496,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request)
         {
             var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
+            viewModel.IsV2Edit = _authorizationService.IsAuthorized(EmployerFeature.EditApprenticeV2);
             if (viewModel.ApprenticeshipStatus == ApprenticeshipStatus.Stopped)
             {
                 TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
@@ -509,30 +510,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequest request)
         {
             var viewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
-
             return View(viewModel);
         }
 
         [HttpPost]
         [Route("{apprenticeshipHashedId}/edit")]
-        public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequestViewModel request)
+        public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequestViewModel viewModel)
         {
-           await _commitmentsApiClient.ValidateApprenticeshipForEdit(new ValidateApprenticeshipForEditRequest
-            {
-                EmployerAccountId = request.AccountId,
-                ApprenticeshipId = request.ApprenticeshipId,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                DateOfBirth = request.DateOfBirth.Date,
-                ULN = request.ULN,
-                Cost = request.Cost,
-                EmployerReference = request.EmployerReference,
-                StartDate = request.StartDate.Date,
-                EndDate = request.EndDate.Date,
-                TrainingCode = request.CourseCode
-            });
+            var validationRequest = await _modelMapper.Map<ValidateApprenticeshipForEditRequest>(viewModel);
+            await _commitmentsApiClient.ValidateApprenticeshipForEdit(validationRequest);
 
-            return RedirectToAction("ApprenticeshipDetails", new { request.AccountHashedId, ApprenticeshipHashedId = request.HashedApprenticeshipId });
+            return RedirectToAction("ApprenticeshipDetails", new { viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.HashedApprenticeshipId });
         }
     }
 }

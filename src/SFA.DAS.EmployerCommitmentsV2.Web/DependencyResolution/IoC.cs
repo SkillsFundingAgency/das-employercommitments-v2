@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
             registry.IncludeRegistry<EncodingRegistry>();
             registry.IncludeRegistry<EmployerUserRolesAuthorizationRegistry>();
             registry.IncludeRegistry<WebRegistry>();
-            registry.IncludeRegistry<DummyRegistry>();
+            registry.IncludeRegistry<LocalDevRegistry>();
         }
     }
 }

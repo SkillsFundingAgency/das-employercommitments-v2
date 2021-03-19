@@ -11,12 +11,11 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
+        <partial name="_ValidationSummary" />
         <h1 class="govuk-heading-xl" id="learnerName">Edit apprentice details</h1>
 
         <form id="editApprenticeship" novalidate method="post">
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(x => x.CohortReference)
 
             @if (Model.IsContinuation)
             {
@@ -25,13 +24,6 @@
                     <dd class="das-definition-list__definition">@Model.FirstName</dd>
                     @Html.Hidden("FirstName", Model.FirstName)
                 </dl>
-
-
-                @*<div class="govuk-form-group">
-                        <hr />
-                        <label class="govuk-label govuk-!-font-weight-bold" asp-for="LastName">Last name</label>
-                        <span>@Model.LastName</span>
-                    </div>*@
 
                 <dl class="das-definition-list">
                     <dt class="das-definition-list__title" asp-for="LastName">Last Name</dt>
@@ -43,16 +35,10 @@
                 <dl class="das-definition-list">
                     <dt class="das-definition-list__title" asp-for="DateOfBirth">Date of birth</dt>
                     <dd class="das-definition-list__definition">@Model.DateOfBirth.Date.Value.ToGdsFormat()</dd>
-                    @Html.Hidden("DateOfBirth.Day", Model.DateOfBirth.Day)
-                    @Html.Hidden("DateOfBirth.Month", Model.DateOfBirth.Month)
-                    @Html.Hidden("DateOfBirth.Year", Model.DateOfBirth.Year)
+                    @Html.HiddenFor(x => x.BirthDay)
+                    @Html.HiddenFor(x => x.BirthMonth)
+                    @Html.HiddenFor(x => x.BirthYear)
                 </dl>
-                @*<div class="govuk-form-group">
-                        <hr />
-                        <label class="govuk-label govuk-!-font-weight-bold govuk-input" asp-for="DateOfBirth">Date of birth</label>
-                        <span>@Model.DateOfBirth.Date.Value.ToGdsFormat()</span>
-                    </div>*@
-
             }
             else
             {
@@ -104,15 +90,6 @@
                 </div>
             }
 
-            @*<div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ULN, "govuk-form-group--error")">
-                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3" />
-                    <label asp-for="ULN" class="govuk-label govuk-!-font-weight-bold">Unique learner number</label>
-                    <span id="hint-uln" class="govuk-hint">
-                    <span id="uln">@Model.ULN</span>
-                    @Html.HiddenFor(x => x.ULN)
-                    </span>
-                </div>*@
-
             <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
             <dl class="das-definition-list">
                 <dt asp-for="ULN" class="das-definition-list__title">Unique learner number</dt>
@@ -126,8 +103,8 @@
                 <dl class="das-definition-list">
                     <dt asp-for="TrainingName" class="das-definition-list__title">Apprenticeship training course</dt>
                     <dd class="das-definition-list__definition">@Model.TrainingName </dd>
-                    @Html.Hidden("TrainingCode", Model.CourseCode)
-                    @Html.Hidden("TrainingName", Model.TrainingName)
+                    @Html.HiddenFor(x => x.CourseCode)
+                    @Html.HiddenFor(x => x.TrainingName)
                 </dl>
             }
             else
@@ -149,9 +126,8 @@
                     <dt class="das-definition-list__title">Planned training start date</dt>
                     <dd class="das-definition-list__definition">@Model.StartDate.Date.Value.ToGdsFormatWithoutDay()</dd>
                 </dl>
-                @Html.Hidden("StartDate.Month", Model.StartDate.Month)
-                @Html.Hidden("StartDate.Year", Model.StartDate.Year)
-
+                @Html.HiddenFor(x => x.StartMonth)
+                @Html.HiddenFor(x => x.StartYear)
             }
             else
             {
@@ -191,9 +167,8 @@
                     <dt class="das-definition-list__title">Planned training finish date</dt>
                     <dd class="das-definition-list__definition">@Model.EndDate.Date.Value.ToGdsFormatWithoutDay()</dd>
                 </dl>
-
-                @Html.Hidden("EndDate.Month", Model.EndDate.Month)
-                @Html.Hidden("EndDate.Year", Model.EndDate.Year)
+                @Html.HiddenFor(x => x.EndMonth)
+                @Html.HiddenFor(x => x.EndYear)
             }
             else
             {
@@ -233,7 +208,7 @@
                 <dl class="das-definition-list">
                     <dt asp-for="Cost" class="das-definition-list__title">Total agreed apprenticeship price (excluding VAT)</dt>
                     <dd class="das-definition-list__definition">@Model.Cost</dd>
-                    @Html.Hidden("Cost", Model.Cost)
+                    @Html.HiddenFor(x => x.Cost)
                 </dl>
 
                 <div class="govuk-inset-text das-inset-text--highlight">
