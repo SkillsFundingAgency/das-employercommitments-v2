@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 EmployerReference = source.EmployerReference,
                 StartDate = source.StartDate.Date,
                 EndDate = source.EndDate.Date,
-                TrainingCode = source.CourseCode, // rename TrainingCode to course code.
+                TrainingCode = source.CourseCode, 
                 UserInfo = _authenticationService.UserInfo
             };
             return Task.FromResult(result);

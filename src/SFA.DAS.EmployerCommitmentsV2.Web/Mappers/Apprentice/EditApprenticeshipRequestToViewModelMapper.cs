@@ -60,7 +60,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 IsUpdateLockedForStartDateAndCourse = commitment.IsFundedByTransfer && !apprenticeship.HasHadDataLockSuccess,
                 IsEndDateLockedForUpdate = IsEndDateLocked(isLockedForUpdate, apprenticeship.HasHadDataLockSuccess, apprenticeship.Status),
                 TrainingName = courseDetails.TrainingProgramme.Name,
-                HashedApprenticeshipId = source.ApprenticeshipHashedId
+                HashedApprenticeshipId = source.ApprenticeshipHashedId,
+                AccountHashedId = source.AccountHashedId
             };
 
             return result;
