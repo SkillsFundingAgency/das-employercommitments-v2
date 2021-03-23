@@ -70,9 +70,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         private bool IsEndDateLocked(bool isLockedForUpdate, bool hasHadDataLockSuccess, ApprenticeshipStatus status)
         {
             // thoughts on this - the only reason for if condition I can think of is because
-            // NotTransferSender :  IsLockedForUpdate becomes true only if it is live. In this case we want to lock the field even if it is waiting for start and we hadAdatalockSuccess
+            // NotTransferSender :  IsLockedForUpdate becomes true only if it is live. In this case we want to lock the field even if it is waiting for start and we haddatalockSuccess
             // TransferSender    : IsLockedForUpdate become true, in case it is Transfer sender and it has received a datalock success even in the case of waiting for start.
-            // this condition is valid when it is a not a transfer sender scenario & it is waiting to start, in that case we will lock the end date as well.
             // But this will also cause this field to become editable, if has received a data lock and status is not waiting to start
             var result = isLockedForUpdate;
             if (hasHadDataLockSuccess)

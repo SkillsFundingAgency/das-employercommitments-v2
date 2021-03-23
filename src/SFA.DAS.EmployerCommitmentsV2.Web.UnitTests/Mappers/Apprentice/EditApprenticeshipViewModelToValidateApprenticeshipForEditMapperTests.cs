@@ -39,7 +39,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(request.AccountId, result.EmployerAccountId);
         }
 
-
         [Test, MoqAutoData]
         public async Task FirstName_IsMapped(
         IAuthenticationService authenticationService)

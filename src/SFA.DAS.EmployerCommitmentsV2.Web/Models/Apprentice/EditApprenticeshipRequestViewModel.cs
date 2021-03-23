@@ -37,32 +37,31 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string ApprenticeName { get; set; }       
         public string ULN { get; set; }
 
-        public DateTime? StopDate { get; set; }
-        public DateTime? PauseDate { get; set; }
-        public DateTime? CompletionDate { get; set; }
-        public ProgrammeType? TrainingType { get; set; }
+        //public DateTime? StopDate { get; set; }
+        //public DateTime? PauseDate { get; set; }
+        //public DateTime? CompletionDate { get; set; }
+        //public ProgrammeType? TrainingType { get; set; }
         public string TrainingName { get; set; }
 
         [Display(Name = "Total agreed apprenticeship price (excluding VAT)")]
         [SuppressArgumentException(nameof(Cost), "The apprenticeship price is not valid")]
         public decimal? Cost { get; set; }
 
-        public ApprenticeshipStatus ApprenticeshipStatus { get; set; }
+        //public ApprenticeshipStatus ApprenticeshipStatus { get; set; }
+        
         public string EmployerReference { get; set; }
+       
         public bool IsContinuation { get; set; }
-        [Display(Name = "Date of birth")]
+       
         [DataType(DataType.Date)]
         public DateModel DateOfBirth { get; set; }
 
-        [Display(Name = "Day")]
         [SuppressArgumentException(nameof(DateOfBirth), "The date of birth is not valid")]
         public int? BirthDay { get => DateOfBirth.Day; set => DateOfBirth.Day = value; }
 
-        [Display(Name = "Month")]
         [SuppressArgumentException(nameof(DateOfBirth), "The date of birth is not valid")]
         public int? BirthMonth { get => DateOfBirth.Month; set => DateOfBirth.Month = value; }
 
-        [Display(Name = "Year")]
         [SuppressArgumentException(nameof(DateOfBirth), "The date of birth is not valid")]
         public int? BirthYear { get => DateOfBirth.Year; set => DateOfBirth.Year = value; }
 
