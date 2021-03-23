@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 ULN= apprenticeship.Uln,
                 CourseCode = apprenticeship.CourseCode,
                 Cost = priceEpisodes.PriceEpisodes.GetPrice(),
-                Reference = apprenticeship.EmployerReference,
+                EmployerReference = apprenticeship.EmployerReference,
                 Courses = courses,
                 IsContinuation = apprenticeship.IsContinuation,
                 IsLockedForUpdate = isLockedForUpdate,

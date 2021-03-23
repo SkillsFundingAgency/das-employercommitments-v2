@@ -520,7 +520,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var validationRequest = await _modelMapper.Map<ValidateApprenticeshipForEditRequest>(viewModel);
             await _commitmentsApiClient.ValidateApprenticeshipForEdit(validationRequest);
 
-            return RedirectToAction("ApprenticeshipDetails", new { viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.HashedApprenticeshipId });
+            return RedirectToAction("ConfirmEditApprenticeship");
+        }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/confirmEdit")]
+        public IActionResult ConfirmEditApprenticeship()
+        {
+            return View();
         }
     }
 }
