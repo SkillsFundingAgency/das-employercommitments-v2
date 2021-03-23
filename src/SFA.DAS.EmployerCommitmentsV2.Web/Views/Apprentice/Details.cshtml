@@ -151,8 +151,6 @@
                 {
                     @if (Model.IsV2Edit)
                     {
-                        <a id="edit-apprentice-link" href="@LinkGenerator.EditApprenticeship(Model.AccountHashedId, Model.HashedApprenticeshipId)" class="govuk-link govuk-body">v1 - Edit</a>
-                        <br />
                         <a id="edit-apprentice-link" href="@Url.Action("EditApprenticeship", new { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link govuk-body">Edit</a>
                     }
                     else

@@ -17,6 +17,9 @@
         <form id="editApprenticeship" novalidate method="post">
             @Html.AntiForgeryToken()
 
+            @Html.HiddenFor(x => x.AccountHashedId)
+            @Html.HiddenFor(x => x.HashedApprenticeshipId)
+
             @if (Model.IsContinuation)
             {
                 <dl class="das-definition-list">
@@ -45,7 +48,7 @@
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.FirstName, "govuk-form-group--error")">
                     <label asp-for="FirstName" class="govuk-label govuk-!-font-weight-bold">First name</label>
                     @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.FirstName) })
-                    <input asp-for="FirstName" class="govuk-input govuk-!-width-two-thirds" id="firstName"/>
+                    <input asp-for="FirstName" class="govuk-input govuk-!-width-two-thirds" id="firstName" />
                 </div>
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.LastName, "govuk-form-group--error")">
                     <label asp-for="LastName" class="govuk-label govuk-!-font-weight-bold">Last name</label>
@@ -186,7 +189,7 @@
                                 <div class="govuk-form-group">
                                     <label asp-for="EndMonth" class="govuk-label govuk-date-input__label">Month</label>
                                     <input asp-for="EndMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
-                                           class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" id="endDate-month"/>
+                                           class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" id="endDate-month" />
                                 </div>
                             </div>
                             <div class="govuk-date-input__item">
