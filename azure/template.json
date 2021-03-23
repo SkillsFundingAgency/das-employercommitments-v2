@@ -26,20 +26,6 @@
                 "description": "The name of the service."
             }
         },
-        "aspSize": {
-            "type": "string",
-            "defaultValue": "1",
-            "metadata": {
-                "description": "The size of the App Service Plan."
-            }
-        },
-        "aspInstances": {
-            "type": "int",
-            "defaultValue": 2,
-            "metadata": {
-                "description": "The instance count of the App Service Plan."
-            }
-        },
         "customHostName": {
             "type": "string",
             "defaultValue": "",
@@ -59,6 +45,12 @@
             "metadata": {
                 "description": "An array of IPs that are permitted to access the app service."
             }
+        },
+        "sharedEnvResourceGroup": {
+            "type": "string"
+        },
+        "sharedFrontEndAppServicePlanName": {
+            "type": "string"
         },
         "keyVaultCertificateName": {
             "type": "string",
@@ -85,38 +77,15 @@
     "variables": {
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
-        "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
-        "appServicePlanName": "[concat(variables('resourceNamePrefix'), '-asp')]"
+        "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]"
     },
     "resources": [
-        {
-            "apiVersion": "2017-05-10",
-            "name": "app-service-plan",
-            "type": "Microsoft.Resources/deployments",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-plan.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "appServicePlanName": {
-                        "value": "[variables('appServicePlanName')]"
-                    },
-                    "aspSize": {
-                        "value": "[parameters('aspSize')]"
-                    },
-                    "aspInstances": {
-                        "value": "[parameters('aspInstances')]"
-                    }
-                }
-            }
-        },
         {
             "condition": "[greater(length(parameters('customHostName')), 0)]",
             "apiVersion": "2017-05-10",
             "name": "app-service-certificate",
             "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -171,10 +140,10 @@
                         "value": "[variables('appServiceName')]"
                     },
                     "appServicePlanName": {
-                        "value": "[variables('appServicePlanName')]"
+                        "value": "[parameters('sharedFrontEndAppServicePlanName')]"
                     },
                     "appServicePlanResourceGroup": {
-                        "value": "[resourceGroup().name]"
+                        "value": "[parameters('sharedEnvResourceGroup')]"
                     },
                     "appServiceAppSettings": {
                         "value": {
@@ -218,7 +187,6 @@
                 }
             },
             "dependsOn": [
-                "app-service-plan"
             ]
         }
     ],
