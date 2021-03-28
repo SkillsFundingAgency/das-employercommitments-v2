@@ -19,8 +19,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         public async Task ThenTheCorrectViewIsReturned()
         {
-            _fixture = new WhenCallingEditApprenticeshipTestsFixture();
-
             var result = await _fixture.EditApprenticeship();
 
             _fixture.VerifyViewModel(result as ViewResult);

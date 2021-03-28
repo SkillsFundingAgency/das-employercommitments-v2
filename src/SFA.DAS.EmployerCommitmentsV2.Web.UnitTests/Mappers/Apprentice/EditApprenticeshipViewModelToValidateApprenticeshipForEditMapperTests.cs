@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using NUnit.Framework;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Testing.AutoFixture;
@@ -11,19 +10,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
     public class EditApprenticeshipViewModelToValidateApprenticeshipForEditMapperTests
     {
         EditApprenticeshipRequestViewModel request;
+
         [SetUp]
         public void SetUp()
         {
-            var fixture = new AutoFixture.Fixture();
+            var fixture = new Fixture();
             fixture.Customize(new DateCustomisation());
             request = fixture.Create<EditApprenticeshipRequestViewModel>();
         }
 
         [Test, MoqAutoData]
         public async Task ApprenticeshipId_IsMapped(
-          IAuthenticationService authenticationService)
+          EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
         {
-            var mapper = new EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper(authenticationService);
             var result = await mapper.Map(request);
 
             Assert.AreEqual(request.ApprenticeshipId, result.ApprenticeshipId);
@@ -31,9 +30,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         [Test, MoqAutoData]
         public async Task EmployerAccountId_IsMapped(
-        IAuthenticationService authenticationService)
+            EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
         {
-            var mapper = new EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper(authenticationService);
             var result = await mapper.Map(request);
 
             Assert.AreEqual(request.AccountId, result.EmployerAccountId);
@@ -41,9 +39,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         [Test, MoqAutoData]
         public async Task FirstName_IsMapped(
-        IAuthenticationService authenticationService)
+            EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
         {
-            var mapper = new EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper(authenticationService);
             var result = await mapper.Map(request);
 
             Assert.AreEqual(request.FirstName, result.FirstName);
@@ -51,9 +48,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         [Test, MoqAutoData]
         public async Task LastName_IsMapped(
-        IAuthenticationService authenticationService)
+            EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
         {
-            var mapper = new EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper(authenticationService);
             var result = await mapper.Map(request);
 
             Assert.AreEqual(request.LastName, result.LastName);
@@ -61,9 +57,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         [Test, MoqAutoData]
         public async Task DateOfBirth_IsMapped(
-        IAuthenticationService authenticationService)
+             EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
         {
-            var mapper = new EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper(authenticationService);
             var result = await mapper.Map(request);
 
             Assert.AreEqual(request.DateOfBirth.Date, result.DateOfBirth);
@@ -71,9 +66,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         [Test, MoqAutoData]
         public async Task ULN_IsMapped(
-        IAuthenticationService authenticationService)
+              EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
         {
-            var mapper = new EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper(authenticationService);
             var result = await mapper.Map(request);
 
             Assert.AreEqual(request.ULN, result.ULN);
@@ -81,9 +75,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         [Test, MoqAutoData]
         public async Task Cost_IsMapped(
-        IAuthenticationService authenticationService)
+             EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
         {
-            var mapper = new EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper(authenticationService);
             var result = await mapper.Map(request);
 
             Assert.AreEqual(request.Cost, result.Cost);
@@ -91,9 +84,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         [Test, MoqAutoData]
         public async Task EmployerReference_IsMapped(
-        IAuthenticationService authenticationService)
+             EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
         {
-            var mapper = new EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper(authenticationService);
             var result = await mapper.Map(request);
 
             Assert.AreEqual(request.EmployerReference, result.EmployerReference);
@@ -101,9 +93,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         [Test, MoqAutoData]
         public async Task StartDate_IsMapped(
-        IAuthenticationService authenticationService)
+             EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
         {
-            var mapper = new EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper(authenticationService);
             var result = await mapper.Map(request);
 
             Assert.AreEqual(request.StartDate.Date, result.StartDate);
@@ -111,9 +102,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         [Test, MoqAutoData]
         public async Task EndDate_IsMapped(
-        IAuthenticationService authenticationService)
+             EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
         {
-            var mapper = new EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper(authenticationService);
             var result = await mapper.Map(request);
 
             Assert.AreEqual(request.EndDate.Date, result.EndDate);
@@ -121,24 +111,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         [Test, MoqAutoData]
         public async Task CourseCode_IsMapped(
-        IAuthenticationService authenticationService)
+        EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
         {
-            var mapper = new EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper(authenticationService);
             var result = await mapper.Map(request);
 
             Assert.AreEqual(request.CourseCode, result.TrainingCode);
-        }
-
-        [Test, MoqAutoData]
-        public async Task UserInfo_IsMapped(      
-        IAuthenticationService authenticationService)
-        {
-            var mapper = new EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper(authenticationService);
-            var result = await mapper.Map(request);
-
-            Assert.AreEqual(authenticationService.UserInfo.UserEmail, result.UserInfo.UserEmail);
-            Assert.AreEqual(authenticationService.UserInfo.UserId, result.UserInfo.UserId);
-            Assert.AreEqual(authenticationService.UserInfo.UserDisplayName, result.UserInfo.UserDisplayName);
         }
 
         public class DateCustomisation : ICustomization

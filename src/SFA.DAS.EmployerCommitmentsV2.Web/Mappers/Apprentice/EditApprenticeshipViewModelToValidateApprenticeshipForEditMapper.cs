@@ -29,8 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 EmployerReference = source.EmployerReference,
                 StartDate = source.StartDate.Date,
                 EndDate = source.EndDate.Date,
-                TrainingCode = source.CourseCode, 
-                UserInfo = _authenticationService.UserInfo
+                TrainingCode = source.CourseCode
             };
             return Task.FromResult(result);
         }

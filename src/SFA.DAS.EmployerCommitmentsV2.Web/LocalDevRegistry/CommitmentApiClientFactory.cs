@@ -32,7 +32,6 @@ namespace SFA.DAS.CommitmentsV2.Api.Client
 
                 var restHttpClient = new CommitmentsRestHttpClient(httpClient, _loggerFactory);
                 return new CommitmentsApiClient(restHttpClient);
-
             }
             else
             {
@@ -54,7 +53,6 @@ namespace SFA.DAS.CommitmentsV2.Api.Client
 
                 var restHttpClient = new CommitmentsRestHttpClient(httpClient, _loggerFactory);
                 return new CommitmentPermissionsApiClient(restHttpClient);
-
             }
             else
             {
