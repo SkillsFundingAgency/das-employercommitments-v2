@@ -524,7 +524,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{apprenticeshipHashedId}/confirmEdit")]
+        [Route("{apprenticeshipHashedId}/edit/confirm")]
         public IActionResult ConfirmEditApprenticeship(ConfirmEditApprenticeshipRequest request)
         {
             return View();

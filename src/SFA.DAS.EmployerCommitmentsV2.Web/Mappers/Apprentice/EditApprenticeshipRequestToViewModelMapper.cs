@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
@@ -40,11 +41,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards(CancellationToken.None)).TrainingProgrammes
                 : (await _commitmentsApiClient.GetAllTrainingProgrammes(CancellationToken.None)).TrainingProgrammes;
 
-            var isLockedForUpdate = (apprenticeship.Status == ApprenticeshipStatus.Live &&
-                                     (apprenticeship.HasHadDataLockSuccess || !IsWithInFundingPeriod(apprenticeship.StartDate)))
+            var isLockedForUpdate = IsLiveAndHasHadDataLockSuccess(apprenticeship)
                                     ||
-                                    (commitment.IsFundedByTransfer
-                                     && apprenticeship.HasHadDataLockSuccess && apprenticeship.Status == ApprenticeshipStatus.WaitingToStart);
+                                    IsLiveAndIsNotWithInFundingPeriod(apprenticeship)
+                                    ||
+                                    IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(apprenticeship, commitment);
 
             var result = new EditApprenticeshipRequestViewModel(apprenticeship.DateOfBirth, apprenticeship.StartDate, apprenticeship.EndDate)
             {
@@ -67,12 +68,40 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             return result;
         }
 
+        private bool IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(GetApprenticeshipResponse apprenticeship, GetCohortResponse commitment)
+        {
+            return commitment.IsFundedByTransfer
+                    && HasHadDataLockSuccess(apprenticeship) 
+                    && IsWaitingToStart(apprenticeship);
+        }
+
+        private bool IsLiveAndHasHadDataLockSuccess(GetApprenticeshipResponse apprenticeship)
+        {
+            return IsLive(apprenticeship) && HasHadDataLockSuccess(apprenticeship);
+        }
+
+        private bool IsLiveAndIsNotWithInFundingPeriod(GetApprenticeshipResponse apprenticeship)
+        {
+            return IsLive(apprenticeship) && !IsWithInFundingPeriod(apprenticeship.StartDate);
+        }
+
+        private bool IsWaitingToStart(GetApprenticeshipResponse apprenticeship)
+        {
+            return apprenticeship.Status == ApprenticeshipStatus.WaitingToStart;
+        }
+
+        private bool IsLive(GetApprenticeshipResponse apprenticeship)
+        {
+            return apprenticeship.Status == ApprenticeshipStatus.Live;
+        }
+
+        private bool HasHadDataLockSuccess(GetApprenticeshipResponse apprenticeship)
+        {
+            return apprenticeship.HasHadDataLockSuccess;
+        }
+
         private bool IsEndDateLocked(bool isLockedForUpdate, bool hasHadDataLockSuccess, ApprenticeshipStatus status)
         {
-            // thoughts on this - the only reason for if condition I can think of is because
-            // NotTransferSender :  IsLockedForUpdate becomes true only if it is live. In this case we want to lock the field even if it is waiting for start and we haddatalockSuccess
-            // TransferSender    : IsLockedForUpdate become true, in case it is Transfer sender and it has received a datalock success even in the case of waiting for start.
-            // But this will also cause this field to become editable, if has received a data lock and status is not waiting to start
             var result = isLockedForUpdate;
             if (hasHadDataLockSuccess)
             {
