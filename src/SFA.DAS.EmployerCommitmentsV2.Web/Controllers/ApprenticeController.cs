@@ -36,6 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private const string ApprenticePausedMessage = "Apprenticeship paused";
         private const string ApprenticeResumeMessage = "Apprenticeship resumed";
         private const string ApprenticeStoppedMessage = "Apprenticeship stopped";
+        private const string ApprenticeEditStopDate = "New stop date confirmed";
 
         public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILinkGenerator linkGenerator, ILogger<ApprenticeController> logger, IAuthorizationService authorizationService)
         {
@@ -499,8 +500,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
+            
 
             return View("details", viewModel);
+        }    
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/details/editstopdate", Name = "EditStopDateOption")]        
+        public async Task<ActionResult> EditStopDate(EditStopDateRequest request)
+        {
+            var viewModel = await _modelMapper.Map<EditStopDateViewModel>(request);
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/details/editstopdate", Name = "PostEditStopDate")]
+        public async Task<ActionResult> UpdateApprenticeshipStopDate(EditStopDateViewModel viewModel)
+        {
+            var request = await _modelMapper.Map<ApprenticeshipStopDateRequest>(viewModel);
+            await _commitmentsApiClient.UpdateApprenticeshipStopDate(viewModel.ApprenticeshipId, request, CancellationToken.None);
+            
+            TempData.AddFlashMessage(ApprenticeEditStopDate, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+
+            return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId }); 
         }
     }
 }
