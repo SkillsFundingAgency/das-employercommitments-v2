@@ -69,8 +69,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         [Test]
         public async Task AndAfterUpdateDate_ThenRedirectToApprenticeDetailsPageWithFlashMessage()
-        {          
-
+        {
             //Act
             var result = await _controller.UpdateApprenticeshipStopDate(_viewModel) as RedirectToActionResult;
 
