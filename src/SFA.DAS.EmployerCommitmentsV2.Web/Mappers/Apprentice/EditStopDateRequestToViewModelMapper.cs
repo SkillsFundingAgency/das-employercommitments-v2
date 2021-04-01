@@ -31,8 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 {   
                     ApprenticeshipId = source.ApprenticeshipId,
                     AccountHashedId = source.AccountHashedId,
-                    ApprenticeshipULN = apprenticeship.Uln,
-                    ApprenticeshipName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
+                    ApprenticeshipULN = apprenticeship.Uln,                    
                     ApprenticeshipHashedId = source.ApprenticeshipHashedId,
                     ApprenticeshipStartDate = apprenticeship.StartDate,
                     CurrentStopDate = apprenticeship.StopDate.Value

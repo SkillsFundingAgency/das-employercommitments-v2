@@ -87,16 +87,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task ApprenticeshipName_IsMapped()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            Assert.AreEqual($"{_apprenticeshipResponse.FirstName} {_apprenticeshipResponse.LastName}", result.ApprenticeshipName);
-        }
-
-        [Test]
         public async Task ApprenticeshipStartDate_IsMapped()
         {
             //Act

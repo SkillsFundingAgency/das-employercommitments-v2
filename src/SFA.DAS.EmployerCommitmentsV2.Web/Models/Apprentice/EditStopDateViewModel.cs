@@ -20,9 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         
         public string ApprenticeshipHashedId { get; set; }
         
-        public string ApprenticeshipName { get; set; }
-        
-        public DateTime EarliestDate { get; set; }
+        public string ApprenticeshipName { get; set; }        
         
         public DateTime CurrentStopDate { get; set; }       
         
