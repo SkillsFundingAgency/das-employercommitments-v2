@@ -24,9 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         
         public DateTime EarliestDate { get; set; }
         
-        public DateTime CurrentStopDate { get; set; }
-        
-        public DateTime? AcademicYearRestriction { get; set; }
+        public DateTime CurrentStopDate { get; set; }       
         
         public DateTime ApprenticeshipStartDate { get; set; }       
         

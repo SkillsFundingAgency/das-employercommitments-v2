@@ -18,15 +18,7 @@
 
         <form method="post">
 
-            @Html.AntiForgeryToken()
-
-            <input type="hidden" asp-for="ApprenticeshipHashedId" />
-            <input type="hidden" asp-for="ApprenticeshipName" />
-            <input type="hidden" asp-for="ApprenticeshipULN" />
-            <input type="hidden" asp-for="CurrentStopDate" />
-            <input type="hidden" asp-for="EarliestDate" />
-            <input type="hidden" asp-for="AcademicYearRestriction" />
-            <input type="hidden" asp-for="ApprenticeshipStartDate" />
+            @Html.AntiForgeryToken()        
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.NewStopDate, "govuk-form-group--error")">
 

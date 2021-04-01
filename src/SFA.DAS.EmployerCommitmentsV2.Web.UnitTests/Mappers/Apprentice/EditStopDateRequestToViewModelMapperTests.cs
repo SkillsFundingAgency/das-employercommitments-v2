@@ -1,25 +1,20 @@
 ﻿using AutoFixture;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using SFA.DAS.Encoding;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 {
     public class EditStopDateRequestToViewModelMapperTests
     {
-        private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
-        private Mock<IEncodingService> _mockEncodingService;
+        private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;        
         private Mock<ILogger<EditStopDateRequestToViewModelMapper>> _logger;
-        private Mock<IAcademicYearDateProvider> _mockAcademicYearDateProvider;
-        private Mock<ICurrentDateTime> _mockCurrentDateTime;
         private EditStopDateRequest _request;
         private GetApprenticeshipResponse _apprenticeshipResponse;
         private EditStopDateRequestToViewModelMapper _mapper;
@@ -31,17 +26,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _request = _autoFixture.Create<EditStopDateRequest>();
 
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+            _logger = new Mock<ILogger<EditStopDateRequestToViewModelMapper>>();
             _apprenticeshipResponse = _autoFixture.Create<GetApprenticeshipResponse>();
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _mockCommitmentsApiClient.Setup(m => m.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_apprenticeshipResponse);
-            _mockEncodingService = new Mock<IEncodingService>();
-            _logger = new Mock<ILogger<EditStopDateRequestToViewModelMapper>>();
-            _mockAcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
-            _mockCurrentDateTime = new Mock<ICurrentDateTime>();
+        
 
-            _mapper = new EditStopDateRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _mockAcademicYearDateProvider.Object,
-                _mockCurrentDateTime.Object, _logger.Object);
+            _mapper = new EditStopDateRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _logger.Object);
         }
 
         [Test]
