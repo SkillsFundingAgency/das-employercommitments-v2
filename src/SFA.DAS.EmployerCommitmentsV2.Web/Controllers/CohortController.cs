@@ -13,8 +13,10 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
+using System.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -320,6 +322,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var viewModel = await _modelMapper.Map<WithTransferSenderViewModel>(request);
             return View(viewModel);
+        }
+
+
+        [HttpGet]
+        [Route("transferConnection/create")]
+        public async Task<IActionResult> SelectTransferConnection(InformRequest request)
+        {
+            var viewModel = await _modelMapper.Map<InformViewModel>(request);
+
+            if (viewModel.TransferConnections.Any())
+            {
+                //https://test-empc.apprenticeships.education.gov.uk/commitments/accounts/V6W4DD/apprentices/transferConnection/create
+                //Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+                return Redirect(_linkGenerator.SelectTransferConnection(request.AccountHashedId));
+            }
+            //https://test-empc.apprenticeships.education.gov.uk/commitments/accounts/VW6B97/apprentices/legalEntity/create
+            return Redirect(_linkGenerator.SelectLegalEntity(request.AccountHashedId));
         }
     }
 }
