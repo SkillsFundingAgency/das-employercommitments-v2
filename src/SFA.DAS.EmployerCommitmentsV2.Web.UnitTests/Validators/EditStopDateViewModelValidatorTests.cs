@@ -77,9 +77,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 
             //Act
             var result = _validator.Validate(viewModel);
-            Assert.AreEqual(expectedValid, result.IsValid);
 
             //Assert
+            Assert.AreEqual(expectedValid, result.IsValid);
             if (errorMessage != null) Assert.AreEqual(errorMessage, result.Errors.Single().ErrorMessage);
         }
     }
