@@ -1,4 +1,4 @@
-﻿@using SFA.DAS.Employer.Shared.UI.Models
+@using SFA.DAS.Employer.Shared.UI.Models
 
 <!DOCTYPE html>
 <html lang="en" class="govuk-template ">
@@ -100,8 +100,9 @@
             accessibleAutocomplete.enhanceSelectElement({
                 selectElement: this,
                 minLength: 3,
-                autoselect: true,
+                autoselect: false,
                 defaultValue: '',
+                showAllValues: true,
                 displayMenu: 'overlay',
                 placeholder: $(this).data('placeholder') || '',
                 onConfirm: function (opt) {
