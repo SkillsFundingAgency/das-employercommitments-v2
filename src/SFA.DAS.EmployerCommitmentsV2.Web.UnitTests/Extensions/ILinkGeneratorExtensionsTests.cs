@@ -112,6 +112,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/manage/{hashedApprenticeshipId}/datalock/changes", url);
         }
+
+        [Test, AutoData]
+        public void SelectTransferConnection_BuildsPathCorrectly(string accountHashedId)
+        {
+            var url = _fixture.Sut.SelectTransferConnection(accountHashedId);
+
+            Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/transferConnection/create", url);
+        }
+
+        [Test, AutoData]
+        public void SelectLegalEntity_BuildsPathCorrectly(string accountHashedId)
+        {
+            var url = _fixture.Sut.SelectLegalEntity(accountHashedId);
+
+            Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/legalEntity/create", url);
+        }
     }
 
     public class ILinkGeneratorExtensionsTestsFixture
