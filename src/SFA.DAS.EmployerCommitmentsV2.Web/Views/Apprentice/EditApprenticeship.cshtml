@@ -226,7 +226,7 @@
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Cost, "govuk-form-group--error")">
                     <label asp-for="Cost" class="govuk-label govuk-!-font-weight-bold">Total agreed apprenticeship price (excluding VAT)</label>
                     <span id="price-hint" class="govuk-hint">
-                        Enter the price, including any end-point assessment costs, in whole pounds. For example, for £1,500 enter 1500
+                        Enter the price, including any end-point assessment costs, in whole pounds. <br /> For example, for £1,500 enter 1500
                     </span>
                     @Html.ValidationMessageFor(m => m.Cost, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Cost) })
                     <input asp-for="Cost" class="govuk-input govuk-input--width-5" inputmode="numeric" pattern="[0-9]*" maxlength="7" min="1" max="9999999" id="cost" />
