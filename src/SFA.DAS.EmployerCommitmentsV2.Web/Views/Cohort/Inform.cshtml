@@ -1,8 +1,6 @@
 ﻿@inject ILinkGenerator LinkGenerator
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
-@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
-@using SFA.DAS.EmployerUrlHelper.Mvc
-@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.CommitmentInformViewModel
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.InformViewModel
 
 @{
     ViewData["Title"] = "Add an apprentice";
@@ -24,7 +22,7 @@
             <li>make sure the organisation that's named on the contract you have with your training provider is in your account - <a href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)">view organisations in this account</a> </li>
             <li>make sure the PAYE scheme that each apprentice is paid through is in your account - <a href="@LinkGenerator.PayeSchemes(Model.AccountHashedId)">view PAYE schemes in this account</a></li>
         </ul>
-        <a href="@Url.Action("SelectTransferConnection")" class="button button-start govuk-button--start" role="button">Start now</a> @*TODO : remove*@
+        
         <a asp-action="SelectTransferConnection" id="continue-button" asp-route-accountHashedId="@Model.AccountHashedId" role="button" draggable="false" class="govuk-button govuk-button--start">
             Start now
         </a>

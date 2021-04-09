@@ -7,21 +7,22 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class InformRequestViewModelMapper : IMapper<InformRequest, InformViewModel>
+    public class InformRequestToSelectTransferConnectionViewModelMapper : IMapper<InformRequest, SelectTransferConnectionViewModel>
     {
         private readonly IAccountApiClient _accountsApiClient;
 
-        public InformRequestViewModelMapper(IAccountApiClient accountApiClient)
+        public InformRequestToSelectTransferConnectionViewModelMapper(IAccountApiClient accountApiClient)
         {
             _accountsApiClient = accountApiClient;
         }
 
-        public async Task<InformViewModel> Map(InformRequest source)
+        public async Task<SelectTransferConnectionViewModel> Map(InformRequest source)
         {
             var result = await GetTransferConnectionsForAccount(source.AccountHashedId);
 
-            return new InformViewModel
+            return new SelectTransferConnectionViewModel
             {
+                AccountHashedId = source.AccountHashedId,
                 TransferConnections = result
             };
         }

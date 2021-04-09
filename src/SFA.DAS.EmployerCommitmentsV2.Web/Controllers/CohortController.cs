@@ -324,20 +324,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
+        [Route("Inform")]
+        public async Task<ActionResult> Inform(InformRequest request)
+        {
+            var viewModel = await _modelMapper.Map<InformViewModel>(request);
+            return View(viewModel);
+        }
 
         [HttpGet]
         [Route("transferConnection/create")]
         public async Task<IActionResult> SelectTransferConnection(InformRequest request)
         {
-            var viewModel = await _modelMapper.Map<InformViewModel>(request);
+            var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(request);
 
             if (viewModel.TransferConnections.Any())
-            {
-                //https://test-empc.apprenticeships.education.gov.uk/commitments/accounts/V6W4DD/apprentices/transferConnection/create
-                //Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+            {   
                 return Redirect(_linkGenerator.SelectTransferConnection(request.AccountHashedId));
             }
-            //https://test-empc.apprenticeships.education.gov.uk/commitments/accounts/VW6B97/apprentices/legalEntity/create
+
             return Redirect(_linkGenerator.SelectLegalEntity(request.AccountHashedId));
         }
     }
