@@ -40,6 +40,7 @@
 
     <!--[if !IE 8]><!-->
     <link href="/css/main.css" rel="stylesheet" />
+    <link href="/css/app.css" rel="stylesheet" no-cdn />
     <!--<![endif]-->
 
     <meta property="og:image" content="/assets/images/govuk-opengraph-image.png" />
@@ -104,6 +105,9 @@
                 defaultValue: '',
                 showAllValues: true,
                 displayMenu: 'overlay',
+                dropdownArrow: function () {
+                    return '<svg width="17" height="11" viewBox="0 0 17 11" xmlns="http://www.w3.org/2000/svg"><path d="M1.97 0L8.39 6.4L14.8 0L16.77 1.97L8.38 10.36L0 1.97L1.97 0Z" fill="black"/></svg>';
+                },
                 placeholder: $(this).data('placeholder') || '',
                 onConfirm: function (opt) {
                     var txtInput = document.querySelector('#' + this.id);
