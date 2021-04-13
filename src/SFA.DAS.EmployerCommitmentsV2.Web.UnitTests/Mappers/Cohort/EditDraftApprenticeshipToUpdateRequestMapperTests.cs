@@ -70,6 +70,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
+        public async Task ThenEmailIsMappedCorrectly()
+        {
+            var result = await _act();
+            Assert.AreEqual(_source.Email, result.Email);
+        }
+
+        [Test]
         public async Task ThenCourseCodeIsMappedCorrectly()
         {
             var result = await _act();

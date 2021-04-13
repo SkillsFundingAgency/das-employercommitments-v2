@@ -37,6 +37,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        [Display(Name = "Email address")]
+        public string Email { get; set; }
+
         [Display(Name = "Date of birth")]
         [DataType(DataType.Date)]
         public DateModel DateOfBirth { get; }

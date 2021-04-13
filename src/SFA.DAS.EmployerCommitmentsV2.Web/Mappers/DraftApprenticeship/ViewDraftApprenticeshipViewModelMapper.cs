@@ -27,6 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 CohortReference = source.Request.CohortReference,
                 FirstName = draftApprenticeship.FirstName,
                 LastName = draftApprenticeship.LastName,
+                Email = draftApprenticeship.Email,
                 Uln = draftApprenticeship.Uln,
                 DateOfBirth = draftApprenticeship.DateOfBirth,
                 TrainingCourse = trainingCourse?.TrainingProgramme.Name,
