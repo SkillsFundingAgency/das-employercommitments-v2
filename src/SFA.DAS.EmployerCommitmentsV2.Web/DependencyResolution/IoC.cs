@@ -2,6 +2,7 @@
 using SFA.DAS.AutoConfiguration.DependencyResolution;
 using SFA.DAS.CommitmentsV2.Shared.DependencyInjection;
 using SFA.DAS.EmployerCommitmentsV2.DependencyResolution;
+using SFA.DAS.EmployerCommitmentsV2.Web.Remove;
 using StructureMap;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
@@ -18,6 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
             registry.IncludeRegistry<EncodingRegistry>();
             registry.IncludeRegistry<EmployerUserRolesAuthorizationRegistry>();
             registry.IncludeRegistry<WebRegistry>();
+            registry.IncludeRegistry<LocalDevRegistry>();
         }
     }
 }
