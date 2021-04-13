@@ -61,11 +61,14 @@ else
                 @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
                 <input asp-for="LastName" class="govuk-input" />
             </div>
-            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
-                <label asp-for="Email" class="govuk-label">Email address</label>
-                @Html.ValidationMessageFor(m => m.Email, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email) })
-                <input asp-for="Email" class="govuk-input" />
-            </div>
+            @if (Model.ShowEmail)
+            {
+                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
+                    <label asp-for="Email" class="govuk-label">Email address</label>
+                    @Html.ValidationMessageFor(m => m.Email, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email)})
+                    <input asp-for="Email" class="govuk-input"/>
+                </div>
+            }
         </fieldset>
     </div>
     <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.DateOfBirth, "govuk-form-group--error")">

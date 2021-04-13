@@ -6,10 +6,12 @@ using AutoFixture;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
@@ -20,6 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     {
         private ApprenticeViewModelMapper _mapper;
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
+        private Mock<IAuthorizationService> _authorizationService;
         private GetProviderResponse _providerResponse;
         private AccountLegalEntityResponse _accountLegalEntityResponse;
         private ApprenticeRequest _source;
@@ -62,10 +65,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 {
                     TrainingProgrammes = _allTrainingProgrammes
                 });
-
+            _authorizationService = new Mock<IAuthorizationService>();
 
             _mapper = new ApprenticeViewModelMapper(
-                _commitmentsApiClient.Object);
+                _commitmentsApiClient.Object, _authorizationService.Object);
 
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }
@@ -158,6 +161,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _accountLegalEntityResponse.LevyStatus = ApprenticeshipEmployerType.NonLevy;
             _result = await _mapper.Map(TestHelper.Clone(_source));
             _result.Courses.Should().BeEquivalentTo(_standardTrainingProgrammes);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task ShowEmailIsSetCorrectly(bool show)
+        {
+            _authorizationService.Setup(x => x.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail))
+                .ReturnsAsync(show);
+
+            _result = await _mapper.Map(TestHelper.Clone(_source));
+            _result.ShowEmail.Should().Be(show);
         }
     }
 }

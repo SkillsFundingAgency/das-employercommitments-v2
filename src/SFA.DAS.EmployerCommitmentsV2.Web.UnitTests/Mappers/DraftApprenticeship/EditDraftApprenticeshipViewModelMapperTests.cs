@@ -3,11 +3,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;
@@ -23,6 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private EditDraftApprenticeshipViewModel _result;
 
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
+        private Mock<IAuthorizationService> _authorizationService;
         private GetDraftApprenticeshipResponse _draftApprenticeshipResponse;
         private Mock<IEncodingService> _encodingService;
         private string _encodedApprenticeshipId;
@@ -75,9 +79,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _commitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_cohort);
 
+            _authorizationService = new Mock<IAuthorizationService>();
+
             _source = autoFixture.Create<EditDraftApprenticeshipRequest>();
             _source.Cohort = _cohort;
-            _mapper = new EditDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object);
+            _mapper = new EditDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object, _authorizationService.Object);
 
             _result = await _mapper.Map(TestHelper.Clone(_source)) as EditDraftApprenticeshipViewModel;
         }
@@ -235,6 +241,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _draftApprenticeshipResponse.IsContinuation = isContinuation;
             _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
             Assert.AreEqual(_draftApprenticeshipResponse.IsContinuation, _result.IsContinuation);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task ShowEmailIsSetCorrectly(bool show)
+        {
+            _authorizationService.Setup(x => x.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail))
+                .ReturnsAsync(show);
+
+            _result = await _mapper.Map(TestHelper.Clone(_source)) as EditDraftApprenticeshipViewModel;
+            _result.ShowEmail.Should().Be(show);
         }
     }
 }
