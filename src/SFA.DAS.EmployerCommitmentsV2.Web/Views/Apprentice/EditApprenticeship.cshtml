@@ -1,0 +1,280 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditApprenticeshipRequestViewModel
+
+@{
+    ViewBag.Title = "Edit Apprentice detail";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageId = "edit-apprentices-detail";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+        <h1 class="govuk-heading-xl" >Edit apprentice details</h1>
+
+        <form id="editApprenticeship" novalidate method="post">
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(x => x.AccountHashedId)
+            @Html.HiddenFor(x => x.HashedApprenticeshipId)
+
+            @if (Model.IsContinuation)
+            {
+                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+                <dl class="das-definition-list">
+                    <dt class="das-definition-list__title" asp-for="FirstName">First Name</dt>
+                    <dd class="das-definition-list__definition" id="firstName">@Model.FirstName</dd>
+                    @Html.Hidden("FirstName", Model.FirstName)
+                </dl>
+
+                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+                <dl class="das-definition-list">
+                    <dt class="das-definition-list__title" asp-for="LastName">Last Name</dt>
+                    <dd class="das-definition-list__definition" id="lastName">@Model.LastName</dd>
+                    @Html.Hidden("LastName", Model.LastName)
+                </dl>
+
+                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+                <dl class="das-definition-list">
+                    <dt class="das-definition-list__title" asp-for="DateOfBirth">Date of birth</dt>
+                    <dd class="das-definition-list__definition" id="dob">@Model.DateOfBirth.Date.Value.ToGdsFormat()</dd>
+                    @Html.HiddenFor(x => x.BirthDay)
+                    @Html.HiddenFor(x => x.BirthMonth)
+                    @Html.HiddenFor(x => x.BirthYear)
+                </dl>
+            }
+            else
+            {
+                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.FirstName, "govuk-form-group--error")">
+                    <label asp-for="FirstName" class="govuk-label govuk-!-font-weight-bold">First name</label>
+                    @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.FirstName) })
+                    <input asp-for="FirstName" class="govuk-input govuk-!-width-two-thirds" id="firstName" />
+                </div>
+                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.LastName, "govuk-form-group--error")">
+                    <label asp-for="LastName" class="govuk-label govuk-!-font-weight-bold">Last name</label>
+                    @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
+                    <input asp-for="LastName" class="govuk-input govuk-!-width-two-thirds" id="lastName" />
+                </div>
+
+                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+                <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.DateOfBirth, "govuk-form-group--error")">
+                    <fieldset class="govuk-fieldset" aria-describedby="dob-hint" role="group">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            Date of birth
+                        </legend>
+                        <span id="dob-hint" class="govuk-hint">
+                            For example, 31 3 1980
+                        </span>
+                        @Html.ValidationMessageFor(m => m.DateOfBirth, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DateOfBirth) })
+                        <div class="govuk-date-input">
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label asp-for="BirthDay" class="govuk-label govuk-date-input__label">Day</label>
+                                    <input asp-for="BirthDay" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="31"
+                                           class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" id="dob-day">
+                                </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label asp-for="BirthMonth" class="govuk-label govuk-date-input__label">Month</label>
+                                    <input asp-for="BirthMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
+                                           class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" id="dob-month">
+                                </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label asp-for="BirthYear" class="govuk-label govuk-date-input__label">Year</label>
+                                    <input asp-for="BirthYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
+                                           class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" id="dob-year">
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            }
+
+            <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+            <dl class="das-definition-list">
+                <dt asp-for="ULN" class="das-definition-list__title">Unique learner number</dt>
+                <dd class="das-definition-list__definition" id="uln">@Model.ULN</dd>
+                @Html.HiddenFor(x => x.ULN)
+            </dl>
+
+            <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+            @if (Model.IsLockedForUpdate || Model.IsUpdateLockedForStartDateAndCourse || Model.IsContinuation)
+            {
+                <dl class="das-definition-list">
+                    <dt asp-for="TrainingName" class="das-definition-list__title">Apprenticeship training course</dt>
+                    <dd class="das-definition-list__definition" id="trainingName">@Model.TrainingName </dd>
+                    @Html.HiddenFor(x => x.CourseCode)
+                    @Html.HiddenFor(x => x.TrainingName)
+                </dl>
+            }
+            else
+            {
+                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
+                    <label asp-for="CourseCode" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
+                    <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
+                    @Html.ValidationMessageFor(m => m.CourseCode, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.CourseCode) })
+                    <select class="govuk-select govuk-!-width-three-quarters das-autocomplete" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "CourseCode", "Name"))" aria-describedby="course-name-hint" id="trainingCourse">
+                        <option value="">Please select</option>
+                    </select>
+                </div>
+            }
+
+            <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+            @if (Model.IsLockedForUpdate || Model.IsUpdateLockedForStartDateAndCourse)
+            {
+                <dl class="das-definition-list">
+                    <dt class="das-definition-list__title">Planned training start date</dt>
+                    <dd class="das-definition-list__definition" id="startDate">@Model.StartDate.Date.Value.ToGdsFormatLongMonthWithoutDay()</dd>
+                </dl>
+                @Html.HiddenFor(x => x.StartMonth)
+                @Html.HiddenFor(x => x.StartYear)
+            }
+            else
+            {
+                <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.StartDate, "govuk-form-group--error")">
+                    <fieldset class="govuk-fieldset" aria-describedby="start-date-hint" role="group">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            Planned training start date
+                        </legend>
+                        <span id="start-date-hint" class="govuk-hint">
+                            For example, 09 2017
+                        </span>
+                        @Html.ValidationMessageFor(m => m.StartDate, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.StartDate) })
+                        <div class="govuk-date-input">
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label asp-for="StartMonth" class="govuk-label govuk-date-input__label length-limit">Month</label>
+                                    <input asp-for="StartMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
+                                           class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" id="startDate-month">
+                                </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label asp-for="StartYear" class="govuk-label govuk-date-input__label">Year</label>
+                                    <input asp-for="StartYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
+                                           class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" id="startDate-year" />
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            }
+
+            <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+            @if (Model.IsEndDateLockedForUpdate)
+            {
+                <dl class="das-definition-list">
+                    <dt class="das-definition-list__title">Planned training finish date</dt>
+                    <dd class="das-definition-list__definition" id="endDate">@Model.EndDate.Date.Value.ToGdsFormatLongMonthWithoutDay()</dd>
+                </dl>
+                @Html.HiddenFor(x => x.EndMonth)
+                @Html.HiddenFor(x => x.EndYear)
+            }
+            else
+            {
+                <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.EndDate, "govuk-form-group--error")">
+                    <fieldset class="govuk-fieldset" aria-describedby="finish-date-hint" role="group">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            Planned training end date
+                        </legend>
+                        <span id="finish-date-hint" class="govuk-hint">
+                            For example, 09 2019
+                        </span>
+                        @Html.ValidationMessageFor(m => m.EndDate, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.EndDate) })
+                        <div class="govuk-date-input">
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label asp-for="EndMonth" class="govuk-label govuk-date-input__label">Month</label>
+                                    <input asp-for="EndMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
+                                           class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" id="endDate-month" />
+                                </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label asp-for="EndYear" class="govuk-label govuk-date-input__label">Year</label>
+                                    <input asp-for="EndYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
+                                           class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" id="endDate-year" />
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            }
+
+            <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+            @if (Model.IsLockedForUpdate)
+            {
+
+                <dl class="das-definition-list">
+                    <dt asp-for="Cost" class="das-definition-list__title">Total agreed apprenticeship price (excluding VAT)</dt>
+                    <dd class="das-definition-list__definition" id="cost">@Model.Cost</dd>
+                    @Html.HiddenFor(x => x.Cost)
+                </dl>
+
+                <div class="govuk-inset-text das-inset-text--highlight">
+                    If you want to change the total agreed apprenticeship price, you'll need to ask your training provider to make the changes on your behalf.
+                    We'll ask you to approve any changes they make.
+                </div>
+            }
+            else
+            {
+                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Cost, "govuk-form-group--error")">
+                    <label asp-for="Cost" class="govuk-label govuk-!-font-weight-bold">Total agreed apprenticeship price (excluding VAT)</label>
+                    <span id="price-hint" class="govuk-hint">
+                        Enter the price, including any end-point assessment costs, in whole pounds. <br /> For example, for £1,500 enter 1500
+                    </span>
+                    @Html.ValidationMessageFor(m => m.Cost, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Cost) })
+                    <input asp-for="Cost" class="govuk-input govuk-input--width-5" inputmode="numeric" pattern="[0-9]*" maxlength="7" min="1" max="9999999" id="cost" />
+                </div>
+            }
+
+            <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+            <div class="govuk-form-group">
+                <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="20">
+                    <div class="govuk-form-group">
+                        <h1 class="govuk-label-wrapper">
+                            <label class="govuk-label govuk-!-font-weight-bold" for="with-hint">
+                                Reference (optional)
+                            </label>
+                        </h1>
+                        <div id="with-hint-hint" class="govuk-hint">
+                            Add a reference, such as employee number or location - this won't be seen by the training provider
+                        </div>
+                        <input maxlength="20" class="govuk-textarea govuk-js-character-count govuk-!-width-two-thirds" asp-for="EmployerReference" id="with-hint" name="EmployerReference" aria-describedby="with-hint-info with-hint-hint" />
+                    </div>
+
+                    <div id="with-hint-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+                        You can enter up to 20 characters
+                    </div>
+                </div>
+            </div>
+
+            <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+            <div class="govuk-form-group">
+
+
+                <div class="das-highlight">
+                    <h3 class="govuk-heading-s">End-point assessments</h3>
+                    <p class="govuk-!-margin-bottom-0">We'll ask you to confirm the <a href="https://www.gov.uk/government/publications/using-the-register-of-apprentice-assessment-organisations" target="_blank" title="Opens in a new window" rel="external" id="assessmentOrg-link">apprentice assessment organisation</a> for this apprentice. We'll do this before the end of the apprenticeship.</p>
+                </div>
+            </div>
+
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button">
+                   Update details
+                </button>
+                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest{ AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.HashedApprenticeshipId })" id="cancel-button">Cancel and return</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section back {
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", new { AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Back to the apprentice details</a>
+}
