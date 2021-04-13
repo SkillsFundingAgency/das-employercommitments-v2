@@ -1,7 +1,187 @@
-﻿
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ConfirmEditApprenticeshipViewModel
+
 @{
-    ViewData["Title"] = "ConfirmEditApprenticeship";
+    ViewBag.Title = "Confirm changes";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageID = "confirm-edited-changes";
 }
 
-<h1> All checks passed </h1>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+    </div>
+</div>
 
+<div class="govuk-grid-row">
+    <div class="govuk-width-container">
+        <h1 class="govuk-heading-xl"> @ViewBag.Title</h1>
+        <form method="POST">
+
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.AccountHashedId)
+            @Html.HiddenFor(x => x.ApprenticeshipHashedId)
+            @Html.HiddenFor(x => x.FirstName)
+            @Html.HiddenFor(x => x.LastName)
+            @Html.HiddenFor(x => x.StartMonth)
+            @Html.HiddenFor(x => x.StartYear)
+            @Html.HiddenFor(x => x.EndMonth)
+            @Html.HiddenFor(x => x.EndYear)
+            @Html.HiddenFor(x => x.BirthMonth)
+            @Html.HiddenFor(x => x.BirthYear)
+            @Html.HiddenFor(x => x.BirthDay)
+            @Html.HiddenFor(x => x.Cost)
+            @Html.HiddenFor(x => x.CourseCode)
+            @Html.HiddenFor(x => x.EmployerReference)
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header "></th>
+                                <th scope="col" class="govuk-table__header "></th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell">Name</td>
+                                <td class="govuk-table__cell"> @Model.OriginalApprenticeship.Name </td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell">Unique learner number</td>
+                                <td class="govuk-table__cell"> @Model.OriginalApprenticeship.ULN </td>
+                            </tr>
+                            <tr>
+                                <td class="govuk-table__cell">Apprenticeship training course</td>
+                                <td id="trainingName" class="govuk-table__cell">@Model.OriginalApprenticeship.TrainingName</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header"></th>
+                                <th scope="col" class="govuk-table__header ">Current</th>
+                                <th scope="col" class="govuk-table__header ">Changed to</th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+
+                            @if (!string.IsNullOrWhiteSpace(Model.Name))
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Name</th>
+                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.Name</td>
+                                    <td class="govuk-table__cell">@Model.Name</td>
+
+                                </tr>
+                            }
+                            @if (Model.DateOfBirth.HasValue)
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Date of birth</th>
+                                    <td class="govuk-table__cell">
+                                        @Model.OriginalApprenticeship.DateOfBirth.Value.ToGdsFormat()
+                                    </td>
+                                    <td class="govuk-table__cell">@Model.DateOfBirth.Value.ToGdsFormat()</td>
+
+                                </tr>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.CourseCode))
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Apprenticeship training course</th>
+                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.TrainingName </td>
+                                    <td class="govuk-table__cell">@Model.TrainingName</td>
+                                </tr>
+                            }
+                            @if (Model.StartDate.HasValue)
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Planned training start date</th>
+                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.StartDate.Value.ToGdsFormat() </td>
+                                    <td class="govuk-table__cell">@Model.StartDate.Value.ToGdsFormat()</td>
+
+                                </tr>
+                            }
+                            @if (Model.EndDate.HasValue)
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Planned training end date</th>
+                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.EndDate.Value.ToGdsFormat() </td>
+                                    <td class="govuk-table__cell">@Model.EndDate.Value.ToGdsFormat()</td>
+
+                                </tr>
+                            }
+
+                            @if (Model.Cost.HasValue)
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Cost</th>
+                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.Cost.FormatCost() </td>
+                                    <td class="govuk-table__cell">@Model.Cost.FormatCost()</td>
+
+                                </tr>
+                            }
+
+
+                            @if (Model.EmployerReference != Model.OriginalApprenticeship.EmployerReference)
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Reference</th>
+                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.EmployerReference</td>
+                                    <td class="govuk-table__cell">@Model.EmployerReference</td>
+
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+
+            <h2 class="heading-medium">Do you want to make these changes?</h2>
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ConfirmChanges,  "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <span id="error-message-@nameof(ConfirmEditApprenticeshipViewModel.ConfirmChanges)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(ConfirmEditApprenticeshipViewModel.ConfirmChanges)].Errors.First().ErrorMessage
+                        </span>
+                    }
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="ConfirmChanges" name="ConfirmChanges" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="ConfirmChanges">
+                                Yes, change these details
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="ConfirmChanges-no" name="ConfirmChanges" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="ConfirmChanges-no">
+                                No, don't change these details
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <button type="submit" class="govuk-button" aria-label="Finish" id="submit-confirm-change">Finish</button>
+        </form>
+    </div>
+</div>
+
+@section back {
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", new { AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">Back to the apprentice details</a>
+}

@@ -7,7 +7,6 @@ using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
@@ -18,6 +17,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
+using SFA.DAS.EmployerCommitmentsV2.Web.ToRemove.SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.EmployerUrlHelper;
 using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateRequest;
 
@@ -519,15 +519,35 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var validationRequest = await _modelMapper.Map<ValidateApprenticeshipForEditRequest>(viewModel);
             await _commitmentsApiClient.ValidateApprenticeshipForEdit(validationRequest);
-
-            return RedirectToAction("ConfirmEditApprenticeship", new { viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.HashedApprenticeshipId });
+         
+            TempData.Put("EditApprenticeshipRequestViewModel", viewModel);
+            return RedirectToAction("ConfirmEditApprenticeship", new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, accountHashedId = viewModel.AccountHashedId });
         }
 
         [HttpGet]
         [Route("{apprenticeshipHashedId}/edit/confirm")]
-        public IActionResult ConfirmEditApprenticeship(ConfirmEditApprenticeshipRequest request)
+        public async Task<IActionResult> ConfirmEditApprenticeship()
         {
-            return View();
+            var editApprenticeshipRequestViewModel = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>("EditApprenticeshipRequestViewModel");
+           // TempData.Put("EditApprenticeshipRequestViewModel", confirmEditApprenticeshipRequest);
+            var viewModel = await _modelMapper.Map<ConfirmEditApprenticeshipViewModel>(editApprenticeshipRequestViewModel);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/edit/confirm")]
+        public async Task<IActionResult> ConfirmEditApprenticeship(ConfirmEditApprenticeshipViewModel viewModel)
+        {
+            var request = await _modelMapper.Map<EditApprenticeshipApiRequest>(viewModel);
+
+            // TODO : remove this line
+            var apiClient = (_commitmentsApiClient as CommitmentsApiClient2);
+
+            var result = await apiClient.EditApprenticeship(request);
+
+
+            return await Task.FromResult(RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId }));
         }
     }
 }
