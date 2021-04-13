@@ -7,7 +7,6 @@ using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Services.Stubs;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
-using SFA.DAS.Http.Configuration;
 using StructureMap;
 using StructureMap.Building.Interception;
 
