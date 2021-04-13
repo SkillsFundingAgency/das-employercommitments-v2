@@ -12,7 +12,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
-        <h1 class="govuk-heading-xl" id="learnerName">Edit apprentice details</h1>
+        <h1 class="govuk-heading-xl" >Edit apprentice details</h1>
 
         <form id="editApprenticeship" novalidate method="post">
             @Html.AntiForgeryToken()
@@ -22,12 +22,14 @@
 
             @if (Model.IsContinuation)
             {
+                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 <dl class="das-definition-list">
                     <dt class="das-definition-list__title" asp-for="FirstName">First Name</dt>
                     <dd class="das-definition-list__definition" id="firstName">@Model.FirstName</dd>
                     @Html.Hidden("FirstName", Model.FirstName)
                 </dl>
 
+                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 <dl class="das-definition-list">
                     <dt class="das-definition-list__title" asp-for="LastName">Last Name</dt>
                     <dd class="das-definition-list__definition" id="lastName">@Model.LastName</dd>
@@ -127,7 +129,7 @@
             {
                 <dl class="das-definition-list">
                     <dt class="das-definition-list__title">Planned training start date</dt>
-                    <dd class="das-definition-list__definition" id="startDate">@Model.StartDate.Date.Value.ToGdsFormatWithoutDay()</dd>
+                    <dd class="das-definition-list__definition" id="startDate">@Model.StartDate.Date.Value.ToGdsFormatLongMonthWithoutDay()</dd>
                 </dl>
                 @Html.HiddenFor(x => x.StartMonth)
                 @Html.HiddenFor(x => x.StartYear)
@@ -168,7 +170,7 @@
             {
                 <dl class="das-definition-list">
                     <dt class="das-definition-list__title">Planned training finish date</dt>
-                    <dd class="das-definition-list__definition" id="endDate">@Model.EndDate.Date.Value.ToGdsFormatWithoutDay()</dd>
+                    <dd class="das-definition-list__definition" id="endDate">@Model.EndDate.Date.Value.ToGdsFormatLongMonthWithoutDay()</dd>
                 </dl>
                 @Html.HiddenFor(x => x.EndMonth)
                 @Html.HiddenFor(x => x.EndYear)
@@ -224,7 +226,7 @@
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Cost, "govuk-form-group--error")">
                     <label asp-for="Cost" class="govuk-label govuk-!-font-weight-bold">Total agreed apprenticeship price (excluding VAT)</label>
                     <span id="price-hint" class="govuk-hint">
-                        Enter the price, including any end-point assessment costs, in whole pounds. For example, for £1,500 enter 1500
+                        Enter the price, including any end-point assessment costs, in whole pounds. <br /> For example, for £1,500 enter 1500
                     </span>
                     @Html.ValidationMessageFor(m => m.Cost, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Cost) })
                     <input asp-for="Cost" class="govuk-input govuk-input--width-5" inputmode="numeric" pattern="[0-9]*" maxlength="7" min="1" max="9999999" id="cost" />
@@ -264,7 +266,7 @@
 
             <div class="govuk-button-group">
                 <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button">
-                    Save and continue
+                   Update details
                 </button>
                 <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest{ AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.HashedApprenticeshipId })" id="cancel-button">Cancel and return</a>
             </div>
