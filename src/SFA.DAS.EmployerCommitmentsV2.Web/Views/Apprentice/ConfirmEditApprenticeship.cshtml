@@ -38,7 +38,21 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
-                    <table class="govuk-table">
+                    <dl class="govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key"> Name </dt>
+                            <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.Name</dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key"> Unique learner number </dt>
+                            <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.ULN</dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key"> Apprenticeship training course </dt>
+                            <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.TrainingName</dd>
+                        </div>
+                    </dl>
+                    @*<table class="govuk-table">
                         <thead class="govuk-table__head">
                             <tr class="govuk-table__row">
                                 <th scope="col" class="govuk-table__header "></th>
@@ -61,7 +75,7 @@
                             </tr>
                         </tbody>
 
-                    </table>
+                    </table>*@
                 </div>
             </div>
 

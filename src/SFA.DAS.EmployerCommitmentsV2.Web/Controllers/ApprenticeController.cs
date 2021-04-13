@@ -529,7 +529,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> ConfirmEditApprenticeship()
         {
             var editApprenticeshipRequestViewModel = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>("EditApprenticeshipRequestViewModel");
-           // TempData.Put("EditApprenticeshipRequestViewModel", confirmEditApprenticeshipRequest);
             var viewModel = await _modelMapper.Map<ConfirmEditApprenticeshipViewModel>(editApprenticeshipRequestViewModel);
 
             return View(viewModel);
@@ -545,6 +544,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var apiClient = (_commitmentsApiClient as CommitmentsApiClient2);
 
             var result = await apiClient.EditApprenticeship(request);
+
+            if (result.NeedReapproval)
+            {
+                TempData.AddFlashMessage("Suggested changes sent to training provider for approval, where needed.", ITempDataDictionaryExtensions.FlashMessageLevel.Info);
+            }
+            else
+            {
+                TempData.AddFlashMessage("Apprentice updated", ITempDataDictionaryExtensions.FlashMessageLevel.Info);
+            }
 
 
             return await Task.FromResult(RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId }));
