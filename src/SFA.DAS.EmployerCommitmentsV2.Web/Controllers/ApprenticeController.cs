@@ -251,7 +251,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var viewModel = await _modelMapper.Map<WhatIsTheNewEndDateViewModel>(request);
 
-            if (request.Edit ?? false)
+            if (request.Edit.GetValueOrDefault())
             {
                 ViewBag.BackUrl = Url.Link(RouteNames.ConfirmDetailsAndSendRequest, request);
             }

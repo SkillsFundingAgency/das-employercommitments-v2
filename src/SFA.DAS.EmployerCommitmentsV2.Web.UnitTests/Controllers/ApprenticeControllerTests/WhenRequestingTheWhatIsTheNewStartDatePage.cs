@@ -81,12 +81,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         internal void ArrangeRequestEditFlag(bool isEdit) => _request.Edit = isEdit;
 
-        public async Task<IActionResult> WhatIsTheNewStartDate()
+        internal async Task<IActionResult> WhatIsTheNewStartDate()
         {
             return await _controller.WhatIsTheNewStartDate(_request);
         }
 
-        public void VerifyViewModel(ViewResult viewResult)
+        internal void VerifyViewModel(ViewResult viewResult)
         {
             var viewModel = viewResult.Model as WhatIsTheNewStartDateViewModel;
 
