@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             var apprenticeship = apprenticehsipTask.Result;
             var priceEpisodes = priceEpisodesTask.Result;
 
-            GetTrainingProgrammeResponse courseDetails = null;
+            GetTrainingProgrammeResponse courseDetails;
             var courseDetailsOriginal = await _commitmentApi.GetTrainingProgramme(apprenticeship.CourseCode);
 
             if (apprenticeship.CourseCode == source.CourseCode)
@@ -110,21 +110,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             vm.OriginalApprenticeship.TrainingName = courseDetailsOriginal?.TrainingProgramme.Name;
 
             return vm;
-            //vm.CourseCode = source.CourseCode;
-            //vm.TrainingName = courseDetails?.TrainingProgramme.Name;
-            //OriginalApprenticeship = new ConfirmEditOriginalApprenticeship
-            //{
-            //    FirstName = apprenticeship.FirstName,
-            //    LastName = apprenticeship.LastName,
-            //    DateOfBirth = apprenticeship.DateOfBirth,
-            //    ULN = apprenticeship.Uln,
-            //    Cost = priceEpisodes.PriceEpisodes.GetPrice(),
-            //    EmployerReference = apprenticeship.EmployerReference,
-            //    StartDate = apprenticeship.StartDate,
-            //    EndDate = apprenticeship.EndDate,
-            //    CourseCode = apprenticeship.CourseCode,
-            //    TrainingName = courseDetailsOriginal?.TrainingProgramme.Name
-            //}
         }
     }
 }

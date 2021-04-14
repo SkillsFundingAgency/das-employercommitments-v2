@@ -1,5 +1,7 @@
 ﻿using AutoFixture;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
@@ -27,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public async Task VerifyValidationApiIsCalled()
         {
             var result = await _fixture.EditApprenticeship(_viewModel);
-            _fixture.VerifyValidationApiIsCalled();
+            _fixture.VerifyViewModelMapperIsCalled();
         }
 
         [Test]
@@ -40,14 +42,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
     public class WhenPostingEditApprenticeshipDetailsFixture : ApprenticeControllerTestFixtureBase
     {
-        public WhenPostingEditApprenticeshipDetailsFixture() : base () { }
+        public WhenPostingEditApprenticeshipDetailsFixture() : base () 
+        {
+            _controller.TempData = new TempDataDictionary( Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
+        }
 
         public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequestViewModel viewModel)
         {
             return await _controller.EditApprenticeship(viewModel);
         }     
 
-        public void VerifyValidationApiIsCalled()
+        public void VerifyViewModelMapperIsCalled()
         {
             _mockCommitmentsApiClient.Verify(x => x.ValidateApprenticeshipForEdit(It.IsAny<ValidateApprenticeshipForEditRequest>(), CancellationToken.None), Times.Once());
         }

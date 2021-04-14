@@ -17,7 +17,6 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
-using SFA.DAS.EmployerCommitmentsV2.Web.ToRemove.SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.EmployerUrlHelper;
 using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateRequest;
 
@@ -538,22 +537,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{apprenticeshipHashedId}/edit/confirm")]
         public async Task<IActionResult> ConfirmEditApprenticeship(ConfirmEditApprenticeshipViewModel viewModel)
         {
-            var request = await _modelMapper.Map<EditApprenticeshipApiRequest>(viewModel);
-
-            // TODO : remove this line
-            var apiClient = (_commitmentsApiClient as CommitmentsApiClient2);
-
-            var result = await apiClient.EditApprenticeship(request);
-
-            if (result.NeedReapproval)
+            if (viewModel.ConfirmChanges.Value)
             {
-                TempData.AddFlashMessage("Suggested changes sent to training provider for approval, where needed.", ITempDataDictionaryExtensions.FlashMessageLevel.Info);
-            }
-            else
-            {
-                TempData.AddFlashMessage("Apprentice updated", ITempDataDictionaryExtensions.FlashMessageLevel.Info);
-            }
+                var request = await _modelMapper.Map<EditApprenticeshipApiRequest>(viewModel);
+                var result = await _commitmentsApiClient.EditApprenticeship(request);
 
+                if (result.NeedReapproval)
+                {
+                    TempData.AddFlashMessage("Suggested changes sent to training provider for approval, where needed.", ITempDataDictionaryExtensions.FlashMessageLevel.Info);
+                }
+                else
+                {
+                    TempData.AddFlashMessage("Apprentice updated", ITempDataDictionaryExtensions.FlashMessageLevel.Info);
+                }
+            }
 
             return await Task.FromResult(RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId }));
         }
