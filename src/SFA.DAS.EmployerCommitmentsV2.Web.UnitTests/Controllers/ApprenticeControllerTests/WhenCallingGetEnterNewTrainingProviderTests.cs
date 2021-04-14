@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
-    [Parallelizable]
     public class WhenCallingGetEnterNewTrainingProviderTests
     {
         WhenCallingGetEnterNewTrainingProviderTestsFixture _fixture;
