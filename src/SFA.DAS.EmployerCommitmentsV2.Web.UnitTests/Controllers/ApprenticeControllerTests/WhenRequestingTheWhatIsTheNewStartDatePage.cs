@@ -29,6 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [Test]
         [TestCase(true, RouteNames.ConfirmDetailsAndSendRequest, Description = "Should return to confirm changes")]
         [TestCase(false , RouteNames.WhoWillEnterTheDetails, Description = "Should return to previous question")]
+        [TestCase(null, RouteNames.WhoWillEnterTheDetails, Description = "Should return to previous question")]
         public async Task BackNavigationSetCorrectly(bool isEdit, string expectedBackNavigationUrl)
         {
             _fixture.ArrangeRequestEditFlag(isEdit);
@@ -42,6 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [Test]
         [TestCase(true)]
         [TestCase(false)]
+        [TestCase(null)]
         public async Task BackNavigationSetCorrectlyInViewData(bool isEdit)
         {
             _fixture.ArrangeRequestEditFlag(isEdit);
