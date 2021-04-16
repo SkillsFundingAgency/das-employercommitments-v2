@@ -94,6 +94,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/{cohortReference}/apprenticeships/{draftApprenticeshipHashedId}/delete");
         }
 
+        public static string SelectTransferConnection(this ILinkGenerator linkGenerator, string accountHashedId)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/transferConnection/create");
+        }
+
+        public static string SelectLegalEntity(this ILinkGenerator linkGenerator, string accountHashedId)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/legalEntity/create");
+        }
+
         public static string EmployerHome(this ILinkGenerator linkGenerator, string accountHashedId)
         {
             return linkGenerator.AccountsLink($"accounts/{accountHashedId}/teams");
