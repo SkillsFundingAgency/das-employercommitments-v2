@@ -163,6 +163,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var routeValues = redirectResult.RouteValues;
 
             Assert.AreEqual(true, routeValues["StoppedDuringCoP"]);
+            Assert.IsFalse(_controller.TempData.Values.Contains(ApprenticeStoppedMessage));
+            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessage));
+            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessageLevel));
         }
 
 
