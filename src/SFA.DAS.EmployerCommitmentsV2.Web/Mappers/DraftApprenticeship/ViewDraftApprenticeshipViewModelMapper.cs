@@ -41,7 +41,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 Reference = draftApprenticeship.Reference,
                 LegalEntityName = source.Cohort.LegalEntityName,
                 ShowEmail = await _authorizationService.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail)
-
             };
 
             return result;
