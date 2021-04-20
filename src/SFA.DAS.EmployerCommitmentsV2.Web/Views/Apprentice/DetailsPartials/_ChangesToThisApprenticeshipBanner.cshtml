@@ -1,0 +1,37 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+@{
+    var changeToApprenticeshipBanners = Model.GetChangeToApprenticeshipBanners();
+}
+
+@if (changeToApprenticeshipBanners > ChangeToApprenticeshipBanner.None)
+{
+    <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Changes to this apprenticeship</h2>
+
+    @if (changeToApprenticeshipBanners.HasFlag(ChangeToApprenticeshipBanner.PendingChangeWaitingForApproval))
+    {
+        <div class="govuk-inset-text govuk-!-margin-top-0">
+            <p class="govuk-body-s govuk-!-margin-bottom-1">
+                You have made a change which needs to be approved by the training provider.
+            </p>
+            <p class="govuk-body-s">
+                <a id="change-of-party-view-changes-link" class="govuk-link" href="@LinkGenerator.ViewChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)">View changes</a>
+            </p>
+        </div>
+    }
+    @if (changeToApprenticeshipBanners.HasFlag(ChangeToApprenticeshipBanner.InFlightChangeOfProviderPendingOther))
+    {
+        <div class="govuk-inset-text govuk-!-margin-top-0">
+            <p class="govuk-body-s govuk-!-margin-bottom-1">
+                You have made a change of provider request. It’s now with the new training provider for review.
+            </p>
+            <p class="govuk-body-s">
+                <a id="change-of-party-view-changes-link" class="govuk-link" href="@Url.RouteUrl("view-changes")">View changes</a>
+            </p>
+        </div>
+    }
+}
