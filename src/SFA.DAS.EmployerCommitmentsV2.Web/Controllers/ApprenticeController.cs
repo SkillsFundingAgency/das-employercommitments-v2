@@ -418,8 +418,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
                 await _commitmentsApiClient.StopApprenticeship(viewModel.ApprenticeshipId, stopApprenticeshipRequest, CancellationToken.None);
 
-                TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
-
                 if (viewModel.IsCoPJourney)
                 {
                     return RedirectToAction(nameof(ApprenticeshipStoppedInform), new
@@ -429,6 +427,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                         StoppedDuringCoP = true
                     });
                 }
+
+                TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
 
             return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });

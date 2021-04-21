@@ -73,6 +73,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         }
 
         [Test]
+        public void ThenEmailIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeship.Email, _result.Email);
+        }
+
+        [Test]
         public void ThenUlnIsMappedCorrectly()
         {
             Assert.AreEqual(_draftApprenticeship.Uln, _result.Uln);
