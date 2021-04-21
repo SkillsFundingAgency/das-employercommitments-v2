@@ -1,0 +1,35 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.InformViewModel
+
+@{
+    ViewData["Title"] = "Add an apprentice";
+    ViewBag.GaData.Vpv = "/apprentices/inform";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Add an apprentice</h1>
+
+        <p class="govuk-body">Add details of one or more apprentices to your account, and authorise payments to their training provider.</p>
+
+        <h2 class="govuk-heading-l">Before you start</h2>
+
+        <p class="govuk-body">You must:</p>
+        <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
+            <li>know the names of your apprentices </li>
+            <li>know your training provider's UK Provider Reference Number (UKPRN) - your training provider can tell you this</li>
+            <li>make sure the organisation that's named on the contract you have with your training provider is in your account - <a href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)">view organisations in this account</a> </li>
+            <li>make sure the PAYE scheme that each apprentice is paid through is in your account - <a href="@LinkGenerator.PayeSchemes(Model.AccountHashedId)">view PAYE schemes in this account</a></li>
+        </ul>
+        
+        <a asp-action="SelectTransferConnection" id="continue-button" asp-route-accountHashedId="@Model.AccountHashedId" role="button" draggable="false" class="govuk-button govuk-button--start">
+            Start now
+        </a>
+    </div>
+</div>
+
+@section Back
+{
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new {Model.AccountHashedId})">Back to Apprentices</a>
+}

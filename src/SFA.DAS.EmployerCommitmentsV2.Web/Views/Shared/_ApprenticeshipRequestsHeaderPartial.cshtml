@@ -5,8 +5,8 @@
     <div class="govuk-grid-column-">
         <div class="govuk-width-container">
             <h1 class="govuk-heading-xl">Apprentice requests</h1>
-
-            <a href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/inform")" class="govuk-button"> Add new apprentice </a>
+            
+            <a href="@Url.Action("Inform", "Cohort", new {Model.AccountHashedId})" class="govuk-button"> Add new apprentice </a>
 
             <div class="das-tabs-boxes">
                 <ul class="das-tabs-boxes__list">
