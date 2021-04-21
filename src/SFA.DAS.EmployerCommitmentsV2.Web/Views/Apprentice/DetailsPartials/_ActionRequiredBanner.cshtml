@@ -21,28 +21,28 @@
             {
                 <p class="govuk-notification-banner__heading">
                     The training provider has made a change which needs to be reviewed and approved by you.
-                    <a class="govuk-notification-banner__link" href="@LinkGenerator.ReviewChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)">Review changes</a>
+                    <a id="review-changes-banner-link" class="govuk-notification-banner__link" href="@LinkGenerator.ReviewChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)">Review changes</a>
                 </p>
             }
             @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.InFlightChangeOfProviderPendingEmployer))
             {
                 <p class="govuk-notification-banner__heading">
                     The new training provider has reviewed the change of provider request. You need to review the new details.
-                    <a class="govuk-notification-banner__link" href="@Url.RouteUrl("view-changes")">View changes</a>
+                    <a id="change-of-party-review-changes-link" class="govuk-notification-banner__link" href="@Url.RouteUrl("view-changes")">View changes</a>
                 </p>
             }
             @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.DataLockChange))
             {
                 <p class="govuk-notification-banner__heading">
                     The training provider has made changes to this apprentice’s details that you need to review.
-                    <a class="govuk-notification-banner__link" href="@LinkGenerator.DatalockChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)">Review changes</a>
+                    <a id="datalock-changes-link" class="govuk-notification-banner__link" href="@LinkGenerator.DatalockChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)">Review changes</a>
                 </p>
             }
             @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.DataLockRestart))
             {
                 <p class="govuk-notification-banner__heading">
                     The apprentice’s training provider has asked you to stop this apprenticeship and to create a new apprentice request with the updated apprenticeship training course.
-                    <a class="govuk-notification-banner__link" href="@LinkGenerator.DatalockRestart(Model.AccountHashedId, Model.HashedApprenticeshipId)">View details</a>
+                    <a id="datalock-restart-link" class="govuk-notification-banner__link" href="@LinkGenerator.DatalockRestart(Model.AccountHashedId, Model.HashedApprenticeshipId)">View details</a>
                 </p>
             }
         </div>
