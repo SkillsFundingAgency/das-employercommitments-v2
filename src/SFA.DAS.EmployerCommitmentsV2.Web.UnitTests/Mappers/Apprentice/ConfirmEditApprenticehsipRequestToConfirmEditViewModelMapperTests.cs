@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test]
         public async Task WhenOnlyEmployerReferenceIsChanged()
         {
-            fixture.source.EmployerReference = "Abc";
+            fixture.source.EmployerReference = "EmployerRef";
 
             var result = await fixture.Map();
 
@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test]
         public async Task WhenFirstNameIsChanged()
         {
-            fixture.source.FirstName = "Abc";
+            fixture.source.FirstName = "FirstName";
 
             var result = await fixture.Map();
 
@@ -68,7 +68,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test]
         public async Task WhenLastNameIsChanged()
         {
-            fixture.source.LastName = "Abc";
+            fixture.source.LastName = "LastName";
 
             var result = await fixture.Map();
 

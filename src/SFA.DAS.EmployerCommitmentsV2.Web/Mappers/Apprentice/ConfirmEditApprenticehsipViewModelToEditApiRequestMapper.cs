@@ -7,10 +7,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
     public class ConfirmEditApprenticehsipViewModelToEditApiRequestMapper : IMapper<ConfirmEditApprenticeshipViewModel, EditApprenticeshipApiRequest>
     {
-        public ConfirmEditApprenticehsipViewModelToEditApiRequestMapper()
-        {
-        }
-
         public Task<EditApprenticeshipApiRequest> Map(ConfirmEditApprenticeshipViewModel source)
         {
             return Task.FromResult(new EditApprenticeshipApiRequest

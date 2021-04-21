@@ -34,6 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
             GetTrainingProgrammeResponse courseDetails;
             var courseDetailsOriginal = await _commitmentApi.GetTrainingProgramme(apprenticeship.CourseCode);
+            var currentPrice = priceEpisodes.PriceEpisodes.GetPrice();
 
             if (apprenticeship.CourseCode == source.CourseCode)
             {
@@ -73,11 +74,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             vm.OriginalApprenticeship.BirthMonth = apprenticeship.DateOfBirth.Month;
             vm.OriginalApprenticeship.BirthYear = apprenticeship.DateOfBirth.Year;
 
-            if (source.Cost != priceEpisodes.PriceEpisodes.GetPrice())
+            if (source.Cost != currentPrice)
             {
                 vm.Cost = source.Cost;
             }
-            vm.OriginalApprenticeship.Cost = priceEpisodes.PriceEpisodes.GetPrice();
+            vm.OriginalApprenticeship.Cost = currentPrice;
 
             if (source.EmployerReference != apprenticeship.EmployerReference)
             {
