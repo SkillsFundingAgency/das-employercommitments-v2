@@ -23,6 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                     r.ProviderId.Should().Be(1);
                     r.FirstName.Should().Be(f.ViewModel.FirstName);
                     r.LastName.Should().Be(f.ViewModel.LastName);
+                    r.Email.Should().Be(f.ViewModel.Email);
                     r.DateOfBirth.Should().Be(f.ViewModel.DateOfBirth.Date);
                     r.Uln.Should().Be(f.ViewModel.Uln);
                     r.CourseCode.Should().Be(f.ViewModel.CourseCode);
@@ -46,6 +47,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             {
                 FirstName = "John",
                 LastName = "Doe",
+                Email = "test@test.com",
                 BirthDay = 1,
                 BirthMonth = 2,
                 BirthYear = 2000,
