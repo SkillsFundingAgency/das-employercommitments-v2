@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using SFA.DAS.Authorization.Services;
@@ -18,6 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         protected readonly Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
         protected readonly Mock<ILinkGenerator> _mockLinkGenerator;
         protected readonly Mock<IAuthorizationService> _mockAuthorizationService;
+        protected readonly Mock<IUrlHelper> _mockUrlHelper;
         
         protected readonly ApprenticeController _controller;
 
@@ -29,6 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _mockLinkGenerator = new Mock<ILinkGenerator>();
             _mockAuthorizationService = new Mock<IAuthorizationService>();
+            _mockUrlHelper = new Mock<IUrlHelper>();
 
             _controller = new ApprenticeController(_mockMapper.Object,
                 Mock.Of<ICookieStorageService<IndexRequest>>(),
@@ -36,6 +39,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 _mockLinkGenerator.Object,
                 Mock.Of<ILogger<ApprenticeController>>(),
                 _mockAuthorizationService.Object);
+
+            _controller.Url = _mockUrlHelper.Object;
         }
     }
 }
