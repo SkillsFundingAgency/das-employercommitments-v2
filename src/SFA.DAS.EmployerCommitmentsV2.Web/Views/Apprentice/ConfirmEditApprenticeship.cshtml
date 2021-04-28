@@ -52,30 +52,6 @@
                             <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.TrainingName</dd>
                         </div>
                     </dl>
-                    @*<table class="govuk-table">
-                        <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th scope="col" class="govuk-table__header "></th>
-                                <th scope="col" class="govuk-table__header "></th>
-                            </tr>
-                        </thead>
-                        <tbody class="govuk-table__body">
-
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell">Name</td>
-                                <td class="govuk-table__cell"> @Model.OriginalApprenticeship.Name </td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell">Unique learner number</td>
-                                <td class="govuk-table__cell"> @Model.OriginalApprenticeship.ULN </td>
-                            </tr>
-                            <tr>
-                                <td class="govuk-table__cell">Apprenticeship training course</td>
-                                <td id="trainingName" class="govuk-table__cell">@Model.OriginalApprenticeship.TrainingName</td>
-                            </tr>
-                        </tbody>
-
-                    </table>*@
                 </div>
             </div>
 
@@ -164,30 +140,28 @@
                 </div>
             </div>
 
-
-            <h2 class="heading-medium">Do you want to make these changes?</h2>
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ConfirmChanges,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
-                    @if (!ViewData.ModelState.IsValid)
-                    {
-                        <span id="error-message-@nameof(ConfirmEditApprenticeshipViewModel.ConfirmChanges)" class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(ConfirmEditApprenticeshipViewModel.ConfirmChanges)].Errors.First().ErrorMessage
-                        </span>
-                    }
-                    <div class="govuk-radios">
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="ConfirmChanges" name="ConfirmChanges" type="radio" value="true">
-                            <label class="govuk-label govuk-radios__label" for="ConfirmChanges">
-                                Yes, change these details
-                            </label>
-                        </div>
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="ConfirmChanges-no" name="ConfirmChanges" type="radio" value="false">
-                            <label class="govuk-label govuk-radios__label" for="ConfirmChanges-no">
-                                No, don't change these details
-                            </label>
-                        </div>
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        <h1 class="govuk-fieldset__heading">
+                            Do you want to make these changes?
+                        </h1>
+                    </legend>
+                <div class="govuk-radios">
+                    @Html.ValidationMessageFor(m => m.ConfirmChanges, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ConfirmChanges) })
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="ConfirmChanges" name="ConfirmChanges" type="radio" value="true">
+                        <label class="govuk-label govuk-radios__label" for="ConfirmChanges">
+                            Yes, change these details
+                        </label>
                     </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="ConfirmChanges-no" name="ConfirmChanges" type="radio" value="false">
+                        <label class="govuk-label govuk-radios__label" for="ConfirmChanges-no">
+                            No, don't change these details
+                        </label>
+                    </div>
+                </div>
                 </fieldset>
             </div>
 
