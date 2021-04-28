@@ -83,8 +83,8 @@
                                 @Model.StopDate.Value.ToGdsFormatLongMonthWithoutDay()
                             }
                         </td>
-                        <td id="editStopDateLink" class="govuk-table__cell govuk-table__cell--numeric">
-                            <a id="edit-stopped-link" class="govuk-link" href="@LinkGenerator.EditStopDate(Model.AccountHashedId, Model.HashedApprenticeshipId)">Edit</a>
+                        <td id="editStopDateLink" class="govuk-table__cell govuk-table__cell--numeric">                            
+                            <a id="edit-stopped-link" class="govuk-link" href="@Url.Action("EditStopDate", new EditStopDateRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit</a>
                         </td>
                     </tr>
 

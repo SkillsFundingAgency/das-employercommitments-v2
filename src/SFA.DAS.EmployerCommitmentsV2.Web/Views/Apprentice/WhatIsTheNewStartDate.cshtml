@@ -37,7 +37,7 @@
                     </span>
 
                     @Html.ValidationMessageFor(m => m.NewStartDate, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.NewStartDate) })
-                    
+
                     <div class="govuk-date-input">
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
@@ -62,5 +62,5 @@
 
 @section Back
 {
-    <div class="das-js-back-link"></div>
+    <a id="back-link" class="govuk-back-link" href="@ViewBag.BackUrl">Back</a>
 }

@@ -18,6 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 ReservationId = source.ReservationId,
                 FirstName = source.FirstName,
                 LastName = source.LastName,
+                Email = source.Email,
                 Uln = source.UniqueLearnerNumber,
                 CourseCode = source.CourseCode,
                 Cost = source.Cost,
