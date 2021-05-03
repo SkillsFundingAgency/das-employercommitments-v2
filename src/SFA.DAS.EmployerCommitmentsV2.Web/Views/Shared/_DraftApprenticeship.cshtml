@@ -69,6 +69,10 @@ else
                     <input asp-for="Email" class="govuk-input"/>
                 </div>
             }
+            else if(!String.IsNullOrWhiteSpace(Model.Email))
+            {
+                @Html.HiddenFor(x => x.Email);
+            }
         </fieldset>
     </div>
     <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.DateOfBirth, "govuk-form-group--error")">
