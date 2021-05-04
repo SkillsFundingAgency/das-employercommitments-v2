@@ -80,10 +80,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             }
             vm.OriginalApprenticeship.Cost = currentPrice;
 
-            if (source.EmployerReference != apprenticeship.EmployerReference)
-            {
-                vm.EmployerReference = source.EmployerReference;
-            }
+            
+            vm.EmployerReference = source.EmployerReference;
             vm.OriginalApprenticeship.EmployerReference = apprenticeship.EmployerReference;
 
             if (source.StartDate.Date != apprenticeship.StartDate)

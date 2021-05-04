@@ -41,7 +41,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
                 }
                 return null;
             }
+            set
+            {
+                if (value.HasValue)
+                {
+                    BirthDay = value.Value.Day;
+                    BirthMonth = value.Value.Month;
+                    BirthYear = value.Value.Year;
+                }
+            }
         }
+
         public int? BirthDay { get; set; }
         public int? BirthMonth { get; set; }
         public int? BirthYear { get; set; }
@@ -58,6 +68,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
                 }
                 return null;
             }
+            set
+            {
+                if (value.HasValue)
+                {
+                    StartMonth = value.Value.Month;
+                    StartYear = value.Value.Year;
+                }
+            }
         }
         public int? StartMonth { get; set; }
         public int? StartYear { get; set; }
@@ -72,6 +90,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
                     return new DateTime(EndYear.Value, EndMonth.Value, 1);
                 }
                 return null;
+            }
+            set
+            {
+                if (value.HasValue)
+                {
+                    EndMonth = value.Value.Month;
+                    EndYear = value.Value.Year;
+                }
             }
         }
         public int? EndMonth { get; set; }
