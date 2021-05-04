@@ -150,7 +150,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.IsNull(result.LastName);
             Assert.IsNull(result.EndMonth);
             Assert.IsNull(result.StartMonth);
-            Assert.IsNull(result.EmployerReference);
             Assert.IsNull(result.BirthMonth);
         }
     }

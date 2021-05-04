@@ -79,8 +79,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 vm.Cost = source.Cost;
             }
             vm.OriginalApprenticeship.Cost = currentPrice;
-
-            
             vm.EmployerReference = source.EmployerReference;
             vm.OriginalApprenticeship.EmployerReference = apprenticeship.EmployerReference;
 
