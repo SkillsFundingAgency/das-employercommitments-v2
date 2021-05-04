@@ -24,7 +24,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string Status { get; set; }
         public string ProviderName { get; set; }
         public PendingChanges PendingChanges { get; set; }
-        public bool CanEditStatus { get; set; }
+        public bool CanEditStatus => (ApprenticeshipStatus == ApprenticeshipStatus.Live ||
+                                     ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart ||
+                                     ApprenticeshipStatus == ApprenticeshipStatus.Paused);
         public string EmployerReference { get; set; }
         public string CohortReference { get; set; }
         public bool EnableEdit { get; set; }

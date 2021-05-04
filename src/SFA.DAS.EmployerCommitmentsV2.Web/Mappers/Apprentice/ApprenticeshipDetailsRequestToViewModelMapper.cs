@@ -86,9 +86,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     EmployerReference = apprenticeship.EmployerReference,
                     CohortReference = _encodingService.Encode(apprenticeship.CohortId, EncodingType.CohortReference),
                     EnableEdit = enableEdit,
-                    CanEditStatus = (apprenticeship.Status == ApprenticeshipStatus.Live ||
-                                     apprenticeship.Status == ApprenticeshipStatus.WaitingToStart ||
-                                     apprenticeship.Status == ApprenticeshipStatus.Paused),
                     EndpointAssessorName = apprenticeship.EndpointAssessorName,
                     MadeRedundant = apprenticeship.MadeRedundant,
                     
