@@ -620,5 +620,42 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             return await Task.FromResult(RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId }));
         }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/changes/view")]
+        public async Task<IActionResult> ViewApprenticeshipUpdates(ViewApprenticehipUpdatesRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ViewApprenticeshipUpdatesRequestViewModel>(request);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/changes/view")]
+        public async Task<IActionResult> ViewApprenticeshipUpdates(ViewApprenticeshipUpdatesRequestViewModel viewModel)
+        {
+            if (viewModel.ApproveChanges.Value)
+            {
+                var request = new AcceptApprenticeshipUpdatesRequest
+                {
+                    ApprenticeshipId = viewModel.OriginalApprenticeship.ApprenticeshipId,
+                    AccountId = viewModel.OriginalApprenticeship.AccountId
+                };
+
+                await _commitmentsApiClient.AcceptApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
+            }
+            else
+            {
+                var request = new RejectApprenticeshipUpdatesRequest
+                {
+                    ApprenticeshipId = viewModel.ApprenticeshipId,
+                    AccountId = viewModel.AccountId
+                };
+
+                await _commitmentsApiClient.RejectApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
+            }
+
+            return await Task.FromResult(RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId }));
+        }
     }
 }

@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class ReviewApprenticehipUpdatesRequestToViewModelMapper : IMapper<ReviewApprenticehipUpdatesRequest, ReviewApprenticeshipUpdatesRequestViewModel>
+    public class ViewApprenticehipUpdatesRequestToViewModelMapper : IMapper<ViewApprenticehipUpdatesRequest, ViewApprenticeshipUpdatesRequestViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
 
-        public ReviewApprenticehipUpdatesRequestToViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
+        public ViewApprenticehipUpdatesRequestToViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
         }
 
-        public async Task<ReviewApprenticeshipUpdatesRequestViewModel> Map(ReviewApprenticehipUpdatesRequest source)
+        public async Task<ViewApprenticeshipUpdatesRequestViewModel> Map(ViewApprenticehipUpdatesRequest source)
         {
             var updates = await _commitmentsApiClient.GetApprenticeshipUpdates(source.ApprenticeshipId,
                    new CommitmentsV2.Api.Types.Requests.GetApprenticeshipUpdatesRequest { Status = CommitmentsV2.Types.ApprenticeshipUpdateStatus.Pending });
@@ -29,21 +29,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             {
                 var update = updates.ApprenticeshipUpdates.First();
 
-                var vm = new ReviewApprenticeshipUpdatesRequestViewModel
+                var vm = new ViewApprenticeshipUpdatesRequestViewModel
                 {
-                    AccountHashedId = source.AccountHashedId,
-                    ApprenticeshipHashedId = source.ApprenticeshipHashedId,
-                    FirstName = update.FirstName,
-                    LastName = update.LastName,
-                    DateOfBirth = update.DateOfBirth,
-                    Cost = update.Cost,
-                    StartDate = update.StartDate,
-                    EndDate = update.EndDate,
-                    CourseCode = update.TrainingCode,
-                    TrainingName = update.TrainingName,
-                    ProviderName = apprenticeship.ProviderName,
+                    ApprenticeshipUpdates = new BaseEdit
+                    {
+                        FirstName = update.FirstName,
+                        LastName = update.LastName,
+                        DateOfBirth = update.DateOfBirth,
+                        Cost = update.Cost,
+                        StartDate = update.StartDate,
+                        EndDate = update.EndDate,
+                        CourseCode = update.TrainingCode,
+                        TrainingName = update.TrainingName,
+                    },
                     OriginalApprenticeship = new BaseEdit
                     {
+                        AccountHashedId = source.AccountHashedId,
+                        ApprenticeshipHashedId = source.ApprenticeshipHashedId,
                         FirstName = apprenticeship.FirstName,
                         LastName = apprenticeship.LastName,
                         DateOfBirth = apprenticeship.DateOfBirth,
@@ -51,7 +53,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                         StartDate = apprenticeship.StartDate,
                         EndDate = apprenticeship.EndDate,
                         CourseCode = apprenticeship.CourseCode
-                    }
+                    },
+                    ProviderName = apprenticeship.ProviderName,
                 };
 
                 if (update.Cost.HasValue)

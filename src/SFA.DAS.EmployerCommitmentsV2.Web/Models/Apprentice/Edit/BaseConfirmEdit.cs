@@ -5,7 +5,7 @@ using System;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
 {
-    public class BaseConfirmEdit : IAuthorizationContextModel
+    public class BaseEdit : IAuthorizationContextModel
     {
         [JsonIgnore]
         public string Name
