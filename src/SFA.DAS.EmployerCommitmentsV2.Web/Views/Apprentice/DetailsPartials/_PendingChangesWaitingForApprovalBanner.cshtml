@@ -11,6 +11,6 @@
         The employer has made a change which needs to be approved by the training provider
     </p>
     <p class="govuk-body-s">
-        <a id="view-changes-banner-link" href="@LinkGenerator.ViewChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)" class="govuk-link">View changes</a>
+        <a id="view-changes-banner-link" href="@Url.Action("ViewApprenticeshipUpdates", new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link">View changes</a>
     </p>
 </div>

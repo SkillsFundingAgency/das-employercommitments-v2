@@ -634,25 +634,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{apprenticeshipHashedId}/changes/view")]
         public async Task<IActionResult> ViewApprenticeshipUpdates(ViewApprenticeshipUpdatesRequestViewModel viewModel)
         {
-            if (viewModel.ApproveChanges.Value)
+            if (viewModel.UndoChanges.Value)
             {
-                var request = new AcceptApprenticeshipUpdatesRequest
-                {
-                    ApprenticeshipId = viewModel.OriginalApprenticeship.ApprenticeshipId,
-                    AccountId = viewModel.OriginalApprenticeship.AccountId
-                };
-
-                await _commitmentsApiClient.AcceptApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
-            }
-            else
-            {
-                var request = new RejectApprenticeshipUpdatesRequest
+                var request = new UndoApprenticeshipUpdatesRequest
                 {
                     ApprenticeshipId = viewModel.ApprenticeshipId,
                     AccountId = viewModel.AccountId
                 };
 
-                await _commitmentsApiClient.RejectApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
+                await _commitmentsApiClient.UndoApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
             }
 
             return await Task.FromResult(RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId }));

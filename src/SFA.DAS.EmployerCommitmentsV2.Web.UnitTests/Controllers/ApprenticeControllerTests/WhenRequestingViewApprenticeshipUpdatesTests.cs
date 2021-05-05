@@ -9,48 +9,48 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
-    public class WhenRequestingReviewApprenticeshipUpdatesTests
+    public class WhenRequestingViewApprenticeshipUpdatesTests
     {
-        private WhenRequestingReviewApprenticeshipUpdatesTestsixture _fixture;
+        private WhenRequestingViewApprenticeshipUpdatesTestsixture _fixture;
 
         [SetUp]
         public void Arrange()
         {
-            _fixture = new WhenRequestingReviewApprenticeshipUpdatesTestsixture();
+            _fixture = new WhenRequestingViewApprenticeshipUpdatesTestsixture();
         }   
 
         [Test]
         public async Task VerifyViewModelMapperIsCalled()
         {
-             await _fixture.ReviewApprenticeshipUpdates();
+             await _fixture.ViewApprenticeshipUpdates();
             _fixture.VerifyViewModelMapperIsCalled();
         }
 
         [Test]
         public async Task VerifyViewIsReturned()
         {
-           var result =  await _fixture.ReviewApprenticeshipUpdates();
+           var result =  await _fixture.ViewApprenticeshipUpdates();
             _fixture.VerifyViewResultIsReturned(result);
         }
     }
 
-    public class WhenRequestingReviewApprenticeshipUpdatesTestsixture : ApprenticeControllerTestFixtureBase
+    public class WhenRequestingViewApprenticeshipUpdatesTestsixture : ApprenticeControllerTestFixtureBase
     {
-        public ReviewApprenticehipUpdatesRequest Request { get; set; }
-        public WhenRequestingReviewApprenticeshipUpdatesTestsixture() : base () 
+        public ViewApprenticehipUpdatesRequest Request { get; set; }
+        public WhenRequestingViewApprenticeshipUpdatesTestsixture() : base () 
         {
-            Request = new ReviewApprenticehipUpdatesRequest { ApprenticeshipId = 1, AccountId = 1 };
+            Request = new ViewApprenticehipUpdatesRequest { ApprenticeshipId = 1, AccountId = 1 };
             _controller.TempData = new TempDataDictionary( Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
         }
 
-        public async Task<IActionResult> ReviewApprenticeshipUpdates()
+        public async Task<IActionResult> ViewApprenticeshipUpdates()
         {
-            return await _controller.ReviewApprenticeshipUpdates(Request);
+            return await _controller.ViewApprenticeshipUpdates(Request);
         }     
 
         internal void VerifyViewModelMapperIsCalled()
         {
-            _mockMapper.Verify(x => x.Map<ReviewApprenticeshipUpdatesRequestViewModel>(It.IsAny<ReviewApprenticehipUpdatesRequest>()), Times.Once());
+            _mockMapper.Verify(x => x.Map<ViewApprenticeshipUpdatesRequestViewModel>(It.IsAny<ViewApprenticehipUpdatesRequest>()), Times.Once());
         }
 
         internal void VerifyViewResultIsReturned(IActionResult result)

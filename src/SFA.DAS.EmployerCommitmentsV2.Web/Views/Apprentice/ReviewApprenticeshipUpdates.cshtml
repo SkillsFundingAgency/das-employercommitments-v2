@@ -6,7 +6,7 @@
 @{
     ViewBag.Title = "Review changes";
     ViewBag.Section = "apprentices";
-    ViewBag.PageID = "confirm-edited-changes";
+    ViewBag.PageID = "review-changes";
 }
 
 <div class="govuk-grid-row">
@@ -24,111 +24,9 @@
             @Html.HiddenFor(x => x.AccountHashedId)
             @Html.HiddenFor(x => x.ApprenticeshipHashedId)
 
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full">
-                    <dl class="govuk-summary-list">
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key"> Name </dt>
-                            <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.Name</dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key"> Unique learner number </dt>
-                            <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.ULN</dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key"> Apprenticeship training course </dt>
-                            <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.TrainingName</dd>
-                        </div>
-                    </dl>
-                </div>
-            </div>
-
+            <partial name="ApprenticeshipUpdatesPartial/_ViewOriginalApprenticeshipForApprenticeshipUpdates" />
             <p>@Model.ProviderName have suggested these changes</p>
-
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full">
-                    <table class="govuk-table">
-                        <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header"></th>
-                                <th scope="col" class="govuk-table__header ">Current</th>
-                                <th scope="col" class="govuk-table__header ">Changed to</th>
-                            </tr>
-                        </thead>
-                        <tbody class="govuk-table__body">
-
-                            @if (!string.IsNullOrWhiteSpace(Model.Name))
-                            {
-                                <tr>
-                                    <th scope="row" class="govuk-table__header">Name</th>
-                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.Name</td>
-                                    <td class="govuk-table__cell">@Model.Name</td>
-
-                                </tr>
-                            }
-                            @if (Model.DateOfBirth.HasValue)
-                            {
-                                <tr>
-                                    <th scope="row" class="govuk-table__header">Date of birth</th>
-                                    <td class="govuk-table__cell">
-                                        @Model.OriginalApprenticeship.DateOfBirth.Value.ToGdsFormat()
-                                    </td>
-                                    <td class="govuk-table__cell">@Model.DateOfBirth.Value.ToGdsFormat()</td>
-
-                                </tr>
-                            }
-                            @if (!string.IsNullOrWhiteSpace(Model.CourseCode))
-                            {
-                                <tr>
-                                    <th scope="row" class="govuk-table__header">Apprenticeship training course</th>
-                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.TrainingName </td>
-                                    <td class="govuk-table__cell">@Model.TrainingName</td>
-                                </tr>
-                            }
-                            @if (Model.StartDate.HasValue)
-                            {
-                                <tr>
-                                    <th scope="row" class="govuk-table__header">Planned training start date</th>
-                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.StartDate.Value.ToGdsFormat() </td>
-                                    <td class="govuk-table__cell">@Model.StartDate.Value.ToGdsFormat()</td>
-
-                                </tr>
-                            }
-                            @if (Model.EndDate.HasValue)
-                            {
-                                <tr>
-                                    <th scope="row" class="govuk-table__header">Planned training end date</th>
-                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.EndDate.Value.ToGdsFormat() </td>
-                                    <td class="govuk-table__cell">@Model.EndDate.Value.ToGdsFormat()</td>
-
-                                </tr>
-                            }
-
-                            @if (Model.Cost.HasValue)
-                            {
-                                <tr>
-                                    <th scope="row" class="govuk-table__header">Cost</th>
-                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.Cost.FormatCost() </td>
-                                    <td class="govuk-table__cell">@Model.Cost.FormatCost()</td>
-
-                                </tr>
-                            }
-
-
-                            @if (Model.EmployerReference != Model.OriginalApprenticeship.EmployerReference)
-                            {
-                                <tr>
-                                    <th scope="row" class="govuk-table__header">Reference</th>
-                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.EmployerReference</td>
-                                    <td class="govuk-table__cell">@Model.EmployerReference</td>
-
-                                </tr>
-                            }
-                        </tbody>
-
-                    </table>
-                </div>
-            </div>
+            <partial name="ApprenticeshipUpdatesPartial/_ViewApprenticeshipUpdates" />
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApproveChanges,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
@@ -157,7 +55,7 @@
 
             <div class="govuk-button-group">
                 <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button">
-                   Continue
+                    Continue
                 </button>
                 <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest{ AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.ApprenticeshipHashedId })" id="cancel-button">Cancel and return</a>
             </div>

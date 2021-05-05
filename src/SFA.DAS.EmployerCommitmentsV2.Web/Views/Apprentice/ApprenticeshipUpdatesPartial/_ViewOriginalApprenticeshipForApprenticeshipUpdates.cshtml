@@ -1,0 +1,21 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit.IViewReviewApprenticeshipUpdatesViewModel
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key"> Name </dt>
+                <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.Name</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key"> Unique learner number </dt>
+                <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.ULN</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key"> Apprenticeship training course </dt>
+                <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.TrainingName</dd>
+            </div>
+        </dl>
+    </div>
+</div>
+
