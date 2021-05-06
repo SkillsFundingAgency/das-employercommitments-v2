@@ -49,6 +49,47 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public Party? PendingChangeOfEmployerRequestWithParty { get; set; }
         public List<TrainingProviderHistory> TrainingProviderHistory { get; set; }
         public bool IsV2Edit { get; set; }
+
+        public ActionRequiredBanner GetActionRequiredBanners()
+        {
+            var actionRequiredBanner = ActionRequiredBanner.None;
+
+            actionRequiredBanner |= PendingChanges == PendingChanges.ReadyForApproval
+                ? ActionRequiredBanner.PendingChangeForApproval
+                : actionRequiredBanner;
+
+            actionRequiredBanner |= HasPendingChangeOfProviderRequest &&
+                    PendingChangeOfProviderRequestWithParty.HasValue &&
+                    PendingChangeOfProviderRequestWithParty.Value == Party.Employer
+                ? ActionRequiredBanner.InFlightChangeOfProviderPendingEmployer
+                : actionRequiredBanner;
+
+            actionRequiredBanner |= PendingDataLockChange
+                ? ActionRequiredBanner.DataLockChange
+                : actionRequiredBanner;
+
+            actionRequiredBanner |= PendingDataLockRestart
+                ? ActionRequiredBanner.DataLockRestart
+                : actionRequiredBanner;
+
+            return actionRequiredBanner;
+        }
+
+        public ChangeToApprenticeshipBanner GetChangeToApprenticeshipBanners()
+        {
+            var changeToApprenticeshipBanner = ChangeToApprenticeshipBanner.None;
+
+            changeToApprenticeshipBanner |= PendingChanges == PendingChanges.WaitingForApproval
+                ? ChangeToApprenticeshipBanner.PendingChangeWaitingForApproval
+                : changeToApprenticeshipBanner;
+
+            changeToApprenticeshipBanner |= HasPendingChangeOfProviderRequest && PendingChangeOfProviderRequestWithParty.HasValue
+               && PendingChangeOfProviderRequestWithParty.Value != Party.Employer
+                ? ChangeToApprenticeshipBanner.InFlightChangeOfProviderPendingOther
+                : changeToApprenticeshipBanner;
+
+            return changeToApprenticeshipBanner;
+        }
     }
 
     public enum PendingChanges
@@ -56,6 +97,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         None = 0,
         ReadyForApproval = 1,
         WaitingForApproval = 2
+    }
+
+    [Flags]
+    public enum ActionRequiredBanner
+    {
+        None = 0,
+        PendingChangeForApproval = 1,
+        InFlightChangeOfProviderPendingEmployer = 2,
+        DataLockChange = 4,
+        DataLockRestart = 8
+    }
+
+    [Flags]
+    public enum ChangeToApprenticeshipBanner
+    {
+        None = 0,
+        PendingChangeWaitingForApproval = 1,
+        InFlightChangeOfProviderPendingOther = 2
     }
 
     public class TrainingProviderHistory
