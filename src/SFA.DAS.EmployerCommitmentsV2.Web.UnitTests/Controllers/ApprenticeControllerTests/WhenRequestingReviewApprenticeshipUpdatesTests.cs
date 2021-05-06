@@ -36,10 +36,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
     public class WhenRequestingReviewApprenticeshipUpdatesTestsixture : ApprenticeControllerTestFixtureBase
     {
-        public ReviewApprenticehipUpdatesRequest Request { get; set; }
+        public ReviewApprenticeshipUpdatesRequest Request { get; set; }
         public WhenRequestingReviewApprenticeshipUpdatesTestsixture() : base () 
         {
-            Request = new ReviewApprenticehipUpdatesRequest { ApprenticeshipId = 1, AccountId = 1 };
+            Request = new ReviewApprenticeshipUpdatesRequest { ApprenticeshipId = 1, AccountId = 1 };
             _controller.TempData = new TempDataDictionary( Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
         }
 
@@ -50,7 +50,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         internal void VerifyViewModelMapperIsCalled()
         {
-            _mockMapper.Verify(x => x.Map<ReviewApprenticeshipUpdatesRequestViewModel>(It.IsAny<ReviewApprenticehipUpdatesRequest>()), Times.Once());
+            _mockMapper.Verify(x => x.Map<ReviewApprenticeshipUpdatesRequestViewModel>(It.IsAny<ReviewApprenticeshipUpdatesRequest>()), Times.Once());
         }
 
         internal void VerifyViewResultIsReturned(IActionResult result)

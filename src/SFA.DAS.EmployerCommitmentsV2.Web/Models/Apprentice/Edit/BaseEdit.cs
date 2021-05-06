@@ -26,7 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ULN { get; set; }
-        public string TrainingName { get; set; }
+        public string CourseName { get; set; }
         public decimal? Cost { get; set; }
         public string EmployerReference { get; set; }
 

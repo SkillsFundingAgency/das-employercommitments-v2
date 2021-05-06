@@ -104,7 +104,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var viewModel = await fixture.Map();
 
-            Assert.AreEqual(fixture.ApprenticeshipUpdate.TrainingName, viewModel.ApprenticeshipUpdates.TrainingName);
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.TrainingName, viewModel.ApprenticeshipUpdates.CourseName);
         }
 
 
@@ -177,7 +177,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var viewModel = await fixture.Map();
 
-            Assert.AreEqual(fixture.ApprenticeshipUpdate.TrainingName, viewModel.ApprenticeshipUpdates.TrainingName);
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.TrainingName, viewModel.ApprenticeshipUpdates.CourseName);
         }
 
         public class ViewApprenticehipUpdatesRequestToViewModelMapperTestsFixture
