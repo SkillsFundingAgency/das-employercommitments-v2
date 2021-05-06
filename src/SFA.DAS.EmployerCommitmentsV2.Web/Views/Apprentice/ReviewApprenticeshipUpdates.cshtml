@@ -37,7 +37,7 @@
                         </div>
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key"> Apprenticeship training course </dt>
-                            <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.TrainingName</dd>
+                            <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.CourseName</dd>
                         </div>
                     </dl>
                 </div>
@@ -81,8 +81,8 @@
                             {
                                 <tr>
                                     <th scope="row" class="govuk-table__header">Apprenticeship training course</th>
-                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.TrainingName </td>
-                                    <td class="govuk-table__cell">@Model.TrainingName</td>
+                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.CourseName </td>
+                                    <td class="govuk-table__cell">@Model.CourseName</td>
                                 </tr>
                             }
                             @if (Model.StartDate.HasValue)

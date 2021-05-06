@@ -3,7 +3,7 @@ using SFA.DAS.Authorization.ModelBinding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
-    public class ReviewApprenticehipUpdatesRequest : IAuthorizationContextModel
+    public class ReviewApprenticeshipUpdatesRequest : IAuthorizationContextModel
     {
         [FromRoute]
         public string AccountHashedId { get; set; }

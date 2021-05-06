@@ -9,21 +9,26 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class ReviewApprenticehipUpdatesRequestToViewModelMapper : IMapper<ReviewApprenticehipUpdatesRequest, ReviewApprenticeshipUpdatesRequestViewModel>
+    public class ReviewApprenticeshipUpdatesRequestToViewModelMapper : IMapper<ReviewApprenticeshipUpdatesRequest, ReviewApprenticeshipUpdatesRequestViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
 
-        public ReviewApprenticehipUpdatesRequestToViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
+        public ReviewApprenticeshipUpdatesRequestToViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
         }
 
-        public async Task<ReviewApprenticeshipUpdatesRequestViewModel> Map(ReviewApprenticehipUpdatesRequest source)
+        public async Task<ReviewApprenticeshipUpdatesRequestViewModel> Map(ReviewApprenticeshipUpdatesRequest source)
         {
-            var updates = await _commitmentsApiClient.GetApprenticeshipUpdates(source.ApprenticeshipId,
+            var updatesTask = _commitmentsApiClient.GetApprenticeshipUpdates(source.ApprenticeshipId,
                    new CommitmentsV2.Api.Types.Requests.GetApprenticeshipUpdatesRequest { Status = CommitmentsV2.Types.ApprenticeshipUpdateStatus.Pending });
 
-            var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
+            var apprenticeshipTask = _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
+
+            await Task.WhenAll(updatesTask, apprenticeshipTask);
+
+            var updates = updatesTask.Result;
+            var apprenticeship = apprenticeshipTask.Result;
 
             if (updates.ApprenticeshipUpdates.Count == 1)
             {
@@ -40,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     StartDate = update.StartDate,
                     EndDate = update.EndDate,
                     CourseCode = update.TrainingCode,
-                    TrainingName = update.TrainingName,
+                    CourseName = update.TrainingName,
                     ProviderName = apprenticeship.ProviderName,
                     OriginalApprenticeship = new BaseConfirmEdit
                     {
@@ -63,7 +68,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 if (!string.IsNullOrWhiteSpace(update.TrainingCode))
                 {
                     var courseDetailsOriginal = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
-                    vm.OriginalApprenticeship.TrainingName = courseDetailsOriginal?.TrainingProgramme.Name;
+                    vm.OriginalApprenticeship.CourseName = courseDetailsOriginal?.TrainingProgramme.Name;
                 }
 
                 return vm;

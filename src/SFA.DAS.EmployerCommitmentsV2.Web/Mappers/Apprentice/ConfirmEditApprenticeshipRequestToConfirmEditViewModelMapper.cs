@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class ConfirmEditApprenticehsipRequestToConfirmEditViewModelMapper : IMapper<EditApprenticeshipRequestViewModel, ConfirmEditApprenticeshipViewModel>
+    public class ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapper : IMapper<EditApprenticeshipRequestViewModel, ConfirmEditApprenticeshipViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentApi;
         private readonly IEncodingService _encodingService;
 
-        public ConfirmEditApprenticehsipRequestToConfirmEditViewModelMapper(ICommitmentsApiClient commitmentsApi, IEncodingService encodingService)
+        public ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapper(ICommitmentsApiClient commitmentsApi, IEncodingService encodingService)
         {
             _commitmentApi = commitmentsApi;
             _encodingService = encodingService;
@@ -24,26 +24,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             source.ApprenticeshipId = _encodingService.Decode(source.HashedApprenticeshipId, EncodingType.ApprenticeshipId);
             source.AccountId = _encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
 
-            var apprenticehsipTask = _commitmentApi.GetApprenticeship(source.ApprenticeshipId);
+            var apprenticeshipTask = _commitmentApi.GetApprenticeship(source.ApprenticeshipId);
             var priceEpisodesTask = _commitmentApi.GetPriceEpisodes(source.ApprenticeshipId);
 
-            await Task.WhenAll(apprenticehsipTask, priceEpisodesTask);
+            await Task.WhenAll(apprenticeshipTask, priceEpisodesTask);
 
-            var apprenticeship = apprenticehsipTask.Result;
+            var apprenticeship = apprenticeshipTask.Result;
             var priceEpisodes = priceEpisodesTask.Result;
 
-            GetTrainingProgrammeResponse courseDetails;
             var courseDetailsOriginal = await _commitmentApi.GetTrainingProgramme(apprenticeship.CourseCode);
             var currentPrice = priceEpisodes.PriceEpisodes.GetPrice();
-
-            if (apprenticeship.CourseCode == source.CourseCode)
-            {
-                courseDetails = courseDetailsOriginal;
-            }
-            else
-            {
-                courseDetails = await _commitmentApi.GetTrainingProgramme(source.CourseCode);
-            }
 
             var vm = new ConfirmEditApprenticeshipViewModel
             {
@@ -100,11 +90,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
             if (source.CourseCode != apprenticeship.CourseCode)
             {
+                var courseDetails = await _commitmentApi.GetTrainingProgramme(source.CourseCode);
                 vm.CourseCode = source.CourseCode;
-                vm.TrainingName = courseDetails?.TrainingProgramme.Name;
+                vm.CourseName = courseDetails?.TrainingProgramme.Name;
             }
             vm.OriginalApprenticeship.CourseCode = apprenticeship.CourseCode;
-            vm.OriginalApprenticeship.TrainingName = courseDetailsOriginal?.TrainingProgramme.Name;
+            vm.OriginalApprenticeship.CourseName = courseDetailsOriginal?.TrainingProgramme.Name;
 
             return vm;
         }

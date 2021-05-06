@@ -581,12 +581,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 }
             }
 
-            return await Task.FromResult(RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId }));
+            return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
         }
 
         [HttpGet]
         [Route("{apprenticeshipHashedId}/changes/review")]
-        public async Task<IActionResult> ReviewApprenticeshipUpdates(ReviewApprenticehipUpdatesRequest request)
+        public async Task<IActionResult> ReviewApprenticeshipUpdates(ReviewApprenticeshipUpdatesRequest request)
         {
             var viewModel = await _modelMapper.Map<ReviewApprenticeshipUpdatesRequestViewModel>(request);
 
@@ -618,7 +618,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 await _commitmentsApiClient.RejectApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
             }
 
-            return await Task.FromResult(RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId }));
+            return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
         }
     }
 }

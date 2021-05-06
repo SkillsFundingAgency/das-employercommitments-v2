@@ -18,13 +18,13 @@ using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetApprenticeshipUpdatesR
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 {
-    public class ReviewApprenticehipUpdatesRequestToViewModelMapperTests
+    public class ReviewApprenticeshipUpdatesRequestToViewModelMapperTests
     {
-        ReviewApprenticehipUpdatesRequestToViewModelMapperTestsFixture fixture;
+        ReviewApprenticeshipUpdatesRequestToViewModelMapperTestsFixture fixture;
         [SetUp]
         public void Arrange()
         {
-            fixture = new ReviewApprenticehipUpdatesRequestToViewModelMapperTestsFixture();
+            fixture = new ReviewApprenticeshipUpdatesRequestToViewModelMapperTestsFixture();
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var viewModel = await fixture.Map();
 
-            Assert.AreEqual(fixture.ApprenticeshipUpdate.TrainingName, viewModel.TrainingName);
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.TrainingName, viewModel.CourseName);
         }
 
 
@@ -177,13 +177,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var viewModel = await fixture.Map();
 
-            Assert.AreEqual(fixture.ApprenticeshipUpdate.TrainingName, viewModel.TrainingName);
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.TrainingName, viewModel.CourseName);
         }
 
-        public class ReviewApprenticehipUpdatesRequestToViewModelMapperTestsFixture
+        public class ReviewApprenticeshipUpdatesRequestToViewModelMapperTestsFixture
         {
-            public ReviewApprenticehipUpdatesRequestToViewModelMapper Mapper;
-            public ReviewApprenticehipUpdatesRequest Source;
+            public ReviewApprenticeshipUpdatesRequestToViewModelMapper Mapper;
+            public ReviewApprenticeshipUpdatesRequest Source;
             public Mock<ICommitmentsApiClient> CommitmentApiClient;
             public GetApprenticeshipResponse GetApprenticeshipResponse;
             public GetApprenticeshipUpdatesResponse GetApprenticeshipUpdatesResponses;
@@ -193,13 +193,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             public long ApprenticeshipId = 1;
 
-            public ReviewApprenticehipUpdatesRequestToViewModelMapperTestsFixture()
+            public ReviewApprenticeshipUpdatesRequestToViewModelMapperTestsFixture()
             {
                 var autoFixture = new Fixture();
                 autoFixture.Customizations.Add(new DateTimeSpecimenBuilder());
                 CommitmentApiClient = new Mock<ICommitmentsApiClient>();
 
-                Source = new ReviewApprenticehipUpdatesRequest { ApprenticeshipId = ApprenticeshipId, AccountId = 22, ApprenticeshipHashedId = "XXX", AccountHashedId = "YYY" };
+                Source = new ReviewApprenticeshipUpdatesRequest { ApprenticeshipId = ApprenticeshipId, AccountId = 22, ApprenticeshipHashedId = "XXX", AccountHashedId = "YYY" };
                 GetApprenticeshipResponse = autoFixture.Create<GetApprenticeshipResponse>();
                 autoFixture.RepeatCount = 1;
                 GetApprenticeshipUpdatesResponses = autoFixture.Create<GetApprenticeshipUpdatesResponse>();
@@ -222,7 +222,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 CommitmentApiClient.Setup(x => x.GetTrainingProgramme(It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(GetTrainingProgrammeResponse));
 
 
-                Mapper = new ReviewApprenticehipUpdatesRequestToViewModelMapper(CommitmentApiClient.Object);
+                Mapper = new ReviewApprenticeshipUpdatesRequestToViewModelMapper(CommitmentApiClient.Object);
             }
 
             internal async Task<ReviewApprenticeshipUpdatesRequestViewModel> Map()
