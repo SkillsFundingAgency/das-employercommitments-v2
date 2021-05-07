@@ -118,7 +118,7 @@
                     <label asp-for="CourseCode" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
                     <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
                     @Html.ValidationMessageFor(m => m.CourseCode, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.CourseCode) })
-                    <select class="govuk-select govuk-!-width-three-quarters das-autocomplete" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "CourseCode", "Name"))" aria-describedby="course-name-hint" id="trainingCourse">
+                    <select class="govuk-select govuk-!-width-three-quarters" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "CourseCode", "Name"))" aria-describedby="course-name-hint" id="trainingCourse">
                         <option value="">Please select</option>
                     </select>
                 </div>
