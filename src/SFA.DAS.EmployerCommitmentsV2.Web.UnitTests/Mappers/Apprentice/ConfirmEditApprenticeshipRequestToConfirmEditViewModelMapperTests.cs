@@ -140,7 +140,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task NotChangedFieldsAreNull()
+        public async Task UnchangedFieldsAreNull()
         {
             fixture.source.CourseCode = "Course";
 
@@ -247,4 +247,3 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
     }
 }
-
