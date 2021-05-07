@@ -32,7 +32,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             var apprenticeship = apprenticeshipTask.Result;
             var priceEpisodes = priceEpisodesTask.Result;
 
-            var courseDetailsOriginal = await _commitmentApi.GetTrainingProgramme(apprenticeship.CourseCode);
             var currentPrice = priceEpisodes.PriceEpisodes.GetPrice();
 
             var vm = new ConfirmEditApprenticeshipViewModel
@@ -95,7 +94,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 vm.CourseName = courseDetails?.TrainingProgramme.Name;
             }
             vm.OriginalApprenticeship.CourseCode = apprenticeship.CourseCode;
-            vm.OriginalApprenticeship.CourseName = courseDetailsOriginal?.TrainingProgramme.Name;
+            vm.OriginalApprenticeship.CourseName = apprenticeship.CourseName;
 
             return vm;
         }
