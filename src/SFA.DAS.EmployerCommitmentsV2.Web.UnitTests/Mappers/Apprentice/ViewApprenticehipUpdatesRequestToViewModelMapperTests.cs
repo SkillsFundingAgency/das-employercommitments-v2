@@ -107,7 +107,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(fixture.ApprenticeshipUpdate.TrainingName, viewModel.ApprenticeshipUpdates.CourseName);
         }
 
-
         [Test]
         public async Task ProviderName_IsMapped()
         {
@@ -190,7 +189,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             public GetApprenticeshipUpdatesRequest GetApprenticeshipUpdatesRequest;
             public GetTrainingProgrammeResponse GetTrainingProgrammeResponse;
             public ApprenticeshipUpdate ApprenticeshipUpdate;
-
             public long ApprenticeshipId = 1;
 
             public ViewApprenticehipUpdatesRequestToViewModelMapperTestsFixture()
@@ -231,15 +229,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             }
         }
 
-
         public class DateTimeSpecimenBuilder : ISpecimenBuilder
         {
             public object Create(object request, ISpecimenContext context)
             {
                 var pi = request as PropertyInfo;
                 if (pi == null || pi.PropertyType != typeof(DateTime?))
+                {
                     return new NoSpecimen();
-
+                }
                 else
                 {
                     DateTime dt;
@@ -256,9 +254,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
                     return dt;
                 }
-
             }
         }
-
     }
 }

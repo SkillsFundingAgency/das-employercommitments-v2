@@ -21,22 +21,27 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
         public async Task<ViewApprenticeshipUpdatesRequestViewModel> Map(ViewApprenticehipUpdatesRequest source)
         {
-            var updates = await _commitmentsApiClient.GetApprenticeshipUpdates(source.ApprenticeshipId,
+            var updatesTask = _commitmentsApiClient.GetApprenticeshipUpdates(source.ApprenticeshipId,
                    new CommitmentsV2.Api.Types.Requests.GetApprenticeshipUpdatesRequest { Status = CommitmentsV2.Types.ApprenticeshipUpdateStatus.Pending });
 
-            var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
+            var apprenticeshipTask = _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
+
+            await Task.WhenAll(updatesTask, apprenticeshipTask);
+
+            var updates = updatesTask.Result;
+            var apprenticeship = apprenticeshipTask.Result;
 
             if (updates.ApprenticeshipUpdates.Count == 1)
             {
                 var update = updates.ApprenticeshipUpdates.First();
 
-                var ApprenticeshipUpdates = GetApprenticeshipUpdates(update);
-                var OriginalApprenticeship = await GetOriginalApprenticeship(apprenticeship, update.Cost.HasValue);
+                var apprenticeshipUpdates = GetApprenticeshipUpdates(update);
+                var originalApprenticeship = await GetOriginalApprenticeship(apprenticeship, update.Cost.HasValue);
 
                 return new ViewApprenticeshipUpdatesRequestViewModel
                 {
-                    ApprenticeshipUpdates = ApprenticeshipUpdates,
-                    OriginalApprenticeship = OriginalApprenticeship,
+                    ApprenticeshipUpdates = apprenticeshipUpdates,
+                    OriginalApprenticeship = originalApprenticeship,
                     ProviderName = apprenticeship.ProviderName,
                     AccountHashedId = source.AccountHashedId,
                     ApprenticeshipHashedId = source.ApprenticeshipHashedId
