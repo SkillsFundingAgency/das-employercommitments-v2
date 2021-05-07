@@ -128,7 +128,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task WhenMultipleAreChangedIsChanged()
+        public async Task WhenMultipleFieldsAreChanged_TheyAreChanged()
         {
             fixture.source.CourseCode = "NewCourse";
             fixture.source.LastName = "NewLastName";
