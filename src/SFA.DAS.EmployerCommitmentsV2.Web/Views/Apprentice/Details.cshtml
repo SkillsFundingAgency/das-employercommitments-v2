@@ -16,40 +16,18 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        @if (Model.PendingChanges == PendingChanges.ReadyForApproval)
-        {
-            <partial name="DetailsPartials/_PendingChangeReadyForApprovalBanner" />
-        }
-        else if (Model.PendingChanges == PendingChanges.WaitingForApproval)
-        {
-            <partial name="DetailsPartials/_PendingChangesWaitingForApprovalBanner" />
-        }
-
-        @if (Model.HasPendingChangeOfProviderRequest && Model.PendingChangeOfProviderRequestWithParty.HasValue)
-        {
-            <partial name="DetailsPartials/_PendingChangeOfPartyRequestBanner" />
-        }
+        <partial name="DetailsPartials/_ActionRequiredBanner" />
+        <partial name="DetailsPartials/_ChangesToThisApprenticeshipBanner" />
 
         @if (Model.HasApprovedChangeOfProviderRequest || Model.IsContinuation)
         {
             <partial name="DetailsPartials/_ApprovedChangesOfPartyRequestBanner" />
         }
 
-        @if (Model.PendingDataLockRestart)
-        {
-            <partial name="DetailsPartials/_PendingDataLockRestartBanner" />
-        }
-
-        @if (Model.PendingDataLockChange)
-        {
-            <partial name="DetailsPartials/_PendingDataLockChangeBanner" />
-
-        }
-
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
 
         @{ if (!Model.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) &&
-                                     Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
+                                      Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
             {
                 <p class="govuk-body">
                     Edit details if there's a change in apprentice or apprenticeship circumstances.

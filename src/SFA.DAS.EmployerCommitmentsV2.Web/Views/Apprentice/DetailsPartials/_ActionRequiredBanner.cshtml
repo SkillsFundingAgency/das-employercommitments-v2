@@ -1,0 +1,50 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+@{ 
+   var actionRequiredBanners = Model.GetActionRequiredBanners();
+}
+
+@if (actionRequiredBanners > ActionRequiredBanner.None)
+{
+    <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+        <div class="govuk-notification-banner__header">
+            <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                Action required
+            </h2>
+        </div>
+        <div class="govuk-notification-banner__content">
+            @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.PendingChangeForApproval))
+            {
+                <p class="govuk-notification-banner__heading">
+                    The training provider has made a change which needs to be reviewed and approved by you.
+                    <a id="review-changes-banner-link" class="govuk-notification-banner__link" href="@Url.Action("ReviewApprenticeshipUpdates", new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Review changes</a>
+                </p>
+            }
+            @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.InFlightChangeOfProviderPendingEmployer))
+            {
+                <p class="govuk-notification-banner__heading">
+                    The new training provider has reviewed the change of provider request. You need to review the new details.
+                    <a id="change-of-party-review-changes-link" class="govuk-notification-banner__link" href="@Url.RouteUrl("view-changes")">View changes</a>
+                </p>
+            }
+            @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.DataLockChange))
+            {
+                <p class="govuk-notification-banner__heading">
+                    The training provider has made changes to this apprentice’s details that you need to review.
+                    <a id="datalock-changes-link" class="govuk-notification-banner__link" href="@LinkGenerator.DatalockChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)">Review changes</a>
+                </p>
+            }
+            @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.DataLockRestart))
+            {
+                <p class="govuk-notification-banner__heading">
+                    The apprentice’s training provider has asked you to stop this apprenticeship and to create a new apprentice request with the updated apprenticeship training course.
+                    <a id="datalock-restart-link" class="govuk-notification-banner__link" href="@LinkGenerator.DatalockRestart(Model.AccountHashedId, Model.HashedApprenticeshipId)">View details</a>
+                </p>
+            }
+        </div>
+    </div>
+}
