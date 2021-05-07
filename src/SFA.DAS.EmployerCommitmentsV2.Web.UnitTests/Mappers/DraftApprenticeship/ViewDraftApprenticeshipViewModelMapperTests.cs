@@ -1,11 +1,14 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
@@ -16,6 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
     {
         private ViewDraftApprenticeshipViewModelMapper _mapper;
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
+        private Mock<IAuthorizationService> _authorizationService;
         private ViewDraftApprenticeshipRequest _request;
         private ViewDraftApprenticeshipViewModel _result;
         private GetDraftApprenticeshipResponse _draftApprenticeship;
@@ -38,12 +42,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                     TrainingProgramme = _course
                 });
 
-
             _commitmentsApiClient.Setup(x =>
                     x.GetDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_draftApprenticeship);
 
-            _mapper = new ViewDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object);
+            _authorizationService = new Mock<IAuthorizationService>();
+
+            _mapper = new ViewDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _authorizationService.Object);
 
             _result = await _mapper.Map(_request) as ViewDraftApprenticeshipViewModel;
         }
@@ -124,6 +129,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public void ThenTrainingCourseIsMappedCorrectly()
         {
             Assert.AreEqual(_course.Name, _result.TrainingCourse);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task ShowEmailIsSetCorrectly(bool show)
+        {
+            _authorizationService.Setup(x => x.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail))
+                .ReturnsAsync(show);
+
+            _result = await _mapper.Map(_request) as ViewDraftApprenticeshipViewModel;
+            _result.ShowEmail.Should().Be(show);
         }
     }
 }

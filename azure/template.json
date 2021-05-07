@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "environmentName": {
@@ -13,6 +13,12 @@
             "metadata": {
                 "description": "The name of the resource environment."
             }
+        },
+        "tags": {
+            "type": "object"
+        },
+        "resourceGroupLocation": {
+            "type": "string"
         },
         "configurationStorageConnectionString": {
             "type": "securestring",
@@ -39,9 +45,8 @@
                 "description": "The connection string for the Redis logging cache."
             }
         },
-        "appServiceAllowedIPs": {
+        "frontEndAccessRestrictions": {
             "type": "array",
-            "defaultValue": [],
             "metadata": {
                 "description": "An array of IPs that are permitted to access the app service."
             }
@@ -52,22 +57,25 @@
         "sharedFrontEndAppServicePlanName": {
             "type": "string"
         },
+        "sharedFrontEndSubnetResourceId": {
+            "type": "string"
+        },
         "keyVaultCertificateName": {
             "type": "string",
             "metadata": {
                 "description": "The name of the certificate stored in the shared keyvault."
             }
         },
-        "keyVaultName": {
+        "sharedKeyVaultName": {
             "type": "string",
             "metadata": {
                 "description": "The name of the shared keyvault."
             }
         },
-        "keyVaultResourceGroupName": {
+        "sharedManagementResourceGroup": {
             "type": "string",
             "metadata": {
-                "description": "The resource group name of the shared keyvault."
+                "description": "The name of the shared management resource group."
             }
         },
         "cdnUrl": {
@@ -77,12 +85,21 @@
     "variables": {
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
+        "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
         "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]"
     },
     "resources": [
         {
+            "apiVersion": "2020-10-01",
+            "name": "[variables('resourceGroupName')]",
+            "type": "Microsoft.Resources/resourceGroups",
+            "location": "[parameters('resourceGroupLocation')]",
+            "tags": "[parameters('tags')]",
+            "properties": {}
+        },
+        {
             "condition": "[greater(length(parameters('customHostName')), 0)]",
-            "apiVersion": "2017-05-10",
+            "apiVersion": "2020-10-01",
             "name": "app-service-certificate",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
@@ -97,18 +114,19 @@
                         "value": "[parameters('keyVaultCertificateName')]"
                     },
                     "keyVaultName": {
-                        "value": "[parameters('keyVaultName')]"
+                        "value": "[parameters('sharedKeyVaultName')]"
                     },
                     "keyVaultResourceGroup": {
-                        "value": "[parameters('keyVaultResourceGroupName')]"
+                        "value": "[parameters('sharedManagementResourceGroup')]"
                     }
                 }
             }
         },
         {
-            "apiVersion": "2017-05-10",
+            "apiVersion": "2020-10-01",
             "name": "application-insights",
             "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -123,12 +141,16 @@
                         "value": "[variables('appServiceName')]"
                     }
                 }
-            }
+            },
+            "dependsOn": [
+                "[variables('resourceGroupName')]"
+            ]
         },
         {
-            "apiVersion": "2017-05-10",
+            "apiVersion": "2020-10-01",
             "name": "app-service",
             "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -144,6 +166,9 @@
                     },
                     "appServicePlanResourceGroup": {
                         "value": "[parameters('sharedEnvResourceGroup')]"
+                    },
+                    "subnetResourceId": {
+                        "value": "[parameters('sharedFrontEndSubnetResourceId')]"
                     },
                     "appServiceAppSettings": {
                         "value": {
@@ -182,15 +207,20 @@
                         "value": "[if(greater(length(parameters('customHostname')), 0), reference('app-service-certificate', '2018-11-01').outputs.certificateThumbprint.value, '')]"
                     },
                     "ipSecurityRestrictions": {
-                        "value": "[parameters('appServiceAllowedIPs')]"
+                        "value": "[parameters('frontEndAccessRestrictions')]"
                     }
                 }
             },
             "dependsOn": [
+                "[variables('resourceGroupName')]"
             ]
         }
     ],
     "outputs": {
+        "ResourceGroupName": {
+            "type": "string",
+            "value": "[variables('resourceGroupName')]"
+        },
         "AppServiceName": {
             "type": "string",
             "value": "[variables('appServiceName')]"

@@ -152,6 +152,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var viewModel = await _modelMapper.Map<EnterNewTrainingProviderViewModel>(request);
 
+            if (request.Edit.GetValueOrDefault())
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.ConfirmDetailsAndSendRequest, request);
+            }
+            else
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.ChangeProviderInform, request);
+            }
+
             return View(viewModel);
         }
 
@@ -179,7 +188,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> WhoWillEnterTheDetails(ChangeOfProviderRequest request)
         {
             var viewModel = await _modelMapper.Map<WhoWillEnterTheDetailsViewModel>(request);
-
             return View(viewModel);
         }
 
@@ -207,6 +215,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var viewModel = await _modelMapper.Map<WhatIsTheNewStartDateViewModel>(request);
 
+            if (request.Edit.GetValueOrDefault())
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.ConfirmDetailsAndSendRequest, request);
+            }
+            else
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.WhoWillEnterTheDetails,
+                    new
+                    {
+                        request.EmployerWillAdd,
+                        request.ProviderName,
+                        request.ProviderId
+                    });
+            }
+
             return View(viewModel);
         }
 
@@ -232,6 +255,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> WhatIsTheNewEndDate(ChangeOfProviderRequest request)
         {
             var viewModel = await _modelMapper.Map<WhatIsTheNewEndDateViewModel>(request);
+
+            if (request.Edit.GetValueOrDefault())
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.ConfirmDetailsAndSendRequest, request);
+            }
+            else
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.WhatIsTheNewStartDate,
+                    new
+                    {
+                        request.EmployerWillAdd,
+                        request.ProviderId,
+                        request.ProviderName,
+                        request.NewStartMonth,
+                        request.NewStartYear
+                    });
+            }
+
             return View(viewModel);
         }
 
@@ -257,6 +298,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var viewModel = await _modelMapper.Map<WhatIsTheNewPriceViewModel>(request);
 
+            if (request.Edit.GetValueOrDefault())
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.ConfirmDetailsAndSendRequest, request);
+            }
+            else
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.WhatIsTheNewEndDate,
+                    new
+                    {
+                        request.EmployerWillAdd,
+                        request.ProviderId,
+                        request.ProviderName,
+                        request.NewStartMonth,
+                        request.NewStartYear,
+                        request.NewEndMonth,
+                        request.NewEndYear
+                    });
+            }
+
             return View(viewModel);
         }
 
@@ -266,7 +326,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> WhatIsTheNewPrice(WhatIsTheNewPriceViewModel viewModel)
         {
             var request = await _modelMapper.Map<ChangeOfProviderRequest>(viewModel);
-
             return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, request);
         }
 
