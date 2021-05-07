@@ -128,7 +128,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task WhenMultiplePropertiesAreChanged_TheyAllAreChanged()
+        public async Task WhenMultipleFieldsAreChanged_TheyAreChanged()
         {
             fixture.source.CourseCode = "NewCourse";
             fixture.source.LastName = "NewLastName";
@@ -138,7 +138,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(fixture.source.LastName, result.LastName);
             Assert.AreEqual(fixture.source.CourseCode, result.CourseCode);
         }
-
 
         [Test]
         public async Task NotChangedFieldsAreNull()
