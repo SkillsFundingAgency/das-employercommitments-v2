@@ -75,7 +75,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             };
 
             var courseDetailsOriginal = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
-            OriginalApprenticeship.CourseName = courseDetailsOriginal?.TrainingProgramme.Name;
+            OriginalApprenticeship.CourseName = apprenticeship.CourseName;
 
             if (costChanged)
             {
