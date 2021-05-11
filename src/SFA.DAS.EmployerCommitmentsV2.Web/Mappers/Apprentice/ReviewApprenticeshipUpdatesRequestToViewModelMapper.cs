@@ -68,11 +68,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     vm.OriginalApprenticeship.Cost = priceEpisodes.PriceEpisodes.GetPrice();
                 }
 
-                if (!string.IsNullOrWhiteSpace(update.TrainingCode))
-                {
-                    var courseDetailsOriginal = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
-                    vm.OriginalApprenticeship.CourseName = courseDetailsOriginal?.TrainingProgramme.Name;
-                }
+                var courseDetailsOriginal = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
+                vm.OriginalApprenticeship.CourseName = courseDetailsOriginal?.TrainingProgramme.Name;
 
                 return vm;
             }
