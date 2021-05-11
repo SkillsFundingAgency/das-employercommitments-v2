@@ -76,11 +76,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 ULN = apprenticeship.Uln,
                 StartDate = apprenticeship.StartDate,
                 EndDate = apprenticeship.EndDate,
-                CourseCode = apprenticeship.CourseCode
+                CourseCode = apprenticeship.CourseCode,
+                CourseName = apprenticeship.CourseName
             };
-
-            var courseDetailsOriginal = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
-            OriginalApprenticeship.CourseName = apprenticeship.CourseName;
 
             if (costChanged)
             {
