@@ -58,7 +58,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                         ULN = apprenticeship.Uln,
                         StartDate = apprenticeship.StartDate,
                         EndDate = apprenticeship.EndDate,
-                        CourseCode = apprenticeship.CourseCode
+                        CourseCode = apprenticeship.CourseCode,
+                        CourseName = apprenticeship.CourseName
                     }
                 };
 
@@ -67,9 +68,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     var priceEpisodes = await _commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId);
                     vm.OriginalApprenticeship.Cost = priceEpisodes.PriceEpisodes.GetPrice();
                 }
-
-                var courseDetailsOriginal = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
-                vm.OriginalApprenticeship.CourseName = courseDetailsOriginal?.TrainingProgramme.Name;
 
                 return vm;
             }
