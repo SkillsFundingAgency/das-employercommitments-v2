@@ -38,14 +38,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 var apprenticeshipUpdatesTask = _commitmentsApiClient.GetApprenticeshipUpdates(apprenticeshipId, new GetApprenticeshipUpdatesRequest() { Status = ApprenticeshipUpdateStatus.Pending }, CancellationToken.None);
                 var apprenticeshipDataLocksStatusTask = _commitmentsApiClient.GetApprenticeshipDatalocksStatus(apprenticeshipId, CancellationToken.None);
                 var changeofPartyRequestsTask = _commitmentsApiClient.GetChangeOfPartyRequests(apprenticeshipId, CancellationToken.None);
+                var changeOfProviderChainTask  = _commitmentsApiClient.GetChangeOfProviderChain(apprenticeshipId, CancellationToken.None);
 
-                await Task.WhenAll(apprenticeshipTask, priceEpisodesTask, apprenticeshipUpdatesTask, apprenticeshipDataLocksStatusTask, changeofPartyRequestsTask);
+                await Task.WhenAll(apprenticeshipTask, priceEpisodesTask, apprenticeshipUpdatesTask, apprenticeshipDataLocksStatusTask, changeofPartyRequestsTask, changeOfProviderChainTask);
 
                 var apprenticeship = apprenticeshipTask.Result;
                 var priceEpisodes = priceEpisodesTask.Result;
                 var apprenticeshipUpdates = apprenticeshipUpdatesTask.Result;
                 var apprenticeshipDataLocksStatus = apprenticeshipDataLocksStatusTask.Result;
                 var changeofPartyRequests = changeofPartyRequestsTask.Result;
+                var changeOfProviderChain = changeOfProviderChainTask.Result;
 
                 var getTrainingProgramme = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode, CancellationToken.None);
                 PendingChanges pendingChange = GetPendingChanges(apprenticeshipUpdates);
@@ -59,9 +61,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 bool enableEdit = EnableEdit(apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged);
 
                 var pendingChangeOfProviderRequest = changeofPartyRequests.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
-                var approvedChangeOfProviderRequest = changeofPartyRequests.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();
                 var pendingChangeOfEmployerRequest = changeofPartyRequests.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
-                var approvedChangeOfEmployerRequest = changeofPartyRequests.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();
+                var approvedChangeOfPartyRequest = changeofPartyRequests.ChangeOfPartyRequests?.Where(x => x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();
 
                 var result = new ApprenticeshipDetailsRequestViewModel
                 {
@@ -85,26 +86,32 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     EmployerReference = apprenticeship.EmployerReference,
                     CohortReference = _encodingService.Encode(apprenticeship.CohortId, EncodingType.CohortReference),
                     EnableEdit = enableEdit,
-                    CanEditStatus = (apprenticeship.Status == ApprenticeshipStatus.Live || 
-                                     apprenticeship.Status == ApprenticeshipStatus.WaitingToStart || 
-                                     apprenticeship.Status == ApprenticeshipStatus.Paused),                    
                     EndpointAssessorName = apprenticeship.EndpointAssessorName,
                     MadeRedundant = apprenticeship.MadeRedundant,
+                    
                     HasPendingChangeOfProviderRequest = pendingChangeOfProviderRequest != null,
                     PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty,
-                    HasApprovedChangeOfProviderRequest = approvedChangeOfProviderRequest != null,
-                    HashedNewApprenticeshipId = approvedChangeOfProviderRequest?.NewApprenticeshipId != null
-                            ? _encodingService.Encode(approvedChangeOfProviderRequest.NewApprenticeshipId.Value, EncodingType.ApprenticeshipId)
+
+                    HashedNewApprenticeshipId = approvedChangeOfPartyRequest?.NewApprenticeshipId != null
+                            ? _encodingService.Encode(approvedChangeOfPartyRequest.NewApprenticeshipId.Value, EncodingType.ApprenticeshipId)
                             : null,
-                    IsContinuation = apprenticeship.ContinuationOfId.HasValue,
-                    HashedPreviousApprenticeshipId = apprenticeship.ContinuationOfId.HasValue
-                            ? _encodingService.Encode(apprenticeship.ContinuationOfId.Value, EncodingType.ApprenticeshipId)
-                            : null,
+
                     HasPendingChangeOfEmployerRequest = pendingChangeOfEmployerRequest != null,
                     PendingChangeOfEmployerRequestWithParty = pendingChangeOfEmployerRequest?.WithParty,
-                    HasApprovedChangeOfEmployerRequest = approvedChangeOfEmployerRequest != null,
+
+                    TrainingProviderHistory = changeOfProviderChain?.ChangeOfProviderChain
+                        .Select(copc => new TrainingProviderHistory
+                        {
+                            ProviderName = copc.ProviderName,
+                            FromDate = copc.StartDate.Value,
+                            ToDate = copc.StopDate.HasValue ? copc.StopDate.Value : copc.EndDate.Value,
+                            HashedApprenticeshipId = _encodingService.Encode(copc.ApprenticeshipId, EncodingType.ApprenticeshipId),
+                            ShowLink = apprenticeship.Id != copc.ApprenticeshipId
+                        })
+                        .ToList(),
+
                     PendingDataLockChange = dataLockPriceTriaged || dataLockCourseChangedTraiged,
-                    PendingDataLockRestart = dataLockCourseTriaged                   
+                    PendingDataLockRestart = dataLockCourseTriaged
                 };
 
                 return result;
