@@ -19,15 +19,10 @@
         <partial name="DetailsPartials/_ActionRequiredBanner" />
         <partial name="DetailsPartials/_ChangesToThisApprenticeshipBanner" />
 
-        @if (Model.HasApprovedChangeOfProviderRequest || Model.IsContinuation)
-        {
-            <partial name="DetailsPartials/_ApprovedChangesOfPartyRequestBanner" />
-        }
-
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
 
-        @{ if (!Model.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) &&
-                                      Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
+        @{ if (!Model.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) && 
+                                    Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
             {
                 <p class="govuk-body">
                     Edit details if there's a change in apprentice or apprenticeship circumstances.
@@ -83,7 +78,7 @@
                                 @Model.StopDate.Value.ToGdsFormatLongMonthWithoutDay()
                             }
                         </td>
-                        <td id="editStopDateLink" class="govuk-table__cell govuk-table__cell--numeric">                            
+                        <td id="editStopDateLink" class="govuk-table__cell govuk-table__cell--numeric">
                             <a id="edit-stopped-link" class="govuk-link" href="@Url.Action("EditStopDate", new EditStopDateRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit</a>
                         </td>
                     </tr>
@@ -117,6 +112,29 @@
                     <td id="cohort-reference" class="govuk-table__cell">@Model.CohortReference</td>
                     <td class="govuk-table__cell"></td>
                 </tr>
+                @if (Model.TrainingProviderHistory != null && Model.TrainingProviderHistory.Count > 1)
+                {
+                <tr>
+                    <th scope="row" class="govuk-table__header">Training provider history</th>
+                    <td id="cohort-reference" class="govuk-table__cell">
+                        @foreach (var trainingProvider in Model.TrainingProviderHistory)
+                        {
+                        <p class="govuk-body">
+                            @if (trainingProvider.ShowLink)
+                            {
+                                <a href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = trainingProvider.HashedApprenticeshipId })">@trainingProvider.ProviderName</a><br>
+                            }
+                            else
+                            {
+                                <span>@trainingProvider.ProviderName</span><br/>
+                            }
+                            <span class="govuk-body-s">@trainingProvider.FromDate.ToString("MMM yyyy") to @trainingProvider.ToDate.ToString("MMM yyyy")</span>
+                        </p>
+                        }
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                }
             </tbody>
         </table>
 

@@ -12,10 +12,12 @@ using SFA.DAS.Encoding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetApprenticeshipUpdatesResponse;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetChangeOfPartyRequestsResponse;
+using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetChangeOfProviderChainResponse;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetPriceEpisodesResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
@@ -30,8 +32,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private GetDataLocksResponse _dataLocksResponse;
         private GetChangeOfPartyRequestsResponse _changeOfPartyRequestsResponse;
         private GetTrainingProgrammeResponse _trainingProgrammeResponse;
+        private GetChangeOfProviderChainResponse _changeOfProviderChainReponse;
         private ApprenticeshipDetailsRequest _request;
         private ApprenticeshipDetailsRequestToViewModelMapper _mapper;
+        
+        private const long ApprenticeshipIdFirst = 456;
+        private const long ApprenticeshipIdMiddle = 356;
+        private const long ApprenticeshipIdLast = 256;
 
         [SetUp]
         public void SetUp()
@@ -39,10 +46,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Arrange
             var autoFixture = new Fixture();
             _request = autoFixture.Build<ApprenticeshipDetailsRequest>()
-                .With(x => x.AccountHashedId, "123")
-                .With(x => x.ApprenticeshipHashedId, "456")
+                .With(x => x.AccountHashedId, $"A123")
+                .With(x => x.ApprenticeshipHashedId, $"A{ApprenticeshipIdFirst}")
                 .Create();           
             _apprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>()
+                .With(x => x.Id, ApprenticeshipIdFirst)
                 .With(x => x.CourseCode, "ABC")
                 .With(x => x.DateOfBirth, autoFixture.Create<DateTime>())
                 .Create();            
@@ -57,7 +65,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _dataLocksResponse = autoFixture.Build<GetDataLocksResponse>().Create();
             _changeOfPartyRequestsResponse = autoFixture.Build<GetChangeOfPartyRequestsResponse>().Create();
             _trainingProgrammeResponse = autoFixture.Build<GetTrainingProgrammeResponse>().Create();
-            
+            _changeOfProviderChainReponse = autoFixture.Build<GetChangeOfProviderChainResponse>().Create();
+
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _mockCommitmentsApiClient.Setup(r => r.GetApprenticeship(It.IsAny<long>(), CancellationToken.None))
                 .ReturnsAsync(_apprenticeshipResponse);
@@ -71,7 +80,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .ReturnsAsync(_changeOfPartyRequestsResponse);
             _mockCommitmentsApiClient.Setup(t => t.GetTrainingProgramme(_apprenticeshipResponse.CourseCode, It.IsAny<CancellationToken>()))
                .ReturnsAsync(_trainingProgrammeResponse);
+            _mockCommitmentsApiClient.Setup(t => t.GetChangeOfProviderChain(It.IsAny<long>(), CancellationToken.None))
+                .ReturnsAsync(_changeOfProviderChainReponse);
+
             _mockEncodingService = new Mock<IEncodingService>();
+            _mockEncodingService.Setup(t => t.Encode(It.IsAny<long>(), It.IsAny<EncodingType>()))
+                .Returns((long value, EncodingType encodingType) => $"A{value}");
+            _mockEncodingService.Setup(t => t.Decode(It.IsAny<string>(), It.IsAny<EncodingType>()))
+                .Returns((string value, EncodingType encodingType) => long.Parse(Regex.Replace(value, "[A-Za-z ]", "")));
+
             _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
         }
 
@@ -133,6 +150,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             _mockCommitmentsApiClient.Verify(t => t.GetChangeOfPartyRequests(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Test]
+        public async Task GetChangeOfProviderChainIsCalled()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            _mockCommitmentsApiClient.Verify(t => t.GetChangeOfProviderChain(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Test]
@@ -469,32 +496,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(pendingChangeRequest, result.HasPendingChangeOfProviderRequest);
         }
 
-        [TestCase(ChangeOfPartyRequestStatus.Approved, true)]
-        [TestCase(ChangeOfPartyRequestStatus.Rejected, false)]
-        [TestCase(ChangeOfPartyRequestStatus.Withdrawn, false)]
-        [TestCase(ChangeOfPartyRequestStatus.Pending, false)]
-        public async Task HasApprovedChangeOfProviderRequest_IsMapped(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool pendingChangeRequest)
-        {
-            //Arrange
-            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest>()
-            {
-                new GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest
-                {
-                    Id = 1,
-                    ChangeOfPartyType = ChangeOfPartyRequestType.ChangeProvider,
-                    OriginatingParty = Party.Employer,
-                    Status = changeOfPartyRequestStatus,
-                    WithParty = Party.Provider
-                }
-            };
-
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            Assert.AreEqual(pendingChangeRequest, result.HasApprovedChangeOfProviderRequest);
-        }
-
         [TestCase(ChangeOfPartyRequestStatus.Approved, false)]
         [TestCase(ChangeOfPartyRequestStatus.Rejected, false)]
         [TestCase(ChangeOfPartyRequestStatus.Withdrawn, false)]
@@ -521,37 +522,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(pendingChangeRequest, result.HasPendingChangeOfEmployerRequest);
         }
 
-        [TestCase(ChangeOfPartyRequestStatus.Approved, true)]
-        [TestCase(ChangeOfPartyRequestStatus.Rejected, false)]
-        [TestCase(ChangeOfPartyRequestStatus.Withdrawn, false)]
-        [TestCase(ChangeOfPartyRequestStatus.Pending, false)]
-        public async Task HasApprovedChangeOfEmployerRequest_IsMapped(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool pendingChangeRequest)
-        {
-            //Arrange
-            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest>()
-            {
-                new GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest
-                {
-                    Id = 1,
-                    ChangeOfPartyType = ChangeOfPartyRequestType.ChangeEmployer,
-                    OriginatingParty = Party.Employer,
-                    Status = changeOfPartyRequestStatus,
-                    WithParty = Party.Provider
-                }
-            };
-
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            Assert.AreEqual(pendingChangeRequest, result.HasApprovedChangeOfEmployerRequest);
-        }
-
-        [TestCase(ChangeOfPartyRequestStatus.Approved, true)]
-        [TestCase(ChangeOfPartyRequestStatus.Pending, false)]
-        [TestCase(ChangeOfPartyRequestStatus.Rejected, true)]
-        [TestCase(ChangeOfPartyRequestStatus.Withdrawn, true)]
-        public async Task ShowChangeTrainingProviderLink_IsMapped(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool flag)
+        [TestCase(ChangeOfPartyRequestStatus.Approved, ChangeOfPartyRequestType.ChangeProvider, false)]
+        [TestCase(ChangeOfPartyRequestStatus.Pending, ChangeOfPartyRequestType.ChangeProvider, false)]
+        [TestCase(ChangeOfPartyRequestStatus.Rejected, ChangeOfPartyRequestType.ChangeProvider, true)]
+        [TestCase(ChangeOfPartyRequestStatus.Withdrawn, ChangeOfPartyRequestType.ChangeProvider, true)]
+        [TestCase(ChangeOfPartyRequestStatus.Approved, ChangeOfPartyRequestType.ChangeEmployer, false)]
+        [TestCase(ChangeOfPartyRequestStatus.Pending, ChangeOfPartyRequestType.ChangeEmployer, false)]
+        [TestCase(ChangeOfPartyRequestStatus.Rejected, ChangeOfPartyRequestType.ChangeEmployer, true)]
+        [TestCase(ChangeOfPartyRequestStatus.Withdrawn, ChangeOfPartyRequestType.ChangeEmployer, true)]
+        public async Task ShowChangeTrainingProviderLink_IsMapped_When_Change_Of_Party(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, ChangeOfPartyRequestType changeOfPartyRequestType, bool flag)
         {
             //Arrange 
             _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
@@ -560,7 +539,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                new ChangeOfPartyRequest
                     {
                         Status = changeOfPartyRequestStatus,
-                        ChangeOfPartyType = ChangeOfPartyRequestType.ChangeProvider
+                        ChangeOfPartyType = changeOfPartyRequestType,
+                        NewApprenticeshipId = _apprenticeshipResponse.Id + 1
                     }
             };
 
@@ -571,69 +551,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(result.ShowChangeTrainingProviderLink, flag);
         }
 
-        [TestCase(ChangeOfPartyRequestStatus.Pending, false)]
-        public async Task Then_CoE_request_not_yet_approved_dont_show_ChangeProviderLink(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool flag)
-        {
-            //Arrange 
-            _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
-            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<ChangeOfPartyRequest>
-            {
-               new ChangeOfPartyRequest
-                    {
-                        Status = changeOfPartyRequestStatus,
-                        ChangeOfPartyType = ChangeOfPartyRequestType.ChangeEmployer
-                    }
-            };
-
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            Assert.AreEqual(result.ShowChangeTrainingProviderLink, flag);
-        }
-
-        [TestCase(ChangeOfPartyRequestStatus.Approved, false)]
-        public async Task Then_CoE_request_approved_by_parties_apprenticeship_moved_from_me_dont_show_ChangeProviderLink(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool flag)
-        {
-            //Arrange 
-            _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
-            _apprenticeshipResponse.ContinuationOfId = null; /* apprenticeship has moved from me to another employer*/
-            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<ChangeOfPartyRequest>
-            {
-               new ChangeOfPartyRequest
-                    {
-                        Status = changeOfPartyRequestStatus,
-                        ChangeOfPartyType = ChangeOfPartyRequestType.ChangeEmployer
-                    }
-            };
-
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            Assert.AreEqual(result.ShowChangeTrainingProviderLink, flag);
-        }
-
-
-        [TestCase(ApprenticeshipStatus.Live, true)]
         [TestCase(ApprenticeshipStatus.Stopped, true)]
         [TestCase(ApprenticeshipStatus.Paused, true)]
+        [TestCase(ApprenticeshipStatus.Live, true)]
         [TestCase(ApprenticeshipStatus.WaitingToStart, true)]
-        public async Task Given_No_Change_Of_Parity_ShowChangeProviderLinkAsync(ApprenticeshipStatus apprenticeshipStatus, bool expected)
+        public async Task ShowChangeProviderLink_IsMapped_When_No_Change_Of_Party(ApprenticeshipStatus apprenticeshipStatus, bool expected)
         {
             //Arrange
             _apprenticeshipResponse.Status = apprenticeshipStatus;
-            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<ChangeOfPartyRequest>
-            {
-                new ChangeOfPartyRequest
-                {
-                    Id = 1,
-                    Status = ChangeOfPartyRequestStatus.Approved,
-                    ChangeOfPartyType = ChangeOfPartyRequestType.ChangeEmployer,
-                    OriginatingParty = Party.Employer,
-                    WithParty = Party.Provider
-                }
-            };
+            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<ChangeOfPartyRequest>();
 
             //Act
             var result = await _mapper.Map(_request);
@@ -642,23 +568,44 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(result.ShowChangeTrainingProviderLink, expected);
         }
 
-
-        [TestCase(ApprenticeshipStatus.Live, false)]
-        [TestCase(ApprenticeshipStatus.Stopped, false)]
-        public async Task Then_Given_ThereIsChangeOfParity_DoNotShowChangeProviderLinkAsync(ApprenticeshipStatus apprenticeshipStatus, bool expected)
+        [TestCase(ApprenticeshipIdFirst, 0, 3)]
+        [TestCase(ApprenticeshipIdMiddle, 1, 3)]
+        [TestCase(ApprenticeshipIdLast, 2, 3)]
+        public async Task TrainingProviderHistory_IsMapped_When_Change_Of_Provider_Chain(long apprenticeshipId, int linkHidden, int historyCount)
         {
             //Arrange
-            _apprenticeshipResponse.Status = apprenticeshipStatus;
-            _apprenticeshipResponse.ContinuationOfId = null; /* apprenticeship has moved from me to another employer*/
-            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<ChangeOfPartyRequest>
+            DateTime now = DateTime.Now;
+            _request.ApprenticeshipHashedId = $"A{apprenticeshipId}";
+            _apprenticeshipResponse.Id = apprenticeshipId;
+            _apprenticeshipResponse.Status = ApprenticeshipStatus.WaitingToStart;
+            _changeOfProviderChainReponse.ChangeOfProviderChain = new List<ChangeOfProviderLink>
             {
-                new ChangeOfPartyRequest
+                new ChangeOfProviderLink
                 {
-                    Id = 1,
-                    Status = ChangeOfPartyRequestStatus.Pending,
-                    ChangeOfPartyType = ChangeOfPartyRequestType.ChangeEmployer,
-                    OriginatingParty = Party.Employer,
-                    WithParty = Party.Provider
+                    ApprenticeshipId = ApprenticeshipIdFirst,
+                    StartDate = now,
+                    EndDate = now.AddDays(10),
+                    StopDate = null,
+                    ProviderName = "ProviderFirst",
+                    CreatedOn = now.AddDays(-12)
+                },
+                new ChangeOfProviderLink
+                {
+                    ApprenticeshipId = ApprenticeshipIdMiddle,
+                    StartDate = now.AddDays(-10),
+                    EndDate = now.AddDays(-5),
+                    StopDate = now.AddDays(-10),
+                    ProviderName = "ProviderMiddle",
+                    CreatedOn = now.AddDays(-22)
+                },
+                new ChangeOfProviderLink
+                {
+                    ApprenticeshipId = ApprenticeshipIdLast,
+                    StartDate = now.AddDays(-20),
+                    EndDate = now.AddDays(-15),
+                    StopDate = now.AddDays(-20),
+                    ProviderName = "ProviderLast",
+                    CreatedOn = now.AddDays(-30)
                 }
             };
 
@@ -666,29 +613,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(result.ShowChangeTrainingProviderLink, expected);
-        }
-
-        [TestCase(ApprenticeshipStatus.Completed, false)]
-        public async Task Then_BasedOnApprenticeStatus_DoNotShowChangeProviderLinkAsync(ApprenticeshipStatus apprenticeshipStatus, bool expected)
-        {
-            //Arrange
-            _apprenticeshipResponse.Status = apprenticeshipStatus;
-            _apprenticeshipResponse.ContinuationOfId = null; /* apprenticeship has moved from me to another employer*/
-            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<ChangeOfPartyRequest>
+            Assert.AreEqual(result.TrainingProviderHistory.Count, historyCount);
+            for(int counter=0; counter < result.TrainingProviderHistory.Count; counter++)
             {
-                new ChangeOfPartyRequest
-                {
-                    Status = ChangeOfPartyRequestStatus.Approved,
-                    ChangeOfPartyType = ChangeOfPartyRequestType.ChangeEmployer
-                }
-            };
-
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            Assert.AreEqual(result.ShowChangeTrainingProviderLink, expected);
+                if(counter == linkHidden)
+                    Assert.IsFalse(result.TrainingProviderHistory[counter].ShowLink);
+                else
+                    Assert.IsTrue(result.TrainingProviderHistory[counter].ShowLink);
+            }
         }
     }
 }
