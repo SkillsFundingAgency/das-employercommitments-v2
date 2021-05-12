@@ -25,7 +25,7 @@
             @Html.HiddenFor(x => x.ApprenticeshipHashedId)
 
             <partial name="ApprenticeshipUpdatesPartial/_ViewOriginalApprenticeshipForApprenticeshipUpdates" />
-            <p>@Model.ProviderName have suggested these changes</p>
+            <p>@Model.ProviderName have suggested these changes:</p>
             <partial name="ApprenticeshipUpdatesPartial/_ViewApprenticeshipUpdates" />
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApproveChanges,  "govuk-form-group--error")">
