@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.Authorization.ModelBinding;
 using SFA.DAS.CommitmentsV2.Types;
 using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
@@ -23,7 +24,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string Status { get; set; }
         public string ProviderName { get; set; }
         public PendingChanges PendingChanges { get; set; }
-        public bool CanEditStatus { get; set; }
+        public bool CanEditStatus => (ApprenticeshipStatus == ApprenticeshipStatus.Live ||
+                                     ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart ||
+                                     ApprenticeshipStatus == ApprenticeshipStatus.Paused);
         public string EmployerReference { get; set; }
         public string CohortReference { get; set; }
         public bool EnableEdit { get; set; }
@@ -34,21 +37,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool HasPendingChangeOfProviderRequest { get; set; }
         public Party? PendingChangeOfProviderRequestWithParty { get; set; }
         public string HashedNewApprenticeshipId { get; set; }
-        public bool IsContinuation { get; set; }
-        public string HashedPreviousApprenticeshipId { get; set; }
         public bool ShowChangeTrainingProviderLink => ((ApprenticeshipStatus == ApprenticeshipStatus.Stopped ||
                                                        ApprenticeshipStatus == ApprenticeshipStatus.Paused ||
                                                        ApprenticeshipStatus == ApprenticeshipStatus.Live ||
                                                        ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart) &&
                                                        !HasPendingChangeOfProviderRequest &&
                                                        !HasPendingChangeOfEmployerRequest &&
-                                                       !(HasApprovedChangeOfEmployerRequest && !IsContinuation) &&
                                                        string.IsNullOrEmpty(HashedNewApprenticeshipId));
 
-        public bool HasApprovedChangeOfProviderRequest { get; set; }
         public bool HasPendingChangeOfEmployerRequest { get; set; }
         public Party? PendingChangeOfEmployerRequestWithParty { get; set; }
-        public bool HasApprovedChangeOfEmployerRequest { get; set; }
+        public List<TrainingProviderHistory> TrainingProviderHistory { get; set; }
         public bool IsV2Edit { get; set; }
 
         public ActionRequiredBanner GetActionRequiredBanners()
@@ -116,5 +115,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         None = 0,
         PendingChangeWaitingForApproval = 1,
         InFlightChangeOfProviderPendingOther = 2
+    }
+
+    public class TrainingProviderHistory
+    {
+        public string ProviderName { get; set; }
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
+        public string HashedApprenticeshipId { get; set; }
+        public bool ShowLink { get; set; }
     }
 }
