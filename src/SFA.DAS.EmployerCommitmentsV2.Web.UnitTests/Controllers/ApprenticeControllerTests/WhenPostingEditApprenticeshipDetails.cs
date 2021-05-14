@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public async Task VerifyValidationApiIsCalled()
         {
             var result = await _fixture.EditApprenticeship(_viewModel);
-            _fixture.VerifyViewModelMapperIsCalled();
+            _fixture.VerifyValidationApiIsCalled();
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             return await _controller.EditApprenticeship(viewModel);
         }     
 
-        public void VerifyViewModelMapperIsCalled()
+        public void VerifyValidationApiIsCalled()
         {
             _mockCommitmentsApiClient.Verify(x => x.ValidateApprenticeshipForEdit(It.IsAny<ValidateApprenticeshipForEditRequest>(), CancellationToken.None), Times.Once());
         }
