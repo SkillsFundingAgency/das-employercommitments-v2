@@ -1,12 +1,11 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
-@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
-@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit.ReviewApprenticeshipUpdatesRequestViewModel
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit.ViewApprenticeshipUpdatesRequestViewModel
 
 @{
-    ViewBag.Title = "Review changes";
+    ViewBag.Title = "View changes";
     ViewBag.Section = "apprentices";
-    ViewBag.PageID = "review-changes";
+    ViewBag.PageID = "view-changes";
 }
 
 <div class="govuk-grid-row">
@@ -25,28 +24,28 @@
             @Html.HiddenFor(x => x.ApprenticeshipHashedId)
 
             <partial name="ApprenticeshipUpdatesPartial/_ViewOriginalApprenticeshipForApprenticeshipUpdates" />
-            <p>@Model.ProviderName have suggested these changes:</p>
+            <p>@Model.ProviderName are reviewing these changes:</p>
             <partial name="ApprenticeshipUpdatesPartial/_ViewApprenticeshipUpdates" />
 
-            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApproveChanges,  "govuk-form-group--error")">
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.UndoChanges,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                         <h1 class="govuk-fieldset__heading">
-                            Are you happy to approve these changes?
+                            Do you want to undo these changes?
                         </h1>
                     </legend>
                     <div class="govuk-radios">
-                        @Html.ValidationMessageFor(m => m.ApproveChanges, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ApproveChanges) })
+                        @Html.ValidationMessageFor(m => m.UndoChanges, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.UndoChanges) })
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="ApproveChanges" name="ApproveChanges" type="radio" value="true">
-                            <label class="govuk-label govuk-radios__label" for="ApproveChanges">
-                                Yes, approve these changes
+                            <input class="govuk-radios__input" id="UndoChanges" name="UndoChanges" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="UndoChanges">
+                                Yes, undo these changes
                             </label>
                         </div>
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="ApproveChanges-no" name="ApproveChanges" type="radio" value="false">
-                            <label class="govuk-label govuk-radios__label" for="ApproveChanges-no">
-                                No, reject these changes
+                            <input class="govuk-radios__input" id="UndoChanges-no" name="UndoChanges" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="UndoChanges-no">
+                                No, keep these changes
                             </label>
                         </div>
                     </div>

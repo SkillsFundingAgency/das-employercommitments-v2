@@ -38,16 +38,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 {
                     AccountHashedId = source.AccountHashedId,
                     ApprenticeshipHashedId = source.ApprenticeshipHashedId,
-                    FirstName = update.FirstName,
-                    LastName = update.LastName,
-                    DateOfBirth = update.DateOfBirth,
-                    Cost = update.Cost,
-                    StartDate = update.StartDate,
-                    EndDate = update.EndDate,
-                    CourseCode = update.TrainingCode,
-                    CourseName = update.TrainingName,
                     ProviderName = apprenticeship.ProviderName,
-                    OriginalApprenticeship = new BaseConfirmEdit
+                    ApprenticeshipUpdates = new BaseEdit
+                    {
+                        FirstName = update.FirstName,
+                        LastName = update.LastName,
+                        DateOfBirth = update.DateOfBirth,
+                        Cost = update.Cost,
+                        StartDate = update.StartDate,
+                        EndDate = update.EndDate,
+                        CourseCode = update.TrainingCode,
+                        CourseName = update.TrainingName,
+                    },
+                    OriginalApprenticeship = new BaseEdit
                     {
                         FirstName = apprenticeship.FirstName,
                         LastName = apprenticeship.LastName,

@@ -139,9 +139,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(fixture.source.CourseCode, result.CourseCode);
         }
 
-
         [Test]
-        public async Task NotChangedFieldsAreNull()
+        public async Task UnchangedFieldsAreNull()
         {
             fixture.source.CourseCode = "Course";
 
@@ -248,4 +247,3 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
     }
 }
-
