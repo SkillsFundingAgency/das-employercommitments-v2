@@ -1,28 +1,21 @@
 ﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
-@if(TempData.ContainsKey(ITempDataDictionaryExtensions.FlashMessageTempDataKey))
+@if (TempData.ContainsKey(ITempDataDictionaryExtensions.FlashMessageTempDataKey))
 {
     var message = TempData[ITempDataDictionaryExtensions.FlashMessageTempDataKey];
-    var level = (ITempDataDictionaryExtensions.FlashMessageLevel) TempData[ITempDataDictionaryExtensions.FlashMessageLevelTempDataKey];
-    
-<div class="govuk-grid-column-two-thirds das-notification govuk-!-margin-bottom-4 das-notification--@GetCssClassForLevel(level)" tabindex="-1">    
-    <h3 class="das-notification__heading">@message</h3>
-</div>
-}
+    var level = (ITempDataDictionaryExtensions.FlashMessageLevel)TempData[ITempDataDictionaryExtensions.FlashMessageLevelTempDataKey];
 
-@functions
-{
-    private string GetCssClassForLevel(ITempDataDictionaryExtensions.FlashMessageLevel level)
+    @if (level == ITempDataDictionaryExtensions.FlashMessageLevel.Info)
     {
-        switch(level)
-        {
-            case ITempDataDictionaryExtensions.FlashMessageLevel.Info:
-                return "info";
-            case ITempDataDictionaryExtensions.FlashMessageLevel.Warning:
-                return "warning";
-            case ITempDataDictionaryExtensions.FlashMessageLevel.Success:
-                return "success";
-            default:
-                throw new ArgumentOutOfRangeException(nameof(level));
-        }
+        <div class="govuk-grid-column-two-thirds das-notification govuk-!-margin-bottom-4 das-notification--info" tabindex="-1">
+            <h3 class="das-notification__heading">@message</h3>
+        </div>
+    }
+    @if (level == ITempDataDictionaryExtensions.FlashMessageLevel.Success)
+    {
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">
+                @message
+            </h1>
+        </div>
     }
 }
