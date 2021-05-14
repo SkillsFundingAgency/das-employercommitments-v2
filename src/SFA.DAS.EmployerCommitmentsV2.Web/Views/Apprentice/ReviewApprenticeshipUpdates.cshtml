@@ -1,10 +1,10 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
-@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ConfirmEditApprenticeshipViewModel
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit.ReviewApprenticeshipUpdatesRequestViewModel
 
 @{
-    ViewBag.Title = "Confirm changes";
+    ViewBag.Title = "Review changes";
     ViewBag.Section = "apprentices";
     ViewBag.PageID = "confirm-edited-changes";
 }
@@ -23,18 +23,6 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.AccountHashedId)
             @Html.HiddenFor(x => x.ApprenticeshipHashedId)
-            @Html.HiddenFor(x => x.FirstName)
-            @Html.HiddenFor(x => x.LastName)
-            @Html.HiddenFor(x => x.StartMonth)
-            @Html.HiddenFor(x => x.StartYear)
-            @Html.HiddenFor(x => x.EndMonth)
-            @Html.HiddenFor(x => x.EndYear)
-            @Html.HiddenFor(x => x.BirthMonth)
-            @Html.HiddenFor(x => x.BirthYear)
-            @Html.HiddenFor(x => x.BirthDay)
-            @Html.HiddenFor(x => x.Cost)
-            @Html.HiddenFor(x => x.CourseCode)
-            @Html.HiddenFor(x => x.EmployerReference)
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
@@ -55,13 +43,15 @@
                 </div>
             </div>
 
+            <p>@Model.ProviderName have suggested these changes:</p>
+
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
                     <table class="govuk-table">
                         <thead class="govuk-table__head">
                             <tr class="govuk-table__row">
                                 <th class="govuk-table__header"></th>
-                                <th scope="col" class="govuk-table__header ">Current</th>
+                                <th scope="col" class="govuk-table__header ">Previous</th>
                                 <th scope="col" class="govuk-table__header ">Changed to</th>
                             </tr>
                         </thead>
@@ -140,32 +130,37 @@
                 </div>
             </div>
 
-            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ConfirmChanges,  "govuk-form-group--error")">
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApproveChanges,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                         <h1 class="govuk-fieldset__heading">
-                            Do you want to make these changes?
+                            Are you happy to approve these changes?
                         </h1>
                     </legend>
-                <div class="govuk-radios">
-                    @Html.ValidationMessageFor(m => m.ConfirmChanges, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ConfirmChanges) })
-                    <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="ConfirmChanges" name="ConfirmChanges" type="radio" value="true">
-                        <label class="govuk-label govuk-radios__label" for="ConfirmChanges">
-                            Yes, change these details
-                        </label>
+                    <div class="govuk-radios">
+                        @Html.ValidationMessageFor(m => m.ApproveChanges, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ApproveChanges) })
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="ApproveChanges" name="ApproveChanges" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="ApproveChanges">
+                                Yes, approve these changes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="ApproveChanges-no" name="ApproveChanges" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="ApproveChanges-no">
+                                No, reject these changes
+                            </label>
+                        </div>
                     </div>
-                    <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="ConfirmChanges-no" name="ConfirmChanges" type="radio" value="false">
-                        <label class="govuk-label govuk-radios__label" for="ConfirmChanges-no">
-                            No, don't change these details
-                        </label>
-                    </div>
-                </div>
                 </fieldset>
             </div>
 
-            <button type="submit" class="govuk-button" aria-label="Finish" id="submit-confirm-change">Finish</button>
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button">
+                   Continue
+                </button>
+                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest{ AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.ApprenticeshipHashedId })" id="cancel-button">Cancel and return</a>
+            </div>
         </form>
     </div>
 </div>
