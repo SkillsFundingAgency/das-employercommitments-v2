@@ -7,7 +7,6 @@ using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
@@ -17,6 +16,7 @@ using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.EmployerUrlHelper;
 using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateRequest;
@@ -37,6 +37,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private const string ApprenticePausedMessage = "Apprenticeship paused";
         private const string ApprenticeResumeMessage = "Apprenticeship resumed";
         private const string ApprenticeStoppedMessage = "Apprenticeship stopped";
+        private const string ApprenticeChangesSentToProvider = "Suggested changes sent to training provider for approval, where needed.";
+        private const string ApprenticeUpdated = "Apprentice updated";
+        private const string ApprenticeEditStopDate = "New stop date confirmed";
+        private const string FlashMessageTempDataKey = "FlashMessage";
+
 
         public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILinkGenerator linkGenerator, ILogger<ApprenticeController> logger, IAuthorizationService authorizationService)
         {
@@ -146,6 +151,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var viewModel = await _modelMapper.Map<EnterNewTrainingProviderViewModel>(request);
 
+            if (request.Edit.GetValueOrDefault())
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.ConfirmDetailsAndSendRequest, request);
+            }
+            else
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.ChangeProviderInform, request);
+            }
+
             return View(viewModel);
         }
 
@@ -167,7 +181,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> WhoWillEnterTheDetails(ChangeOfProviderRequest request)
         {
             var viewModel = await _modelMapper.Map<WhoWillEnterTheDetailsViewModel>(request);
-
             return View(viewModel);
         }
 
@@ -193,6 +206,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var viewModel = await _modelMapper.Map<WhatIsTheNewStartDateViewModel>(request);
 
+            if (request.Edit.GetValueOrDefault())
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.ConfirmDetailsAndSendRequest, request);
+            }
+            else
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.WhoWillEnterTheDetails,
+                    new
+                    {
+                        request.EmployerWillAdd,
+                        request.ProviderName,
+                        request.ProviderId
+                    });
+            }
+
             return View(viewModel);
         }
 
@@ -216,6 +244,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> WhatIsTheNewEndDate(ChangeOfProviderRequest request)
         {
             var viewModel = await _modelMapper.Map<WhatIsTheNewEndDateViewModel>(request);
+
+            if (request.Edit.GetValueOrDefault())
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.ConfirmDetailsAndSendRequest, request);
+            }
+            else
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.WhatIsTheNewStartDate,
+                    new
+                    {
+                        request.EmployerWillAdd,
+                        request.ProviderId,
+                        request.ProviderName,
+                        request.NewStartMonth,
+                        request.NewStartYear
+                    });
+            }
+
             return View(viewModel);
         }
 
@@ -239,6 +285,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var viewModel = await _modelMapper.Map<WhatIsTheNewPriceViewModel>(request);
 
+            if (request.Edit.GetValueOrDefault())
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.ConfirmDetailsAndSendRequest, request);
+            }
+            else
+            {
+                ViewBag.BackUrl = Url.Link(RouteNames.WhatIsTheNewEndDate,
+                    new
+                    {
+                        request.EmployerWillAdd,
+                        request.ProviderId,
+                        request.ProviderName,
+                        request.NewStartMonth,
+                        request.NewStartYear,
+                        request.NewEndMonth,
+                        request.NewEndYear
+                    });
+            }
+
             return View(viewModel);
         }
 
@@ -247,7 +312,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> WhatIsTheNewPrice(WhatIsTheNewPriceViewModel viewModel)
         {
             var request = await _modelMapper.Map<ChangeOfProviderRequest>(viewModel);
-
             return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, request);
         }
 
@@ -399,8 +463,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
                 await _commitmentsApiClient.StopApprenticeship(viewModel.ApprenticeshipId, stopApprenticeshipRequest, CancellationToken.None);
 
-                TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
-
                 if (viewModel.IsCoPJourney)
                 {
                     return RedirectToAction(nameof(ApprenticeshipStoppedInform), new
@@ -410,6 +472,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                         StoppedDuringCoP = true
                     });
                 }
+
+                TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
 
             return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
@@ -479,13 +543,36 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request)
         {
             var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
+                  
             viewModel.IsV2Edit = _authorizationService.IsAuthorized(EmployerFeature.EditApprenticeV2);
-            if (viewModel.ApprenticeshipStatus == ApprenticeshipStatus.Stopped)
-            {
-                TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
-            }
+            
+			if (!TempData.ContainsKey(FlashMessageTempDataKey) &&  viewModel.ApprenticeshipStatus == ApprenticeshipStatus.Stopped)
+            {   
+                TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);                
+            }      
 
             return View("details", viewModel);
+        }    
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/details/editstopdate", Name = "EditStopDateOption")]        
+        public async Task<ActionResult> EditStopDate(EditStopDateRequest request)
+        {
+            var viewModel = await _modelMapper.Map<EditStopDateViewModel>(request);
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/details/editstopdate", Name = "PostEditStopDate")]
+        public async Task<ActionResult> UpdateApprenticeshipStopDate(EditStopDateViewModel viewModel)
+        {
+            var request = await _modelMapper.Map<ApprenticeshipStopDateRequest>(viewModel);
+
+            await _commitmentsApiClient.UpdateApprenticeshipStopDate(viewModel.ApprenticeshipId, request, CancellationToken.None);
+            
+            TempData.AddFlashMessage(ApprenticeEditStopDate, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+
+            return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId }); 
         }
 
         [HttpGet]
@@ -502,15 +589,105 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var validationRequest = await _modelMapper.Map<ValidateApprenticeshipForEditRequest>(viewModel);
             await _commitmentsApiClient.ValidateApprenticeshipForEdit(validationRequest);
-
-            return RedirectToAction("ConfirmEditApprenticeship", new { viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.HashedApprenticeshipId });
+         
+            TempData.Put("EditApprenticeshipRequestViewModel", viewModel);
+            return RedirectToAction("ConfirmEditApprenticeship", new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, accountHashedId = viewModel.AccountHashedId });
         }
 
         [HttpGet]
         [Route("{apprenticeshipHashedId}/edit/confirm")]
-        public IActionResult ConfirmEditApprenticeship(ConfirmEditApprenticeshipRequest request)
+        public async Task<IActionResult> ConfirmEditApprenticeship()
         {
-            return View();
+            var editApprenticeshipRequestViewModel = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>("EditApprenticeshipRequestViewModel");
+            var viewModel = await _modelMapper.Map<ConfirmEditApprenticeshipViewModel>(editApprenticeshipRequestViewModel);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/edit/confirm")]
+        public async Task<IActionResult> ConfirmEditApprenticeship(ConfirmEditApprenticeshipViewModel viewModel)
+        {
+            if (viewModel.ConfirmChanges.Value)
+            {
+                var request = await _modelMapper.Map<EditApprenticeshipApiRequest>(viewModel);
+                var result = await _commitmentsApiClient.EditApprenticeship(request);
+
+                if (result.NeedReapproval)
+                {
+                    TempData.AddFlashMessage(ApprenticeChangesSentToProvider, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
+                }
+                else
+                {
+                    TempData.AddFlashMessage(ApprenticeUpdated, ITempDataDictionaryExtensions.FlashMessageLevel.Info);
+                }
+            }
+
+            return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+        }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/changes/review")]
+        public async Task<IActionResult> ReviewApprenticeshipUpdates(ReviewApprenticeshipUpdatesRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ReviewApprenticeshipUpdatesRequestViewModel>(request);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/changes/review")]
+        public async Task<IActionResult> ReviewApprenticeshipUpdates(ReviewApprenticeshipUpdatesRequestViewModel viewModel)
+        {
+            if (viewModel.ApproveChanges.Value)
+            {
+                var request = new AcceptApprenticeshipUpdatesRequest
+                {
+                    ApprenticeshipId = viewModel.ApprenticeshipId,
+                    AccountId = viewModel.AccountId
+                };
+
+                await _commitmentsApiClient.AcceptApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
+            }
+            else
+            {
+                var request = new RejectApprenticeshipUpdatesRequest
+                {
+                    ApprenticeshipId = viewModel.ApprenticeshipId,
+                    AccountId = viewModel.AccountId
+                };
+
+                await _commitmentsApiClient.RejectApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
+            }
+
+            return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+        }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/changes/view")]
+        public async Task<IActionResult> ViewApprenticeshipUpdates(ViewApprenticehipUpdatesRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ViewApprenticeshipUpdatesRequestViewModel>(request);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/changes/view")]
+        public async Task<IActionResult> ViewApprenticeshipUpdates(ViewApprenticeshipUpdatesRequestViewModel viewModel)
+        {
+            if (viewModel.UndoChanges.Value)
+            {
+                var request = new UndoApprenticeshipUpdatesRequest
+                {
+                    ApprenticeshipId = viewModel.ApprenticeshipId,
+                    AccountId = viewModel.AccountId
+                };
+
+                await _commitmentsApiClient.UndoApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
+            }
+
+            return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
         }
     }
 }

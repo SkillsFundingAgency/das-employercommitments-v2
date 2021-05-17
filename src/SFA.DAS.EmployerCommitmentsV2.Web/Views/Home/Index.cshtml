@@ -13,8 +13,8 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="das-cards">
-            <div class="das-card das-card--underline">
-                <h2 class="govuk-heading-m das-card__heading"><a id="AddApprentice" href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/inform")" class="govuk-link">Add an apprentice</a></h2>
+            <div class="das-card das-card--underline">                
+                <h2 class="govuk-heading-m das-card__heading"><a id="AddApprentice" href="@Url.Action("Inform", "Cohort", new {Model.AccountHashedId})" class="govuk-link">Add an apprentice</a></h2>
                 <p>Add new apprentices or ask your training provider to add them.</p>
             </div>
             <div class="das-card das-card--underline">

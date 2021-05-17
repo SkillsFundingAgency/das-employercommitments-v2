@@ -3,7 +3,7 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using StructureMap;
 using System;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Remove
+namespace SFA.DAS.EmployerCommitmentsV2.Web
 {
     public class LocalDevRegistry : Registry
     {

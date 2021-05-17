@@ -3,12 +3,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
@@ -24,6 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private AddDraftApprenticeshipViewModel _result;
 
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
+        private Mock<IAuthorizationService> _authorizationService;
         private Mock<IEncodingService> _encodingService;
         private string _encodedTransferSenderId;
         private GetCohortResponse _cohort;
@@ -64,7 +68,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                 .Setup(x => x.Encode(It.IsAny<long>(), It.Is<EncodingType>(e => e == EncodingType.PublicAccountId)))
                 .Returns(_encodedTransferSenderId);
 
-            _mapper = new AddDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object);
+            _authorizationService = new Mock<IAuthorizationService>();
+
+            _mapper = new AddDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object, _authorizationService.Object);
 
             _source = autoFixture.Create<AddDraftApprenticeshipRequest>();
             _source.StartMonthYear = "092020";
@@ -177,6 +183,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         {
             _cohort.WithParty = Party.Provider;
             Assert.ThrowsAsync<CohortEmployerUpdateDeniedException>(() => _mapper.Map(_source));
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task ShowEmailIsSetCorrectly(bool show)
+        {
+            _authorizationService.Setup(x => x.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail))
+                .ReturnsAsync(show);
+
+            _result = await _mapper.Map(TestHelper.Clone(_source));
+            _result.ShowEmail.Should().Be(show);
         }
     }
 }

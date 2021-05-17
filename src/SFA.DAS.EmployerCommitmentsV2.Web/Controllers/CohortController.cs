@@ -13,8 +13,10 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
+using System.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -320,6 +322,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var viewModel = await _modelMapper.Map<WithTransferSenderViewModel>(request);
             return View(viewModel);
+        }
+
+        [HttpGet]
+        [Route("Inform")]
+        public async Task<ActionResult> Inform(InformRequest request)
+        {
+            var viewModel = await _modelMapper.Map<InformViewModel>(request);
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [Route("transferConnection/create")]
+        public async Task<IActionResult> SelectTransferConnection(InformRequest request)
+        {
+            var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(request);
+
+            if (viewModel.TransferConnections.Any())
+            {   
+                return Redirect(_linkGenerator.SelectTransferConnection(request.AccountHashedId));
+            }
+
+            return Redirect(_linkGenerator.SelectLegalEntity(request.AccountHashedId));
         }
     }
 }

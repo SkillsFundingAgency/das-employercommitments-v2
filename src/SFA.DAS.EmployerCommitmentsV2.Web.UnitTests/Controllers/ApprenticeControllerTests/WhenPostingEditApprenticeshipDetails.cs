@@ -1,5 +1,7 @@
 ﻿using AutoFixture;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
@@ -40,7 +42,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
     public class WhenPostingEditApprenticeshipDetailsFixture : ApprenticeControllerTestFixtureBase
     {
-        public WhenPostingEditApprenticeshipDetailsFixture() : base () { }
+        public WhenPostingEditApprenticeshipDetailsFixture() : base () 
+        {
+            _controller.TempData = new TempDataDictionary( Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
+        }
 
         public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequestViewModel viewModel)
         {

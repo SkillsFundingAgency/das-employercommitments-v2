@@ -8,6 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public string CohortReference { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Email { get; set; }
         public string Uln { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string TrainingCourse { get; set; }
@@ -16,5 +17,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public int? Cost { get; set; }
         public string Reference { get; set; }
         public string LegalEntityName { get; set; }
+        public bool ShowEmail { get; set; }
     }
 }

@@ -1,0 +1,67 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit.ViewApprenticeshipUpdatesRequestViewModel
+
+@{
+    ViewBag.Title = "View changes";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageID = "view-changes";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-width-container">
+        <h1 class="govuk-heading-xl"> @ViewBag.Title</h1>
+        <form method="POST">
+
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.AccountHashedId)
+            @Html.HiddenFor(x => x.ApprenticeshipHashedId)
+
+            <partial name="ApprenticeshipUpdatesPartial/_ViewOriginalApprenticeshipForApprenticeshipUpdates" />
+            <p>@Model.ProviderName are reviewing these changes:</p>
+            <partial name="ApprenticeshipUpdatesPartial/_ViewApprenticeshipUpdates" />
+
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.UndoChanges,  "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        <h1 class="govuk-fieldset__heading">
+                            Do you want to undo these changes?
+                        </h1>
+                    </legend>
+                    <div class="govuk-radios">
+                        @Html.ValidationMessageFor(m => m.UndoChanges, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.UndoChanges) })
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="UndoChanges" name="UndoChanges" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="UndoChanges">
+                                Yes, undo these changes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="UndoChanges-no" name="UndoChanges" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="UndoChanges-no">
+                                No, keep these changes
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button">
+                    Continue
+                </button>
+                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest{ AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.ApprenticeshipHashedId })" id="cancel-button">Cancel and return</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section back {
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", new { AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">Back to the apprentice details</a>
+}

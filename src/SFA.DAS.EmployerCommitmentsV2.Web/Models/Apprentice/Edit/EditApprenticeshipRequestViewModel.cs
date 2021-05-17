@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Authorization.ModelBinding;
+﻿using Newtonsoft.Json;
+using SFA.DAS.Authorization.ModelBinding;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Attributes;
@@ -27,8 +28,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string HashedApprenticeshipId { get; set; }
+        [JsonIgnore]
         public long ApprenticeshipId { get; set; }
         public string AccountHashedId { get; set; }
+        [JsonIgnore]
         public long AccountId { get; set; }
         public string ULN { get; set; }
         public string TrainingName { get; set; }

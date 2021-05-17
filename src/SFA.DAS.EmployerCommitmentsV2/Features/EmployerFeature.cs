@@ -7,5 +7,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Features
         public const string EnhancedApproval = Prefix + "EnhancedApproval";
         public const string ManageApprenticesV2 = Prefix + "ManageApprenticesV2";
         public const string EditApprenticeV2 = Prefix + "EditApprenticeV2";
+        public const string ApprenticeEmail = Prefix + "ApprenticeEmail";
     }
 }
