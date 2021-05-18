@@ -2,27 +2,10 @@
 @if(TempData.ContainsKey(ITempDataDictionaryExtensions.FlashMessageTempDataKey))
 {
     var message = TempData[ITempDataDictionaryExtensions.FlashMessageTempDataKey];
-    var level = (ITempDataDictionaryExtensions.FlashMessageLevel) TempData[ITempDataDictionaryExtensions.FlashMessageLevelTempDataKey];
-    
-<div class="govuk-grid-column-two-thirds das-notification govuk-!-margin-bottom-4 das-notification--@GetCssClassForLevel(level)" tabindex="-1">    
-    <h3 class="das-notification__heading">@message</h3>
-</div>
-}
 
-@functions
-{
-    private string GetCssClassForLevel(ITempDataDictionaryExtensions.FlashMessageLevel level)
-    {
-        switch(level)
-        {
-            case ITempDataDictionaryExtensions.FlashMessageLevel.Info:
-                return "info";
-            case ITempDataDictionaryExtensions.FlashMessageLevel.Warning:
-                return "warning";
-            case ITempDataDictionaryExtensions.FlashMessageLevel.Success:
-                return "success";
-            default:
-                throw new ArgumentOutOfRangeException(nameof(level));
-        }
-    }
+    <div class="govuk-panel govuk-panel--confirmation">
+        <h3 class="govuk-panel__title">
+            @message
+        </h3>
+    </div>
 }
