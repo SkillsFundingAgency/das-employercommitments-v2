@@ -566,11 +566,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
                   
             viewModel.IsV2Edit = _authorizationService.IsAuthorized(EmployerFeature.EditApprenticeV2);
-            
-			if (!TempData.ContainsKey(FlashMessageTempDataKey) &&  viewModel.ApprenticeshipStatus == ApprenticeshipStatus.Stopped)
-            {   
-                TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);                
-            }      
 
             return View("details", viewModel);
         }    
