@@ -1,11 +1,21 @@
 ﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
-@if(TempData.ContainsKey(ITempDataDictionaryExtensions.FlashMessageTempDataKey))
+@if (TempData.ContainsKey(ITempDataDictionaryExtensions.FlashMessageTempDataKey))
 {
     var message = TempData[ITempDataDictionaryExtensions.FlashMessageTempDataKey];
+    var level = (ITempDataDictionaryExtensions.FlashMessageLevel)TempData[ITempDataDictionaryExtensions.FlashMessageLevelTempDataKey];
 
-    <div class="govuk-panel govuk-panel--confirmation">
-        <h3 class="govuk-panel__title">
-            @message
-        </h3>
-    </div>
+    @if (level == ITempDataDictionaryExtensions.FlashMessageLevel.Info)
+    {
+        <div class="govuk-grid-column-two-thirds das-notification govuk-!-margin-bottom-4 das-notification--info" tabindex="-1">
+            <h3 class="das-notification__heading">@message</h3>
+        </div>
+    }
+    @if (level == ITempDataDictionaryExtensions.FlashMessageLevel.Success)
+    {
+        <div class="govuk-grid-column-two-thirds govuk-!-margin-bottom-4 govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">
+                @message
+            </h1>
+        </div>
+    }
 }
