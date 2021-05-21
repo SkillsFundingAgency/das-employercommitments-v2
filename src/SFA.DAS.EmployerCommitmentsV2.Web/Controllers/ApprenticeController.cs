@@ -40,6 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private const string ApprenticeChangesSentToProvider = "Suggested changes sent to training provider for approval, where needed.";
         private const string ApprenticeUpdated = "Apprentice updated";
         private const string ApprenticeEditStopDate = "New stop date confirmed";
+        private const string ApprenticeEndDateUpdatedOnCompletedRecord = "New planned training finish date confirmed";
         private const string FlashMessageTempDataKey = "FlashMessage";
 
 
@@ -100,6 +101,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var request = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.EditEndDateRequest>(viewModel);
             await _commitmentsApiClient.UpdateEndDateOfCompletedRecord(request, CancellationToken.None);
+
+            TempData.AddFlashMessage(ApprenticeEndDateUpdatedOnCompletedRecord, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+
             return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
         }
 
@@ -545,11 +549,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
                   
             viewModel.IsV2Edit = _authorizationService.IsAuthorized(EmployerFeature.EditApprenticeV2);
-            
-			if (!TempData.ContainsKey(FlashMessageTempDataKey) &&  viewModel.ApprenticeshipStatus == ApprenticeshipStatus.Stopped)
-            {   
-                TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);                
-            }      
 
             return View("details", viewModel);
         }    
