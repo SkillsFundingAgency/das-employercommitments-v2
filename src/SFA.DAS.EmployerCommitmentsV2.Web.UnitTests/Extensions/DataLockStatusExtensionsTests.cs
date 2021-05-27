@@ -74,8 +74,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         public void HasDataLockCourseChangeTriaged_Returns_Correct_Value(DataLockErrorCode errorCode, bool expectedResult)
         {
             //Arrange
-            _dataLocks = new List<GetDataLocksResponse.DataLock>
-            { new GetDataLocksResponse.DataLock
+            _dataLocks = new List<DataLock>
+            { new DataLock
                 {
                     Id = 1,
                     TriageStatus = TriageStatus.Change,
@@ -107,8 +107,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         public void HasDataLockPriceTriaged_Returns_Correct_Value(DataLockErrorCode errorCode, bool expectedResult)
         {
             //Arrange
-            _dataLocks = new List<GetDataLocksResponse.DataLock>
-            { new GetDataLocksResponse.DataLock
+            _dataLocks = new List<DataLock>
+            { new DataLock
                 {
                     Id = 1,
                     TriageStatus = TriageStatus.Change,

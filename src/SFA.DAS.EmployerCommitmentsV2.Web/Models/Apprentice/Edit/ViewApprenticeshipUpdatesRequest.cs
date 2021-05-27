@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.ModelBinding;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
 {
-    public class ViewApprenticehipUpdatesRequest : IAuthorizationContextModel
+    public class ViewApprenticeshipUpdatesRequest : IAuthorizationContextModel
     {
         [FromRoute]
         public string AccountHashedId { get; set; }

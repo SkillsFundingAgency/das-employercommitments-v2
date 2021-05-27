@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class ViewApprenticehipUpdatesRequestToViewModelMapper : IMapper<ViewApprenticehipUpdatesRequest, ViewApprenticeshipUpdatesRequestViewModel>
+    public class ViewApprenticehipUpdatesRequestToViewModelMapper : IMapper<ViewApprenticeshipUpdatesRequest, ViewApprenticeshipUpdatesViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
 
@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             _commitmentsApiClient = commitmentsApiClient;
         }
 
-        public async Task<ViewApprenticeshipUpdatesRequestViewModel> Map(ViewApprenticehipUpdatesRequest source)
+        public async Task<ViewApprenticeshipUpdatesViewModel> Map(ViewApprenticeshipUpdatesRequest source)
         {
             var updatesTask = _commitmentsApiClient.GetApprenticeshipUpdates(source.ApprenticeshipId,
                    new CommitmentsV2.Api.Types.Requests.GetApprenticeshipUpdatesRequest { Status = CommitmentsV2.Types.ApprenticeshipUpdateStatus.Pending });
@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 var apprenticeshipUpdates = GetApprenticeshipUpdates(update);
                 var originalApprenticeship = await GetOriginalApprenticeship(apprenticeship, update.Cost.HasValue);
 
-                return new ViewApprenticeshipUpdatesRequestViewModel
+                return new ViewApprenticeshipUpdatesViewModel
                 {
                     ApprenticeshipUpdates = apprenticeshipUpdates,
                     OriginalApprenticeship = originalApprenticeship,

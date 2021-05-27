@@ -1,6 +1,6 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
-@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit.ViewApprenticeshipUpdatesRequestViewModel
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit.ViewApprenticeshipUpdatesViewModel
 
 @{
     ViewBag.Title = "View changes";
@@ -23,7 +23,7 @@
             @Html.HiddenFor(x => x.AccountHashedId)
             @Html.HiddenFor(x => x.ApprenticeshipHashedId)
 
-            <partial name="ApprenticeshipUpdatesPartial/_ViewOriginalApprenticeshipForApprenticeshipUpdates" />
+            <partial name="ApprenticeshipUpdatesPartial/_ViewOriginalApprenticeshipForApprenticeshipUpdates" for="OriginalApprenticeship" />
             <p>@Model.ProviderName are reviewing these changes:</p>
             <partial name="ApprenticeshipUpdatesPartial/_ViewApprenticeshipUpdates" />
 

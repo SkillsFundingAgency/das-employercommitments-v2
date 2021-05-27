@@ -182,7 +182,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public class ViewApprenticehipUpdatesRequestToViewModelMapperTestsFixture
         {
             public ViewApprenticehipUpdatesRequestToViewModelMapper Mapper;
-            public ViewApprenticehipUpdatesRequest Source;
+            public ViewApprenticeshipUpdatesRequest Source;
             public Mock<ICommitmentsApiClient> CommitmentApiClient;
             public GetApprenticeshipResponse GetApprenticeshipResponse;
             public GetApprenticeshipUpdatesResponse GetApprenticeshipUpdatesResponses;
@@ -197,7 +197,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 autoFixture.Customizations.Add(new DateTimeSpecimenBuilder());
                 CommitmentApiClient = new Mock<ICommitmentsApiClient>();
 
-                Source = new ViewApprenticehipUpdatesRequest { ApprenticeshipId = ApprenticeshipId, AccountId = 22, ApprenticeshipHashedId = "XXX", AccountHashedId = "YYY" };
+                Source = new ViewApprenticeshipUpdatesRequest { ApprenticeshipId = ApprenticeshipId, AccountId = 22, ApprenticeshipHashedId = "XXX", AccountHashedId = "YYY" };
                 GetApprenticeshipResponse = autoFixture.Create<GetApprenticeshipResponse>();
                 GetApprenticeshipResponse.Id = ApprenticeshipId;
                 autoFixture.RepeatCount = 1;
@@ -223,9 +223,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 Mapper = new ViewApprenticehipUpdatesRequestToViewModelMapper(CommitmentApiClient.Object);
             }
 
-            internal async Task<ViewApprenticeshipUpdatesRequestViewModel> Map()
+            internal async Task<ViewApprenticeshipUpdatesViewModel> Map()
             {
-                return await Mapper.Map(Source) as ViewApprenticeshipUpdatesRequestViewModel;
+                return await Mapper.Map(Source) as ViewApprenticeshipUpdatesViewModel;
             }
         }
 

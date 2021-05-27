@@ -35,7 +35,7 @@
             {
                 <p class="govuk-notification-banner__heading">
                     The training provider has made changes to this apprentice’s details that you need to review.
-                    <a id="datalock-changes-link" class="govuk-notification-banner__link" href="@LinkGenerator.DatalockChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)">Review changes</a>
+                    <a id="datalock-changes-link" class="govuk-notification-banner__link" href="@Url.Action("DataLockRequestChanges", new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Review changes</a>
                 </p>
             }
             @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.DataLockRestart))
