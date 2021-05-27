@@ -34,7 +34,27 @@
             <tbody>
                 <tr>
                     <th scope="row" class="govuk-table__header das-table-cell-width-45">Status</th>
-                    <td class="govuk-table__cell das-table-cell-width-40">@Model.Status</td>
+
+                    <td class="govuk-table__cell das-table-cell-width-40">
+
+                        @{
+                            string statusColor = Model.ApprenticeshipStatus switch
+                            {
+                                ApprenticeshipStatus.WaitingToStart =>  "yellow",
+                                ApprenticeshipStatus.Live => "blue",
+                                ApprenticeshipStatus.Paused =>  "grey",
+                                ApprenticeshipStatus.Stopped =>  "red",
+                                ApprenticeshipStatus.Completed => "green",
+                                _ =>  string.Empty
+                             };
+                        }
+                        
+                        <strong class="govuk-tag govuk-tag--@statusColor">
+                            @Model.Status
+                        </strong>
+
+                    </td>
+
                     <td id="editStatusLink" class="govuk-table__cell das-table-cell-width-15 govuk-table__cell--numeric">
                         @if (Model.CanEditStatus)
                         {
@@ -79,7 +99,7 @@
                             }
                         </td>
                         <td id="editStopDateLink" class="govuk-table__cell govuk-table__cell--numeric">
-                            <a id="edit-stopped-link" class="govuk-link" href="@Url.Action("EditStopDate", new EditStopDateRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit</a>
+                            <a id="edit-stopped-link" class="govuk-link" href="@Url.Action("EditStopDate", new EditStopDateRequest {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Edit</a>
                         </td>
                     </tr>
 
@@ -159,7 +179,7 @@
         <table class="govuk-table govuk-!-margin-bottom-8">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header  das-table-cell-width-45" ">Name</th>
+                    <th scope="row" class="govuk-table__header  das-table-cell-width-45">Name</th>
                     <td id="apprentice-name" class="govuk-table__cell das-table-cell-width-55">@Model.ApprenticeName</td>
                 </tr>
                 <tr class="govuk-table__row">

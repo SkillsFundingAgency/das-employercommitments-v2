@@ -35,13 +35,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test]
-        public async Task ThenTheCorrectViewIsReturnedWithFlashMessage()
+        public async Task ThenTheCorrectViewIsReturnedWithoutFlashMessage()
         {
             _fixture = new WhenCallingApprenticeshipDetailsTestsFixture(ApprenticeshipStatus.Stopped);
 
             var result = await _fixture.ApprenticeshipDetails();
 
-            _fixture.VerifyFlashMessage(result as ViewResult);
+            _fixture.VerifyNoFlashMessage(result as ViewResult);
         } 
     }
 
@@ -77,15 +77,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.AreEqual(_viewModel, viewModel);
         }
 
-        public void VerifyFlashMessage(ViewResult viewResult)
+        public void VerifyNoFlashMessage(ViewResult viewResult)
         {
             var viewModel = viewResult.Model as ApprenticeshipDetailsRequestViewModel;
          
             Assert.IsInstanceOf<ApprenticeshipDetailsRequestViewModel>(viewModel);
             Assert.AreEqual(_viewModel, viewModel);
-            Assert.IsTrue(_controller.TempData.Values.Contains(ApprenticeStoppedMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
+            Assert.IsFalse(_controller.TempData.Values.Contains(ApprenticeStoppedMessage));
+            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessage));
+            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessageLevel));
         }
     }
 }

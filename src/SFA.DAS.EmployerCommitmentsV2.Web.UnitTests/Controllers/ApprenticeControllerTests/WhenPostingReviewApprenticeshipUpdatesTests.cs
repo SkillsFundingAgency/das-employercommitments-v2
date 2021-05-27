@@ -47,6 +47,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
     public class WhenPostingReviewApprenticeshipUpdatesTestsFixture : ApprenticeControllerTestFixtureBase
     {
+        public const string FlashMessageTempDataKey = "FlashMessage";
+        public const string FlashMessageLevelTempDataKey = "FlashMessageLevel";
+        private const string ChangesApprovedMessage = "Changes approved";
+        private const string ChangesRejectedMessage = "Changes rejected";
+
         public ReviewApprenticeshipUpdatesViewModel ViewModel { get; set; }
         public WhenPostingReviewApprenticeshipUpdatesTestsFixture() : base () 
         {
@@ -62,11 +67,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         internal void VerifyAcceptApprenticeshipUpdatesApiIsCalled()
         {
             _mockCommitmentsApiClient.Verify(x => x.AcceptApprenticeshipUpdates(ViewModel.ApprenticeshipId, It.IsAny<AcceptApprenticeshipUpdatesRequest>(), It.IsAny<CancellationToken>()), Times.Once());
+            Assert.IsTrue(_controller.TempData.Values.Contains(ChangesApprovedMessage));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageTempDataKey));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevelTempDataKey));
         }
 
         internal void VerifyRejectApprenticeshipUpdatesApiIsCalled()
         {
             _mockCommitmentsApiClient.Verify(x => x.RejectApprenticeshipUpdates(ViewModel.ApprenticeshipId, It.IsAny<RejectApprenticeshipUpdatesRequest>(), It.IsAny<CancellationToken>()), Times.Once());
+            Assert.IsTrue(_controller.TempData.Values.Contains(ChangesRejectedMessage));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageTempDataKey));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevelTempDataKey));
         }
     }
 }
