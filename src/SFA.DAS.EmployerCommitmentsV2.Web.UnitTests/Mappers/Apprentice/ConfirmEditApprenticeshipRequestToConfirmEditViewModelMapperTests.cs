@@ -15,14 +15,14 @@ using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 {
-    public class ConfirmEditApprenticehsipRequestToConfirmEditViewModelMapperTests
+    public class ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTests
     {
-        ConfirmEditApprenticehsipRequestToConfirmEditViewModelMapperTestsFixture fixture;
+        ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTestsFixture fixture;
 
         [SetUp]
         public void Setup()
         {
-            fixture = new ConfirmEditApprenticehsipRequestToConfirmEditViewModelMapperTestsFixture();
+            fixture = new ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTestsFixture();
         }
 
         [Test]
@@ -128,7 +128,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task WhenMultipleAreChangedIsChanged()
+        public async Task WhenMultipleFieldsAreChanged_TheyAreChanged()
         {
             fixture.source.CourseCode = "NewCourse";
             fixture.source.LastName = "NewLastName";
@@ -139,9 +139,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(fixture.source.CourseCode, result.CourseCode);
         }
 
-
         [Test]
-        public async Task NotChangedFieldsAreNull()
+        public async Task UnchangedFieldsAreNull()
         {
             fixture.source.CourseCode = "Course";
 
@@ -154,20 +153,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
     }
 
-    public class ConfirmEditApprenticehsipRequestToConfirmEditViewModelMapperTestsFixture
+    public class ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTestsFixture
     {
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
 
         public GetApprenticeshipResponse _apprenticeshipResponse;
         private GetPriceEpisodesResponse _priceEpisodeResponse;
 
-        private ConfirmEditApprenticehsipRequestToConfirmEditViewModelMapper _mapper;
+        private ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapper _mapper;
         private TrainingProgramme _standardSummary;
         private Mock<IEncodingService> _encodingService;
         public EditApprenticeshipRequestViewModel source;
         public ConfirmEditApprenticeshipViewModel resultViewModl;
 
-        public ConfirmEditApprenticehsipRequestToConfirmEditViewModelMapperTestsFixture()
+        public ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTestsFixture()
         {
             var autoFixture = new Fixture();
 
@@ -212,8 +211,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 });
 
             _encodingService = new Mock<IEncodingService>();
-            _encodingService.Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<EncodingType>())).Returns(22);
-            _mapper = new ConfirmEditApprenticehsipRequestToConfirmEditViewModelMapper(_mockCommitmentsApiClient.Object, _encodingService.Object);
+            _encodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.ApprenticeshipId)).Returns(_apprenticeshipResponse.Id);
+            _encodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.AccountId)).Returns(_apprenticeshipResponse.EmployerAccountId);
+
+            _mapper = new ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapper(_mockCommitmentsApiClient.Object, _encodingService.Object);
         }
 
         public List<TrainingProgrammeFundingPeriod> SetPriceBand(int fundingCap)
@@ -237,13 +238,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         internal void VerifyCommitmentApiIsCalled()
         {
-            _mockCommitmentsApiClient.Verify(c => c.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
+            _mockCommitmentsApiClient.Verify(c => c.GetApprenticeship(_apprenticeshipResponse.Id, It.IsAny<CancellationToken>()), Times.Once());
         }
 
         internal void VerifyPriceEpisodeIsCalled()
         {
-            _mockCommitmentsApiClient.Verify(c => c.GetPriceEpisodes(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
+            _mockCommitmentsApiClient.Verify(c => c.GetPriceEpisodes(_apprenticeshipResponse.Id, It.IsAny<CancellationToken>()), Times.Once());
         }
     }
 }
-

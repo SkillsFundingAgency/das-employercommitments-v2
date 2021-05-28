@@ -21,7 +21,7 @@
             {
                 <p class="govuk-notification-banner__heading">
                     The training provider has made a change which needs to be reviewed and approved by you.
-                    <a id="review-changes-banner-link" class="govuk-notification-banner__link" href="@LinkGenerator.ReviewChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)">Review changes</a>
+                    <a id="review-changes-banner-link" class="govuk-notification-banner__link" href="@Url.Action("ReviewApprenticeshipUpdates", new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Review changes</a>
                 </p>
             }
             @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.InFlightChangeOfProviderPendingEmployer))

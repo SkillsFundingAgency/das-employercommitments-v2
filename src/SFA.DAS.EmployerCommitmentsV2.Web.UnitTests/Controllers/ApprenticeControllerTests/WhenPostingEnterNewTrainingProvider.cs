@@ -21,19 +21,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test]
-        public async Task AndTheFeatureToggleIsEnable_ThenRedirectToWhoWillEnterTheDetailsPage()
+        public async Task ThenRedirectToWhoWillEnterTheDetailsPage()
         {
-            var result = await _fixture.EnterNewTrainingProvider(true);
+            var result = await _fixture.EnterNewTrainingProvider();
 
             _fixture.VerifyRedirectsToWhoWillEnterTheDetailsPage(result);
-        }
-
-        [Test]
-        public async Task AndTheFeatureToggleIsDisabled_ThenRedirectToSendRequestPage()
-        {
-            var result = await _fixture.EnterNewTrainingProvider(false);
-
-            _fixture.VerifyRedirectsToSendNewTrainingProviderRequestPage(result);
         }
     }
 
@@ -51,11 +43,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 .ReturnsAsync(new SendNewTrainingProviderRequest { AccountHashedId = _viewModel.AccountHashedId, ApprenticeshipHashedId = _viewModel.ApprenticeshipHashedId, ProviderId = _viewModel.ProviderId.Value });
         }
 
-        public async Task<IActionResult> EnterNewTrainingProvider(bool changeProviderFeatureToggleEnabled)
+        public async Task<IActionResult> EnterNewTrainingProvider()
         {
-            _mockAuthorizationService.Setup(a => a.IsAuthorized(EmployerFeature.ChangeOfProvider))
-                .Returns(changeProviderFeatureToggleEnabled);
-
             return await _controller.EnterNewTrainingProvider(_viewModel);
         }
 
