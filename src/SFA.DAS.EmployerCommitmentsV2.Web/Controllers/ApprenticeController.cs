@@ -727,5 +727,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
         }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/changes/restart")]
+        public async Task<IActionResult> DataLockRequestRestart(DataLockRequestRestartRequest request)
+        {
+            var viewModel = await _modelMapper.Map<DataLockRequestRestartViewModel>(request);
+
+            return View(viewModel);
+        }
     }
 }
