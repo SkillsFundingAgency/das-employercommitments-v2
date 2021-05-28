@@ -18,7 +18,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
             registry.IncludeRegistry<EncodingRegistry>();
             registry.IncludeRegistry<EmployerUserRolesAuthorizationRegistry>();
             registry.IncludeRegistry<WebRegistry>();
-            registry.IncludeRegistry<LocalDevRegistry>();
+
+            // Enable if you want to by pass MI locally.
+            //registry.IncludeRegistry<LocalDevRegistry>();
         }
     }
 }

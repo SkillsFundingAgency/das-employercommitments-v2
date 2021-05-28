@@ -518,8 +518,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (viewModel.PauseConfirmed.HasValue && viewModel.PauseConfirmed.Value)
             {
-                var pauseRequest = new PauseApprenticeshipRequest { ApprenticeshipId = viewModel.ApprenticeshipId };
-                
+                var pauseRequest = await _modelMapper.Map<PauseApprenticeshipRequest>(viewModel);
+
                 await _commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
                 
                 TempData.AddFlashMessage(ApprenticePausedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
@@ -544,7 +544,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (viewModel.ResumeConfirmed.HasValue && viewModel.ResumeConfirmed.Value)
             {
-                var resumeRequest = new ResumeApprenticeshipRequest { ApprenticeshipId = viewModel.ApprenticeshipId };
+                var resumeRequest = await _modelMapper.Map<ResumeApprenticeshipRequest>(viewModel);
 
                 await _commitmentsApiClient.ResumeApprenticeship(resumeRequest, CancellationToken.None);
 
