@@ -1,0 +1,59 @@
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+
+@{
+    ViewBag.Title = "Do you want to use transfer funds to pay for this training?";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageID = "choose-transfer-connection";
+}
+
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.SelectTransferConnectionViewModel
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <partial name="_ValidationSummary" />
+        
+        <h1 class="govuk-heading-xl"> @ViewBag.Title </h1>
+
+        <form method="post">
+            
+            @Html.AntiForgeryToken()
+            
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" id="radio-lines">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <span id="error-message-@nameof(SelectTransferConnectionViewModel.TransferConnectionCode)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(SelectTransferConnectionViewModel.TransferConnectionCode)].Errors.First().ErrorMessage
+                        </span>
+                    }
+                    <div class="govuk-radios">
+                        @foreach (var entity in Model.TransferConnections)
+                        {
+                            <div class="govuk-radios__item" id="radio-item-transfer-connection">
+                                <input class="govuk-radios__input" id="TransferConnection-@entity.TransferConnectionCode" name="TransferConnectionCode" type="radio" value="@entity.TransferConnectionCode">
+                                <label class="govuk-label govuk-radios__label" for="TransferConnection-@entity.TransferConnectionCode">
+                                    Yes, I will use transfer funds from @entity.TransferConnectionName
+                                </label>
+                            </div>
+                            <hr />
+                        }
+                        <div class="govuk-radios__item" id="radio-item-none">                           
+                            <input class="govuk-radios__input" dataOptionName="" id="TransferConnection-None" name="TransferConnectionCode" type="radio" value="None" />
+                            <label class="govuk-label govuk-radios__label" for="TransferConnection-None">
+                                No, I don't want to use transfer funds
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>            
+            <button type="submit" class="govuk-button" id="submit-transfer-connection">Continue</button>
+        </form>
+
+    </div>
+</div>
+
+@section Back
+{
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new {Model.AccountHashedId})">Back to Apprentices</a>
+}

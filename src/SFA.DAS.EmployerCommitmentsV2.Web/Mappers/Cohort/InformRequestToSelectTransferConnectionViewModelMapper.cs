@@ -38,8 +38,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
             return listOfTransferConnections.Select(x => new TransferConnection
             {
-                AccountId = x.FundingEmployerAccountId,
-                AccountName = x.FundingEmployerAccountName
+                TransferConnectionCode = x.FundingEmployerAccountId,
+                TransferConnectionName = x.FundingEmployerAccountName
             }).ToList();
         }
 

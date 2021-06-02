@@ -17,6 +17,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
 using System.Linq;
+using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -329,21 +330,32 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<ActionResult> Inform(InformRequest request)
         {
             var viewModel = await _modelMapper.Map<InformViewModel>(request);
-            return View(viewModel);
+            return View(viewModel);            
         }
 
         [HttpGet]
         [Route("transferConnection/create")]
         public async Task<IActionResult> SelectTransferConnection(InformRequest request)
         {
-            var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(request);
+            var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(request);          
 
             if (viewModel.TransferConnections.Any())
-            {   
-                return Redirect(_linkGenerator.SelectTransferConnection(request.AccountHashedId));
+            {
+                return View(viewModel);                
             }
 
             return Redirect(_linkGenerator.SelectLegalEntity(request.AccountHashedId));
         }
+
+        [HttpPost]        
+        [Route("transferConnection/create")]
+        public ActionResult SetTransferConnection(SelectTransferConnectionViewModel selectedTransferConnection)
+        {
+            var transferConnectionCode = selectedTransferConnection.TransferConnectionCode.Equals("None", StringComparison.InvariantCultureIgnoreCase) 
+                ? null : selectedTransferConnection.TransferConnectionCode;
+
+            return Redirect(_linkGenerator.SelectLegalEntityWithTransferConnectionCode(selectedTransferConnection.AccountHashedId, transferConnectionCode));            
+        }
+        
     }
 }
