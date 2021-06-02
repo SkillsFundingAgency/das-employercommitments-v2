@@ -44,14 +44,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         }
 
         [Test]
-        public async Task Then_User_Is_Redirected_To_TransferConnections_Page()
+        public void Then_User_Is_Redirected_To_TransferConnections_Page()
         {
             //Arrange
-            _linkGeneratorResult = $"accounts/{_informRequest.AccountHashedId}/apprentices/transferConnection/create";
+            _linkGeneratorResult = $"accounts/{_informViewModel.AccountHashedId}/apprentices/legalEntity/create?transferConnectionCode={_informViewModel.TransferConnectionCode}";
             _linkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns(_linkGeneratorResult);
 
             //Act
-            var result = await _controller.SelectTransferConnection(_informRequest);
+            var result =  _controller.SetTransferConnection(_informViewModel);
 
            //Assert
             Assert.IsInstanceOf<RedirectResult>(result);

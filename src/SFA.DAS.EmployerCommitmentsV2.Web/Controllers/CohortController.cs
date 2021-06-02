@@ -330,7 +330,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<ActionResult> Inform(InformRequest request)
         {
             var viewModel = await _modelMapper.Map<InformViewModel>(request);
-            return View(viewModel);            
+            return View(viewModel); 
         }
 
         [HttpGet]
@@ -341,7 +341,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (viewModel.TransferConnections.Any())
             {
-                return View(viewModel);                
+                return View(viewModel);
             }
 
             return Redirect(_linkGenerator.SelectLegalEntity(request.AccountHashedId));
