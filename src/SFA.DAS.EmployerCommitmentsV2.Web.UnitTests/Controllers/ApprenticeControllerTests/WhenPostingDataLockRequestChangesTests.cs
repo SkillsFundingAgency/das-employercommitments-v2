@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test]
-        public async Task VerifyRejectIsCalled_WhenApprovingRequest()
+        public async Task VerifyAcceptIsCalled_WhenApprovingRequest()
         {
             _viewModel.AcceptChanges = true;
             await _fixture.DataLockRequestChanges(_viewModel);

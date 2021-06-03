@@ -33,6 +33,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             if (updates.ApprenticeshipUpdates.Count == 1)
             {
                 var update = updates.ApprenticeshipUpdates.First();
+                
+                if (!string.IsNullOrWhiteSpace(update.FirstName + update.LastName))
+                {
+                    update.FirstName = string.IsNullOrWhiteSpace(update.FirstName) ? apprenticeship.FirstName : update.FirstName;
+                    update.LastName = string.IsNullOrWhiteSpace(update.LastName) ? apprenticeship.LastName : update.LastName;
+                }
 
                 var vm = new ReviewApprenticeshipUpdatesViewModel
                 {

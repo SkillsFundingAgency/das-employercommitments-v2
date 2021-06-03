@@ -179,6 +179,38 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(fixture.ApprenticeshipUpdate.TrainingName, viewModel.ApprenticeshipUpdates.CourseName);
         }
 
+        [Test]
+        public async Task If_FirstName_Only_Updated_Map_FirstName_From_OriginalApprenticeship()
+        {
+            fixture.GetApprenticeshipUpdatesResponses.ApprenticeshipUpdates.First().LastName = null;
+            
+            var viewModel = await fixture.Map();
+
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.FirstName, viewModel.ApprenticeshipUpdates.FirstName);
+            Assert.AreEqual(fixture.GetApprenticeshipResponse.LastName, viewModel.ApprenticeshipUpdates.LastName);
+        }
+
+        [Test]
+        public async Task If_LastName_Only_Updated_Map_FirstName_From_OriginalApprenticeship()
+        {
+            fixture.GetApprenticeshipUpdatesResponses.ApprenticeshipUpdates.First().FirstName = null;
+            
+            var viewModel = await fixture.Map();
+
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.LastName, viewModel.ApprenticeshipUpdates.LastName);
+            Assert.AreEqual(fixture.GetApprenticeshipResponse.FirstName, viewModel.ApprenticeshipUpdates.FirstName);
+        }
+
+        [Test]
+        public async Task If_BothNames_Updated_Map_BothNames_From_Update()
+        {
+            var viewModel = await fixture.Map();
+
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.FirstName, viewModel.ApprenticeshipUpdates.FirstName);
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.LastName, viewModel.ApprenticeshipUpdates.LastName);
+        }
+
+
         public class ReviewApprenticeshipUpdatesRequestToViewModelMapperTestsFixture
         {
             public ReviewApprenticeshipUpdatesRequestToViewModelMapper Mapper;
