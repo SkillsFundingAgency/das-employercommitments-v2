@@ -1,0 +1,78 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit.DataLockRequestRestartViewModel
+
+@{
+    ViewBag.Title = "Change apprentice details";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageId = "restart-requested";
+    ViewBag.GaData.Vpv = "/accounts/apprentices/manage/restart-requested";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-width-container">
+        <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
+        <p>
+            @Model.ProviderName have requested these updates:
+
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header"></th>
+                        <th scope="col" class="govuk-table__header">Period</th>
+                        <th scope="col" class="govuk-table__header">Current details</th>
+                        <th scope="col" class="govuk-table__header">Change to</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @if (Model.OriginalApprenticeship.CourseCode != Model.NewCourseCode)
+                    {
+                        var period = Model.NewPeriodStartDate.HasValue
+                            ? Model.NewPeriodEndDate.HasValue
+                                ? $"From {Model.NewPeriodStartDate.Value.ToGdsFormat()} to {Model.NewPeriodEndDate.Value.ToGdsFormat()}"
+                                : $"From {Model.NewPeriodStartDate.Value.ToGdsFormat()} onwards"
+                            : "--";
+
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Apprenticeship training course</th>
+                        <td class="govuk-table__cell">@period</td>
+                        <td class="govuk-table__cell">@Model.OriginalApprenticeship.CourseName</td>
+                        <td class="govuk-table__cell">@Model.NewCourseName</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+        <p class="govuk-body">
+            To update this apprentice's training details, you need to do the following:
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                change the apprentices' status to ’stopped'
+            </li>
+            <li>
+                create a new apprentice request and add the correct details
+            </li>
+        </ul>
+
+        <div class="govuk-inset-text">
+            <p class="govuk-body">
+                The apprentice's new training start date must be either:
+            </p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>
+                    the same month and year as the stop date of the current record
+                </li>
+                <li>
+                    any month and year after the stop date of the current record
+                </li>
+            </ul>
+        </div>
+        <div>
+            <a id="return-link" class="govuk-link" href="@Url.Action("ApprenticeshipDetails", new { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">Back to the apprentice details</a>
+        </div>
+    </div>
+</div>
+
+@section back {
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", new { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">Back to the apprentice details</a>
+}
