@@ -345,7 +345,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 return View(viewModel);
             }
 
-            return RedirectToAction("SelectLegalEntity", new ChooseOrganisationRequest { AccountHashedId = request.AccountHashedId, transferConnectionCode = string.Empty  });
+            return RedirectToAction("SelectLegalEntity", new SelectLegalEntityRequest { AccountHashedId = request.AccountHashedId, transferConnectionCode = string.Empty  });
         }
 
         [HttpPost]        
@@ -355,12 +355,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var transferConnectionCode = selectedTransferConnection.TransferConnectionCode.Equals("None", StringComparison.InvariantCultureIgnoreCase) 
                 ? null : selectedTransferConnection.TransferConnectionCode;
 
-            return RedirectToAction("SelectLegalEntity", new ChooseOrganisationRequest { AccountHashedId = selectedTransferConnection.AccountHashedId, transferConnectionCode =  transferConnectionCode }); 
+            return RedirectToAction("SelectLegalEntity", new SelectLegalEntityRequest { AccountHashedId = selectedTransferConnection.AccountHashedId, transferConnectionCode =  transferConnectionCode }); 
         }        
 
         [HttpGet]
         [Route("legalEntity/create")]
-        public async Task<IActionResult> SelectLegalEntity(ChooseOrganisationRequest request)
+        public async Task<IActionResult> SelectLegalEntity(SelectLegalEntityRequest request)
         {
             var response = await _modelMapper.Map<SelectLegalEntityViewModel>(request);
 

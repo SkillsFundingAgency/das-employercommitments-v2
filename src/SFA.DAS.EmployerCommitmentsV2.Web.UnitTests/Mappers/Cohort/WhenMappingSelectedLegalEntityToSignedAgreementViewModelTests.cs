@@ -1,45 +1,33 @@
 ﻿using AutoFixture;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.EAS.Account.Api.Client;
-using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using System;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
     public class WhenMappingSelectedLegalEntityToSignedAgreementViewModelTests
-    {
-        private Mock<IAccountApiClient> _accountApiClient;
+    {        
+        private Mock<IEmployerAccountsService> _employerAccountsService;
         private SelectedLegalEntityToSignedAgreementViewModelMapper _mapper;
         private SelectLegalEntityViewModel _selectLegalEntityViewModel;
-        private LegalEntitySignedAgreementViewModel _legalEntitySignedAgreementViewModel;
-        private ResourceViewModel _resourceViewModel;
 
         [SetUp]
         public void Arrange()
         {
             var autoFixture = new Fixture();
-            _accountApiClient = new Mock<IAccountApiClient>();
-            _selectLegalEntityViewModel = autoFixture.Create<SelectLegalEntityViewModel>();            
-            _legalEntitySignedAgreementViewModel = autoFixture.Create<LegalEntitySignedAgreementViewModel>();
-            _resourceViewModel = autoFixture.Create<ResourceViewModel>();
-            _resourceViewModel.Id = "123";
-            var legalEnityViewModel = autoFixture.Create<LegalEntityViewModel>();
-            legalEnityViewModel.Code = _selectLegalEntityViewModel.LegalEntityCode;
+            _employerAccountsService = new Mock<IEmployerAccountsService>();
+            _selectLegalEntityViewModel = autoFixture.Create<SelectLegalEntityViewModel>();
+            
+            var legalEntity = autoFixture.Create<LegalEntity>();
+            legalEntity.Code = _selectLegalEntityViewModel.LegalEntityCode;
+            _employerAccountsService.Setup(x => x.GetLegalEntitiesForAccount(_selectLegalEntityViewModel.AccountHashedId))
+                .ReturnsAsync(new List<LegalEntity> { legalEntity });
 
-            _accountApiClient.Setup(x => x.GetLegalEntitiesConnectedToAccount(_selectLegalEntityViewModel.AccountHashedId))
-                .ReturnsAsync(new List<ResourceViewModel> { _resourceViewModel });
-
-            _accountApiClient.Setup(x => x.GetLegalEntity(_selectLegalEntityViewModel.AccountHashedId, Convert.ToInt64(_resourceViewModel.Id)))
-                .ReturnsAsync(legalEnityViewModel);
-
-            _mapper = new SelectedLegalEntityToSignedAgreementViewModelMapper(_accountApiClient.Object);
+            _mapper = new SelectedLegalEntityToSignedAgreementViewModelMapper(_employerAccountsService.Object);
         }
 
         [Test]
@@ -80,20 +68,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_selectLegalEntityViewModel);
 
             //Assert
-            _accountApiClient.Verify(x => x.GetLegalEntitiesConnectedToAccount(_selectLegalEntityViewModel.AccountHashedId),
+            _employerAccountsService.Verify(x => x.GetLegalEntitiesForAccount(_selectLegalEntityViewModel.AccountHashedId),
                 Times.Once);
-        }
-
-        [Test]
-        public async Task Then_GetLegalEntity_Is_Called()
-        {
-            //Act
-            var result = await _mapper.Map(_selectLegalEntityViewModel);
-
-            //Assert
-            _accountApiClient.Verify(x => x.GetLegalEntity(_selectLegalEntityViewModel.AccountHashedId, Convert.ToInt64(_resourceViewModel.Id)),
-                Times.Once);
-        }
+        }   
 
     }
 }

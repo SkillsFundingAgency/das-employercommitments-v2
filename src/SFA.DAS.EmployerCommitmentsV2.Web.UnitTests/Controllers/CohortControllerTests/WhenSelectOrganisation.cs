@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
     {
         private CohortController _controller;
         private SelectLegalEntityViewModel _selectLegalEntityViewModel;
-        private ChooseOrganisationRequest _chooseOrganisationRequest;
+        private SelectLegalEntityRequest _chooseOrganisationRequest;
         private string _linkGeneratorResult;
         private Mock<IModelMapper> _modelMapper;
         private Mock<ILinkGenerator> _linkGenerator;
@@ -39,9 +39,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             _modelMapper = new Mock<IModelMapper>();
             _linkGenerator = new Mock<ILinkGenerator>();            
 
-            _chooseOrganisationRequest = autoFixture.Create<ChooseOrganisationRequest>();
+            _chooseOrganisationRequest = autoFixture.Create<SelectLegalEntityRequest>();
             _selectLegalEntityViewModel = autoFixture.Create<SelectLegalEntityViewModel>();
-            _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<ChooseOrganisationRequest>(r => r == _chooseOrganisationRequest)))
+            _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<SelectLegalEntityRequest>(r => r == _chooseOrganisationRequest)))
                .ReturnsAsync(_selectLegalEntityViewModel);
 
             _controller = new CohortController(Mock.Of<ICommitmentsApiClient>(),
@@ -74,7 +74,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             //Arrange
             _chooseOrganisationRequest.transferConnectionCode = isTransfer ? _chooseOrganisationRequest.transferConnectionCode : string.Empty;
-            _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<ChooseOrganisationRequest>(r => r == _chooseOrganisationRequest)))
+            _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<SelectLegalEntityRequest>(r => r == _chooseOrganisationRequest)))
             .ReturnsAsync(new SelectLegalEntityViewModel());
             
             //Assert
@@ -87,7 +87,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             //Arrange
             _chooseOrganisationRequest.transferConnectionCode = isTransfer ? _chooseOrganisationRequest.transferConnectionCode : string.Empty;
-            _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<ChooseOrganisationRequest>(r => r == _chooseOrganisationRequest)))
+            _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<SelectLegalEntityRequest>(r => r == _chooseOrganisationRequest)))
             .ReturnsAsync(new SelectLegalEntityViewModel { LegalEntities = Enumerable.Empty<LegalEntity>() });
 
             //Assert
@@ -115,7 +115,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 _linkGeneratorResult = $"accounts/{_chooseOrganisationRequest.AccountHashedId}/apprentices/provider/create";
 
             _linkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns(_linkGeneratorResult);
-            _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<ChooseOrganisationRequest>(r => r == _chooseOrganisationRequest)))
+            _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<SelectLegalEntityRequest>(r => r == _chooseOrganisationRequest)))
                          .ReturnsAsync(new SelectLegalEntityViewModel
                          {
                              LegalEntities = new[] { new LegalEntity
