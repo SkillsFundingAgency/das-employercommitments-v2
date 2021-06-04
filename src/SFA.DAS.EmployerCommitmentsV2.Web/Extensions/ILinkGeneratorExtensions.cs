@@ -108,6 +108,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
         {
             return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/legalEntity/create?transferConnectionCode={transferConnectionCode}");
         }
+   
+        public static string AgreementNotSigned(this ILinkGenerator linkGenerator, string accountHashedId, string legalEntityCode)
+        {
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/{legalEntityCode}/AgreementNotSigned");
+        }
 
         public static string EmployerHome(this ILinkGenerator linkGenerator, string accountHashedId)
         {

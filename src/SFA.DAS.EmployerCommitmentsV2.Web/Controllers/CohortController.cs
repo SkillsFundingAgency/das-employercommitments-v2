@@ -18,6 +18,7 @@ using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
 using System.Linq;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
+using SFA.DAS.EAS.Account.Api.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -329,7 +330,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("Inform")]
         public async Task<ActionResult> Inform(InformRequest request)
         {
-            var viewModel = await _modelMapper.Map<InformViewModel>(request);
+            var viewModel = await _modelMapper.Map<InformViewModel>(request);            
             return View(viewModel); 
         }
 
@@ -344,7 +345,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 return View(viewModel);
             }
 
-            return Redirect(_linkGenerator.SelectLegalEntity(request.AccountHashedId));
+            return RedirectToAction("SelectLegalEntity", new ChooseOrganisationRequest { AccountHashedId = request.AccountHashedId, transferConnectionCode = string.Empty  });
         }
 
         [HttpPost]        
@@ -354,8 +355,56 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var transferConnectionCode = selectedTransferConnection.TransferConnectionCode.Equals("None", StringComparison.InvariantCultureIgnoreCase) 
                 ? null : selectedTransferConnection.TransferConnectionCode;
 
-            return Redirect(_linkGenerator.SelectLegalEntityWithTransferConnectionCode(selectedTransferConnection.AccountHashedId, transferConnectionCode));            
+            return RedirectToAction("SelectLegalEntity", new ChooseOrganisationRequest { AccountHashedId = selectedTransferConnection.AccountHashedId, transferConnectionCode =  transferConnectionCode }); 
+        }        
+
+        [HttpGet]
+        [Route("legalEntity/create")]
+        public async Task<IActionResult> SelectLegalEntity(ChooseOrganisationRequest request)
+        {
+            var response = await _modelMapper.Map<SelectLegalEntityViewModel>(request);
+
+            if (response.LegalEntities == null || !response.LegalEntities.Any())
+                throw new Exception($"No legal entities associated with account {request.AccountHashedId}");            
+
+            if (response.LegalEntities.Count() > 1)
+                return View(response);
+
+            var autoSelectLegalEntity = response.LegalEntities.First();
+
+            var hasSigned = autoSelectLegalEntity.HasSignedAgreement(!string.IsNullOrWhiteSpace(request.transferConnectionCode));
+
+            if (hasSigned)
+            {
+                return RedirectToAction("SelectProvider", new SelectProviderRequest
+                {
+                    AccountHashedId = request.AccountHashedId,
+                    TransferSenderId = request.transferConnectionCode,
+                    AccountLegalEntityId = autoSelectLegalEntity.Id,
+                    AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId
+                });
+            }
+
+            return Redirect(_linkGenerator.AgreementNotSigned(request.AccountHashedId, autoSelectLegalEntity.Code));
+        }      
+
+        [HttpPost]        
+        [Route("legalEntity/create")]
+        public async Task<ActionResult> SetLegalEntity(SelectLegalEntityViewModel selectedLegalEntity)
+        {
+            var response = await _modelMapper.Map<LegalEntitySignedAgreementViewModel>(selectedLegalEntity);
+
+            if (response.HasSignedAgreement)
+            {
+                return RedirectToAction("SelectProvider", new SelectProviderRequest
+                {
+                    AccountHashedId = selectedLegalEntity.AccountHashedId,
+                    TransferSenderId = selectedLegalEntity.TransferConnectionCode,                    
+                    AccountLegalEntityHashedId = response.AccountLegalEntityPublicHashedId
+                });               
+            }
+
+            return Redirect(_linkGenerator.AgreementNotSigned(selectedLegalEntity.AccountHashedId, response.LegalEntityCode));
         }
-        
     }
 }

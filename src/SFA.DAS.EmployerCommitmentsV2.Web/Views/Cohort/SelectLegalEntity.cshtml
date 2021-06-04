@@ -1,0 +1,87 @@
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+
+@{
+    ViewBag.Title = "Choose organisation";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageID = "choose-organisation";
+}
+
+
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.SelectLegalEntityViewModel
+
+<div class="govuk-grid-row">
+    <form method="POST">
+        <div class="govuk-grid-column-two-thirds">
+            @*@Html.Partial("_ValidationSummary", Html.ViewData.ModelState)*@
+
+            <partial name="_ValidationSummary" />
+
+            <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
+
+            @Html.AntiForgeryToken()
+
+        <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.LegalEntityCode,  "govuk-form-group--error")">
+            <fieldset class="govuk-fieldset">
+
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h1 class="govuk-fieldset__heading">
+                        Which organisation is named on the contract with the training provider for the apprentices you’d like to add?
+                    </h1>
+                </legend>
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <span id="error-message-@nameof(SelectLegalEntityViewModel.LegalEntityCode)" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(SelectLegalEntityViewModel.LegalEntityCode)].Errors.First().ErrorMessage
+                    </span>
+                }
+                <div class="govuk-radios">
+                    @foreach (var entity in Model.LegalEntities)
+                    {
+                        @*<div class="govuk-radios__item">
+                        <label class="govuk-label govuk-radios__label" for="LegalEntityCode-@entity.Code">
+                            @Html.RadioButton("LegalEntityCode", @entity.Code, new { @id = "LegalEntityCode-" + entity.Code, dataOptionName = $"{entity.Name}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{entity.Name}')" })
+                            @entity.Name
+                        </label>
+                    </div>*@
+
+
+                        <div class="govuk-radios__item" id="radio-item-legal-entity-code">
+                            <input class="govuk-radios__input" id="LegalEntityCode-@entity.Code" name="LegalEntityCode" type="radio" value="@entity.Code">
+                            <label class="govuk-label govuk-radios__label" for="LegalEntityCode-@entity.Code">
+                                @entity.Name
+                            </label>
+                        </div>
+                    }
+                </div>
+            </fieldset>
+            <div class="govuk-!-padding-bottom-2"></div>
+            <details id="service-help" class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        What is a contract for services?
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p> A contract for services is a formal agreement between a buyer and a supplier.</p>
+                    <p>In this case, the contract is between the organisation that's buying apprenticeship training for their apprentices and the training provider that's training the apprentices.</p>
+                    <p>If you're an employer-provider, for example, you won't need a contract for services as your organisation is both the buyer and the supplier.</p>
+                </div>
+            </details>
+
+        </div>
+            @Html.Hidden("TransferConnectionCode", Model.TransferConnectionCode)
+            @Html.Hidden("CohortRef", Model.CohortRef)
+            
+            <button type="submit" class="govuk-button" id="submit-legal-entity">Continue</button>
+        </div>
+    </form>
+</div>
+
+@section Back
+{
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home")">Back to Apprentices</a>
+}
