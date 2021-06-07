@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 throw new Exception($"LegalEntity Agreement does not exist {source.AccountHashedId}");
             }
 
-            var hasSigned = legalEntity.HasSignedAgreement(!string.IsNullOrWhiteSpace(source.TransferConnectionCode));
+            var hasSignedMinimumRequiredAgreementVersion = legalEntity.HasSignedMinimumRequiredAgreementVersion(!string.IsNullOrWhiteSpace(source.TransferConnectionCode));
 
             return new LegalEntitySignedAgreementViewModel
             {
@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 LegalEntityCode = source.LegalEntityCode,
                 TransferConnectionCode = source.TransferConnectionCode,
                 CohortRef = source.CohortRef,
-                HasSignedAgreement = hasSigned,
+                HasSignedMinimumRequiredAgreementVersion = hasSignedMinimumRequiredAgreementVersion,
                 LegalEntityName = legalEntity.Name ?? string.Empty,
                 AccountLegalEntityPublicHashedId = legalEntity.AccountLegalEntityPublicHashedId
             };
