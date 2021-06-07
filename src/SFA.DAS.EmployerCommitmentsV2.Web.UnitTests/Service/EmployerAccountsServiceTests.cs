@@ -13,8 +13,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Service
     {
         private Mock<IAccountApiClient> _accountApiClient;
         private EmployerAccountsService _employerAccountsService;
-        private LegalEntityViewModel _legalEntityViewModel;
-        private ResourceViewModel _resourceViewModel;
+        private LegalEntityViewModel _legalEntityViewModel;        
         private const string ExpectedAccountId = "ABC3421";
 
         public EmployerAccountsServiceTests()
@@ -29,10 +28,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Service
             _accountApiClient.Setup(x => x.GetLegalEntitiesConnectedToAccount(ExpectedAccountId))
                .ReturnsAsync(new List<ResourceViewModel>());
             _employerAccountsService = new EmployerAccountsService(_accountApiClient.Object);
-            _legalEntityViewModel = autoFixture.Create<LegalEntityViewModel>();
-            _resourceViewModel = autoFixture.Create<ResourceViewModel>();
-        }       
-
+            _legalEntityViewModel = autoFixture.Create<LegalEntityViewModel>();           
+        }
 
         [Test]
         public async Task Then_Api_GetLegalEntitiesForAccount_Is_Called()

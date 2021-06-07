@@ -43,31 +43,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Services
                 AccountLegalEntityPublicHashedId = legalEntityViewModel.Result.AccountLegalEntityPublicHashedId
             }));
             return list;
-
-            //foreach (var entity in listOfEntities)
-            //{
-            //    var legalEntityViewModel = await _accountsApiClient.GetLegalEntity(accountId, Convert.ToInt64(entity.Id));
-
-            //    list.Add(new LegalEntity
-            //    {
-            //        Name = legalEntityViewModel.Name,
-            //        RegisteredAddress = legalEntityViewModel.Address,
-            //        Source = legalEntityViewModel.SourceNumeric,
-            //        Agreements =
-            //            legalEntityViewModel.Agreements.Select(agreementSource => new Agreement
-            //            {
-            //                Id = agreementSource.Id,
-            //                SignedDate = agreementSource.SignedDate,
-            //                SignedByName = agreementSource.SignedByName,
-            //                Status = (EmployerAgreementStatus)agreementSource.Status,
-            //                TemplateVersionNumber = agreementSource.TemplateVersionNumber
-            //            }).ToList(),
-            //        Code = legalEntityViewModel.Code,
-            //        Id = legalEntityViewModel.LegalEntityId,
-            //        AccountLegalEntityPublicHashedId = legalEntityViewModel.AccountLegalEntityPublicHashedId
-            //    });
-            //}
-            //return list;
         }
     }
 }

@@ -25,11 +25,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         private SelectLegalEntityRequest _chooseOrganisationRequest;
         private string _linkGeneratorResult;
         private Mock<IModelMapper> _modelMapper;
-        private Mock<ILinkGenerator> _linkGenerator;
-        private const string HashedAccountId = "12345";
+        private Mock<ILinkGenerator> _linkGenerator;        
         private const string LegalEntityCode = "LCODE";
-        private const string LegalEntityName = "LNAME";
-        private const string CohortRefParam = "";
+        private const string LegalEntityName = "LNAME";        
         private const string CohortRefViewModel = "ViewModelCohortReef";
 
         [SetUp]
@@ -53,7 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
         [TestCase(true)]
         [TestCase(false)]
-        public async Task Then_VerifyViewModelIsMappedFromRequest(bool isTransfer)
+        public async Task Then_Verify_ViewModel_Is_Mapped_From_Request(bool isTransfer)
         {
             //Arrange
             _chooseOrganisationRequest.transferConnectionCode = isTransfer ? _chooseOrganisationRequest.transferConnectionCode : string.Empty;

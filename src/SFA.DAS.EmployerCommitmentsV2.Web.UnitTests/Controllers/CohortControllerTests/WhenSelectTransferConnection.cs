@@ -71,7 +71,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         }
 
         [Test]
-        public void Then_User_ChoseLegalEntity_Redirected_To_SelectedLegalEntity()
+        public void Then_User_Redirected_To_SelectedLegalEntity()
         {
             //Act
             var result = _controller.SetTransferConnection(_informViewModel);

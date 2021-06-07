@@ -127,15 +127,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
             var url = _fixture.Sut.SelectLegalEntity(accountHashedId);
 
             Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/legalEntity/create", url);
-        }
-
-        [Test, AutoData]
-        public void SelectLegalEntityWithTransferConnectionCode_BuildsPathCorrectly(string accountHashedId, string transferConnectionCode)
-        {
-            var url = _fixture.Sut.SelectLegalEntityWithTransferConnectionCode(accountHashedId, transferConnectionCode);
-
-            Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/legalEntity/create?transferConnectionCode={transferConnectionCode}", url);
-        }       
+        }         
     }
 
     public class ILinkGeneratorExtensionsTestsFixture
