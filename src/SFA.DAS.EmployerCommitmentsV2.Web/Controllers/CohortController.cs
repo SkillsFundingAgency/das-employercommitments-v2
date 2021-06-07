@@ -404,5 +404,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             return Redirect(_linkGenerator.AgreementNotSigned(selectedLegalEntity.AccountHashedId, response.LegalEntityCode));
         }
+
+
+        [HttpGet]
+        [Route("{legalEntityCode}/AgreementNotSigned")]
+        public async Task<ActionResult> AgreementNotSigned(LegalEntitySignedAgreementViewModel viewModel)
+        {
+            var response = await _modelMapper.Map<AgreementNotSignedViewModel>(viewModel);
+            
+            return View(response);
+        }
     }
 }

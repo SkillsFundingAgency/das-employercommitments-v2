@@ -1,0 +1,42 @@
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@inject ILinkGenerator LinkGenerator
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.AgreementNotSignedViewModel
+
+@{
+    ViewBag.Title = "Agreement not signed"; 
+    ViewBag.GaData.Vpv = "/unapproved/AgreementNotSigned";
+    ViewBag.GaData.Org = Model.LegalEntityName;
+
+    var CanContinueText = Model.CanContinueAnyway
+    ? "Without a signed agreement you can add apprentice details, but won't be able to authorise payments to training providers."
+    : "Without an accepted agreement you cannot proceed any further.";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Agreement not signed</h1>
+        <div class="notice">
+            
+            <i class="icon icon-important">
+                <span class="visually-hidden">Warning</span>
+            </i>
+
+            <strong class="bold-small">
+
+                @Model.LegalEntityName
+                doesn't have a signed agreement with the Education and Skills Funding Agency (ESFA). @CanContinueText
+
+                <br /><br />
+                Only account owners can sign ESFA agreements. If you're not sure who the owner is, you can <a href="@LinkGenerator.YourTeam(Model.HashedAccountId)">check your team details</a>.
+            </strong>
+
+        </div>
+        
+        <p>
+            <a class="button" href="@LinkGenerator.YourOrganisationsAndAgreements(Model.HashedAccountId)" aria-label="Review your agreement">Review agreement</a>
+            @if (Model.CanContinueAnyway)
+            {
+            <p><a href="@Url.Action("SelectProvider", new {Model.HashedAccountId, Model.LegalEntityCode, Model.TransferConnectionCode, Model.CohortRef})">Continue anyway</a></p>
+        }
+        </div>
+    </div>

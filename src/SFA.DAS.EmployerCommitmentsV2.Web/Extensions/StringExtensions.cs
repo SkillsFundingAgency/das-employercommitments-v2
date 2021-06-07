@@ -13,5 +13,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 
             return value;
         }
+
+        public static T ToEnum<T>(this string value) where T : struct
+        {
+            return (T)Enum.Parse(typeof(T), value);
+        }
     }
 }
