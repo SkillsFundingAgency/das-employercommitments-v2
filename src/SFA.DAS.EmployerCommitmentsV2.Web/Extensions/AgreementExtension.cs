@@ -6,7 +6,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 {
     public static class AgreementExtension
     {   
-        public static bool HasSignedAgreement(this LegalEntity legalEntity, bool isTransfer)
+        public static bool HasSignedMinimumRequiredAgreementVersion(this LegalEntity legalEntity, bool isTransfer)
         {
             if (isTransfer)
             {

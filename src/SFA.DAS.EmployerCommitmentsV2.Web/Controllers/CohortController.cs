@@ -370,9 +370,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             var autoSelectLegalEntity = response.LegalEntities.First();
 
-            var hasSigned = autoSelectLegalEntity.HasSignedAgreement(!string.IsNullOrWhiteSpace(request.transferConnectionCode));
+            var hasSignedMinimumRequiredAgreementVersion = autoSelectLegalEntity.HasSignedMinimumRequiredAgreementVersion(!string.IsNullOrWhiteSpace(request.transferConnectionCode));
 
-            if (hasSigned)
+            if (hasSignedMinimumRequiredAgreementVersion)
             {
                 return RedirectToAction("SelectProvider", new SelectProviderRequest
                 {
@@ -392,7 +392,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var response = await _modelMapper.Map<LegalEntitySignedAgreementViewModel>(selectedLegalEntity);
 
-            if (response.HasSignedAgreement)
+            if (response.HasSignedMinimumRequiredAgreementVersion)
             {
                 return RedirectToAction("SelectProvider", new SelectProviderRequest
                 {
