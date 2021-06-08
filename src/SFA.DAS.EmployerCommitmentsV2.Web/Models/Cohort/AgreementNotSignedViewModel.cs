@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 {
     public class AgreementNotSignedViewModel : LegalEntitySignedAgreementViewModel
     {
-        public bool IsLevyEmployer { get; set; }
+        public bool CanContinueAnyway { get; set; }
     }
 }

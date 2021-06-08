@@ -133,15 +133,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             _chooseOrganisationRequest.transferConnectionCode = isTransfer ? _chooseOrganisationRequest.transferConnectionCode : string.Empty;
             var result = await _controller.SelectLegalEntity(_chooseOrganisationRequest);
 
-            //Assert                       
+            //Assert
+            var redirectToActionResult = result as RedirectToActionResult;
             switch (expectedAction)
             {
-                case ExpectedAction.AgreementNotSigned:                    
-                    var redirectResult = result as RedirectResult;
-                    Assert.AreEqual(_linkGeneratorResult, redirectResult.Url);
+                case ExpectedAction.AgreementNotSigned:
+                    Assert.AreEqual(expectedAction.ToString(), redirectToActionResult.ActionName);
                     break;
-                case ExpectedAction.SelectProvider:                    
-                    var redirectToActionResult = result as RedirectToActionResult;
+                case ExpectedAction.SelectProvider:
                     Assert.AreEqual(expectedAction.ToString(), redirectToActionResult.ActionName);
                     break;
                 default:

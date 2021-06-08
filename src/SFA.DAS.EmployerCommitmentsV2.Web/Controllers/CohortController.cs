@@ -60,31 +60,31 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             switch (viewModel.Selection)
             {
                 case CohortDetailsOptions.Send:
-                {
-                    var request = await _modelMapper.Map<SendCohortRequest>(viewModel);
-                    await _commitmentsApiClient.SendCohort(viewModel.CohortId, request);
-                    return RedirectToAction("Sent", new { viewModel.CohortReference, viewModel.AccountHashedId});
-                }
-                case CohortDetailsOptions.Approve:
-                {
-                    var request = await _modelMapper.Map<ApproveCohortRequest>(viewModel);
-                    await _commitmentsApiClient.ApproveCohort(viewModel.CohortId, request);
-                    return RedirectToAction("Approved", new { viewModel.CohortReference, viewModel.AccountHashedId });
-                }
-                case CohortDetailsOptions.ViewEmployerAgreement:
-                {
-                    var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
-                    if (request.AgreementHashedId == null)
                     {
-                        return Redirect(_linkGenerator.AccountsLink($"accounts/{request.AccountHashedId}/agreements/"));
+                        var request = await _modelMapper.Map<SendCohortRequest>(viewModel);
+                        await _commitmentsApiClient.SendCohort(viewModel.CohortId, request);
+                        return RedirectToAction("Sent", new { viewModel.CohortReference, viewModel.AccountHashedId });
                     }
-                    return Redirect(_linkGenerator.AccountsLink(
-                    $"accounts/{request.AccountHashedId}/agreements/{request.AgreementHashedId}/about-your-agreement"));
-                }
+                case CohortDetailsOptions.Approve:
+                    {
+                        var request = await _modelMapper.Map<ApproveCohortRequest>(viewModel);
+                        await _commitmentsApiClient.ApproveCohort(viewModel.CohortId, request);
+                        return RedirectToAction("Approved", new { viewModel.CohortReference, viewModel.AccountHashedId });
+                    }
+                case CohortDetailsOptions.ViewEmployerAgreement:
+                    {
+                        var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
+                        if (request.AgreementHashedId == null)
+                        {
+                            return Redirect(_linkGenerator.AccountsLink($"accounts/{request.AccountHashedId}/agreements/"));
+                        }
+                        return Redirect(_linkGenerator.AccountsLink(
+                        $"accounts/{request.AccountHashedId}/agreements/{request.AgreementHashedId}/about-your-agreement"));
+                    }
                 case CohortDetailsOptions.Homepage:
-                {
-                    return Redirect(_linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
-                }
+                    {
+                        return Redirect(_linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
+                    }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
             }
@@ -103,10 +103,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete([FromServices] IAuthenticationService authenticationService, ConfirmDeleteViewModel viewModel)
         {
-            if(viewModel.ConfirmDeletion == true)
-            { 
+            if (viewModel.ConfirmDeletion == true)
+            {
                 await _commitmentsApiClient.DeleteCohort(viewModel.CohortId, authenticationService.UserInfo, CancellationToken.None);
-                return RedirectToAction("Review", new {viewModel.AccountHashedId});
+                return RedirectToAction("Review", new { viewModel.AccountHashedId });
             }
             return RedirectToAction("Details", new { viewModel.CohortReference, viewModel.AccountHashedId });
         }
@@ -343,18 +343,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 return View(viewModel);
             }
 
-            return RedirectToAction("SelectLegalEntity", new SelectLegalEntityRequest { AccountHashedId = request.AccountHashedId, transferConnectionCode = string.Empty  });
+            return RedirectToAction("SelectLegalEntity", new SelectLegalEntityRequest { AccountHashedId = request.AccountHashedId, transferConnectionCode = string.Empty });
         }
 
-        [HttpPost]        
+        [HttpPost]
         [Route("transferConnection/create")]
         public ActionResult SetTransferConnection(SelectTransferConnectionViewModel selectedTransferConnection)
         {
-            var transferConnectionCode = selectedTransferConnection.TransferConnectionCode.Equals("None", StringComparison.InvariantCultureIgnoreCase) 
+            var transferConnectionCode = selectedTransferConnection.TransferConnectionCode.Equals("None", StringComparison.InvariantCultureIgnoreCase)
                 ? null : selectedTransferConnection.TransferConnectionCode;
 
-            return RedirectToAction("SelectLegalEntity", new SelectLegalEntityRequest { AccountHashedId = selectedTransferConnection.AccountHashedId, transferConnectionCode =  transferConnectionCode }); 
-        }        
+            return RedirectToAction("SelectLegalEntity", new SelectLegalEntityRequest { AccountHashedId = selectedTransferConnection.AccountHashedId, transferConnectionCode = transferConnectionCode });
+        }
 
         [HttpGet]
         [Route("legalEntity/create")]
@@ -363,13 +363,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var response = await _modelMapper.Map<SelectLegalEntityViewModel>(request);
 
             if (response.LegalEntities == null || !response.LegalEntities.Any())
-                throw new Exception($"No legal entities associated with account {request.AccountHashedId}");            
+                throw new Exception($"No legal entities associated with account {request.AccountHashedId}");
 
             if (response.LegalEntities.Count() > 1)
                 return View(response);
 
             var autoSelectLegalEntity = response.LegalEntities.First();
-
+          
             var hasSignedMinimumRequiredAgreementVersion = autoSelectLegalEntity.HasSignedMinimumRequiredAgreementVersion(!string.IsNullOrWhiteSpace(request.transferConnectionCode));
 
             if (hasSignedMinimumRequiredAgreementVersion)
@@ -382,15 +382,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId
                 });
             }
+            
+            return RedirectToAction("AgreementNotSigned", new LegalEntitySignedAgreementViewModel
+            {
+                AccountHashedId = request.AccountHashedId,                
+                LegalEntityCode = autoSelectLegalEntity.Code,
+                CohortRef = request.cohortRef,
+                LegalEntityName = autoSelectLegalEntity.Name,
+                TransferConnectionCode = request.transferConnectionCode,
+                AccountLegalEntityPublicHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId
+            });
 
-            return Redirect(_linkGenerator.AgreementNotSigned(request.AccountHashedId, autoSelectLegalEntity.Code));
-        }      
+        }
 
-        [HttpPost]        
+        [HttpPost]
         [Route("legalEntity/create")]
         public async Task<ActionResult> SetLegalEntity(SelectLegalEntityViewModel selectedLegalEntity)
         {
-            var response = await _modelMapper.Map<LegalEntitySignedAgreementViewModel>(selectedLegalEntity);
+            var response = await _modelMapper.Map<LegalEntitySignedAgreementViewModel>(selectedLegalEntity);          
 
             if (response.HasSignedMinimumRequiredAgreementVersion)
             {
@@ -402,7 +411,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 });               
             }
 
-            return Redirect(_linkGenerator.AgreementNotSigned(selectedLegalEntity.AccountHashedId, response.LegalEntityCode));
+            return RedirectToAction("AgreementNotSigned", new LegalEntitySignedAgreementViewModel
+            {
+                AccountHashedId = selectedLegalEntity.AccountHashedId,
+                LegalEntityCode = selectedLegalEntity.LegalEntityCode,
+                CohortRef = selectedLegalEntity.CohortRef,
+                LegalEntityName = response.LegalEntityName,
+                AccountLegalEntityPublicHashedId = response.AccountLegalEntityPublicHashedId
+            });
         }
 
 
@@ -411,7 +427,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<ActionResult> AgreementNotSigned(LegalEntitySignedAgreementViewModel viewModel)
         {
             var response = await _modelMapper.Map<AgreementNotSignedViewModel>(viewModel);
-            
+
             return View(response);
         }
     }

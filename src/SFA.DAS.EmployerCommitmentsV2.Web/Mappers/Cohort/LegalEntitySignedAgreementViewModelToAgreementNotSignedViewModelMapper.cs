@@ -23,17 +23,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         public async Task<AgreementNotSignedViewModel> Map(LegalEntitySignedAgreementViewModel source)
         {
-            var accountId = _encodingService.Decode(source.HashedAccountId, EncodingType.AccountId);
+            var accountId = _encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
 
             var account = await _employerAccountsService.GetAccount(accountId);
 
             return new AgreementNotSignedViewModel
-            {
-                IsLevyEmployer = account.ApprenticeshipEmployerType == ApprenticeshipEmployerType.Levy,
-                HashedAccountId = source.HashedAccountId,
+            {   
+                AccountHashedId = source.AccountHashedId,
                 AccountLegalEntityPublicHashedId = source.AccountLegalEntityPublicHashedId,
                 CohortRef = source.CohortRef,
-                HasSignedAgreement = source.HasSignedAgreement,
+                HasSignedMinimumRequiredAgreementVersion = source.HasSignedMinimumRequiredAgreementVersion,
                 LegalEntityCode = source.LegalEntityCode,
                 LegalEntityName = source.LegalEntityName,
                 TransferConnectionCode = source.TransferConnectionCode,
