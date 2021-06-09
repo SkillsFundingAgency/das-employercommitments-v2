@@ -409,7 +409,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     TransferSenderId = selectedLegalEntity.TransferConnectionCode,                    
                     AccountLegalEntityHashedId = response.AccountLegalEntityPublicHashedId
                 });               
-            }
+            }            
 
             return RedirectToAction("AgreementNotSigned", new LegalEntitySignedAgreementViewModel
             {
@@ -423,7 +423,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
 
         [HttpGet]
-        [Route("{legalEntityId}/AgreementNotSigned")]
+        [Route("AgreementNotSigned")]
         public async Task<ActionResult> AgreementNotSigned(LegalEntitySignedAgreementViewModel viewModel)
         {
             var response = await _modelMapper.Map<AgreementNotSignedViewModel>(viewModel);
