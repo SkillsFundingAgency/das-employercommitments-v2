@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var hasSignedMinimumRequiredAgreementVersion = legalEntity.HasSignedMinimumRequiredAgreementVersion(!string.IsNullOrWhiteSpace(source.TransferConnectionCode));
 
             return new LegalEntitySignedAgreementViewModel
-            {                
+            {
                 AccountHashedId = source.AccountHashedId,
                 LegalEntityCode = source.LegalEntityCode,
                 TransferConnectionCode = source.TransferConnectionCode,

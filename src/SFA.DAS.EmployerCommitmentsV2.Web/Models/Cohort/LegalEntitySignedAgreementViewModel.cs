@@ -2,7 +2,7 @@
 {
     public class LegalEntitySignedAgreementViewModel
     {
-        public string AccountHashedId { get; set; }        
+        public string AccountHashedId { get; set; }
         public string TransferConnectionCode { get; set; }
         public string LegalEntityCode { get; set; }
         public string CohortRef { get; set; }

@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 LegalEntityCode = source.LegalEntityCode,
                 LegalEntityName = source.LegalEntityName,
                 TransferConnectionCode = source.TransferConnectionCode,
-                CanContinueAnyway = account.ApprenticeshipEmployerType == ApprenticeshipEmployerType.Levy
+                CanContinueAnyway = (account.ApprenticeshipEmployerType == ApprenticeshipEmployerType.Levy)
             };
         }
     }

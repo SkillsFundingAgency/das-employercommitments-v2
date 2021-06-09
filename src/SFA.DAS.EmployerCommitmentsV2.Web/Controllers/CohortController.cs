@@ -369,7 +369,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 return View(response);
 
             var autoSelectLegalEntity = response.LegalEntities.First();
-          
+
             var hasSignedMinimumRequiredAgreementVersion = autoSelectLegalEntity.HasSignedMinimumRequiredAgreementVersion(!string.IsNullOrWhiteSpace(request.transferConnectionCode));
 
             if (hasSignedMinimumRequiredAgreementVersion)
@@ -399,7 +399,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("legalEntity/create")]
         public async Task<ActionResult> SetLegalEntity(SelectLegalEntityViewModel selectedLegalEntity)
         {
-            var response = await _modelMapper.Map<LegalEntitySignedAgreementViewModel>(selectedLegalEntity);          
+            var response = await _modelMapper.Map<LegalEntitySignedAgreementViewModel>(selectedLegalEntity);
 
             if (response.HasSignedMinimumRequiredAgreementVersion)
             {
