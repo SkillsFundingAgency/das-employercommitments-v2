@@ -386,7 +386,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return RedirectToAction("AgreementNotSigned", new LegalEntitySignedAgreementViewModel
             {
                 AccountHashedId = request.AccountHashedId,                
-                LegalEntityCode = autoSelectLegalEntity.Code,
+                LegalEntityId = autoSelectLegalEntity.Id,
                 CohortRef = request.cohortRef,
                 LegalEntityName = autoSelectLegalEntity.Name,
                 TransferConnectionCode = request.transferConnectionCode,
@@ -414,7 +414,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return RedirectToAction("AgreementNotSigned", new LegalEntitySignedAgreementViewModel
             {
                 AccountHashedId = selectedLegalEntity.AccountHashedId,
-                LegalEntityCode = selectedLegalEntity.LegalEntityCode,
+                LegalEntityId = selectedLegalEntity.LegalEntityId,
                 CohortRef = selectedLegalEntity.CohortRef,
                 LegalEntityName = response.LegalEntityName,
                 AccountLegalEntityPublicHashedId = response.AccountLegalEntityPublicHashedId
@@ -423,7 +423,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
 
         [HttpGet]
-        [Route("{legalEntityCode}/AgreementNotSigned")]
+        [Route("{legalEntityId}/AgreementNotSigned")]
         public async Task<ActionResult> AgreementNotSigned(LegalEntitySignedAgreementViewModel viewModel)
         {
             var response = await _modelMapper.Map<AgreementNotSignedViewModel>(viewModel);

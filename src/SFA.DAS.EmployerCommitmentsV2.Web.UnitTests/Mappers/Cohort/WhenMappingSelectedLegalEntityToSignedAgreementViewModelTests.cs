@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _selectLegalEntityViewModel = autoFixture.Create<SelectLegalEntityViewModel>();
             
             var legalEntity = autoFixture.Create<LegalEntity>();
-            legalEntity.Code = _selectLegalEntityViewModel.LegalEntityCode;
+            legalEntity.Id = _selectLegalEntityViewModel.LegalEntityId;
             _employerAccountsService.Setup(x => x.GetLegalEntitiesForAccount(_selectLegalEntityViewModel.AccountHashedId))
                 .ReturnsAsync(new List<LegalEntity> { legalEntity });
 
@@ -47,7 +47,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_selectLegalEntityViewModel);
 
             //Assert           
-            Assert.AreEqual(_selectLegalEntityViewModel.LegalEntityCode, result.LegalEntityCode);
+            Assert.AreEqual(_selectLegalEntityViewModel.LegalEntityId, result.LegalEntityId);
         }
 
         [Test]

@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountLegalEntityPublicHashedId = source.AccountLegalEntityPublicHashedId,
                 CohortRef = source.CohortRef,
                 HasSignedMinimumRequiredAgreementVersion = source.HasSignedMinimumRequiredAgreementVersion,
-                LegalEntityCode = source.LegalEntityCode,
+                LegalEntityId = source.LegalEntityId,
                 LegalEntityName = source.LegalEntityName,
                 TransferConnectionCode = source.TransferConnectionCode,
                 CanContinueAnyway = (account.ApprenticeshipEmployerType == ApprenticeshipEmployerType.Levy)

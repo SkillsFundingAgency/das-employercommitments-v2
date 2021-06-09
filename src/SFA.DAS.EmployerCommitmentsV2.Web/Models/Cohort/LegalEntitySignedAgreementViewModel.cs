@@ -4,7 +4,7 @@
     {
         public string AccountHashedId { get; set; }
         public string TransferConnectionCode { get; set; }
-        public string LegalEntityCode { get; set; }
+        public long LegalEntityId { get; set; }
         public string CohortRef { get; set; }
         public bool HasSignedMinimumRequiredAgreementVersion { get; set; }
         public string LegalEntityName { get; set; }        

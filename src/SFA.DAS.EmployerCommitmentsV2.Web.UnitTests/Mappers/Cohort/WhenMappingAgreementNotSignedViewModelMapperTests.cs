@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_legalEntitySignedAgreementViewModel);
 
             //Assert           
-            Assert.AreEqual(_legalEntitySignedAgreementViewModel.LegalEntityCode, result.LegalEntityCode);
+            Assert.AreEqual(_legalEntitySignedAgreementViewModel.LegalEntityId, result.LegalEntityId);
         }
 
         [Test]
