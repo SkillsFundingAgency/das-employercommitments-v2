@@ -409,7 +409,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     TransferSenderId = selectedLegalEntity.TransferConnectionCode,                    
                     AccountLegalEntityHashedId = response.AccountLegalEntityPublicHashedId
                 });               
-            }            
+            }
 
             return RedirectToAction("AgreementNotSigned", new LegalEntitySignedAgreementViewModel
             {
