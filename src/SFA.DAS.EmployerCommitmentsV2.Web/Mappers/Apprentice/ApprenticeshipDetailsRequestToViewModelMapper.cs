@@ -52,8 +52,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 var getTrainingProgramme = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode, CancellationToken.None);
                 PendingChanges pendingChange = GetPendingChanges(apprenticeshipUpdates);
 
-                var statusText = MapApprenticeshipStatus(apprenticeship.Status);
-
                 bool dataLockCourseTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseTriaged();
                 bool dataLockCourseChangedTraiged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseChangeTriaged();
                 bool dataLockPriceTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockPriceTriaged();
@@ -80,7 +78,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     TrainingType = getTrainingProgramme.TrainingProgramme.ProgrammeType,
                     Cost = priceEpisodes.PriceEpisodes.GetPrice(),
                     ApprenticeshipStatus = apprenticeship.Status,
-                    Status = statusText,
                     ProviderName = apprenticeship.ProviderName,
                     PendingChanges = pendingChange,
                     EmployerReference = apprenticeship.EmployerReference,
@@ -143,27 +140,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 pendingChange = PendingChanges.ReadyForApproval;
             return pendingChange;
         }      
-
-        private string MapApprenticeshipStatus(ApprenticeshipStatus paymentStatus)
-        {
-            switch (paymentStatus)
-            {
-                
-                case ApprenticeshipStatus.WaitingToStart:
-                    return "Waiting to start";
-                case ApprenticeshipStatus.Live:
-                    return "Live";               
-                case ApprenticeshipStatus.Paused:
-                    return "Paused";
-                case ApprenticeshipStatus.Stopped:
-                    return "Stopped";
-                case ApprenticeshipStatus.Completed:
-                    return "Completed";
-                default:
-                    return string.Empty;
-            }
-        }
-
     }
-   
 }

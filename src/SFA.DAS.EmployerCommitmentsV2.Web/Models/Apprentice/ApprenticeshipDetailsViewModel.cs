@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
@@ -11,7 +12,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public DateTime PlannedStartDate { get; set; }
         public DateTime PlannedEndDate { get; set; }
         public string ProviderName { get; set; }
-        public string Status { get; set; }
+        public ApprenticeshipStatus Status { get; set; }
         public IEnumerable<string> Alerts { get; set; }
     }
 }

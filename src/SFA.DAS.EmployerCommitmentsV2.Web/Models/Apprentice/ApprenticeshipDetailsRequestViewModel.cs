@@ -21,7 +21,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string TrainingName { get; set; }
         public decimal? Cost { get; set; }
         public ApprenticeshipStatus ApprenticeshipStatus { get; set; }
-        public string Status { get; set; }
         public string ProviderName { get; set; }
         public PendingChanges PendingChanges { get; set; }
         public bool CanEditStatus => (ApprenticeshipStatus == ApprenticeshipStatus.Live ||
