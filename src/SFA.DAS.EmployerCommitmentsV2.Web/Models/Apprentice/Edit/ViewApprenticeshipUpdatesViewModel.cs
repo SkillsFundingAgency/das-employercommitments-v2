@@ -5,7 +5,7 @@ using SFA.DAS.Authorization.ModelBinding;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
 {
     public class ViewApprenticeshipUpdatesViewModel : 
-        IApprenticeshipUpdatesViewModel
+        IApprenticeshipUpdatesViewModel, IAuthorizationContextModel
     {        
         public bool? UndoChanges { get; set; }
         [FromRoute]

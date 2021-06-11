@@ -5,7 +5,7 @@ using SFA.DAS.Authorization.ModelBinding;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
 {
     public class ReviewApprenticeshipUpdatesViewModel 
-        : IApprenticeshipUpdatesViewModel
+        : IApprenticeshipUpdatesViewModel, IAuthorizationContextModel
     {
         public bool? ApproveChanges { get; set; }
         [FromRoute]
