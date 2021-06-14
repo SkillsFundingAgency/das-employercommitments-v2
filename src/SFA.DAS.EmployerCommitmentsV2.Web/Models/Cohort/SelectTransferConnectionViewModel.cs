@@ -3,7 +3,7 @@
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 {
     public class SelectTransferConnectionViewModel
-    {        
+    {
         public string AccountHashedId { get; set; }
 
         public string TransferConnectionCode { get; set; }
@@ -14,6 +14,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
     public class TransferConnection
     {
         public string TransferConnectionName { get; set; }
-        public long TransferConnectionCode { get; set; }
+        public string TransferConnectionCode { get; set; }
     }
 }

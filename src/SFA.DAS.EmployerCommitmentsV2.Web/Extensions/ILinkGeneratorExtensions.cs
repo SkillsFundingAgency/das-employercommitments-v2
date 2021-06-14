@@ -4,9 +4,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 {
     public static class ILinkGeneratorExtensions
     {
-       public static string YourOrganisationsAndAgreements(this ILinkGenerator linkGenerator, string accountHashedId)
+        public static string YourOrganisationsAndAgreements(this ILinkGenerator linkGenerator, string accountHashedId)
         {
             return linkGenerator.AccountsLink($"accounts/{accountHashedId}/agreements");
+        }
+        
+        public static string YourTeam(this ILinkGenerator linkGenerator, string accountHashedId)
+        {
+            return linkGenerator.AccountsLink($"accounts/{accountHashedId}/teams/view");
         }
 
         public static string PayeSchemes(this ILinkGenerator linkGenerator, string accountHashedId)
@@ -103,10 +108,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
         {
             return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/legalEntity/create");
         }
-
-        public static string SelectLegalEntityWithTransferConnectionCode(this ILinkGenerator linkGenerator, string accountHashedId, string transferConnectionCode)
+   
+        public static string AgreementNotSigned(this ILinkGenerator linkGenerator, string accountHashedId, string legalEntityCode)
         {
-            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/legalEntity/create?transferConnectionCode={transferConnectionCode}");
+            return linkGenerator.CommitmentsLink($"accounts/{accountHashedId}/apprentices/{legalEntityCode}/AgreementNotSigned");
         }
 
         public static string EmployerHome(this ILinkGenerator linkGenerator, string accountHashedId)

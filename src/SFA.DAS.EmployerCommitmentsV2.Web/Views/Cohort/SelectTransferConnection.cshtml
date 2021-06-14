@@ -2,8 +2,7 @@
 
 @{
     ViewBag.Title = "Do you want to use transfer funds to pay for this training?";
-    ViewBag.Section = "apprentices";
-    ViewBag.PageID = "choose-transfer-connection";
+    ViewBag.GaData.Vpv = "/unapproved/transferConnection/create/select-transfer-connection";
 }
 
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.SelectTransferConnectionViewModel
@@ -39,7 +38,7 @@
                             <hr />
                         }
                         <div class="govuk-radios__item" id="radio-item-none">                           
-                            <input class="govuk-radios__input" dataOptionName="" id="TransferConnection-None" name="TransferConnectionCode" type="radio" value="None" />
+                            <input class="govuk-radios__input" id="TransferConnection-None" name="TransferConnectionCode" type="radio" value="None" />
                             <label class="govuk-label govuk-radios__label" for="TransferConnection-None">
                                 No, I don't want to use transfer funds
                             </label>

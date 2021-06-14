@@ -17,7 +17,6 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
 using System.Linq;
-using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -61,31 +60,31 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             switch (viewModel.Selection)
             {
                 case CohortDetailsOptions.Send:
-                {
-                    var request = await _modelMapper.Map<SendCohortRequest>(viewModel);
-                    await _commitmentsApiClient.SendCohort(viewModel.CohortId, request);
-                    return RedirectToAction("Sent", new { viewModel.CohortReference, viewModel.AccountHashedId});
-                }
-                case CohortDetailsOptions.Approve:
-                {
-                    var request = await _modelMapper.Map<ApproveCohortRequest>(viewModel);
-                    await _commitmentsApiClient.ApproveCohort(viewModel.CohortId, request);
-                    return RedirectToAction("Approved", new { viewModel.CohortReference, viewModel.AccountHashedId });
-                }
-                case CohortDetailsOptions.ViewEmployerAgreement:
-                {
-                    var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
-                    if (request.AgreementHashedId == null)
                     {
-                        return Redirect(_linkGenerator.AccountsLink($"accounts/{request.AccountHashedId}/agreements/"));
+                        var request = await _modelMapper.Map<SendCohortRequest>(viewModel);
+                        await _commitmentsApiClient.SendCohort(viewModel.CohortId, request);
+                        return RedirectToAction("Sent", new { viewModel.CohortReference, viewModel.AccountHashedId });
                     }
-                    return Redirect(_linkGenerator.AccountsLink(
-                    $"accounts/{request.AccountHashedId}/agreements/{request.AgreementHashedId}/about-your-agreement"));
-                }
+                case CohortDetailsOptions.Approve:
+                    {
+                        var request = await _modelMapper.Map<ApproveCohortRequest>(viewModel);
+                        await _commitmentsApiClient.ApproveCohort(viewModel.CohortId, request);
+                        return RedirectToAction("Approved", new { viewModel.CohortReference, viewModel.AccountHashedId });
+                    }
+                case CohortDetailsOptions.ViewEmployerAgreement:
+                    {
+                        var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
+                        if (request.AgreementHashedId == null)
+                        {
+                            return Redirect(_linkGenerator.AccountsLink($"accounts/{request.AccountHashedId}/agreements/"));
+                        }
+                        return Redirect(_linkGenerator.AccountsLink(
+                        $"accounts/{request.AccountHashedId}/agreements/{request.AgreementHashedId}/about-your-agreement"));
+                    }
                 case CohortDetailsOptions.Homepage:
-                {
-                    return Redirect(_linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
-                }
+                    {
+                        return Redirect(_linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
+                    }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
             }
@@ -104,10 +103,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete([FromServices] IAuthenticationService authenticationService, ConfirmDeleteViewModel viewModel)
         {
-            if(viewModel.ConfirmDeletion == true)
-            { 
+            if (viewModel.ConfirmDeletion == true)
+            {
                 await _commitmentsApiClient.DeleteCohort(viewModel.CohortId, authenticationService.UserInfo, CancellationToken.None);
-                return RedirectToAction("Review", new {viewModel.AccountHashedId});
+                return RedirectToAction("Review", new { viewModel.AccountHashedId });
             }
             return RedirectToAction("Details", new { viewModel.CohortReference, viewModel.AccountHashedId });
         }
@@ -330,32 +329,106 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<ActionResult> Inform(InformRequest request)
         {
             var viewModel = await _modelMapper.Map<InformViewModel>(request);
-            return View(viewModel); 
+            return View(viewModel);
         }
 
         [HttpGet]
         [Route("transferConnection/create")]
         public async Task<IActionResult> SelectTransferConnection(InformRequest request)
         {
-            var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(request);          
+            var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(request);
 
             if (viewModel.TransferConnections.Any())
             {
                 return View(viewModel);
             }
 
-            return Redirect(_linkGenerator.SelectLegalEntity(request.AccountHashedId));
+            return RedirectToAction("SelectLegalEntity", new SelectLegalEntityRequest { AccountHashedId = request.AccountHashedId, transferConnectionCode = string.Empty });
         }
 
-        [HttpPost]        
+        [HttpPost]
         [Route("transferConnection/create")]
         public ActionResult SetTransferConnection(SelectTransferConnectionViewModel selectedTransferConnection)
         {
-            var transferConnectionCode = selectedTransferConnection.TransferConnectionCode.Equals("None", StringComparison.InvariantCultureIgnoreCase) 
+            var transferConnectionCode = selectedTransferConnection.TransferConnectionCode.Equals("None", StringComparison.InvariantCultureIgnoreCase)
                 ? null : selectedTransferConnection.TransferConnectionCode;
 
-            return Redirect(_linkGenerator.SelectLegalEntityWithTransferConnectionCode(selectedTransferConnection.AccountHashedId, transferConnectionCode));            
+            return RedirectToAction("SelectLegalEntity", new SelectLegalEntityRequest { AccountHashedId = selectedTransferConnection.AccountHashedId, transferConnectionCode = transferConnectionCode });
         }
-        
+
+        [HttpGet]
+        [Route("legalEntity/create")]
+        public async Task<IActionResult> SelectLegalEntity(SelectLegalEntityRequest request)
+        {
+            var response = await _modelMapper.Map<SelectLegalEntityViewModel>(request);
+
+            if (response.LegalEntities == null || !response.LegalEntities.Any())
+                throw new Exception($"No legal entities associated with account {request.AccountHashedId}");
+
+            if (response.LegalEntities.Count() > 1)
+                return View(response);
+
+            var autoSelectLegalEntity = response.LegalEntities.First();
+
+            var hasSignedMinimumRequiredAgreementVersion = autoSelectLegalEntity.HasSignedMinimumRequiredAgreementVersion(!string.IsNullOrWhiteSpace(request.transferConnectionCode));
+
+            if (hasSignedMinimumRequiredAgreementVersion)
+            {
+                return RedirectToAction("SelectProvider", new SelectProviderRequest
+                {
+                    AccountHashedId = request.AccountHashedId,
+                    TransferSenderId = request.transferConnectionCode,
+                    AccountLegalEntityId = autoSelectLegalEntity.Id,
+                    AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId
+                });
+            }
+            
+            return RedirectToAction("AgreementNotSigned", new LegalEntitySignedAgreementViewModel
+            {
+                AccountHashedId = request.AccountHashedId,                
+                LegalEntityId = autoSelectLegalEntity.Id,
+                CohortRef = request.cohortRef,
+                LegalEntityName = autoSelectLegalEntity.Name,
+                TransferConnectionCode = request.transferConnectionCode,
+                AccountLegalEntityPublicHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId
+            });
+
+        }
+
+        [HttpPost]
+        [Route("legalEntity/create")]
+        public async Task<ActionResult> SetLegalEntity(SelectLegalEntityViewModel selectedLegalEntity)
+        {
+            var response = await _modelMapper.Map<LegalEntitySignedAgreementViewModel>(selectedLegalEntity);
+
+            if (response.HasSignedMinimumRequiredAgreementVersion)
+            {
+                return RedirectToAction("SelectProvider", new SelectProviderRequest
+                {
+                    AccountHashedId = selectedLegalEntity.AccountHashedId,
+                    TransferSenderId = selectedLegalEntity.TransferConnectionCode,                    
+                    AccountLegalEntityHashedId = response.AccountLegalEntityPublicHashedId
+                });               
+            }
+
+            return RedirectToAction("AgreementNotSigned", new LegalEntitySignedAgreementViewModel
+            {
+                AccountHashedId = selectedLegalEntity.AccountHashedId,
+                LegalEntityId = selectedLegalEntity.LegalEntityId,
+                CohortRef = selectedLegalEntity.CohortRef,
+                LegalEntityName = response.LegalEntityName,
+                AccountLegalEntityPublicHashedId = response.AccountLegalEntityPublicHashedId
+            });
+        }
+
+
+        [HttpGet]
+        [Route("AgreementNotSigned")]
+        public async Task<ActionResult> AgreementNotSigned(LegalEntitySignedAgreementViewModel viewModel)
+        {
+            var response = await _modelMapper.Map<AgreementNotSignedViewModel>(viewModel);
+
+            return View(response);
+        }
     }
 }

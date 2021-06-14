@@ -5,6 +5,7 @@ using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.Encoding;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     public class WhenMappingInformRequestToTransferConnectionViewModelTests
     {
         private Mock<IAccountApiClient> _accountApiClient;
+        private Mock<IEncodingService> _encodingService;
         private InformRequestToSelectTransferConnectionViewModelMapper _mapper;        
         private InformRequest _informRequest;
 
@@ -23,6 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var autoFixture = new Fixture();
             _accountApiClient = new Mock<IAccountApiClient>();
+            _encodingService = new Mock<IEncodingService>();
             _informRequest = autoFixture.Create<InformRequest>(); 
 
             _accountApiClient.Setup(x => x.GetTransferConnections(_informRequest.AccountHashedId))
@@ -43,7 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
                 });
 
-            _mapper = new InformRequestToSelectTransferConnectionViewModelMapper(_accountApiClient.Object);
+            _mapper = new InformRequestToSelectTransferConnectionViewModelMapper(_accountApiClient.Object, _encodingService.Object);
         }
 
         [Test]
