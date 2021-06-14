@@ -359,8 +359,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     OriginatingParty = Party.None
                 }
             };
-            _dataLocksResponse.DataLocks = new List<GetDataLocksResponse.DataLock>
-            { new GetDataLocksResponse.DataLock
+            _dataLocksResponse.DataLocks = new List<DataLock>
+            { new DataLock
                 {
                     Id = 1,
                     TriageStatus = TriageStatus.Restart,
@@ -388,8 +388,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     OriginatingParty = Party.None
                 }
             };
-            _dataLocksResponse.DataLocks = new List<GetDataLocksResponse.DataLock>
-            { new GetDataLocksResponse.DataLock
+            _dataLocksResponse.DataLocks = new List<DataLock>
+            { new DataLock
                 {
                     Id = 1,
                     TriageStatus = TriageStatus.Change,
@@ -414,8 +414,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task DataLock_TriageStatus_Mapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
-            _dataLocksResponse.DataLocks = new List<GetDataLocksResponse.DataLock>
-            { new GetDataLocksResponse.DataLock
+            _dataLocksResponse.DataLocks = new List<DataLock>
+            { new DataLock
                 {
                     Id = 1,
                     TriageStatus = TriageStatus.Change,

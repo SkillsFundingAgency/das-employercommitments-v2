@@ -48,10 +48,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
     public class WhenPostingViewApprenticeshipUpdatesTestsFixture : ApprenticeControllerTestFixtureBase
     {
-        public ViewApprenticeshipUpdatesRequestViewModel ViewModel { get; set; }
+        public ViewApprenticeshipUpdatesViewModel ViewModel { get; set; }
         public WhenPostingViewApprenticeshipUpdatesTestsFixture() : base () 
         {
-            ViewModel = new ViewApprenticeshipUpdatesRequestViewModel { ApprenticeshipId = 1, AccountId = 1 };
+            ViewModel = new ViewApprenticeshipUpdatesViewModel { ApprenticeshipId = 1, AccountId = 1 };
             _controller.TempData = new TempDataDictionary( Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
         }
 

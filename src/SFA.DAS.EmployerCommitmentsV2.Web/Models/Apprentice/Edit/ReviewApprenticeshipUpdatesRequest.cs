@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.ModelBinding;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
 {
     public class ReviewApprenticeshipUpdatesRequest : IAuthorizationContextModel
     {

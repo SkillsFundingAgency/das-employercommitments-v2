@@ -634,14 +634,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{apprenticeshipHashedId}/changes/review")]
         public async Task<IActionResult> ReviewApprenticeshipUpdates(ReviewApprenticeshipUpdatesRequest request)
         {
-            var viewModel = await _modelMapper.Map<ReviewApprenticeshipUpdatesRequestViewModel>(request);
+            var viewModel = await _modelMapper.Map<ReviewApprenticeshipUpdatesViewModel>(request);
 
             return View(viewModel);
         }
 
         [HttpPost]
         [Route("{apprenticeshipHashedId}/changes/review")]
-        public async Task<IActionResult> ReviewApprenticeshipUpdates(ReviewApprenticeshipUpdatesRequestViewModel viewModel)
+        public async Task<IActionResult> ReviewApprenticeshipUpdates(ReviewApprenticeshipUpdatesViewModel viewModel)
         {
             if (viewModel.ApproveChanges.Value)
             {
@@ -671,16 +671,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("{apprenticeshipHashedId}/changes/view")]
-        public async Task<IActionResult> ViewApprenticeshipUpdates(ViewApprenticehipUpdatesRequest request)
+        public async Task<IActionResult> ViewApprenticeshipUpdates(ViewApprenticeshipUpdatesRequest request)
         {
-            var viewModel = await _modelMapper.Map<ViewApprenticeshipUpdatesRequestViewModel>(request);
+            var viewModel = await _modelMapper.Map<ViewApprenticeshipUpdatesViewModel>(request);
 
             return View(viewModel);
         }
 
         [HttpPost]
         [Route("{apprenticeshipHashedId}/changes/view")]
-        public async Task<IActionResult> ViewApprenticeshipUpdates(ViewApprenticeshipUpdatesRequestViewModel viewModel)
+        public async Task<IActionResult> ViewApprenticeshipUpdates(ViewApprenticeshipUpdatesViewModel viewModel)
         {
             if (viewModel.UndoChanges.Value)
             {
@@ -696,6 +696,45 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+        }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/changes/request")]
+        public async Task<IActionResult> DataLockRequestChanges(DataLockRequestChangesRequest request)
+        {
+            var viewModel = await _modelMapper.Map<DataLockRequestChangesViewModel>(request);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/changes/request")]
+        public async Task<IActionResult> DataLockRequestChanges(DataLockRequestChangesViewModel viewModel)
+        {
+            if (viewModel.AcceptChanges.HasValue)
+            {
+                if (viewModel.AcceptChanges.Value)
+                {
+                    var request = await _modelMapper.Map<AcceptDataLocksRequestChangesRequest>(viewModel);
+                    await _commitmentsApiClient.AcceptDataLockChanges(viewModel.ApprenticeshipId, request);
+                }
+                else
+                {
+                    var request = await _modelMapper.Map<RejectDataLocksRequestChangesRequest>(viewModel);
+                    await _commitmentsApiClient.RejectDataLockChanges(viewModel.ApprenticeshipId, request);
+                }
+            }
+
+            return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+        }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/changes/restart")]
+        public async Task<IActionResult> DataLockRequestRestart(DataLockRequestRestartRequest request)
+        {
+            var viewModel = await _modelMapper.Map<DataLockRequestRestartViewModel>(request);
+
+            return View(viewModel);
         }
     }
 }

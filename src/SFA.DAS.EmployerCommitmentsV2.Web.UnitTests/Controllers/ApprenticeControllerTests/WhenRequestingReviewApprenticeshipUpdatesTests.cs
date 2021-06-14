@@ -50,7 +50,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         internal void VerifyViewModelMapperIsCalled()
         {
-            _mockMapper.Verify(x => x.Map<ReviewApprenticeshipUpdatesRequestViewModel>(It.IsAny<ReviewApprenticeshipUpdatesRequest>()), Times.Once());
+            _mockMapper.Verify(x => x.Map<ReviewApprenticeshipUpdatesViewModel>(It.IsAny<ReviewApprenticeshipUpdatesRequest>()), Times.Once());
         }
 
         internal void VerifyViewResultIsReturned(IActionResult result)

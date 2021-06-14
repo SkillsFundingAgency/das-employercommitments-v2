@@ -35,14 +35,14 @@
             {
                 <p class="govuk-notification-banner__heading">
                     The training provider has made changes to this apprentice’s details that you need to review.
-                    <a id="datalock-changes-link" class="govuk-notification-banner__link" href="@LinkGenerator.DatalockChanges(Model.AccountHashedId, Model.HashedApprenticeshipId)">Review changes</a>
+                    <a id="datalock-changes-link" class="govuk-notification-banner__link" href="@Url.Action("DataLockRequestChanges", new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Review changes</a>
                 </p>
             }
             @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.DataLockRestart))
             {
                 <p class="govuk-notification-banner__heading">
                     The apprentice’s training provider has asked you to stop this apprenticeship and to create a new apprentice request with the updated apprenticeship training course.
-                    <a id="datalock-restart-link" class="govuk-notification-banner__link" href="@LinkGenerator.DatalockRestart(Model.AccountHashedId, Model.HashedApprenticeshipId)">View details</a>
+                    <a id="datalock-restart-link" class="govuk-notification-banner__link" href="@Url.Action("DataLockRequestRestart", new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">View details</a>
                 </p>
             }
         </div>
