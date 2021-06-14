@@ -7,6 +7,7 @@ using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Services.Stubs;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using SFA.DAS.Http.Configuration;
 using StructureMap;
 using StructureMap.Building.Interception;
@@ -20,6 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
             For(typeof(IMapper<,>)).DecorateAllWith(typeof(AttachUserInfoToSaveRequests<,>));
             For<IModelMapper>().Use<ModelMapper>();
             For<IAuthenticationService>().Use<AuthenticationService>();
+            For<IEmployerAccountsService>().Use<EmployerAccountsService>();
             For<StubEmployerAccountsApiClient>().Use<StubEmployerAccountsApiClient>().Singleton();
             For<IEmployerAccountsApiClient>().InterceptWith(new FuncInterceptor<IEmployerAccountsApiClient>(
                 (c, o) => c.GetInstance<EmployerCommitmentsV2Configuration>().UseStubEmployerAccountsApiClient ? c.GetInstance<StubEmployerAccountsApiClient>() : o));

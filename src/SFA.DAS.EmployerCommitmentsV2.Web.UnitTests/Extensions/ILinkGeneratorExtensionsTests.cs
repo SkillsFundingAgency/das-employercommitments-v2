@@ -127,7 +127,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
             var url = _fixture.Sut.SelectLegalEntity(accountHashedId);
 
             Assert.AreEqual($"{_fixture.CommitmentsLink}accounts/{accountHashedId}/apprentices/legalEntity/create", url);
-        }
+        }         
     }
 
     public class ILinkGeneratorExtensionsTestsFixture
