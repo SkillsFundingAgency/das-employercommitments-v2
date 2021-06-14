@@ -20,6 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var legalEntities = await _employerAccountsService.GetLegalEntitiesForAccount(source.AccountHashedId);
 
             return new SelectLegalEntityViewModel {
+                AccountHashedId = source.AccountHashedId,
                 TransferConnectionCode = source.transferConnectionCode,
                 LegalEntities = legalEntities,
                 CohortRef = string.IsNullOrWhiteSpace(source.cohortRef) ? Guid.NewGuid().ToString().ToUpper() : source.cohortRef

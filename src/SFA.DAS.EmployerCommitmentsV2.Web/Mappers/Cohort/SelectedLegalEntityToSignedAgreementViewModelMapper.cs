@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var legalEntities = await _employerAccountsService.GetLegalEntitiesForAccount(source.AccountHashedId);
 
             var legalEntity = legalEntities.FirstOrDefault(
-                   c => c.Code.Equals(source.LegalEntityCode, StringComparison.CurrentCultureIgnoreCase));
+                   c => c.Id.Equals(source.LegalEntityId));
 
             if (legalEntity == null)
             {
@@ -33,8 +33,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
             return new LegalEntitySignedAgreementViewModel
             {
-                HashedAccountId = source.AccountHashedId,
-                LegalEntityCode = source.LegalEntityCode,
+                AccountHashedId = source.AccountHashedId,
+                LegalEntityId = source.LegalEntityId,
                 TransferConnectionCode = source.TransferConnectionCode,
                 CohortRef = source.CohortRef,
                 HasSignedMinimumRequiredAgreementVersion = hasSignedMinimumRequiredAgreementVersion,

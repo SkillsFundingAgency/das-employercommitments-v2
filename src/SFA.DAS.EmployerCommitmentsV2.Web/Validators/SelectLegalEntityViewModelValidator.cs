@@ -7,7 +7,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
     {
         public SelectLegalEntityViewModelValidator()
         {            
-            RuleFor(x => x.LegalEntityCode).NotEmpty().WithMessage("Choose organisation");
+            RuleFor(x => x.LegalEntityId).NotEmpty().WithMessage("Choose organisation");
         }
     }
 }

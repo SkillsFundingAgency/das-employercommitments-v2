@@ -8,7 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
     {
         public string AccountHashedId { get; set; }
         public string TransferConnectionCode { get; set; }        
-        public string LegalEntityCode { get; set; }
+        public long LegalEntityId { get; set; }
         public string CohortRef { get; set; }
         public IEnumerable<LegalEntity> LegalEntities { get; set; }        
     }

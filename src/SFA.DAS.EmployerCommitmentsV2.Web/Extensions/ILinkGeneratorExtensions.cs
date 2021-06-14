@@ -4,9 +4,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 {
     public static class ILinkGeneratorExtensions
     {
-       public static string YourOrganisationsAndAgreements(this ILinkGenerator linkGenerator, string accountHashedId)
+        public static string YourOrganisationsAndAgreements(this ILinkGenerator linkGenerator, string accountHashedId)
         {
             return linkGenerator.AccountsLink($"accounts/{accountHashedId}/agreements");
+        }
+        
+        public static string YourTeam(this ILinkGenerator linkGenerator, string accountHashedId)
+        {
+            return linkGenerator.AccountsLink($"accounts/{accountHashedId}/teams/view");
         }
 
         public static string PayeSchemes(this ILinkGenerator linkGenerator, string accountHashedId)

@@ -3,8 +3,7 @@
 
 @{
     ViewBag.Title = "Choose organisation";
-    ViewBag.Section = "apprentices";
-    ViewBag.PageID = "choose-organisation";
+    ViewBag.GaData.Vpv = "/unapproved/legalEntity/create/choose-organisation";
 }
 
 
@@ -20,7 +19,7 @@
 
             @Html.AntiForgeryToken()
 
-        <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.LegalEntityCode,  "govuk-form-group--error")">
+        <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.LegalEntityId,  "govuk-form-group--error")">
             <fieldset class="govuk-fieldset">
 
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -31,16 +30,16 @@
 
                 @if (!ViewData.ModelState.IsValid)
                 {
-                    <span id="error-message-@nameof(SelectLegalEntityViewModel.LegalEntityCode)" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(SelectLegalEntityViewModel.LegalEntityCode)].Errors.First().ErrorMessage
+                    <span id="error-message-@nameof(SelectLegalEntityViewModel.LegalEntityId)" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(SelectLegalEntityViewModel.LegalEntityId)].Errors.First().ErrorMessage
                     </span>
                 }
                 <div class="govuk-radios">
                     @foreach (var entity in Model.LegalEntities)
                     {
                         <div class="govuk-radios__item" id="radio-item-legal-entity-code">
-                            <input class="govuk-radios__input" id="LegalEntityCode-@entity.Code" name="LegalEntityCode" type="radio" value="@entity.Code">
-                            <label class="govuk-label govuk-radios__label" for="LegalEntityCode-@entity.Code">
+                            <input class="govuk-radios__input" id="LegalEntityId-@entity.Id" name="LegalEntityId" type="radio" value="@entity.Id">
+                            <label class="govuk-label govuk-radios__label" for="LegalEntityCode-@entity.Id">
                                 @entity.Name
                             </label>
                         </div>
