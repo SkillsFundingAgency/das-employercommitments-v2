@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetApprenticeshipUpdatesResponse;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetChangeOfPartyRequestsResponse;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetChangeOfProviderChainResponse;
@@ -296,7 +297,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(statusText, result.Status);
+            Assert.AreEqual(statusText, result.ApprenticeshipStatus.GetDescription());
         }
 
         [Test]
@@ -359,8 +360,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     OriginatingParty = Party.None
                 }
             };
-            _dataLocksResponse.DataLocks = new List<GetDataLocksResponse.DataLock>
-            { new GetDataLocksResponse.DataLock
+            _dataLocksResponse.DataLocks = new List<DataLock>
+            { new DataLock
                 {
                     Id = 1,
                     TriageStatus = TriageStatus.Restart,
@@ -388,8 +389,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     OriginatingParty = Party.None
                 }
             };
-            _dataLocksResponse.DataLocks = new List<GetDataLocksResponse.DataLock>
-            { new GetDataLocksResponse.DataLock
+            _dataLocksResponse.DataLocks = new List<DataLock>
+            { new DataLock
                 {
                     Id = 1,
                     TriageStatus = TriageStatus.Change,
@@ -414,8 +415,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task DataLock_TriageStatus_Mapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
-            _dataLocksResponse.DataLocks = new List<GetDataLocksResponse.DataLock>
-            { new GetDataLocksResponse.DataLock
+            _dataLocksResponse.DataLocks = new List<DataLock>
+            { new DataLock
                 {
                     Id = 1,
                     TriageStatus = TriageStatus.Change,

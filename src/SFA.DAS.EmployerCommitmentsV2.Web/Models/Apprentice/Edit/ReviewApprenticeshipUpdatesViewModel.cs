@@ -4,13 +4,10 @@ using SFA.DAS.Authorization.ModelBinding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
 {
-    public class ReviewApprenticeshipUpdatesRequestViewModel : IViewReviewApprenticeshipUpdatesViewModel, IAuthorizationContextModel
+    public class ReviewApprenticeshipUpdatesViewModel 
+        : IApprenticeshipUpdatesViewModel, IAuthorizationContextModel
     {
         public bool? ApproveChanges { get; set; }
-
-        public string ProviderName { get; set; }
-
-        public BaseEdit OriginalApprenticeship { get; set; }
         [FromRoute]
         public string AccountHashedId { get; set; }
         [JsonIgnore]
@@ -19,6 +16,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
         public string ApprenticeshipHashedId { get; set; }
         [JsonIgnore]
         public long ApprenticeshipId { get; set; }
+        public string ProviderName { get; set; }
+        public BaseEdit OriginalApprenticeship { get; set; }
         public BaseEdit ApprenticeshipUpdates { get; set; }
     }
 }

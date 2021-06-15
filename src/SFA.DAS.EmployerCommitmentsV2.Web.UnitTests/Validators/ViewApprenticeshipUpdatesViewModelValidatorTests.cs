@@ -6,20 +6,20 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class ReviewApprenticeshipUpdatesRequestViewModelValidatorTests
+    public class ViewApprenticeshipUpdatesViewModelValidatorTests
     {
-        private ReviewApprenticeshipUpdatesRequestViewModelValidator _validator;
+        private ViewApprenticeshipUpdatesViewModelValidator _validator;
 
         [SetUp]
         public void Arrange()
         {
-            _validator = new ReviewApprenticeshipUpdatesRequestViewModelValidator();
+            _validator = new ViewApprenticeshipUpdatesViewModelValidator();
         }
 
         [Test, MoqAutoData]
-        public void WhenApproveChangesIsNull_ThenValidatorReturnsInvalid(ReviewApprenticeshipUpdatesRequestViewModel viewModel)
+        public void WhenUndoChangesIsNull_ThenValidatorReturnsInvalid(ViewApprenticeshipUpdatesViewModel viewModel)
         {
-            viewModel.ApproveChanges = null;
+            viewModel.UndoChanges = null;
 
             var result = _validator.Validate(viewModel);
 
@@ -27,9 +27,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         }
 
         [Test, MoqAutoData]
-        public void WhenApproveChangesIsFalse_ThenValidatorReturnsValid(ReviewApprenticeshipUpdatesRequestViewModel viewModel)
+        public void WhenUndoChangesIsFalse_ThenValidatorReturnsValid(ViewApprenticeshipUpdatesViewModel viewModel)
         {
-            viewModel.ApproveChanges = false;
+            viewModel.UndoChanges = false;
 
             var result = _validator.Validate(viewModel);
 
@@ -37,9 +37,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         }
 
         [Test, MoqAutoData]
-        public void WhenApproveChangesIsTrue_ThenValidatorReturnsValid(ReviewApprenticeshipUpdatesRequestViewModel viewModel)
+        public void WhenUndoChangesIsTrue_ThenValidatorReturnsValid(ViewApprenticeshipUpdatesViewModel viewModel)
         {
-            viewModel.ApproveChanges = true;
+            viewModel.UndoChanges = true;
 
             var result = _validator.Validate(viewModel);
 
