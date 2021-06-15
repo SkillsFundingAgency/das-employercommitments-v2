@@ -21,8 +21,7 @@
 
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
 
-        @{ if (!Model.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) && 
-                                    Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
+        @{ if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped && Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
             {
                 <p class="govuk-body">
                     Edit details if there's a change in apprentice or apprenticeship circumstances.
@@ -36,23 +35,9 @@
                     <th scope="row" class="govuk-table__header das-table-cell-width-45">Status</th>
 
                     <td class="govuk-table__cell das-table-cell-width-40">
-
-                        @{
-                            string statusColor = Model.ApprenticeshipStatus switch
-                            {
-                                ApprenticeshipStatus.WaitingToStart =>  "yellow",
-                                ApprenticeshipStatus.Live => "blue",
-                                ApprenticeshipStatus.Paused =>  "grey",
-                                ApprenticeshipStatus.Stopped =>  "red",
-                                ApprenticeshipStatus.Completed => "green",
-                                _ =>  string.Empty
-                             };
-                        }
-                        
-                        <strong class="govuk-tag govuk-tag--@statusColor">
-                            @Model.Status
+                        <strong class="govuk-tag @Model.ApprenticeshipStatus.GetDisplayClass()">
+                            @Model.ApprenticeshipStatus.GetDescription()
                         </strong>
-
                     </td>
 
                     <td id="editStatusLink" class="govuk-table__cell das-table-cell-width-15 govuk-table__cell--numeric">
