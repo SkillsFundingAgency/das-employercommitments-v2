@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
     [DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
-    [Route("accounts/{accountHashedId}/")]
+    [Route("{accountHashedId}")]
     public class TransferRequestController : Controller
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
