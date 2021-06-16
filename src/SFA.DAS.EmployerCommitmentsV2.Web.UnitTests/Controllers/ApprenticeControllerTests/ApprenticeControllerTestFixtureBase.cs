@@ -37,8 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 Mock.Of<ICookieStorageService<IndexRequest>>(),
                 _mockCommitmentsApiClient.Object,
                 _mockLinkGenerator.Object,
-                Mock.Of<ILogger<ApprenticeController>>(),
-                _mockAuthorizationService.Object);
+                Mock.Of<ILogger<ApprenticeController>>());
 
             _controller.Url = _mockUrlHelper.Object;
         }

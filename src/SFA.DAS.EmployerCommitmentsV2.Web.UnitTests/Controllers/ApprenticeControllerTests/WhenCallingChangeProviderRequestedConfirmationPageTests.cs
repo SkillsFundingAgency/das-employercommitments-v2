@@ -56,8 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 Mock.Of<ICookieStorageService<IndexRequest>>(),
                 Mock.Of<ICommitmentsApiClient>(),
                 Mock.Of<ILinkGenerator>(),
-                Mock.Of<ILogger<ApprenticeController>>(),
-                Mock.Of<IAuthorizationService>());
+                Mock.Of<ILogger<ApprenticeController>>());                
         }
 
         public async Task<IActionResult> ChangeProviderRequested()
