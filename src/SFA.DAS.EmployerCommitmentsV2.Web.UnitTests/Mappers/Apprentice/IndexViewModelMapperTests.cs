@@ -6,10 +6,12 @@ using AutoFixture.NUnit3;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
@@ -34,6 +36,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                         apiRequest.PageItemCount == Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
+        }
+
+        [Test, MoqAutoData]
+        public async Task Then_Shows_Apprentice_Confirmation_Column(
+            bool show,
+            [Frozen] Mock<IAuthorizationService> mockAuthorizationService,
+            IndexViewModelMapper mapper)
+        {
+            var request = new IndexRequest { PageNumber = 0 };
+            mockAuthorizationService.Setup(x => x.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail))
+                .ReturnsAsync(show);
+
+            var viewModel = await mapper.Map(request);
+
+            viewModel.ShowApprenticeConfirmationColumn.Should().Be(show);
         }
 
         [Test, MoqAutoData]

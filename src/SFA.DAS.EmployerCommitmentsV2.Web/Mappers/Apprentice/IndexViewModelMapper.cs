@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
 
@@ -14,15 +16,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         private readonly ICommitmentsApiClient _client;
         private readonly IModelMapper _modelMapper;
         private readonly IEncodingService _encodingService;
+        private readonly IAuthorizationService _authorizationService;
 
         public IndexViewModelMapper(
             ICommitmentsApiClient client, 
             IModelMapper modelMapper,
-            IEncodingService encodingService)
+            IEncodingService encodingService,
+            IAuthorizationService authorizationService)
         {
             _client = client;
             _modelMapper = modelMapper;
             _encodingService = encodingService;
+            _authorizationService = authorizationService;
         }
 
         public async Task<IndexViewModel> Map(IndexRequest source)
@@ -90,6 +95,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 AccountHashedId = source.AccountHashedId,
                 Apprenticeships = apprenticeships,
                 FilterModel = filterModel,
+                ShowApprenticeConfirmationColumn = await _authorizationService.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail)
             };
         }
     }

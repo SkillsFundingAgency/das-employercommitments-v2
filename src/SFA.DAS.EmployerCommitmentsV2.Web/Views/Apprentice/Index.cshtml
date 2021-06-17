@@ -181,61 +181,72 @@ else
     {
         <table class="govuk-table das-table--responsive das-table--double-arrows">
             <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">
-                    <a class="@(Model.FilterModel.SortField == "FirstName" ? Model.SortedByHeaderClassName : IndexViewModel.HeaderClassName)"
-                       asp-route="@RouteNames.ApprenticesIndex"
-                       asp-all-route-data="@Model.FilterModel.BuildSortRouteData("FirstName")"
-                       title="Sort the table by name">
-                        Apprentice name
-                    </a>
-                </th>
-                <th scope="col" class="govuk-table__header">
-                    <a class="@(Model.FilterModel.SortField == "CourseName" ? Model.SortedByHeaderClassName : IndexViewModel.HeaderClassName)"
-                       asp-route="@RouteNames.ApprenticesIndex"
-                       asp-all-route-data="@Model.FilterModel.BuildSortRouteData("CourseName")"
-                       title="Sort the table by name">
-                        Apprenticeship training course
-                    </a>
-                </th>
-                <th scope="col" class="govuk-table__header">
-                    <a class="@(Model.FilterModel.SortField == "StartDate" ? Model.SortedByHeaderClassName : IndexViewModel.HeaderClassName)"
-                       asp-route="@RouteNames.ApprenticesIndex"
-                       asp-all-route-data="@Model.FilterModel.BuildSortRouteData("StartDate")"
-                       title="Sort the table by name">
-                        Planned start date
-                    </a>
-                </th>
-                <th scope="col" class="govuk-table__header">
-                    <a class="@(Model.FilterModel.SortField == "EndDate" ? Model.SortedByHeaderClassName : IndexViewModel.HeaderClassName)"
-                       asp-route="@RouteNames.ApprenticesIndex"
-                       asp-all-route-data="@Model.FilterModel.BuildSortRouteData("EndDate")"
-                       title="Sort the table by name">
-                        Planned end date
-                    </a>
-                </th>
-                <th scope="col" class="govuk-table__header">
-                    <a class="@(Model.FilterModel.SortField == "ProviderName" ? Model.SortedByHeaderClassName : IndexViewModel.HeaderClassName)"
-                       asp-route="@RouteNames.ApprenticesIndex"
-                       asp-all-route-data="@Model.FilterModel.BuildSortRouteData("ProviderName")"
-                       title="Sort the table by name">
-                        Training provider
-                    </a>
-                </th>
-                <th scope="col" class="govuk-table__header">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">
+                        <a class="@(Model.FilterModel.SortField == "FirstName" ? Model.SortedByHeaderClassName : IndexViewModel.HeaderClassName)"
+                           asp-route="@RouteNames.ApprenticesIndex"
+                           asp-all-route-data="@Model.FilterModel.BuildSortRouteData("FirstName")"
+                           title="Sort the table by name">
+                            Apprentice name
+                        </a>
+                    </th>
+                    <th scope="col" class="govuk-table__header">
+                        <a class="@(Model.FilterModel.SortField == "CourseName" ? Model.SortedByHeaderClassName : IndexViewModel.HeaderClassName)"
+                           asp-route="@RouteNames.ApprenticesIndex"
+                           asp-all-route-data="@Model.FilterModel.BuildSortRouteData("CourseName")"
+                           title="Sort the table by name">
+                            Apprenticeship training course
+                        </a>
+                    </th>
+                    <th scope="col" class="govuk-table__header">
+                        <a class="@(Model.FilterModel.SortField == "StartDate" ? Model.SortedByHeaderClassName : IndexViewModel.HeaderClassName)"
+                           asp-route="@RouteNames.ApprenticesIndex"
+                           asp-all-route-data="@Model.FilterModel.BuildSortRouteData("StartDate")"
+                           title="Sort the table by name">
+                            Planned start date
+                        </a>
+                    </th>
+                    <th scope="col" class="govuk-table__header">
+                        <a class="@(Model.FilterModel.SortField == "EndDate" ? Model.SortedByHeaderClassName : IndexViewModel.HeaderClassName)"
+                           asp-route="@RouteNames.ApprenticesIndex"
+                           asp-all-route-data="@Model.FilterModel.BuildSortRouteData("EndDate")"
+                           title="Sort the table by name">
+                            Planned end date
+                        </a>
+                    </th>
+                    <th scope="col" class="govuk-table__header">
+                        <a class="@(Model.FilterModel.SortField == "ProviderName" ? Model.SortedByHeaderClassName : IndexViewModel.HeaderClassName)"
+                           asp-route="@RouteNames.ApprenticesIndex"
+                           asp-all-route-data="@Model.FilterModel.BuildSortRouteData("ProviderName")"
+                           title="Sort the table by name">
+                            Training provider
+                        </a>
+                    </th>
+                    @if (Model.ShowApprenticeConfirmationColumn)
+                    {
+                        <th scope="col" class="govuk-table__header">
+                            <a class="@(Model.FilterModel.SortField == "ConfirmationStatus" ? Model.SortedByHeaderClassName : IndexViewModel.HeaderClassName)"
+                               asp-route="@RouteNames.ApprenticesIndex"
+                               asp-all-route-data="@Model.FilterModel.BuildSortRouteData("ConfirmationStatus")"
+                               title="Sort the table by status">
+                                Apprentice Confirmation
+                            </a>
+                        </th>
+                    }
+                    <th scope="col" class="govuk-table__header">
                         Status
-                </th>
-                <th scope="col" class="govuk-table__header">
+                    </th>
+                    <th scope="col" class="govuk-table__header">
                         Alerts
-                </th>
-            </tr>
+                    </th>
+                </tr>
             </thead>
             <tbody class="govuk-table__body">
             @foreach (var apprenticeship in Model.Apprenticeships)
             {
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell" data-label="Apprentice name">
-                        <a class="govuk-link" 
+                        <a class="govuk-link"
                            href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = apprenticeship.EncodedApprenticeshipId })">
                             @apprenticeship.ApprenticeName
                         </a>
@@ -252,6 +263,12 @@ else
                     <td class="govuk-table__cell" data-label="Training provider">
                         @apprenticeship.ProviderName
                     </td>
+                    @if (Model.ShowApprenticeConfirmationColumn)
+                    {
+                        <td class="govuk-table__cell" data-label="Apprentice Confirmation">
+                            @apprenticeship.ConfirmationStatus
+                        </td>
+                    }
                     <td class="govuk-table__cell" data-label="Status">
                         <strong class="govuk-tag @apprenticeship.Status.GetDisplayClass()">
                             @apprenticeship.Status.GetDescription()
@@ -260,13 +277,13 @@ else
                     <td class="govuk-table__cell" data-label="Alerts">
                         @for (var i = 0; i < apprenticeship.Alerts.Count(); i++)
                         {
-                            <a class="govuk-link" 
+                            <a class="govuk-link"
                                href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = apprenticeship.EncodedApprenticeshipId })">
                                 @apprenticeship.Alerts.ElementAt(i)
                             </a>
                             @if (i < apprenticeship.Alerts.Count() - 1)
                             {
-                                <br/>
+                                <br />
                             }
                         }
                     </td>

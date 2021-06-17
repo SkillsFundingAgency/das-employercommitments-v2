@@ -90,6 +90,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             result.Status.Should().Be(source.ApprenticeshipStatus);
         }
 
+
+        [Test, MoqAutoData]
+        public async Task Then_Maps_ConfirmationStatus(
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source,
+            ApprenticeshipDetailsToViewModelMapper mapper)
+        {
+            var result = await mapper.Map(source);
+
+            result.ConfirmationStatus.Should().Be(source.ConfirmationStatus);
+        }
+
+
         [Test, MoqAutoData]
         public async Task Then_Maps_Alerts(
             GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source,
