@@ -72,6 +72,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 SelectedProvider = source.SelectedProvider,
                 SelectedCourse = source.SelectedCourse,
                 SelectedStatus = source.SelectedStatus,
+                SelectedAlert = source.SelectedAlert,
                 SelectedEndDate = source.SelectedEndDate,
                 StatusFilters = statusFilters,
                 AlertFilters = alertFilters
