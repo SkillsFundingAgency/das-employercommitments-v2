@@ -9,12 +9,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest
         [FromRoute]
         public string AccountHashedId { get; set; }
         public long AccountId { get; set; }
-        
+
         [FromRoute]
         public string TransferRequestHashedId { get; set; }
         public long TransferRequestId { get; set; }
-
-        public TransferApprovalStatus TransferApprovalStatus { get; set; }
-        public string TransferReceiverName { get; set; }
     }
 }

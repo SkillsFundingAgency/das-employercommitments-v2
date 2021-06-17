@@ -36,7 +36,7 @@
                     @if (!ViewData.ModelState.IsValid)
                     {
                         <span id="error-message-@nameof(TransferConfirmationViewModel.SelectedOption)" class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(TransferRequestForSenderViewModel.ApprovalConfirmed)].Errors.First().ErrorMessage
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(TransferConfirmationViewModel.SelectedOption)].Errors.First().ErrorMessage
                         </span>
                     }
                     <div class="govuk-radios">

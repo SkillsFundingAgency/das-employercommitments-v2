@@ -8,7 +8,6 @@ using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
 using SFA.DAS.Testing.AutoFixture;
@@ -16,7 +15,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.TransferRequestControllerTests
 {
     public class WhenCallingPostTransferDetailsForSender
     {
@@ -31,22 +30,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
                 .Setup(mapper => mapper.Map<UpdateTransferApprovalForSenderRequest>(viewModel))
                 .ReturnsAsync(request);
 
-            request.TransferApprovalStatus = TransferApprovalStatus.Approved;
-
-            var expectedRouteValues = new RouteValueDictionary(new
-            {
-                viewModel.AccountHashedId,
-                viewModel.TransferRequestHashedId,
-                request.TransferApprovalStatus,
-                viewModel.TransferReceiverName
-            });
-
             var result = (await controller.TransferDetailsForSender(viewModel)) as RedirectToActionResult;
 
             result.Should().NotBeNull();
             result.ActionName.Should().Be("TransferConfirmation");
             result.ControllerName.Should().Be("TransferRequest");
-            result.RouteValues.Should().BeEquivalentTo(expectedRouteValues);
         }
 
         [Test, MoqAutoData]
