@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 var request = await _modelMapper.Map<UpdateTransferApprovalForSenderRequest>(viewModel);
                 await _commitmentsApiClient.UpdateTransferRequestForSender(request.TransferSenderId, request.TransferRequestId, request.CohortId, request);
 
-                return RedirectToAction(nameof(TransferRequestController.TransferConfirmation), nameof(TransferRequestController).ControllerName());
+                return RedirectToAction(nameof(TransferRequestController.TransferConfirmation), nameof(TransferRequestController).ControllerName(), new { viewModel.AccountHashedId, viewModel.TransferRequestHashedId });
             }
             catch (Exception ex)
             {
