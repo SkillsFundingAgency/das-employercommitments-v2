@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class ReviewApprenticeshipUpdatesRequestToViewModelMapper : IMapper<ReviewApprenticeshipUpdatesRequest, ReviewApprenticeshipUpdatesRequestViewModel>
+    public class ReviewApprenticeshipUpdatesRequestToViewModelMapper : IMapper<ReviewApprenticeshipUpdatesRequest, ReviewApprenticeshipUpdatesViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
 
@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             _commitmentsApiClient = commitmentsApiClient;
         }
 
-        public async Task<ReviewApprenticeshipUpdatesRequestViewModel> Map(ReviewApprenticeshipUpdatesRequest source)
+        public async Task<ReviewApprenticeshipUpdatesViewModel> Map(ReviewApprenticeshipUpdatesRequest source)
         {
             var updatesTask = _commitmentsApiClient.GetApprenticeshipUpdates(source.ApprenticeshipId,
                    new CommitmentsV2.Api.Types.Requests.GetApprenticeshipUpdatesRequest { Status = CommitmentsV2.Types.ApprenticeshipUpdateStatus.Pending });
@@ -33,14 +33,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             if (updates.ApprenticeshipUpdates.Count == 1)
             {
                 var update = updates.ApprenticeshipUpdates.First();
-
+                
                 if (!string.IsNullOrWhiteSpace(update.FirstName + update.LastName))
                 {
                     update.FirstName = string.IsNullOrWhiteSpace(update.FirstName) ? apprenticeship.FirstName : update.FirstName;
                     update.LastName = string.IsNullOrWhiteSpace(update.LastName) ? apprenticeship.LastName : update.LastName;
                 }
 
-                var vm = new ReviewApprenticeshipUpdatesRequestViewModel
+                var vm = new ReviewApprenticeshipUpdatesViewModel
                 {
                     AccountHashedId = source.AccountHashedId,
                     ApprenticeshipHashedId = source.ApprenticeshipHashedId,

@@ -1,0 +1,91 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit.DataLockRequestChangesViewModel
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @{ var count = 1; }
+        @foreach (var dl in Model.CourseChanges)
+        {
+            var ilrPeriod = dl.IlrEndDate.HasValue
+                ? $"From {dl.IlrStartDate.Date.ToGdsFormat()} to {dl.IlrEndDate.Value.ToGdsFormat()}"
+                : $"From {dl.IlrStartDate.Date.ToGdsFormat()} onwards";
+
+            var dasPeriod = $"From {dl.CurrentStartDate.ToGdsFormat()} onwards";
+
+            <h2 class="govuk-heading-m">Change @(count++)</h2>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header"></th>
+                        <th scope="col" class="govuk-table__header">Currently</th>
+                        <th scope="col" class="govuk-table__header">Change to</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr>
+                        <th scope="row" class="govuk-table__header">Period</th>
+                        <td class="govuk-table__cell"><span>@dasPeriod</span></td>
+                        <td class="govuk-table__cell">@ilrPeriod</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="govuk-table__header">Apprenticeship training course</th>
+                        <td class="govuk-table__cell">@dl.CurrentTrainingProgram</td>
+                        <td class="govuk-table__cell">@dl.IlrTrainingProgram</td>
+                    </tr>
+                </tbody>
+            </table>
+            }
+            @foreach (var p in Model.PriceChanges)
+            {
+                var ilrPeriod = p.IlrEndDate.HasValue
+                    ? $"From {p.IlrStartDate.Date.ToGdsFormat()} to {p.IlrEndDate.Value.ToGdsFormat()}"
+                    : $"From {p.IlrStartDate.Date.ToGdsFormat()} onwards";
+
+                var dasPeriod = p.MissingPriceHistory
+                    ? string.Empty
+                    : p.CurrentEndDate.HasValue
+                        ? $"From {p.CurrentStartDate.Date.ToGdsFormat()} to {p.CurrentEndDate.Value.ToGdsFormat()}"
+                        : $"From {p.CurrentStartDate.ToGdsFormat()} onwards";
+
+                <h2 class="govuk-heading-m">Change @(count++)</h2>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header"></th>
+                            <th scope="col" class="govuk-table__header">Currently</th>
+                            <th scope="col" class="govuk-table__header">Change to</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <tr>
+                            <th scope="row" class="govuk-table__header">Price period</th>
+                            <td class="govuk-table__cell"><span>@dasPeriod</span></td>
+                            <td class="govuk-table__cell">@ilrPeriod</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="govuk-table__header">Total apprenticeship training price</th>
+                            <td class="govuk-table__cell">
+                                @{
+                                    if (!p.MissingPriceHistory)
+                                    {
+                                        <span>@FormatCost(p.CurrentCost)</span>
+                                    }
+                                }
+                            </td>
+                            <td class="govuk-table__cell">@FormatCost(p.IlrCost)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+</div>
+</div>
+
+@functions {
+    public string FormatCost(decimal? cost)
+    {
+        if (!cost.HasValue)
+            return string.Empty;
+
+        return $"£{cost.Value:n0}";
+    }
+}

@@ -277,7 +277,9 @@ else
                         @apprenticeship.ProviderName
                     </td>
                     <td class="govuk-table__cell" data-label="Status">
-                        @apprenticeship.Status
+                        <strong class="govuk-tag @apprenticeship.Status.GetDisplayClass()">
+                            @apprenticeship.Status.GetDescription()
+                        </strong>
                     </td>
                     <td class="govuk-table__cell" data-label="Alerts">
                         @for (var i = 0; i < apprenticeship.Alerts.Count(); i++)

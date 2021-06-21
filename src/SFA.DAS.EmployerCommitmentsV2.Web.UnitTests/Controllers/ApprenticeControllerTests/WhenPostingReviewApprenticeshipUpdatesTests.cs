@@ -52,10 +52,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         private const string ChangesApprovedMessage = "Changes approved";
         private const string ChangesRejectedMessage = "Changes rejected";
 
-        public ReviewApprenticeshipUpdatesRequestViewModel ViewModel { get; set; }
+        public ReviewApprenticeshipUpdatesViewModel ViewModel { get; set; }
         public WhenPostingReviewApprenticeshipUpdatesTestsFixture() : base () 
         {
-            ViewModel = new ReviewApprenticeshipUpdatesRequestViewModel { ApprenticeshipId = 1, AccountId = 1 };
+            ViewModel = new ReviewApprenticeshipUpdatesViewModel { ApprenticeshipId = 1, AccountId = 1 };
             _controller.TempData = new TempDataDictionary( Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
         }
 

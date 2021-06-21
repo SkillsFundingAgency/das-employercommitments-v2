@@ -256,7 +256,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 Mapper = new ReviewApprenticeshipUpdatesRequestToViewModelMapper(CommitmentApiClient.Object);
             }
 
-            internal async Task<ReviewApprenticeshipUpdatesRequestViewModel> Map()
+            internal async Task<ReviewApprenticeshipUpdatesViewModel> Map()
             {
                 return await Mapper.Map(Source);
             }
