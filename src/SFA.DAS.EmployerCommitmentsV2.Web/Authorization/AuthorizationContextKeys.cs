@@ -7,6 +7,7 @@
         public const string AccountLegalEntityId = "AccountLegalEntityId";
         public const string DraftApprenticeshipId = "DraftApprenticeshipId";
         public const string DecodedTransferSenderId = "DecodedTransferSenderId";
+        public const string TransferRequestId = "TransferRequestId";
         public const string ApprenticeshipId = "ApprenticeshipId";
     }
 }

@@ -1,0 +1,171 @@
+﻿@inject ILinkGenerator LinkGenerator;
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest
+@model TransferRequestForSenderViewModel
+
+@{
+    ViewBag.Title = "Transfer request details";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageID = "approve-transfer-cohort";
+    ViewBag.GaData.Vpv = "/accounts/apprentices/legalEntity/create/choose-organisation";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @if (Model.PendingApproval)
+        {
+            <partial name="_ValidationSummary" />
+        }
+
+        <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
+        @if (Model.ShowFundingCapWarning)
+        {
+            <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        Important
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <strong>Transfer request is lower than the funding band maximum</strong>
+                    <p>
+                        The receiving employer and training provider could renegotiate the total cost of the training during the lifetime of the apprenticeship up to the funding band maximum.
+                    </p>
+                    <p>
+                        You will not be asked to approve these funding changes.
+                    </p>
+                </div>
+            </div>
+        }
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Receiving employer
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.TransferReceiverName
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Receiving employer account ID
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.TransferReceiverPublicHashedAccountId
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Cohort reference
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.HashedCohortReference
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Status
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.TransferApprovalStatusDesc
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Current transfer request
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @($"£{Model.TotalCost:n0}")
+                </dd>
+            </div>
+            @if (Model.ShowFundingCapWarning)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Funding band maximum
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @($"£{Model.FundingCap:n0}")
+                    </dd>
+                </div>
+            }
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Training
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @foreach (var item in Model.TrainingList)
+                    {
+                        <p>@item.SummaryDescription</p>
+                    }
+                </dd>
+            </div>
+            @if (!Model.PendingApproval)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        @Model.TransferApprovalStatusDesc by
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.TransferApprovalSetBy
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        @Model.TransferApprovalStatusDesc on
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @($"{Model.TransferApprovalSetOn:dd MMM yyyy}")
+                    </dd>
+                </div>
+            }
+        </dl>
+
+        @if (Model.PendingApproval)
+        {
+            <form method="post">
+                <input type="hidden" asp-for="HashedCohortReference" />
+                <input type="hidden" asp-for="TransferReceiverPublicHashedAccountId" />
+                <input type="hidden" asp-for="TransferReceiverName" />
+
+                @Html.AntiForgeryToken()
+
+                <h2 class="govuk-heading-m">Do you want to accept or reject the request?</h2>
+
+                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApprovalConfirmed,  "govuk-form-group--error")">
+                    <fieldset class="govuk-fieldset">
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <span id="error-message-@nameof(TransferRequestForSenderViewModel.ApprovalConfirmed)" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(TransferRequestForSenderViewModel.ApprovalConfirmed)].Errors.First().ErrorMessage
+                            </span>
+                        }
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="ApprovalConfirmed" name="ApprovalConfirmed" type="radio" value="true">
+                                <label class="govuk-label govuk-radios__label" for="ApprovalConfirmed">
+                                    Yes, approve the request
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="ApprovalConfirmed-no" name="ApprovalConfirmed" type="radio" value="false">
+                                <label class="govuk-label govuk-radios__label" for="ApprovalConfirmed-no">
+                                    No, reject the request
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <button class="govuk-button" type="submit" id="submit-approve-transfer">Continue</button>
+                <a class="govuk-body govuk-link" id="link-cancel-transfer" href="@LinkGenerator.EmployerAccountsTransfers(Model.TransferSenderHashedAccountId)" title="continue">Cancel</a>
+            </form>
+        }
+    </div>
+</div>
+
+@section Back
+{
+    <a id="back-link" class="govuk-back-link" href="@LinkGenerator.EmployerAccountsTransfers(Model.TransferSenderHashedAccountId)">Back to Transfers</a>
+}
