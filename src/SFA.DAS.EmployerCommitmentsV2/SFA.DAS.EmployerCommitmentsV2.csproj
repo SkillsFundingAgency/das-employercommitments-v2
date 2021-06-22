@@ -8,9 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
-    <PackageReference Include="SFA.DAS.Authorization.CommitmentPermissions" Version="6.0.59" />
-    <PackageReference Include="SFA.DAS.Authorization.EmployerFeatures" Version="6.0.59" />
-    <PackageReference Include="SFA.DAS.Authorization.EmployerUserRoles" Version="6.0.59" />
+    <PackageReference Include="SFA.DAS.Authorization.CommitmentPermissions" Version="6.0.95" />
+    <PackageReference Include="SFA.DAS.Authorization.EmployerFeatures" Version="6.0.95" />
+    <PackageReference Include="SFA.DAS.Authorization.EmployerUserRoles" Version="6.0.95" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="7.35.0" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="7.35.0" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Types" Version="7.35.0" />

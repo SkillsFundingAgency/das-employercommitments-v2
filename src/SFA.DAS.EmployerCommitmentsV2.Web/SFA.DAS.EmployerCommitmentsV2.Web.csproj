@@ -24,7 +24,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
     <PackageReference Include="NLog.Schema" Version="4.5.11" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.0" />
-    <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="6.0.59" />
+    <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="6.0.95" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="7.35.0" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Types" Version="7.35.0" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="7.35.0" />
