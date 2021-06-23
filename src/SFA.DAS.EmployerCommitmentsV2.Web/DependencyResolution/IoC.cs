@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
             registry.IncludeRegistry<WebRegistry>();
 
             // Enable if you want to by pass MI locally.
-            //registry.IncludeRegistry<LocalDevRegistry>();
+            registry.IncludeRegistry<LocalDevRegistry.LocalDevRegistry>();
         }
     }
 }
