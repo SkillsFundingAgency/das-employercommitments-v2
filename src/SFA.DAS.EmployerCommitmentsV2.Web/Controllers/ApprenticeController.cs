@@ -32,8 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ICookieStorageService<IndexRequest> _cookieStorage;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly ILinkGenerator _linkGenerator;
-        private readonly ILogger<ApprenticeController> _logger;
-        private readonly IAuthorizationService _authorizationService;
+        private readonly ILogger<ApprenticeController> _logger;        
         private const string ApprenticePausedMessage = "Apprenticeship paused";
         private const string ApprenticeResumeMessage = "Apprenticeship resumed";
         private const string ApprenticeStoppedMessage = "Apprenticeship stopped";
@@ -46,14 +45,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private const string ChangesRejectedMessage = "Changes rejected";
         private const string ChangesUndoneMessage = "Changes undone";
 
-        public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILinkGenerator linkGenerator, ILogger<ApprenticeController> logger, IAuthorizationService authorizationService)
+        public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILinkGenerator linkGenerator, ILogger<ApprenticeController> logger)
         {
             _modelMapper = modelMapper;
             _cookieStorage = cookieStorage;
             _commitmentsApiClient = commitmentsApiClient;
             _linkGenerator = linkGenerator;
-            _logger = logger;
-            _authorizationService = authorizationService;
+            _logger = logger;            
         }
 
         [Route("", Name = RouteNames.ApprenticesIndex)]
@@ -552,8 +550,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request)
         {
             var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
-                  
-            viewModel.IsV2Edit = _authorizationService.IsAuthorized(EmployerFeature.EditApprenticeV2);
 
             return View("details", viewModel);
         }    

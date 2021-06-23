@@ -41,8 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 Mock.Of<ICookieStorageService<IndexRequest>>(),
                 _mockCommitmentsApiClient.Object,
                 _mockLinkGenerator.Object,
-                Mock.Of<ILogger<ApprenticeController>>(),
-                Mock.Of<IAuthorizationService>());
+                Mock.Of<ILogger<ApprenticeController>>());
             _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
         }
 
