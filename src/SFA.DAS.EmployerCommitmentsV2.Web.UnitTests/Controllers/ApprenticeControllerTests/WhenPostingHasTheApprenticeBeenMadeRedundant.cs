@@ -19,10 +19,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             _controller = new ApprenticeController(Mock.Of<IModelMapper>(),
                 Mock.Of<ICookieStorageService<IndexRequest>>(),
-                Mock.Of<ICommitmentsApiClient>(), 
-                Mock.Of<ILinkGenerator>(), 
-                Mock.Of<ILogger<ApprenticeController>>(),
-                Mock.Of<IAuthorizationService>());
+                Mock.Of<ICommitmentsApiClient>(),
+                Mock.Of<ILinkGenerator>(),
+                Mock.Of<ILogger<ApprenticeController>>());
         }
 
         [Test, MoqAutoData]

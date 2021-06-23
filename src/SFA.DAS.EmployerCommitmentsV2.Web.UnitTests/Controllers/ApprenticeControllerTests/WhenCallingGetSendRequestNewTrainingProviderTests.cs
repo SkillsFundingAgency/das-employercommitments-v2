@@ -54,9 +54,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             _controller = new ApprenticeController(_modelMapper.Object,
                Mock.Of<ICookieStorageService<IndexRequest>>(),
                Mock.Of<ICommitmentsApiClient>(),
-               Mock.Of<ILinkGenerator>(), 
-               Mock.Of<ILogger<ApprenticeController>>(),
-               Mock.Of<IAuthorizationService>());
+               Mock.Of<ILinkGenerator>(),
+               Mock.Of<ILogger<ApprenticeController>>());
         }
 
         public async Task<IActionResult> SendRequestNewTrainingProvider()
