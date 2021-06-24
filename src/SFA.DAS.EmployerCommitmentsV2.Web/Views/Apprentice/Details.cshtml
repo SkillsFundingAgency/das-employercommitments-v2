@@ -98,6 +98,15 @@
                         </tr>
                     }
                 }
+                @if (Model.ShowApprenticeConfirmationColumn)
+                {
+                    <tr>
+                        <th scope="row" class="govuk-table__header">Apprentice confirmation</th>
+                        <td id="madeRedundant" class="govuk-table__cell" colspan="2">
+                            @Model.ConfirmationStatus
+                        </td>
+                    </tr>
+                }
                 <tr>
                     <th scope="row" class="govuk-table__header">Training provider</th>
                     <td class="govuk-table__cell">@Model.ProviderName</td>
@@ -119,26 +128,26 @@
                 </tr>
                 @if (Model.TrainingProviderHistory != null && Model.TrainingProviderHistory.Count > 1)
                 {
-                <tr>
-                    <th scope="row" class="govuk-table__header">Training provider history</th>
-                    <td id="cohort-reference" class="govuk-table__cell">
-                        @foreach (var trainingProvider in Model.TrainingProviderHistory)
-                        {
-                        <p class="govuk-body">
-                            @if (trainingProvider.ShowLink)
+                    <tr>
+                        <th scope="row" class="govuk-table__header">Training provider history</th>
+                        <td id="cohort-reference" class="govuk-table__cell">
+                            @foreach (var trainingProvider in Model.TrainingProviderHistory)
                             {
-                                <a href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = trainingProvider.HashedApprenticeshipId })">@trainingProvider.ProviderName</a><br>
+                                <p class="govuk-body">
+                                    @if (trainingProvider.ShowLink)
+                                    {
+                                        <a href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = trainingProvider.HashedApprenticeshipId })">@trainingProvider.ProviderName</a><br>
+                                    }
+                                    else
+                                    {
+                                        <span>@trainingProvider.ProviderName</span><br />
+                                    }
+                                    <span class="govuk-body-s">@trainingProvider.FromDate.ToString("MMM yyyy") to @trainingProvider.ToDate.ToString("MMM yyyy")</span>
+                                </p>
                             }
-                            else
-                            {
-                                <span>@trainingProvider.ProviderName</span><br/>
-                            }
-                            <span class="govuk-body-s">@trainingProvider.FromDate.ToString("MMM yyyy") to @trainingProvider.ToDate.ToString("MMM yyyy")</span>
-                        </p>
-                        }
-                    </td>
-                    <td class="govuk-table__cell"></td>
-                </tr>
+                        </td>
+                        <td class="govuk-table__cell"></td>
+                    </tr>
                 }
             </tbody>
         </table>
