@@ -1,9 +1,10 @@
-﻿using SFA.DAS.Authorization.CommitmentPermissions.Client;
+﻿using System;
+using SFA.DAS.Authorization.CommitmentPermissions.Client;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.EAS.Account.Api.Client;
 using StructureMap;
-using System;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web
+namespace SFA.DAS.EmployerCommitmentsV2.Web.LocalDevRegistry
 {
     public class LocalDevRegistry : Registry
     {
@@ -14,6 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web
             {
                 For<ICommitmentsApiClientFactory>().ClearAll().Use<LocalDevApiClientFactory>();
                 For<ICommitmentPermissionsApiClientFactory>().ClearAll().Use<LocalDevApiClientFactory>();
+                For<IAccountApiClient>().ClearAll().Use<LocalAccountApiClient>();
             }
         }
     }
