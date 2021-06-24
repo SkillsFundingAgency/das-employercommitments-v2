@@ -16,7 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Stubs
 
         public StubEmployerAccountsApiClient()
         {
-            _httpClient = new HttpClient { BaseAddress = new System.Uri("https://sfa-stub-employeraccountapi.herokuapp.com/api-v2/") };
+            _httpClient = new HttpClient { BaseAddress = new System.Uri("https://das-commitments-stub-accapi.herokuapp.com/api-v2/") };
         }
 
         public async Task<bool> IsUserInRole(IsUserInRoleRequest roleRequest, CancellationToken cancellationToken)

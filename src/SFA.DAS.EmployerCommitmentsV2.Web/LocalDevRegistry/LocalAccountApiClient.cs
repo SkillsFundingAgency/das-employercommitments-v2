@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EAS.Account.Api.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Stubs;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.LocalDevRegistry
 {
@@ -14,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.LocalDevRegistry
 
         public LocalAccountApiClient()
         {
-            _httpClient = new HttpClient { BaseAddress = new System.Uri("https://sfa-stub-??????.herokuapp.com/") };
+            _httpClient = new HttpClient { BaseAddress = new System.Uri("https://das-commitments-stub-accapi.herokuapp.com/") };
         }
 
         public Task<AccountDetailViewModel> GetAccount(string hashedAccountId)
@@ -42,34 +45,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.LocalDevRegistry
             throw new NotImplementedException();
         }
 
-        public async Task<ICollection<ResourceViewModel>> GetLegalEntitiesConnectedToAccount(string accountId)
+        public async Task<ICollection<ResourceViewModel>> GetLegalEntitiesConnectedToAccount(string hashedAccountId)
         {
-            var le = new ResourceViewModel { Id = "645", Href = "X9JE72" };
-            var list = new Collection<ResourceViewModel>();
-            list.Add(le);
-
-            return await Task.FromResult(list);
+            var response = await _httpClient.GetAsync($"api/accounts/{hashedAccountId}/legalentities", CancellationToken.None).ConfigureAwait(false);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new Collection<ResourceViewModel>();
+            }
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var ales = JsonConvert.DeserializeObject<Collection<ResourceViewModel>>(content);
+            return ales;
         }
 
-        public Task<LegalEntityViewModel> GetLegalEntity(string accountId, long id)
+        public async Task<LegalEntityViewModel> GetLegalEntity(string hashedAccountId, long id)
         {
-            return Task.FromResult(new LegalEntityViewModel
+            var response = await _httpClient.GetAsync($"api/accounts/{hashedAccountId}/legalentities/{id}", CancellationToken.None).ConfigureAwait(false);
+            if (!response.IsSuccessStatusCode)
             {
-                Name = "Rapid Logistics Co Ltd",
-                Address = "xxxx",
-                Source = "Source",
-                Agreements = new List<AgreementViewModel>{ new AgreementViewModel
-                {
-                    Id = 123,
-                    SignedDate = DateTime.Now,
-                    SignedByName = "SignedBy",
-                    Status = EmployerAgreementStatus.Signed,
-                    TemplateVersionNumber = 10
-                }},
-                Code = "X9JE72",
-                LegalEntityId = id,
-                AccountLegalEntityPublicHashedId = "X9JE72"
-            });
+                return null;
+            }
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var ale = JsonConvert.DeserializeObject<LegalEntityViewModel>(content);
+            return ale;
         }
 
         public Task<ICollection<LevyDeclarationViewModel>> GetLevyDeclarations(string accountId)
@@ -114,7 +111,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.LocalDevRegistry
 
         public async Task<ICollection<TransferConnectionViewModel>> GetTransferConnections(string accountHashedId)
         {
-            return await Task.FromResult(new Collection<TransferConnectionViewModel>());
+
+            var response = await _httpClient.GetAsync($"api/accounts/{accountHashedId}/transfers/connections", CancellationToken.None).ConfigureAwait(false);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new Collection<TransferConnectionViewModel>();
+            }
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var connections = JsonConvert.DeserializeObject<Collection<TransferConnectionViewModel>>(content);
+            return connections;
         }
 
         public Task<ICollection<AccountDetailViewModel>> GetUserAccounts(string userId)
