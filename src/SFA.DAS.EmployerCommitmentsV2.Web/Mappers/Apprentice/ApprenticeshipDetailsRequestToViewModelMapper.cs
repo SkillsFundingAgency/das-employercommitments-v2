@@ -117,7 +117,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
                     PendingDataLockChange = dataLockPriceTriaged || dataLockCourseChangedTraiged,
                     PendingDataLockRestart = dataLockCourseTriaged,
-                    ConfirmationStatus = ConfirmationStatus.Confirmed, // Chas! apprenticeship.ConfirmationStatus
+                    ConfirmationStatus = apprenticeship.ConfirmationStatus,
                     ShowApprenticeConfirmationColumn = await _authorizationService.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail)
                 };
 
