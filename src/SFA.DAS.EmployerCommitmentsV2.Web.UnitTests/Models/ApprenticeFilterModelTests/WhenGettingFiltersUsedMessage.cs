@@ -94,6 +94,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
             filterModel.FiltersUsedMessage.Value.Should().Be($"matching <strong>{selectedEndDate.ToGdsFormatWithoutDay()}</strong>");
         }
 
+
+        [Test, AutoData]
+        public void And_No_Search_And_SelectedStatus_Then_SelectedStatus(Alerts selectedAlert)
+        {
+            var filterModel = new ApprenticesFilterModel
+            {
+                SelectedAlert = selectedAlert
+            };
+
+            filterModel.FiltersUsedMessage.Value.Should().Be($"matching <strong>{selectedAlert.GetDescription()}</strong>");
+        }
+
+
         [Test, AutoData]
         public void And_Search_And_SelectedProvider_Then_SearchTerm_And_SelectedProvider(
             string searchTerm,
