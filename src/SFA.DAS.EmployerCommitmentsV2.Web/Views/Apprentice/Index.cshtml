@@ -97,7 +97,8 @@ else
                                     </select>
                                 </div>
                             </div>
-                        </div><div class="govuk-grid-row">
+                        </div>
+                        <div class="govuk-grid-row">
                             <div class="govuk-grid-column-one-third">
                                 <div class="govuk-form-group">
                                     <label class="govuk-label" for="selectedStatus">Status</label>
@@ -117,6 +118,29 @@ else
                                     </select>
                                 </div>
                             </div>
+                            <div class="govuk-grid-column-one-third">
+                                <div class="govuk-form-group">
+                                    <label class="govuk-label" for="selectedStatus">Alerts</label>
+                                    <select class="govuk-select govuk-!-width-full" id="selectedAlert" name="selectedAlert">
+                                        <option label="All" aria-label="All statuses" value="">All</option>
+                                        @foreach (var alert in Model.FilterModel.AlertFilters)
+                                        {
+                                            if (alert == Model.FilterModel.SelectedAlert)
+                                            {
+                                                <option label="@alert.GetDescription()" value="@alert" selected="selected">@alert.GetDescription()</option>
+                                            }
+                                            else
+                                            {
+                                                <option label="@alert.GetDescription()" value="@alert">@alert.GetDescription()</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            
+                            
+
                         </div>
                         <button class="govuk-button govuk-!-margin-0" type="submit">Apply filters</button>
                     </div>

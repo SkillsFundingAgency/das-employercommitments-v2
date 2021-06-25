@@ -20,5 +20,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public DateTime? SelectedEndDate { get; set; }
         public ApprenticeshipStatus? SelectedStatus { get; set; }
         public bool FromSearch { get; set; }
+        public Alerts? SelectedAlert { get; set; }
     }
 }

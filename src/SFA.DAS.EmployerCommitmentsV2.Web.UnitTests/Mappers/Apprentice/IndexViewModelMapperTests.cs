@@ -164,6 +164,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(request.SelectedCourse, viewModel.FilterModel.SelectedCourse);
             Assert.AreEqual(request.SelectedStatus, viewModel.FilterModel.SelectedStatus);
             Assert.AreEqual(request.SelectedEndDate, viewModel.FilterModel.SelectedEndDate);
+            Assert.AreEqual(request.SelectedAlert, viewModel.FilterModel.SelectedAlert);
         }
 
         [Test, MoqAutoData]

@@ -64,11 +64,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
         }
 
         [Test]
+        public void And_Has_SelectedAlert_Then_True()
+        {
+            var filterModel = new ApprenticesFilterModel
+            {
+                SelectedAlert = Alerts.IlrDataMismatch
+            };
+
+            filterModel.SearchOrFiltersApplied.Should().BeTrue();
+        }
+
+        [Test]
         public void And_No_Search_Or_Filter_Then_False()
         {
             var filterModel = new ApprenticesFilterModel();
 
             filterModel.SearchOrFiltersApplied.Should().BeFalse();
         }
+
+       
     }
 }
