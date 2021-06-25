@@ -60,6 +60,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
                 filters.Add(model.SelectedEndDate.Value.ToGdsFormatWithoutDay());
             }
 
+            if (model.SelectedAlert.HasValue)
+            {
+                filters.Add(model.SelectedAlert.Value.GetDescription());
+            }
+
             return filters;
         }
     }

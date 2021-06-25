@@ -14,6 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string SelectedCourse { get; set; }
         public ApprenticeshipStatus? SelectedStatus { get; set; }
         public DateTime? SelectedEndDate { get; set; }
+        public Alerts? SelectedAlert { get; set; }
         public string SortField { get; set; }
         public bool ReverseSort { get; set; }
 
@@ -21,6 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public IEnumerable<string> CourseFilters { get; set; } = new List<string>();
         public IEnumerable<ApprenticeshipStatus> StatusFilters { get; set; } = new List<ApprenticeshipStatus>();
         public IEnumerable<DateTime> EndDateFilters { get; set; } = new List<DateTime>();
+        public IEnumerable<Alerts> AlertFilters { get; set; } = new List<Alerts>();
 
         private const int PageSize = Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage;
         public int PagedRecordsFrom => TotalNumberOfApprenticeshipsFound == 0 ? 0 : (PageNumber - 1) * PageSize + 1;
@@ -37,7 +39,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                                               || !string.IsNullOrWhiteSpace(SelectedProvider)
                                               || !string.IsNullOrWhiteSpace(SelectedCourse)
                                               || SelectedStatus.HasValue
-                                              || SelectedEndDate.HasValue;
+                                              || SelectedEndDate.HasValue
+                                              || SelectedAlert.HasValue;
 
         public HtmlString FiltersUsedMessage => this.GetFiltersUsedMessage();
 
@@ -129,6 +132,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
             if (SelectedEndDate.HasValue)
             {
                 routeData.Add(nameof(SelectedEndDate), SelectedEndDate.Value.ToString("yyyy-MM-dd"));
+            }
+
+            if (SelectedAlert.HasValue)
+            {
+                routeData.Add(nameof(SelectedAlert), SelectedAlert.Value.ToString());
             }
 
             return routeData;
