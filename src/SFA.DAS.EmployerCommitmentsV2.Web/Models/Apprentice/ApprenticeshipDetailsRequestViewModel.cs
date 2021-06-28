@@ -47,8 +47,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool HasPendingChangeOfEmployerRequest { get; set; }
         public Party? PendingChangeOfEmployerRequestWithParty { get; set; }
         public List<TrainingProviderHistory> TrainingProviderHistory { get; set; }
-        public bool IsV2Edit { get; set; }
-
+        
         public ActionRequiredBanner GetActionRequiredBanners()
         {
             var actionRequiredBanner = ActionRequiredBanner.None;
