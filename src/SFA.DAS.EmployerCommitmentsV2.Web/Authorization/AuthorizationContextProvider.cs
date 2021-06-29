@@ -30,6 +30,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
             var accountId = GetAccountId();
             var cohortId = GetCohortId();
             var userRef = GetUserRef();
+            var apprenticeshipId = GetApprenticeshipId();
 
             CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, accountId, AuthorizationContextKeys.AccountId);
             CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, cohortId, AuthorizationContextKeys.CohortId);
@@ -37,16 +38,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
             CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetDraftApprenticeshipId(), AuthorizationContextKeys.DraftApprenticeshipId);
             CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetTransferSenderId(), AuthorizationContextKeys.DecodedTransferSenderId);
             CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetTransferRequestId(), AuthorizationContextKeys.TransferRequestId);
-            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetApprenticeshipId(), AuthorizationContextKeys.ApprenticeshipId);
+            CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, apprenticeshipId, AuthorizationContextKeys.ApprenticeshipId);
 
-            if (accountId.HasValue && userRef.HasValue)
-            {
-                authorizationContext.AddEmployerUserRoleValues(accountId.Value, userRef.Value);
-            }
+            if (accountId.HasValue)
+            { 
+                if(userRef.HasValue)
+                {
+                    authorizationContext.AddEmployerUserRoleValues(accountId.Value, userRef.Value);
+                } 
+                
+                if (cohortId.HasValue)
+                {
+                    authorizationContext.AddCommitmentPermissionValues(cohortId.Value, Party.Employer, accountId.Value);
+                }
 
-            if (accountId.HasValue && cohortId.HasValue)
-            {
-                authorizationContext.AddCommitmentPermissionValues(cohortId.Value, Party.Employer, accountId.Value);
+                if (apprenticeshipId.HasValue)
+                {
+                    authorizationContext.AddApprenticeshipPermissionValues(apprenticeshipId.Value, Party.Employer, accountId.Value);
+                }
             }
 
             return authorizationContext;
