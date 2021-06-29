@@ -141,24 +141,54 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
             Assert.IsNotNull(authorizationContext);
             Assert.AreEqual(_fixture.DraftApprenticeshipId, authorizationContext.Get<long?>("DraftApprenticeshipId"));
         }
+
+        [Test]
+        public void GetAuthorizationContext_WhenAccountId_And_CohortIdExist_AndIsValid_ThenShouldReturnAuthorizationContextWithEmployerParty()
+        {
+            _fixture
+                .SetValidAccountId()
+                .SetValidCohortId()
+                .SetUserRef(Guid.NewGuid());
+
+            var authorizationContext = _fixture.GetAuthorizationContext();
+
+            Assert.IsNotNull(authorizationContext);
+            Assert.AreEqual(Party.Employer, authorizationContext.Get<Party>("Party"));
+        }
+
+        [Test]
+        public void GetAuthorizationContext_WhenAccountId_And_ApprenticeshipIdExist_AndIsValid_ThenShouldReturnAuthorizationContextWithEmployerParty()
+        {
+            _fixture
+                .SetValidAccountId()
+                .SetValidApprenticeshipId()
+                .SetUserRef(Guid.NewGuid());
+
+            var authorizationContext = _fixture.GetAuthorizationContext();
+
+            Assert.IsNotNull(authorizationContext);
+            Assert.AreEqual(Party.Employer, authorizationContext.Get<Party>("Party"));
+        }
     }
 
     public class AuthorizationContextProviderTestsFixture
     {
-        public IAuthorizationContextProvider AuthorizationContextProvider { get; set; }
-        public Mock<IHttpContextAccessor> HttpContextAccessor { get; set; }
-        public Mock<IAuthenticationService> UserService { get; set; }
-        public Mock<IRoutingFeature> RoutingFeature { get; set; }
-        public Mock<IEncodingService> EncodingService { get; set; }
-        public string DraftApprenticeshipHashedId { get; set; }
-        public long DraftApprenticeshipId { get; set; }
-        public long CohortId { get; set; }
-        public string CohortReference { get; set; }
-        public string AccountHashedId { get; set; }
-        public long AccountId { get; set; }
-        public Guid? UserRef { get; set; }
-        public string UserRefClaimValue { get; set; }
-        public RouteData RouteData { get; set; }
+        public IAuthorizationContextProvider AuthorizationContextProvider { get; private set; }
+        public Mock<IHttpContextAccessor> HttpContextAccessor { get; private set; }
+        public Mock<IAuthenticationService> UserService { get; private set; }
+        public Mock<IRoutingFeature> RoutingFeature { get; private set; }
+        public Mock<IEncodingService> EncodingService { get; private set; }
+        public string DraftApprenticeshipHashedId { get; private set; }
+        public long DraftApprenticeshipId { get; private set; }
+        public long CohortId { get; private set; }
+        public string CohortReference { get; private set; }
+        public string AccountHashedId { get; private set; }
+        public long AccountId { get; private set; }
+        public Guid? UserRef { get; private set; }
+        public string UserRefClaimValue { get; private set; }
+        public RouteData RouteData { get; private set; }
+        public string ApprenticeshipHashedId { get; private set; }
+        public long ApprenticeshipId { get; private set; }
 
         public AuthorizationContextProviderTestsFixture()
         {
@@ -292,6 +322,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
 
             UserService.Setup(a => a.IsUserAuthenticated()).Returns(true);
             UserService.Setup(a => a.TryGetUserClaimValue(EmployeeClaims.Id, out userIdClaimValue)).Returns(true);
+
+            return this;
+        }
+
+        public AuthorizationContextProviderTestsFixture SetValidApprenticeshipId()
+        {
+            ApprenticeshipHashedId = "XYRZ";
+            ApprenticeshipId = 887;
+
+            long decodedApprenticeshipId;
+            RouteData.Values[RouteValueKeys.ApprenticeshipHashedId] = ApprenticeshipHashedId;
+
+            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
+            EncodingService.Setup(h => h.TryDecode(ApprenticeshipHashedId, EncodingType.ApprenticeshipId, out decodedApprenticeshipId)).Returns(true);
 
             return this;
         }
