@@ -7,6 +7,7 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
@@ -26,8 +27,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 {
     public class ApprenticeshipDetailsRequestToViewModelMapperTests
     {
+        Fixture autoFixture = new Fixture();
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
         private Mock<IEncodingService> _mockEncodingService;
+        private Mock<IAuthorizationService> _authorizationService;
         private GetApprenticeshipResponse _apprenticeshipResponse;
         private GetPriceEpisodesResponse _priceEpisodesResponse;
         private GetApprenticeshipUpdatesResponse _apprenticeshipUpdatesResponse;
@@ -46,7 +49,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public void SetUp()
         {
             //Arrange
-            var autoFixture = new Fixture();
             _request = autoFixture.Build<ApprenticeshipDetailsRequest>()
                 .With(x => x.AccountHashedId, $"A123")
                 .With(x => x.ApprenticeshipHashedId, $"A{ApprenticeshipIdFirst}")
@@ -91,7 +93,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _mockEncodingService.Setup(t => t.Decode(It.IsAny<string>(), It.IsAny<EncodingType>()))
                 .Returns((string value, EncodingType encodingType) => long.Parse(Regex.Replace(value, "[A-Za-z ]", "")));
 
-            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), Mock.Of<IAuthorizationService>());
+            _authorizationService = new Mock<IAuthorizationService>();
+
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), _authorizationService.Object);
         }
 
        [Test]
@@ -623,6 +627,41 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 else
                     Assert.IsTrue(result.TrainingProviderHistory[counter].ShowLink);
             }
+        }
+
+        [TestCase(null)]
+        [TestCase(ConfirmationStatus.Unconfirmed)]
+        [TestCase(ConfirmationStatus.Confirmed)]
+        [TestCase(ConfirmationStatus.Overdue)]
+        public async Task GetApprenticeshipConfirmationStatus_IsMappedCorrectly(ConfirmationStatus? confirmationStatus)
+        {
+            // Arrange
+            _apprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>()
+                .With(x => x.Id, ApprenticeshipIdFirst)
+                .With(x => x.CourseCode, "ABC")
+                .With(x => x.DateOfBirth, autoFixture.Create<DateTime>())
+                .With(x => x.ConfirmationStatus, confirmationStatus).Create();
+
+            _mockCommitmentsApiClient.Setup(x => x.GetApprenticeship(It.IsAny<long>(), CancellationToken.None))
+                .ReturnsAsync(_apprenticeshipResponse);
+
+            // Act 
+            var result = await _mapper.Map(_request);
+
+            // Assert
+            Assert.AreEqual(result.ConfirmationStatus, confirmationStatus);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task CheckShowConfirmationColumnIsMappedCorrectly(bool show)
+        {
+            _authorizationService.Setup(x => x.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail))
+                    .ReturnsAsync(show);
+
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(show, result.ShowApprenticeConfirmationColumn);
         }
     }
 }
