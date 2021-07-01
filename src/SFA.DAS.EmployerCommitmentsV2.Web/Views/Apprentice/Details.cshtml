@@ -169,10 +169,13 @@
                     <th scope="row" class="govuk-table__header  das-table-cell-width-45">Name</th>
                     <td id="apprentice-name" class="govuk-table__cell das-table-cell-width-55">@Model.ApprenticeName</td>
                 </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">Email</th>
-                    <td id="email" class="govuk-table__cell">@Model.Email</td>
-                </tr>
+                @if (!string.IsNullOrEmpty(Model.Email))
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Email address</th>
+                        <td id="email address" class="govuk-table__cell">@Model.Email</td>
+                    </tr>
+                }
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Unique learner number</th>
                     <td id="uln" class="govuk-table__cell">@Model.ULN</td>
