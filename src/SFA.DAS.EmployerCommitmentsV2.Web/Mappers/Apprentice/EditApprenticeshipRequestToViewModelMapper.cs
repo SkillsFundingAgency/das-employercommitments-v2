@@ -51,6 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             {
                 FirstName = apprenticeship.FirstName,
                 LastName = apprenticeship.LastName,
+                Email = apprenticeship.Email,
                 ULN= apprenticeship.Uln,
                 CourseCode = apprenticeship.CourseCode,
                 Cost = priceEpisodes.PriceEpisodes.GetPrice(),

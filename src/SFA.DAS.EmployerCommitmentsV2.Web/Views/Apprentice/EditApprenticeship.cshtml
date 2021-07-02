@@ -57,6 +57,11 @@
                     @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
                     <input asp-for="LastName" class="govuk-input govuk-!-width-two-thirds" id="lastName" />
                 </div>
+                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
+                    <label asp-for="Email" class="govuk-label govuk-!-font-weight-bold">Email address</label>
+                    @Html.ValidationMessageFor(m => m.Email, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email) })
+                    <input asp-for="Email" class="govuk-input govuk-!-width-two-thirds" id="email" />
+                </div>
 
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.DateOfBirth, "govuk-form-group--error")">
@@ -266,7 +271,7 @@
 
             <div class="govuk-button-group">
                 <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button">
-                   Update details
+                    Update details
                 </button>
                 <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest{ AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.HashedApprenticeshipId })" id="cancel-button">Cancel and return</a>
             </div>

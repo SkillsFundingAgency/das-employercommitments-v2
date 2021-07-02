@@ -25,6 +25,7 @@
             @Html.HiddenFor(x => x.ApprenticeshipHashedId)
             @Html.HiddenFor(x => x.FirstName)
             @Html.HiddenFor(x => x.LastName)
+            @Html.HiddenFor(x => x.Email)
             @Html.HiddenFor(x => x.StartMonth)
             @Html.HiddenFor(x => x.StartYear)
             @Html.HiddenFor(x => x.EndMonth)
@@ -73,6 +74,15 @@
                                     <th scope="row" class="govuk-table__header">Name</th>
                                     <td class="govuk-table__cell">@Model.OriginalApprenticeship.Name</td>
                                     <td class="govuk-table__cell">@Model.Name</td>
+
+                                </tr>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.Email))
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Email address</th>
+                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.Email</td>
+                                    <td class="govuk-table__cell">@Model.Email</td>
 
                                 </tr>
                             }
@@ -147,21 +157,21 @@
                             Do you want to make these changes?
                         </h1>
                     </legend>
-                <div class="govuk-radios">
-                    @Html.ValidationMessageFor(m => m.ConfirmChanges, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ConfirmChanges) })
-                    <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="ConfirmChanges" name="ConfirmChanges" type="radio" value="true">
-                        <label class="govuk-label govuk-radios__label" for="ConfirmChanges">
-                            Yes, change these details
-                        </label>
+                    <div class="govuk-radios">
+                        @Html.ValidationMessageFor(m => m.ConfirmChanges, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ConfirmChanges) })
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="ConfirmChanges" name="ConfirmChanges" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="ConfirmChanges">
+                                Yes, change these details
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="ConfirmChanges-no" name="ConfirmChanges" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="ConfirmChanges-no">
+                                No, don't change these details
+                            </label>
+                        </div>
                     </div>
-                    <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="ConfirmChanges-no" name="ConfirmChanges" type="radio" value="false">
-                        <label class="govuk-label govuk-radios__label" for="ConfirmChanges-no">
-                            No, don't change these details
-                        </label>
-                    </div>
-                </div>
                 </fieldset>
             </div>
 
