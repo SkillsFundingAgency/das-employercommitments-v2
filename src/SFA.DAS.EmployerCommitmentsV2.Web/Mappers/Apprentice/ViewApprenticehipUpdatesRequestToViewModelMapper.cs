@@ -57,6 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             {
                 FirstName = update.FirstName,
                 LastName = update.LastName,
+                Email = update.Email,
                 DateOfBirth = update.DateOfBirth,
                 Cost = update.Cost,
                 StartDate = update.StartDate,
@@ -72,6 +73,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             {
                 FirstName = apprenticeship.FirstName,
                 LastName = apprenticeship.LastName,
+                Email = apprenticeship.Email,
                 DateOfBirth = apprenticeship.DateOfBirth,
                 ULN = apprenticeship.Uln,
                 StartDate = apprenticeship.StartDate,
