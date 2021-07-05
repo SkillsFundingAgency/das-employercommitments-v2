@@ -78,6 +78,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task WhenEmailIsChanged()
+        {
+            fixture.source.Email = "Email";
+
+            var result = await fixture.Map();
+
+            Assert.AreNotEqual(fixture.source.Email, fixture._apprenticeshipResponse.Email);
+            Assert.AreEqual(fixture.source.Email, result.Email);
+            Assert.AreEqual(fixture._apprenticeshipResponse.Email, result.OriginalApprenticeship.Email);
+        }
+
+        [Test]
         public async Task WhenDobIsChanged()
         {
             fixture.source.DateOfBirth = new CommitmentsV2.Shared.Models.DateModel(new DateTime(2000,12,31));
@@ -182,6 +194,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             source.CourseCode = _apprenticeshipResponse.CourseCode;
             source.FirstName = _apprenticeshipResponse.FirstName;
             source.LastName = _apprenticeshipResponse.LastName;
+            source.Email = _apprenticeshipResponse.Email;
             source.DateOfBirth = new CommitmentsV2.Shared.Models.DateModel(_apprenticeshipResponse.DateOfBirth);
             source.Cost = 1000;
             source.EmployerReference = _apprenticeshipResponse.EmployerReference;
