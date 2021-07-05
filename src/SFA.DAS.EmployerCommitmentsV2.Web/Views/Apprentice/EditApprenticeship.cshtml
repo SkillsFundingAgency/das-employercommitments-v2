@@ -38,6 +38,13 @@
 
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 <dl class="das-definition-list">
+                    <dt class="das-definition-list__title" asp-for="LastName">Email address</dt>
+                    <dd class="das-definition-list__definition" id="lastName">@Model.Email</dd>
+                    @Html.Hidden("Email", Model.Email)
+                </dl>
+
+                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+                <dl class="das-definition-list">
                     <dt class="das-definition-list__title" asp-for="DateOfBirth">Date of birth</dt>
                     <dd class="das-definition-list__definition" id="dob">@Model.DateOfBirth.Date.Value.ToGdsFormat()</dd>
                     @Html.HiddenFor(x => x.BirthDay)

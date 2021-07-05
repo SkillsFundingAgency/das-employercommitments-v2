@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     {
                         FirstName = update.FirstName,
                         LastName = update.LastName,
-                        //Email = update.E Chas!
+                        Email = update.Email,
                         DateOfBirth = update.DateOfBirth,
                         Cost = update.Cost,
                         StartDate = update.StartDate,
