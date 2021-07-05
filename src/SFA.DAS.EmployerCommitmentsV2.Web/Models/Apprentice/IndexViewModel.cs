@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string SortedByHeaderClassName { get; set; }
         public ApprenticesFilterModel FilterModel { get; set; }
         public bool ShowPageLinks  => FilterModel.TotalNumberOfApprenticeshipsFound > Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage;
-
+        public bool ShowApprenticeConfirmationColumn { get; set; }
         public void SortedByHeader()
         {
             SortedByHeaderClassName += HeaderClassName;

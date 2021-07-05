@@ -28,6 +28,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 PlannedStartDate = source.StartDate,
                 PlannedEndDate = source.EndDate,
                 Status = source.ApprenticeshipStatus,
+                ConfirmationStatus = source.ConfirmationStatus,
                 Alerts = source.Alerts.Select(x => x.GetDescription()) 
             };
 
