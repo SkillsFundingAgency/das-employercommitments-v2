@@ -295,7 +295,7 @@ else
                     @if (Model.ShowApprenticeConfirmationColumn)
                     {
                         <td class="govuk-table__cell" data-label="Apprentice confirmation">
-                            @apprenticeship.ConfirmationStatus
+                            @apprenticeship.ConfirmationStatus.ToDisplayString()
                         </td>
                     }
                     <td class="govuk-table__cell" data-label="Alerts">
