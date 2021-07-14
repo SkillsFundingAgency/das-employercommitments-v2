@@ -1,25 +1,25 @@
 ﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
-@if (TempData.ContainsKey(ITempDataDictionaryExtensions.FlashMessageTempDataKey))
+@if (TempData.ContainsKey(ITempDataDictionaryExtensions.FlashMessageBodyTempDataKey))
 {
-    var message = TempData[ITempDataDictionaryExtensions.FlashMessageTempDataKey];
-    var submessage = TempData[ITempDataDictionaryExtensions.FlashMessageSubTempDataKey];
+    var body = TempData[ITempDataDictionaryExtensions.FlashMessageBodyTempDataKey];
+    var title = TempData[ITempDataDictionaryExtensions.FlashMessageTitleTempDataKey];
     var level = (ITempDataDictionaryExtensions.FlashMessageLevel) TempData[ITempDataDictionaryExtensions.FlashMessageLevelTempDataKey];
 
     @if (level == ITempDataDictionaryExtensions.FlashMessageLevel.Info)
     {
         <div class="govuk-grid-column-two-thirds das-notification govuk-!-margin-bottom-4 das-notification--info" tabindex="-1">
-            <h3 class="das-notification__heading">@message</h3>
+            <h3 class="das-notification__heading">@body</h3>
         </div>
     }
     @if (level == ITempDataDictionaryExtensions.FlashMessageLevel.Success)
     {
-        if (submessage == null)
+        if (title == null)
         {
             <div classs="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
                     <div class="govuk-!-margin-bottom-4 govuk-panel govuk-panel--confirmation">
                         <h1 class="govuk-panel__title">
-                            @message
+                            @body
                         </h1>
                     </div>
                 </div>
@@ -37,9 +37,9 @@
                         </div>
                         <div class="govuk-notification-banner__content">
                             <h3 class="govuk-notification-banner__heading">
-                                @message
+                                @title
                             </h3>
-                            <p class="govuk-body">@submessage</p>
+                            <p class="govuk-body">@body</p>
                         </div>
                     </div>
                 </div>
