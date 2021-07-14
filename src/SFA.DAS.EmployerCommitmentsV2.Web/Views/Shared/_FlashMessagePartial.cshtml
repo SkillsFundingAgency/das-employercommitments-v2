@@ -2,7 +2,8 @@
 @if (TempData.ContainsKey(ITempDataDictionaryExtensions.FlashMessageTempDataKey))
 {
     var message = TempData[ITempDataDictionaryExtensions.FlashMessageTempDataKey];
-    var level = (ITempDataDictionaryExtensions.FlashMessageLevel)TempData[ITempDataDictionaryExtensions.FlashMessageLevelTempDataKey];
+    var submessage = TempData[ITempDataDictionaryExtensions.FlashMessageSubTempDataKey];
+    var level = (ITempDataDictionaryExtensions.FlashMessageLevel) TempData[ITempDataDictionaryExtensions.FlashMessageLevelTempDataKey];
 
     @if (level == ITempDataDictionaryExtensions.FlashMessageLevel.Info)
     {
@@ -12,10 +13,37 @@
     }
     @if (level == ITempDataDictionaryExtensions.FlashMessageLevel.Success)
     {
-        <div class="govuk-grid-column-two-thirds govuk-!-margin-bottom-4 govuk-panel govuk-panel--confirmation">
-            <h1 class="govuk-panel__title">
-                @message
-            </h1>
-        </div>
+        if (submessage == null)
+        {
+            <div classs="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <div class="govuk-!-margin-bottom-4 govuk-panel govuk-panel--confirmation">
+                        <h1 class="govuk-panel__title">
+                            @message
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div classs="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <div class="govuk-!-margin-bottom-4 govuk-notification-banner govuk-notification-banner--success">
+                        <div class="govuk-notification-banner__header">
+                            <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                                Success
+                            </h2>
+                        </div>
+                        <div class="govuk-notification-banner__content">
+                            <h3 class="govuk-notification-banner__heading">
+                                @message
+                            </h3>
+                            <p class="govuk-body">@submessage</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     }
 }

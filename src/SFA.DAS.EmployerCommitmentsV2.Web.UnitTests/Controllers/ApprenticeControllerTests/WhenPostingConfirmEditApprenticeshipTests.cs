@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTestBase
     {
         private const string EditApprenticeNeedReapproval = "Suggested changes sent to training provider for approval, where needed.";
-        private const string EditApprenticeUpdated = "Apprentice updated";
+        private const string EditApprenticeUpdated = "You have updated apprentice details";
         private const string FlashMessage = "FlashMessage";
         private const string FlashMessageLevel = "FlashMessageLevel";
         private EditApprenticeshipResponse response;
