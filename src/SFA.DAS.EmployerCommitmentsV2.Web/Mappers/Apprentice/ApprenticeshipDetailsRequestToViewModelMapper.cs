@@ -118,7 +118,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     PendingDataLockChange = dataLockPriceTriaged || dataLockCourseChangedTraiged,
                     PendingDataLockRestart = dataLockCourseTriaged,
                     ConfirmationStatus = apprenticeship.ConfirmationStatus,
-                    ShowApprenticeConfirmationColumn = await _authorizationService.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail)
+                    ShowApprenticeConfirmationColumn = await _authorizationService.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail),
+                    Email = apprenticeship.Email,
                 };
 
                 return result;

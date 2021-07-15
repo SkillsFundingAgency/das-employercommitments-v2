@@ -44,6 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private const long ApprenticeshipIdFirst = 456;
         private const long ApprenticeshipIdMiddle = 356;
         private const long ApprenticeshipIdLast = 256;
+        private const string ApprenticeshipEmail = "a@a.com";
 
         [SetUp]
         public void SetUp()
@@ -662,6 +663,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             Assert.AreEqual(show, result.ShowApprenticeConfirmationColumn);
+        }
+
+        [Test]
+        public async Task CheckEmailIsMappedCorrectly()
+        {
+            _apprenticeshipResponse.Email = ApprenticeshipEmail;
+
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(ApprenticeshipEmail, result.Email);
         }
     }
 }
