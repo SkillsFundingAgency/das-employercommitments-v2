@@ -246,9 +246,6 @@ else
                             Training provider
                         </a>
                     </th>
-                    <th scope="col" class="govuk-table__header">
-                        Status
-                    </th>
                     @if (Model.ShowApprenticeConfirmationColumn)
                     {
                         <th scope="col" class="govuk-table__header">
@@ -260,6 +257,9 @@ else
                             </a>
                         </th>
                     }
+                    <th scope="col" class="govuk-table__header">
+                        Status
+                    </th>
                     <th scope="col" class="govuk-table__header">
                         Alerts
                     </th>
@@ -287,17 +287,17 @@ else
                     <td class="govuk-table__cell" data-label="Training provider">
                         @apprenticeship.ProviderName
                     </td>
-                    <td class="govuk-table__cell" data-label="Status">
-                        <strong class="govuk-tag @apprenticeship.Status.GetDisplayClass()">
-                            @apprenticeship.Status.GetDescription()
-                        </strong>
-                    </td>
                     @if (Model.ShowApprenticeConfirmationColumn)
                     {
                         <td class="govuk-table__cell" data-label="Apprentice confirmation">
                             @apprenticeship.ConfirmationStatus.ToDisplayString()
                         </td>
                     }
+                    <td class="govuk-table__cell" data-label="Status">
+                        <strong class="govuk-tag @apprenticeship.Status.GetDisplayClass()">
+                            @apprenticeship.Status.GetDescription()
+                        </strong>
+                    </td>
                     <td class="govuk-table__cell" data-label="Alerts">
                         @for (var i = 0; i < apprenticeship.Alerts.Count(); i++)
                         {
