@@ -70,7 +70,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Services
                 MaxConcurrentThreads
             );
 
-            return bag.ToList();
+            return bag.OrderBy(le => le.Id).ToList();
         }
     }
 }
