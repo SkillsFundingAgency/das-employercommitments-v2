@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.CommitmentPermissions.Client;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.CommitmentsV2.Api.Client.Http;
 using SFA.DAS.Http;
 using System;
 
-namespace SFA.DAS.CommitmentsV2.Api.Client
+namespace SFA.DAS.EmployerCommitmentsV2.Web
 {
     public class LocalDevApiClientFactory : ICommitmentsApiClientFactory, ICommitmentPermissionsApiClientFactory
     {
