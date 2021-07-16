@@ -2,12 +2,16 @@
 @if (TempData.ContainsKey(ITempDataDictionaryExtensions.FlashMessageTempDataKey))
 {
     var message = TempData[ITempDataDictionaryExtensions.FlashMessageTempDataKey];
+    var detail = TempData[ITempDataDictionaryExtensions.FlashMessageTempDetailKey];
     var level = (ITempDataDictionaryExtensions.FlashMessageLevel)TempData[ITempDataDictionaryExtensions.FlashMessageLevelTempDataKey];
 
     @if (level == ITempDataDictionaryExtensions.FlashMessageLevel.Info)
     {
         <div class="govuk-grid-column-two-thirds das-notification govuk-!-margin-bottom-4 das-notification--info" tabindex="-1">
             <h3 class="das-notification__heading">@message</h3>
+            <div class="govuk-panel__body">
+                @detail
+            </div>
         </div>
     }
     @if (level == ITempDataDictionaryExtensions.FlashMessageLevel.Success)
@@ -16,6 +20,9 @@
             <h1 class="govuk-panel__title">
                 @message
             </h1>
+            <div class="govuk-panel__body">
+                @detail
+            </div>
         </div>
     }
 }

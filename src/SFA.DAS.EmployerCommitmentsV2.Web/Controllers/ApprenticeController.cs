@@ -37,8 +37,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private const string ApprenticeUpdated = "Apprentice updated";
         private const string ApprenticeEditStopDate = "New stop date confirmed";
         private const string ApprenticeEndDateUpdatedOnCompletedRecord = "New planned training finish date confirmed";
-        private const string FlashMessageTempDataKey = "FlashMessage";
         private const string ChangesApprovedMessage = "Changes approved";
+        private const string AlertDetailsWhenApproved = "An alert has been sent to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service";
         private const string ChangesRejectedMessage = "Changes rejected";
         private const string ChangesUndoneMessage = "Changes undone";
 
@@ -667,7 +667,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 };
 
                 await _commitmentsApiClient.AcceptApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
-                TempData.AddFlashMessage(ChangesApprovedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                TempData.AddFlashMessage(ChangesApprovedMessage, AlertDetailsWhenApproved, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
             else
             {
