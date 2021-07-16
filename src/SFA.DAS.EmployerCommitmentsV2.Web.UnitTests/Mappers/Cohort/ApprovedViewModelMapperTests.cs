@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
@@ -63,6 +65,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await fixture.Map();
             Assert.AreEqual(fixture.Source.CohortReference, result.CohortReference);
         }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task HasApprenticeEmailIsMappedCorrectly(bool expected)
+        {
+            var fixture = new ApprovedViewModelMapperTestsFixture();
+            fixture.AuthorizationService.Setup(x => x.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail))
+                .ReturnsAsync(expected);
+            var result = await fixture.Map();
+            Assert.AreEqual(expected, result.HasApprenticeEmail);
+        }
+
     }
 
     public class ApprovedViewModelMapperTestsFixture
@@ -72,6 +86,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public ApprovedViewModel Result;
         public Mock<ICommitmentsApiClient> CommitmentsApiClient;
         public Mock<IEncodingService> EncodingService;
+        public Mock<IAuthorizationService> AuthorizationService;
         public GetCohortResponse Cohort;
         public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
         private Fixture _autoFixture;
@@ -92,8 +107,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 .ReturnsAsync(DraftApprenticeshipsResponse);
 
             EncodingService = new Mock<IEncodingService>();
+            AuthorizationService = new Mock<IAuthorizationService>();
 
-            Mapper = new ApprovedViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object);
+            Mapper = new ApprovedViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, AuthorizationService.Object);
             Source = _autoFixture.Create<ApprovedRequest>();
         }
 
@@ -107,7 +123,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             return Mapper.Map(TestHelper.Clone(Source));
         }
-
-
     }
 }

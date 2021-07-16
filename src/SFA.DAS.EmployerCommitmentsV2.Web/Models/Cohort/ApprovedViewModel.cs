@@ -12,7 +12,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string LegalEntityName { get; set; }
         public string ProviderName { get; set; }
         public string Message { get; set; }
-
+        public bool HasApprenticeEmail { get; set; }
         public string PageTitle
         {
             get
