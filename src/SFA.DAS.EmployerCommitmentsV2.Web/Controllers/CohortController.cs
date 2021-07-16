@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    //[DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
+    [DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
     [Route("{accountHashedId}/unapproved")]
     public class CohortController : Controller
     {
