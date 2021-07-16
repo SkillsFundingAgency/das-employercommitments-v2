@@ -36,6 +36,10 @@
         @if (Model.WithParty == Party.None)
         {
             <p class="govuk-body">You've approved these apprentice details. <a id="next-manage-link" class="govuk-link" href="@Url.CommitmentsLink($"/accounts/{Model.AccountHashedId}/apprentices/manage/all")">Manage your apprentices</a> to view or update details.</p>
+            @if (Model.HasApprenticeEmail)
+            {
+                <p class="govuk-body">Your apprentice will now receive an email alert inviting them to the My apprenticeship service where they will review and confirm their apprenticeship details</p>
+            }
         }
         else if (Model.WithParty == Party.Provider)
         {
