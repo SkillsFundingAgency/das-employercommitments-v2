@@ -636,7 +636,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 }
                 else
                 {
-                    TempData.AddFlashMessage(ApprenticeUpdated, null, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                    TempData.AddFlashMessage(ApprenticeUpdated, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
                 }
             }
 
