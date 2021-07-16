@@ -47,8 +47,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
     public class WhenPostingReviewApprenticeshipUpdatesTestsFixture : ApprenticeControllerTestFixtureBase
     {
-        public const string FlashMessageTempDataKey = "FlashMessage";
+        public const string FlashMessageBodyTempDataKey = "FlashMessageBody";
         public const string FlashMessageLevelTempDataKey = "FlashMessageLevel";
+        public const string FlashMessageTitleTempDataKey = "FlashMessageTitle";
         private const string ChangesApprovedMessage = "Changes approved";
         private const string ChangesRejectedMessage = "Changes rejected";
 
@@ -68,16 +69,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             _mockCommitmentsApiClient.Verify(x => x.AcceptApprenticeshipUpdates(ViewModel.ApprenticeshipId, It.IsAny<AcceptApprenticeshipUpdatesRequest>(), It.IsAny<CancellationToken>()), Times.Once());
             Assert.IsTrue(_controller.TempData.Values.Contains(ChangesApprovedMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageTempDataKey));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageBodyTempDataKey));
             Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevelTempDataKey));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageTitleTempDataKey));
         }
 
         internal void VerifyRejectApprenticeshipUpdatesApiIsCalled()
         {
             _mockCommitmentsApiClient.Verify(x => x.RejectApprenticeshipUpdates(ViewModel.ApprenticeshipId, It.IsAny<RejectApprenticeshipUpdatesRequest>(), It.IsAny<CancellationToken>()), Times.Once());
             Assert.IsTrue(_controller.TempData.Values.Contains(ChangesRejectedMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageTempDataKey));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageBodyTempDataKey));
             Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevelTempDataKey));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageTitleTempDataKey));
         }
     }
 }

@@ -103,5 +103,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
         }
         public int? EndMonth { get; set; }
         public int? EndYear { get; set; }
+
+        public string ProviderName { get; set; }
     }
 }

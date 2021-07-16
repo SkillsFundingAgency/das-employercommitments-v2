@@ -20,8 +20,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     public class WhenPostingEditStopDateTests : ApprenticeControllerTestBase
     {
         private const string ApprenticeEditStopDate = "New stop date confirmed";
-        private const string FlashMessage = "FlashMessage";
+        private const string FlashMessageBody = "FlashMessageBody";
         private const string FlashMessageLevel = "FlashMessageLevel";
+        private const string FlashMessageTitle = "FlashMessageTitle";
         private Fixture _autoFixture;
         private EditStopDateViewModel _viewModel;
 
@@ -75,8 +76,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             //Assert
             Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
             Assert.IsTrue(_controller.TempData.Values.Contains(ApprenticeEditStopDate));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessage));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageBody));
             Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageTitle));
         }
     }
 }

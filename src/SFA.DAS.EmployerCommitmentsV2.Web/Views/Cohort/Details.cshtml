@@ -16,22 +16,34 @@
 
         @if (!Model.IsAgreementSigned)
         {
-
-            <div class="govuk-panel" style="border-color:#2e358b;">
-                <h1 class="govuk-panel__title">
-                    You must sign your employer agreement before you can approve this record
-                </h1>
+            <div class="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        Important
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <p class="govuk-notification-banner__heading">
+                        You must accept your employer agreement before you can approve this record
+                    </p>
+                </div>
             </div>
         }
         else
         {
             if (!Model.IsCompleteForEmployer)
             {
-
-                <div class="govuk-panel" style="border-color:#2e358b;">
-                    <h1 class="govuk-panel__title">
-                        You must complete all apprentice details before you can approve this record
-                    </h1>
+                <div class="govuk-notification-banner">
+                    <div class="govuk-notification-banner__header">
+                        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                            Important
+                        </h2>
+                    </div>
+                    <div class="govuk-notification-banner__content">
+                        <p class="govuk-notification-banner__heading">
+                            You must complete all apprentice details before you can approve this record
+                        </p>
+                    </div>
                 </div>
             }
         }
