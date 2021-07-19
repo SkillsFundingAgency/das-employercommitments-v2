@@ -23,6 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 ApprenticeshipId = source.ApprenticeshipId,
                 FirstName = source.FirstName,
                 LastName = source.LastName,
+                Email = source.Email,
                 DateOfBirth = source.DateOfBirth.Date,
                 ULN = source.ULN,
                 Cost = source.Cost,

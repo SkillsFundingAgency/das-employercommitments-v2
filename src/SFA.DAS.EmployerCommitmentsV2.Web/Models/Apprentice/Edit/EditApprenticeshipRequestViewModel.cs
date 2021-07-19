@@ -27,6 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Email { get; set; }
         public string HashedApprenticeshipId { get; set; }
         [JsonIgnore]
         public long ApprenticeshipId { get; set; }
@@ -79,5 +80,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         public bool IsUpdateLockedForStartDateAndCourse { get; set; }
         public bool IsEndDateLockedForUpdate { get; internal set; }
+        public bool ShowApprenticeEmail { get; set; }
     }
 }
