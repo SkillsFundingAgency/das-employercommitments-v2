@@ -21,8 +21,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     public class WhenPostingPauseRequestConfirmation : ApprenticeControllerTestBase
     {
         public const string ApprenticePausedMessage = "Apprenticeship paused";
-        private const string FlashMessage = "FlashMessage";
+        private const string FlashMessageBody = "FlashMessageBody";
         private const string FlashMessageLevel = "FlashMessageLevel";
+        private const string FlashMessageTitle = "FlashMessageTitle";
 
         [SetUp]
         public void Arrange()
@@ -75,8 +76,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             //Assert
             Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
             Assert.IsTrue(_controller.TempData.Values.Contains(ApprenticePausedMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessage));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageBody));
             Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageTitle));
         }
 
         [Test, MoqAutoData]
@@ -117,8 +119,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             //Assert
             Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
             Assert.IsFalse(_controller.TempData.Values.Contains(ApprenticePausedMessage));
-            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessage));
+            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessageBody));
             Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessageLevel));
+            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessageTitle));
         }
     }
 }

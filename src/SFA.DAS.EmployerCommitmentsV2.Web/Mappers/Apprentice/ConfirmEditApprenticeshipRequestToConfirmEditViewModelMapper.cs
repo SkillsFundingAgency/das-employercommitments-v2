@@ -41,7 +41,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 OriginalApprenticeship = new ConfirmEditApprenticeshipViewModel()
                 {
                     ULN = apprenticeship.Uln
-                }
+                },
+                ProviderName = apprenticeship.ProviderName
             };
 
             if (source.FirstName != apprenticeship.FirstName || source.LastName != apprenticeship.LastName)
