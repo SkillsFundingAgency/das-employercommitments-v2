@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private const string ApprenticeEditStopDate = "New stop date confirmed";
         private const string ApprenticeEndDateUpdatedOnCompletedRecord = "New planned training finish date confirmed";
         private const string ChangesApprovedMessage = "Changes approved";
-        private const string AlertDetailsWhenApproved = "An alert has been sent to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service";
+        private const string AlertDetailsWhenApproved = "An alert has been sent to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service.";
         private const string ChangesRejectedMessage = "Changes rejected";
         private const string ChangesUndoneMessage = "Changes undone";
 
