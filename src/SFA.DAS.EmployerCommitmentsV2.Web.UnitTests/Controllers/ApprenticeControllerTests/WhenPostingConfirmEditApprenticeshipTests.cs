@@ -21,9 +21,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     [TestFixture]
     public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTestBase
     {
-        private const string EditApprenticeNeedReapproval = "Suggested changes sent to training provider for approval, where needed.";
-        private const string EditApprenticeUpdated = "Apprentice updated";
-        private const string FlashMessage = "FlashMessage";
+        private const string EditApprenticeUpdated = "You have updated apprentice details";
+        private const string FlashMessageBody = "FlashMessageBody";
         private const string FlashMessageLevel = "FlashMessageLevel";
         private EditApprenticeshipResponse response;
 
@@ -56,8 +55,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.AreEqual(redirect.RouteValues["AccountHashedId"], viewModel.AccountHashedId);
             Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], viewModel.ApprenticeshipHashedId);
 
-            Assert.IsTrue(_controller.TempData.Values.Contains(EditApprenticeNeedReapproval));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessage));
+            Assert.IsTrue(_controller.TempData.Values.Contains($"Your suggested changes have been sent to {viewModel.ProviderName} for approval."));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageBody));
             Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
         }
 
@@ -73,7 +72,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], viewModel.ApprenticeshipHashedId);
 
             Assert.IsTrue(_controller.TempData.Values.Contains(EditApprenticeUpdated));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessage));
+            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageBody));
             Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
         }
 

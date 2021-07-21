@@ -35,17 +35,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool? MadeRedundant { get; set; }
         public bool HasPendingChangeOfProviderRequest { get; set; }
         public Party? PendingChangeOfProviderRequestWithParty { get; set; }
-        public string HashedNewApprenticeshipId { get; set; }
+        public bool HasContinuation { get; set; }
         public bool ShowChangeTrainingProviderLink => ((ApprenticeshipStatus == ApprenticeshipStatus.Stopped ||
                                                        ApprenticeshipStatus == ApprenticeshipStatus.Paused ||
                                                        ApprenticeshipStatus == ApprenticeshipStatus.Live ||
                                                        ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart) &&
-                                                       !HasPendingChangeOfProviderRequest &&
-                                                       !HasPendingChangeOfEmployerRequest &&
-                                                       string.IsNullOrEmpty(HashedNewApprenticeshipId));
-
-        public bool HasPendingChangeOfEmployerRequest { get; set; }
-        public Party? PendingChangeOfEmployerRequestWithParty { get; set; }
+                                                       !HasContinuation);
         public List<TrainingProviderHistory> TrainingProviderHistory { get; set; }
         public ConfirmationStatus? ConfirmationStatus { get; set; }
         public bool ShowApprenticeConfirmationColumn { get; set; }
