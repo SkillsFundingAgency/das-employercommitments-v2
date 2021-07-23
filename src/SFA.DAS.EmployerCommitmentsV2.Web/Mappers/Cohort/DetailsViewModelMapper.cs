@@ -106,7 +106,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                             DateOfBirth = a.DateOfBirth,
                             EndDate = a.EndDate,
                             StartDate = a.StartDate,
-                            OriginalStartDate = a.OriginalStartDate                            
+                            OriginalStartDate = a.OriginalStartDate                       
                         })
                 .ToList()
                 })
