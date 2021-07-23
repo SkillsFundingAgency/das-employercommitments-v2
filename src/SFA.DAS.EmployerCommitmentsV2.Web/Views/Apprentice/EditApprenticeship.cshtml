@@ -39,6 +39,13 @@
 
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 <dl class="das-definition-list">
+                    <dt class="das-definition-list__title" asp-for="LastName">Email address</dt>
+                    <dd class="das-definition-list__definition" id="lastName">@Model.Email</dd>
+                    @Html.Hidden("Email", Model.Email)
+                </dl>
+
+                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+                <dl class="das-definition-list">
                     <dt class="das-definition-list__title" asp-for="DateOfBirth">Date of birth</dt>
                     <dd class="das-definition-list__definition" id="dob">@Model.DateOfBirth.Date.Value.ToGdsFormat()</dd>
                     @Html.HiddenFor(x => x.BirthDay)
@@ -58,6 +65,23 @@
                     @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
                     <input asp-for="LastName" class="govuk-input govuk-!-width-two-thirds" id="lastName" />
                 </div>
+                @if (Model.ShowApprenticeEmail && !string.IsNullOrEmpty(Model.Email))
+                {
+                    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
+                        <label asp-for="Email" class="govuk-label govuk-!-font-weight-bold">Email address</label>
+                        @Html.ValidationMessageFor(m => m.Email, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email) })
+                        <input asp-for="Email" class="govuk-input govuk-!-width-two-thirds" id="email" />
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(Model.Email))
+                {
+                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+                    <dl class="das-definition-list">
+                        <dt class="das-definition-list__title" asp-for="LastName">Email address</dt>
+                        <dd class="das-definition-list__definition" id="lastName">@Model.Email</dd>
+                        @Html.Hidden("Email", Model.Email)
+                    </dl>
+                }
 
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.DateOfBirth, "govuk-form-group--error")">
@@ -267,7 +291,7 @@
 
             <div class="govuk-button-group">
                 <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button">
-                   Update details
+                    Update details
                 </button>
                 <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest{ AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.HashedApprenticeshipId })" id="cancel-button">Cancel and return</a>
             </div>
