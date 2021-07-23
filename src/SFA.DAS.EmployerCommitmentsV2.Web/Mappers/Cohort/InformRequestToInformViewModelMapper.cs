@@ -2,17 +2,26 @@
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.Authorization.Services;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
     public class InformRequestToInformViewModelMapper : IMapper<InformRequest, InformViewModel>
     {
-        public Task<InformViewModel> Map(InformRequest source)
+        private readonly IAuthorizationService _authorizationService;
+
+        public InformRequestToInformViewModelMapper(IAuthorizationService authorizationService)
         {
-            return Task.FromResult(new InformViewModel
+            _authorizationService = authorizationService;
+        }
+        public async Task<InformViewModel> Map(InformRequest source)
+        {
+            return new InformViewModel
             {
-                AccountHashedId = source.AccountHashedId
-            });
+                AccountHashedId = source.AccountHashedId,
+                HasApprenticeEmail = await _authorizationService.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail)
+            };
         }
     }
 }

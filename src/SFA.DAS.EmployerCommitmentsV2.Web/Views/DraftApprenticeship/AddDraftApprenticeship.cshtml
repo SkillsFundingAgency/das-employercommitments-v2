@@ -12,8 +12,23 @@
         <partial name="_ValidationSummary" />
         <h1 class="govuk-heading-xl">Add apprentice details</h1>
         <div class="govuk-inset-text">
-            <p class="govuk-body">You must add the apprentice’s first and last names - fill in as many other fields as you can. You'll be able to return later to make changes or add more information. </p>
-            <p class="govuk-body">You'll only be able to authorise payments for this apprentice once all the fields have been completed - either by yourself or your training provider</p>
+            @if (Model.ShowEmail)
+            {
+            <p class="govuk-body">
+                You must add the apprentice’s:
+                <ul>
+                    <li>first name</li>
+                    <li>last name</li>
+                    <li>email address</li>
+                </ul>
+                Fill in as many other fields as you can. You're able to return to make changes or add more information at any time.
+            </p>
+            }
+            else
+            {
+                <p class="govuk-body">You must add the apprentice’s first and last names - fill in as many other fields as you can. You'll be able to return later to make changes or add more information.</p>
+            }
+           <p class="govuk-body">You'll only be able to authorise payments for this apprentice once all the fields have been completed - either by yourself or your training provider.</p>
         </div>
 
         <form id="addApprenticeship" novalidate method="post">
