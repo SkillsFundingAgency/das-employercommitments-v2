@@ -86,11 +86,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         private IReadOnlyCollection<DetailsViewCourseGroupingModel> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships)
         {
             var groupedByCourse = draftApprenticeships
-                .GroupBy(a => new { a.CourseCode, a.CourseName })
+                .GroupBy(a => new { a.CourseCode, a.CourseName, a.TrainingType })
                 .Select(course => new DetailsViewCourseGroupingModel
                 {
                     CourseCode = course.Key.CourseCode,
                     CourseName = course.Key.CourseName,
+                    TrainingType = course.Key.TrainingType,
                     DraftApprenticeships = course
                         // Sort before on raw properties rather than use displayName property post select for performance reasons
                         .OrderBy(a => a.FirstName)
@@ -105,7 +106,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                             DateOfBirth = a.DateOfBirth,
                             EndDate = a.EndDate,
                             StartDate = a.StartDate,
-                            OriginalStartDate = a.OriginalStartDate
+                            OriginalStartDate = a.OriginalStartDate                            
                         })
                 .ToList()
                 })
