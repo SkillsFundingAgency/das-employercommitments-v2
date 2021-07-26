@@ -8,6 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
     {
         public static readonly string FlashMessageTitleTempDataKey = "FlashMessageTitle";
         public static readonly string FlashMessageBodyTempDataKey = "FlashMessageBody";
+        public static readonly string FlashMessageTempDetailKey = "FlashMessageDetail";
         public static readonly string FlashMessageLevelTempDataKey = "FlashMessageLevel";
 
         public enum FlashMessageLevel
@@ -15,6 +16,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             Info,
             Warning,
             Success
+        }
+
+        public static void AddFlashMessageWithDetail(this ITempDataDictionary tempData, string body, string details, FlashMessageLevel level)
+        {
+            tempData.AddFlashMessage(body, level);
+            tempData[FlashMessageTempDetailKey] = details;
         }
 
         public static void AddFlashMessage(this ITempDataDictionary tempData, string body, FlashMessageLevel level)
