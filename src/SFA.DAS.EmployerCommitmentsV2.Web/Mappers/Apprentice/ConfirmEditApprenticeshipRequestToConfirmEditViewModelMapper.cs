@@ -41,7 +41,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 OriginalApprenticeship = new ConfirmEditApprenticeshipViewModel()
                 {
                     ULN = apprenticeship.Uln
-                }
+                },
+                ProviderName = apprenticeship.ProviderName
             };
 
             if (source.FirstName != apprenticeship.FirstName || source.LastName != apprenticeship.LastName)
@@ -49,9 +50,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 vm.FirstName = source.FirstName;
                 vm.LastName = source.LastName;
             }
-
             vm.OriginalApprenticeship.FirstName = apprenticeship.FirstName;
             vm.OriginalApprenticeship.LastName = apprenticeship.LastName;
+
+            if (source.Email != apprenticeship.Email)
+            {
+                vm.Email = source.Email;
+            }
+            vm.OriginalApprenticeship.Email = apprenticeship.Email;
 
             if (source.DateOfBirth.Date != apprenticeship.DateOfBirth)
             {

@@ -100,6 +100,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task Email_IsMapped()
+        {
+            var viewModel = await fixture.Map();
+
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.Email, viewModel.ApprenticeshipUpdates.Email);
+        }
+
+        [Test]
         public async Task TrainingName_IsMapped()
         {
             var viewModel = await fixture.Map();
@@ -210,6 +218,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(fixture.ApprenticeshipUpdate.LastName, viewModel.ApprenticeshipUpdates.LastName);
         }
 
+        [Test]
+        public async Task OriginalApprenticeship_Email_IsMapped()
+        {
+            var viewModel = await fixture.Map();
+
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.Email, viewModel.ApprenticeshipUpdates.Email);
+        }
 
         public class ReviewApprenticeshipUpdatesRequestToViewModelMapperTestsFixture
         {

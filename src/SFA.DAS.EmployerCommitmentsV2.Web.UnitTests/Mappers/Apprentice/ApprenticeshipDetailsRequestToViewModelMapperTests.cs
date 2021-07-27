@@ -6,6 +6,7 @@ using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
@@ -17,9 +18,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetApprenticeshipUpdatesResponse;
-using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetChangeOfPartyRequestsResponse;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetChangeOfProviderChainResponse;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetPriceEpisodesResponse;
 
@@ -44,6 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private const long ApprenticeshipIdFirst = 456;
         private const long ApprenticeshipIdMiddle = 356;
         private const long ApprenticeshipIdLast = 256;
+        private const string ApprenticeshipEmail = "a@a.com";
 
         [SetUp]
         public void SetUp()
@@ -502,76 +502,37 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(pendingChangeRequest, result.HasPendingChangeOfProviderRequest);
         }
 
-        [TestCase(ChangeOfPartyRequestStatus.Approved, false)]
-        [TestCase(ChangeOfPartyRequestStatus.Rejected, false)]
-        [TestCase(ChangeOfPartyRequestStatus.Withdrawn, false)]
-        [TestCase(ChangeOfPartyRequestStatus.Pending, true)]
-        public async Task HasPendingChangeOfEmployerRequest_IsMapped(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool pendingChangeRequest)
-        {
-            //Arrange
-            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest>()
-            {
-                new GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest
-                {
-                    Id = 1,
-                    ChangeOfPartyType = ChangeOfPartyRequestType.ChangeEmployer,
-                    OriginatingParty = Party.Employer,
-                    Status = changeOfPartyRequestStatus,
-                    WithParty = Party.Provider
-                }
-            };
-
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            Assert.AreEqual(pendingChangeRequest, result.HasPendingChangeOfEmployerRequest);
-        }
-
-        [TestCase(ChangeOfPartyRequestStatus.Approved, ChangeOfPartyRequestType.ChangeProvider, false)]
-        [TestCase(ChangeOfPartyRequestStatus.Pending, ChangeOfPartyRequestType.ChangeProvider, false)]
-        [TestCase(ChangeOfPartyRequestStatus.Rejected, ChangeOfPartyRequestType.ChangeProvider, true)]
-        [TestCase(ChangeOfPartyRequestStatus.Withdrawn, ChangeOfPartyRequestType.ChangeProvider, true)]
-        [TestCase(ChangeOfPartyRequestStatus.Approved, ChangeOfPartyRequestType.ChangeEmployer, false)]
-        [TestCase(ChangeOfPartyRequestStatus.Pending, ChangeOfPartyRequestType.ChangeEmployer, false)]
-        [TestCase(ChangeOfPartyRequestStatus.Rejected, ChangeOfPartyRequestType.ChangeEmployer, true)]
-        [TestCase(ChangeOfPartyRequestStatus.Withdrawn, ChangeOfPartyRequestType.ChangeEmployer, true)]
-        public async Task ShowChangeTrainingProviderLink_IsMapped_When_Change_Of_Party(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, ChangeOfPartyRequestType changeOfPartyRequestType, bool flag)
+        [TestCase(12345, false)]
+        [TestCase(null, true)]
+        public async Task ShowChangeTrainingProviderLink_IsMapped_When_HasContinuation(long? continuedBy, bool expected)
         {
             //Arrange 
             _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
-            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<ChangeOfPartyRequest>
-            {
-               new ChangeOfPartyRequest
-                    {
-                        Status = changeOfPartyRequestStatus,
-                        ChangeOfPartyType = changeOfPartyRequestType,
-                        NewApprenticeshipId = _apprenticeshipResponse.Id + 1
-                    }
-            };
-
+            _apprenticeshipResponse.ContinuedById = continuedBy;
+            
             //Act
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(result.ShowChangeTrainingProviderLink, flag);
+            Assert.AreEqual(expected, result.ShowChangeTrainingProviderLink);
         }
 
         [TestCase(ApprenticeshipStatus.Stopped, true)]
         [TestCase(ApprenticeshipStatus.Paused, true)]
         [TestCase(ApprenticeshipStatus.Live, true)]
         [TestCase(ApprenticeshipStatus.WaitingToStart, true)]
-        public async Task ShowChangeProviderLink_IsMapped_When_No_Change_Of_Party(ApprenticeshipStatus apprenticeshipStatus, bool expected)
+        [TestCase(ApprenticeshipStatus.Completed, false)]
+        public async Task ShowChangeProviderLink_IsMapped_For_ApprenticeshipStatus(ApprenticeshipStatus apprenticeshipStatus, bool expected)
         {
             //Arrange
             _apprenticeshipResponse.Status = apprenticeshipStatus;
-            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<ChangeOfPartyRequest>();
+            _apprenticeshipResponse.ContinuedById = null;
 
             //Act
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(result.ShowChangeTrainingProviderLink, expected);
+            Assert.AreEqual(expected, result.ShowChangeTrainingProviderLink);
         }
 
         [TestCase(ApprenticeshipIdFirst, 0, 3)]
@@ -662,6 +623,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             Assert.AreEqual(show, result.ShowApprenticeConfirmationColumn);
+        }
+
+        [Test]
+        public async Task CheckEmailIsMappedCorrectly()
+        {
+            _apprenticeshipResponse.Email = ApprenticeshipEmail;
+
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(ApprenticeshipEmail, result.Email);
         }
     }
 }

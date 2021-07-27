@@ -28,8 +28,26 @@
                 </p>
             }
         }
+        @if (Model.ShowApprenticeConfirmationColumn && Model.ConfirmationStatus == ConfirmationStatus.Overdue)
+        {
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        Help with your apprentice’s overdue confirmation
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    If your apprentice has not confirmed their apprenticeship details within the 14 day deadline, you should:
+                    <ul>
+                        <li>
+                            contact the apprentice to complete their apprenticeship confirmation
+                        </li>
+                    </ul>
+                </div>
+            </details>
+        }
 
-        <table id="app-status" class="govuk-table govuk-!-margin-bottom-8">
+    <table id="app-status" class="govuk-table govuk-!-margin-bottom-8">
             <tbody>
                 <tr>
                     <th scope="row" class="govuk-table__header das-table-cell-width-45">Status</th>
@@ -103,7 +121,7 @@
                     <tr>
                         <th scope="row" class="govuk-table__header">Apprentice confirmation</th>
                         <td id="madeRedundant" class="govuk-table__cell" colspan="2">
-                            @Model.ConfirmationStatus
+                            @Model.ConfirmationStatus.ToDisplayString()
                         </td>
                     </tr>
                 }
@@ -169,6 +187,13 @@
                     <th scope="row" class="govuk-table__header  das-table-cell-width-45">Name</th>
                     <td id="apprentice-name" class="govuk-table__cell das-table-cell-width-55">@Model.ApprenticeName</td>
                 </tr>
+                @if (!string.IsNullOrEmpty(Model.Email))
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Email address</th>
+                        <td id="email address" class="govuk-table__cell">@Model.Email</td>
+                    </tr>
+                }
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Unique learner number</th>
                     <td id="uln" class="govuk-table__cell">@Model.ULN</td>

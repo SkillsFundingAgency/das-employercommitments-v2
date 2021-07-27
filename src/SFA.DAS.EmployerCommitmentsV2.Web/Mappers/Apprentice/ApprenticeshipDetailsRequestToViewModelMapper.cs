@@ -66,10 +66,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
                 bool enableEdit = EnableEdit(apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged);
 
-                var pendingChangeOfProviderRequest = changeofPartyRequests.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
-                var pendingChangeOfEmployerRequest = changeofPartyRequests.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
-                var approvedChangeOfPartyRequest = changeofPartyRequests.ChangeOfPartyRequests?.Where(x => x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();
-
+                var pendingChangeOfProviderRequest = changeofPartyRequests.ChangeOfPartyRequests?
+                    .Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
+                
                 var result = new ApprenticeshipDetailsRequestViewModel
                 {
                     HashedApprenticeshipId = source.ApprenticeshipHashedId,
@@ -93,17 +92,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     EnableEdit = enableEdit,
                     EndpointAssessorName = apprenticeship.EndpointAssessorName,
                     MadeRedundant = apprenticeship.MadeRedundant,
-                    
                     HasPendingChangeOfProviderRequest = pendingChangeOfProviderRequest != null,
                     PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty,
-
-                    HashedNewApprenticeshipId = approvedChangeOfPartyRequest?.NewApprenticeshipId != null
-                            ? _encodingService.Encode(approvedChangeOfPartyRequest.NewApprenticeshipId.Value, EncodingType.ApprenticeshipId)
-                            : null,
-
-                    HasPendingChangeOfEmployerRequest = pendingChangeOfEmployerRequest != null,
-                    PendingChangeOfEmployerRequestWithParty = pendingChangeOfEmployerRequest?.WithParty,
-
+                    HasContinuation = apprenticeship.HasContinuation,
                     TrainingProviderHistory = changeOfProviderChain?.ChangeOfProviderChain
                         .Select(copc => new TrainingProviderHistory
                         {
@@ -118,7 +109,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     PendingDataLockChange = dataLockPriceTriaged || dataLockCourseChangedTraiged,
                     PendingDataLockRestart = dataLockCourseTriaged,
                     ConfirmationStatus = apprenticeship.ConfirmationStatus,
-                    ShowApprenticeConfirmationColumn = await _authorizationService.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail)
+                    ShowApprenticeConfirmationColumn = await _authorizationService.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail),
+                    Email = apprenticeship.Email,
                 };
 
                 return result;

@@ -25,6 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
         public long ApprenticeshipId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Email { get; set; }
         public string ULN { get; set; }
         public string CourseName { get; set; }
         public decimal? Cost { get; set; }
@@ -102,5 +103,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
         }
         public int? EndMonth { get; set; }
         public int? EndYear { get; set; }
+
+        public string ProviderName { get; set; }
     }
 }
