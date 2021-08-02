@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
@@ -48,21 +51,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
     public class WhenPostingViewApprenticeshipUpdatesTestsFixture : ApprenticeControllerTestFixtureBase
     {
+        public Mock<IAuthenticationService> AuthenticationService { get; }
+        public UserInfo UserInfo;
+
         public ViewApprenticeshipUpdatesViewModel ViewModel { get; set; }
         public WhenPostingViewApprenticeshipUpdatesTestsFixture() : base () 
         {
             ViewModel = new ViewApprenticeshipUpdatesViewModel { ApprenticeshipId = 1, AccountId = 1 };
             _controller.TempData = new TempDataDictionary( Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
+
+            var autoFixture = new Fixture();
+            UserInfo = autoFixture.Create<UserInfo>();
+            AuthenticationService = new Mock<IAuthenticationService>();
+            AuthenticationService.Setup(x => x.UserInfo).Returns(UserInfo);
         }
 
         public async Task<IActionResult> ViewApprenticeshipUpdates()
         {
-            return await _controller.ViewApprenticeshipUpdates(ViewModel);
+            return await _controller.ViewApprenticeshipUpdates(AuthenticationService.Object, ViewModel);
         }     
 
         internal void Verify_UndoApprenticeshipUpdatesApi_Is_Called()
         {
-            _mockCommitmentsApiClient.Verify(x => x.UndoApprenticeshipUpdates(ViewModel.ApprenticeshipId, It.IsAny<UndoApprenticeshipUpdatesRequest>(), It.IsAny<CancellationToken>()), Times.Once());
+            _mockCommitmentsApiClient.Verify(x => x.UndoApprenticeshipUpdates(ViewModel.ApprenticeshipId, It.Is<UndoApprenticeshipUpdatesRequest>(o => o.UserInfo != null), It.IsAny<CancellationToken>()), Times.Once());
         }
 
         internal void Verify_UndoApprenticeshipUpdatesApi_IsNot_Called()
