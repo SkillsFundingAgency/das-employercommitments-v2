@@ -52,13 +52,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
             var cohortTask = _commitmentsApiClient.GetCohort(source.CohortId);
             var draftApprenticeshipsTask = _commitmentsApiClient.GetDraftApprenticeships(source.CohortId);
+            var emailOverlapsTask = _commitmentsApiClient.GetEmailOverlapChecks(source.CohortId);
 
-            await Task.WhenAll(cohortTask, draftApprenticeshipsTask);
+            await Task.WhenAll(cohortTask, draftApprenticeshipsTask, emailOverlapsTask);
 
             cohort = await cohortTask;
             var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
+            var emailOverlaps = (await emailOverlapsTask).ApprenticeshipEmailOverlaps.ToList();
 
-            var courses = GroupCourses(draftApprenticeships);
+            var courses = GroupCourses(draftApprenticeships, emailOverlaps);
             var viewOrApprove = cohort.WithParty == CommitmentsV2.Types.Party.Employer ? "Approve" : "View";
             var isAgreementSigned = await IsAgreementSigned(cohort.AccountLegalEntityId);
 
@@ -78,12 +80,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                     : $"{viewOrApprove} {draftApprenticeships.Count} apprentices' details",
                 IsApprovedByProvider = cohort.IsApprovedByProvider,
                 IsAgreementSigned = isAgreementSigned,
-                IsCompleteForEmployer = cohort.IsCompleteForEmployer,
+                IsCompleteForEmployer = cohort.IsCompleteForEmployer && !emailOverlaps.Any(),
                 ShowAddAnotherApprenticeOption = !cohort.IsLinkedToChangeOfPartyRequest
             };
         }
 
-        private IReadOnlyCollection<DetailsViewCourseGroupingModel> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships)
+        private IReadOnlyCollection<DetailsViewCourseGroupingModel> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships, List<ApprenticeshipEmailOverlap> emailOverlaps)
         {
             var groupedByCourse = draftApprenticeships
                 .GroupBy(a => new { a.CourseCode, a.CourseName })
@@ -105,7 +107,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                             DateOfBirth = a.DateOfBirth,
                             EndDate = a.EndDate,
                             StartDate = a.StartDate,
-                            OriginalStartDate = a.OriginalStartDate
+                            OriginalStartDate = a.OriginalStartDate,
+                            HasOverlappingEmail = emailOverlaps.Any(x=>x.Id == a.Id) 
                         })
                 .ToList()
                 })
@@ -113,10 +116,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 .ToList();
 
             PopulateFundingBandExcessModels(groupedByCourse);
+            PopulateEmailOverlapsModel(groupedByCourse);
 
             return groupedByCourse;
         }
 
+        private void PopulateEmailOverlapsModel(List<DetailsViewCourseGroupingModel> courseGroups)
+        {
+            foreach (var courseGroup in courseGroups)
+            {
+                var numberOfEmailOverlaps = courseGroup.DraftApprenticeships.Count(x => x.HasOverlappingEmail);
+                if (numberOfEmailOverlaps > 0)
+                {
+                    courseGroup.EmailOverlaps = new EmailOverlapsModel(numberOfEmailOverlaps);
+                }
+
+            }
+        }
         private void PopulateFundingBandExcessModels(List<DetailsViewCourseGroupingModel> courseGroups)
         {
             var results = courseGroups.Select(courseGroup => SetFundingBandCap(courseGroup.CourseCode, courseGroup.DraftApprenticeships)).ToList();

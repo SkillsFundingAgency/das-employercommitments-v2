@@ -19,6 +19,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
 using SFA.DAS.Http;
+using SFA.DAS.Testing.Builders;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -509,6 +510,48 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(1000, result.Courses.First().DraftApprenticeships.First().FundingBandCap);
             Assert.AreEqual(true, result.Courses.First().DraftApprenticeships.First().ExceedsFundingBandCap);
         }
+
+        [Test]
+        public async Task EmailOverlapIsMappedCorrectlyToDraftApprenticeshipAndToSummaryLine()
+        {
+            var f = new DetailsViewModelMapperTestsFixture().WithOneEmailOverlapping();
+            var apprenticeshipId = f.EmailOverlapResponse.ApprenticeshipEmailOverlaps.First().Id;
+
+            var result = await f.Map();
+            var course = result.Courses.FirstOrDefault(x => x.DraftApprenticeships.Any(y => y.Id == apprenticeshipId));
+
+            Assert.NotNull(course);
+            Assert.NotNull(course.EmailOverlaps);
+            Assert.AreEqual(1, course.EmailOverlaps.NumberOfEmailOverlaps);
+            Assert.AreEqual(1, course.DraftApprenticeships.Count(x => x.HasOverlappingEmail));
+            Assert.AreEqual(apprenticeshipId, course.DraftApprenticeships.First(x => x.HasOverlappingEmail).Id);
+        }
+
+        [Test]
+        public async Task EmailOverlapIsMappedCorrectlyToDraftApprenticeshipsAndToSummaryLineWhenTwoEmailOverlapsExistOnSameCourse()
+        {
+            var f = new DetailsViewModelMapperTestsFixture().WithTwoEmailOverlappingOnSameCourse();
+            var apprenticeshipId1 = f.EmailOverlapResponse.ApprenticeshipEmailOverlaps.First().Id;
+            var apprenticeshipId2 = f.EmailOverlapResponse.ApprenticeshipEmailOverlaps.Last().Id;
+
+            var result = await f.Map();
+            var course = result.Courses.FirstOrDefault();
+
+            Assert.NotNull(course);
+            Assert.NotNull(course.EmailOverlaps);
+            Assert.AreEqual(2, course.EmailOverlaps.NumberOfEmailOverlaps);
+            Assert.AreEqual(2, course.DraftApprenticeships.Count(x => x.HasOverlappingEmail));
+            Assert.IsTrue(course.DraftApprenticeships.First(x => x.Id == apprenticeshipId1).HasOverlappingEmail);
+            Assert.IsTrue(course.DraftApprenticeships.First(x => x.Id == apprenticeshipId2).HasOverlappingEmail);
+        }
+
+        [Test]
+        public async Task EmployerCanApproveIsMappedCorrectlyWhenThereAreEmailOverlaps()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().WithOneEmailOverlapping();
+            var result = await fixture.Map();
+            Assert.IsFalse(result.IsCompleteForEmployer);
+        }
     }
 
     public class DetailsViewModelMapperTestsFixture
@@ -524,6 +567,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public DateTime DefaultStartDate = new DateTime(2019, 10, 1);
         public AccountLegalEntityResponse AccountLegalEntityResponse;
         public LegalEntityViewModel LegalEntityViewModel;
+        public GetEmailOverlapsResponse EmailOverlapResponse;
 
         private Fixture _autoFixture;
         private TrainingProgramme _trainingProgramme;
@@ -538,6 +582,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Cohort = _autoFixture.Build<GetCohortResponse>().Without(x => x.TransferSenderId).Without(x => x.ChangeOfPartyRequestId).Create();
             AccountLegalEntityResponse = _autoFixture.Create<AccountLegalEntityResponse>();
             LegalEntityViewModel = _autoFixture.Create<LegalEntityViewModel>();
+            EmailOverlapResponse = new GetEmailOverlapsResponse { ApprenticeshipEmailOverlaps = new List<ApprenticeshipEmailOverlap>() };
 
             var draftApprenticeships = CreateDraftApprenticeshipDtos(_autoFixture);
             _autoFixture.Register(() => draftApprenticeships);
@@ -550,6 +595,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 .ReturnsAsync(DraftApprenticeshipsResponse);
             CommitmentsApiClient.Setup(x => x.GetAccountLegalEntity(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(AccountLegalEntityResponse);
+            CommitmentsApiClient.Setup(x => x.GetEmailOverlapChecks(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(EmailOverlapResponse);
 
             AccountApiClient = new Mock<IAccountApiClient>();
             AccountApiClient.Setup(x => x.GetLegalEntity(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(LegalEntityViewModel);
@@ -607,7 +654,35 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             return this;
         }
 
-        public Task<DetailsViewModel> Map()
+        public DetailsViewModelMapperTestsFixture WithOneEmailOverlapping()
+        {
+            CreateThisNumberOfApprenticeships(10);
+            var first = DraftApprenticeshipsResponse.DraftApprenticeships.First();
+            var emailOverlap = _autoFixture.Build<ApprenticeshipEmailOverlap>().With(x => x.Id, first.Id).Create();
+            EmailOverlapResponse.ApprenticeshipEmailOverlaps = new List<ApprenticeshipEmailOverlap> { emailOverlap };
+            
+            return this;
+        }
+
+        public DetailsViewModelMapperTestsFixture WithTwoEmailOverlappingOnSameCourse()
+        {
+            var draftApprenticeships = _autoFixture.CreateMany<DraftApprenticeshipDto>(5).ToArray();
+            foreach (var draftApprenticeship in draftApprenticeships)
+            {
+                draftApprenticeship.CourseCode = "ABC";
+                draftApprenticeship.CourseName = "ABC Name";
+            }
+            DraftApprenticeshipsResponse.DraftApprenticeships = draftApprenticeships;
+            var first = DraftApprenticeshipsResponse.DraftApprenticeships.First();
+            var last = DraftApprenticeshipsResponse.DraftApprenticeships.Last();
+            var emailOverlap1 = _autoFixture.Build<ApprenticeshipEmailOverlap>().With(x => x.Id, first.Id).Create();
+            var emailOverlap2 = _autoFixture.Build<ApprenticeshipEmailOverlap>().With(x => x.Id, last.Id).Create();
+            EmailOverlapResponse.ApprenticeshipEmailOverlaps = new List<ApprenticeshipEmailOverlap> { emailOverlap1, emailOverlap2 };
+
+            return this;
+        }
+
+    public Task<DetailsViewModel> Map()
         {
             return Mapper.Map(TestHelper.Clone(Source));
         }

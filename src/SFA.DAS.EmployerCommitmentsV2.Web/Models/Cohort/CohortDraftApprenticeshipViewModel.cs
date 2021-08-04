@@ -48,5 +48,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string DisplayCost => Cost.HasValue ? $"{Cost.Value.ToGdsCostFormat()}" : "-";
 
         public DateTime? OriginalStartDate { get; set; }
+        public bool HasOverlappingEmail { get; set; }
     }
 }
