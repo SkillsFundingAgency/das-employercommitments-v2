@@ -17,6 +17,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
@@ -655,14 +656,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpPost]
         [Route("{apprenticeshipHashedId}/changes/review")]
-        public async Task<IActionResult> ReviewApprenticeshipUpdates(ReviewApprenticeshipUpdatesViewModel viewModel)
+        public async Task<IActionResult> ReviewApprenticeshipUpdates([FromServices] IAuthenticationService authenticationService, ReviewApprenticeshipUpdatesViewModel viewModel)
         {
             if (viewModel.ApproveChanges.Value)
             {
                 var request = new AcceptApprenticeshipUpdatesRequest
                 {
                     ApprenticeshipId = viewModel.ApprenticeshipId,
-                    AccountId = viewModel.AccountId
+                    AccountId = viewModel.AccountId,
+                    UserInfo = authenticationService.UserInfo
                 };
 
                 await _commitmentsApiClient.AcceptApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
@@ -673,7 +675,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 var request = new RejectApprenticeshipUpdatesRequest
                 {
                     ApprenticeshipId = viewModel.ApprenticeshipId,
-                    AccountId = viewModel.AccountId
+                    AccountId = viewModel.AccountId,
+                    UserInfo = authenticationService.UserInfo
                 };
 
                 await _commitmentsApiClient.RejectApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
@@ -695,14 +698,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpPost]
         [Route("{apprenticeshipHashedId}/changes/view")]
-        public async Task<IActionResult> ViewApprenticeshipUpdates(ViewApprenticeshipUpdatesViewModel viewModel)
+        public async Task<IActionResult> ViewApprenticeshipUpdates([FromServices] IAuthenticationService authenticationService, ViewApprenticeshipUpdatesViewModel viewModel)
         {
             if (viewModel.UndoChanges.Value)
             {
                 var request = new UndoApprenticeshipUpdatesRequest
                 {
                     ApprenticeshipId = viewModel.ApprenticeshipId,
-                    AccountId = viewModel.AccountId
+                    AccountId = viewModel.AccountId,
+                    UserInfo = authenticationService.UserInfo
                 };
 
                 await _commitmentsApiClient.UndoApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
