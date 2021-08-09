@@ -17,6 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 DateOfBirth = source.DateOfBirth.Date,
                 Uln = source.Uln,
                 CourseCode = source.CourseCode,
+                CourseOption = null,
                 Cost = source.Cost,
                 StartDate = source.StartDate.Date,
                 EndDate = source.EndDate.Date,

@@ -79,6 +79,32 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> EditDraftApprenticeship(EditDraftApprenticeshipViewModel model)
         {
             var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
+
+            await _commitmentsApiClient.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
+            
+            return RedirectToAction("SelectOption", "DraftApprenticeship", new { model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId });
+        }
+
+        [HttpGet]
+        [Route("{DraftApprenticeshipHashedId}/select-option")]
+        public async Task<IActionResult> SelectOption(SelectOptionRequest request)
+        {
+            var model = await _modelMapper.Map<SelectOptionViewModel>(request);
+
+            if (model == null)
+            {
+                return RedirectToAction("Details", "Cohort", new { request.AccountHashedId, request.CohortReference });
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Route("{DraftApprenticeshipHashedId}/select-option")]
+        public async Task<IActionResult> SelectOption(SelectOptionViewModel model)
+        {
+            var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
+
             await _commitmentsApiClient.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
 
             return RedirectToAction("Details", "Cohort", new { model.AccountHashedId, model.CohortReference });

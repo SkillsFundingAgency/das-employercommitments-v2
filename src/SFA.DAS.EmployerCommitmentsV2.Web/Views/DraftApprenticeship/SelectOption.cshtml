@@ -1,0 +1,76 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.SelectOptionViewModel
+
+@{
+    ViewData["Title"] = "Select option";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <partial name="_ValidationSummary" />
+
+        <h1 class="govuk-heading-xl">Select a standard option</h1>
+
+        @*To do - Add link to standards cache*@
+        @*<div class="govuk-inset-text">
+            <p class="govuk-body">For more information visit ... </p>
+        </div>*@
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key"> Apprenticeship training course </dt>
+                <dd class="govuk-summary-list__value"> @Model.StandardTitle </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key"> Version </dt>
+                <dd class="govuk-summary-list__value"> @Model.Version </dd>
+            </div>
+        </dl>
+
+        <form id="selectOption" method="post">
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseOption, "govuk-form-group--error")">
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(x => x.DraftApprenticeshipId)
+                @Html.HiddenFor(x => x.FirstName)
+                @Html.HiddenFor(x => x.LastName)
+                @Html.HiddenFor(x => x.Email)
+                @Html.HiddenFor(x => x.Uln)
+                @Html.HiddenFor(x => x.CohortId)
+                @Html.HiddenFor(x => x.CohortReference)
+                @Html.HiddenFor(x => x.CourseCode)
+                @Html.HiddenFor(x => x.Cost)
+                @Html.HiddenFor(x => x.ReservationId)
+                @Html.HiddenFor(x => x.Reference)
+                @Html.HiddenFor(x => x.AccountHashedId)
+                @Html.HiddenFor(x => x.BirthDay)
+                @Html.HiddenFor(x => x.BirthMonth)
+                @Html.HiddenFor(x => x.BirthYear)
+                @Html.HiddenFor(x => x.DateOfBirth)
+                @Html.HiddenFor(x => x.StartMonth)
+                @Html.HiddenFor(x => x.StartYear)
+                @Html.HiddenFor(x => x.EndMonth)
+                @Html.HiddenFor(x => x.EndYear)
+
+                <div class="govuk-radios">
+                    @foreach (var option in Model.Options)
+                    {
+                        <div class="govuk-radios__item" id="radio-item-yes">
+                            <input class="govuk-radios__input" type="radio" name="CourseOption" value="@option" checked="@(Model.CourseOption == option)">
+                            <label class="govuk-label govuk-radios__label" for="CancelRequest-yes">@option</label>
+                        </div>
+                    }
+
+                    <p> or </p>
+
+                    <div class="govuk-radios__item" id="radio-item-yes">
+                        <input class="govuk-radios__input" type="radio" id="CancelRequest-no" name="CourseOption" value="N/A">
+                        <label class="govuk-label govuk-radios__label" for="CancelRequest-no"> Confirm option at a later date</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" id="continue-button" class="govuk-button">Save and continue</button>
+        </form>
+    </div>
+</div>
