@@ -19,6 +19,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {
@@ -61,7 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             await TestAsync(
                 f => f.Post(),
                 (f, r) => r.Should().NotBeNull()
-                    .And.BeOfType<RedirectToActionResult>().Which.ActionName.Should().Be("Details"));
+                    .And.BeOfType<RedirectToActionResult>().Which.ActionName.Should().Be("SelectOption"));
         }
     }
 
@@ -78,6 +79,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
         public Mock<IModelMapper> ModelMapper { get; set; }
         public Mock<IAuthorizationService> AuthorizationService { get; set; }
+        public Mock<IEncodingService> EncodingService { get; set; }
         public DraftApprenticeshipController Controller { get; set; }
         public Mock<ILinkGenerator> LinkGenerator { get; set; }
 
@@ -123,16 +125,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             ModelMapper = new Mock<IModelMapper>();
             LinkGenerator = new Mock<ILinkGenerator>();
             AuthorizationService = new Mock<IAuthorizationService>();
+            EncodingService = new Mock<IEncodingService>();
+
             AuthorizationService.Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval)).Returns(false);
-            
+
+            EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.ApprenticeshipId))
+                .Returns("APP123");
+
             Controller = new DraftApprenticeshipController(
                 ModelMapper.Object,
                 CommitmentsApiClient.Object,
-                AuthorizationService.Object
-                );
+                AuthorizationService.Object,
+                Mock.Of<IEncodingService>());
 
             CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammes(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammesResponse{TrainingProgrammes = Courses});
             CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammeStandards(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse{TrainingProgrammes = StandardCourses});
+            CommitmentsApiClient.Setup(c => c.AddDraftApprenticeship(It.IsAny<long>(), AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new AddDraftApprenticeshipResponse { DraftApprenticeshipId = 123456});
+
             ModelMapper.Setup(m => m.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(ViewModel)).Returns(Task.FromResult(AddDraftApprenticeshipRequest));
 
             ModelMapper.Setup(m => m.Map<AddDraftApprenticeshipViewModel>(It.IsAny<AddDraftApprenticeshipRequest>())).ReturnsAsync(ViewModel);

@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             result.CohortId.Should().Be(_request.CohortId);
             result.CourseCode.Should().Be(_getDraftApprenticeshipResponse.CourseCode);
             result.Cost.Should().Be(_getDraftApprenticeshipResponse.Cost);
-            //result.CohortReference.Should().Be(_getDraftApprenticeshipResponse);
+            result.CohortReference.Should().Be(_request.CohortReference);
             result.ReservationId.Should().Be(_getDraftApprenticeshipResponse.ReservationId);
             result.Reference.Should().Be(_getDraftApprenticeshipResponse.Reference);
             result.AccountHashedId.Should().Be(_request.AccountHashedId);
@@ -67,7 +67,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             result.StandardTitle.Should().Be(_getDraftApprenticeshipResponse.TrainingCourseName);
             result.Version.Should().Be(_getDraftApprenticeshipResponse.TrainingCourseVersion);
             result.CourseOption.Should().Be(_getDraftApprenticeshipResponse.TrainingCourseOption);
-
         }
 
         [Test]

@@ -12,9 +12,8 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
 using System;
 using SFA.DAS.Authorization.Services;
-using SFA.DAS.EmployerCommitmentsV2.Features;
-using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -25,17 +24,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IModelMapper _modelMapper;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IEncodingService _encodingService;
+
         public const string ApprenticeDeletedMessage = "Apprentice record deleted";
 
         public DraftApprenticeshipController(
             IModelMapper modelMapper,
 			ICommitmentsApiClient commitmentsApiClient,
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService,
+            IEncodingService encodingService)
         {
 
             _modelMapper = modelMapper;
             _commitmentsApiClient = commitmentsApiClient;
             _authorizationService = authorizationService;
+            _encodingService = encodingService;
         }
 
         [HttpGet]
@@ -58,9 +61,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> AddDraftApprenticeship(AddDraftApprenticeshipViewModel model)
         {
             var addDraftApprenticeshipRequest = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(model);
-            await _commitmentsApiClient.AddDraftApprenticeship(model.CohortId.Value, addDraftApprenticeshipRequest);
+            
+            var response = await _commitmentsApiClient.AddDraftApprenticeship(model.CohortId.Value, addDraftApprenticeshipRequest);
 
-            return RedirectToAction("Details", "Cohort", new { model.AccountHashedId, model.CohortReference });
+            var draftApprenticeshipHashedId = _encodingService.Encode(response.DraftApprenticeshipId, EncodingType.ApprenticeshipId);
+            
+            return RedirectToAction("SelectOption", "DraftApprenticeship", new { model.AccountHashedId, model.CohortReference, draftApprenticeshipHashedId });
         }
 
         [HttpGet]

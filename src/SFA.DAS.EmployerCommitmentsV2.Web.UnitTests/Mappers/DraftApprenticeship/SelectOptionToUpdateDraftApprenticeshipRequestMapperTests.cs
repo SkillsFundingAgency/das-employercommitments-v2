@@ -37,20 +37,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         }
 
         [Test]
-        public async Task Then_ViewModelValuesAreMapped(SelectOptionViewModel viewModel)
+        public async Task Then_ViewModelValuesAreMapped()
         {
-            var result = await _mapper.Map(viewModel);
+            var result = await _mapper.Map(_viewModel);
 
-            result.FirstName.Should().Be(viewModel.FirstName);
-            result.LastName.Should().Be(viewModel.LastName);
-            result.Email.Should().Be(viewModel.Email);
-            result.Uln.Should().Be(viewModel.Uln);
-            result.DateOfBirth.Should().Be(viewModel.DateOfBirth.Date);
-            result.StartDate.Should().Be(viewModel.StartDate.Date);
-            result.EndDate.Should().Be(viewModel.EndDate.Date);
-            result.Reference.Should().Be(viewModel.Reference);
-            result.ReservationId.Should().Be(viewModel.ReservationId);
-            result.CourseOption.Should().Be(viewModel.CourseOption);
+            result.FirstName.Should().Be(_viewModel.FirstName);
+            result.LastName.Should().Be(_viewModel.LastName);
+            result.Email.Should().Be(_viewModel.Email);
+            result.Uln.Should().Be(_viewModel.Uln);
+            result.DateOfBirth.Should().Be(_viewModel.DateOfBirth.Date);
+            result.StartDate.Should().Be(_viewModel.StartDate.Date);
+            result.EndDate.Should().Be(_viewModel.EndDate.Date);
+            result.Reference.Should().Be(_viewModel.Reference);
+            result.ReservationId.Should().Be(_viewModel.ReservationId);
+            result.CourseOption.Should().Be(_viewModel.CourseOption);
         }
 
         [Test]
