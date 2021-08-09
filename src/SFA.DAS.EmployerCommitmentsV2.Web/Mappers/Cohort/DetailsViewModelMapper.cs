@@ -139,7 +139,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                         ApprenticeshipId = draftApprenticeship.Id
                     });
 
-                    draftApprenticeship.HasOverlappingUln = result.HasOverlappingEndDate || result.HasOverlappingEndDate;
+                    draftApprenticeship.HasOverlappingUln = result.HasOverlappingStartDate || result.HasOverlappingEndDate;
                 }
             }
         }

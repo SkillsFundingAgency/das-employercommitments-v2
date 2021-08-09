@@ -27,7 +27,7 @@
                 </div>
                 <div class="govuk-notification-banner__content">
                     <p class="govuk-notification-banner__heading">
-                        You can’t approve this cohort until  :
+                        You can’t approve this apprentice request until:
                     </p>
                     <ul>
                         @if (!Model.IsAgreementSigned)
@@ -40,7 +40,7 @@
                         }
                         @if (Model.HasOverlappingUln)
                         {
-                            <li>There are no overlapping training dates for you apprentices</li>
+                            <li>There are no overlapping training dates for your apprentices</li>
                         }
                     </ul>
                 </div>
@@ -91,7 +91,7 @@
                 <div class="govuk-inset-text das-inset-text--highlight">
                     <h3 class="govuk-heading-s">Apprenticeship can't have overlapping training dates</h3>
                     <p>
-                        you must update training dates to able to approve
+                        You must update training dates to be able to approve
                     </p>
                 </div>
             }
