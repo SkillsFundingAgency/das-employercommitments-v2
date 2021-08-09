@@ -13,8 +13,11 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-
-        @if (!Model.IsAgreementSigned)
+        @if ((!Model.IsAgreementSigned)
+              ||
+           (!Model.IsCompleteForEmployer)
+              ||
+          Model.HasOverlappingUln)
         {
             <div class="govuk-notification-banner">
                 <div class="govuk-notification-banner__header">
@@ -24,28 +27,25 @@
                 </div>
                 <div class="govuk-notification-banner__content">
                     <p class="govuk-notification-banner__heading">
-                        You must accept your employer agreement before you can approve this record
+                        You can’t approve this cohort until  :
                     </p>
+                    <ul>
+                        @if (!Model.IsAgreementSigned)
+                        {
+                            <li>You have accepted your employer agreement</li>
+                        }
+                        @if (!Model.IsCompleteForEmployer)
+                        {
+                            <li>All apprentice records are complete</li>
+                        }
+                        @if (Model.HasOverlappingUln)
+                        {
+                            <li>There are no overlapping training dates for you apprentices</li>
+                        }
+                    </ul>
                 </div>
             </div>
-        }
-        else
-        {
-            if (!Model.IsCompleteForEmployer)
-            {
-                <div class="govuk-notification-banner">
-                    <div class="govuk-notification-banner__header">
-                        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-                            Important
-                        </h2>
-                    </div>
-                    <div class="govuk-notification-banner__content">
-                        <p class="govuk-notification-banner__heading">
-                            You must complete all apprentice details before you can approve this record
-                        </p>
-                    </div>
-                </div>
-            }
+
         }
 
         <partial name="_ValidationSummary" />
@@ -86,6 +86,15 @@
                     </p>
                 </div>
             }
+            if (@course.DraftApprenticeships.Any(x => x.HasOverlappingUln))
+            {
+                <div class="govuk-inset-text das-inset-text--highlight">
+                    <h3 class="govuk-heading-s">Apprenticeship can't have overlapping training dates</h3>
+                    <p>
+                        you must update training dates to able to approve
+                    </p>
+                </div>
+            }
             <table class="govuk-table das-table--responsive">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
@@ -103,7 +112,18 @@
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell" data-label="Name">@draftApprenticeship.DisplayName</td>
                             <td class="govuk-table__cell" data-label="Date of birth">@draftApprenticeship.DisplayDateOfBirth</td>
-                            <td class="govuk-table__cell" data-label="Training dates">@draftApprenticeship.DisplayTrainingDates</td>
+                            <td class="govuk-table__cell" data-label="Training dates">
+                                @if (draftApprenticeship.HasOverlappingUln)
+                                {
+                                    <span class="das-table-cell--highlight">
+                                        @draftApprenticeship.DisplayTrainingDates
+                                    </span>
+                                }
+                                else
+                                {
+                                    @draftApprenticeship.DisplayTrainingDates
+                                }
+                            </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Price">
                                 @if (@draftApprenticeship.ExceedsFundingBandCap)
                                 {
