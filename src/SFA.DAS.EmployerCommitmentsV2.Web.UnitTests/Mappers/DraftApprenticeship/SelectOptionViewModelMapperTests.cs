@@ -41,8 +41,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _mockCommitmentsApiClient.Setup(client => client.GetStandardOptions(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_getStandardOptionsResponse);
 
-           // _mockEncodingService.Setup(service => service.Encode(_request.CohortReference, EncodingType.CohortReference))
-
             _mapper = new SelectOptionViewModelMapper(_mockCommitmentsApiClient.Object);
         }
 
