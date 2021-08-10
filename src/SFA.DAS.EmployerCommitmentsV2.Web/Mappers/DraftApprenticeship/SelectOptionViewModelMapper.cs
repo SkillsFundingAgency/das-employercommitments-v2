@@ -9,12 +9,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
     public class SelectOptionViewModelMapper : IMapper<SelectOptionRequest, SelectOptionViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly IEncodingService _encodingService;
 
-        public SelectOptionViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
+        public SelectOptionViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
-            _encodingService = encodingService;
         }
 
         public async Task<SelectOptionViewModel> Map(SelectOptionRequest source)
@@ -39,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 CourseCode = draftApprenticeship.CourseCode,
                 CourseOption = draftApprenticeship.TrainingCourseOption,
                 Cost = draftApprenticeship.Cost,
-                CohortReference = _encodingService.Encode(source.CohortId, EncodingType.CohortReference),
+                CohortReference = source.CohortReference,
                 ReservationId = draftApprenticeship.ReservationId,
                 Reference = draftApprenticeship.Reference, 
                 AccountHashedId = source.AccountHashedId,

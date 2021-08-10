@@ -20,7 +20,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private GetStandardOptionsResponse _getStandardOptionsResponse;
 
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
-        private Mock<IEncodingService> _mockEncodingService;
 
         private SelectOptionViewModelMapper _mapper;
 
@@ -35,7 +34,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _getStandardOptionsResponse = fixture.Build<GetStandardOptionsResponse>().Create();
 
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockEncodingService = new Mock<IEncodingService>();
 
             _mockCommitmentsApiClient.Setup(client => client.GetDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_getDraftApprenticeshipResponse);
@@ -43,7 +41,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _mockCommitmentsApiClient.Setup(client => client.GetStandardOptions(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_getStandardOptionsResponse);
 
-            _mapper = new SelectOptionViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object);
+           // _mockEncodingService.Setup(service => service.Encode(_request.CohortReference, EncodingType.CohortReference))
+
+            _mapper = new SelectOptionViewModelMapper(_mockCommitmentsApiClient.Object);
         }
 
         [Test]
