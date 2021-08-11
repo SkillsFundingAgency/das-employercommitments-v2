@@ -57,7 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
         
         [Test]
-        public async Task WhenPostingAction_WithEnhancedApproval_ThenShouldRedirectToCohortDetailsV2()
+        public async Task WhenPostingAction_ThenShouldRedirectToSelectOptionPage()
         {
             await TestAsync(
                 f => f.Post(),
@@ -140,7 +140,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammes(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammesResponse{TrainingProgrammes = Courses});
             CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammeStandards(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse{TrainingProgrammes = StandardCourses});
-            CommitmentsApiClient.Setup(c => c.AddDraftApprenticeship(It.IsAny<long>(), AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>()))
+            CommitmentsApiClient.Setup(c => c.AddDraftApprenticeship(ViewModel.CohortId.Value, AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new AddDraftApprenticeshipResponse { DraftApprenticeshipId = 123456});
 
             ModelMapper.Setup(m => m.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(ViewModel)).Returns(Task.FromResult(AddDraftApprenticeshipRequest));
