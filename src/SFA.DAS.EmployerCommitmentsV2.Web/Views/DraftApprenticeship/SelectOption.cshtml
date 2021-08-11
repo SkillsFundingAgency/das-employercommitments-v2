@@ -30,27 +30,26 @@
 
         <form id="selectOption" method="post">
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseOption, "govuk-form-group--error")">
-                @Html.AntiForgeryToken()
-                @Html.HiddenFor(x => x.DraftApprenticeshipId)
-                @Html.HiddenFor(x => x.FirstName)
-                @Html.HiddenFor(x => x.LastName)
-                @Html.HiddenFor(x => x.Email)
-                @Html.HiddenFor(x => x.Uln)
-                @Html.HiddenFor(x => x.CohortId)
-                @Html.HiddenFor(x => x.CohortReference)
-                @Html.HiddenFor(x => x.CourseCode)
-                @Html.HiddenFor(x => x.Cost)
-                @Html.HiddenFor(x => x.ReservationId)
-                @Html.HiddenFor(x => x.Reference)
-                @Html.HiddenFor(x => x.AccountHashedId)
-                @Html.HiddenFor(x => x.BirthDay)
-                @Html.HiddenFor(x => x.BirthMonth)
-                @Html.HiddenFor(x => x.BirthYear)
-                @Html.HiddenFor(x => x.DateOfBirth)
-                @Html.HiddenFor(x => x.StartMonth)
-                @Html.HiddenFor(x => x.StartYear)
-                @Html.HiddenFor(x => x.EndMonth)
-                @Html.HiddenFor(x => x.EndYear)
+                <input type="hidden" asp-for="DraftApprenticeshipId" />
+                <input type="hidden" asp-for="FirstName" />
+                <input type="hidden" asp-for="LastName" />
+                <input type="hidden" asp-for="Email" />
+                <input type="hidden" asp-for="Uln" />
+                <input type="hidden" asp-for="CohortId" />
+                <input type="hidden" asp-for="CohortReference" />
+                <input type="hidden" asp-for="CourseCode" />
+                <input type="hidden" asp-for="Cost" />
+                <input type="hidden" asp-for="ReservationId" />
+                <input type="hidden" asp-for="Reference" />
+                <input type="hidden" asp-for="AccountHashedId" />
+                <input type="hidden" asp-for="BirthDay" />
+                <input type="hidden" asp-for="BirthMonth" />
+                <input type="hidden" asp-for="BirthYear" />
+                <input type="hidden" asp-for="DateOfBirth" />
+                <input type="hidden" asp-for="StartMonth" />
+                <input type="hidden" asp-for="StartYear" />
+                <input type="hidden" asp-for="EndMonth" />
+                <input type="hidden" asp-for="EndYear" />
 
                 <div class="govuk-radios">
                     @foreach (var option in Model.Options)
