@@ -57,7 +57,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
             get
             {
                 return Courses != null
-                    && Courses.Count > 0
                     && Courses.Any(x => x.DraftApprenticeships != null
                     && x.DraftApprenticeships.Any(x => x.HasOverlappingUln));
             }
