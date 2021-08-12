@@ -80,7 +80,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                     : $"{viewOrApprove} {draftApprenticeships.Count} apprentices' details",
                 IsApprovedByProvider = cohort.IsApprovedByProvider,
                 IsAgreementSigned = isAgreementSigned,
-                IsCompleteForEmployer = cohort.IsCompleteForEmployer && !emailOverlaps.Any(),
+                IsCompleteForEmployer = cohort.IsCompleteForEmployer,
+                HasEmailOverlaps = emailOverlaps.Any(),
                 ShowAddAnotherApprenticeOption = !cohort.IsLinkedToChangeOfPartyRequest
             };
         }

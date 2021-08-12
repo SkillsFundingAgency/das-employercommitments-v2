@@ -9,6 +9,6 @@
             NumberOfEmailOverlaps = numberOfEmailOverlaps;
         }
 
-        public string DisplayEmailOverlapsMessage => NumberOfEmailOverlaps == 1 ? "1 apprenticeship with an email issue" : $"{NumberOfEmailOverlaps} apprenticeships with email issues";
+        public string DisplayEmailOverlapsMessage => "You can’t use the same email address";
     }
 }
