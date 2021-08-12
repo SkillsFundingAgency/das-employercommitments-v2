@@ -4,6 +4,7 @@
 @{ 
     ViewData["Title"] = "Are you sure you want to cancel this request? - Apprenticeship service - GOV.UK";
     var apprenticeDisplayName = Model.ApprenticeName.EndsWith("s") ? Model.ApprenticeName + "'" : Model.ApprenticeName + "'s";
+    ViewBag.GaData.Vpv = "/accounts/apprentices/manage/change-provider/cancel";
 }
 
 <div class="govuk-grid-row">

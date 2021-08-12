@@ -6,9 +6,10 @@
 
 @{
     ViewData["Title"] = $"Confirm details and send request to {Model.ProviderName} - Apprenticeship service - GOV.UK";
+    ViewBag.GaData.Vpv = "/accounts/apprentices/manage/confirm-change-of-provider-details";
 
     var apprenticeDisplayName = Model.ApprenticeFullName.EndsWith("s") ? Model.ApprenticeFullName + "'" : Model.ApprenticeFullName + "'s";
-   
+
     var queryData = new
     {
         ProviderId = Model.ProviderId,
