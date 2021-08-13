@@ -19,11 +19,13 @@ using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateRequest;
+using SFA.DAS.Authorization.EmployerUserRoles.Options;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
     [Route("{accountHashedId}/apprentices")]
     [SetNavigationSection(NavigationSection.ApprenticesHome)]
+    [DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
     public class ApprenticeController : Controller
     {
         private readonly IModelMapper _modelMapper;
