@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using AddDraftApprenticeshipRequest = SFA.DAS.CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest;
@@ -7,9 +8,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
     public class AddDraftApprenticeshipRequestMapper : IMapper<AddDraftApprenticeshipViewModel, AddDraftApprenticeshipRequest>
     {
-        public Task<AddDraftApprenticeshipRequest> Map(AddDraftApprenticeshipViewModel source)
+        private ICommitmentsApiClient _commitmentsApiClient;
+
+        public AddDraftApprenticeshipRequestMapper(ICommitmentsApiClient commitmentsApiClient)
         {
-            return Task.FromResult(new AddDraftApprenticeshipRequest
+            _commitmentsApiClient = commitmentsApiClient;
+        }
+
+        public async Task<AddDraftApprenticeshipRequest> Map(AddDraftApprenticeshipViewModel source)
+        {
+            var standard = await _commitmentsApiClient.GetCalculatedTrainingProgrammeVersion(int.Parse(source.CourseCode), source.StartDate.Date.Value);
+
+            return new AddDraftApprenticeshipRequest
             {
                 UserId = "X", // TODO: Remove this from the request as it's not required
                 ProviderId = 1, // TODO: Remove this from the request as it's not required
@@ -19,12 +29,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 Email = source.Email, 
                 Uln = source.Uln,
                 CourseCode = source.CourseCode,
+                StandardUId = standard.TrainingProgramme.StandardUId,
+                Version = standard.TrainingProgramme.Version,
+                VersionConfimed = true,
                 Cost = source.Cost,
                 StartDate = source.StartDate.Date,
                 EndDate = source.EndDate.Date,
                 OriginatorReference = source.Reference,
                 ReservationId = source.ReservationId
-            });
+            };
         }
     }
 }

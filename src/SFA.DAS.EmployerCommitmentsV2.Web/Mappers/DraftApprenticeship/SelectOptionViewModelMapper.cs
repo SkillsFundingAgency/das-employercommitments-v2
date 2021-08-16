@@ -18,13 +18,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
         public async Task<SelectOptionViewModel> Map(SelectOptionRequest source)
         {
             var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(source.CohortId, source.DraftApprenticeshipId);
-            
-            var optionsResponse = await _commitmentsApiClient.GetStandardOptions(draftApprenticeship.StandardUId);
 
-            if (optionsResponse.Options is null)
+            if (draftApprenticeship.HasStandardOptions == false)
             {
                 return null;
             }
+
+            var standard = await _commitmentsApiClient.GetTrainingProgrammeVersionByStandardUId(draftApprenticeship.StandardUId);
 
             return new SelectOptionViewModel(draftApprenticeship.DateOfBirth, draftApprenticeship.StartDate, draftApprenticeship.EndDate)
             {
@@ -41,9 +41,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 ReservationId = draftApprenticeship.ReservationId,
                 Reference = draftApprenticeship.Reference, 
                 AccountHashedId = source.AccountHashedId,
-                Options = optionsResponse.Options,
+                Options = standard.TrainingProgramme.Options,
                 StandardTitle = draftApprenticeship.TrainingCourseName,
-                Version = draftApprenticeship.TrainingCourseVersion
+                StandardUId = draftApprenticeship.StandardUId,
+                StandardUrl = standard.TrainingProgramme.StandardPageUrl,
+                Version = draftApprenticeship.TrainingCourseVersion,
+                CourseVersionConfirmed = draftApprenticeship.TrainingCourseVersionConfirmed
             };
         }
     }

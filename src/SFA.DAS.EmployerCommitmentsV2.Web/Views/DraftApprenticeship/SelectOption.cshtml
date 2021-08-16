@@ -12,10 +12,12 @@
 
         <h1 class="govuk-heading-xl">Select a standard option</h1>
 
-        @*To do - Add link to standards cache*@
-        @*<div class="govuk-inset-text">
-            <p class="govuk-body">For more information visit ... </p>
-        </div>*@
+        @if (!string.IsNullOrEmpty(Model.StandardUrl))
+        {
+            <div class="govuk-inset-text">
+                <p class="govuk-body">For more information visit <a class="govuk-link" href="@Model.StandardUId" target="_blank" >the IFATE page for this standard (opens in a new tab)</a>.</p>
+            </div>
+        }
 
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
@@ -33,6 +35,9 @@
                 <input type="hidden" asp-for="DraftApprenticeshipId" />
                 <input type="hidden" asp-for="FirstName" />
                 <input type="hidden" asp-for="LastName" />
+                <input type="hidden" asp-for="StandardUId" />
+                <input type="hidden" asp-for="Version" />
+                <input type="hidden" asp-for="CourseVersionConfirmed" />
                 <input type="hidden" asp-for="Email" />
                 <input type="hidden" asp-for="Uln" />
                 <input type="hidden" asp-for="CohortId" />

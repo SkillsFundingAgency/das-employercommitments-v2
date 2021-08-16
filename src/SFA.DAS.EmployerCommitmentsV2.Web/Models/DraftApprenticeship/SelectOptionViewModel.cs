@@ -19,7 +19,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public long DraftApprenticeshipId { get; set; }
 
         public string StandardTitle { get; set; }
+        public string StandardUId { get; set; }
         public string Version { get; set; }
+        public bool CourseVersionConfirmed { get; set; }
+        public string StandardUrl { get; set; }
         public IEnumerable<string> Options { get; set; }
     }
 }
