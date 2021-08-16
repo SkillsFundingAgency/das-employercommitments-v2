@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
@@ -11,6 +15,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     [TestFixture]
     public class WhenIMapDraftApprenticeshipToUpdateRequest
     {
+        private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+        private GetTrainingProgrammeResponse _trainingProgrammeResponse;
         private UpdateDraftApprenticeshipRequestMapper _mapper;
         private EditDraftApprenticeshipViewModel _source;
         private Func<Task<UpdateDraftApprenticeshipRequest>> _act;
@@ -24,9 +30,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var startDate = fixture.Create<DateTime?>();
             var endDate = fixture.Create<DateTime?>();
 
-            _mapper = new UpdateDraftApprenticeshipRequestMapper();
+            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+
+            _mapper = new UpdateDraftApprenticeshipRequestMapper(_mockCommitmentsApiClient.Object);
 
             _source = fixture.Build<EditDraftApprenticeshipViewModel>()
+                .With(x => x.CourseCode, fixture.Create<int>().ToString())
                 .With(x => x.BirthDay, birthDate?.Day)
                 .With(x => x.BirthMonth, birthDate?.Month)
                 .With(x => x.BirthYear, birthDate?.Year)
@@ -37,6 +46,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 .Without(x => x.StartDate)
                 .Without(x => x.Courses)
                 .Create();
+
+            _trainingProgrammeResponse = fixture.Create<GetTrainingProgrammeResponse>();
+
+            _mockCommitmentsApiClient.Setup(x => x.GetCalculatedTrainingProgrammeVersion(int.Parse(_source.CourseCode), _source.StartDate.Date.Value, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_trainingProgrammeResponse);
 
             _act = async () => await _mapper.Map(TestHelper.Clone(_source));
         }
@@ -109,6 +123,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _act();
             Assert.AreEqual(_source.Reference, result.Reference);
+        }
+
+        [Test]
+        public async Task And_CalculatedStandardUIdHasChanged_Then_ResetCourseOption()
+        {
+            _trainingProgrammeResponse.TrainingProgramme.StandardUId = "ST0001_1.0";
+            var result = await _act();
+            Assert.IsNull(result.CourseOption);
+        }
+
+        [Test]
+        public async Task And_CalculatedStandardUIdHasNotChanged_Then_MapCourseOption()
+        {
+            _trainingProgrammeResponse.TrainingProgramme.StandardUId = _source.StandardUId;
+            var result = await _act();
+            Assert.AreEqual(_source.CourseOption, result.CourseOption);
         }
     }
 }

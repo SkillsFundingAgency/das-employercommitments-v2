@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private SelectOptionRequest _request;
 
         private GetDraftApprenticeshipResponse _getDraftApprenticeshipResponse;
-        private GetStandardOptionsResponse _getStandardOptionsResponse;
+        private GetTrainingProgrammeResponse _GetTrainingProgrammeResponse;
 
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
 
@@ -30,16 +30,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             _request = fixture.Build<SelectOptionRequest>().Create();
 
-            _getDraftApprenticeshipResponse = fixture.Build<GetDraftApprenticeshipResponse>().Create();
-            _getStandardOptionsResponse = fixture.Build<GetStandardOptionsResponse>().Create();
+            _getDraftApprenticeshipResponse = fixture.Build<GetDraftApprenticeshipResponse>()
+                .With(x => x.HasStandardOptions, true)
+                .Create();
+
+            _GetTrainingProgrammeResponse = fixture.Build<GetTrainingProgrammeResponse>().Create();
 
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
             _mockCommitmentsApiClient.Setup(client => client.GetDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_getDraftApprenticeshipResponse);
 
-            _mockCommitmentsApiClient.Setup(client => client.GetStandardOptions(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_getStandardOptionsResponse);
+            _mockCommitmentsApiClient.Setup(client => client.GetTrainingProgrammeVersionByStandardUId(_getDraftApprenticeshipResponse.StandardUId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_GetTrainingProgrammeResponse);
 
             _mapper = new SelectOptionViewModelMapper(_mockCommitmentsApiClient.Object);
         }
@@ -61,7 +64,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             result.ReservationId.Should().Be(_getDraftApprenticeshipResponse.ReservationId);
             result.Reference.Should().Be(_getDraftApprenticeshipResponse.Reference);
             result.AccountHashedId.Should().Be(_request.AccountHashedId);
-            result.Options.Should().BeEquivalentTo(_getStandardOptionsResponse.Options);
+            result.Options.Should().BeEquivalentTo(_GetTrainingProgrammeResponse.TrainingProgramme.Options);
             result.StandardTitle.Should().Be(_getDraftApprenticeshipResponse.TrainingCourseName);
             result.Version.Should().Be(_getDraftApprenticeshipResponse.TrainingCourseVersion);
             result.CourseOption.Should().Be(_getDraftApprenticeshipResponse.TrainingCourseOption);
@@ -70,8 +73,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         [Test]
         public async Task When_ApprenticeshipVersionDoesNotHaveAnyOptions_Then_ReturnNull()
         {
-            _mockCommitmentsApiClient.Setup(client => client.GetStandardOptions(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetStandardOptionsResponse());
+            _getDraftApprenticeshipResponse.HasStandardOptions = false;
 
             var result = await _mapper.Map(_request);
 

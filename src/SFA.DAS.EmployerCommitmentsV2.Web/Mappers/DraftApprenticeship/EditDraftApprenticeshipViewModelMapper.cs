@@ -42,6 +42,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 Email = draftApprenticeship.Email,
                 Uln = draftApprenticeship.Uln,
                 CourseCode = draftApprenticeship.CourseCode,
+                StandardUId = draftApprenticeship.StandardUId,
+                CourseOption = draftApprenticeship.TrainingCourseOption,
                 Cost = draftApprenticeship.Cost,
                 Reference = draftApprenticeship.Reference,
                 AccountHashedId = source.Request.AccountHashedId,

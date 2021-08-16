@@ -18,7 +18,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         public async Task<UpdateDraftApprenticeshipRequest> Map(EditDraftApprenticeshipViewModel source)
         {
             var standard = await _commitmentsAPiClient.GetCalculatedTrainingProgrammeVersion(int.Parse(source.CourseCode), source.StartDate.Date.Value);
-            
+
+            var selectedOption = standard.TrainingProgramme.StandardUId == source.StandardUId ? source.CourseOption : null;
+
             return new UpdateDraftApprenticeshipRequest
             {
                 ReservationId = source.ReservationId,
@@ -31,7 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 CourseVersion = standard.TrainingProgramme.Version,
                 CourseVersionConfirmed = true,
                 CourseCode = source.CourseCode,
-                CourseOption = null,
+                CourseOption = selectedOption,
                 Cost = source.Cost,
                 StartDate = source.StartDate.Date,
                 EndDate = source.EndDate.Date,

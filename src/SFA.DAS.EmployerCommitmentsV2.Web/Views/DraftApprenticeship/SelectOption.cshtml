@@ -15,7 +15,7 @@
         @if (!string.IsNullOrEmpty(Model.StandardUrl))
         {
             <div class="govuk-inset-text">
-                <p class="govuk-body">For more information visit <a class="govuk-link" href="@Model.StandardUId" target="_blank" >the IFATE page for this standard (opens in a new tab)</a>.</p>
+                <p class="govuk-body">For more information visit <a class="govuk-link" href="@Model.StandardUrl" target="_blank" >the IfATE page for this standard (opens in a new tab)</a>.</p>
             </div>
         }
 
@@ -55,6 +55,10 @@
                 <input type="hidden" asp-for="StartYear" />
                 <input type="hidden" asp-for="EndMonth" />
                 <input type="hidden" asp-for="EndYear" />
+
+                <div id="changed-name-hint" class="govuk-hint @Html.AddClassIfPropertyInError(x => x.CourseOption, "govuk-error-message")">
+                    Select an option.
+                </div>
 
                 <div class="govuk-radios">
                     @foreach (var option in Model.Options)

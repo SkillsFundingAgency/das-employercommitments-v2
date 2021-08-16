@@ -1,6 +1,10 @@
 using System;
+using System.Threading;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.Testing;
@@ -32,6 +36,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                     r.EndDate.Should().Be(f.ViewModel.EndDate.Date);
                     r.OriginatorReference.Should().Be(f.ViewModel.Reference);
                     r.ReservationId.Should().Be(f.ViewModel.ReservationId);
+                    r.StandardUId.Should().Be(f.TrainingProgrammeResponse.TrainingProgramme.StandardUId);
+                    r.Version.Should().Be(f.TrainingProgrammeResponse.TrainingProgramme.Version);
                 });
         }
     }
@@ -40,6 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     {
         public AddDraftApprenticeshipViewModel ViewModel { get; set; }
         public AddDraftApprenticeshipRequestMapper Mapper { get; set; }
+        public GetTrainingProgrammeResponse TrainingProgrammeResponse { get; set; }
 
         public AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapperTestsFixture()
         {
@@ -52,7 +59,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 BirthMonth = 2,
                 BirthYear = 2000,
                 Uln = "AAA000",
-                CourseCode = "BBB111",
+                CourseCode = "111",
                 Cost = 3,
                 StartMonth = 8,
                 StartYear = 2019,
@@ -61,8 +68,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 Reference = "CCC222",
                 ReservationId = Guid.NewGuid()
             };
-            
-            Mapper = new AddDraftApprenticeshipRequestMapper();
+
+            TrainingProgrammeResponse = new GetTrainingProgrammeResponse
+            {
+                TrainingProgramme = new CommitmentsV2.Types.TrainingProgramme
+                {
+                    StandardUId = "ST0001_1.0",
+                    Version = "1.0"
+                }
+            };
+
+            var mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+
+            mockCommitmentsApiClient.Setup(c => c.GetCalculatedTrainingProgrammeVersion(int.Parse(ViewModel.CourseCode), ViewModel.StartDate.Date.Value, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(TrainingProgrammeResponse);
+
+            Mapper = new AddDraftApprenticeshipRequestMapper(mockCommitmentsApiClient.Object);
         }
 
         public AddDraftApprenticeshipRequest Map()
