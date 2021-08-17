@@ -2,6 +2,7 @@
 @using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
+@using System.Net.Mime
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
 
 @{
@@ -31,7 +32,7 @@
         }
         else
         {
-            if (!Model.IsCompleteForEmployer)
+            if (!Model.IsCompleteForEmployer || Model.HasEmailOverlaps)
             {
                 <div class="govuk-notification-banner">
                     <div class="govuk-notification-banner__header">
@@ -41,7 +42,22 @@
                     </div>
                     <div class="govuk-notification-banner__content">
                         <p class="govuk-notification-banner__heading">
-                            You must complete all apprentice details before you can approve this record
+                            @if (!Model.IsCompleteForEmployer && Model.HasEmailOverlaps)
+                            {
+                                <text>You can’t approve this apprentice record until:</text>
+                                <ul>
+                                    <li>all apprentice records are complete</li>
+                                    <li>each apprentice has a unique email address</li>
+                                </ul>
+                            }
+                            else if (Model.HasEmailOverlaps)
+                            {
+                                <text>You can’t approve this apprentice request until all apprentices have unique email addresses</text>
+                            }
+                            else
+                            {
+                                <text>You must complete all apprentice details before you can approve this record</text>
+                            }
                         </p>
                     </div>
                 </div>
@@ -91,7 +107,7 @@
                 <div class="govuk-inset-text das-inset-text--highlight">
                     <h3 class="govuk-heading-s">@course.EmailOverlaps.DisplayEmailOverlapsMessage</h3>
                     <p>
-                        Please address this before proceeding
+                        You must enter unique email addresses for each apprentice
                     </p>
                 </div>
             }
