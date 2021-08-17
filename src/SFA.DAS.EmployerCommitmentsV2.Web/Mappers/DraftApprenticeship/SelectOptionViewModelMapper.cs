@@ -28,25 +28,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 
             return new SelectOptionViewModel(draftApprenticeship.DateOfBirth, draftApprenticeship.StartDate, draftApprenticeship.EndDate)
             {
+                CohortId = source.CohortId,
+                AccountHashedId = source.AccountHashedId,
+                CohortReference = source.CohortReference,
                 DraftApprenticeshipId = draftApprenticeship.Id,
                 FirstName = draftApprenticeship.FirstName,
                 LastName = draftApprenticeship.LastName,
                 Email = draftApprenticeship.Email,
                 Uln = draftApprenticeship.Uln,
-                CohortId = source.CohortId,
-                CourseCode = draftApprenticeship.CourseCode,
-                CourseOption = draftApprenticeship.TrainingCourseOption,
-                Cost = draftApprenticeship.Cost,
-                CohortReference = source.CohortReference,
-                ReservationId = draftApprenticeship.ReservationId,
-                Reference = draftApprenticeship.Reference, 
-                AccountHashedId = source.AccountHashedId,
-                Options = standard.TrainingProgramme.Options,
                 StandardTitle = draftApprenticeship.TrainingCourseName,
                 StandardUId = draftApprenticeship.StandardUId,
-                StandardUrl = standard.TrainingProgramme.StandardPageUrl,
+                CourseCode = draftApprenticeship.CourseCode,
                 Version = draftApprenticeship.TrainingCourseVersion,
-                CourseVersionConfirmed = draftApprenticeship.TrainingCourseVersionConfirmed
+                CourseVersionConfirmed = draftApprenticeship.TrainingCourseVersionConfirmed,
+                CourseOption = draftApprenticeship.TrainingCourseOption,
+                Cost = draftApprenticeship.Cost,
+                ReservationId = draftApprenticeship.ReservationId,
+                Reference = draftApprenticeship.Reference, 
+                Options = standard.TrainingProgramme.Options,
+                StandardUrl = standard.TrainingProgramme.StandardPageUrl
             };
         }
     }

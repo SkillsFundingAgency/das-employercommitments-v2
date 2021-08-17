@@ -36,8 +36,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                     r.EndDate.Should().Be(f.ViewModel.EndDate.Date);
                     r.OriginatorReference.Should().Be(f.ViewModel.Reference);
                     r.ReservationId.Should().Be(f.ViewModel.ReservationId);
-                    r.StandardUId.Should().Be(f.TrainingProgrammeResponse.TrainingProgramme.StandardUId);
-                    r.Version.Should().Be(f.TrainingProgrammeResponse.TrainingProgramme.Version);
                 });
         }
     }
@@ -46,7 +44,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     {
         public AddDraftApprenticeshipViewModel ViewModel { get; set; }
         public AddDraftApprenticeshipRequestMapper Mapper { get; set; }
-        public GetTrainingProgrammeResponse TrainingProgrammeResponse { get; set; }
 
         public AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapperTestsFixture()
         {
@@ -69,21 +66,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 ReservationId = Guid.NewGuid()
             };
 
-            TrainingProgrammeResponse = new GetTrainingProgrammeResponse
-            {
-                TrainingProgramme = new CommitmentsV2.Types.TrainingProgramme
-                {
-                    StandardUId = "ST0001_1.0",
-                    Version = "1.0"
-                }
-            };
-
-            var mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-
-            mockCommitmentsApiClient.Setup(c => c.GetCalculatedTrainingProgrammeVersion(int.Parse(ViewModel.CourseCode), ViewModel.StartDate.Date.Value, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(TrainingProgrammeResponse);
-
-            Mapper = new AddDraftApprenticeshipRequestMapper(mockCommitmentsApiClient.Object);
+            Mapper = new AddDraftApprenticeshipRequestMapper();
         }
 
         public AddDraftApprenticeshipRequest Map()
