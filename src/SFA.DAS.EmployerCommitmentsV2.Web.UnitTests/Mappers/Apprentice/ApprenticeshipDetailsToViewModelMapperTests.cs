@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using AutoFixture.NUnit3;
+using System.Linq;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
