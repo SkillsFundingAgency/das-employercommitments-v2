@@ -35,6 +35,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 Uln = draftApprenticeship.Uln,
                 DateOfBirth = draftApprenticeship.DateOfBirth,
                 TrainingCourse = trainingCourse?.TrainingProgramme.Name,
+                HasStandardOptions = draftApprenticeship.HasStandardOptions,
+                Version = draftApprenticeship.TrainingCourseVersion,
+                CourseOption = GetCourseOption(draftApprenticeship.TrainingCourseOption),
                 Cost = draftApprenticeship.Cost,
                 StartDate = draftApprenticeship.StartDate,
                 EndDate = draftApprenticeship.EndDate,
@@ -44,6 +47,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
             };
 
             return result;
+        }
+
+        private string GetCourseOption(string draftApprenticeshipTrainingCourseOption)
+        {
+            return draftApprenticeshipTrainingCourseOption switch
+            {
+                null => string.Empty,
+                "" => "To be confirmed",
+                _ => draftApprenticeshipTrainingCourseOption
+            };
         }
     }
 }
