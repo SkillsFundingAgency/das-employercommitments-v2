@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Authorization.EmployerUserRoles.DependencyResolution.StructureMap;
+﻿using Microsoft.Extensions.Configuration;
+using SFA.DAS.Authorization.EmployerUserRoles.DependencyResolution.StructureMap;
 using SFA.DAS.AutoConfiguration.DependencyResolution;
 using SFA.DAS.CommitmentsV2.Shared.DependencyInjection;
 using SFA.DAS.EmployerCommitmentsV2.DependencyResolution;
@@ -8,7 +9,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
 {
     public static class IoC
     {
-        public static void Initialize(Registry registry)
+        public static void Initialize(Registry registry, IConfiguration config)
         {
             registry.IncludeRegistry<DefaultRegistry>();
             registry.IncludeRegistry<AutoConfigurationRegistry>();
@@ -20,7 +21,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
             registry.IncludeRegistry<WebRegistry>();
 
             // Enable if you want to by pass MI locally.
-            registry.IncludeRegistry<LocalDevRegistry.LocalDevRegistry>();
+            if (config["UseLocalDevRegistry"] != null && bool.Parse(config["UseLocalDevRegistry"]))
+            {
+                registry.IncludeRegistry<LocalDevRegistry.LocalDevRegistry>();
+            }
         }
     }
 }
