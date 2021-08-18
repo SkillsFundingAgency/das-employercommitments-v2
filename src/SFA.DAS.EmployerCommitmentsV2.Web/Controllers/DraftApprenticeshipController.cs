@@ -71,7 +71,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("{DraftApprenticeshipHashedId}", Name="Details")]
-        [Route("{DraftApprenticeshipHashedId}/edit")]
+        [Route("{DraftApprenticeshipHashedId}/edit", Name="Details-Edit")]
         public async Task<IActionResult> Details(DetailsRequest request)
         {
             var viewModel = await _modelMapper.Map<IDraftApprenticeshipViewModel>(request);

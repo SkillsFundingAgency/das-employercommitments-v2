@@ -17,6 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 
         public string AccountHashedId { get; set; }
         public long DraftApprenticeshipId { get; set; }
+        public string ApprenticeshipHashedId { get; set; }
 
         public string StandardTitle { get; set; }
         public string Version { get; set; }

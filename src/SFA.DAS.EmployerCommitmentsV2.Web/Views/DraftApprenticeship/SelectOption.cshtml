@@ -1,10 +1,11 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.SelectOptionViewModel
 
 @{
     ViewData["Title"] = "Select option";
     var optionError = ViewData.ModelState.ContainsKey("CourseOption");
-    
+
 }
 
 <div class="govuk-grid-row">
@@ -17,7 +18,7 @@
         @if (!string.IsNullOrEmpty(Model.StandardUrl))
         {
             <div class="govuk-inset-text">
-                <p class="govuk-body">For more information visit <a class="govuk-link" href="@Model.StandardUrl" target="_blank" >the IfATE page for this standard (opens in a new tab)</a>.</p>
+                <p class="govuk-body">For more information visit <a class="govuk-link" href="@Model.StandardUrl" target="_blank">the IfATE page for this standard (opens in a new tab)</a>.</p>
             </div>
         }
 
@@ -57,8 +58,8 @@
                 <input type="hidden" asp-for="StartYear" />
                 <input type="hidden" asp-for="EndMonth" />
                 <input type="hidden" asp-for="EndYear" />
-                
-                <div id="error-message-CourseOption" class="@(optionError == true ? "govuk-error-message" : "govuk-hint")" >
+
+                <div id="error-message-CourseOption" class="@(optionError == true ? "govuk-error-message" : "govuk-hint")">
                     Select an option.
                 </div>
 
@@ -84,3 +85,7 @@
         </form>
     </div>
 </div>
+
+@section back {
+    <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl("Details-Edit")">Back</a>
+}
