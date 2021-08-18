@@ -3,8 +3,6 @@
 
 @{
     ViewData["Title"] = "Select a standard option";
-    var optionError = ViewData.ModelState.ContainsKey("CourseOption");
-
 }
 
 <div class="govuk-grid-row">
@@ -61,9 +59,11 @@
         <input type="hidden" asp-for="EndMonth" />
         <input type="hidden" asp-for="EndYear" />
 
-        <div id="error-message-CourseOption" class="@(optionError == true ? "govuk-error-message" : "govuk-hint")">
-            Select an option.
+        <div id="select-an-option-hint" class="govuk-hint">
+            Select an option
         </div>
+
+        @Html.ValidationMessageFor(m => m.CourseOption, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.CourseOption) })
 
         <div class="govuk-radios">
             @foreach (var option in Model.Options.Select((Value, Index) => new { Value, Index }))
