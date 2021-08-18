@@ -1,9 +1,8 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
-@using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.SelectOptionViewModel
 
 @{
-    ViewData["Title"] = "Select option";
+    ViewData["Title"] = "Select a standard option";
     var optionError = ViewData.ModelState.ContainsKey("CourseOption");
 
 }
@@ -33,58 +32,59 @@
             </div>
         </dl>
 
-        <form id="selectOption" method="post">
-            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseOption, "govuk-form-group--error")">
-                <input type="hidden" asp-for="DraftApprenticeshipId" />
-                <input type="hidden" asp-for="FirstName" />
-                <input type="hidden" asp-for="LastName" />
-                <input type="hidden" asp-for="StandardUId" />
-                <input type="hidden" asp-for="Version" />
-                <input type="hidden" asp-for="CourseVersionConfirmed" />
-                <input type="hidden" asp-for="Email" />
-                <input type="hidden" asp-for="Uln" />
-                <input type="hidden" asp-for="CohortId" />
-                <input type="hidden" asp-for="CohortReference" />
-                <input type="hidden" asp-for="CourseCode" />
-                <input type="hidden" asp-for="Cost" />
-                <input type="hidden" asp-for="ReservationId" />
-                <input type="hidden" asp-for="Reference" />
-                <input type="hidden" asp-for="AccountHashedId" />
-                <input type="hidden" asp-for="BirthDay" />
-                <input type="hidden" asp-for="BirthMonth" />
-                <input type="hidden" asp-for="BirthYear" />
-                <input type="hidden" asp-for="DateOfBirth" />
-                <input type="hidden" asp-for="StartMonth" />
-                <input type="hidden" asp-for="StartYear" />
-                <input type="hidden" asp-for="EndMonth" />
-                <input type="hidden" asp-for="EndYear" />
-
-                <div id="error-message-CourseOption" class="@(optionError == true ? "govuk-error-message" : "govuk-hint")">
-                    Select an option.
-                </div>
-
-                <div class="govuk-radios">
-                    @foreach (var option in Model.Options.Select((Value, Index) => new { Value, Index }))
-                    {
-                        <div class="govuk-radios__item" id="radio-item-yes">
-                            <input class="govuk-radios__input" type="radio" id="@($"option-{option.Index}")" name="CourseOption" value="@option.Value" checked="@(Model.CourseOption == option.Value)">
-                            <label class="govuk-label govuk-radios__label" for="@($"option-{option.Index}")">@option.Value</label>
-                        </div>
-                    }
-
-                    <div class="govuk-radios__divider">or</div>
-
-                    <div class="govuk-radios__item" id="radio-item-yes">
-                        <input class="govuk-radios__input" type="radio" id="option-choose-later" name="CourseOption" value="N/A">
-                        <label class="govuk-label govuk-radios__label" for="option-choose-later"> Confirm option at a later date</label>
-                    </div>
-                </div>
-            </div>
-
-            <button type="submit" id="continue-button" class="govuk-button">Save and continue</button>
-        </form>
     </div>
 </div>
+
+<form id="selectOption" method="post">
+    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseOption, "govuk-form-group--error")">
+        <input type="hidden" asp-for="DraftApprenticeshipId" />
+        <input type="hidden" asp-for="FirstName" />
+        <input type="hidden" asp-for="LastName" />
+        <input type="hidden" asp-for="StandardUId" />
+        <input type="hidden" asp-for="Version" />
+        <input type="hidden" asp-for="CourseVersionConfirmed" />
+        <input type="hidden" asp-for="Email" />
+        <input type="hidden" asp-for="Uln" />
+        <input type="hidden" asp-for="CohortId" />
+        <input type="hidden" asp-for="CohortReference" />
+        <input type="hidden" asp-for="CourseCode" />
+        <input type="hidden" asp-for="Cost" />
+        <input type="hidden" asp-for="ReservationId" />
+        <input type="hidden" asp-for="Reference" />
+        <input type="hidden" asp-for="AccountHashedId" />
+        <input type="hidden" asp-for="BirthDay" />
+        <input type="hidden" asp-for="BirthMonth" />
+        <input type="hidden" asp-for="BirthYear" />
+        <input type="hidden" asp-for="DateOfBirth" />
+        <input type="hidden" asp-for="StartMonth" />
+        <input type="hidden" asp-for="StartYear" />
+        <input type="hidden" asp-for="EndMonth" />
+        <input type="hidden" asp-for="EndYear" />
+
+        <div id="error-message-CourseOption" class="@(optionError == true ? "govuk-error-message" : "govuk-hint")">
+            Select an option.
+        </div>
+
+        <div class="govuk-radios">
+            @foreach (var option in Model.Options.Select((Value, Index) => new { Value, Index }))
+            {
+                <div class="govuk-radios__item" id="radio-item-yes">
+                    <input class="govuk-radios__input" type="radio" id="@($"option-{option.Index}")" name="CourseOption" value="@option.Value" checked="@(Model.CourseOption == option.Value)">
+                    <label class="govuk-label govuk-radios__label" for="@($"option-{option.Index}")">@option.Value</label>
+                </div>
+            }
+
+            <div class="govuk-radios__divider">or</div>
+
+            <div class="govuk-radios__item" id="radio-item-yes">
+                <input class="govuk-radios__input" type="radio" id="option-choose-later" name="CourseOption" value="N/A">
+                <label class="govuk-label govuk-radios__label" for="option-choose-later"> Confirm option at a later date</label>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" id="continue-button" class="govuk-button">Save and continue</button>
+</form>
 
 @section back {
     <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl("Details-Edit")">Back</a>
