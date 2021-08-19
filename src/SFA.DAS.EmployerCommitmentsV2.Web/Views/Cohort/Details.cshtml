@@ -129,7 +129,7 @@
                     @foreach (var draftApprenticeship in course.DraftApprenticeships)
                     {
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell @(draftApprenticeship.HasOverlappingEmail ? "das-table-cell--highlight" : "")" data-label="Name">
+                            <td class="govuk-table__cell" @(draftApprenticeship.HasOverlappingEmail ? "style='border-bottom: 5px solid #1d70b8 !important'" : "") data-label="Name">
                                 @draftApprenticeship.DisplayName
                             </td>
                             <td class="govuk-table__cell" data-label="Date of birth">@draftApprenticeship.DisplayDateOfBirth</td>
