@@ -17,6 +17,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Http;
 using System.Linq;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -29,19 +30,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly ILinkGenerator _linkGenerator;
         private readonly IModelMapper _modelMapper;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IEncodingService _encodingService;
 
         public CohortController(
             ICommitmentsApiClient commitmentsApiClient,
             ILogger<CohortController> logger,
             ILinkGenerator linkGenerator,
             IModelMapper modelMapper,
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService,
+            IEncodingService encodingService)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _logger = logger;
             _linkGenerator = linkGenerator;
             _modelMapper = modelMapper;
             _authorizationService = authorizationService;
+            _encodingService = encodingService;
         }
 
         [Route("{cohortReference}")]
@@ -253,6 +257,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var request = await _modelMapper.Map<CreateCohortRequest>(model);
             var newCohort = await _commitmentsApiClient.CreateCohort(request);
+
+            var cohortApprenticeships = await _commitmentsApiClient.GetDraftApprenticeships(newCohort.CohortId);
+
+            if (cohortApprenticeships.DraftApprenticeships.Count() == 1)
+            {
+                var draftApprenticeship = cohortApprenticeships.DraftApprenticeships.Single();
+                
+                if (draftApprenticeship.CourseCode != null)
+                {
+                    var draftApprenticeshipHashedId = _encodingService.Encode(draftApprenticeship.Id, EncodingType.ApprenticeshipId);
+
+                    return RedirectToAction("SelectOption", "DraftApprenticeship", new { model.AccountHashedId, newCohort.CohortReference, draftApprenticeshipHashedId });
+                }
+            }
 
             return RedirectToAction("Details", new { model.AccountHashedId, newCohort.CohortReference });
         }

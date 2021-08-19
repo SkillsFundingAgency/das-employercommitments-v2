@@ -10,6 +10,7 @@ using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.Encoding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
               Mock.Of<ILogger<CohortController>>(),
               _linkGenerator.Object,
               _modelMapper.Object,
-              Mock.Of<IAuthorizationService>());
+              Mock.Of<IAuthorizationService>(),
+              Mock.Of<IEncodingService>());
         }
 
         [TestCase(true)]

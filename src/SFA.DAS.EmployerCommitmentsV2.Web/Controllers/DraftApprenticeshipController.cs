@@ -34,7 +34,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             IAuthorizationService authorizationService,
             IEncodingService encodingService)
         {
-
             _modelMapper = modelMapper;
             _commitmentsApiClient = commitmentsApiClient;
             _authorizationService = authorizationService;
@@ -87,7 +86,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
 
             await _commitmentsApiClient.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
-            
+
             return RedirectToAction("SelectOption", "DraftApprenticeship", new { model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId });
         }
 
