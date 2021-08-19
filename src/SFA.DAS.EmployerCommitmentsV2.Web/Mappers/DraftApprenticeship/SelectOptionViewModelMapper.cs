@@ -31,6 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 CohortId = source.CohortId,
                 CohortReference = source.CohortReference,
                 DraftApprenticeshipId = draftApprenticeship.Id,
+                Version = draftApprenticeship.TrainingCourseVersion,
                 StandardTitle = draftApprenticeship.TrainingCourseName,
                 CourseOption = draftApprenticeship.TrainingCourseOption,
                 Options = standard.TrainingProgramme.Options,

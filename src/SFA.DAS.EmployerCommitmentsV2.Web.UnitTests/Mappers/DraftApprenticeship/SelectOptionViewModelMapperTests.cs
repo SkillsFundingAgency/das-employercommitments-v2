@@ -55,10 +55,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             result.DraftApprenticeshipId.Should().Be(_getDraftApprenticeshipResponse.Id);
             result.CohortId.Should().Be(_request.CohortId);
             result.CohortReference.Should().Be(_request.CohortReference);
-            result.AccountHashedId.Should().Be(_request.AccountHashedId);
             result.Options.Should().BeEquivalentTo(_GetTrainingProgrammeResponse.TrainingProgramme.Options);
             result.StandardTitle.Should().Be(_getDraftApprenticeshipResponse.TrainingCourseName);
             result.CourseOption.Should().Be(_getDraftApprenticeshipResponse.TrainingCourseOption);
+            result.StandardUrl.Should().Be(_GetTrainingProgrammeResponse.TrainingProgramme.StandardPageUrl);
         }
 
         [Test]
