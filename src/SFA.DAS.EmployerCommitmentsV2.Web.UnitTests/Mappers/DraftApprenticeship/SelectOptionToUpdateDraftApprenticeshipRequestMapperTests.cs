@@ -1,9 +1,13 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
@@ -11,8 +15,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
     public class SelectOptionToUpdateDraftApprenticeshipRequestMapperTests
     {
         private SelectOptionViewModel _viewModel;
+        private GetDraftApprenticeshipResponse _getDraftApprenticeshipResponse;
         private SelectOptionViewModelToUpdateDraftApprenticeshipRequestMapper _mapper;
-    
+
+        private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+
         [SetUp]
         public void Arrange()
         {
@@ -23,17 +30,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             var endDate = fixture.Create<DateTime?>();
 
             _viewModel = fixture.Build<SelectOptionViewModel>()
-                .With(x => x.BirthDay, birthDate?.Day)
-                .With(x => x.BirthMonth, birthDate?.Month)
-                .With(x => x.BirthYear, birthDate?.Year)
-                .With(x => x.EndMonth, endDate?.Month)
-                .With(x => x.EndYear, endDate?.Year)
-                .With(x => x.StartMonth, startDate?.Month)
-                .With(x => x.StartYear, startDate?.Year)
                 .Without(x => x.StartDate)
                 .Create();
 
-            _mapper = new SelectOptionViewModelToUpdateDraftApprenticeshipRequestMapper();
+            _getDraftApprenticeshipResponse = fixture.Create<GetDraftApprenticeshipResponse>();
+
+            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+
+            _mockCommitmentsApiClient.Setup(c => c.GetDraftApprenticeship(_viewModel.CohortId.Value, _viewModel.DraftApprenticeshipId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_getDraftApprenticeshipResponse);
+
+            _mapper = new SelectOptionViewModelToUpdateDraftApprenticeshipRequestMapper(_mockCommitmentsApiClient.Object);
         }
 
         [Test]
@@ -41,15 +48,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         {
             var result = await _mapper.Map(_viewModel);
 
-            result.FirstName.Should().Be(_viewModel.FirstName);
-            result.LastName.Should().Be(_viewModel.LastName);
-            result.Email.Should().Be(_viewModel.Email);
-            result.Uln.Should().Be(_viewModel.Uln);
-            result.DateOfBirth.Should().Be(_viewModel.DateOfBirth.Date);
-            result.StartDate.Should().Be(_viewModel.StartDate.Date);
-            result.EndDate.Should().Be(_viewModel.EndDate.Date);
-            result.Reference.Should().Be(_viewModel.Reference);
-            result.ReservationId.Should().Be(_viewModel.ReservationId);
+            result.FirstName.Should().Be(_getDraftApprenticeshipResponse.FirstName);
+            result.LastName.Should().Be(_getDraftApprenticeshipResponse.LastName);
+            result.Email.Should().Be(_getDraftApprenticeshipResponse.Email);
+            result.Uln.Should().Be(_getDraftApprenticeshipResponse.Uln);
+            result.DateOfBirth.Should().Be(_getDraftApprenticeshipResponse.DateOfBirth);
+            result.StartDate.Should().Be(_getDraftApprenticeshipResponse.StartDate);
+            result.EndDate.Should().Be(_getDraftApprenticeshipResponse.EndDate);
+            result.Reference.Should().Be(_getDraftApprenticeshipResponse.Reference);
+            result.ReservationId.Should().Be(_getDraftApprenticeshipResponse.ReservationId);
             result.CourseOption.Should().Be(_viewModel.CourseOption);
         }
 

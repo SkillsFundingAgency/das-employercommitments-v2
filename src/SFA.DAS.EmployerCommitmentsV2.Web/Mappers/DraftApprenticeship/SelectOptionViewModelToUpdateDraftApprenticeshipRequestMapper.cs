@@ -1,4 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using System.Threading.Tasks;
@@ -7,23 +8,32 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 {
     public class SelectOptionViewModelToUpdateDraftApprenticeshipRequestMapper : IMapper<SelectOptionViewModel, UpdateDraftApprenticeshipRequest>
     {
-        public Task<UpdateDraftApprenticeshipRequest> Map(SelectOptionViewModel source)
+        private readonly ICommitmentsApiClient _commitmentsApiClient;
+
+        public SelectOptionViewModelToUpdateDraftApprenticeshipRequestMapper(ICommitmentsApiClient commitmentsApiClient)
         {
-            return Task.FromResult(new UpdateDraftApprenticeshipRequest
+            _commitmentsApiClient = commitmentsApiClient;
+        }
+
+        public async Task<UpdateDraftApprenticeshipRequest> Map(SelectOptionViewModel source)
+        {
+            var response = await _commitmentsApiClient.GetDraftApprenticeship(source.CohortId.Value, source.DraftApprenticeshipId);
+
+            return new UpdateDraftApprenticeshipRequest
             {
-                FirstName = source.FirstName,
-                LastName = source.LastName,
-                Email = source.Email,
-                DateOfBirth = source.DateOfBirth.Date,
-                Uln = source.Uln,
-                CourseCode = source.CourseCode,
+                FirstName = response.FirstName,
+                LastName = response.LastName,
+                Email = response.Email,
+                DateOfBirth = response.DateOfBirth,
+                Uln = response.Uln,
+                CourseCode = response.CourseCode,
                 CourseOption = source.CourseOption == "N/A" ? string.Empty : source.CourseOption,
-                Cost = source.Cost,
-                StartDate = source.StartDate.Date,
-                EndDate = source.EndDate.Date,
-                Reference = source.Reference,
-                ReservationId = source.ReservationId
-            });
+                Cost = response.Cost,
+                StartDate = response.StartDate,
+                EndDate = response.EndDate,
+                Reference = response.Reference,
+                ReservationId = response.ReservationId
+            };
         }
     }
 }

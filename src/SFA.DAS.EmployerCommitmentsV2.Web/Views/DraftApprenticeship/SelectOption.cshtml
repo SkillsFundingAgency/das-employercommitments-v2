@@ -29,36 +29,14 @@
                 <dd class="govuk-summary-list__value"> @Model.Version </dd>
             </div>
         </dl>
-
     </div>
 </div>
 
 <form id="selectOption" method="post">
     <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseOption, "govuk-form-group--error")">
-        <input type="hidden" asp-for="DraftApprenticeshipId" />
-        <input type="hidden" asp-for="FirstName" />
-        <input type="hidden" asp-for="LastName" />
-        <input type="hidden" asp-for="StandardUId" />
-        <input type="hidden" asp-for="Version" />
-        <input type="hidden" asp-for="CourseVersionConfirmed" />
-        <input type="hidden" asp-for="Email" />
-        <input type="hidden" asp-for="Uln" />
+        <input type="hidden" asp-for="DraftApprenticeshipId" />      
         <input type="hidden" asp-for="CohortId" />
-        <input type="hidden" asp-for="CohortReference" />
-        <input type="hidden" asp-for="CourseCode" />
-        <input type="hidden" asp-for="Cost" />
-        <input type="hidden" asp-for="ReservationId" />
-        <input type="hidden" asp-for="Reference" />
-        <input type="hidden" asp-for="AccountHashedId" />
-        <input type="hidden" asp-for="BirthDay" />
-        <input type="hidden" asp-for="BirthMonth" />
-        <input type="hidden" asp-for="BirthYear" />
-        <input type="hidden" asp-for="DateOfBirth" />
-        <input type="hidden" asp-for="StartMonth" />
-        <input type="hidden" asp-for="StartYear" />
-        <input type="hidden" asp-for="EndMonth" />
-        <input type="hidden" asp-for="EndYear" />
-
+    
         <div id="select-an-option-hint" class="govuk-hint">
             Select an option
         </div>

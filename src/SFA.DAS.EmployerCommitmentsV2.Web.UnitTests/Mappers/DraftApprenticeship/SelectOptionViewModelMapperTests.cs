@@ -53,20 +53,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             var result = await _mapper.Map(_request);
 
             result.DraftApprenticeshipId.Should().Be(_getDraftApprenticeshipResponse.Id);
-            result.FirstName.Should().Be(_getDraftApprenticeshipResponse.FirstName);
-            result.LastName.Should().Be(_getDraftApprenticeshipResponse.LastName);
-            result.Email.Should().Be(_getDraftApprenticeshipResponse.Email);
-            result.Uln.Should().Be(_getDraftApprenticeshipResponse.Uln);
             result.CohortId.Should().Be(_request.CohortId);
-            result.CourseCode.Should().Be(_getDraftApprenticeshipResponse.CourseCode);
-            result.Cost.Should().Be(_getDraftApprenticeshipResponse.Cost);
             result.CohortReference.Should().Be(_request.CohortReference);
-            result.ReservationId.Should().Be(_getDraftApprenticeshipResponse.ReservationId);
-            result.Reference.Should().Be(_getDraftApprenticeshipResponse.Reference);
             result.AccountHashedId.Should().Be(_request.AccountHashedId);
             result.Options.Should().BeEquivalentTo(_GetTrainingProgrammeResponse.TrainingProgramme.Options);
             result.StandardTitle.Should().Be(_getDraftApprenticeshipResponse.TrainingCourseName);
-            result.Version.Should().Be(_getDraftApprenticeshipResponse.TrainingCourseVersion);
             result.CourseOption.Should().Be(_getDraftApprenticeshipResponse.TrainingCourseOption);
         }
 

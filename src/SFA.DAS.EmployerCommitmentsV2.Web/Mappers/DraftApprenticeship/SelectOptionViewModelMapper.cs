@@ -29,22 +29,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
             return new SelectOptionViewModel(draftApprenticeship.DateOfBirth, draftApprenticeship.StartDate, draftApprenticeship.EndDate)
             {
                 CohortId = source.CohortId,
-                AccountHashedId = source.AccountHashedId,
                 CohortReference = source.CohortReference,
                 DraftApprenticeshipId = draftApprenticeship.Id,
-                FirstName = draftApprenticeship.FirstName,
-                LastName = draftApprenticeship.LastName,
-                Email = draftApprenticeship.Email,
-                Uln = draftApprenticeship.Uln,
                 StandardTitle = draftApprenticeship.TrainingCourseName,
-                StandardUId = draftApprenticeship.StandardUId,
-                CourseCode = draftApprenticeship.CourseCode,
-                Version = draftApprenticeship.TrainingCourseVersion,
-                CourseVersionConfirmed = draftApprenticeship.TrainingCourseVersionConfirmed,
                 CourseOption = draftApprenticeship.TrainingCourseOption,
-                Cost = draftApprenticeship.Cost,
-                ReservationId = draftApprenticeship.ReservationId,
-                Reference = draftApprenticeship.Reference, 
                 Options = standard.TrainingProgramme.Options,
                 StandardUrl = standard.TrainingProgramme.StandardPageUrl
             };
