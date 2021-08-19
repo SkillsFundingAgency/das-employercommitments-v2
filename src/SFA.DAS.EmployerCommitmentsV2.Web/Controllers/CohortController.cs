@@ -258,18 +258,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var request = await _modelMapper.Map<CreateCohortRequest>(model);
             var newCohort = await _commitmentsApiClient.CreateCohort(request);
 
-            var cohortApprenticeships = await _commitmentsApiClient.GetDraftApprenticeships(newCohort.CohortId);
+            var draftApprenticeshipsResponse = await _commitmentsApiClient.GetDraftApprenticeships(newCohort.CohortId);
 
-            if (cohortApprenticeships.DraftApprenticeships.Count() == 1)
+            var draftApprenticeship = draftApprenticeshipsResponse.DraftApprenticeships.SingleOrDefault();
+           
+            if (draftApprenticeship?.CourseCode != null)
             {
-                var draftApprenticeship = cohortApprenticeships.DraftApprenticeships.Single();
-                
-                if (draftApprenticeship.CourseCode != null)
-                {
-                    var draftApprenticeshipHashedId = _encodingService.Encode(draftApprenticeship.Id, EncodingType.ApprenticeshipId);
+                var draftApprenticeshipHashedId = _encodingService.Encode(draftApprenticeship.Id, EncodingType.ApprenticeshipId);
 
-                    return RedirectToAction("SelectOption", "DraftApprenticeship", new { model.AccountHashedId, newCohort.CohortReference, draftApprenticeshipHashedId });
-                }
+                return RedirectToAction("SelectOption", "DraftApprenticeship", new { model.AccountHashedId, newCohort.CohortReference, draftApprenticeshipHashedId });
             }
 
             return RedirectToAction("Details", new { model.AccountHashedId, newCohort.CohortReference });
