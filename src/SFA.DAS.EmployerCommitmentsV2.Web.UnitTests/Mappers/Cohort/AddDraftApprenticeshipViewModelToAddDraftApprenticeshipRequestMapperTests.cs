@@ -1,6 +1,10 @@
 using System;
+using System.Threading;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.Testing;
@@ -52,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 BirthMonth = 2,
                 BirthYear = 2000,
                 Uln = "AAA000",
-                CourseCode = "BBB111",
+                CourseCode = "111",
                 Cost = 3,
                 StartMonth = 8,
                 StartYear = 2019,
@@ -61,7 +65,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 Reference = "CCC222",
                 ReservationId = Guid.NewGuid()
             };
-            
+
             Mapper = new AddDraftApprenticeshipRequestMapper();
         }
 

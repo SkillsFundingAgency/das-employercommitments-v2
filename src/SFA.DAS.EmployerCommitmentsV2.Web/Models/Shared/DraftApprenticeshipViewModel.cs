@@ -60,6 +60,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public string Uln { get; set; }
 
         public string CourseCode { get; set; }
+        public string StandardUId { get; set; }
+        public string CourseOption { get; set; }
 
         [Display(Name = "Planned training start date")]
         public MonthYearModel StartDate { get; set; }
