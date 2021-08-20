@@ -47,15 +47,15 @@
             @foreach (var option in Model.Options.Select((Value, Index) => new { Value, Index }))
             {
                 <div class="govuk-radios__item" id="radio-item-yes">
-                    <input class="govuk-radios__input" type="radio" id="@($"option-{option.Index}")" name="CourseOption" value="@option.Value" checked="@(Model.CourseOption == option.Value)">
-                    <label class="govuk-label govuk-radios__label" for="@($"option-{option.Index}")">@option.Value</label>
+                    <input class="govuk-radios__input" type="radio" id="option-@option.Index" name="CourseOption" value="@option.Value" checked="@(Model.CourseOption == option.Value)">
+                    <label class="govuk-label govuk-radios__label" for="option-@option.Index">@option.Value</label>
                 </div>
             }
 
             <div class="govuk-radios__divider">or</div>
 
             <div class="govuk-radios__item" id="radio-item-yes">
-                <input class="govuk-radios__input" type="radio" id="option-choose-later" name="CourseOption" value="N/A">
+                <input class="govuk-radios__input" type="radio" id="option-choose-later" name="CourseOption" value="N/A" checked="@(Model.CourseOption == string.Empty)">
                 <label class="govuk-label govuk-radios__label" for="option-choose-later"> Confirm option at a later date</label>
             </div>
         </div>

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
@@ -7,9 +8,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
     public class UpdateDraftApprenticeshipRequestMapper : IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipRequest>
     {
-        public Task<UpdateDraftApprenticeshipRequest> Map(EditDraftApprenticeshipViewModel source)
+        private readonly ICommitmentsApiClient _commitmentsApiClient;
+
+        public UpdateDraftApprenticeshipRequestMapper(ICommitmentsApiClient commitmentsApiClient)
         {
-            return Task.FromResult(new UpdateDraftApprenticeshipRequest
+            _commitmentsApiClient = commitmentsApiClient;
+        }
+
+        public async Task<UpdateDraftApprenticeshipRequest> Map(EditDraftApprenticeshipViewModel source)
+        {
+            var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(source.CohortId.Value, source.DraftApprenticeshipId);
+
+            return new UpdateDraftApprenticeshipRequest
             {
                 ReservationId = source.ReservationId,
                 FirstName = source.FirstName,
@@ -18,12 +28,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 DateOfBirth = source.DateOfBirth.Date,
                 Uln = source.Uln,
                 CourseCode = source.CourseCode,
-                CourseOption = source.CourseOption,
+                CourseOption = draftApprenticeship.TrainingCourseOption,
                 Cost = source.Cost,
                 StartDate = source.StartDate.Date,
                 EndDate = source.EndDate.Date,
                 Reference = source.Reference
-            });
+            };
         }
     }
 }

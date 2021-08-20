@@ -15,6 +15,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     [TestFixture]
     public class WhenIMapDraftApprenticeshipToUpdateRequest
     {
+        private GetDraftApprenticeshipResponse _getDraftApprenticeshipResponse;
+        private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+
         private UpdateDraftApprenticeshipRequestMapper _mapper;
         private EditDraftApprenticeshipViewModel _source;
         private Func<Task<UpdateDraftApprenticeshipRequest>> _act;
@@ -28,7 +31,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var startDate = fixture.Create<DateTime?>();
             var endDate = fixture.Create<DateTime?>();
 
-            _mapper = new UpdateDraftApprenticeshipRequestMapper();
+            _getDraftApprenticeshipResponse = fixture.Create<GetDraftApprenticeshipResponse>();
+
+            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+
+            _mapper = new UpdateDraftApprenticeshipRequestMapper(_mockCommitmentsApiClient.Object);
 
             _source = fixture.Build<EditDraftApprenticeshipViewModel>()
                 .With(x => x.CourseCode, fixture.Create<int>().ToString())
@@ -42,6 +49,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 .Without(x => x.StartDate)
                 .Without(x => x.Courses)
                 .Create();
+
+            _mockCommitmentsApiClient.Setup(x => x.GetDraftApprenticeship(_source.CohortId.Value, _source.DraftApprenticeshipId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_getDraftApprenticeshipResponse);
 
             _act = async () => await _mapper.Map(TestHelper.Clone(_source));
         }
@@ -114,6 +124,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _act();
             Assert.AreEqual(_source.Reference, result.Reference);
+        }
+
+        [TestCase("Option 1")]
+        [TestCase("")]
+        [TestCase(null)]
+        public async Task ThenCourseOptionIsMappedCorrectly(string option)
+        {
+            _getDraftApprenticeshipResponse.TrainingCourseOption = option;
+            var result = await _act();
+            Assert.AreEqual(_getDraftApprenticeshipResponse.TrainingCourseOption, result.CourseOption);
         }
 
     }
