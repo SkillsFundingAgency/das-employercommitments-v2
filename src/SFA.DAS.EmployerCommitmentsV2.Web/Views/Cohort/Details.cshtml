@@ -44,7 +44,7 @@
                         <p class="govuk-notification-banner__heading">
                             @if (!Model.IsCompleteForEmployer && Model.HasEmailOverlaps)
                             {
-                                <text>You can’t approve this apprentice record until:</text>
+                                <text>You can’t approve this apprentice request until:</text>
                                 <ul>
                                     <li>all apprentice records are complete</li>
                                     <li>each apprentice has a unique email address</li>
@@ -52,11 +52,11 @@
                             }
                             else if (Model.HasEmailOverlaps)
                             {
-                                <text>You can’t approve this apprentice request until all apprentices have unique email addresses</text>
+                                <text>You can’t approve this apprentice request until each apprentice haa a unique email address</text>
                             }
                             else
                             {
-                                <text>You must complete all apprentice details before you can approve this record</text>
+                                <text>You can’t approve this apprentice request until all apprentice records are complete</text>
                             }
                         </p>
                     </div>
@@ -94,6 +94,15 @@
         @foreach (var course in Model.Courses)
         {
             <h3 class="govuk-heading-m">@course.Count x @course.DisplayCourseName</h3>
+            if (@course.EmailOverlaps != null)
+            {
+                <div class="govuk-inset-text das-inset-text--highlight">
+                    <h3 class="govuk-heading-s">@course.EmailOverlaps.DisplayEmailOverlapsMessage</h3>
+                    <p>
+                        You must enter unique email addresses for each apprentice.
+                    </p>
+                </div>
+            }
             if (@course.FundingBandExcess != null)
             {
                 <div class="govuk-inset-text das-inset-text--highlight">
@@ -102,15 +111,6 @@
                         @course.FundingBandExcess.FundingBandCapExcessLabel
                         <text><a target="_blank" href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band maximum</a>@course.FundingBandExcess.DisplaySingleFundingBandCap</text>
                         You'll need to pay the difference directly to the training provider.
-                    </p>
-                </div>
-            }
-            if (@course.EmailOverlaps != null)
-            {
-                <div class="govuk-inset-text das-inset-text--highlight">
-                    <h3 class="govuk-heading-s">@course.EmailOverlaps.DisplayEmailOverlapsMessage</h3>
-                    <p>
-                        You must enter unique email addresses for each apprentice
                     </p>
                 </div>
             }
