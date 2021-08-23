@@ -110,7 +110,7 @@
                     @foreach (var draftApprenticeship in course.DraftApprenticeships)
                     {
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell" data-label="Name">@draftApprenticeship.DisplayName</td>
+                            <td class="govuk-table__cell" data-label="Name"><span class="das-breakable">@draftApprenticeship.DisplayName</span></td>
                             <td class="govuk-table__cell" data-label="Date of birth">@draftApprenticeship.DisplayDateOfBirth</td>
                             <td class="govuk-table__cell" data-label="Training dates">
                                 @if (draftApprenticeship.HasOverlappingUln)
