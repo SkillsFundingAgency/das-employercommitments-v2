@@ -130,11 +130,13 @@
                     {
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell" data-label="Name">
-                                @draftApprenticeship.DisplayName
-
                                 @if (draftApprenticeship.HasOverlappingEmail)
                                 {
-                                    <hr style="border-bottom: 5px solid #1d70b8" />
+                                    <span class="das-table-cell--highlight das-breakable">@draftApprenticeship.DisplayName</span>
+                                }
+                                else
+                                {
+                                    @draftApprenticeship.DisplayName
                                 }
                             </td>
                             <td class="govuk-table__cell" data-label="Date of birth">@draftApprenticeship.DisplayDateOfBirth</td>
