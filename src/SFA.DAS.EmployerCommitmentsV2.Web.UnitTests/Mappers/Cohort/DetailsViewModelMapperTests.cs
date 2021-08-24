@@ -19,7 +19,6 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
 using SFA.DAS.Http;
-using SFA.DAS.Testing.Builders;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -545,6 +544,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.IsTrue(course.DraftApprenticeships.First(x => x.Id == apprenticeshipId2).HasOverlappingEmail);
         }
 
+        [TestCase(true, true)]
+        [TestCase(false, false)]
+        public async Task ShowHasOverlappingUlnIsMappedCorrectlyWhenOverlap(bool hasOverlap, bool hasUlnOverlap)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetUlnOverlap(hasOverlap);
+            var result = await fixture.Map();
+
+            Assert.AreEqual(hasUlnOverlap, result.HasOverlappingUln);
+        }
+
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        public async Task ShowApprovalOptionIsMappedCorrectlyWhenOverlap(bool hasOverlap, bool expectedEmployerCanApprove)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            fixture.SetIsAgreementSigned(true).SetUlnOverlap(hasOverlap);
+            var result = await fixture.Map();
+
+            Assert.AreEqual(expectedEmployerCanApprove, result.EmployerCanApprove);
+        }
+
         [Test]
         public async Task HasEmailOverlapsIsMappedCorrectlyWhenThereAreEmailOverlaps()
         {
@@ -613,6 +634,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             CommitmentsApiClient.Setup(x => x.GetTrainingProgramme("no-course", CancellationToken.None))
                 .ThrowsAsync(new RestHttpClientException(new HttpResponseMessage(HttpStatusCode.NotFound){RequestMessage = new HttpRequestMessage(),
                     ReasonPhrase = "Url not found"}, "Course not found" ));
+            CommitmentsApiClient.Setup(x => x.ValidateUlnOverlap(It.IsAny<ValidateUlnOverlapRequest>(), CancellationToken.None))
+              .ReturnsAsync(new ValidateUlnOverlapResult { HasOverlappingEndDate = false, HasOverlappingStartDate = false });
 
             EncodingService = new Mock<IEncodingService>();
             SetEncodingOfApprenticeIds();
@@ -656,7 +679,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
         public DetailsViewModelMapperTestsFixture WithOneEmailOverlapping()
         {
-            CreateThisNumberOfApprenticeships(10);
             var first = DraftApprenticeshipsResponse.DraftApprenticeships.First();
             var emailOverlap = _autoFixture.Build<ApprenticeshipEmailOverlap>().With(x => x.Id, first.Id).Create();
             EmailOverlapResponse.ApprenticeshipEmailOverlaps = new List<ApprenticeshipEmailOverlap> { emailOverlap };
@@ -790,6 +812,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 c.CourseCode = "";
                 return c;
             }).ToList();
+            return this;
+        }
+
+        internal DetailsViewModelMapperTestsFixture SetUlnOverlap(bool hasOverlap)
+        {
+            CommitmentsApiClient.Setup(x => x.ValidateUlnOverlap(It.IsAny<ValidateUlnOverlapRequest>(), CancellationToken.None))
+             .ReturnsAsync(new ValidateUlnOverlapResult { HasOverlappingEndDate = hasOverlap, HasOverlappingStartDate = hasOverlap });
+
             return this;
         }
     }

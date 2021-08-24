@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public bool IsAgreementSigned { get; set; }
         public string OptionsTitle => IsAgreementSigned && IsCompleteForEmployer && !HasEmailOverlaps ? "Approve these details?": "Choose an option";
         public bool ShowViewAgreementOption => !IsAgreementSigned;
-        public bool EmployerCanApprove => IsAgreementSigned && IsCompleteForEmployer && !HasEmailOverlaps;
+        public bool EmployerCanApprove => IsAgreementSigned && IsCompleteForEmployer && !HasOverlappingUln && !HasEmailOverlaps;
         public bool ShowApprovalOptionMessage => EmployerCanApprove && IsApprovedByProvider;
         public bool ShowGotoHomePageOption => (!IsCompleteForEmployer && IsAgreementSigned) || HasEmailOverlaps;
         public bool IsReadOnly => WithParty != Party.Employer;
@@ -50,6 +50,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
                     return "Request changes from training provider";
                 }
                 return "No, request changes from training provider";
+            }
+        }
+
+        public bool HasOverlappingUln
+        {
+            get
+            {
+                return Courses != null
+                    && Courses.Any(x => x.DraftApprenticeships != null
+                    && x.DraftApprenticeships.Any(x => x.HasOverlappingUln));
             }
         }
     }

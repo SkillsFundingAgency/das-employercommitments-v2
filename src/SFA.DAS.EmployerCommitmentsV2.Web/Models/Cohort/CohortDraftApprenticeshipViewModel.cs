@@ -14,6 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public DateTime? EndDate { get; set; }
         public int? Cost { get; set; }
         public int? FundingBandCap { get; set; }
+        public string ULN { get; set; }
 
         public bool ExceedsFundingBandCap
         {
@@ -48,6 +49,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string DisplayCost => Cost.HasValue ? $"{Cost.Value.ToGdsCostFormat()}" : "-";
 
         public DateTime? OriginalStartDate { get; set; }
+
+        public bool HasOverlappingUln { get; set; }
         public bool HasOverlappingEmail { get; set; }
     }
 }

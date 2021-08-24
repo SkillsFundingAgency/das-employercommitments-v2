@@ -60,7 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
             var emailOverlaps = (await emailOverlapsTask).ApprenticeshipEmailOverlaps.ToList();
 
-            var courses = GroupCourses(draftApprenticeships, emailOverlaps);
+            var courses = await GroupCourses(draftApprenticeships, emailOverlaps);
             var viewOrApprove = cohort.WithParty == CommitmentsV2.Types.Party.Employer ? "Approve" : "View";
             var isAgreementSigned = await IsAgreementSigned(cohort.AccountLegalEntityId);
 
@@ -86,7 +86,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             };
         }
 
-        private IReadOnlyCollection<DetailsViewCourseGroupingModel> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships, List<ApprenticeshipEmailOverlap> emailOverlaps)
+        private async Task<IReadOnlyCollection<DetailsViewCourseGroupingModel>> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships, List<ApprenticeshipEmailOverlap> emailOverlaps)
         {
             var groupedByCourse = draftApprenticeships
                 .GroupBy(a => new { a.CourseCode, a.CourseName })
@@ -109,7 +109,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                             EndDate = a.EndDate,
                             StartDate = a.StartDate,
                             OriginalStartDate = a.OriginalStartDate,
-                            HasOverlappingEmail = emailOverlaps.Any(x=>x.Id == a.Id) 
+                            HasOverlappingEmail = emailOverlaps.Any(x=>x.Id == a.Id),
+                            ULN = a.Uln
                         })
                 .ToList()
                 })
@@ -117,9 +118,35 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 .ToList();
 
             PopulateFundingBandExcessModels(groupedByCourse);
+            await CheckUlnOverlap(groupedByCourse);
             PopulateEmailOverlapsModel(groupedByCourse);
 
             return groupedByCourse;
+        }
+
+        private Task CheckUlnOverlap(List<DetailsViewCourseGroupingModel> courseGroups)
+        {
+            var results = courseGroups.Select(courseGroup => SetUlnOverlap(courseGroup.DraftApprenticeships));
+            return Task.WhenAll(results);
+        }
+
+        private async Task SetUlnOverlap(IReadOnlyCollection<CohortDraftApprenticeshipViewModel> draftApprenticeships)
+        {
+            foreach (var draftApprenticeship in draftApprenticeships)
+            {
+                if (!string.IsNullOrWhiteSpace(draftApprenticeship.ULN) && draftApprenticeship.StartDate.HasValue && draftApprenticeship.EndDate.HasValue)
+                {
+                    var result = await _commitmentsApiClient.ValidateUlnOverlap(new CommitmentsV2.Api.Types.Requests.ValidateUlnOverlapRequest
+                    {
+                        EndDate = draftApprenticeship.EndDate.Value,
+                        StartDate = draftApprenticeship.StartDate.Value,
+                        ULN = draftApprenticeship.ULN,
+                        ApprenticeshipId = draftApprenticeship.Id
+                    });
+
+                    draftApprenticeship.HasOverlappingUln = result.HasOverlappingStartDate || result.HasOverlappingEndDate;
+                }
+            }
         }
 
         private void PopulateEmailOverlapsModel(List<DetailsViewCourseGroupingModel> courseGroups)
