@@ -32,6 +32,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string TotalAgreedPrice { get; private set; }
         [Name("Your reference")]
         public string EmployerRef { get; private set; }
+        [Name("Apprentice Confirmation")]
+        public string ApprenticeConfirmation { get; private set; }
         [Name("Status")]
         public string Status { get ; private set ; }
         [Name("Alerts")]
@@ -52,6 +54,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                 Uln = model.Uln,
                 DateOfBirth = model.DateOfBirth.ToGdsFormat(),
                 TotalAgreedPrice = $"{model.TotalAgreedPrice.Value as object:n0}",
+                ApprenticeConfirmation = model.ConfirmationStatus.GetDescription(),
                 Status = model.ApprenticeshipStatus.GetDescription(),
                 Alerts = GenerateAlerts(model.Alerts)
             };

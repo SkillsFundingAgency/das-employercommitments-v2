@@ -44,6 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 Status = request.SelectedStatus,
                 EndDate = request.SelectedEndDate,
                 Alert = request.SelectedAlert,
+                ApprenticeConfirmationStatus = request.SelectedApprenticeConfirmation,
                 PageNumber = 0
             };
             

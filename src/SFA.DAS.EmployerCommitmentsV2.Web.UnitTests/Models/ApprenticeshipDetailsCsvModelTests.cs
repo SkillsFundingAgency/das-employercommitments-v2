@@ -85,6 +85,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
         }
 
         [Test, AutoData]
+        public void Then_Maps_ApprenticeConfirmation(
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
+        {
+            ApprenticeshipDetailsCsvModel result = source;
+
+            result.ApprenticeConfirmation.Should().Be(source.ConfirmationStatus.GetDescription());
+        }
+
+        [Test, AutoData]
         public void Then_Maps_Status(
             GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
         {
