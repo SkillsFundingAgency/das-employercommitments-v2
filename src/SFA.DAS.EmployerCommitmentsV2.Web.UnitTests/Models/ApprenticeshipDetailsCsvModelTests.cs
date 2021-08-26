@@ -94,6 +94,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
         }
 
         [Test, AutoData]
+        public void Then_Maps_Null_ApprenticeConfirmation(
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
+        {
+            source.ConfirmationStatus = null;
+
+            ApprenticeshipDetailsCsvModel result = source;
+
+            result.ApprenticeConfirmation.Should().BeNull();
+        }
+
+        [Test, AutoData]
         public void Then_Maps_Status(
             GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
         {

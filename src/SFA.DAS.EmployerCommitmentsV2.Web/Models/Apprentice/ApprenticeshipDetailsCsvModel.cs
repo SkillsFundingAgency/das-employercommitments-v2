@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                 Uln = model.Uln,
                 DateOfBirth = model.DateOfBirth.ToGdsFormat(),
                 TotalAgreedPrice = $"{model.TotalAgreedPrice.Value as object:n0}",
-                ApprenticeConfirmation = model.ConfirmationStatus.GetDescription(),
+                ApprenticeConfirmation = model.ConfirmationStatus?.GetDescription(),
                 Status = model.ApprenticeshipStatus.GetDescription(),
                 Alerts = GenerateAlerts(model.Alerts)
             };
