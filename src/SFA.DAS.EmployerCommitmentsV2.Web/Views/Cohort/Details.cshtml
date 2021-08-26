@@ -75,17 +75,6 @@
         @foreach (var course in Model.Courses)
         {
             <h3 class="govuk-heading-m">@course.Count x @course.DisplayCourseName</h3>
-            if (@course.FundingBandExcess != null)
-            {
-                <div class="govuk-inset-text das-inset-text--highlight">
-                    <h3 class="govuk-heading-s">@course.FundingBandExcess.FundingBandCapExcessHeader</h3>
-                    <p>
-                        @course.FundingBandExcess.FundingBandCapExcessLabel
-                        <text><a target="_blank" href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band maximum</a>@course.FundingBandExcess.DisplaySingleFundingBandCap</text>
-                        You'll need to pay the difference directly to the training provider.
-                    </p>
-                </div>
-            }
             if (@course.DraftApprenticeships.Any(x => x.HasOverlappingUln))
             {
                 <div class="govuk-inset-text das-inset-text--highlight">
@@ -104,7 +93,17 @@
                     </p>
                 </div>
             }
-
+            if (@course.FundingBandExcess != null)
+            {
+                <div class="govuk-inset-text das-inset-text--highlight">
+                    <h3 class="govuk-heading-s">@course.FundingBandExcess.FundingBandCapExcessHeader</h3>
+                    <p>
+                        @course.FundingBandExcess.FundingBandCapExcessLabel
+                        <text><a target="_blank" href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band maximum</a>@course.FundingBandExcess.DisplaySingleFundingBandCap</text>
+                        You'll need to pay the difference directly to the training provider.
+                    </p>
+                </div>
+            }
             <table class="govuk-table das-table--responsive">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
