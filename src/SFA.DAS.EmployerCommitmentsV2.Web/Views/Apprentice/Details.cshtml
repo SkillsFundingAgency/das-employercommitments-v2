@@ -220,6 +220,10 @@
                     <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.TrainingName </td>
                 </tr>
                 <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header"> Version </th>
+                    <td id="version" class="govuk-table__cell" colspan="2">@Model.Version </td>
+                </tr>
+                <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Planned training start date</th>
                     <td id="start-date" class="govuk-table__cell" colspan="2">
                         @if (@Model.StartDate.HasValue)

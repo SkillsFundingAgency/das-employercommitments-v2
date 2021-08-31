@@ -19,6 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public DateTime? CompletionDate { get; set; }
         public ProgrammeType? TrainingType { get; set; }
         public string TrainingName { get; set; }
+        public string Version { get; set; }
         public decimal? Cost { get; set; }
         public ApprenticeshipStatus ApprenticeshipStatus { get; set; }
         public string ProviderName { get; set; }
