@@ -1,0 +1,60 @@
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ChangeVersionViewModel
+@{
+    ViewData["Title"] = "Select a standard version";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-xl">Select a standard version</h1>
+
+        @if (!string.IsNullOrEmpty(Model.StandardUrl))
+        {
+            <div class="govuk-inset-text">
+                <p class="govuk-body">For more information visit <a class="govuk-link" href="@Model.StandardUrl" target="_blank">the IfATE page for this standard (opens in a new tab)</a>.</p>
+            </div>
+        }
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key"> Apprenticeship training course </dt>
+                <dd class="govuk-summary-list__value"> @Model.StandardTitle </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key"> Version </dt>
+                <dd class="govuk-summary-list__value"> @Model.CurrentVersion </dd>
+            </div>
+        </dl>
+    </div>
+</div>
+
+<form id="change-version-form" method="post">
+    <div class="govuk-form-group">
+        <div id="select-a-version-hint" class="govuk-hint">
+            Select an version
+        </div>
+
+        <div class="govuk-radios">
+            @foreach (var version in Model.NewerVersions)
+            {
+                <div class="govuk-radios__item" id="radio-item-yes">
+                    <input class="govuk-radios__input" type="radio" id="version-@version" name="SelectedVersion" value="@version">
+                    <label class="govuk-label govuk-radios__label" for="version-@version">Version @version</label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="govuk-button-group">
+        <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button">
+            Save and continue
+        </button>
+
+        <a class="govuk-link govuk-link--no-visited-state" href="@Url.RouteUrl(RouteNames.ApprenticeDetail)" id="cancel-button">Cancel and return</a>
+    </div>
+</form>
+
+@section back {
+    <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ApprenticeDetail)">Back</a>
+}

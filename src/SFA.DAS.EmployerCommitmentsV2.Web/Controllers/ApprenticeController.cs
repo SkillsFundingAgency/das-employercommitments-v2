@@ -614,6 +614,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
+        [Route("{apprenticeshipHashedId}/change-version")]
+        public async Task<IActionResult> ChangeVersion(ChangeVersionRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ChangeVersionViewModel>(request);
+            return View(viewModel);
+        }
+
+        [HttpGet]
         [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
         [Route("{apprenticeshipHashedId}/edit/confirm")]
         public async Task<IActionResult> ConfirmEditApprenticeship()
