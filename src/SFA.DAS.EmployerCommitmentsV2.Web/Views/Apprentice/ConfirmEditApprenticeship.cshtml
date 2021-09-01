@@ -36,6 +36,7 @@
             @Html.HiddenFor(x => x.BirthDay)
             @Html.HiddenFor(x => x.Cost)
             @Html.HiddenFor(x => x.CourseCode)
+            @Html.HiddenFor(x => x.Version)
             @Html.HiddenFor(x => x.EmployerReference)
             @Html.HiddenFor(x => x.ProviderName)
 
@@ -105,6 +106,14 @@
                                     <th scope="row" class="govuk-table__header">Apprenticeship training course</th>
                                     <td class="govuk-table__cell">@Model.OriginalApprenticeship.CourseName </td>
                                     <td class="govuk-table__cell">@Model.CourseName</td>
+                                </tr>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.Version))
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Version</th>
+                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.Version </td>
+                                    <td class="govuk-table__cell">@Model.Version</td>
                                 </tr>
                             }
                             @if (Model.StartDate.HasValue)

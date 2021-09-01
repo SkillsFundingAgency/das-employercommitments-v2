@@ -58,6 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 Email = apprenticeship.Email,
                 ULN= apprenticeship.Uln,
                 CourseCode = apprenticeship.CourseCode,
+                Version = apprenticeship.Version,
                 Cost = priceEpisodes.PriceEpisodes.GetPrice(),
                 EmployerReference = apprenticeship.EmployerReference,
                 Courses = courses,

@@ -140,6 +140,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task WhenVersionIsChanged()
+        {
+            fixture.source.Version = "1.1";
+
+            var result = await fixture.Map();
+
+            Assert.AreNotEqual(fixture.source.Version, fixture._apprenticeshipResponse.Version);
+            Assert.AreEqual(fixture.source.Version, result.Version);
+        }
+
+        [Test]
         public async Task WhenMultipleFieldsAreChanged_TheyAreChanged()
         {
             fixture.source.CourseCode = "NewCourse";
@@ -184,6 +195,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _apprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>()
                 .With(x => x.CourseCode, "ABC")
+                .With(x => x.Version, "1.0")
                 .With(x => x.StartDate, new DateTime(2020, 1, 1))
                 .With(x => x.EndDate, new DateTime(2021, 1, 1))
                 .With(x => x.DateOfBirth, new DateTime(1990,1,1))

@@ -93,6 +93,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             vm.OriginalApprenticeship.EndMonth = apprenticeship.EndDate.Month;
             vm.OriginalApprenticeship.EndYear = apprenticeship.EndDate.Year;
 
+            if (source.Version != apprenticeship.Version)
+            {
+                vm.Version = source.Version;
+            }
+            vm.OriginalApprenticeship.Version = apprenticeship.Version;
+
+            // TODO: This should be changed to show correct version name
             if (source.CourseCode != apprenticeship.CourseCode)
             {
                 var courseDetails = await _commitmentApi.GetTrainingProgramme(source.CourseCode);
