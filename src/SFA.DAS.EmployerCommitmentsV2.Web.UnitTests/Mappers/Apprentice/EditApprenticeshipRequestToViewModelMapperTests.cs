@@ -161,6 +161,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task ApprenticeshipConfirmationStatus_IsMapped()
+        {
+            //Act
+            await _fixture.Map();
+
+            //Assert
+            _fixture.VerifyApprenticeshipConfirmationStatusIsMapped();
+        }
+
+
+        [Test]
         public async Task ULN_IsMapped()
         {
             //Act
@@ -422,6 +433,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         internal void VerifyEmailIsMapped()
         {
             Assert.AreEqual(ApprenticeshipResponse.Email, _viewModel.Email);
+        }
+
+        internal void VerifyApprenticeshipConfirmationStatusIsMapped()
+        {
+            Assert.AreEqual(ApprenticeshipResponse.ConfirmationStatus, _viewModel.ApprenticeshipConfirmationStatus);
         }
 
         internal void VerifyULNIsMapped()
