@@ -5,11 +5,8 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using SFA.DAS.EmployerCommitmentsV2.Features;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.Encoding;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,18 +18,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
         private readonly ILogger<ApprenticeshipDetailsRequestToViewModelMapper> _logger;
-        private readonly IAuthorizationService _authorizationService;
 
         public ApprenticeshipDetailsRequestToViewModelMapper(
             ICommitmentsApiClient commitmentsApiClient, 
             IEncodingService encodingService, 
-            ILogger<ApprenticeshipDetailsRequestToViewModelMapper> logger,
-            IAuthorizationService authorizationService)
+            ILogger<ApprenticeshipDetailsRequestToViewModelMapper> logger)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
             _logger = logger;
-            _authorizationService = authorizationService;
         }
 
         public async Task<ApprenticeshipDetailsRequestViewModel> Map(ApprenticeshipDetailsRequest source)
@@ -109,7 +103,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     PendingDataLockChange = dataLockPriceTriaged || dataLockCourseChangedTraiged,
                     PendingDataLockRestart = dataLockCourseTriaged,
                     ConfirmationStatus = apprenticeship.ConfirmationStatus,
-                    ShowApprenticeConfirmationColumn = await _authorizationService.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail),
                     Email = apprenticeship.Email,
                 };
 
