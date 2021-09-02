@@ -603,7 +603,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpPost]
-        [Route("{apprenticeshipHashedId}/edit")]
+        [Route("{apprenticeshipHashedId}/edit", Name = RouteNames.EditApprenticeship)]
         public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequestViewModel viewModel)
         {
             var validationRequest = await _modelMapper.Map<ValidateApprenticeshipForEditRequest>(viewModel);
