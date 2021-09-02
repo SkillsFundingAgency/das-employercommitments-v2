@@ -224,9 +224,7 @@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header"> Version </th>
                     <td id="version" class="govuk-table__cell" colspan="2">@Model.Version </td>
-                    @if (Model.HasNewerVersions && (Model.ApprenticeshipStatus == ApprenticeshipStatus.Live
-                                                   || Model.ApprenticeshipStatus == ApprenticeshipStatus.Paused
-                                                   || Model.ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart))
+                    @if (Model.EnableEdit && Model.HasNewerVersions)
                     {
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion)">Change</a>
