@@ -57,7 +57,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 var changeofPartyRequests = changeofPartyRequestsTask.Result;
                 var changeOfProviderChain = changeOfProviderChainTask.Result;
 
-                var getTrainingProgramme = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode, CancellationToken.None);
+                var trainingProgrammeVersionsResponse = await _commitmentsApiClient.GetTrainingProgrammeVersions(apprenticeship.CourseCode, CancellationToken.None);
+                var currentTrainingProgramme = trainingProgrammeVersionsResponse.TrainingProgrammeVersions.FirstOrDefault(v => v.Version == apprenticeship.Version);
                 PendingChanges pendingChange = GetPendingChanges(apprenticeshipUpdates);
 
                 bool dataLockCourseTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseTriaged();
@@ -81,9 +82,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     StopDate = apprenticeship.StopDate,
                     PauseDate = apprenticeship.PauseDate,
                     CompletionDate = apprenticeship.CompletionDate,
-                    TrainingName = getTrainingProgramme.TrainingProgramme.Name,
+                    TrainingName = currentTrainingProgramme.Name,
                     Version = apprenticeship.Version,
-                    TrainingType = getTrainingProgramme.TrainingProgramme.ProgrammeType,
+                    TrainingType = currentTrainingProgramme.ProgrammeType,
                     Cost = priceEpisodes.PriceEpisodes.GetPrice(),
                     ApprenticeshipStatus = apprenticeship.Status,
                     ProviderName = apprenticeship.ProviderName,
@@ -112,6 +113,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     ConfirmationStatus = apprenticeship.ConfirmationStatus,
                     ShowApprenticeConfirmationColumn = await _authorizationService.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail),
                     Email = apprenticeship.Email,
+                    HasNewerVersions = HasNewerVersions(currentTrainingProgramme.Version, trainingProgrammeVersionsResponse.TrainingProgrammeVersions)
                 };
 
                 return result;
@@ -142,6 +144,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             if (apprenticeshipUpdates.ApprenticeshipUpdates.Any(x => x.OriginatingParty == Party.Provider))
                 pendingChange = PendingChanges.ReadyForApproval;
             return pendingChange;
-        }      
+        }
+
+        private bool HasNewerVersions(string currentVersion, IEnumerable<TrainingProgramme> versions)
+        {
+            if (versions.Where(v => decimal.Parse(v.Version) > decimal.Parse(currentVersion)).Count() > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

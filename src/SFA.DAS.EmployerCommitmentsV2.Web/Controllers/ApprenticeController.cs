@@ -614,7 +614,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{apprenticeshipHashedId}/change-version")]
+        [Route("{apprenticeshipHashedId}/change-version", Name = RouteNames.ChangeVersion)]
         public async Task<IActionResult> ChangeVersion(ChangeVersionRequest request)
         {
             var viewModel = await _modelMapper.Map<ChangeVersionViewModel>(request);
