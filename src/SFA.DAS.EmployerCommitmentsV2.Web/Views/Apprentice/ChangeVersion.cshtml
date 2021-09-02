@@ -1,4 +1,5 @@
-﻿@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ChangeVersionViewModel
 @{
     ViewData["Title"] = "Select a standard version";
@@ -6,6 +7,8 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+
+        <partial name="_ValidationSummary" />
 
         <h1 class="govuk-heading-xl">Select a standard version</h1>
 
@@ -32,8 +35,9 @@
 <form id="change-version-form" method="post">
     <div class="govuk-form-group">
         <div id="select-a-version-hint" class="govuk-hint">
-            Select an version
+            Select a version
         </div>
+        @Html.ValidationMessageFor(m => m.SelectedVersion, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.SelectedVersion) })
 
         <div class="govuk-radios">
             @foreach (var version in Model.NewerVersions)
