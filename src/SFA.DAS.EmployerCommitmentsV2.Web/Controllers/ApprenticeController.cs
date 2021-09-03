@@ -607,22 +607,27 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{apprenticeshipHashedId}/edit", Name = RouteNames.EditApprenticeship)]
         public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequestViewModel viewModel)
         {
-            TrainingProgramme trainingProgramme;
+            var apprenticeship = await _commitmentsApiClient.GetApprenticeship(viewModel.ApprenticeshipId);
 
-            if (int.TryParse(viewModel.CourseCode, out var standardId))
+            if (viewModel.CourseCode != apprenticeship.CourseCode || apprenticeship.StartDate <= viewModel.StartDate.Date.Value)
             {
-                var standardVersionResponse = await _commitmentsApiClient.GetCalculatedTrainingProgrammeVersion(standardId, viewModel.StartDate.Date.Value);
+                TrainingProgramme trainingProgramme;
 
-                trainingProgramme = standardVersionResponse.TrainingProgramme;
+                if (int.TryParse(viewModel.CourseCode, out var standardId))
+                {
+                    var standardVersionResponse = await _commitmentsApiClient.GetCalculatedTrainingProgrammeVersion(standardId, viewModel.StartDate.Date.Value);
+
+                    trainingProgramme = standardVersionResponse.TrainingProgramme;
+                }
+                else
+                {
+                    var frameworkResponse = await _commitmentsApiClient.GetTrainingProgramme(viewModel.CourseCode);
+
+                    trainingProgramme = frameworkResponse.TrainingProgramme;
+                }
+
+                viewModel.Version = trainingProgramme.Version;
             }
-            else
-            {
-                var frameworkResponse = await _commitmentsApiClient.GetTrainingProgramme(viewModel.CourseCode);
-
-                trainingProgramme = frameworkResponse.TrainingProgramme;
-            }
-
-            viewModel.Version = trainingProgramme.Version;
 
             var validationRequest = await _modelMapper.Map<ValidateApprenticeshipForEditRequest>(viewModel);
             await _commitmentsApiClient.ValidateApprenticeshipForEdit(validationRequest);
