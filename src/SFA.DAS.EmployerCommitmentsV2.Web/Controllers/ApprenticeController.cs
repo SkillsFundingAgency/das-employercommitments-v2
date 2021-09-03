@@ -20,6 +20,7 @@ using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateRequest;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -606,6 +607,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{apprenticeshipHashedId}/edit", Name = RouteNames.EditApprenticeship)]
         public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequestViewModel viewModel)
         {
+            TrainingProgramme trainingProgramme;
+
+            if (int.TryParse(viewModel.CourseCode, out var standardId))
+            {
+                var standardVersionResponse = await _commitmentsApiClient.GetCalculatedTrainingProgrammeVersion(standardId, viewModel.StartDate.Date.Value);
+
+                trainingProgramme = standardVersionResponse.TrainingProgramme;
+            }
+            else
+            {
+                var frameworkResponse = await _commitmentsApiClient.GetTrainingProgramme(viewModel.CourseCode);
+
+                trainingProgramme = frameworkResponse.TrainingProgramme;
+            }
+
+            viewModel.Version = trainingProgramme.Version;
+
             var validationRequest = await _modelMapper.Map<ValidateApprenticeshipForEditRequest>(viewModel);
             await _commitmentsApiClient.ValidateApprenticeshipForEdit(validationRequest);
          

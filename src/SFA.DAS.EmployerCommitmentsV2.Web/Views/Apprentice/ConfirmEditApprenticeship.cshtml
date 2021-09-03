@@ -108,14 +108,6 @@
                                     <td class="govuk-table__cell">@Model.CourseName</td>
                                 </tr>
                             }
-                            @if (!string.IsNullOrWhiteSpace(Model.Version))
-                            {
-                                <tr>
-                                    <th scope="row" class="govuk-table__header">Version</th>
-                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.Version </td>
-                                    <td class="govuk-table__cell">@Model.Version</td>
-                                </tr>
-                            }
                             @if (Model.StartDate.HasValue)
                             {
                                 <tr>
@@ -132,6 +124,14 @@
                                     <td class="govuk-table__cell">@Model.OriginalApprenticeship.EndDate.Value.ToGdsFormat() </td>
                                     <td class="govuk-table__cell">@Model.EndDate.Value.ToGdsFormat()</td>
 
+                                </tr>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.Version))
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Version</th>
+                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.Version </td>
+                                    <td class="govuk-table__cell">@Model.Version</td>
                                 </tr>
                             }
 
