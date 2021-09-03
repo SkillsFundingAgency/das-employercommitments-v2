@@ -69,7 +69,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [Test]
         public async Task And_StandardIsSelected_And_StartDateMovedForward_Then_GetCalculatedVersion()
         {
-            _viewModel.StartDate.Month = _viewModel.StartDate.Date.Value.AddMonths(1).Month;
+            _viewModel.StartDate = new MonthYearModel(_viewModel.StartDate.Date.Value.AddMonths(1).ToString("MMyyy"));
             _fixture.SetUpGetCalculatedTrainingProgrammeVersion(_viewModel, _standardVersionResponse);
 
             await _fixture.EditApprenticeship(_viewModel);
@@ -89,9 +89,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [Test]
         public async Task And_StartDateIsMovedForward_And_FrameworkNotChanged_Then_GetTrainingProgramme()
         {
-            _viewModel.StartDate.Month = _viewModel.StartDate.Date.Value.AddMonths(1).Month;
+            _viewModel.StartDate = new MonthYearModel(_viewModel.StartDate.Date.Value.AddMonths(1).ToString("MMyyy"));
             _viewModel.CourseCode = "1-2-3";
             _apprenticeshipResponse.CourseCode = "1-2-3";
+            _fixture.SetUpGetTrainingProgramme(_viewModel, _frameworkResponse);
 
             await _fixture.EditApprenticeship(_viewModel);
 
@@ -103,6 +104,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             _viewModel.CourseCode = "4-5-6";
             _apprenticeshipResponse.CourseCode = "1-2-3";
+            _fixture.SetUpGetTrainingProgramme(_viewModel, _frameworkResponse);
 
             await _fixture.EditApprenticeship(_viewModel);
 
