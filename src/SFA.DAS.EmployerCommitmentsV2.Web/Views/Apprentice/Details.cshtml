@@ -221,20 +221,23 @@
                     <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.TrainingName </td>
                     <td class="govuk-table__cell"></td>
                 </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header"> Version </th>
-                    <td id="version" class="govuk-table__cell" colspan="2">@Model.Version </td>
-                    @if (Model.EnableEdit && Model.HasNewerVersions)
-                    {
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion)">Change</a>
-                        </td>
-                    }
-                    else
-                    {
-                        <td class="govuk-table__cell"></td>
-                    }
-                </tr>
+                @if (!string.IsNullOrEmpty(Model.Version))
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header"> Version </th>
+                        <td id="version" class="govuk-table__cell" colspan="2">@Model.Version </td>
+                        @if (Model.EnableEdit && Model.HasNewerVersions)
+                        {
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion)">Change</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="govuk-table__cell"></td>
+                        }
+                    </tr>
+                }
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Planned training start date</th>
                     <td id="start-date" class="govuk-table__cell" colspan="2">

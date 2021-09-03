@@ -35,7 +35,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private GetApprenticeshipUpdatesResponse _apprenticeshipUpdatesResponse;
         private GetDataLocksResponse _dataLocksResponse;
         private GetChangeOfPartyRequestsResponse _changeOfPartyRequestsResponse;
+        private GetTrainingProgrammeResponse _getTrainingProgrammeByStandardUId;
         private GetTrainingProgrammeVersionsResponse _trainingProgrammeVersionsResponse;
+        private GetTrainingProgrammeResponse _getTrainingProgrammeResponse;
         private GetChangeOfProviderChainResponse _changeOfProviderChainReponse;
         private ApprenticeshipDetailsRequest _request;
         private ApprenticeshipDetailsRequestToViewModelMapper _mapper;
@@ -55,7 +57,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .Create();           
             _apprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>()
                 .With(x => x.Id, ApprenticeshipIdFirst)
-                .With(x => x.CourseCode, "ABC")
+                .With(x => x.CourseCode, "123")
+                .With(x => x.StandardUId, "ST0001_1.0")
                 .With(x => x.Version, "1.0")
                 .With(x => x.DateOfBirth, autoFixture.Create<DateTime>())
                 .Create();            
@@ -69,6 +72,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .Create();       
             _dataLocksResponse = autoFixture.Build<GetDataLocksResponse>().Create();
             _changeOfPartyRequestsResponse = autoFixture.Build<GetChangeOfPartyRequestsResponse>().Create();
+
+            var trainingProgrammeByStandardUId = autoFixture.Build<TrainingProgramme>()
+                .With(x => x.CourseCode, _apprenticeshipResponse.CourseCode)
+                .With(x => x.StandardUId, "ST0001_1.0")
+                .With(x => x.Version, "1.0")
+                .Create();
+            _getTrainingProgrammeByStandardUId = new GetTrainingProgrammeResponse
+            {
+                TrainingProgramme = trainingProgrammeByStandardUId
+            };
+
+            var framework = autoFixture.Build<TrainingProgramme>()
+                .Without(x => x.Version)
+                .Without(x => x.StandardUId)
+                .With(x => x.CourseCode, "1-2-3")
+                .Create();
+            _getTrainingProgrammeResponse = new GetTrainingProgrammeResponse
+            {
+                TrainingProgramme = framework
+            };
 
             var trainingProgrammeVersions = autoFixture.Build<TrainingProgramme>().CreateMany(2).ToList();
             trainingProgrammeVersions[0].Version = "1.0";
@@ -94,6 +117,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                .ReturnsAsync(_trainingProgrammeVersionsResponse);
             _mockCommitmentsApiClient.Setup(t => t.GetChangeOfProviderChain(It.IsAny<long>(), CancellationToken.None))
                 .ReturnsAsync(_changeOfProviderChainReponse);
+            _mockCommitmentsApiClient.Setup(c => c.GetTrainingProgrammeVersionByStandardUId(It.IsAny<string>(), CancellationToken.None))
+                .ReturnsAsync(_getTrainingProgrammeByStandardUId);
+            _mockCommitmentsApiClient.Setup(c => c.GetTrainingProgramme(It.IsAny<string>(), CancellationToken.None))
+                .ReturnsAsync(_getTrainingProgrammeResponse);
 
             _mockEncodingService = new Mock<IEncodingService>();
             _mockEncodingService.Setup(t => t.Encode(It.IsAny<long>(), It.IsAny<EncodingType>()))
@@ -280,7 +307,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task TrainingName_IsMapped()
         {
             //Arrange
-            var expectedVersion = _trainingProgrammeVersionsResponse.TrainingProgrammeVersions.FirstOrDefault(v => v.Version == _apprenticeshipResponse.Version);
+            var expectedVersion = _getTrainingProgrammeByStandardUId.TrainingProgramme;
 
             //Act
             var result = await _mapper.Map(_request);
@@ -654,7 +681,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [TestCase("1.1", false)]
         public async Task HasNewerVersionsIsMappedCorrectly(string currentVersion, bool hasNewerVersions)
         {
-            _apprenticeshipResponse.Version = currentVersion;
+            _getTrainingProgrammeByStandardUId.TrainingProgramme.Version = currentVersion;
 
             var result = await _mapper.Map(_request);
 

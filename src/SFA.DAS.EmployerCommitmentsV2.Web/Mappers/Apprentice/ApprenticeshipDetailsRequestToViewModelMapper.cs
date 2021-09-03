@@ -9,7 +9,6 @@ using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.Authorization.Services;
 using SFA.DAS.Encoding;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,8 +56,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 var changeofPartyRequests = changeofPartyRequestsTask.Result;
                 var changeOfProviderChain = changeOfProviderChainTask.Result;
 
-                var trainingProgrammeVersionsResponse = await _commitmentsApiClient.GetTrainingProgrammeVersions(apprenticeship.CourseCode, CancellationToken.None);
-                var currentTrainingProgramme = trainingProgrammeVersionsResponse.TrainingProgrammeVersions.FirstOrDefault(v => v.Version == apprenticeship.Version);
+                var currentTrainingProgramme = await GetTrainingProgramme(apprenticeship.CourseCode, apprenticeship.StandardUId);
+                
                 PendingChanges pendingChange = GetPendingChanges(apprenticeshipUpdates);
 
                 bool dataLockCourseTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseTriaged();
@@ -113,7 +112,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     ConfirmationStatus = apprenticeship.ConfirmationStatus,
                     ShowApprenticeConfirmationColumn = await _authorizationService.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail),
                     Email = apprenticeship.Email,
-                    HasNewerVersions = HasNewerVersions(currentTrainingProgramme.Version, trainingProgrammeVersionsResponse.TrainingProgrammeVersions)
+                    HasNewerVersions = await HasNewerVersions(currentTrainingProgramme)
                 };
 
                 return result;
@@ -122,6 +121,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             {
                 _logger.LogError(e, $"Error mapping for accountId {source.AccountHashedId}  and apprenticeship {source.ApprenticeshipHashedId} to ApprenticeshipDetailsRequestViewModel");
                 throw;
+            }
+        }
+
+        private async Task<TrainingProgramme> GetTrainingProgramme(string courseCode, string standardUId)
+        {
+            if (!string.IsNullOrEmpty(standardUId))
+            {
+                var trainingProgrammeVersionResponse = await _commitmentsApiClient.GetTrainingProgrammeVersionByStandardUId(standardUId);
+
+                return trainingProgrammeVersionResponse.TrainingProgramme;
+            }
+            else
+            {
+                var frameworkResponse = await _commitmentsApiClient.GetTrainingProgramme(courseCode);
+
+                return frameworkResponse.TrainingProgramme;
             }
         }
 
@@ -146,13 +161,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             return pendingChange;
         }
 
-        private bool HasNewerVersions(string currentVersion, IEnumerable<TrainingProgramme> versions)
+        private async Task<bool> HasNewerVersions(TrainingProgramme trainingProgramme)
         {
-            if (versions.Where(v => decimal.Parse(v.Version) > decimal.Parse(currentVersion)).Count() > 0)
+            if (trainingProgramme.ProgrammeType == ProgrammeType.Standard)
             {
-                return true;
-            }
+                var versionsResponse = await _commitmentsApiClient.GetTrainingProgrammeVersions(trainingProgramme.CourseCode);
 
+                if (versionsResponse.TrainingProgrammeVersions.Where(v => decimal.Parse(v.Version) > decimal.Parse(trainingProgramme.Version)).Count() > 0)
+                {
+                    return true;
+                }
+            }
+            
             return false;
         }
     }
