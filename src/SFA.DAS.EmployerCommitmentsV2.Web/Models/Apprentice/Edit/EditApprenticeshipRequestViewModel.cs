@@ -80,6 +80,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         public bool IsUpdateLockedForStartDateAndCourse { get; set; }
         public bool IsEndDateLockedForUpdate { get; internal set; }
-        public ConfirmationStatus? ApprenticeshipConfirmationStatus { get; set; }
+        public bool EmailAddressConfirmedByApprentice { get; set; }
     }
 }

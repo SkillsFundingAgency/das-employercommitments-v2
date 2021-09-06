@@ -167,7 +167,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             await _fixture.Map();
 
             //Assert
-            _fixture.VerifyApprenticeshipConfirmationStatusIsMapped();
+            _fixture.VerifyEmailAddressConfirmedByApprentice();
         }
 
 
@@ -435,9 +435,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(ApprenticeshipResponse.Email, _viewModel.Email);
         }
 
-        internal void VerifyApprenticeshipConfirmationStatusIsMapped()
+        internal void VerifyEmailAddressConfirmedByApprentice()
         {
-            Assert.AreEqual(ApprenticeshipResponse.ConfirmationStatus, _viewModel.ApprenticeshipConfirmationStatus);
+            Assert.AreEqual(ApprenticeshipResponse.EmailAddressConfirmedByApprentice, _viewModel.EmailAddressConfirmedByApprentice);
         }
 
         internal void VerifyULNIsMapped()

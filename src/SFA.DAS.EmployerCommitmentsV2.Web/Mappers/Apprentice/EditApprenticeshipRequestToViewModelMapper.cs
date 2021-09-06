@@ -64,7 +64,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 TrainingName = courseDetails.TrainingProgramme.Name,
                 HashedApprenticeshipId = source.ApprenticeshipHashedId,
                 AccountHashedId = source.AccountHashedId,
-                ApprenticeshipConfirmationStatus = apprenticeship.ConfirmationStatus
+                EmailAddressConfirmedByApprentice = apprenticeship.EmailAddressConfirmedByApprentice
             };
 
             return result;
