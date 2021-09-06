@@ -99,10 +99,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             }
             vm.OriginalApprenticeship.Version = apprenticeship.Version;
 
-            // TODO: This should be changed to show correct version name
             if (source.CourseCode != apprenticeship.CourseCode)
             {
-                var courseDetails = await _commitmentApi.GetTrainingProgramme(source.CourseCode);
+                var courseDetails = await _commitmentApi.GetTrainingProgrammeVersionByCourseCodeAndVersion(source.CourseCode, source.Version);
                 vm.CourseCode = source.CourseCode;
                 vm.CourseName = courseDetails?.TrainingProgramme.Name;
             }
