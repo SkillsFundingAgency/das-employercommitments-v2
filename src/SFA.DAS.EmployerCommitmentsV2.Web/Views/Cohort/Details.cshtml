@@ -13,11 +13,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        @if ((!Model.IsAgreementSigned)
-              ||
-           (!Model.IsCompleteForEmployer)
-              ||
-          Model.HasOverlappingUln)
+        @if (!Model.IsAgreementSigned || !Model.IsCompleteForEmployer || Model.HasOverlappingUln || Model.HasEmailOverlaps)
         {
             <div class="govuk-notification-banner">
                 <div class="govuk-notification-banner__header">
@@ -32,15 +28,19 @@
                     <ul>
                         @if (!Model.IsAgreementSigned)
                         {
-                            <li>You have accepted your employer agreement</li>
+                            <li>you have accepted your employer agreement</li>
                         }
                         @if (!Model.IsCompleteForEmployer)
                         {
-                            <li>All apprentice records are complete</li>
+                            <li>all apprentice records are complete</li>
                         }
                         @if (Model.HasOverlappingUln)
                         {
-                            <li>There are no overlapping training dates for your apprentices</li>
+                            <li>there are no overlapping training dates for your apprentices</li>
+                        }
+                        @if (Model.HasEmailOverlaps)
+                        {
+                            <li>each apprentice has a unique email address</li>
                         }
                     </ul>
                 </div>
@@ -75,6 +75,24 @@
         @foreach (var course in Model.Courses)
         {
             <h3 class="govuk-heading-m">@course.Count x @course.DisplayCourseName</h3>
+            if (@course.DraftApprenticeships.Any(x => x.HasOverlappingUln))
+            {
+                <div class="govuk-inset-text das-inset-text--highlight">
+                    <h3 class="govuk-heading-s">Apprenticeship can't have overlapping training dates</h3>
+                    <p>
+                        You must update training dates to be able to approve
+                    </p>
+                </div>
+            }
+            if (@course.EmailOverlaps != null)
+            {
+                <div class="govuk-inset-text das-inset-text--highlight">
+                    <h3 class="govuk-heading-s">@course.EmailOverlaps.DisplayEmailOverlapsMessage</h3>
+                    <p>
+                        You must enter a unique email address for each apprentice.
+                    </p>
+                </div>
+            }
             if (@course.FundingBandExcess != null)
             {
                 <div class="govuk-inset-text das-inset-text--highlight">
@@ -83,15 +101,6 @@
                         @course.FundingBandExcess.FundingBandCapExcessLabel
                         <text><a target="_blank" href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band maximum</a>@course.FundingBandExcess.DisplaySingleFundingBandCap</text>
                         You'll need to pay the difference directly to the training provider.
-                    </p>
-                </div>
-            }
-            if (@course.DraftApprenticeships.Any(x => x.HasOverlappingUln))
-            {
-                <div class="govuk-inset-text das-inset-text--highlight">
-                    <h3 class="govuk-heading-s">Apprenticeship can't have overlapping training dates</h3>
-                    <p>
-                        You must update training dates to be able to approve
                     </p>
                 </div>
             }
@@ -110,7 +119,16 @@
                     @foreach (var draftApprenticeship in course.DraftApprenticeships)
                     {
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell" data-label="Name"><span class="das-breakable">@draftApprenticeship.DisplayName</span></td>
+                            <td class="govuk-table__cell" data-label="Name">
+                                @if (draftApprenticeship.HasOverlappingEmail)
+                                {
+                                    <span class="das-table-cell--highlight das-breakable">@draftApprenticeship.DisplayName</span>
+                                }
+                                else
+                                {
+                                    <span class="das-breakable">@draftApprenticeship.DisplayName</span>
+                                }
+                            </td>
                             <td class="govuk-table__cell" data-label="Date of birth">@draftApprenticeship.DisplayDateOfBirth</td>
                             <td class="govuk-table__cell" data-label="Training dates">
                                 @if (draftApprenticeship.HasOverlappingUln)
