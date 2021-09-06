@@ -126,14 +126,16 @@
 
                                 </tr>
                             }
-                            @if (!string.IsNullOrWhiteSpace(Model.Version))
+                            @if (!string.IsNullOrWhiteSpace(Model.Version) || !string.IsNullOrWhiteSpace(Model.CourseCode))
                             {
                                 <tr>
                                     <th scope="row" class="govuk-table__header">Version</th>
                                     <td class="govuk-table__cell">
                                         @(Model.OriginalApprenticeship.Version != null ? Model.OriginalApprenticeship.Version : "Not applicable" )                                
                                     </td>
-                                    <td class="govuk-table__cell">@Model.Version</td>
+                                    <td class="govuk-table__cell">
+                                        @(Model.Version != null ? Model.Version : "Not applicable" ) 
+                                    </td>
                                 </tr>
                             }
 
@@ -146,7 +148,6 @@
 
                                 </tr>
                             }
-
 
                             @if (Model.EmployerReference != Model.OriginalApprenticeship.EmployerReference)
                             {
