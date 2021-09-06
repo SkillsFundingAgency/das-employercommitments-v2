@@ -151,6 +151,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task WhenCourseCodeIsChangeButVersionIsNotChanged_ThenVersionIsMapped()
+        {
+            fixture.source.CourseCode = "123";
+
+            var result = await fixture.Map();
+
+            Assert.AreNotEqual(fixture.source.Version, fixture._apprenticeshipResponse.Version);
+            Assert.AreEqual(fixture.source.Version, result.Version);
+        }
+
+        [Test]
         public async Task WhenMultipleFieldsAreChanged_TheyAreChanged()
         {
             fixture.source.CourseCode = "NewCourse";

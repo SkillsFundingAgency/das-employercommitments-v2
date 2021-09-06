@@ -93,7 +93,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             vm.OriginalApprenticeship.EndMonth = apprenticeship.EndDate.Month;
             vm.OriginalApprenticeship.EndYear = apprenticeship.EndDate.Year;
 
-            if (source.Version != apprenticeship.Version)
+            if (source.Version != apprenticeship.Version || source.CourseCode != apprenticeship.CourseCode)
             {
                 vm.Version = source.Version;
             }
