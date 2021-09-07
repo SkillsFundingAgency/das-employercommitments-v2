@@ -101,7 +101,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
             if (source.CourseCode != apprenticeship.CourseCode)
             {
-                var courseDetails = await _commitmentApi.GetTrainingProgrammeVersionByCourseCodeAndVersion(source.CourseCode, source.Version);
+                var courseDetails = !string.IsNullOrEmpty(source.Version)
+                    ? await _commitmentApi.GetTrainingProgrammeVersionByCourseCodeAndVersion(source.CourseCode, source.Version)
+                    : await _commitmentApi.GetTrainingProgramme(source.CourseCode);
                 vm.CourseCode = source.CourseCode;
                 vm.CourseName = courseDetails?.TrainingProgramme.Name;
             }
