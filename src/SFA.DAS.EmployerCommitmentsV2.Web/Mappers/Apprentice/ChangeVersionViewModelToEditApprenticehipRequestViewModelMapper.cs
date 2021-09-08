@@ -27,6 +27,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
             var currentPrice = priceEpisodes.PriceEpisodes.GetPrice();
 
+            var versionResponse = await _commitmentsApiClient.GetTrainingProgrammeVersionByCourseCodeAndVersion(apprenticeship.CourseCode, source.SelectedVersion);
+
+            var newStandardVersion = versionResponse.TrainingProgramme;
+
             var editRequestViewModel = new EditApprenticeshipRequestViewModel(apprenticeship.DateOfBirth, apprenticeship.StartDate, apprenticeship.EndDate)
             {
                 AccountHashedId = source.AccountHashedId,
@@ -38,6 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 Cost = currentPrice,
                 CourseCode = apprenticeship.CourseCode,
                 Version = source.SelectedVersion,
+                TrainingName = apprenticeship.CourseName != newStandardVersion.Name ? newStandardVersion.Name : null,
                 EmployerReference = apprenticeship.EmployerReference
             };
 
