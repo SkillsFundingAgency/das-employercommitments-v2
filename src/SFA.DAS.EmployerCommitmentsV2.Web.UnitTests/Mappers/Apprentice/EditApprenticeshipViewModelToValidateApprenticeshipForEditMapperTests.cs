@@ -118,6 +118,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(request.CourseCode, result.TrainingCode);
         }
 
+        [Test, MoqAutoData]
+        public async Task Version_IsMapped(EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
+        {
+            var result = await mapper.Map(request);
+
+            Assert.AreEqual(request.Version, result.Version);
+        }
+
         public class DateCustomisation : ICustomization
         {
             public void Customize(IFixture fixture)
