@@ -609,7 +609,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var apprenticeship = await _commitmentsApiClient.GetApprenticeship(viewModel.ApprenticeshipId);
 
-            if (viewModel.CourseCode != apprenticeship.CourseCode || apprenticeship.StartDate <= viewModel.StartDate.Date.Value)
+            // Only calculate the version if the course changes, or the start date changes and is > than the original start date.
+            if (viewModel.CourseCode != apprenticeship.CourseCode || (apprenticeship.StartDate != viewModel.StartDate.Date.Value && apprenticeship.StartDate < viewModel.StartDate.Date.Value))
             {
                 TrainingProgramme trainingProgramme;
 
@@ -641,6 +642,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> ChangeVersion(ChangeVersionRequest request)
         {
             var viewModel = await _modelMapper.Map<ChangeVersionViewModel>(request);
+
+            // Get Edit Model if it exists to pre-select version if navigating back
+            var editApprenticeViewModel = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>("EditApprenticeshipRequestViewModel");
+
+            if(editApprenticeViewModel != null && !string.IsNullOrWhiteSpace(editApprenticeViewModel.Version))
+            {
+                viewModel.SelectedVersion = editApprenticeViewModel.Version;
+            }
+
             return View(viewModel);
         }
 
