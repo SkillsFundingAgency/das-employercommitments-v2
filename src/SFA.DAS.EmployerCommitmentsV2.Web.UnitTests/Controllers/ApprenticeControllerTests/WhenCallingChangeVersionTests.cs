@@ -1,7 +1,9 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System.Threading.Tasks;
@@ -58,7 +60,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 Version = version
             };
 
-            _controller.TempData.Add("EditApprenticeshipRequestViewModel", editApprenticeViewModel);
+            object serializedModel = JsonConvert.SerializeObject(editApprenticeViewModel);
+            _tempDataDictionary.Setup(s => s.TryGetValue("EditApprenticeshipRequestViewModel", out serializedModel)).Returns(true);
         }
 
         public async Task<IActionResult> ChangeVersion()
