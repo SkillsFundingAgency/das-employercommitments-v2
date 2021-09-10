@@ -642,6 +642,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> ChangeVersion(ChangeVersionRequest request)
         {
             var viewModel = await _modelMapper.Map<ChangeVersionViewModel>(request);
+
+            // Get Edit Model if it exists to pre-select version if navigating back
+            var editApprenticeViewModel = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>("EditApprenticeshipRequestViewModel");
+
+            if(editApprenticeViewModel != null && !string.IsNullOrWhiteSpace(editApprenticeViewModel.Version))
+            {
+                viewModel.SelectedVersion = editApprenticeViewModel.Version;
+            }
+
             return View(viewModel);
         }
 

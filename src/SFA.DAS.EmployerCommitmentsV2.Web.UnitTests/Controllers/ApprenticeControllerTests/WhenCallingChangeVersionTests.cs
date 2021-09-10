@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -24,6 +25,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             _fixture.VerifyViewModel(result as ViewResult);
         }
+
+        [Test]
+        public async Task ThenSelectedVersionSet_WhenEditModelAvailable()
+        {
+            var version = "1.3";
+            _fixture.SetEditApprenticeViewModel(version);
+            var result = await _fixture.ChangeVersion();
+
+            _fixture.VerifySelectedVersion(result as ViewResult, version);
+        }
     }
 
     public class WhenCallingChangeVersionTestsFixture : ApprenticeControllerTestFixtureBase
@@ -40,6 +51,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 .ReturnsAsync(_viewModel);
         }
 
+        public void SetEditApprenticeViewModel(string version)
+        {
+            var editApprenticeViewModel = new EditApprenticeshipRequestViewModel
+            {
+                Version = version
+            };
+
+            _controller.TempData.Add("EditApprenticeshipRequestViewModel", editApprenticeViewModel);
+        }
+
         public async Task<IActionResult> ChangeVersion()
         {
             return await _controller.ChangeVersion(_request);
@@ -50,6 +71,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var viewModel = viewResult.Model as ChangeVersionViewModel;
 
             Assert.AreEqual(_viewModel, viewModel);
+        }
+
+        public void VerifySelectedVersion(ViewResult viewResult, string version)
+        {
+            var viewModel = viewResult.Model as ChangeVersionViewModel;
+
+            viewModel.SelectedVersion.Should().Be(version);
         }
     }
 }
