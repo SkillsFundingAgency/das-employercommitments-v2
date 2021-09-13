@@ -21,18 +21,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         {
             var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
 
-            var standardVersions = await _commitmentsApiClient.GetTrainingProgrammeVersions(apprenticeship.CourseCode);
+            var currentVersion = await _commitmentsApiClient.GetTrainingProgrammeVersionByStandardUId(apprenticeship.StandardUId);
 
-            var currentVersion = standardVersions.TrainingProgrammeVersions.FirstOrDefault(v => v.StandardUId == apprenticeship.StandardUId);
-
-            var newerVersions = standardVersions.TrainingProgrammeVersions.Where(v => float.Parse(v.Version) > float.Parse(currentVersion.Version));
+            var newerVersions = await _commitmentsApiClient.GetNewerTrainingProgrammeVersions(apprenticeship.StandardUId);
 
             return new ChangeVersionViewModel
             {
                 CurrentVersion = apprenticeship.Version,
-                StandardTitle = currentVersion.Name,
-                StandardUrl = currentVersion.StandardPageUrl,
-                NewerVersions = newerVersions.Select(x => x.Version)
+                StandardTitle = currentVersion.TrainingProgramme.Name,
+                StandardUrl = currentVersion.TrainingProgramme.StandardPageUrl,
+                NewerVersions = newerVersions.NewerVersions.Select(x => x.Version)
             };
         }
     }

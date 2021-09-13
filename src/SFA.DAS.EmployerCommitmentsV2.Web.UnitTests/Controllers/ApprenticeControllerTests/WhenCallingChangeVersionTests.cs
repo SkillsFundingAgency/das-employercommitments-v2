@@ -1,8 +1,11 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System.Threading.Tasks;
 
@@ -49,6 +52,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             _mockMapper.Setup(m => m.Map<ChangeVersionViewModel>(_request))
                 .ReturnsAsync(_viewModel);
+
+            _controller.TempData = new TempDataDictionary(Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
         }
 
         public void SetEditApprenticeViewModel(string version)
@@ -58,7 +63,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 Version = version
             };
 
-            _controller.TempData.Add("EditApprenticeshipRequestViewModel", editApprenticeViewModel);
+            _controller.TempData.Put("EditApprenticeshipRequestViewModel", editApprenticeViewModel);
         }
 
         public async Task<IActionResult> ChangeVersion()

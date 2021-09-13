@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private GetDataLocksResponse _dataLocksResponse;
         private GetChangeOfPartyRequestsResponse _changeOfPartyRequestsResponse;
         private GetTrainingProgrammeResponse _getTrainingProgrammeByStandardUId;
-        private GetTrainingProgrammeVersionsResponse _trainingProgrammeVersionsResponse;
+        private GetNewerTrainingProgrammeVersionsResponse _newerTrainingProgrammeVersionsResponse;
         private GetTrainingProgrammeResponse _getTrainingProgrammeResponse;
         private GetChangeOfProviderChainResponse _changeOfProviderChainReponse;
         private ApprenticeshipDetailsRequest _request;
@@ -94,11 +94,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             };
 
             var trainingProgrammeVersions = autoFixture.Build<TrainingProgramme>().CreateMany(2).ToList();
-            trainingProgrammeVersions[0].Version = "1.0";
-            trainingProgrammeVersions[1].Version = "1.1";
+            trainingProgrammeVersions[0].Version = "1.1";
+            trainingProgrammeVersions[1].Version = "1.2";
 
-            _trainingProgrammeVersionsResponse = autoFixture.Build<GetTrainingProgrammeVersionsResponse>()
-                .With(x => x.TrainingProgrammeVersions, trainingProgrammeVersions).Create();
+            _newerTrainingProgrammeVersionsResponse = autoFixture.Build<GetNewerTrainingProgrammeVersionsResponse>()
+                .With(x => x.NewerVersions, trainingProgrammeVersions).Create();
 
             _changeOfProviderChainReponse = autoFixture.Build<GetChangeOfProviderChainResponse>().Create();
 
@@ -113,8 +113,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .ReturnsAsync(_dataLocksResponse);
             _mockCommitmentsApiClient.Setup(c => c.GetChangeOfPartyRequests(It.IsAny<long>(), CancellationToken.None))
                 .ReturnsAsync(_changeOfPartyRequestsResponse);
-            _mockCommitmentsApiClient.Setup(t => t.GetTrainingProgrammeVersions(_apprenticeshipResponse.CourseCode, It.IsAny<CancellationToken>()))
-               .ReturnsAsync(_trainingProgrammeVersionsResponse);
+            _mockCommitmentsApiClient.Setup(t => t.GetNewerTrainingProgrammeVersions(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+               .ReturnsAsync(_newerTrainingProgrammeVersionsResponse);
             _mockCommitmentsApiClient.Setup(t => t.GetChangeOfProviderChain(It.IsAny<long>(), CancellationToken.None))
                 .ReturnsAsync(_changeOfProviderChainReponse);
             _mockCommitmentsApiClient.Setup(c => c.GetTrainingProgrammeVersionByStandardUId(It.IsAny<string>(), CancellationToken.None))
@@ -134,13 +134,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task GetTrainingProgrammeVersionsIsCalled()
+        public async Task GetNewerTrainingProgrammeVersionsIsCalled()
         {
             //Act
             var result = await _mapper.Map(_request);
 
             //Assert
-            _mockCommitmentsApiClient.Verify(t => t.GetTrainingProgrammeVersions(_apprenticeshipResponse.CourseCode, It.IsAny<CancellationToken>()), Times.Once());
+            _mockCommitmentsApiClient.Verify(t => t.GetNewerTrainingProgrammeVersions(_apprenticeshipResponse.StandardUId, It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Test]
@@ -508,7 +508,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task TrainingType_IsMapped()
         {
             //Arrange
-            var expectedVersion = _trainingProgrammeVersionsResponse.TrainingProgrammeVersions.FirstOrDefault(v => v.Version == _apprenticeshipResponse.Version);
+            var expectedVersion = _getTrainingProgrammeByStandardUId.TrainingProgramme;
             
             //Act
             var result = await _mapper.Map(_request);
@@ -677,11 +677,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(ApprenticeshipEmail, result.Email);
         }
 
-        [TestCase("1.0", true)]
-        [TestCase("1.1", false)]
-        public async Task HasNewerVersionsIsMappedCorrectly(string currentVersion, bool hasNewerVersions)
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task HasNewerVersionsIsMappedCorrectly(bool hasNewerVersions)
         {
-            _getTrainingProgrammeByStandardUId.TrainingProgramme.Version = currentVersion;
+            if (hasNewerVersions == false)
+                _newerTrainingProgrammeVersionsResponse.NewerVersions = new List<TrainingProgramme>();
 
             var result = await _mapper.Map(_request);
 

@@ -610,7 +610,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var apprenticeship = await _commitmentsApiClient.GetApprenticeship(viewModel.ApprenticeshipId);
 
             // Only calculate the version if the course changes, or the start date changes and is > than the original start date.
-            if (viewModel.CourseCode != apprenticeship.CourseCode || (apprenticeship.StartDate != viewModel.StartDate.Date.Value && apprenticeship.StartDate < viewModel.StartDate.Date.Value))
+            if (viewModel.CourseCode != apprenticeship.CourseCode || apprenticeship.StartDate < viewModel.StartDate.Date.Value)
             {
                 TrainingProgramme trainingProgramme;
 

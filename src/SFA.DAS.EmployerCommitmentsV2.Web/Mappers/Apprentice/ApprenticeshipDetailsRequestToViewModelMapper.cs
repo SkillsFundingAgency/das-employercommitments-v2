@@ -165,9 +165,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         {
             if (trainingProgramme.ProgrammeType == ProgrammeType.Standard)
             {
-                var versionsResponse = await _commitmentsApiClient.GetTrainingProgrammeVersions(trainingProgramme.CourseCode);
+                var newerVersionsResponse = await _commitmentsApiClient.GetNewerTrainingProgrammeVersions(trainingProgramme.StandardUId);
 
-                if (versionsResponse.TrainingProgrammeVersions.Where(v => decimal.Parse(v.Version) > decimal.Parse(trainingProgramme.Version)).Count() > 0)
+                if (newerVersionsResponse.NewerVersions != null && newerVersionsResponse.NewerVersions.Count() > 0)
                 {
                     return true;
                 }
