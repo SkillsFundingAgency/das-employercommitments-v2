@@ -58,6 +58,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         public string CourseCode { get; set; }
 
+        public string Version { get; set; }
+
         public IEnumerable<TrainingProgramme> Courses { get; set; }
 
         public MonthYearModel StartDate { get; set; }

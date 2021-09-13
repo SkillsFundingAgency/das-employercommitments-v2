@@ -93,9 +93,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             vm.OriginalApprenticeship.EndMonth = apprenticeship.EndDate.Month;
             vm.OriginalApprenticeship.EndYear = apprenticeship.EndDate.Year;
 
+            if (source.Version != apprenticeship.Version || source.CourseCode != apprenticeship.CourseCode)
+            {
+                vm.Version = source.Version;
+            }
+            vm.OriginalApprenticeship.Version = apprenticeship.Version;
+
             if (source.CourseCode != apprenticeship.CourseCode)
             {
-                var courseDetails = await _commitmentApi.GetTrainingProgramme(source.CourseCode);
+                var courseDetails = !string.IsNullOrEmpty(source.Version)
+                       ? await _commitmentApi.GetTrainingProgrammeVersionByCourseCodeAndVersion(source.CourseCode, source.Version)
+                       : await _commitmentApi.GetTrainingProgramme(source.CourseCode);
                 vm.CourseCode = source.CourseCode;
                 vm.CourseName = courseDetails?.TrainingProgramme.Name;
             }

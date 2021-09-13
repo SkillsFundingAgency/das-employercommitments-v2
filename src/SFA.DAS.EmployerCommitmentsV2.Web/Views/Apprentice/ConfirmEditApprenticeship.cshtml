@@ -1,6 +1,6 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
-@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ConfirmEditApprenticeshipViewModel
 
 @{
@@ -36,6 +36,7 @@
             @Html.HiddenFor(x => x.BirthDay)
             @Html.HiddenFor(x => x.Cost)
             @Html.HiddenFor(x => x.CourseCode)
+            @Html.HiddenFor(x => x.Version)
             @Html.HiddenFor(x => x.EmployerReference)
             @Html.HiddenFor(x => x.ProviderName)
 
@@ -125,6 +126,18 @@
 
                                 </tr>
                             }
+                            @if (!string.IsNullOrWhiteSpace(Model.Version) || !string.IsNullOrWhiteSpace(Model.CourseCode))
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Version</th>
+                                    <td class="govuk-table__cell">
+                                        @(Model.OriginalApprenticeship.Version != null ? Model.OriginalApprenticeship.Version : "Not applicable" )                                
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        @(Model.Version != null ? Model.Version : "Not applicable" ) 
+                                    </td>
+                                </tr>
+                            }
 
                             @if (Model.Cost.HasValue)
                             {
@@ -135,7 +148,6 @@
 
                                 </tr>
                             }
-
 
                             @if (Model.EmployerReference != Model.OriginalApprenticeship.EmployerReference)
                             {
@@ -183,5 +195,13 @@
 </div>
 
 @section back {
-    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", new { AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">Back to the apprentice details</a>
+
+    @if (!string.IsNullOrEmpty(Model.Version))
+    {
+        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ChangeVersion)">Back</a>
+    }
+    else
+    {
+        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.EditApprenticeship)">Back</a>
+    }
 }

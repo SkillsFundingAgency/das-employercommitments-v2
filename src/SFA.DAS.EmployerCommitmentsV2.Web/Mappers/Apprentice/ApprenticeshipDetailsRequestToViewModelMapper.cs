@@ -9,7 +9,6 @@ using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.Authorization.Services;
 using SFA.DAS.Encoding;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,7 +56,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 var changeofPartyRequests = changeofPartyRequestsTask.Result;
                 var changeOfProviderChain = changeOfProviderChainTask.Result;
 
-                var getTrainingProgramme = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode, CancellationToken.None);
+                var currentTrainingProgramme = await GetTrainingProgramme(apprenticeship.CourseCode, apprenticeship.StandardUId);
+                
                 PendingChanges pendingChange = GetPendingChanges(apprenticeshipUpdates);
 
                 bool dataLockCourseTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseTriaged();
@@ -81,8 +81,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     StopDate = apprenticeship.StopDate,
                     PauseDate = apprenticeship.PauseDate,
                     CompletionDate = apprenticeship.CompletionDate,
-                    TrainingName = getTrainingProgramme.TrainingProgramme.Name,
-                    TrainingType = getTrainingProgramme.TrainingProgramme.ProgrammeType,
+                    TrainingName = currentTrainingProgramme.Name,
+                    Version = apprenticeship.Version,
+                    TrainingType = currentTrainingProgramme.ProgrammeType,
                     Cost = priceEpisodes.PriceEpisodes.GetPrice(),
                     ApprenticeshipStatus = apprenticeship.Status,
                     ProviderName = apprenticeship.ProviderName,
@@ -111,6 +112,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     ConfirmationStatus = apprenticeship.ConfirmationStatus,
                     ShowApprenticeConfirmationColumn = await _authorizationService.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail),
                     Email = apprenticeship.Email,
+                    HasNewerVersions = await HasNewerVersions(currentTrainingProgramme)
                 };
 
                 return result;
@@ -119,6 +121,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             {
                 _logger.LogError(e, $"Error mapping for accountId {source.AccountHashedId}  and apprenticeship {source.ApprenticeshipHashedId} to ApprenticeshipDetailsRequestViewModel");
                 throw;
+            }
+        }
+
+        private async Task<TrainingProgramme> GetTrainingProgramme(string courseCode, string standardUId)
+        {
+            if (!string.IsNullOrEmpty(standardUId))
+            {
+                var trainingProgrammeVersionResponse = await _commitmentsApiClient.GetTrainingProgrammeVersionByStandardUId(standardUId);
+
+                return trainingProgrammeVersionResponse.TrainingProgramme;
+            }
+            else
+            {
+                var frameworkResponse = await _commitmentsApiClient.GetTrainingProgramme(courseCode);
+
+                return frameworkResponse.TrainingProgramme;
             }
         }
 
@@ -141,6 +159,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             if (apprenticeshipUpdates.ApprenticeshipUpdates.Any(x => x.OriginatingParty == Party.Provider))
                 pendingChange = PendingChanges.ReadyForApproval;
             return pendingChange;
-        }      
+        }
+
+        private async Task<bool> HasNewerVersions(TrainingProgramme trainingProgramme)
+        {
+            if (trainingProgramme.ProgrammeType == ProgrammeType.Standard)
+            {
+                var newerVersionsResponse = await _commitmentsApiClient.GetNewerTrainingProgrammeVersions(trainingProgramme.StandardUId);
+
+                if (newerVersionsResponse.NewerVersions != null && newerVersionsResponse.NewerVersions.Count() > 0)
+                {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
     }
 }

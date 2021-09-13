@@ -22,5 +22,7 @@
         public const string HasTheApprenticeBeenMadeRedundant = "HasTheApprenticeBeenMadeRedundant";
         public const string ViewChanges = "view-changes";
         public const string WhenToApplyStopApprentice = "WhenToApplyStopApprentice";
+        public const string ChangeVersion = "change-version";
+        public const string EditApprenticeship = "edit-apprenticeship";
     }
 }

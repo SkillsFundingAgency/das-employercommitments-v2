@@ -20,6 +20,7 @@ using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateRequest;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -603,14 +604,65 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpPost]
-        [Route("{apprenticeshipHashedId}/edit")]
+        [Route("{apprenticeshipHashedId}/edit", Name = RouteNames.EditApprenticeship)]
         public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequestViewModel viewModel)
         {
+            var apprenticeship = await _commitmentsApiClient.GetApprenticeship(viewModel.ApprenticeshipId);
+
+            // Only calculate the version if the course changes, or the start date changes and is > than the original start date.
+            if (viewModel.CourseCode != apprenticeship.CourseCode || apprenticeship.StartDate < viewModel.StartDate.Date.Value)
+            {
+                TrainingProgramme trainingProgramme;
+
+                if (int.TryParse(viewModel.CourseCode, out var standardId))
+                {
+                    var standardVersionResponse = await _commitmentsApiClient.GetCalculatedTrainingProgrammeVersion(standardId, viewModel.StartDate.Date.Value);
+
+                    trainingProgramme = standardVersionResponse.TrainingProgramme;
+                }
+                else
+                {
+                    var frameworkResponse = await _commitmentsApiClient.GetTrainingProgramme(viewModel.CourseCode);
+
+                    trainingProgramme = frameworkResponse.TrainingProgramme;
+                }
+
+                viewModel.Version = trainingProgramme.Version;
+            }
+
             var validationRequest = await _modelMapper.Map<ValidateApprenticeshipForEditRequest>(viewModel);
             await _commitmentsApiClient.ValidateApprenticeshipForEdit(validationRequest);
          
             TempData.Put("EditApprenticeshipRequestViewModel", viewModel);
             return RedirectToAction("ConfirmEditApprenticeship", new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, accountHashedId = viewModel.AccountHashedId });
+        }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/change-version", Name = RouteNames.ChangeVersion)]
+        public async Task<IActionResult> ChangeVersion(ChangeVersionRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ChangeVersionViewModel>(request);
+
+            // Get Edit Model if it exists to pre-select version if navigating back
+            var editApprenticeViewModel = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>("EditApprenticeshipRequestViewModel");
+
+            if(editApprenticeViewModel != null && !string.IsNullOrWhiteSpace(editApprenticeViewModel.Version))
+            {
+                viewModel.SelectedVersion = editApprenticeViewModel.Version;
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/change-version")]
+        public async Task<IActionResult> ChangeVersion(ChangeVersionViewModel changeVersionViewModel)
+        {
+            var editRequestViewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(changeVersionViewModel);
+
+            TempData.Put("EditApprenticeshipRequestViewModel", editRequestViewModel);
+
+            return RedirectToAction("ConfirmEditApprenticeship", new { apprenticeshipHashedId = changeVersionViewModel.ApprenticeshipHashedId, accountHashedId = changeVersionViewModel.AccountHashedId });
         }
 
         [HttpGet]

@@ -64,6 +64,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 EndDate = update.EndDate,
                 CourseCode = update.TrainingCode,
                 CourseName = update.TrainingName,
+                Version = update.Version
             };
         }
 
@@ -79,7 +80,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 StartDate = apprenticeship.StartDate,
                 EndDate = apprenticeship.EndDate,
                 CourseCode = apprenticeship.CourseCode,
-                CourseName = apprenticeship.CourseName
+                CourseName = apprenticeship.CourseName,
+                Version = apprenticeship.Version
             };
 
             if (costChanged)
