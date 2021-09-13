@@ -53,8 +53,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             _mockMapper.Setup(m => m.Map<ChangeVersionViewModel>(_request))
                 .ReturnsAsync(_viewModel);
-
-            _controller.TempData = new TempDataDictionary(Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
         }
 
         public void SetEditApprenticeViewModel(string version)
