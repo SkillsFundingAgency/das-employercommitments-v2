@@ -666,11 +666,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
+        [Route("{apprenticeshipHashedId}/change-option")]
+        public async Task<IActionResult> ChangeOption()
+        {
+            var editApprenticeshipRequestViewModel = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>("EditApprenticeshipRequestViewModel");
+
+            var viewModel = await _modelMapper.Map<ChangeOptionViewModel>(editApprenticeshipRequestViewModel);
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
         [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
         [Route("{apprenticeshipHashedId}/edit/confirm")]
         public async Task<IActionResult> ConfirmEditApprenticeship()
         {
             var editApprenticeshipRequestViewModel = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>("EditApprenticeshipRequestViewModel");
+
             var viewModel = await _modelMapper.Map<ConfirmEditApprenticeshipViewModel>(editApprenticeshipRequestViewModel);
 
             return View(viewModel);
