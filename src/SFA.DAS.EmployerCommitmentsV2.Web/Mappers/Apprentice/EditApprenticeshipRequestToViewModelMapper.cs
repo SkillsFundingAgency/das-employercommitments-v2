@@ -7,8 +7,6 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.Authorization.Services;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
@@ -17,14 +15,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IAcademicYearDateProvider _academicYearDateProvider;
         private readonly ICurrentDateTime _currentDateTime;
-        private readonly IAuthorizationService _authorizationService;
 
-        public EditApprenticeshipRequestToViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IAcademicYearDateProvider academicYearDateProvider, ICurrentDateTime currentDateTime, IAuthorizationService authorizationService)
+        public EditApprenticeshipRequestToViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IAcademicYearDateProvider academicYearDateProvider, ICurrentDateTime currentDateTime)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _academicYearDateProvider = academicYearDateProvider;
             _currentDateTime = currentDateTime;
-            _authorizationService = authorizationService;
         }
         public async Task<EditApprenticeshipRequestViewModel> Map(EditApprenticeshipRequest source)
         {
@@ -67,8 +63,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 IsEndDateLockedForUpdate = IsEndDateLocked(isLockedForUpdate, apprenticeship.HasHadDataLockSuccess, apprenticeship.Status),
                 TrainingName = courseDetails.TrainingProgramme.Name,
                 HashedApprenticeshipId = source.ApprenticeshipHashedId,
-                AccountHashedId = source.AccountHashedId,
-                ShowApprenticeEmail = await _authorizationService.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail)
+                AccountHashedId = source.AccountHashedId
             };
 
             return result;

@@ -62,32 +62,25 @@ else
                 @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
                 <input asp-for="LastName" class="govuk-input" />
             </div>
-            @if (Model.ShowEmail)
-            {
-                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
-                    <details class="govuk-details" data-module="govuk-details">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">
-                                Email address
-                            </span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            Your apprentice will receive an email alert inviting them to the My apprenticeship service. On the service, your apprentice will be able to:
-                            <ul>
-                                <li>review and confirm their apprenticeship details</li>
-                                <li>understand the roles and responsibilities of an apprentice, an employer and a training provider</li>
-                                <li>find help and support during their apprenticeship</li>
-                            </ul>
-                        </div>
-                    </details>
-                    @Html.ValidationMessageFor(m => m.Email, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email)})
-                    <input asp-for="Email" class="govuk-input"/>
-                </div>
-            }
-            else if(!String.IsNullOrWhiteSpace(Model.Email))
-            {
-                @Html.HiddenFor(x => x.Email);
-            }
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            Email address
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        Your apprentice will receive an email alert inviting them to the My apprenticeship service. On the service, your apprentice will be able to:
+                        <ul>
+                            <li>review and confirm their apprenticeship details</li>
+                            <li>understand the roles and responsibilities of an apprentice, an employer and a training provider</li>
+                            <li>find help and support during their apprenticeship</li>
+                        </ul>
+                    </div>
+                </details>
+                @Html.ValidationMessageFor(m => m.Email, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email)})
+                <input asp-for="Email" class="govuk-input"/>
+            </div>
         </fieldset>
     </div>
     <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.DateOfBirth, "govuk-form-group--error")">
