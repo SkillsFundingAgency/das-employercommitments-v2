@@ -95,6 +95,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public IEnumerable<TrainingProgramme> Courses { get; set; }
 
         public bool IsContinuation { get; set; }
-        public bool ShowEmail { get; set; }
     }
 }

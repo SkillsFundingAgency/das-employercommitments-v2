@@ -2,13 +2,11 @@
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
@@ -29,7 +27,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         Fixture autoFixture = new Fixture();
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
         private Mock<IEncodingService> _mockEncodingService;
-        private Mock<IAuthorizationService> _authorizationService;
         private GetApprenticeshipResponse _apprenticeshipResponse;
         private GetPriceEpisodesResponse _priceEpisodesResponse;
         private GetApprenticeshipUpdatesResponse _apprenticeshipUpdatesResponse;
@@ -128,9 +125,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _mockEncodingService.Setup(t => t.Decode(It.IsAny<string>(), It.IsAny<EncodingType>()))
                 .Returns((string value, EncodingType encodingType) => long.Parse(Regex.Replace(value, "[A-Za-z ]", "")));
 
-            _authorizationService = new Mock<IAuthorizationService>();
-
-            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), _authorizationService.Object);
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
         }
 
         [Test]
@@ -653,18 +648,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             // Assert
             Assert.AreEqual(result.ConfirmationStatus, confirmationStatus);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public async Task CheckShowConfirmationColumnIsMappedCorrectly(bool show)
-        {
-            _authorizationService.Setup(x => x.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail))
-                    .ReturnsAsync(show);
-
-            var result = await _mapper.Map(_request);
-
-            Assert.AreEqual(show, result.ShowApprenticeConfirmationColumn);
         }
 
         [Test]
