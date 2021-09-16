@@ -617,5 +617,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             Assert.AreEqual(ApprenticeshipEmail, result.Email);
         }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task CheckEmailShouldBePresentIsMappedCorrectly(bool expected)
+        {
+            _apprenticeshipResponse.EmailShouldBePresent = expected;
+
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(expected, result.EmailShouldBePresent);
+        }
+
     }
 }
