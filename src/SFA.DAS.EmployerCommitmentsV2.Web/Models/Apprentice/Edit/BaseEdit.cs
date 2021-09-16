@@ -58,6 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
         public int? BirthYear { get; set; }
         public string CourseCode { get; set; }
         public string Version { get; set; }
+        public string Option { get; set; }
 
         [JsonIgnore]
         public DateTime? StartDate

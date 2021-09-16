@@ -2,11 +2,8 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Newtonsoft.Json;
 using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using System;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
@@ -32,34 +29,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
     public class WhenCallingChangeOptionTestsFixture : ApprenticeControllerTestFixtureBase
     {
-        private readonly EditApprenticeshipRequestViewModel _editViewModel;
-        private readonly ChangeOptionViewModel _viewModel;
+        private ChangeOptionRequest _request;
+        private ChangeOptionViewModel _viewModel;
 
         public WhenCallingChangeOptionTestsFixture() : base()
         {
-            var baseDate = DateTime.Now;
-            var startDate = new MonthYearModel(baseDate.ToString("MMyyyy"));
-            var endDate = new MonthYearModel(baseDate.AddYears(2).ToString("MMyyyy"));
-            var dateOfBirth = new MonthYearModel(baseDate.AddYears(-18).ToString("MMyyyy"));
-
-            _editViewModel = _autoFixture.Build<EditApprenticeshipRequestViewModel>()
-                    .With(x => x.StartDate, startDate)
-                    .With(x => x.EndDate, endDate)
-                    .With(x => x.DateOfBirth, dateOfBirth)
-                .Create();
-
+            _request = _autoFixture.Create<ChangeOptionRequest>();
             _viewModel = _autoFixture.Create<ChangeOptionViewModel>();
 
-            object serializedModel = JsonConvert.SerializeObject(_editViewModel);
-            _tempDataDictionary.Setup(s => s.TryGetValue("EditApprenticeshipRequestViewModel", out serializedModel)).Returns(true);
-
-            _mockMapper.Setup(m => m.Map<ChangeOptionViewModel>(It.IsAny<EditApprenticeshipRequestViewModel>()))
+            _mockMapper.Setup(m => m.Map<ChangeOptionViewModel>(It.IsAny<ChangeOptionRequest>()))
                 .ReturnsAsync(_viewModel);
         }
 
         public async Task<IActionResult> ChangeOption()
         {
-            return await _controller.ChangeOption();
+            return await _controller.ChangeOption(_request);
         }
 
         public void VerifyViewModel(ViewResult viewResult)

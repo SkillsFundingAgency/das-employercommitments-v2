@@ -2,6 +2,7 @@
 using SFA.DAS.CommitmentsV2.Types;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
@@ -20,6 +21,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public ProgrammeType? TrainingType { get; set; }
         public string TrainingName { get; set; }
         public string Version { get; set; }
+        public string Option { get; set; }
+        public IEnumerable<string> VersionOptions { get; set; }
         public decimal? Cost { get; set; }
         public ApprenticeshipStatus ApprenticeshipStatus { get; set; }
         public string ProviderName { get; set; }
@@ -47,6 +50,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool ShowApprenticeConfirmationColumn { get; set; }
         public string Email { get; set; }
         public bool HasNewerVersions { get; set; }
+        public bool HasOptions => VersionOptions.Any();
 
         public ActionRequiredBanner GetActionRequiredBanners()
         {

@@ -238,6 +238,23 @@
                         }
                     </tr>
                 }
+                @if (Model.TrainingType == ProgrammeType.Standard && Model.HasOptions)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header"> Option </th>
+                        <td id="version" class="govuk-table__cell" colspan="2">@(!string.IsNullOrEmpty(Model.Option) ? Model.Option : "To be confirmed")</td>
+                        @if (Model.EnableEdit)
+                        {
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeOption)">Change</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="govuk-table__cell"></td>
+                        }
+                    </tr>
+                }
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Planned training start date</th>
                     <td id="start-date" class="govuk-table__cell" colspan="2">

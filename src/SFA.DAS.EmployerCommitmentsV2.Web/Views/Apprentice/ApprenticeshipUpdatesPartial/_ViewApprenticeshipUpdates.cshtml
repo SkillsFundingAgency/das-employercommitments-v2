@@ -59,6 +59,14 @@
                         <td class="govuk-table__cell">@Model.ApprenticeshipUpdates.Version</td>
                     </tr>
                 }
+                @if (Model.ApprenticeshipUpdates.Option != null)
+                {
+                    <tr>
+                        <th scope="row" class="govuk-table__header">Option</th>
+                        <td class="govuk-table__cell">@(Model.OriginalApprenticeship.Option == string.Empty ? "To be confirmed" : Model.OriginalApprenticeship.Option) </td>
+                        <td class="govuk-table__cell">@(Model.ApprenticeshipUpdates.Option == string.Empty ? "To be confirmed" : Model.ApprenticeshipUpdates.Option)</td>
+                    </tr>
+                }
                 @if (Model.ApprenticeshipUpdates.StartDate.HasValue)
                 {
                     <tr>

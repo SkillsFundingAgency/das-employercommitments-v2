@@ -89,6 +89,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
+        public async Task Version_IsMapped()
+        {
+            var result = await mapper.Map(request);
+
+            Assert.AreEqual(request.Version, result.Version);
+        }
+
+        [Test, MoqAutoData]
+        public async Task Option_IsMapped()
+        {
+            var result = await mapper.Map(request);
+
+            Assert.AreEqual(request.Option, result.Option);
+        }
+
+        [Test, MoqAutoData]
         public async Task Cost_IsMapped()
         {
             var result = await mapper.Map(request);

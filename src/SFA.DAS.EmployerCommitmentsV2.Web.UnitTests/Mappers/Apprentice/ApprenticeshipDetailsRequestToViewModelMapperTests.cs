@@ -317,6 +317,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task Option_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(_apprenticeshipResponse.Option, result.Option);
+        }
+
+        [Test]
         public async Task Price_IsMapped()
         {
             //Act
@@ -687,6 +697,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             Assert.AreEqual(hasNewerVersions, result.HasNewerVersions);
+        }
+
+        [Test]
+        public async Task VersionOptionsAreMappedCorrectly()
+        {
+           
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(_getTrainingProgrammeByStandardUId.TrainingProgramme.Options, result.VersionOptions);
         }
     }
 }

@@ -162,6 +162,49 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task WhenOptionIsChanged()
+        {
+            fixture.source.Option = "NewOption";
+
+            var result = await fixture.Map();
+
+            Assert.AreNotEqual(fixture.source.Option, fixture._apprenticeshipResponse.Option);
+            Assert.AreEqual(fixture.source.Option, result.Option);
+        }
+
+        [Test]
+        public async Task When_VersionHasOptions_Then_ReturnToChangeOptionsIsTrue()
+        {
+            fixture.source.HasOptions = true;
+
+            var result = await fixture.Map();
+
+            Assert.True(result.ReturnToChangeOption);
+        }
+
+        [Test]
+        public async Task When_VersionIsChangedDirectly_Then_ReturnToChangeVersionIsTrue()
+        {
+            fixture.source.Version = "NewVersion";
+
+            var result = await fixture.Map();
+
+            Assert.True(result.ReturnToChangeVersion);
+        }
+
+        [Test]
+        public async Task When_VersionIsChangedAsPartOfEditApprenticeship_Then_ReturnToChangeVersionAndOptionAreFalse()
+        {
+            fixture.source.Version = "NewVersion";
+            fixture.source.CourseCode = "NewCourseCode";
+
+            var result = await fixture.Map();
+
+            Assert.False(result.ReturnToChangeVersion);
+            Assert.False(result.ReturnToChangeOption);
+        }
+
+        [Test]
         public async Task WhenMultipleFieldsAreChanged_TheyAreChanged()
         {
             fixture.source.CourseCode = "NewCourse";

@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -10,6 +11,7 @@ using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,7 +39,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 .Create();
             
             _standardVersionResponse = _autoFixture.Build<GetTrainingProgrammeResponse>()
-                .With(x => x.TrainingProgramme, _autoFixture.Build<TrainingProgramme>().With(x => x.Version, "1.0").Create())
+                .With(x => x.TrainingProgramme, _autoFixture.Build<TrainingProgramme>()
+                    .With(x => x.Version, "1.0")
+                    .With(x => x.Options, new List<string>())
+                    .Create())
                 .Create();
             
             _frameworkResponse = _autoFixture.Create<GetTrainingProgrammeResponse>();
@@ -123,6 +128,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test]
+        public async Task And_StandardHasOptions_Then_RedirectToChangeOption()
+        {
+            _standardVersionResponse.TrainingProgramme.Options = _autoFixture.Create<List<string>>();
+
+            var result = await _fixture.EditApprenticeship(_viewModel);
+
+            _fixture.VerifyRedirectToChangeOption(result as RedirectToActionResult);
+        }
+
+        [Test]
         public async Task VerifyValidationApiIsCalled()
         {
             var result = await _fixture.EditApprenticeship(_viewModel);
@@ -195,6 +210,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public void VerifyMapperIsCalled()
         {
             _mockMapper.Verify(x => x.Map<ValidateApprenticeshipForEditRequest>(It.IsAny<EditApprenticeshipRequestViewModel>()), Times.Once());
+        }
+
+        public void VerifyRedirectToChangeOption(RedirectToActionResult result)
+        {
+            result.ActionName.Should().Be("ChangeOption");
         }
     }
 }

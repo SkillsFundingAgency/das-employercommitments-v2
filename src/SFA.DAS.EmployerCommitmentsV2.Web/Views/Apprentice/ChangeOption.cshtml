@@ -33,6 +33,11 @@
 </div>
 
 <form id="change-version-form" method="post">
+
+    @Html.HiddenFor(x => x.CurrentOption)
+    @Html.HiddenFor(x => x.ReturnToEdit)
+    @Html.HiddenFor(x => x.ReturnToChangeVersion)
+
     <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.SelectedOption, "govuk-form-group--error")">
         <div id="select-a-version-hint" class="govuk-hint">
             Select an option
@@ -56,14 +61,25 @@
     </div>
 
     <div class="govuk-button-group">
-        <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button">
+        <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button"> 
             Save and continue
         </button>
 
-        <a class="govuk-link govuk-link--no-visited-state" href="@Url.RouteUrl(RouteNames.ApprenticeDetail)" id="cancel-button">Cancel and return</a>
+        <a class="govuk-link govuk-link--no-visited-state" href="@Url.RouteUrl(RouteNames.CancelInProgressChangeOfCircumstance)" id="cancel-button"> Cancel and return </a>
     </div>
 </form>
 
-@*@section back {
-    <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ApprenticeDetail)">Back</a>
-}*@
+@section back {
+    @if (Model.ReturnToEdit)
+    {
+        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.EditApprenticeship)">Back</a>
+    }
+    else if (Model.ReturnToChangeVersion)
+    {
+        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ChangeVersion)">Back</a>
+    }
+    else
+    {
+        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ApprenticeDetail)">Back</a>
+    }
+}
