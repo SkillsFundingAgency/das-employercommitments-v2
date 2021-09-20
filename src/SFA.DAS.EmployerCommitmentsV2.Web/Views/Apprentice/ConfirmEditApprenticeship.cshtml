@@ -115,7 +115,6 @@
                                     <th scope="row" class="govuk-table__header">Planned training start date</th>
                                     <td class="govuk-table__cell">@Model.OriginalApprenticeship.StartDate.Value.ToGdsFormat() </td>
                                     <td class="govuk-table__cell">@Model.StartDate.Value.ToGdsFormat()</td>
-
                                 </tr>
                             }
                             @if (Model.EndDate.HasValue)
@@ -126,6 +125,7 @@
                                     <td class="govuk-table__cell">@Model.EndDate.Value.ToGdsFormat()</td>
                                 </tr>
                             }
+
                             @if (!string.IsNullOrWhiteSpace(Model.Version) || !string.IsNullOrWhiteSpace(Model.CourseCode))
                             {
                                 <tr>
@@ -138,13 +138,39 @@
                                     </td>
                                 </tr>
                             }
-                            @if (Model.Option != null)
+
+                            @if (Model.Option != Model.OriginalApprenticeship.Option)
                             {
                                 <tr>
                                     <th scope="row" class="govuk-table__header">Option</th>
-                                    <td class="govuk-table__cell">@(Model.OriginalApprenticeship.Option == string.Empty ? "To be confirmed" : Model.OriginalApprenticeship.Option) </td>
-
-                                    <td class="govuk-table__cell">@(Model.Option == string.Empty ? "To be confirmed" : Model.Option)</td>
+                                    <td class="govuk-table__cell">
+                                        @if (Model.OriginalApprenticeship.Option == string.Empty)
+                                        {
+                                            <span> To be confirmed </span>
+                                        }
+                                        else if (Model.OriginalApprenticeship.Option == null)
+                                        {
+                                            <span> Not applicable </span>
+                                        }
+                                        else
+                                        {
+                                            <span> @Model.OriginalApprenticeship.Option</span>
+                                        }
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        @if (Model.Option == string.Empty)
+                                        {
+                                            <span> To be confirmed </span>
+                                        }
+                                        else if (Model.Option == null)
+                                        {
+                                            <span> Not applicable </span>
+                                        }
+                                        else
+                                        {
+                                            <span> @Model.Option</span>
+                                        }
+                                    </td>
                                 </tr>
                             }
 
@@ -154,7 +180,6 @@
                                     <th scope="row" class="govuk-table__header">Cost</th>
                                     <td class="govuk-table__cell">@Model.OriginalApprenticeship.Cost.FormatCost() </td>
                                     <td class="govuk-table__cell">@Model.Cost.FormatCost()</td>
-
                                 </tr>
                             }
 
@@ -164,7 +189,6 @@
                                     <th scope="row" class="govuk-table__header">Reference</th>
                                     <td class="govuk-table__cell">@Model.OriginalApprenticeship.EmployerReference</td>
                                     <td class="govuk-table__cell">@Model.EmployerReference</td>
-
                                 </tr>
                             }
                         </tbody>
