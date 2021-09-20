@@ -263,17 +263,14 @@ else
                             Training provider
                         </a>
                     </th>
-                    @if (Model.ShowApprenticeConfirmationColumn)
-                    {
-                        <th scope="col" class="govuk-table__header">
-                            <a class="@(Model.FilterModel.SortField == "ConfirmationStatus" ? Model.SortedByHeaderClassName : IndexViewModel.HeaderClassName)"
-                               asp-route="@RouteNames.ApprenticesIndex"
-                               asp-all-route-data="@Model.FilterModel.BuildSortRouteData("ConfirmationStatus")"
-                               title="Sort the table by status">
-                                Apprentice confirmation
-                            </a>
-                        </th>
-                    }
+                    <th scope="col" class="govuk-table__header">
+                        <a class="@(Model.FilterModel.SortField == "ConfirmationStatus" ? Model.SortedByHeaderClassName : IndexViewModel.HeaderClassName)"
+                           asp-route="@RouteNames.ApprenticesIndex"
+                           asp-all-route-data="@Model.FilterModel.BuildSortRouteData("ConfirmationStatus")"
+                           title="Sort the table by status">
+                            Apprentice confirmation
+                        </a>
+                    </th>
                     <th scope="col" class="govuk-table__header">
                         Status
                     </th>
@@ -304,12 +301,9 @@ else
                     <td class="govuk-table__cell" data-label="Training provider">
                         @apprenticeship.ProviderName
                     </td>
-                    @if (Model.ShowApprenticeConfirmationColumn)
-                    {
-                        <td class="govuk-table__cell" data-label="Apprentice confirmation">
-                            @apprenticeship.ConfirmationStatus.ToDisplayString()
-                        </td>
-                    }
+                    <td class="govuk-table__cell" data-label="Apprentice confirmation">
+                        @apprenticeship.ConfirmationStatus.ToDisplayString()
+                    </td>
                     <td class="govuk-table__cell" data-label="Status">
                         <strong class="govuk-tag @apprenticeship.Status.GetDisplayClass()">
                             @apprenticeship.Status.GetDescription()

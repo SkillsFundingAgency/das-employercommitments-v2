@@ -5,12 +5,10 @@ using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetPriceEpisodesResponse;
@@ -307,18 +305,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(expectedIsEndDateLockedForUpdate, viewModel.IsEndDateLockedForUpdate);
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public async Task CanShowApprenticeEmail_IsMapped(bool expected)
-        {
-            _fixture.SetCanShowApprenticeEmail(expected);
-
-            //Act
-            var viewModel = await _fixture.Map();
-
-            //Assert
-            Assert.AreEqual(expected, viewModel.ShowApprenticeEmail);
-        }
     }
 
     public class EditApprenticeshipRequestToViewModelMapperTestsFixture
@@ -328,7 +314,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
         private Mock<IAcademicYearDateProvider> _mockAcademicYearDateProvider;
         private Mock<ICurrentDateTime> _mockCurrentDateTimeProvider;
-        private Mock<IAuthorizationService> _mockAuthorizationService;
         
         private GetPriceEpisodesResponse _priceEpisodesResponse;
         private GetCohortResponse _cohortResponse;
@@ -352,12 +337,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             return this;
         }
 
-        internal EditApprenticeshipRequestToViewModelMapperTestsFixture SetCanShowApprenticeEmail(bool value)
-        {
-            _mockAuthorizationService.Setup(x => x.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail))
-                .ReturnsAsync(value);
-            return this;
-        }
 
         internal EditApprenticeshipRequestToViewModelMapperTestsFixture VerifyGetApprenticeshipIsCalled()
         {
@@ -569,9 +548,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _mockCurrentDateTimeProvider = new Mock<ICurrentDateTime>();
 
-            _mockAuthorizationService = new Mock<IAuthorizationService>();
-
-            _mapper = new EditApprenticeshipRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockAcademicYearDateProvider.Object, _mockCurrentDateTimeProvider.Object, _mockAuthorizationService.Object);
+            _mapper = new EditApprenticeshipRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockAcademicYearDateProvider.Object, _mockCurrentDateTimeProvider.Object);
         }
     }
 }

@@ -1,10 +1,8 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
@@ -12,12 +10,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     public class ApprenticeViewModelMapper : IMapper<ApprenticeRequest, ApprenticeViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly IAuthorizationService _authorizationService;
 
-        public ApprenticeViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IAuthorizationService authorizationService)
+        public ApprenticeViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
-            _authorizationService = authorizationService;
         }
 
         public async Task<ApprenticeViewModel> Map(ApprenticeRequest source)
@@ -45,8 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 Courses = courses,
                 TransferSenderId = source.TransferSenderId,
                 Origin = source.Origin,
-                AutoCreatedReservation = source.AutoCreated,
-                ShowEmail = await _authorizationService.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail)
+                AutoCreatedReservation = source.AutoCreated
             };
 
             return result;

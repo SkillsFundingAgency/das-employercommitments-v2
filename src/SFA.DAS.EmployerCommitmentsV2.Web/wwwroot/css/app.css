@@ -3,3 +3,9 @@
     top: 5px;
     right: 10px;
 }
+
+/* Overwrite max width on govuk banner content */
+
+.govuk-notification-banner__content > * {
+    max-width: none;
+}
