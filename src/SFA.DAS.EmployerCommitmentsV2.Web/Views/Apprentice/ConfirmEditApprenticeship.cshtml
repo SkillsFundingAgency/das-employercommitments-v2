@@ -196,7 +196,7 @@
 
 @section back {
 
-    @if (!string.IsNullOrEmpty(Model.Version) && string.IsNullOrEmpty(Model.CourseCode))
+    @if (!string.IsNullOrEmpty(Model.Version) && string.IsNullOrEmpty(Model.CourseCode) && !Model.StartDate.HasValue)
     {
         <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ChangeVersion)">Back</a>
     }
