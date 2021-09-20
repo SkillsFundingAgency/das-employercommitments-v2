@@ -16,22 +16,13 @@
     {
         <div class="govuk-inset-text govuk-!-margin-top-0">
 
-            @if (Model.ShowApprenticeConfirmationColumn)
-            {
-                <p class="govuk-body-s govuk-!-margin-bottom-1">
-                    You have made a change to the apprentice’s details which will:
-                    <ul>
-                        <li>need to be approved by the training provider </li>
-                        <li>send an alert to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service</li>
-                    </ul>
-                </p>
-            }
-            else
-            {
-                <p class="govuk-body-s govuk-!-margin-bottom-1">
-                    You have made a change which needs to be approved by the training provider.
-                </p>
-            }
+            <p class="govuk-body-s govuk-!-margin-bottom-1">
+                You have made a change to the apprentice’s details which will:
+                <ul>
+                    <li>need to be approved by the training provider </li>
+                    <li>send an alert to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service</li>
+                </ul>
+            </p>
             <p class="govuk-body-s">
                 <a id="view-changes-banner-link" class="govuk-link" href="@Url.Action("ViewApprenticeshipUpdates", new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">View changes</a>
             </p>

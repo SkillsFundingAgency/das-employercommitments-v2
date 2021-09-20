@@ -56,7 +56,7 @@
             }
             else
             {
-                @if (Model.ShowApprenticeEmail && !string.IsNullOrEmpty(Model.Email))
+                @if (!string.IsNullOrEmpty(Model.Email))
                 {
                     <div class="govuk-inset-text">
                         <p>Please note</p>
@@ -76,7 +76,7 @@
                     @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
                     <input asp-for="LastName" class="govuk-input govuk-!-width-two-thirds" id="lastName" />
                 </div>
-                @if (Model.ShowApprenticeEmail && !string.IsNullOrEmpty(Model.Email))
+                @if (!string.IsNullOrEmpty(Model.Email))
                 {
                     <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
                         <label asp-for="Email" class="govuk-label govuk-!-font-weight-bold">Email address</label>

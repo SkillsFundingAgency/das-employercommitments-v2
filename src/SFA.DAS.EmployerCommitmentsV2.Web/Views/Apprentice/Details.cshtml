@@ -29,7 +29,7 @@
                 </p>
             }
         }
-        @if (Model.ShowApprenticeConfirmationColumn && Model.ConfirmationStatus == ConfirmationStatus.Overdue)
+        @if (Model.ConfirmationStatus == ConfirmationStatus.Overdue)
         {
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
@@ -117,15 +117,12 @@
                         </tr>
                     }
                 }
-                @if (Model.ShowApprenticeConfirmationColumn)
-                {
-                    <tr>
-                        <th scope="row" class="govuk-table__header">Apprentice confirmation</th>
-                        <td id="madeRedundant" class="govuk-table__cell" colspan="2">
-                            @Model.ConfirmationStatus.ToDisplayString()
-                        </td>
-                    </tr>
-                }
+                <tr>
+                    <th scope="row" class="govuk-table__header">Apprentice confirmation</th>
+                    <td id="confirationStatus" class="govuk-table__cell" colspan="2">
+                        @Model.ConfirmationStatus.ToDisplayString()
+                    </td>
+                </tr>
                 <tr>
                     <th scope="row" class="govuk-table__header">Training provider</th>
                     <td class="govuk-table__cell">@Model.ProviderName</td>

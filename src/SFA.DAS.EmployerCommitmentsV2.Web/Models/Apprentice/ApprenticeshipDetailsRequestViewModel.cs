@@ -47,7 +47,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                                                        !HasContinuation);
         public List<TrainingProviderHistory> TrainingProviderHistory { get; set; }
         public ConfirmationStatus? ConfirmationStatus { get; set; }
-        public bool ShowApprenticeConfirmationColumn { get; set; }
         public string Email { get; set; }
         public bool HasNewerVersions { get; set; }
         public bool HasOptions => VersionOptions.Any();

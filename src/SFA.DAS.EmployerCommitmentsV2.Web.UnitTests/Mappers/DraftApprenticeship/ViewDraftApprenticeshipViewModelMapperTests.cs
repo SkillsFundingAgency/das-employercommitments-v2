@@ -1,14 +1,12 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
-using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
@@ -167,17 +165,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public void Then_CourseOptionIsMappedCorrectly()
         {
             Assert.AreEqual(_draftApprenticeship.TrainingCourseOption, _result.CourseOption);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public async Task ShowEmailIsSetCorrectly(bool show)
-        {
-            _authorizationService.Setup(x => x.IsAuthorizedAsync(EmployerFeature.ApprenticeEmail))
-                .ReturnsAsync(show);
-
-            _result = await _mapper.Map(_request) as ViewDraftApprenticeshipViewModel;
-            _result.ShowEmail.Should().Be(show);
         }
     }
 }
