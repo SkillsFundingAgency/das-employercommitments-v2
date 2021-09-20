@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Types;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetPriceEpisodesResponse;
 using SFA.DAS.Encoding;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 {
@@ -193,10 +194,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task When_VersionIsChangedAsPartOfEditApprenticeship_Then_ReturnToChangeVersionAndOptionAreFalse()
+        public async Task When_VersionIsChangedByEditCourse_Then_ReturnToChangeVersionAndOptionAreFalse()
         {
             fixture.source.Version = "NewVersion";
             fixture.source.CourseCode = "NewCourseCode";
+
+            var result = await fixture.Map();
+
+            Assert.False(result.ReturnToChangeVersion);
+            Assert.False(result.ReturnToChangeOption);
+        }
+
+        [Test]
+        public async Task When_VersionIsChangedByEditStartDate_Then_ReturnToChangeVersionAndOptionAreFalse()
+        {
+            fixture.source.Version = "NewVersion";
+            fixture.source.StartDate = new MonthYearModel(DateTime.Now.ToString("MMyyyy"));
 
             var result = await fixture.Map();
 
