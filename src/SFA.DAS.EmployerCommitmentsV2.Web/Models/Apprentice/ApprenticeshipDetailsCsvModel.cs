@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string TotalAgreedPrice { get; private set; }
         [Name("Your reference")]
         public string EmployerRef { get; private set; }
-        [Name("Apprentice Confirmation")]
+        [Name("Apprentice confirmation")]
         public string ApprenticeConfirmation { get; private set; }
         [Name("Status")]
         public string Status { get ; private set ; }
