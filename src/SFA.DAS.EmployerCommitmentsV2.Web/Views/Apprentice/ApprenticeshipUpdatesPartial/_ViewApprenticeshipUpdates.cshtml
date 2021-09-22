@@ -51,7 +51,7 @@
                         <td class="govuk-table__cell">@Model.ApprenticeshipUpdates.CourseName</td>
                     </tr>
                 }
-                @if (Model.ApprenticeshipUpdates.Version != Model.OriginalApprenticeship.Version || !string.IsNullOrEmpty(Model.ApprenticeshipUpdates.CourseCode))
+                @if (!string.IsNullOrWhiteSpace(Model.ApprenticeshipUpdates.Version) || !string.IsNullOrWhiteSpace(Model.ApprenticeshipUpdates.CourseCode))
                 {
                     <tr>
                         <th scope="row" class="govuk-table__header">Version</th>
@@ -59,7 +59,7 @@
                         <td class="govuk-table__cell">@(!string.IsNullOrEmpty(Model.ApprenticeshipUpdates.Version) ? Model.ApprenticeshipUpdates.Version : "Not applicable" )</td>
                     </tr>
                 }
-                @if (Model.ApprenticeshipUpdates.Option != Model.OriginalApprenticeship.Option)
+                @if (Model.ApprenticeshipUpdates.Option != Model.OriginalApprenticeship.Option || !string.IsNullOrEmpty(Model.ApprenticeshipUpdates.CourseCode))
                 {
                     <tr>
                         <th scope="row" class="govuk-table__header">Option</th>

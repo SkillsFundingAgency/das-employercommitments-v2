@@ -109,22 +109,6 @@
                                     <td class="govuk-table__cell">@Model.CourseName</td>
                                 </tr>
                             }
-                            @if (Model.StartDate.HasValue)
-                            {
-                                <tr>
-                                    <th scope="row" class="govuk-table__header">Planned training start date</th>
-                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.StartDate.Value.ToGdsFormat() </td>
-                                    <td class="govuk-table__cell">@Model.StartDate.Value.ToGdsFormat()</td>
-                                </tr>
-                            }
-                            @if (Model.EndDate.HasValue)
-                            {
-                                <tr>
-                                    <th scope="row" class="govuk-table__header">Planned training end date</th>
-                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.EndDate.Value.ToGdsFormat() </td>
-                                    <td class="govuk-table__cell">@Model.EndDate.Value.ToGdsFormat()</td>
-                                </tr>
-                            }
 
                             @if (!string.IsNullOrWhiteSpace(Model.Version) || !string.IsNullOrWhiteSpace(Model.CourseCode))
                             {
@@ -139,7 +123,7 @@
                                 </tr>
                             }
 
-                            @if (Model.Option != Model.OriginalApprenticeship.Option)
+                            @if (Model.Option != Model.OriginalApprenticeship.Option || (!string.IsNullOrWhiteSpace(Model.CourseCode) && Model.Option == string.Empty))
                             {
                                 <tr>
                                     <th scope="row" class="govuk-table__header">Option</th>
@@ -158,7 +142,7 @@
                                         }
                                     </td>
                                     <td class="govuk-table__cell">
-                                        @if (Model.Option == string.Empty)
+                                        @if (Model.Option == "N/A")
                                         {
                                             <span> To be confirmed </span>
                                         }
@@ -171,6 +155,23 @@
                                             <span> @Model.Option</span>
                                         }
                                     </td>
+                                </tr>
+                            }
+
+                            @if (Model.StartDate.HasValue)
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Planned training start date</th>
+                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.StartDate.Value.ToGdsFormat() </td>
+                                    <td class="govuk-table__cell">@Model.StartDate.Value.ToGdsFormat()</td>
+                                </tr>
+                            }
+                            @if (Model.EndDate.HasValue)
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Planned training end date</th>
+                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.EndDate.Value.ToGdsFormat() </td>
+                                    <td class="govuk-table__cell">@Model.EndDate.Value.ToGdsFormat()</td>
                                 </tr>
                             }
 
