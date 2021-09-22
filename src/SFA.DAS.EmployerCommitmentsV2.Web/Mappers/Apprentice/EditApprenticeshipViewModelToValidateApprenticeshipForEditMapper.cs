@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 EndDate = source.EndDate.Date,
                 TrainingCode = source.CourseCode,
                 Version = source.Version,
-                Option = source.Option
+                Option = source.Option == "N/A" ? string.Empty : source.Option
             };
             return Task.FromResult(result);
         }

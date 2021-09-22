@@ -123,12 +123,12 @@
                                 </tr>
                             }
 
-                            @if (Model.Option != Model.OriginalApprenticeship.Option || (!string.IsNullOrWhiteSpace(Model.CourseCode) && Model.Option == string.Empty))
+                            @if (Model.Option != Model.OriginalApprenticeship.Option || (!string.IsNullOrWhiteSpace(Model.CourseCode) && Model.Option == "N/A"))
                             {
                                 <tr>
                                     <th scope="row" class="govuk-table__header">Option</th>
                                     <td class="govuk-table__cell">
-                                        @if (Model.OriginalApprenticeship.Option == string.Empty)
+                                        @if (Model.OriginalApprenticeship.Option == "N/A")
                                         {
                                             <span> To be confirmed </span>
                                         }

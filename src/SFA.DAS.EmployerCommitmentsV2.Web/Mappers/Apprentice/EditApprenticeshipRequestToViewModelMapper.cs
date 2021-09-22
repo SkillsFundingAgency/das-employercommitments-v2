@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 ULN= apprenticeship.Uln,
                 CourseCode = apprenticeship.CourseCode,
                 Version = apprenticeship.Version,
-                Option = apprenticeship.Option,
+                Option = apprenticeship.Option == string.Empty ? "N/A" : apprenticeship.Option,
                 Cost = priceEpisodes.PriceEpisodes.GetPrice(),
                 EmployerReference = apprenticeship.EmployerReference,
                 Courses = courses,
