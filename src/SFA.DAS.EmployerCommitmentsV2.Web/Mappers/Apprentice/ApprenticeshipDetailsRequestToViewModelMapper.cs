@@ -106,7 +106,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     PendingDataLockRestart = dataLockCourseTriaged,
                     ConfirmationStatus = apprenticeship.ConfirmationStatus,
                     Email = apprenticeship.Email,
-                    HasNewerVersions = await HasNewerVersions(currentTrainingProgramme)
+                    HasNewerVersions = await HasNewerVersions(currentTrainingProgramme),
+                    Option = apprenticeship.Option,
+                    VersionOptions = currentTrainingProgramme.Options
                 };
 
                 return result;

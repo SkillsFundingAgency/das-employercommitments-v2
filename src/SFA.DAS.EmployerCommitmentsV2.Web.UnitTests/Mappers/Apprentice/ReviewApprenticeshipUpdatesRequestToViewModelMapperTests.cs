@@ -108,6 +108,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task Option_IsMapped()
+        {
+            var viewModel = await fixture.Map();
+
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.Option, viewModel.ApprenticeshipUpdates.Option);
+        }
+
+        [Test]
         public async Task Email_IsMapped()
         {
             var viewModel = await fixture.Map();

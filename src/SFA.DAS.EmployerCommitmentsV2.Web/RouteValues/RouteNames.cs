@@ -18,11 +18,13 @@
         public const string ConfirmDetailsAndSendRequest = "confirm-details-and-send-request";
         public const string SendRequestNewTrainingProvider = "send-request-new";
         public const string CancelChangeOfProviderRequest = "cancel-change-of-proivder-request";
+        public const string CancelInProgressChangeOfCircumstance = "cancel-in-progress-change-of-circumstance";
         public const string ChangeProviderRequestedConfirmation = "change-provider-requested";
         public const string HasTheApprenticeBeenMadeRedundant = "HasTheApprenticeBeenMadeRedundant";
         public const string ViewChanges = "view-changes";
         public const string WhenToApplyStopApprentice = "WhenToApplyStopApprentice";
         public const string ChangeVersion = "change-version";
+        public const string ChangeOption = "change-option";
         public const string EditApprenticeship = "edit-apprenticeship";
     }
 }

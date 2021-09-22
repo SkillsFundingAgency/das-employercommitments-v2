@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Types;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetPriceEpisodesResponse;
 using SFA.DAS.Encoding;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 {
@@ -159,6 +160,61 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             Assert.AreNotEqual(fixture.source.Version, fixture._apprenticeshipResponse.Version);
             Assert.AreEqual(fixture.source.Version, result.Version);
+        }
+
+        [Test]
+        public async Task WhenOptionIsChanged()
+        {
+            fixture.source.Option = "NewOption";
+
+            var result = await fixture.Map();
+
+            Assert.AreNotEqual(fixture.source.Option, fixture._apprenticeshipResponse.Option);
+            Assert.AreEqual(fixture.source.Option, result.Option);
+        }
+
+        [Test]
+        public async Task When_VersionHasOptions_Then_ReturnToChangeOptionsIsTrue()
+        {
+            fixture.source.HasOptions = true;
+
+            var result = await fixture.Map();
+
+            Assert.True(result.ReturnToChangeOption);
+        }
+
+        [Test]
+        public async Task When_VersionIsChangedDirectly_Then_ReturnToChangeVersionIsTrue()
+        {
+            fixture.source.Version = "NewVersion";
+
+            var result = await fixture.Map();
+
+            Assert.True(result.ReturnToChangeVersion);
+        }
+
+        [Test]
+        public async Task When_VersionIsChangedByEditCourse_Then_ReturnToChangeVersionAndOptionAreFalse()
+        {
+            fixture.source.Version = "NewVersion";
+            fixture.source.CourseCode = "NewCourseCode";
+
+            var result = await fixture.Map();
+
+            Assert.False(result.ReturnToChangeVersion);
+            Assert.False(result.ReturnToChangeOption);
+        }
+
+        [Test]
+        public async Task When_VersionIsChangedByEditStartDate_Then_ReturnToChangeVersionAndOptionAreFalse()
+        {
+            fixture.source.Version = "NewVersion";
+            fixture.source.StartDate = new MonthYearModel(DateTime.Now.ToString("MMyyyy"));
+
+            var result = await fixture.Map();
+
+            Assert.False(result.ReturnToChangeVersion);
+            Assert.False(result.ReturnToChangeOption);
         }
 
         [Test]

@@ -62,8 +62,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test]
-        public async Task Then_VerifyRedirectToConfirmEditApprenticeship()
+        public async Task And_VersionHasOptions_Then_VerifyRedirectToChangeOption()
         {
+            _editRequestViewModel.HasOptions = true;
+
+            var result = await _controller.ChangeVersion(_viewModel);
+
+            result.VerifyReturnsRedirectToActionResult().WithActionName("ChangeOption");
+        }
+
+        [Test]
+        public async Task And_VersionHasNoOptions_Then_VerifyRedirectToConfirmEditApprenticeship()
+        {
+            _editRequestViewModel.HasOptions = false;
+
             var result = await _controller.ChangeVersion(_viewModel);
 
             result.VerifyReturnsRedirectToActionResult().WithActionName("ConfirmEditApprenticeship");

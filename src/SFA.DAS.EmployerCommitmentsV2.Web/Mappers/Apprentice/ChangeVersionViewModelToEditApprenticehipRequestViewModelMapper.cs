@@ -2,6 +2,7 @@
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
@@ -43,7 +44,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 CourseCode = apprenticeship.CourseCode,
                 Version = source.SelectedVersion,
                 TrainingName = apprenticeship.CourseName != newStandardVersion.Name ? newStandardVersion.Name : null,
-                EmployerReference = apprenticeship.EmployerReference
+                EmployerReference = apprenticeship.EmployerReference,
+                HasOptions = newStandardVersion.Options.Any()
             };
 
             return editRequestViewModel;

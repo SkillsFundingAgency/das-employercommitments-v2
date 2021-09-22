@@ -110,6 +110,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             vm.OriginalApprenticeship.CourseCode = apprenticeship.CourseCode;
             vm.OriginalApprenticeship.CourseName = apprenticeship.CourseName;
 
+            vm.Option = source.Option == string.Empty ? "TBC" : source.Option;
+            vm.OriginalApprenticeship.Option = apprenticeship.Option == string.Empty ? "TBC" : apprenticeship.Option; 
+
+            if (source.HasOptions)
+            {
+                vm.ReturnToChangeOption = source.HasOptions;
+            }
+            else
+            {
+                vm.ReturnToChangeVersion = !string.IsNullOrEmpty(vm.Version) && string.IsNullOrEmpty(vm.CourseCode) && !vm.StartDate.HasValue;
+            }
+
             return vm;
         }
     }

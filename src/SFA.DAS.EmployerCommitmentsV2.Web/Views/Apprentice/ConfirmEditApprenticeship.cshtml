@@ -37,6 +37,7 @@
             @Html.HiddenFor(x => x.Cost)
             @Html.HiddenFor(x => x.CourseCode)
             @Html.HiddenFor(x => x.Version)
+            @Html.HiddenFor(x => x.Option)
             @Html.HiddenFor(x => x.EmployerReference)
             @Html.HiddenFor(x => x.ProviderName)
 
@@ -108,13 +109,61 @@
                                     <td class="govuk-table__cell">@Model.CourseName</td>
                                 </tr>
                             }
+
+                            @if (!string.IsNullOrWhiteSpace(Model.Version) || !string.IsNullOrWhiteSpace(Model.CourseCode))
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Version</th>
+                                    <td class="govuk-table__cell">
+                                        @(Model.OriginalApprenticeship.Version != null ? Model.OriginalApprenticeship.Version : "Not applicable" )
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        @(Model.Version != null ? Model.Version : "Not applicable" )
+                                    </td>
+                                </tr>
+                            }
+
+                            @if (Model.Option != Model.OriginalApprenticeship.Option || (!string.IsNullOrWhiteSpace(Model.CourseCode) && Model.Option == "TBC"))
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Option</th>
+                                    <td class="govuk-table__cell">
+                                        @if (Model.OriginalApprenticeship.Option == "TBC")
+                                        {
+                                            <span> To be confirmed </span>
+                                        }
+                                        else if (Model.OriginalApprenticeship.Option == null)
+                                        {
+                                            <span> Not applicable </span>
+                                        }
+                                        else
+                                        {
+                                            <span> @Model.OriginalApprenticeship.Option</span>
+                                        }
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        @if (Model.Option == "TBC")
+                                        {
+                                            <span> To be confirmed </span>
+                                        }
+                                        else if (Model.Option == null)
+                                        {
+                                            <span> Not applicable </span>
+                                        }
+                                        else
+                                        {
+                                            <span> @Model.Option</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+
                             @if (Model.StartDate.HasValue)
                             {
                                 <tr>
                                     <th scope="row" class="govuk-table__header">Planned training start date</th>
                                     <td class="govuk-table__cell">@Model.OriginalApprenticeship.StartDate.Value.ToGdsFormat() </td>
                                     <td class="govuk-table__cell">@Model.StartDate.Value.ToGdsFormat()</td>
-
                                 </tr>
                             }
                             @if (Model.EndDate.HasValue)
@@ -123,19 +172,6 @@
                                     <th scope="row" class="govuk-table__header">Planned training end date</th>
                                     <td class="govuk-table__cell">@Model.OriginalApprenticeship.EndDate.Value.ToGdsFormat() </td>
                                     <td class="govuk-table__cell">@Model.EndDate.Value.ToGdsFormat()</td>
-
-                                </tr>
-                            }
-                            @if (!string.IsNullOrWhiteSpace(Model.Version) || !string.IsNullOrWhiteSpace(Model.CourseCode))
-                            {
-                                <tr>
-                                    <th scope="row" class="govuk-table__header">Version</th>
-                                    <td class="govuk-table__cell">
-                                        @(Model.OriginalApprenticeship.Version != null ? Model.OriginalApprenticeship.Version : "Not applicable" )                                
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        @(Model.Version != null ? Model.Version : "Not applicable" ) 
-                                    </td>
                                 </tr>
                             }
 
@@ -145,7 +181,6 @@
                                     <th scope="row" class="govuk-table__header">Cost</th>
                                     <td class="govuk-table__cell">@Model.OriginalApprenticeship.Cost.FormatCost() </td>
                                     <td class="govuk-table__cell">@Model.Cost.FormatCost()</td>
-
                                 </tr>
                             }
 
@@ -155,7 +190,6 @@
                                     <th scope="row" class="govuk-table__header">Reference</th>
                                     <td class="govuk-table__cell">@Model.OriginalApprenticeship.EmployerReference</td>
                                     <td class="govuk-table__cell">@Model.EmployerReference</td>
-
                                 </tr>
                             }
                         </tbody>
@@ -195,8 +229,11 @@
 </div>
 
 @section back {
-
-    @if (!string.IsNullOrEmpty(Model.Version) && string.IsNullOrEmpty(Model.CourseCode) && !Model.StartDate.HasValue)
+    @if (Model.ReturnToChangeOption)
+    {
+        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ChangeOption)">Back</a>
+    }
+    else if (Model.ReturnToChangeVersion)
     {
         <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ChangeVersion)">Back</a>
     }
