@@ -18,10 +18,7 @@
         <p class="govuk-body">You must:</p>
         <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
             <li>know the names of your apprentices </li>
-            @if (Model.HasApprenticeEmail)
-            {
-                <li>know a unique email address for each of your apprentices</li>
-            }
+            <li>know a unique email address for each of your apprentices</li>
             <li>know your training provider's UK Provider Reference Number (UKPRN) - your training provider can tell you this</li>
             <li>make sure the organisation that's named on the contract you have with your training provider is in your account - <a href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)">view organisations in this account</a> </li>
             <li>make sure the PAYE scheme that each apprentice is paid through is in your account - <a href="@LinkGenerator.PayeSchemes(Model.AccountHashedId)">view PAYE schemes in this account</a></li>
