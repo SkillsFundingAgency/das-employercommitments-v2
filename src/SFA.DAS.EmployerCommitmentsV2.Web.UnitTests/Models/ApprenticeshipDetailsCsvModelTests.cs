@@ -101,7 +101,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
 
             ApprenticeshipDetailsCsvModel result = source;
 
-            result.ApprenticeConfirmation.Should().BeNull();
+            result.ApprenticeConfirmation.Should().Be("N/A");
         }
 
         [Test, AutoData]
