@@ -64,7 +64,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             {
                 AccountHashedId = source.AccountHashedId,
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
-                CurrentOption = apprenticeship.Option == string.Empty ? "N/A" : apprenticeship.Option,
+                CurrentOption = apprenticeship.Option == string.Empty ? "TBC" : apprenticeship.Option,
                 SelectedVersion = selectedVersion,
                 SelectedOption = selectedOption,
                 SelectedVersionName = standardVersion.TrainingProgramme.Name,

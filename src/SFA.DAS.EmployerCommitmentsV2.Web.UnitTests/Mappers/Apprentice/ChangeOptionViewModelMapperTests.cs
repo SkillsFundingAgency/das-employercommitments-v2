@@ -129,13 +129,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task And_ApprenticeshipOption_IsEmpty_Then_CurrentOptionIsMappedToNA()
+        public async Task And_ApprenticeshipOption_IsEmpty_Then_CurrentOptionIsMappedToTBC()
         {
             _getApprenticeshipResponse.Option = string.Empty;
 
             var viewModel = await _mapper.Map(_request);
 
-            viewModel.CurrentOption.Should().Be("N/A");
+            viewModel.CurrentOption.Should().Be("TBC");
         }
 
         [Test]

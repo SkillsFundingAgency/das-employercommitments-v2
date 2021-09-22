@@ -60,7 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 };
             }
 
-            editViewModel.Option = source.SelectedOption == "N/A" ? string.Empty : source.SelectedOption;
+            editViewModel.Option = source.SelectedOption == "TBC" ? string.Empty : source.SelectedOption;
 
             return editViewModel;
         }

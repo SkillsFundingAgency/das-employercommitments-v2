@@ -156,7 +156,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test]
         public async Task And_ChooseLaterIsSelected_Then_OptionIsEmptyString()
         {
-            _viewModel.SelectedOption = "N/A";
+            _viewModel.SelectedOption = "TBC";
 
             var result = await _mapper.Map(_viewModel);
 
