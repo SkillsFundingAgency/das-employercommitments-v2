@@ -49,7 +49,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public ConfirmationStatus? ConfirmationStatus { get; set; }
         public string Email { get; set; }
         public bool HasNewerVersions { get; set; }
-        public bool HasOptions => VersionOptions.Any();
+        // If It's completed or stopped and option is null, dont show options as it could predate standard versioning
+        // even if the version has options
+        public bool HasOptions => VersionOptions.Any() && !PreDatesStandardVersioning;
+        private bool IsCompletedOrStopped => ApprenticeshipStatus == ApprenticeshipStatus.Stopped || ApprenticeshipStatus == ApprenticeshipStatus.Completed;
+        private bool PreDatesStandardVersioning => IsCompletedOrStopped && Option == null;
 
         public ActionRequiredBanner GetActionRequiredBanners()
         {
