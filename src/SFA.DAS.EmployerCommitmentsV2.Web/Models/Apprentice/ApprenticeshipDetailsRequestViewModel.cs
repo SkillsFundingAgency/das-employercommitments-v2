@@ -51,7 +51,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool HasNewerVersions { get; set; }
         // If It's completed or stopped and option is null, dont show options as it could predate standard versioning
         // even if the version has options
-        public bool HasOptions => VersionOptions.Any() && !PreDatesStandardVersioning;
+        public bool ShowOptions => VersionOptions != null && VersionOptions.Any() && !PreDatesStandardVersioning;
+        public bool OnlySingleOption => VersionOptions != null && VersionOptions.Count() == 1;
         private bool IsCompletedOrStopped => ApprenticeshipStatus == ApprenticeshipStatus.Stopped || ApprenticeshipStatus == ApprenticeshipStatus.Completed;
         private bool PreDatesStandardVersioning => IsCompletedOrStopped && Option == null;
 
