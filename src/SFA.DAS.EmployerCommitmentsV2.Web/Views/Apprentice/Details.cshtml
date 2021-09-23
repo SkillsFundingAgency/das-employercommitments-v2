@@ -235,12 +235,12 @@
                         }
                     </tr>
                 }
-                @if (Model.TrainingType == ProgrammeType.Standard && Model.HasOptions)
+                @if (Model.TrainingType == ProgrammeType.Standard && Model.ShowOptions)
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header"> Option </th>
                         <td id="version" class="govuk-table__cell" colspan="2">@(!string.IsNullOrEmpty(Model.Option) ? Model.Option : "To be confirmed")</td>
-                        @if (Model.EnableEdit)
+                        @if (Model.EnableEdit && !Model.OnlySingleOption)
                         {
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeOption)">Change</a>
