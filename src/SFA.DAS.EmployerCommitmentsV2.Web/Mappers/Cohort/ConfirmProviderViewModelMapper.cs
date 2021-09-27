@@ -28,7 +28,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 CourseCode = source.CourseCode,
                 ProviderId = source.ProviderId,
                 ProviderName = providerResponse.Name,
-                TransferSenderId = source.TransferSenderId
+                TransferSenderId = source.TransferSenderId,
+                EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
             };
 
             return result;

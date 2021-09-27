@@ -27,9 +27,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 StartMonthYear = source.StartMonthYear,
                 ReservationId = source.ReservationId,
                 TransferSenderId = source.TransferSenderId,
-                Origin = source.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
+                Origin = DetermineOrigin(source),
+                EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
             };
 
+        }
+
+        private Origin DetermineOrigin(SelectProviderRequest source)
+        {
+            if (source.ReservationId.HasValue)
+            {
+                return Origin.Reservations;
+            }
+
+            if(!string.IsNullOrWhiteSpace(source.EncodedPledgeApplicationId))
+            {
+                return Origin.LevyTransferMatching;
+            }
+
+            return Origin.Apprentices;
         }
     }
 }

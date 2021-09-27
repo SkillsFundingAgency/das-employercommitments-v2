@@ -224,7 +224,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 model.CourseCode,
                 model.ProviderId,
                 model.TransferSenderId,
-                Origin = model.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
+                model.EncodedPledgeApplicationId,
+                Origin = DetermineOrigin(model)
             };
 
             switch (model.WhoIsAddingApprentices)
@@ -237,6 +238,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 default:
                     return RedirectToAction("Error", "Error");
             }
+        }
+
+        private Origin DetermineOrigin(AssignViewModel source)
+        {
+            if (source.ReservationId.HasValue)
+            {
+                return Origin.Reservations;
+            }
+
+            return !string.IsNullOrWhiteSpace(source.EncodedPledgeApplicationId) ? Origin.LevyTransferMatching : Origin.Apprentices;
         }
 
         [HttpGet]
@@ -253,7 +264,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var request = await _modelMapper.Map<CreateCohortRequest>(model);
             var newCohort = await _commitmentsApiClient.CreateCohort(request);
-
             return RedirectToAction("Details", new { model.AccountHashedId, newCohort.CohortReference });
         }
 
@@ -358,6 +368,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("legalEntity/create")]
+        [Route("add/legal-entity")]
         public async Task<IActionResult> SelectLegalEntity(SelectLegalEntityRequest request)
         {
             var response = await _modelMapper.Map<SelectLegalEntityViewModel>(request);
@@ -379,7 +390,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     AccountHashedId = request.AccountHashedId,
                     TransferSenderId = request.transferConnectionCode,
                     AccountLegalEntityId = autoSelectLegalEntity.Id,
-                    AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId
+                    AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId,
+                    EncodedPledgeApplicationId = request.EncodedPledgeApplicationId
                 });
             }
             
@@ -397,6 +409,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpPost]
         [Route("legalEntity/create")]
+        [Route("add/legal-entity")]
         public async Task<ActionResult> SetLegalEntity(SelectLegalEntityViewModel selectedLegalEntity)
         {
             var response = await _modelMapper.Map<LegalEntitySignedAgreementViewModel>(selectedLegalEntity);
@@ -407,7 +420,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 {
                     AccountHashedId = selectedLegalEntity.AccountHashedId,
                     TransferSenderId = selectedLegalEntity.TransferConnectionCode,                    
-                    AccountLegalEntityHashedId = response.AccountLegalEntityPublicHashedId
+                    AccountLegalEntityHashedId = response.AccountLegalEntityPublicHashedId,
+                    EncodedPledgeApplicationId = selectedLegalEntity.EncodedPledgeApplicationId
                 });               
             }
 
@@ -417,7 +431,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 LegalEntityId = selectedLegalEntity.LegalEntityId,
                 CohortRef = selectedLegalEntity.CohortRef,
                 LegalEntityName = response.LegalEntityName,
-                AccountLegalEntityPublicHashedId = response.AccountLegalEntityPublicHashedId
+                AccountLegalEntityPublicHashedId = response.AccountLegalEntityPublicHashedId,
+                EncodedPledgeApplicationId = selectedLegalEntity.EncodedPledgeApplicationId
             });
         }
 

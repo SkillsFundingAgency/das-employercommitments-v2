@@ -28,7 +28,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 CourseCode = source.CourseCode,
                 ReservationId = source.ReservationId,
                 ProviderName = provider.Name,
-                TransferSenderId = source.TransferSenderId
+                TransferSenderId = source.TransferSenderId,
+                EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
             };
         }
     }

@@ -17,7 +17,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 ProviderId = long.Parse(source.ProviderId),
                 ReservationId = source.ReservationId,
                 StartMonthYear = source.StartMonthYear,
-                TransferSenderId = source.TransferSenderId
+                TransferSenderId = source.TransferSenderId,
+                EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
             });
         }
     }

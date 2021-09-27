@@ -31,6 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 viewModel.CourseCode,
                 viewModel.ProviderId,
                 viewModel.TransferSenderId,
+                viewModel.EncodedPledgeApplicationId,
                 Origin = viewModel.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
             });
             viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Employer;
@@ -57,6 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 viewModel.CourseCode,
                 viewModel.ProviderId,
                 viewModel.TransferSenderId,
+                viewModel.EncodedPledgeApplicationId,
                 Origin = viewModel.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
             });
             viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Provider;

@@ -10,6 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string TransferConnectionCode { get; set; }        
         public long LegalEntityId { get; set; }
         public string CohortRef { get; set; }
-        public IEnumerable<LegalEntity> LegalEntities { get; set; }        
+        public IEnumerable<LegalEntity> LegalEntities { get; set; }
+        public string EncodedPledgeApplicationId { get; set; }
     }
 }

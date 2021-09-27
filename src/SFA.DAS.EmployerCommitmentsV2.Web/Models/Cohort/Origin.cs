@@ -3,6 +3,7 @@
     public enum Origin : byte
     {
         Apprentices = 0,
-        Reservations = 1
+        Reservations = 1,
+        LevyTransferMatching = 2
     }
 }

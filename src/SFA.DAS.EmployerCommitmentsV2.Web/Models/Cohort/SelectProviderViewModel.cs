@@ -15,5 +15,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string ProviderId { get; set; }
         public string TransferSenderId { get; set; }
         public Origin Origin { get; set; }
+        public string EncodedPledgeApplicationId { get; set; }
     }
 }

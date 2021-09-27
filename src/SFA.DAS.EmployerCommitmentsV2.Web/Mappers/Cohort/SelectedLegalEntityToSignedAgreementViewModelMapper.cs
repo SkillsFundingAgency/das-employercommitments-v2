@@ -39,7 +39,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 CohortRef = source.CohortRef,
                 HasSignedMinimumRequiredAgreementVersion = hasSignedMinimumRequiredAgreementVersion,
                 LegalEntityName = legalEntity.Name ?? string.Empty,
-                AccountLegalEntityPublicHashedId = legalEntity.AccountLegalEntityPublicHashedId
+                AccountLegalEntityPublicHashedId = legalEntity.AccountLegalEntityPublicHashedId,
+                EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
             };
         }
     }

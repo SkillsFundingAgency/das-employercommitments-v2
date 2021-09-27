@@ -14,7 +14,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 CourseCode = source.CourseCode,
                 ReservationId = source.ReservationId,
-                StartMonthYear = source.StartMonthYear
+                StartMonthYear = source.StartMonthYear,
+                EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
             });
         }
     }
