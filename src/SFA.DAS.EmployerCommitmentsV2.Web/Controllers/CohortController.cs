@@ -211,7 +211,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             if (!model.ReservationId.HasValue && model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
             {
                 var url = _linkGenerator.ReservationsLink(
-                    $"accounts/{model.AccountHashedId}/reservations/{model.AccountLegalEntityHashedId}/select?providerId={model.ProviderId}&transferSenderId={model.TransferSenderId}");
+                    $"accounts/{model.AccountHashedId}/reservations/{model.AccountLegalEntityHashedId}/select?providerId={model.ProviderId}&transferSenderId={model.TransferSenderId}&encodedPledgeApplicationId={model.EncodedPledgeApplicationId}");
                 return Redirect(url);
             }
 
