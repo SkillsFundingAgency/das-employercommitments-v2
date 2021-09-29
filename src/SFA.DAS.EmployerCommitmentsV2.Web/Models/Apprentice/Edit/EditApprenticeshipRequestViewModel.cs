@@ -58,6 +58,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         public string CourseCode { get; set; }
 
+        public string Version { get; set; }
+        public string Option { get; set; }
+
         public IEnumerable<TrainingProgramme> Courses { get; set; }
 
         public MonthYearModel StartDate { get; set; }
@@ -80,5 +83,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         public bool IsUpdateLockedForStartDateAndCourse { get; set; }
         public bool IsEndDateLockedForUpdate { get; internal set; }
+
+        public bool ShowApprenticeEmail { get; set; }
+        public bool HasOptions { get; set; }
     }
 }

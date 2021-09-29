@@ -3,6 +3,7 @@
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
 
@@ -47,7 +48,7 @@
             </details>
         }
 
-    <table id="app-status" class="govuk-table govuk-!-margin-bottom-8">
+        <table id="app-status" class="govuk-table govuk-!-margin-bottom-8">
             <tbody>
                 <tr>
                     <th scope="row" class="govuk-table__header das-table-cell-width-45">Status</th>
@@ -174,7 +175,7 @@
             <div class="govuk-grid-column-one-third das-!-text-align-right--from-tablet">
                 @if (Model.EnableEdit)
                 {
-                <a id="edit-apprentice-link" href="@Url.Action("EditApprenticeship", new { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link govuk-body">Edit</a>
+                    <a id="edit-apprentice-link" href="@Url.Action("EditApprenticeship", new { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link govuk-body">Edit</a>
                 }
             </div>
         </div>
@@ -215,7 +216,42 @@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header das-table-cell-width-45">Apprenticeship training course </th>
                     <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.TrainingName </td>
+                    <td class="govuk-table__cell"></td>
                 </tr>
+                @if (!string.IsNullOrEmpty(Model.Version))
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header"> Version </th>
+                        <td id="version" class="govuk-table__cell" colspan="2">@Model.Version </td>
+                        @if (Model.EnableEdit && Model.HasNewerVersions)
+                        {
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion)">Change</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="govuk-table__cell"></td>
+                        }
+                    </tr>
+                }
+                @if (Model.TrainingType == ProgrammeType.Standard && Model.ShowOptions)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header"> Option </th>
+                        <td id="version" class="govuk-table__cell" colspan="2">@(!string.IsNullOrEmpty(Model.Option) ? Model.Option : "To be confirmed")</td>
+                        @if (Model.EnableEdit && !Model.OnlySingleOption)
+                        {
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeOption)">Change</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="govuk-table__cell"></td>
+                        }
+                    </tr>
+                }
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Planned training start date</th>
                     <td id="start-date" class="govuk-table__cell" colspan="2">
@@ -224,35 +260,43 @@
                             @Model.StartDate.Value.ToGdsFormatLongMonthWithoutDay()
                         }
                     </td>
+                    <td class="govuk-table__cell"></td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Planned training finish date</th>
-                    <td id="end-date" class="govuk-table__cell">
+                    <td id="end-date" class="govuk-table__cell" colspan="2">
                         @if (Model.EndDate.HasValue)
                         {
                             @Model.EndDate.Value.ToGdsFormatLongMonthWithoutDay()
                         }
                     </td>
-                    <td class="govuk-table__cell">
-                        @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
-                        {
-                            <a id="edit-end-date-link" class="govuk-link" href="@Url.Action("EditEndDate", new  EditEndDateRequest{ AccountHashedId =Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit</a>
-                        }
-                    </td>
+                    @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
+                    {
+                        <td class="govuk-table__cell">
+                            <a id="edit-end-date-link" class="govuk-link" href="@Url.Action("EditEndDate", new EditEndDateRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit</a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="govuk-table__cell"></td>
+                    }
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Total agreed apprenticeship price</th>
                     <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost() excluding VAT</td>
+                    <td class="govuk-table__cell"></td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Reference </th>
                     <td id="employer-reference" class="govuk-table__cell" colspan="2">@Model.EmployerReference</td>
+                    <td class="govuk-table__cell"></td>
                 </tr>
                 @if (Model.TrainingType == ProgrammeType.Standard)
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">End-point assessor</th>
                         <td id="end-point-assessor" class="govuk-table__cell" colspan="2">@(Model.EndpointAssessorName ?? "The end-point assessor has not been declared")</td>
+                        <td class="govuk-table__cell"></td>
                     </tr>
                 }
             </tbody>

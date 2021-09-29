@@ -93,14 +93,34 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             vm.OriginalApprenticeship.EndMonth = apprenticeship.EndDate.Month;
             vm.OriginalApprenticeship.EndYear = apprenticeship.EndDate.Year;
 
+            if (source.Version != apprenticeship.Version || source.CourseCode != apprenticeship.CourseCode)
+            {
+                vm.Version = source.Version;
+            }
+            vm.OriginalApprenticeship.Version = apprenticeship.Version;
+
             if (source.CourseCode != apprenticeship.CourseCode)
             {
-                var courseDetails = await _commitmentApi.GetTrainingProgramme(source.CourseCode);
+                var courseDetails = !string.IsNullOrEmpty(source.Version)
+                       ? await _commitmentApi.GetTrainingProgrammeVersionByCourseCodeAndVersion(source.CourseCode, source.Version)
+                       : await _commitmentApi.GetTrainingProgramme(source.CourseCode);
                 vm.CourseCode = source.CourseCode;
                 vm.CourseName = courseDetails?.TrainingProgramme.Name;
             }
             vm.OriginalApprenticeship.CourseCode = apprenticeship.CourseCode;
             vm.OriginalApprenticeship.CourseName = apprenticeship.CourseName;
+
+            vm.Option = source.Option == string.Empty ? "TBC" : source.Option;
+            vm.OriginalApprenticeship.Option = apprenticeship.Option == string.Empty ? "TBC" : apprenticeship.Option; 
+
+            if (source.HasOptions)
+            {
+                vm.ReturnToChangeOption = source.HasOptions;
+            }
+            else
+            {
+                vm.ReturnToChangeVersion = !string.IsNullOrEmpty(vm.Version) && string.IsNullOrEmpty(vm.CourseCode) && !vm.StartDate.HasValue;
+            }
 
             return vm;
         }

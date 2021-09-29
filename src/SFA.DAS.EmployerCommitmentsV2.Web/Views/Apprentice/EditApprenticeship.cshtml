@@ -20,6 +20,8 @@
 
             @Html.HiddenFor(x => x.AccountHashedId)
             @Html.HiddenFor(x => x.HashedApprenticeshipId)
+            @Html.HiddenFor(x => x.Version)
+            @Html.HiddenFor(x => x.Option)
 
             @if (Model.IsContinuation)
             {
@@ -177,7 +179,8 @@
                             Planned training start date
                         </legend>
                         <span id="start-date-hint" class="govuk-hint">
-                            For example, 09 2017
+                            For example, 09 2017 <br />
+                            The standard version will be based on the start date provided
                         </span>
                         @Html.ValidationMessageFor(m => m.StartDate, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.StartDate) })
                         <div class="govuk-date-input">
