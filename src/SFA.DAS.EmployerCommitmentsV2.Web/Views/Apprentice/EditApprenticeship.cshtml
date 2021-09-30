@@ -58,7 +58,7 @@
             }
             else
             {
-                @if (!string.IsNullOrEmpty(Model.Email))
+                @if (!string.IsNullOrEmpty(Model.Email) || Model.EmailShouldBePresent)
                 {
                     <div class="govuk-inset-text">
                         <p>Please note</p>
@@ -78,7 +78,7 @@
                     @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
                     <input asp-for="LastName" class="govuk-input govuk-!-width-two-thirds" id="lastName" />
                 </div>
-                @if (!string.IsNullOrEmpty(Model.Email))
+                @if (!string.IsNullOrEmpty(Model.Email) || Model.EmailShouldBePresent)
                 {
                     @if (!Model.EmailAddressConfirmedByApprentice)
                     {
@@ -97,15 +97,6 @@
                             @Html.Hidden("Email", Model.Email)
                         </dl>
                     }
-                }
-                else if (!string.IsNullOrEmpty(Model.Email))
-                {
-                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
-                    <dl class="das-definition-list">
-                        <dt class="das-definition-list__title" asp-for="Email">Email address</dt>
-                        <dd class="das-definition-list__definition" id="Email">@Model.Email</dd>
-                        @Html.Hidden("Email", Model.Email)
-                    </dl>
                 }
 
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />

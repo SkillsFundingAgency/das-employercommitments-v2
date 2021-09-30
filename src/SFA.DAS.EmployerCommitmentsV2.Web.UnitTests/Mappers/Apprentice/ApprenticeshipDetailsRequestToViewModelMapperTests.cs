@@ -672,6 +672,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         [TestCase(true)]
         [TestCase(false)]
+        public async Task CheckEmailShouldBePresentIsMappedCorrectly(bool expected)
+        {
+            _apprenticeshipResponse.EmailShouldBePresent = expected;
+
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(expected, result.EmailShouldBePresent);
+        }
+
+
+        [TestCase(true)]
+        [TestCase(false)]
         public async Task HasNewerVersionsIsMappedCorrectly(bool hasNewerVersions)
         {
             if (hasNewerVersions == false)
