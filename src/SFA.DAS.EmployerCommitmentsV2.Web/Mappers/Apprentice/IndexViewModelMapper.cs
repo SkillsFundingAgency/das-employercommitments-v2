@@ -41,7 +41,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 CourseName = source.SelectedCourse,
                 Status = source.SelectedStatus,
                 EndDate = source.SelectedEndDate,
-                Alert = source.SelectedAlert
+                Alert = source.SelectedAlert,
+                ApprenticeConfirmationStatus = source.SelectedApprenticeConfirmation
             });
 
             var statusFilters = new[]
@@ -73,6 +74,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 SelectedCourse = source.SelectedCourse,
                 SelectedStatus = source.SelectedStatus,
                 SelectedAlert = source.SelectedAlert,
+                SelectedApprenticeConfirmation = source.SelectedApprenticeConfirmation,
                 SelectedEndDate = source.SelectedEndDate,
                 StatusFilters = statusFilters,
                 AlertFilters = alertFilters

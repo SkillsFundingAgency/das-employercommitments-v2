@@ -2,6 +2,7 @@
 using SFA.DAS.CommitmentsV2.Types;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
@@ -19,6 +20,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public DateTime? CompletionDate { get; set; }
         public ProgrammeType? TrainingType { get; set; }
         public string TrainingName { get; set; }
+        public string Version { get; set; }
+        public string Option { get; set; }
+        public IEnumerable<string> VersionOptions { get; set; }
         public decimal? Cost { get; set; }
         public ApprenticeshipStatus ApprenticeshipStatus { get; set; }
         public string ProviderName { get; set; }
@@ -45,6 +49,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public ConfirmationStatus? ConfirmationStatus { get; set; }
         public string Email { get; set; }
         public bool EmailShouldBePresent { get; set; }
+        public bool HasNewerVersions { get; set; }
+        // If It's completed or stopped and option is null, dont show options as it could predate standard versioning
+        // even if the version has options
+        public bool ShowOptions => VersionOptions != null && VersionOptions.Any() && !PreDatesStandardVersioning;
+        public bool OnlySingleOption => VersionOptions != null && VersionOptions.Count() == 1;
+        private bool IsCompletedOrStopped => ApprenticeshipStatus == ApprenticeshipStatus.Stopped || ApprenticeshipStatus == ApprenticeshipStatus.Completed;
+        private bool PreDatesStandardVersioning => IsCompletedOrStopped && Option == null;
 
         public ActionRequiredBanner GetActionRequiredBanners()
         {

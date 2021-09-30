@@ -201,6 +201,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task Version_IsMapped()
+        {
+            //Act
+            await _fixture.Map();
+
+            //Assert
+            _fixture.VerifyCourseCodeIsMapped();
+        }
+
+        [Test]
         public async Task Cost_IsMapped()
         {
             //Act
@@ -464,6 +474,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(ApprenticeshipResponse.CourseCode, _viewModel.CourseCode);
         }
 
+        internal void VerifyVersionIsMapped()
+        {
+            Assert.AreEqual(ApprenticeshipResponse.Version, _viewModel.Version);
+        }
+
         internal void VerifyCoursesAreMapped()
         {
             Assert.AreEqual(_courses, _viewModel.Courses);
@@ -533,6 +548,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .Create();
             ApprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>()
                 .With(x => x.CourseCode, "ABC")
+                .With(x => x.Version, "1.0")
                 .With(x => x.DateOfBirth, autoFixture.Create<DateTime>())
                 .Create();
             _priceEpisodesResponse = autoFixture.Build<GetPriceEpisodesResponse>()

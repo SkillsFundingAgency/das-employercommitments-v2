@@ -5,6 +5,7 @@ using CsvHelper.Configuration.Attributes;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
@@ -32,6 +33,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string TotalAgreedPrice { get; private set; }
         [Name("Your reference")]
         public string EmployerRef { get; private set; }
+        [Name("Apprentice confirmation")]
+        public string ApprenticeConfirmation { get; private set; }
         [Name("Status")]
         public string Status { get ; private set ; }
         [Name("Alerts")]
@@ -52,6 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                 Uln = model.Uln,
                 DateOfBirth = model.DateOfBirth.ToGdsFormat(),
                 TotalAgreedPrice = $"{model.TotalAgreedPrice.Value as object:n0}",
+                ApprenticeConfirmation = model.ConfirmationStatus.ToDisplayString(),
                 Status = model.ApprenticeshipStatus.GetDescription(),
                 Alerts = GenerateAlerts(model.Alerts)
             };

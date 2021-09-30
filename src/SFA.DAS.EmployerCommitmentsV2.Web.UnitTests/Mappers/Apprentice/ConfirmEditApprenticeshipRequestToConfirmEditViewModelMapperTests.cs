@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Types;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetPriceEpisodesResponse;
 using SFA.DAS.Encoding;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 {
@@ -140,6 +141,83 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task WhenVersionIsChanged()
+        {
+            fixture.source.Version = "1.1";
+
+            var result = await fixture.Map();
+
+            Assert.AreNotEqual(fixture.source.Version, fixture._apprenticeshipResponse.Version);
+            Assert.AreEqual(fixture.source.Version, result.Version);
+        }
+
+        [Test]
+        public async Task WhenCourseCodeIsChangeButVersionIsNotChanged_ThenVersionIsMapped()
+        {
+            fixture.source.CourseCode = "123";
+
+            var result = await fixture.Map();
+
+            Assert.AreNotEqual(fixture.source.Version, fixture._apprenticeshipResponse.Version);
+            Assert.AreEqual(fixture.source.Version, result.Version);
+        }
+
+        [Test]
+        public async Task WhenOptionIsChanged()
+        {
+            fixture.source.Option = "NewOption";
+
+            var result = await fixture.Map();
+
+            Assert.AreNotEqual(fixture.source.Option, fixture._apprenticeshipResponse.Option);
+            Assert.AreEqual(fixture.source.Option, result.Option);
+        }
+
+        [Test]
+        public async Task When_VersionHasOptions_Then_ReturnToChangeOptionsIsTrue()
+        {
+            fixture.source.HasOptions = true;
+
+            var result = await fixture.Map();
+
+            Assert.True(result.ReturnToChangeOption);
+        }
+
+        [Test]
+        public async Task When_VersionIsChangedDirectly_Then_ReturnToChangeVersionIsTrue()
+        {
+            fixture.source.Version = "NewVersion";
+
+            var result = await fixture.Map();
+
+            Assert.True(result.ReturnToChangeVersion);
+        }
+
+        [Test]
+        public async Task When_VersionIsChangedByEditCourse_Then_ReturnToChangeVersionAndOptionAreFalse()
+        {
+            fixture.source.Version = "NewVersion";
+            fixture.source.CourseCode = "NewCourseCode";
+
+            var result = await fixture.Map();
+
+            Assert.False(result.ReturnToChangeVersion);
+            Assert.False(result.ReturnToChangeOption);
+        }
+
+        [Test]
+        public async Task When_VersionIsChangedByEditStartDate_Then_ReturnToChangeVersionAndOptionAreFalse()
+        {
+            fixture.source.Version = "NewVersion";
+            fixture.source.StartDate = new MonthYearModel(DateTime.Now.ToString("MMyyyy"));
+
+            var result = await fixture.Map();
+
+            Assert.False(result.ReturnToChangeVersion);
+            Assert.False(result.ReturnToChangeOption);
+        }
+
+        [Test]
         public async Task WhenMultipleFieldsAreChanged_TheyAreChanged()
         {
             fixture.source.CourseCode = "NewCourse";
@@ -184,6 +262,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _apprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>()
                 .With(x => x.CourseCode, "ABC")
+                .With(x => x.Version, "1.0")
                 .With(x => x.StartDate, new DateTime(2020, 1, 1))
                 .With(x => x.EndDate, new DateTime(2021, 1, 1))
                 .With(x => x.DateOfBirth, new DateTime(1990,1,1))
@@ -217,7 +296,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .ReturnsAsync(_apprenticeshipResponse);
             _mockCommitmentsApiClient.Setup(c => c.GetPriceEpisodes(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_priceEpisodeResponse);
-            _mockCommitmentsApiClient.Setup(t => t.GetTrainingProgramme(_apprenticeshipResponse.CourseCode, It.IsAny<CancellationToken>()))
+            _mockCommitmentsApiClient.Setup(t => t.GetTrainingProgrammeVersionByCourseCodeAndVersion(source.CourseCode, source.Version, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new GetTrainingProgrammeResponse
                 {
                     TrainingProgramme = _standardSummary

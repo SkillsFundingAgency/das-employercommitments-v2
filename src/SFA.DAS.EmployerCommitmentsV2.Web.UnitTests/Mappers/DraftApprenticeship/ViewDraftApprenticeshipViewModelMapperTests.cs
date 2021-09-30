@@ -128,5 +128,43 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         {
             Assert.AreEqual(_course.Name, _result.TrainingCourse);
         }
+
+        [Test]
+        public void ThenVersionIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeship.TrainingCourseVersion, _result.Version);
+        }
+
+        [Test]
+        public void ThenHasStandardOptionsIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeship.HasStandardOptions, _result.HasStandardOptions);
+        }
+
+        [Test]
+        public async Task And_TrainingCourseOptionIsNull_Then_CourseOptionIsMappedToEmptyString()
+        {
+            _draftApprenticeship.TrainingCourseOption = null;
+
+            _result = await _mapper.Map(_request) as ViewDraftApprenticeshipViewModel;
+
+            Assert.AreEqual(string.Empty, _result.CourseOption);
+        }
+
+        [Test]
+        public async Task And_TrainingCourseOptionIsEmptyString_Then_CourseOptionIsMappedToToBeConfirmed()
+        {
+            _draftApprenticeship.TrainingCourseOption = "";
+
+            _result = await _mapper.Map(_request) as ViewDraftApprenticeshipViewModel;
+
+            Assert.AreEqual("To be confirmed", _result.CourseOption);
+        }
+
+        [Test]
+        public void Then_CourseOptionIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeship.TrainingCourseOption, _result.CourseOption);
+        }
     }
 }

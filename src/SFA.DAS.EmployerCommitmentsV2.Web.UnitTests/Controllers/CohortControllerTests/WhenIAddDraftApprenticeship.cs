@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +10,11 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
@@ -44,11 +47,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         }
 
         [Test]
-        public async Task PostAddDraftApprenticeship_WithValidModel_WithEnhancedApproval_ShouldRedirectToCohortDetailsV2()
+        public async Task PostAddDraftApprenticeship_WithValidModel_WithEnhancedApproval_WithoutCourseSelected_ShouldRedirectToCohortDetailsV2()
         {
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
                 .ForPostRequest()
-                .WithCreatedCohort("ABC123", 123);
+                .SetupEncodingService()
+                .WithCreatedCohort("ABC123", 123)
+                .WithDraftApprenticeship(123, withCourseSelected : false);
 
             var result = await fixtures.CheckPost();
 
@@ -56,11 +61,27 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         }
 
         [Test]
+        public async Task PostAddDraftApprenticeship_WithValidModel_WithEnhancedApproval_WithCourseSelected_ShouldRedirectToSelectOptions()
+        {
+            var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
+                .ForPostRequest()
+                .SetupEncodingService()
+                .WithCreatedCohort("ABC123", 123)
+                .WithDraftApprenticeship(123, withCourseSelected: true);
+
+            var result = await fixtures.CheckPost();
+
+            result.VerifyReturnsRedirectToActionResult().WithActionName("SelectOption");
+        }
+
+        [Test]
         public async Task PostAddDraftApprenticeship_WithValidModel_ShouldSaveCohort()
         {
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
                 .ForPostRequest()
+                .SetupEncodingService()
                 .WithCreatedCohort("ABC123", 123)
+                .WithDraftApprenticeship(123)
                 .WithReviewCohortLink("someurl")
                 .WithTrainingProvider();
 
@@ -80,6 +101,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             ModelMapperMock.Setup(x => x.Map<ApprenticeViewModel>(It.IsAny<ApprenticeRequest>()))
                 .ReturnsAsync(new ApprenticeViewModel());
             AuthorizationServiceMock = new Mock<IAuthorizationService>();
+            EncodingServiceMock = new Mock<IEncodingService>();
         }
 
         public Mock<ILinkGenerator> LinkGeneratorMock { get; }
@@ -90,7 +112,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
         public Mock<IAuthorizationService> AuthorizationServiceMock { get; set; }
         public IAuthorizationService AuthorizationService => AuthorizationServiceMock.Object;
-
+        public Mock<IEncodingService> EncodingServiceMock { get; set; }
+        public IEncodingService EncodingService => EncodingServiceMock.Object;
         public ApprenticeRequest GetRequest { get; private set; }
         public ApprenticeViewModel PostRequest { get; private set; }
         
@@ -137,6 +160,34 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             return this;
         }
 
+        public CreateCohortWithDraftApprenticeshipControllerTestFixtures SetupEncodingService()
+        {
+            EncodingServiceMock
+                .Setup(e => e.Encode(It.IsAny<long>(), EncodingType.ApprenticeshipId))
+                .Returns("APP123");
+
+            return this;
+        }
+
+        public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithDraftApprenticeship(long cohortId, bool withCourseSelected = false)
+        {
+            CommitmentsApiClientMock
+                .Setup(c => c.GetDraftApprenticeships(cohortId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetDraftApprenticeshipsResponse
+                {
+                    DraftApprenticeships = new List<DraftApprenticeshipDto>
+                    {
+                        new DraftApprenticeshipDto
+                        {
+                            Id = 123456,
+                            CourseCode = withCourseSelected ? "ST0001" : null
+                        }
+                    }
+                });
+
+            return this;
+        }
+
         public CohortController CreateController()
         {
             var controller = new CohortController(
@@ -144,7 +195,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 Mock.Of<ILogger<CohortController>>(),
                 LinkGenerator,
                 ModelMapper,
-                AuthorizationService
+                AuthorizationService,
+                Mock.Of<IEncodingService>()
             );
             return controller;
         }
