@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Html;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using System.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
@@ -15,6 +16,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public ApprenticeshipStatus? SelectedStatus { get; set; }
         public DateTime? SelectedEndDate { get; set; }
         public Alerts? SelectedAlert { get; set; }
+        public ConfirmationStatus? SelectedApprenticeConfirmation { get; set; }
+
         public string SortField { get; set; }
         public bool ReverseSort { get; set; }
 
@@ -23,6 +26,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public IEnumerable<ApprenticeshipStatus> StatusFilters { get; set; } = new List<ApprenticeshipStatus>();
         public IEnumerable<DateTime> EndDateFilters { get; set; } = new List<DateTime>();
         public IEnumerable<Alerts> AlertFilters { get; set; } = new List<Alerts>();
+        public IEnumerable<ConfirmationStatus> ApprenticeConfirmationFilters =>
+                Enum.GetValues(typeof(ConfirmationStatus)).Cast<ConfirmationStatus>().ToList();
 
         private const int PageSize = Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage;
         public int PagedRecordsFrom => TotalNumberOfApprenticeshipsFound == 0 ? 0 : (PageNumber - 1) * PageSize + 1;
@@ -40,7 +45,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                                               || !string.IsNullOrWhiteSpace(SelectedCourse)
                                               || SelectedStatus.HasValue
                                               || SelectedEndDate.HasValue
-                                              || SelectedAlert.HasValue;
+                                              || SelectedAlert.HasValue
+                                              || SelectedApprenticeConfirmation.HasValue;
 
         public HtmlString FiltersUsedMessage => this.GetFiltersUsedMessage();
 
@@ -137,6 +143,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
             if (SelectedAlert.HasValue)
             {
                 routeData.Add(nameof(SelectedAlert), SelectedAlert.Value.ToString());
+            }
+
+            if (SelectedApprenticeConfirmation.HasValue)
+            {
+                routeData.Add(nameof(SelectedApprenticeConfirmation), SelectedApprenticeConfirmation.Value.ToString());
             }
 
             return routeData;

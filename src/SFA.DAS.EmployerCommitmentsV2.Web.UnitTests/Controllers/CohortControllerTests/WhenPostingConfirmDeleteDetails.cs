@@ -13,6 +13,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
@@ -69,7 +70,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                     Mock.Of<ILogger<CohortController>>(),
                     LinkGenerator.Object,
                     Mock.Of<IModelMapper>(),
-                    Mock.Of<IAuthorizationService>());
+                    Mock.Of<IAuthorizationService>(),
+                    Mock.Of<IEncodingService>());
             }
 
             public WhenPostingConfirmDeleteDetailsTestFixture SetConfirmDelete(bool confirmDeletion)
