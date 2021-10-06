@@ -4,8 +4,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class
-        SelectProviderViewModelFromConfirmProviderMapper : IMapper<ConfirmProviderViewModel, SelectProviderViewModel>
+    public class SelectProviderViewModelFromConfirmProviderMapper : IMapper<ConfirmProviderViewModel, SelectProviderViewModel>
     {
         public Task<SelectProviderViewModel> Map(ConfirmProviderViewModel source)
         {
