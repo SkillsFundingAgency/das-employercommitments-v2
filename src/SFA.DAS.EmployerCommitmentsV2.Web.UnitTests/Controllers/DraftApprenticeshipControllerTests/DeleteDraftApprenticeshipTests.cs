@@ -14,7 +14,7 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.Encoding;
 using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
@@ -169,7 +169,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             Sut = new DraftApprenticeshipController(
                 ModelMapperMock.Object,
                 CommitmentApiClient.Object,
-                AuthorizationServiceMock.Object);          
+                AuthorizationServiceMock.Object,
+                Mock.Of<IEncodingService>());          
             
 
             Sut.TempData = new Mock<ITempDataDictionary>().Object;

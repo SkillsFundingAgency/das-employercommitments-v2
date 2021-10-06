@@ -1,0 +1,85 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ChangeOptionViewModel
+@{
+    ViewData["Title"] = "Select a standard option";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <partial name="_ValidationSummary" />
+
+        <h1 class="govuk-heading-xl">Select a standard option</h1>
+
+        @if (!string.IsNullOrEmpty(Model.SelectedVersionUrl))
+        {
+            <div class="govuk-inset-text">
+                <p class="govuk-body">For more information visit <a class="govuk-link" href="@Model.SelectedVersionUrl" target="_blank">the IfATE page for this standard (opens in a new tab)</a>.</p>
+            </div>
+        }
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key"> Apprenticeship training course </dt>
+                <dd class="govuk-summary-list__value"> @Model.SelectedVersionName </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key"> Version </dt>
+                <dd class="govuk-summary-list__value"> @Model.SelectedVersion </dd>
+            </div>
+        </dl>
+    </div>
+</div>
+
+<form id="change-version-form" method="post">
+
+    @Html.HiddenFor(x => x.CurrentOption)
+    @Html.HiddenFor(x => x.ReturnToEdit)
+    @Html.HiddenFor(x => x.ReturnToChangeVersion)
+
+    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.SelectedOption, "govuk-form-group--error")">
+        <div id="select-a-version-hint" class="govuk-hint">
+            Select an option
+        </div>
+        @Html.ValidationMessageFor(m => m.SelectedOption, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.SelectedOption) })
+
+        <div class="govuk-radios">
+            @foreach (var option in Model.Options)
+            {
+                <div class="govuk-radios__item" id="radio-item-yes">
+                    <input class="govuk-radios__input" type="radio" id="option-@option" name="SelectedOption" value="@option" @(option == Model.SelectedOption ? "checked" : "")>
+                    <label class="govuk-label govuk-radios__label" for="option-@option">@option</label>
+                </div>
+            }
+            <div class="govuk-radios__divider">or</div>
+            <div class="govuk-radios__item" id="radio-item-yes">
+                <input class="govuk-radios__input" type="radio" id="option-choose-later" name="SelectedOption" value="TBC" @(Model.SelectedOption == string.Empty ? "checked" : "")>
+                <label class="govuk-label govuk-radios__label" for="option-choose-later">Confirm option at a later date</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="govuk-button-group">
+        <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button"> 
+            Save and continue
+        </button>
+
+        <a class="govuk-link govuk-link--no-visited-state" href="@Url.RouteUrl(RouteNames.CancelInProgressChangeOfCircumstance)" id="cancel-button"> Cancel and return </a>
+    </div>
+</form>
+
+@section back {
+    @if (Model.ReturnToEdit)
+    {
+        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.EditApprenticeship)">Back</a>
+    }
+    else if (Model.ReturnToChangeVersion)
+    {
+        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ChangeVersion)">Back</a>
+    }
+    else
+    {
+        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ApprenticeDetail)">Back</a>
+    }
+}

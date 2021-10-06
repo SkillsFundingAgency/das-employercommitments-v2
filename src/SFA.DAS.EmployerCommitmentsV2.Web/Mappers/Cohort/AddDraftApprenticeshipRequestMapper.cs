@@ -7,7 +7,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
     public class AddDraftApprenticeshipRequestMapper : IMapper<AddDraftApprenticeshipViewModel, AddDraftApprenticeshipRequest>
     {
-        public Task<AddDraftApprenticeshipRequest> Map(AddDraftApprenticeshipViewModel source)
+       public Task<AddDraftApprenticeshipRequest> Map(AddDraftApprenticeshipViewModel source)
         {
             return Task.FromResult(new AddDraftApprenticeshipRequest
             {

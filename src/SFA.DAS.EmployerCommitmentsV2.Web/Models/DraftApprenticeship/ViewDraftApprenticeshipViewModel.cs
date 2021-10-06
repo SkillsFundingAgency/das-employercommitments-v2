@@ -12,10 +12,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public string Uln { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string TrainingCourse { get; set; }
+        public string Version { get; set; }
+        public string CourseOption { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int? Cost { get; set; }
         public string Reference { get; set; }
         public string LegalEntityName { get; set; }
+        public bool HasStandardOptions { get; set; }
     }
 }
