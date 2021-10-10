@@ -185,7 +185,7 @@
                     <th scope="row" class="govuk-table__header  das-table-cell-width-45">Name</th>
                     <td id="apprentice-name" class="govuk-table__cell das-table-cell-width-55">@Model.ApprenticeName</td>
                 </tr>
-                @if (!string.IsNullOrEmpty(Model.Email))
+                @if (!string.IsNullOrEmpty(Model.Email) || Model.EmailShouldBePresent)
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Email address</th>

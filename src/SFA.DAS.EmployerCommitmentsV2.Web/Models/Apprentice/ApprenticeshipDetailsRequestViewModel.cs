@@ -48,6 +48,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public List<TrainingProviderHistory> TrainingProviderHistory { get; set; }
         public ConfirmationStatus? ConfirmationStatus { get; set; }
         public string Email { get; set; }
+        public bool EmailShouldBePresent { get; set; }
         public bool HasNewerVersions { get; set; }
         // If It's completed or stopped and option is null, dont show options as it could predate standard versioning
         // even if the version has options
