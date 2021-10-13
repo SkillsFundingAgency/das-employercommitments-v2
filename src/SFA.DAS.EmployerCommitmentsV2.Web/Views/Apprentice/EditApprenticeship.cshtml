@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditApprenticeshipRequestViewModel
@@ -57,7 +58,7 @@
             }
             else
             {
-                @if (!string.IsNullOrEmpty(Model.Email))
+                @if (!string.IsNullOrEmpty(Model.Email) || Model.EmailShouldBePresent)
                 {
                     <div class="govuk-inset-text">
                         <p>Please note</p>
@@ -77,22 +78,25 @@
                     @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
                     <input asp-for="LastName" class="govuk-input govuk-!-width-two-thirds" id="lastName" />
                 </div>
-                @if (!string.IsNullOrEmpty(Model.Email))
+                @if (!string.IsNullOrEmpty(Model.Email) || Model.EmailShouldBePresent)
                 {
-                    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
-                        <label asp-for="Email" class="govuk-label govuk-!-font-weight-bold">Email address</label>
-                        @Html.ValidationMessageFor(m => m.Email, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email) })
-                        <input asp-for="Email" class="govuk-input govuk-!-width-two-thirds" id="email" />
-                    </div>
-                }
-                else if (!string.IsNullOrEmpty(Model.Email))
-                {
-                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
-                    <dl class="das-definition-list">
-                        <dt class="das-definition-list__title" asp-for="LastName">Email address</dt>
-                        <dd class="das-definition-list__definition" id="lastName">@Model.Email</dd>
-                        @Html.Hidden("Email", Model.Email)
-                    </dl>
+                    @if (!Model.EmailAddressConfirmedByApprentice)
+                    {
+                        <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
+                            <label asp-for="Email" class="govuk-label govuk-!-font-weight-bold">Email address</label>
+                            @Html.ValidationMessageFor(m => m.Email, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email) })
+                            <input asp-for="Email" class="govuk-input govuk-!-width-two-thirds" id="email" />
+                        </div>
+                    }
+                    else
+                    {
+                        <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+                        <dl class="das-definition-list">
+                            <dt class="das-definition-list__title" asp-for="Email">Email address</dt>
+                            <dd class="das-definition-list__definition" id="Email">@Model.Email</dd>
+                            @Html.Hidden("Email", Model.Email)
+                        </dl>
+                    }
                 }
 
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />

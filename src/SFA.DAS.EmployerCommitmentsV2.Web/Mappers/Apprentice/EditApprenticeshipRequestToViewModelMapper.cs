@@ -65,7 +65,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 IsEndDateLockedForUpdate = IsEndDateLocked(isLockedForUpdate, apprenticeship.HasHadDataLockSuccess, apprenticeship.Status),
                 TrainingName = courseDetails.TrainingProgramme.Name,
                 HashedApprenticeshipId = source.ApprenticeshipHashedId,
-                AccountHashedId = source.AccountHashedId
+                AccountHashedId = source.AccountHashedId,
+                EmailAddressConfirmedByApprentice = apprenticeship.EmailAddressConfirmedByApprentice,
+                EmailShouldBePresent = apprenticeship.EmailShouldBePresent
             };
 
             return result;
