@@ -63,7 +63,18 @@
                     <div class="govuk-inset-text">
                         <p>Please note</p>
                         <p>
-                            Apprentices will be alerted about any changes made to their details and will need to re-confirm their apprenticeship details on the My apprenticeship service.
+                            @if (Model.EmailAddressConfirmedByApprentice)
+                            {
+                                <text>
+                                    This email address matches the one the apprentice added to their account, so only they can update it.
+                                </text>
+                            }
+                            else
+                            {
+                                <text>
+                                    Apprentices will be alerted about any changes made to their details and will need to re-confirm their apprenticeship details on the My apprenticeship service.
+                                </text>
+                            }
                         </p>
                     </div>
                 }
