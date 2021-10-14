@@ -51,5 +51,5 @@
 
 @section Back
 {
-    <div class="das-js-back-link"></div>
+    @Html.ActionLink("Back to apprentices", "Index", "Home", new { @Model.AccountHashedId}, new { @class = "govuk-back-link" })
 }
