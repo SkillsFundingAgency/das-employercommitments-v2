@@ -63,18 +63,7 @@
                     <div class="govuk-inset-text">
                         <p>Please note</p>
                         <p>
-                            @if (Model.EmailAddressConfirmedByApprentice)
-                            {
-                                <text>
-                                    This email address matches the one the apprentice added to their account, so only they can update it.
-                                </text>
-                            }
-                            else
-                            {
-                                <text>
-                                    Apprentices will be alerted about any changes made to their details and will need to re-confirm their apprenticeship details on the My apprenticeship service.
-                                </text>
-                            }
+                            Apprentices will be alerted about any changes made to their details and will need to re-confirm their apprenticeship details on the My apprenticeship service.
                         </p>
                     </div>
                 }
@@ -102,6 +91,7 @@
                     else
                     {
                         <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+                        <span id="email-readonly" class="govuk-hint">This email address matches the one the apprentice added to their account, so only they can update it.</span>
                         <dl class="das-definition-list">
                             <dt class="das-definition-list__title" asp-for="Email">Email address</dt>
                             <dd class="das-definition-list__definition" id="Email">@Model.Email</dd>
