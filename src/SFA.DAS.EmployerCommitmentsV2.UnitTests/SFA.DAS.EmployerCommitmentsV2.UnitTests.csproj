@@ -14,8 +14,7 @@
     <PackageReference Include="Moq" Version="4.10.1" />
     <PackageReference Include="NUnit" Version="3.11.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="7.88.1" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Types" Version="7.88.1" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Types" Version="7.88.2" />
     <PackageReference Include="SFA.DAS.Testing" Version="3.0.22" />
   </ItemGroup>
 
