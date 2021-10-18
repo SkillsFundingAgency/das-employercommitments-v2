@@ -9,5 +9,6 @@
         public const string TransferSenderId = "TransferSenderId";
         public const string TransferRequestHashedId = "TransferRequestHashedId";
         public const string ApprenticeshipHashedId = "ApprenticeshipHashedId";
+        public const string PledgeApplicationId = "EncodedPledgeApplicationId";
     }
 }

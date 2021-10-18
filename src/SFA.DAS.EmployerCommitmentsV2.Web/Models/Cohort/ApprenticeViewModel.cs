@@ -16,5 +16,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public Origin Origin { get; set; }
         public bool AutoCreatedReservation { get; set; }
         public string EncodedPledgeApplicationId { get; set; }
+        public long? PledgeApplicationId { get; set; }
     }
 }
