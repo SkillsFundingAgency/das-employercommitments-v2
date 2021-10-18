@@ -58,7 +58,7 @@
             }
             else
             {
-                @if (!string.IsNullOrEmpty(Model.Email) || Model.EmailShouldBePresent)
+                @if (!string.IsNullOrEmpty(Model.Email))
                 {
                     <div class="govuk-inset-text">
                         <p>Please note</p>
@@ -91,6 +91,7 @@
                     else
                     {
                         <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+                        <span id="email-readonly" class="govuk-hint">This email address matches the one the apprentice added to their account, so only they can update it.</span>
                         <dl class="das-definition-list">
                             <dt class="das-definition-list__title" asp-for="Email">Email address</dt>
                             <dd class="das-definition-list__definition" id="Email">@Model.Email</dd>
