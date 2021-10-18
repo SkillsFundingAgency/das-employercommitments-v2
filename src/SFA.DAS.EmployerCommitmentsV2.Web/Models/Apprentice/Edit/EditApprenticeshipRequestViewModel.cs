@@ -85,8 +85,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool IsEndDateLockedForUpdate { get; internal set; }
 
         public bool ShowApprenticeEmail { get; set; }
-        public bool HasOptions { get; set; }
         public bool EmailAddressConfirmedByApprentice { get; set; }
         public bool EmailShouldBePresent { get; set; }
+        public bool HasOptions { get; set; }
     }
 }
