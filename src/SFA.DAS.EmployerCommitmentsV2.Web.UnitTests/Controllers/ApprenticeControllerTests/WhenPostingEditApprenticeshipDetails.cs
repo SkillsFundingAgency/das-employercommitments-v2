@@ -131,6 +131,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public async Task And_StandardHasOptions_Then_RedirectToChangeOption()
         {
             _standardVersionResponse.TrainingProgramme.Options = _autoFixture.Create<List<string>>();
+            _viewModel.HasOptions = true;
 
             var result = await _fixture.EditApprenticeship(_viewModel);
 
