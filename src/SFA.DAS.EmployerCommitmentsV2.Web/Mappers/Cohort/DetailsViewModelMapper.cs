@@ -73,6 +73,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 LegalEntityName = cohort.LegalEntityName,
                 ProviderName = cohort.ProviderName,
                 TransferSenderHashedId = cohort.TransferSenderId == null ? null : _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId),
+                EncodedPledgeApplicationId = cohort.PledgeApplicationId == null ? null : _encodingService.Encode(cohort.PledgeApplicationId.Value, EncodingType.PledgeApplicationId),
                 Message = cohort.LatestMessageCreatedByProvider,
                 Courses = courses,
                 PageTitle = draftApprenticeships.Count == 1

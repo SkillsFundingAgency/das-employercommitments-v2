@@ -26,7 +26,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 StartDate = source.StartDate.Date,
                 EndDate = source.EndDate.Date,
                 OriginatorReference = source.Reference,
-                TransferSenderId = source.DecodedTransferSenderId
+                TransferSenderId = source.DecodedTransferSenderId,
+                PledgeApplicationId = (int?)source.PledgeApplicationId
             });
         }
      }
