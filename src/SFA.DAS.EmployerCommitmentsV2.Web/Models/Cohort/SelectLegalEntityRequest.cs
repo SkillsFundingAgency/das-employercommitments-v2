@@ -11,5 +11,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string transferConnectionCode { get; set; }
 
         public string cohortRef { get; set; }
+
+        [FromQuery]
+        public string EncodedPledgeApplicationId { get; set; }
     }
 }

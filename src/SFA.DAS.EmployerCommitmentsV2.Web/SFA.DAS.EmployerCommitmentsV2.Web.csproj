@@ -32,7 +32,7 @@
     <PackageReference Include="SFA.DAS.CommitmentsV2.Types" Version="7.89.4" />
     <PackageReference Include="SFA.DAS.Employer.Shared.UI" Version="2.0.21" />
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.77" />
-    <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.22" />
+    <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />
     <PackageReference Include="SFA.DAS.NLog.Targets.Redis" Version="1.2.1" />
     <PackageReference Include="SFA.DAS.Validation.Mvc" Version="6.0.7" />
     <PackageReference Include="StackExchange.Redis" Version="2.1.30" />

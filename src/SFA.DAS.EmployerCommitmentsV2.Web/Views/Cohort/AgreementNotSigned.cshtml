@@ -35,7 +35,7 @@
             <a class="govuk-button" href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)" aria-label="Review your agreement">Review agreement</a>
             @if (Model.CanContinueAnyway)
             {
-                <p><a href="@Url.Action("SelectProvider", new SelectProviderRequest { AccountHashedId = Model.AccountHashedId, AccountLegalEntityHashedId = Model.AccountLegalEntityPublicHashedId  })">Continue anyway</a></p>
+                <p><a href="@Url.Action("SelectProvider", new SelectProviderRequest { AccountHashedId = Model.AccountHashedId, AccountLegalEntityHashedId = Model.AccountLegalEntityPublicHashedId, EncodedPledgeApplicationId  = Model.EncodedPledgeApplicationId})">Continue anyway</a></p>
             }
         </div>
     </div>

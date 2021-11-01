@@ -4,7 +4,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class SelectProviderViewModelFromConfirmProviderMapper: IMapper<ConfirmProviderViewModel, SelectProviderViewModel>
+    public class SelectProviderViewModelFromConfirmProviderMapper : IMapper<ConfirmProviderViewModel, SelectProviderViewModel>
     {
         public Task<SelectProviderViewModel> Map(ConfirmProviderViewModel source)
         {
@@ -17,8 +17,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 StartMonthYear = source.StartMonthYear,
                 TransferSenderId = source.TransferSenderId,
-                Origin = source.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
+                Origin = DetermineOrigin(source),
+                EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
             });
+        }
+
+        private Origin DetermineOrigin(ConfirmProviderViewModel source)
+        {
+            if (source.ReservationId.HasValue)
+            {
+                return Origin.Reservations;
+            }
+
+            if (!string.IsNullOrWhiteSpace(source.EncodedPledgeApplicationId))
+            {
+                return Origin.LevyTransferMatching;
+            }
+
+            return Origin.Apprentices;
         }
     }
 }

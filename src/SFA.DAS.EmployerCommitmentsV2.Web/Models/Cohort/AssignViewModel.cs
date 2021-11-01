@@ -13,6 +13,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string CourseCode { get; set; }
         public long ProviderId { get; set; }
         public string TransferSenderId { get; set; }
+        public string EncodedPledgeApplicationId { get; set; }
 
         [Required(ErrorMessage = "Select whether to add apprentices yourself or not")]
         public WhoIsAddingApprentices? WhoIsAddingApprentices { get; set; }

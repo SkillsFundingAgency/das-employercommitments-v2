@@ -23,7 +23,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountHashedId = source.AccountHashedId,
                 TransferConnectionCode = source.transferConnectionCode,
                 LegalEntities = legalEntities,
-                CohortRef = string.IsNullOrWhiteSpace(source.cohortRef) ? Guid.NewGuid().ToString().ToUpper() : source.cohortRef
+                CohortRef = string.IsNullOrWhiteSpace(source.cohortRef) ? Guid.NewGuid().ToString().ToUpper() : source.cohortRef,
+                EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
             };
         }        
     }    

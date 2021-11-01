@@ -40,6 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 ProviderName = provider.Name,
                 Courses = courses,
                 TransferSenderId = source.TransferSenderId,
+                EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
                 Origin = source.Origin,
                 AutoCreatedReservation = source.AutoCreated
             };

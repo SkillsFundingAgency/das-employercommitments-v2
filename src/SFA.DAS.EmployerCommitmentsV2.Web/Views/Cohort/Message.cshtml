@@ -19,6 +19,7 @@
             @Html.HiddenFor(x => x.StartMonthYear)
             @Html.HiddenFor(x => x.ProviderId)
             @Html.HiddenFor(x => x.TransferSenderId)
+            @Html.HiddenFor(x => x.EncodedPledgeApplicationId)
 
             <div class="govuk-form-group  @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
                 <label class="govuk-label govuk-!-font-weight-bold" for="Message">Message (optional)</label>

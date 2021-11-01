@@ -9,5 +9,6 @@
         public bool HasSignedMinimumRequiredAgreementVersion { get; set; }
         public string LegalEntityName { get; set; }        
         public string AccountLegalEntityPublicHashedId { get; set; }
+        public string EncodedPledgeApplicationId { get; set; }
     }
 }

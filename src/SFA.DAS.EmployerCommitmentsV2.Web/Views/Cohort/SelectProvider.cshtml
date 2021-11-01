@@ -62,7 +62,11 @@
             Model.ReservationId,
             Model.CourseCode,
             Model.StartMonthYear
-        }, new {@class = "govuk-back-link", id = "back-link"})
+        }, new { @class = "govuk-back-link", id = "back-link" })
+    }
+    else if (Model.Origin == Origin.LevyTransferMatching)
+    {
+        <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications/{Model.EncodedPledgeApplicationId}")" id="back-link" class="govuk-back-link">Back</a>
     }
     else
     {
