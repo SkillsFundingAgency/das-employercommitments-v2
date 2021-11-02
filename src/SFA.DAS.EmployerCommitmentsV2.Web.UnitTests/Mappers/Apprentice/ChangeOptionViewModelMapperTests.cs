@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _request = _fixture.Create<ChangeOptionRequest>();
 
-            var baseDate = DateTime.Now;
+            var baseDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             var startDate = baseDate;
             var endDate = baseDate.AddYears(2);
             var dateOfBirth = baseDate.AddYears(-18);
@@ -156,11 +156,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             viewModel.ReturnToEdit.Should().BeTrue();
         }
 
-        [Ignore("Setup incorrect; unit test fails on first of the month")]
         [Test]
         public async Task When_StartDateHasChanged_Then_SetReturnToEditTrue()
         {
-            _editViewModel.StartDate.Date.Value.AddMonths(1);
+            _editViewModel.StartDate.Month = _editViewModel.StartDate.Date.Value.AddMonths(1).Month;
             SetupTempDataDictionary();
 
             var viewModel = await _mapper.Map(_request);
@@ -168,7 +167,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             viewModel.ReturnToEdit.Should().BeTrue();
         }
 
-        [Ignore("Assertion incorrect; unit test fails on first of the month")]
         [Test]
         public async Task When_VersionHasChanged_Then_SetReturnToChangeVersionTrue()
         {
@@ -177,7 +175,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             var viewModel = await _mapper.Map(_request);
 
-            viewModel.ReturnToEdit.Should().BeTrue();
+            viewModel.ReturnToChangeVersion.Should().BeTrue();
         }
 
         [Test]
