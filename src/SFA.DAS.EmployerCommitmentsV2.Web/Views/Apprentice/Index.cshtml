@@ -120,7 +120,7 @@ else
                             </div>
                             <div class="govuk-grid-column-one-third">
                                 <div class="govuk-form-group">
-                                    <label class="govuk-label" for="selectedStatus">Alerts</label>
+                                    <label class="govuk-label" for="selectedAlert">Alerts</label>
                                     <select class="govuk-select govuk-!-width-full" id="selectedAlert" name="selectedAlert">
                                         <option label="All" aria-label="All statuses" value="">All</option>
                                         @foreach (var alert in Model.FilterModel.AlertFilters)
@@ -140,7 +140,7 @@ else
 
                             <div class="govuk-grid-column-one-third">
                                 <div class="govuk-form-group">
-                                    <label class="govuk-label" for="selectedStatus">Apprentice confirmation</label>
+                                    <label class="govuk-label" for="selectedApprenticeConfirmation">Apprentice confirmation</label>
                                     <select class="govuk-select govuk-!-width-full" id="selectedApprenticeConfirmation" name="selectedApprenticeConfirmation">
                                         <option label="All" aria-label="All confirmations" value="">All</option>
                                         @foreach (var confirmation in Model.FilterModel.ApprenticeConfirmationFilters)
