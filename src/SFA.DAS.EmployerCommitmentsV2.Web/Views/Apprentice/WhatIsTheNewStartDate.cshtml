@@ -14,6 +14,10 @@
             What is the start date with @(Model.ProviderName)?
         </h1>
 
+        <p class="govuk-body">
+            This date must be on or after the stop date (@(Model.StopDate.ToString("MMMM yyyy"))).
+        </p>
+
         <form method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ProviderId" />
@@ -27,11 +31,9 @@
             <input type="hidden" asp-for="Edit" />
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.NewStartDate,  "govuk-form-group--error")">
-                <fieldset class="govuk-fieldset">
+                <fieldset class="govuk-fieldset" role="group" aria-describedby="hint-text">
 
-                    <p class="govuk-body" id="help-text">
-                        This date must be on or after the stop date (@(Model.StopDate.ToString("MMMM yyyy"))).
-                    </p>
+                    <legend class="govuk-visually-hidden">Start date</legend>
 
                     <span class="govuk-hint" id="hint-text">
                         For example, 04 2020
@@ -42,17 +44,18 @@
                     <div class="govuk-date-input">
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
-                                <label asp-for="NewStartMonth" class="govuk-label govuk-date-input__label">Month</label>
+                                <label for="new-start-month" class="govuk-label govuk-date-input__label">Month</label>
                                 <input asp-for="NewStartMonth" class="govuk-input govuk-date-input__input govuk-input--width-2 @Html.AddClassIfPropertyInError(x=>x.NewStartDate, "govuk-input--error input-validation-error")" type="number" id="new-start-month">
                             </div>
                         </div>
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
-                                <label asp-for="NewStartYear" class="govuk-label govuk-date-input__label">Year</label>
+                                <label for="new-start-year" class="govuk-label govuk-date-input__label">Year</label>
                                 <input asp-for="NewStartYear" class="govuk-input govuk-date-input__input govuk-input--width-4 @Html.AddClassIfPropertyInError(x=>x.NewStartDate, "govuk-input--error input-validation-error")" type="number" id="new-start-year">
                             </div>
                         </div>
                     </div>
+                    
                 </fieldset>
             </div>
 
