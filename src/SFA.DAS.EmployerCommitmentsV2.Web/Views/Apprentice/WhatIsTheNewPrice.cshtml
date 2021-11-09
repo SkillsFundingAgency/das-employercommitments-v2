@@ -15,6 +15,10 @@
             What is the agreed price of completing the training with @Model.ProviderName?
         </h1>
 
+        <p class="govuk-body">
+            This is the price you agreed with @Model.ProviderName to complete the remainder of the apprenticeship training and assessment.
+        </p>
+
         <form method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ProviderId" />
@@ -26,20 +30,12 @@
             <input type="hidden" asp-for="Edit" />
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.NewPrice,  "govuk-form-group--error")">
-                <fieldset class="govuk-fieldset">
-
-                    <p class="govuk-body">
-                        This is the price you agreed with @Model.ProviderName to complete the remainder of the apprenticeship training and assessment.
-                    </p>
-
-                    <span class="govuk-hint">
-                        For example, 5000
-                    </span>
-
-                    @Html.ValidationMessageFor(m => m.NewPrice, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.NewPrice) })
-                    <input id="input-newprice" asp-for="NewPrice" class="govuk-input govuk-!-width-one-third @Html.AddClassIfPropertyInError(x=>x.NewPrice, "govuk-input--error input-validation-error")" />
-
-                </fieldset>
+                <label class="govuk-label" for="input-newprice">Price</label>
+                <span class="govuk-hint">
+                    For example, 5000
+                </span>
+                @Html.ValidationMessageFor(m => m.NewPrice, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.NewPrice) })
+                <input id="input-newprice" asp-for="NewPrice" class="govuk-input govuk-!-width-one-third @Html.AddClassIfPropertyInError(x=>x.NewPrice, "govuk-input--error input-validation-error")" />
             </div>
 
             <button id="continue-button" class="govuk-button" type="submit"> Continue </button>
