@@ -10,51 +10,45 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
-
         <h1 class="govuk-heading-xl">
             When did this apprenticeship training stop?
         </h1>
-
+        <p class="govuk-body">
+            The earliest date you can enter is this apprenticeship's start date of @(Model.StartDate.ToString("MMMM yyyy")). 
+            Any outstanding payments will be made for activity up to this date.
+        </p>
         <form method="post">
             @Html.AntiForgeryToken()
-
             <input type="hidden" asp-for="IsCoPJourney" />
             <input type="hidden" asp-for="StartDate" />
-
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.StopDate,  "govuk-form-group--error")">
-                <fieldset class="govuk-fieldset">
-                    <p class="govuk-body" id="help-text">
-                        The earliest date you can enter is this apprenticeship's start date of @(Model.StartDate.ToString("MMMM yyyy")). Any outstanding payments will be made for activity up to this date.
-                    </p>
-
+                <fieldset class="govuk-fieldset" role="group" aria-describedby="hint-text">
+                    <legend class="govuk-visually-hidden">Stop date</legend>
                     <span class="govuk-hint" id="hint-text">
                         For example, 06 2018
                     </span>
-
                     @if (!ViewData.ModelState.IsValid)
                     {
                         <span id="error-message-@nameof(SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.StopRequestViewModel.StopDate)" class="govuk-error-message">
                              @ViewData.ModelState[nameof(SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.StopRequestViewModel.StopDate)].Errors.First().ErrorMessage
                         </span>
                     }
-
                     <div class="govuk-date-input">
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
-                                <label asp-for="StopMonth" class="govuk-label govuk-date-input__label">Month</label>
+                                <label for="stop-month" class="govuk-label govuk-date-input__label">Month</label>
                                 <input asp-for="StopMonth" class="govuk-input govuk-date-input__input govuk-input--width-2 @Html.AddClassIfPropertyInError(x => x.StopDate,  "govuk-input--error")" type="number" id="stop-month">
                             </div>
                         </div>
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
-                                <label asp-for="StopYear" class="govuk-label govuk-date-input__label">Year</label>
+                                <label for="stop-year" class="govuk-label govuk-date-input__label">Year</label>
                                 <input asp-for="StopYear" class="govuk-input govuk-date-input__input govuk-input--width-4 @Html.AddClassIfPropertyInError(x => x.StopDate,  "govuk-input--error")" type="number" id="stop-year">
                             </div>
                         </div>
                     </div>
                 </fieldset>
             </div>
-
             <button class="govuk-button" type="submit" id="continue-button"> Save and continue </button>
         </form>
     </div>
