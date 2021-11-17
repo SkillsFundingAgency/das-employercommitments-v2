@@ -11,65 +11,64 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.SelectLegalEntityViewModel
 
 <div class="govuk-grid-row">
-    <form method="POST">
-        <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <partial name="_ValidationSummary" />
 
-            <partial name="_ValidationSummary" />
+        <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
 
-            <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
+        <form method="POST">
 
-            @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
 
-            <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.LegalEntityId,  "govuk-form-group--error")">
-                <fieldset class="govuk-fieldset">
+        <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.LegalEntityId,  "govuk-form-group--error")">
+            <fieldset class="govuk-fieldset">
 
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        <h1 class="govuk-fieldset__heading">
-                            Which organisation is named on the contract with the training provider for the apprentices you’d like to add?
-                        </h1>
-                    </legend>
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    Which organisation is named on the contract with the training provider for the apprentices you’d like to add?
+                </legend>
 
-                    @if (!ViewData.ModelState.IsValid)
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <span id="error-message-@nameof(SelectLegalEntityViewModel.LegalEntityId)" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(SelectLegalEntityViewModel.LegalEntityId)].Errors.First().ErrorMessage
+                    </span>
+                }
+                <div class="govuk-radios">
+                    @foreach (var entity in Model.LegalEntities)
                     {
-                        <span id="error-message-@nameof(SelectLegalEntityViewModel.LegalEntityId)" class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(SelectLegalEntityViewModel.LegalEntityId)].Errors.First().ErrorMessage
-                        </span>
+                        <div class="govuk-radios__item" id="radio-item-legal-entity-code">
+                            <input class="govuk-radios__input" id="LegalEntityId-@entity.Id" name="LegalEntityId" type="radio" value="@entity.Id">
+                            <label class="govuk-label govuk-radios__label" for="LegalEntityId-@entity.Id">
+                                @entity.Name
+                            </label>
+                        </div>
                     }
-                    <div class="govuk-radios">
-                        @foreach (var entity in Model.LegalEntities)
-                        {
-                            <div class="govuk-radios__item" id="radio-item-legal-entity-code">
-                                <input class="govuk-radios__input" id="LegalEntityId-@entity.Id" name="LegalEntityId" type="radio" value="@entity.Id">
-                                <label class="govuk-label govuk-radios__label" for="LegalEntityCode-@entity.Id">
-                                    @entity.Name
-                                </label>
-                            </div>
-                        }
-                    </div>
-                </fieldset>
-                <div class="govuk-!-padding-bottom-2"></div>
-                <details id="service-help" class="govuk-details" data-module="govuk-details">
-                    <summary class="govuk-details__summary">
-                        <span class="govuk-details__summary-text">
-                            What is a contract for services?
-                        </span>
-                    </summary>
-                    <div class="govuk-details__text">
-                        <p> A contract for services is a formal agreement between a buyer and a supplier.</p>
-                        <p>In this case, the contract is between the organisation that's buying apprenticeship training for their apprentices and the training provider that's training the apprentices.</p>
-                        <p>If you're an employer-provider, for example, you won't need a contract for services as your organisation is both the buyer and the supplier.</p>
-                    </div>
-                </details>
-
-            </div>
-
-            @Html.Hidden("TransferConnectionCode", Model.TransferConnectionCode)
-            @Html.Hidden("CohortRef", Model.CohortRef)
-            @Html.HiddenFor(x => x.EncodedPledgeApplicationId)
-
-            <button type="submit" class="govuk-button" id="submit-legal-entity">Continue</button>
+                </div>
+            </fieldset>
         </div>
-    </form>
+
+        <details id="service-help" class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    What is a contract for services?
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                <p> A contract for services is a formal agreement between a buyer and a supplier.</p>
+                <p>In this case, the contract is between the organisation that's buying apprenticeship training for their apprentices and the training provider that's training the apprentices.</p>
+                <p>If you're an employer-provider, for example, you won't need a contract for services as your organisation is both the buyer and the supplier.</p>
+            </div>
+        </details>
+
+        @Html.Hidden("TransferConnectionCode", Model.TransferConnectionCode)
+        @Html.Hidden("CohortRef", Model.CohortRef)
+        @Html.HiddenFor(x => x.EncodedPledgeApplicationId)
+
+        <button type="submit" class="govuk-button" id="submit-legal-entity">Continue</button>
+        
+        </form>
+    </div>
 </div>
 
 @section Back
