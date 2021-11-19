@@ -15,6 +15,10 @@
             Who will enter the new course dates and price?
         </h1>
 
+        <p class="govuk-body govuk-!-padding-bottom-6">
+            If your training provider adds the new course dates and price, you'll need to check and agree to them before any payments are made.
+        </p>
+
         <form method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ProviderId" />
@@ -23,9 +27,6 @@
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmployerWillAdd,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
-                    <p class="govuk-body govuk-!-padding-bottom-6">
-                        If your training provider adds the new course dates and price, you'll need to check and agree to them before any payments are made.
-                    </p>
 
                     @if (!ViewData.ModelState.IsValid)
                     {

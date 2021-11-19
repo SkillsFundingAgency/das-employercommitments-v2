@@ -38,8 +38,8 @@
                     </span>
                 </summary>
                 <div class="govuk-details__text">
-                    If your apprentice has not confirmed their apprenticeship details within the 14 day deadline, you should:
-                    <ul>
+                    <p>If your apprentice has not confirmed their apprenticeship details within the 14 day deadline, you should:</p>
+                    <ul class="govuk-list govuk-list--bullet">
                         <li>
                             contact the apprentice to complete their apprenticeship confirmation
                         </li>
@@ -129,7 +129,7 @@
                     @if (Model.ShowChangeTrainingProviderLink)
                     {
                         <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <a id="change-training-provider-link" class="govuk-link" href="@Url.Action("ChangeProviderInform", new  ChangeProviderInformRequest{ AccountHashedId = Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change</a>
+                            <a id="change-training-provider-link" class="govuk-link" href="@Url.Action("ChangeProviderInform", new  ChangeProviderInformRequest{ AccountHashedId = Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change<span class="govuk-visually-hidden"> training provider</span></a>
                         </td>
                     }
                     else
@@ -146,7 +146,7 @@
                 {
                     <tr>
                         <th scope="row" class="govuk-table__header">Training provider history</th>
-                        <td id="cohort-reference" class="govuk-table__cell">
+                        <td id="training-provider-history" class="govuk-table__cell">
                             @foreach (var trainingProvider in Model.TrainingProviderHistory)
                             {
                                 <p class="govuk-body">
@@ -175,7 +175,7 @@
             <div class="govuk-grid-column-one-third das-!-text-align-right--from-tablet">
                 @if (Model.EnableEdit)
                 {
-                    <a id="edit-apprentice-link" href="@Url.Action("EditApprenticeship", new { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link govuk-body">Edit</a>
+                    <a id="edit-apprentice-link" href="@Url.Action("EditApprenticeship", new { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link govuk-body">Edit<span class="govuk-visually-hidden"> apprentice details</span></a>
                 }
             </div>
         </div>
@@ -189,7 +189,7 @@
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Email address</th>
-                        <td id="email address" class="govuk-table__cell">@Model.Email</td>
+                        <td id="email-address" class="govuk-table__cell">@Model.Email</td>
                     </tr>
                 }
                 <tr class="govuk-table__row">
@@ -216,7 +216,6 @@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header das-table-cell-width-45">Apprenticeship training course </th>
                     <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.TrainingName </td>
-                    <td class="govuk-table__cell"></td>
                 </tr>
                 @if (!string.IsNullOrEmpty(Model.Version))
                 {
@@ -239,11 +238,11 @@
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header"> Option </th>
-                        <td id="version" class="govuk-table__cell" colspan="2">@(!string.IsNullOrEmpty(Model.Option) ? Model.Option : "To be confirmed")</td>
+                        <td id="option" class="govuk-table__cell" colspan="2">@(!string.IsNullOrEmpty(Model.Option) ? Model.Option : "To be confirmed")</td>
                         @if (Model.EnableEdit && !Model.OnlySingleOption)
                         {
                             <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeOption)">Change</a>
+                                <a id="change-option-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeOption)">Change<span class="govuk-visually-hidden"> option</span></a>
                             </td>
                         }
                         else
@@ -273,7 +272,7 @@
                     @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
                     {
                         <td class="govuk-table__cell">
-                            <a id="edit-end-date-link" class="govuk-link" href="@Url.Action("EditEndDate", new EditEndDateRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit</a>
+                            <a id="edit-end-date-link" class="govuk-link" href="@Url.Action("EditEndDate", new EditEndDateRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit<span class="govuk-visually-hidden"> end date</span></a>
                         </td>
                     }
                     else

@@ -69,12 +69,12 @@
                 }
 
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.FirstName, "govuk-form-group--error")">
-                    <label asp-for="FirstName" class="govuk-label govuk-!-font-weight-bold">First name</label>
+                    <label for="firstName" class="govuk-label govuk-!-font-weight-bold">First name</label>
                     @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.FirstName) })
                     <input asp-for="FirstName" class="govuk-input govuk-!-width-two-thirds" id="firstName" />
                 </div>
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.LastName, "govuk-form-group--error")">
-                    <label asp-for="LastName" class="govuk-label govuk-!-font-weight-bold">Last name</label>
+                    <label for="lastName" class="govuk-label govuk-!-font-weight-bold">Last name</label>
                     @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
                     <input asp-for="LastName" class="govuk-input govuk-!-width-two-thirds" id="lastName" />
                 </div>
@@ -83,7 +83,7 @@
                     @if (!Model.EmailAddressConfirmedByApprentice)
                     {
                         <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
-                            <label asp-for="Email" class="govuk-label govuk-!-font-weight-bold">Email address</label>
+                            <label for="email" class="govuk-label govuk-!-font-weight-bold">Email address</label>
                             @Html.ValidationMessageFor(m => m.Email, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email) })
                             <input asp-for="Email" class="govuk-input govuk-!-width-two-thirds" id="email" />
                         </div>
@@ -113,21 +113,21 @@
                         <div class="govuk-date-input">
                             <div class="govuk-date-input__item">
                                 <div class="govuk-form-group">
-                                    <label asp-for="BirthDay" class="govuk-label govuk-date-input__label">Day</label>
+                                    <label for="dob-day" class="govuk-label govuk-date-input__label">Day</label>
                                     <input asp-for="BirthDay" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="31"
                                            class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" id="dob-day">
                                 </div>
                             </div>
                             <div class="govuk-date-input__item">
                                 <div class="govuk-form-group">
-                                    <label asp-for="BirthMonth" class="govuk-label govuk-date-input__label">Month</label>
+                                    <label for="dob-month" class="govuk-label govuk-date-input__label">Month</label>
                                     <input asp-for="BirthMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
                                            class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" id="dob-month">
                                 </div>
                             </div>
                             <div class="govuk-date-input__item">
                                 <div class="govuk-form-group">
-                                    <label asp-for="BirthYear" class="govuk-label govuk-date-input__label">Year</label>
+                                    <label for="dob-year" class="govuk-label govuk-date-input__label">Year</label>
                                     <input asp-for="BirthYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
                                            class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" id="dob-year">
                                 </div>
@@ -157,7 +157,7 @@
             else
             {
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
-                    <label asp-for="CourseCode" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
+                    <label for="trainingCourse" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
                     <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
                     @Html.ValidationMessageFor(m => m.CourseCode, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.CourseCode) })
                     <select class="govuk-select govuk-!-width-three-quarters" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "CourseCode", "Name"))" aria-describedby="course-name-hint" id="trainingCourse">
@@ -191,14 +191,14 @@
                         <div class="govuk-date-input">
                             <div class="govuk-date-input__item">
                                 <div class="govuk-form-group">
-                                    <label asp-for="StartMonth" class="govuk-label govuk-date-input__label length-limit">Month</label>
+                                    <label for="startDate-month" class="govuk-label govuk-date-input__label length-limit">Month</label>
                                     <input asp-for="StartMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
                                            class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" id="startDate-month">
                                 </div>
                             </div>
                             <div class="govuk-date-input__item">
                                 <div class="govuk-form-group">
-                                    <label asp-for="StartYear" class="govuk-label govuk-date-input__label">Year</label>
+                                    <label for="startDate-year" class="govuk-label govuk-date-input__label">Year</label>
                                     <input asp-for="StartYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
                                            class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" id="startDate-year" />
                                 </div>
@@ -232,14 +232,14 @@
                         <div class="govuk-date-input">
                             <div class="govuk-date-input__item">
                                 <div class="govuk-form-group">
-                                    <label asp-for="EndMonth" class="govuk-label govuk-date-input__label">Month</label>
+                                    <label for="endDate-month" class="govuk-label govuk-date-input__label">Month</label>
                                     <input asp-for="EndMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
                                            class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" id="endDate-month" />
                                 </div>
                             </div>
                             <div class="govuk-date-input__item">
                                 <div class="govuk-form-group">
-                                    <label asp-for="EndYear" class="govuk-label govuk-date-input__label">Year</label>
+                                    <label for="endDate-year" class="govuk-label govuk-date-input__label">Year</label>
                                     <input asp-for="EndYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
                                            class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" id="endDate-year" />
                                 </div>
@@ -267,7 +267,7 @@
             else
             {
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Cost, "govuk-form-group--error")">
-                    <label asp-for="Cost" class="govuk-label govuk-!-font-weight-bold">Total agreed apprenticeship price (excluding VAT)</label>
+                    <label for="cost" class="govuk-label govuk-label--s">Total agreed apprenticeship price (excluding VAT)</label>
                     <span id="price-hint" class="govuk-hint">
                         Enter the price, including any end-point assessment costs, in whole pounds. <br /> For example, for £1,500 enter 1500
                     </span>
@@ -303,7 +303,7 @@
 
                 <div class="das-highlight">
                     <h3 class="govuk-heading-s">End-point assessments</h3>
-                    <p class="govuk-!-margin-bottom-0">We'll ask you to confirm the <a href="https://www.gov.uk/government/publications/using-the-register-of-apprentice-assessment-organisations" target="_blank" title="Opens in a new window" rel="external" id="assessmentOrg-link">apprentice assessment organisation</a> for this apprentice. We'll do this before the end of the apprenticeship.</p>
+                    <p class="govuk-!-margin-bottom-0">We'll ask you to confirm the <a href="https://www.gov.uk/government/publications/using-the-register-of-apprentice-assessment-organisations" target="_blank" title="Opens in a new window" rel="external" id="assessmentOrg-link" class="govuk-link">apprentice assessment organisation</a> for this apprentice. We'll do this before the end of the apprenticeship.</p>
                 </div>
             </div>
 

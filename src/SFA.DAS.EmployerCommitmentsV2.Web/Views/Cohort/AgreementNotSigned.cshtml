@@ -15,27 +15,24 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+        
         <h1 class="govuk-heading-xl">Agreement not accepted</h1>
-
 
         <div class="govuk-warning-text">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-            <strong class="govuk-warning-text__text">
+            <div class="govuk-warning-text__text">
                 <span class="govuk-warning-text__assistive">Warning</span>
-
-                @Model.LegalEntityName
-                doesn't have an accepted agreement with the Education and Skills Funding Agency (ESFA). @CanContinueText
-
-                <br /><br />
-                Only account owners can accept ESFA agreements. If you're not sure who the owner is, you can <a href="@LinkGenerator.YourTeam(Model.AccountHashedId)">check your team details</a>.
-            </strong>
+                <p>@Model.LegalEntityName doesn't have an accepted agreement with the Education and Skills Funding Agency (ESFA). @CanContinueText</p>
+                <p>Only account owners can accept ESFA agreements. If you're not sure who the owner is, you can <a href="@LinkGenerator.YourTeam(Model.AccountHashedId)" class="govuk-link">check your team details</a>.</p>
+            </div>
         </div>      
 
-        <p>
+        <div class="govuk-button-group">
             <a class="govuk-button" href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)" aria-label="Review your agreement">Review agreement</a>
             @if (Model.CanContinueAnyway)
             {
-                <p><a href="@Url.Action("SelectProvider", new SelectProviderRequest { AccountHashedId = Model.AccountHashedId, AccountLegalEntityHashedId = Model.AccountLegalEntityPublicHashedId, EncodedPledgeApplicationId  = Model.EncodedPledgeApplicationId})">Continue anyway</a></p>
+                <a class="govuk-link" href="@Url.Action("SelectProvider", new SelectProviderRequest { AccountHashedId = Model.AccountHashedId, AccountLegalEntityHashedId = Model.AccountLegalEntityPublicHashedId, EncodedPledgeApplicationId  = Model.EncodedPledgeApplicationId})">Continue anyway</a>
             }
         </div>
     </div>
+</div>

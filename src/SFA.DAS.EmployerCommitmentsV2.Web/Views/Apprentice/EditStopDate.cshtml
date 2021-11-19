@@ -43,14 +43,14 @@
                     <div class="govuk-date-input">
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
-                                <label asp-for="NewStopDate.Month" class="govuk-label govuk-date-input__label">Month</label>
+                                <label for="stop-month" class="govuk-label govuk-date-input__label">Month</label>
                                 <input asp-for="NewStopDate.Month" class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit
                                        @Html.AddClassIfPropertyInError(x => x.NewStopDate,  "govuk-input--error")" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12" type="text" id="stop-month">
                             </div>
                         </div>
                         <div class="govuk-date-input__item">
                             <div class="govuk-form-group">
-                                <label asp-for="NewStopDate.Year" class="govuk-label govuk-date-input__label">Year</label>
+                                <label for="stop-year" class="govuk-label govuk-date-input__label">Year</label>
                                 <input asp-for="NewStopDate.Year" class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit
                                        @Html.AddClassIfPropertyInError(x => x.NewStopDate,  "govuk-input--error")"  inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999" type="text" id="stop-year">
                             </div>
