@@ -15,6 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public int? Cost { get; set; }
         public int? FundingBandCap { get; set; }
         public string ULN { get; set; }
+        public bool IsComplete { get; set; }
 
         public bool ExceedsFundingBandCap
         {
