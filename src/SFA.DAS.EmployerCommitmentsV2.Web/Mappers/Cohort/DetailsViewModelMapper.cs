@@ -126,11 +126,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             return groupedByCourse;
         }
 
-        private bool IsDraftApprenticeshipComplete(DraftApprenticeshipDto a, GetCohortResponse cohortResponse) =>
+        private bool IsDraftApprenticeshipComplete(DraftApprenticeshipDto draftApprenticeship, GetCohortResponse cohortResponse) =>
                 !(
-                  string.IsNullOrWhiteSpace(a.FirstName) || string.IsNullOrWhiteSpace(a.LastName) || a.DateOfBirth == null ||
-                  string.IsNullOrWhiteSpace(a.CourseName) || a.StartDate == null || a.EndDate == null || a.Cost == null ||
-                  (cohortResponse.ApprenticeEmailIsRequired && string.IsNullOrWhiteSpace(a.Email) && !cohortResponse.IsLinkedToChangeOfPartyRequest)
+                  string.IsNullOrWhiteSpace(draftApprenticeship.FirstName) || string.IsNullOrWhiteSpace(draftApprenticeship.LastName) 
+                  || draftApprenticeship.DateOfBirth == null ||  string.IsNullOrWhiteSpace(draftApprenticeship.CourseName) 
+                  || draftApprenticeship.StartDate == null || draftApprenticeship.EndDate == null || draftApprenticeship.Cost == null 
+                  || (cohortResponse.ApprenticeEmailIsRequired && string.IsNullOrWhiteSpace(draftApprenticeship.Email) && !cohortResponse.IsLinkedToChangeOfPartyRequest)
                  );
         
 
