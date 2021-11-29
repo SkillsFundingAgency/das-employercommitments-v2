@@ -112,9 +112,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                             OriginalStartDate = a.OriginalStartDate,
                             HasOverlappingEmail = emailOverlaps.Any(x=>x.Id == a.Id),
                             ULN = a.Uln,
-                            IsComplete = !(string.IsNullOrWhiteSpace(a.FirstName) || string.IsNullOrWhiteSpace(a.LastName) || a.DateOfBirth == null ||
-                                                                        string.IsNullOrWhiteSpace(a.CourseName) || a.StartDate == null || a.EndDate == null || a.Cost == null ||
-                                                                        (cohortResponse.ApprenticeEmailIsRequired && string.IsNullOrWhiteSpace(a.Email) && !cohortResponse.IsLinkedToChangeOfPartyRequest))
+                            IsComplete = IsDraftApprenticeshipComplete(a, cohortResponse)
                         })
                 .ToList()
                 })
@@ -127,6 +125,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
             return groupedByCourse;
         }
+
+        private bool IsDraftApprenticeshipComplete(DraftApprenticeshipDto a, GetCohortResponse cohortResponse) =>
+                !(
+                  string.IsNullOrWhiteSpace(a.FirstName) || string.IsNullOrWhiteSpace(a.LastName) || a.DateOfBirth == null ||
+                  string.IsNullOrWhiteSpace(a.CourseName) || a.StartDate == null || a.EndDate == null || a.Cost == null ||
+                  (cohortResponse.ApprenticeEmailIsRequired && string.IsNullOrWhiteSpace(a.Email) && !cohortResponse.IsLinkedToChangeOfPartyRequest)
+                 );
+        
 
         private Task CheckUlnOverlap(List<DetailsViewCourseGroupingModel> courseGroups)
         {
