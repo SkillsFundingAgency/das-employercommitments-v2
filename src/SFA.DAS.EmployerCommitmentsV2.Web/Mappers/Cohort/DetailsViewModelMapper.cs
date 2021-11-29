@@ -112,9 +112,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                             OriginalStartDate = a.OriginalStartDate,
                             HasOverlappingEmail = emailOverlaps.Any(x=>x.Id == a.Id),
                             ULN = a.Uln,
-                            IsComplete = !(a.FirstName == null || a.LastName == null || a.DateOfBirth == null ||
-                                                                        a.CourseName == null || a.StartDate == null || a.EndDate == null || a.Cost == null ||
-                                                                        (a.Email == null && !cohortResponse.IsLinkedToChangeOfPartyRequest))
+                            IsComplete = !(string.IsNullOrWhiteSpace(a.FirstName) || string.IsNullOrWhiteSpace(a.LastName) || a.DateOfBirth == null ||
+                                                                        string.IsNullOrWhiteSpace(a.CourseName) || a.StartDate == null || a.EndDate == null || a.Cost == null ||
+                                                                        (cohortResponse.ApprenticeEmailIsRequired && string.IsNullOrWhiteSpace(a.Email) && !cohortResponse.IsLinkedToChangeOfPartyRequest))
                         })
                 .ToList()
                 })
