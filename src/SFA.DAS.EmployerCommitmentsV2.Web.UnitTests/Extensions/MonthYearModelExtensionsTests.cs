@@ -1,7 +1,8 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.Globalization;
+using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
-using System;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 {
@@ -84,13 +85,33 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         }
 
         [Test]
-        public void WhenDateTimeIsBeforeMonthYearModel_IsEqualToOrBeforeMonthYearOfDateTime_ReturnsTrue()
+        public void WhenDateTimeIsBeforeMonthYearModel_IsEqualToOrBeforeMonthYearOfDateTime_ReturnsFalse()
         {
             var dateTime = new DateTime(2020, 1, 1);
 
             var actualResult = _monthYear.IsEqualToOrBeforeMonthYearOfDateTime(dateTime);
 
             Assert.False(actualResult);
+        }
+
+        [Test]
+        [TestCase("01/12/2021", "01/11/2021", true)]
+        [TestCase("01/12/2021", "01/01/2022", false)]
+        public void WhenDateTimeIsInFuture_IsNotInFutureMonthYear_ReturnsFalse(string nowDateString, string proposedStopDateString, bool isValid)
+        {
+            var nowDate = DateTime.ParseExact(nowDateString,
+                    "dd/MM/yyyy",
+                    CultureInfo.CurrentCulture);
+
+            var proposedStopDate = DateTime.ParseExact(proposedStopDateString,
+                  "dd/MM/yyyy",
+                  CultureInfo.CurrentCulture);
+
+            var monthYear = new MonthYearModel(proposedStopDate.ToString("MMyyyy"));
+
+            var actualResult = monthYear.IsNotInFutureMonthYear(nowDate);
+
+            Assert.AreEqual(isValid, actualResult);
         }
     }
 }
