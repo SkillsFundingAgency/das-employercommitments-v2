@@ -88,7 +88,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 
         private void AssertValidationResult<T>(Expression<Func<StopRequestViewModel, T>> property, StopRequestViewModel instance, bool expectedValid, string expectedErrorMessage = null)
         {
-            var validator = new StopRequestViewModelValidator(Mock.Of<ICurrentDateTime>());
+            var currentDateMock = new Mock<ICurrentDateTime>();
+            currentDateMock.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+            var validator = new StopRequestViewModelValidator(currentDateMock.Object);
 
             if (expectedValid)
             {
