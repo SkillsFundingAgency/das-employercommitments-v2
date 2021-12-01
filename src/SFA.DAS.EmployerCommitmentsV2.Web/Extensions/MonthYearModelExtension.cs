@@ -20,10 +20,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             return monthYearModel.Date.Value <= new DateTime(datetime.Year, datetime.Month, 1);
         }
 
-        public static bool IsNotInFutureMonthYear(this MonthYearModel monthYearModel)
+        public static bool IsNotInFutureMonthYear(this MonthYearModel monthYearModel, DateTime nowDateTime)
         {
-            var dateTimeNow = DateTime.UtcNow;
-            var futureDateAndTime = new DateTime(dateTimeNow.Year, dateTimeNow.AddMonths(1).Month, 1);
+            var plusOneMonth = nowDateTime.AddMonths(1);
+            var futureDateAndTime = new DateTime(plusOneMonth.Year, plusOneMonth.Month, 1);
             return monthYearModel.Date.Value < futureDateAndTime;
         }
     }

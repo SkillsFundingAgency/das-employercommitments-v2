@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
@@ -6,8 +7,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
 {
     public class StopRequestViewModelValidator : AbstractValidator<StopRequestViewModel>
     {
-        public StopRequestViewModelValidator()
+        private readonly ICurrentDateTime _currentDateTime;
+        public StopRequestViewModelValidator(ICurrentDateTime currentDateTime)
         {
+            _currentDateTime = currentDateTime;
             RuleFor(r => r.StopDate).Must((r, StopDate) => r.StopMonth.HasValue && r.StopYear.HasValue)
                  .WithMessage("Enter the stop date for this apprenticeship")
                  .Unless(r => r.StopYear.HasValue || r.StopMonth.HasValue);
@@ -29,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
                .When(r => r.StopDate.IsValid);
 
             RuleFor(r => r.StopDate)
-                .Must((r, StopDate) => StopDate.IsNotInFutureMonthYear())
+                .Must((r, StopDate) => StopDate.IsNotInFutureMonthYear(_currentDateTime.UtcNow))
                 .WithMessage(r => $"The stop date cannot be in the future")
                 .When(r => r.StopDate.IsValid);
 

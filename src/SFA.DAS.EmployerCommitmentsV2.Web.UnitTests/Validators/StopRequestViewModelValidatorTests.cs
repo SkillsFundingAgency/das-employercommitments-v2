@@ -1,5 +1,7 @@
 ﻿using FluentValidation.TestHelper;
+using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 using System;
@@ -86,7 +88,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 
         private void AssertValidationResult<T>(Expression<Func<StopRequestViewModel, T>> property, StopRequestViewModel instance, bool expectedValid, string expectedErrorMessage = null)
         {
-            var validator = new StopRequestViewModelValidator();
+            var validator = new StopRequestViewModelValidator(Mock.Of<ICurrentDateTime>());
 
             if (expectedValid)
             {
