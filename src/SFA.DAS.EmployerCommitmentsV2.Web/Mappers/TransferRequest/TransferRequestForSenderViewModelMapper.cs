@@ -28,6 +28,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.TransferRequest
             viewModel.TransferReceiverPublicHashedAccountId = _encodingService.Encode(response.ReceivingEmployerAccountId, EncodingType.PublicAccountId);
             viewModel.TransferSenderHashedAccountId = _encodingService.Encode(response.SendingEmployerAccountId, EncodingType.AccountId);
             viewModel.TransferReceiverName = response.LegalEntityName;
+            viewModel.AutoApprovalEnabled = response.AutoApproval;
+            viewModel.PledgeApplicationId = response.PledgeApplicationId;
 
             return viewModel;
         }

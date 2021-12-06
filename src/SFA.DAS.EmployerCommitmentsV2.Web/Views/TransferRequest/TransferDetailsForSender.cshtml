@@ -13,7 +13,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        @if (Model.PendingApproval)
+        @if (Model.PendingApproval && !Model.AutoApprovalEnabled)
         {
             <partial name="_ValidationSummary" />
         }
@@ -109,7 +109,20 @@
                         @Model.TransferApprovalStatusDesc by
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        @Model.TransferApprovalSetBy
+                        @{
+                            if (Model.AutomaticallyApproved)
+                            {
+                                <p>You chose to automatically approve these details when you approved the  application for pledge @Model.PledgeApplicationId</p>
+                            }
+                            else if (Model.AutomaticallyRejected)
+                            {
+                                <p>The cost was greater than the amount you agreed to fund when you approved the application for pledge @Model.PledgeApplicationId</p>
+                            }
+                            else
+                            {
+                                @Model.TransferApprovalSetBy
+                            }
+                        }
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -123,7 +136,7 @@
             }
         </dl>
 
-        @if (Model.PendingApproval)
+        @if (Model.PendingApproval && !Model.AutoApprovalEnabled)
         {
             <form method="post">
                 <input type="hidden" asp-for="HashedCohortReference" />
