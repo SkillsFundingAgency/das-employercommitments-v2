@@ -136,5 +136,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             return linkGenerator.CommitmentsLink($"{hashedApprenticeshipId}/details/statuschange/{changeType}/maderedundant");
         }
 
+        public static string SenderApplicationDetails(this ILinkGenerator linkGenerator,
+            string hashedAccountId,
+            string hashedPledgeId,
+            string hashedPledgeApplicationId)
+        {
+            return linkGenerator.LevyTransferMatchingLink($"/accounts/{hashedAccountId}/pledges/{hashedPledgeId}/applications/{hashedPledgeApplicationId}");
+        }
+
+        public static string ReceiverApplicationDetails(this ILinkGenerator linkGenerator,
+            string hashedAccountId,
+            string hashedPledgeApplicationId)
+        {
+            return linkGenerator.LevyTransferMatchingLink($"/accounts/{hashedAccountId}/applications/{hashedPledgeApplicationId}");
+        }
     }
 }

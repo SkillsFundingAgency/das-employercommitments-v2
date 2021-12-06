@@ -24,5 +24,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest
         public bool PendingApproval => TransferApprovalStatus == TransferApprovalStatus.Pending;
         public bool ShowFundingCapWarning { get; set; }
         public bool? ApprovalConfirmed { get; set; }
+        public bool AutoApprovalEnabled { get; set; }
+        public string HashedPledgeId { get; set; }
+        public string HashedPledgeApplicationId { get; set; }
+        public bool AutomaticallyApproved => AutoApprovalEnabled && TransferApprovalStatus == TransferApprovalStatus.Approved;
+        public bool AutomaticallyRejected => AutoApprovalEnabled && TransferApprovalStatus == TransferApprovalStatus.Rejected;
     }
 }
