@@ -1,15 +1,15 @@
-﻿using SFA.DAS.EmployerCommitmentsV2.Services.LevyTransferMatching.Responses;
+﻿using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Services.LevyTransferMatching
+namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
 {
-    public class LevyTransferMatchingApiClient : ILevyTransferMatchingApiClient
+    public class ApprovalsApiClient : IApprovalsApiClient
     {
         private readonly IRestHttpClient _client;
 
-        public LevyTransferMatchingApiClient(IRestHttpClient client)
+        public ApprovalsApiClient(IRestHttpClient client)
         {
             _client = client;
         }

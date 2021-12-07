@@ -1,10 +1,10 @@
-﻿using SFA.DAS.EmployerCommitmentsV2.Services.LevyTransferMatching.Responses;
+﻿using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Services.LevyTransferMatching
+namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
 {
-    public interface ILevyTransferMatchingApiClient
+    public interface IApprovalsApiClient
     {
         Task<GetPledgeApplicationResponse> GetPledgeApplication(int pledgeApplicationId, CancellationToken cancellationToken = default);
     }

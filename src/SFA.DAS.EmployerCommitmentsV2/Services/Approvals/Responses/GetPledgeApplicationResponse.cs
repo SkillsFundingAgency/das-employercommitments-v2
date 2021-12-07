@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Services.LevyTransferMatching.Responses
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
 {
     public class GetPledgeApplicationResponse
     {

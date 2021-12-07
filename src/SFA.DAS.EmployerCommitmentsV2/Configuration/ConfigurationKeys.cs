@@ -15,6 +15,6 @@
         public const string EmployerSharedUiConfiguration = "SFA.DAS.Employer.Shared.UI";
         public static readonly string ZenDeskConfiguration = $"{EmployerCommitmentsV2}:ZenDesk";
         public static readonly string ConnectionStrings = $"{EmployerCommitmentsV2}:ConnectionStrings";
-        public static readonly string LevyTransferMatchingApiClientConfiguration = $"{EmployerCommitmentsV2}:LevyTransferMatchingApiClientConfiguration";
+        public static readonly string ApprovalsApiClientConfiguration = $"{EmployerCommitmentsV2}:ApprovalsApiClientConfiguration";
     }
 }

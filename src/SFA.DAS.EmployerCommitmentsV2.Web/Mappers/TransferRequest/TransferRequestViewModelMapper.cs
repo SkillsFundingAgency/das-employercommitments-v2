@@ -1,8 +1,8 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Services.LevyTransferMatching;
-using SFA.DAS.EmployerCommitmentsV2.Services.LevyTransferMatching.Responses;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
 using SFA.DAS.Encoding;
 using System.Collections.Generic;
@@ -13,13 +13,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.TransferRequest
     public class TransferRequestViewModelMapper<T> where T : TransferRequestViewModel, new()
     {
         protected readonly ICommitmentsApiClient _commitmentsApiClient;
-        protected readonly ILevyTransferMatchingApiClient _levyTransferMatchingApiClient;
+        protected readonly IApprovalsApiClient _approvalsApiClient;
         protected readonly IEncodingService _encodingService;
 
-        public TransferRequestViewModelMapper(ICommitmentsApiClient commitmentsApiClient, ILevyTransferMatchingApiClient levyTransferMatchingApiClient, IEncodingService encodingService)
+        public TransferRequestViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient, IEncodingService encodingService)
         {
             _commitmentsApiClient = commitmentsApiClient;
-            _levyTransferMatchingApiClient = levyTransferMatchingApiClient;
+            _approvalsApiClient = approvalsApiClient;
             _encodingService = encodingService;
         }
 

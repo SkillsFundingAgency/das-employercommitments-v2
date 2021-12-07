@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
             registry.IncludeRegistry<EncodingRegistry>();
             registry.IncludeRegistry<EmployerUserRolesAuthorizationRegistry>();
             registry.IncludeRegistry<WebRegistry>();
-            registry.IncludeRegistry<LevyTransferMatchingApiClientRegistry>();
+            registry.IncludeRegistry<ApprovalsApiClientRegistry>();
 
             // Enable if you want to by pass MI locally.
             if (config["UseLocalDevRegistry"] != null && bool.Parse(config["UseLocalDevRegistry"]))
