@@ -106,7 +106,7 @@
         {
             "condition": "[greater(length(parameters('customHostName')), 0)]",
             "apiVersion": "2021-04-01",
-            "name": "app-service-certificate",
+            "name": "[concat(parameters('keyVaultCertificateName'), '-', utcNow())]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
             "properties": {
@@ -130,7 +130,7 @@
         },
         {
             "apiVersion": "2021-04-01",
-            "name": "application-insights",
+            "name": "[concat(variables('appServiceName'), '-', utcNow())]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
@@ -154,7 +154,7 @@
         },
         {
             "apiVersion": "2021-04-01",
-            "name": "app-service-apim-product-subscription",
+            "name": "[concat(variables('appServiceName'), '-', utcNow())]",
             "resourceGroup": "[parameters('sharedApimResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
@@ -178,7 +178,7 @@
         },
         {
             "apiVersion": "2021-04-01",
-            "name": "app-service",
+            "name": "[concat(variables('appServiceName'), '-', utcNow())]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
