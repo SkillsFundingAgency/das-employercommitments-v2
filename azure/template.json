@@ -78,6 +78,12 @@
                 "description": "The name of the shared management resource group."
             }
         },
+        "sharedApimResourceGroup": {
+            "type": "string"
+        },
+        "sharedApimName": {
+            "type": "string"
+        },
         "cdnUrl": {
             "type": "string"
         }
@@ -90,7 +96,7 @@
     },
     "resources": [
         {
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
             "name": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/resourceGroups",
             "location": "[parameters('resourceGroupLocation')]",
@@ -99,7 +105,7 @@
         },
         {
             "condition": "[greater(length(parameters('customHostName')), 0)]",
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
             "name": "app-service-certificate",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
@@ -123,7 +129,7 @@
             }
         },
         {
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
             "name": "application-insights",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
@@ -147,7 +153,31 @@
             ]
         },
         {
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
+            "name": "app-service-apim-product-subscription",
+            "resourceGroup": "[parameters('sharedApimResourceGroup')]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'apim/apim-subscription.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "apimName": {
+                        "value": "[parameters('sharedApimName')]"
+                    },
+                    "subscriptionName": {
+                        "value": "[variables('appServiceName')]"
+                    },
+                    "subscriptionScope": {
+                        "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/products/ApprovalsOuterApi')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2021-04-01",
             "name": "app-service",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
