@@ -217,7 +217,7 @@
                                 },
                                 {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[reference('application-insights').outputs.InstrumentationKey.value]"
+                                    "value": "[reference(concat(variables('appServiceName'), '-app-insights-', parameters('utcValue'))).outputs.InstrumentationKey.value]"
                                 },
                                 {
                                     "name": "ASPNETCORE_ENVIRONMENT",
