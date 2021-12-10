@@ -1,5 +1,6 @@
 ﻿@using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerUrlHelper.Mvc
+@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.ApprovedViewModel
 
 @{
@@ -35,7 +36,7 @@
 
         @if (Model.WithParty == Party.None)
         {
-            <p class="govuk-body">You've approved these apprentice details. <a id="next-manage-link" class="govuk-link" href="@Url.CommitmentsV2Link($"/{Model.AccountHashedId}/apprentices")">Manage your apprentices</a> to view or update details.</p>
+            <p class="govuk-body">You've approved these apprentice details. <a id="next-manage-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ApprenticesIndex, new { @Model.AccountHashedId })">Manage your apprentices</a> to view or update details.</p>
             <p class="govuk-body">Your apprentice will now receive an email alert inviting them to the My apprenticeship service where they will review and confirm their apprenticeship details.</p>
         }
         else if (Model.WithParty == Party.Provider)
@@ -49,7 +50,7 @@
         {
             <ul class="govuk-list govuk-list--bullet">
                 <li>You will receive notification once the sending employer approves or rejects the transfer request. You can view the progress of a request from the 'With transfer sending employers' status screen</li>
-                <li>Once the transfer request is approved, you'll be able to <a id="next-manage-link" class="govuk-link" href="@Url.CommitmentsV2Link($"/{Model.AccountHashedId}/apprentices")">view and manage the apprentices</a>.</li>
+                <li>Once the transfer request is approved, you'll be able to <a id="next-manage-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ApprenticesIndex, new { @Model.AccountHashedId })">view and manage the apprentices</a>.</li>
             </ul>
         }
 
