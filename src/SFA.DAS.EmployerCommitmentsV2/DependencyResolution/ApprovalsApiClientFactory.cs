@@ -30,10 +30,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution
             else
                 httpClient.BaseAddress = new Uri(_configuration.ApiBaseUrl);
 
-            //var httpClientFactory = new ManagedIdentityHttpClientFactory(_configuration, _loggerFactory);
-            //var httpClient = httpClientFactory.CreateHttpClient();
             var apiClient = new ApprovalsApiClient(new RestHttpClient(httpClient));
-
             return apiClient;
         }
     }
