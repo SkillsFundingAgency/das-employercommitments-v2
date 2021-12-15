@@ -13,9 +13,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
     public class AspNetStartup
     {
         private readonly IConfiguration _configuration;
-        public IHostingEnvironment Environment { get; }
+        public IWebHostEnvironment Environment { get; }
 
-        public AspNetStartup(IConfiguration configuration, IHostingEnvironment environment)
+        public AspNetStartup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _configuration = configuration;
             Environment = environment;
@@ -49,6 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .UseStaticFiles()
                 .UseDasHealthChecks()
                 .UseAuthentication()
+                .UseAuthorization()
                 .UseMvc();
         }
     }

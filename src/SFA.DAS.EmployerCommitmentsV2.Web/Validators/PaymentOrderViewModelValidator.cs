@@ -9,7 +9,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
         public PaymentOrderViewModelValidator()
         {
             RuleFor(x => x.ProviderPaymentOrder)
-                .Cascade(CascadeMode.StopOnFirstFailure)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .Must(x =>
                 {

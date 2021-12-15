@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             SelectProviderRequest request,
             SelectProviderViewModel viewModel,
             [Frozen] Mock<IModelMapper> mockMapper,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             await controller.SelectProvider(request);
 
@@ -31,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             SelectProviderRequest request,
             SelectProviderViewModel viewModel,
             [Frozen] Mock<IModelMapper> mockMapper,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map<SelectProviderViewModel>(request))

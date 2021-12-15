@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             ConfirmProviderRequest confirmProviderRequest,
             GetProviderResponse getProviderResponse,
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             confirmProviderRequest.ProviderId = providerId;
             mockApiClient

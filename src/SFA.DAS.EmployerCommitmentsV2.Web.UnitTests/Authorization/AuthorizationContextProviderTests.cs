@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 using Moq;
@@ -196,12 +196,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
             HttpContextAccessor = new Mock<IHttpContextAccessor>();
             RoutingFeature = new Mock<IRoutingFeature>();
             EncodingService = new Mock<IEncodingService>();
-            HttpContextAccessor.Setup(c => c.HttpContext.Features[typeof(IRoutingFeature)]).Returns(RoutingFeature.Object);
-            RoutingFeature.Setup(f => f.RouteData).Returns(new RouteData());
-            HttpContextAccessor.Setup(c => c.HttpContext.Request.Query).Returns(new QueryCollection());
-            HttpContextAccessor.Setup(c => c.HttpContext.Request.Form).Returns(new FormCollection(new Dictionary<string, StringValues>()));
-            UserRef = Guid.NewGuid();
             RouteData = new RouteData();
+            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
+            UserRef = Guid.NewGuid();
+
+            var featureCollection = new Mock<IFeatureCollection>();
+            featureCollection.Setup(f => f.Get<IRoutingFeature>()).Returns(RoutingFeature.Object);
+
+            var context = new Mock<HttpContext>();
+            context.Setup(c => c.Features).Returns(featureCollection.Object);
+            context.Setup(c => c.Request.Query).Returns(new QueryCollection());
+            context.Setup(c => c.Request.Form).Returns(new FormCollection(new Dictionary<string, StringValues>()));
+
+            HttpContextAccessor.Setup(c => c.HttpContext).Returns(context.Object);
 
             AuthorizationContextProvider = new AuthorizationContextProvider(HttpContextAccessor.Object, EncodingService.Object, UserService.Object);
         }

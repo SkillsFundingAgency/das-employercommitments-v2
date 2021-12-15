@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             AssignRequest request,
             AssignViewModel viewModel,
             [Frozen] Mock<IModelMapper> mockMapper,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map<AssignViewModel>(request))

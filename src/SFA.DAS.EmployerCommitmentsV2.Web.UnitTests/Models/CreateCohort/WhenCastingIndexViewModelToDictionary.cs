@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.CreateCohort
             var dictionary = indexViewModel.ToDictionary();
 
             dictionary.Should().ContainKey(nameof(indexViewModel.AccountHashedId))
-                .WhichValue.Should().Be(indexViewModel.AccountHashedId);
+                .WhoseValue.Should().Be(indexViewModel.AccountHashedId);
         }
 
         [Test, AutoData]
@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.CreateCohort
             var dictionary = indexViewModel.ToDictionary();
 
             dictionary.Should().ContainKey(nameof(IndexViewModel.ReservationId))
-                .WhichValue.Should().Be(indexViewModel.ReservationId?.ToString());
+                .WhoseValue.Should().Be(indexViewModel.ReservationId?.ToString());
         }
 
         [Test, AutoData]
@@ -34,7 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.CreateCohort
             var dictionary = indexViewModel.ToDictionary();
 
             dictionary.Should().ContainKey(nameof(IndexViewModel.AccountLegalEntityHashedId))
-                .WhichValue.Should().Be(indexViewModel.AccountLegalEntityHashedId);
+                .WhoseValue.Should().Be(indexViewModel.AccountLegalEntityHashedId);
         }
 
         [Test, AutoData]
@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.CreateCohort
             var dictionary = indexViewModel.ToDictionary();
 
             dictionary.Should().ContainKey(nameof(IndexViewModel.StartMonthYear))
-                .WhichValue.Should().Be(indexViewModel.StartMonthYear);
+                .WhoseValue.Should().Be(indexViewModel.StartMonthYear);
         }
 
         [Test, AutoData]
@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.CreateCohort
             var dictionary = indexViewModel.ToDictionary();
 
             dictionary.Should().ContainKey(nameof(IndexViewModel.CourseCode))
-                .WhichValue.Should().Be(indexViewModel.CourseCode);
+                .WhoseValue.Should().Be(indexViewModel.CourseCode);
         }
 
         // missing value cases

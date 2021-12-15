@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Filters
     [TestFixture]
     public class WhenAddingGoogleAnalyticsInformation
     {
-        [Test, MoqAutoData]
+        [Test, DomainAutoData]
         public async Task Then_If_Employer_Adds_The_AccountId_And_UserId_To_The_ViewBag_Data(
             Guid userId,
             long accountId,
@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Filters
             Assert.AreEqual(userId.ToString(), viewBagData.UserId);
         }
 
-        [Test, MoqAutoData]
+        [Test, DomainAutoData]
         public async Task And_Context_Is_Non_Controller_Then_No_Data_Is_Added_To_ViewBag(
             Guid userId,
             long accountId,

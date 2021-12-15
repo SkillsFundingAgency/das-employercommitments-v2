@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using StackExchange.Redis;
 
@@ -9,7 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
 {
     public static class DataProtectionStartupExtensions
     {
-        public static IServiceCollection AddDataProtection(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment environment)
+        public static IServiceCollection AddDataProtection(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
             if (!environment.IsDevelopment())
             {

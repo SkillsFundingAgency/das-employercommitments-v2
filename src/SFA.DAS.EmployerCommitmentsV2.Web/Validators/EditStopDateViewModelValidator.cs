@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
             RuleFor(x => x.AccountHashedId).NotEmpty();
 
             RuleFor(r => r.NewStopDate)
-                .Cascade(CascadeMode.StopOnFirstFailure)
+                .Cascade(CascadeMode.Stop)
                 .NotNull().WithMessage("Enter the stop date for this apprenticeship")
                 .Must(d => d.Date.HasValue).WithMessage("Enter the stop date for this apprenticeship")
                 .Must(d => d.Date <= new DateTime(_currentDateTime.UtcNow.Year, _currentDateTime.UtcNow.Month, 1)).WithMessage("The stop date cannot be in the future")

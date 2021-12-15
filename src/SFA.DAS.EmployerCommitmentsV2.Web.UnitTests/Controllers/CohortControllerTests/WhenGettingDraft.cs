@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         public async Task ThenMapperIsCalled(
             [Frozen] Mock<IModelMapper> modelMapper,
             CohortsByAccountRequest request,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             await controller.Draft(request);
 
@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             [Frozen] Mock<IModelMapper> modelMapper,
             CohortsByAccountRequest request,
             DraftViewModel viewModel,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             modelMapper
                 .Setup(x => x.Map<DraftViewModel>(request))

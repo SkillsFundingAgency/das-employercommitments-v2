@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.TransferReques
             TransferRequestRequest request,
             TransferRequestForReceiverViewModel viewModel,
             [Frozen] Mock<IModelMapper> mockMapper,
-            TransferRequestController controller)
+            [Greedy] TransferRequestController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map<TransferRequestForReceiverViewModel>(request))

@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             DownloadRequest request,
             string expectedFileName,
             [Frozen] Mock<IModelMapper> csvMapper,
-            ApprenticeController controller)
+            [Greedy] ApprenticeController controller)
         {
             //Arrange
             var expectedCsvContent = new DownloadViewModel

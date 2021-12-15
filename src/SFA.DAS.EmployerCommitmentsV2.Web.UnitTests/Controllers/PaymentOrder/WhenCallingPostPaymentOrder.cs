@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
             UpdateProviderPaymentsPriorityRequest request,
             PaymentOrderViewModel viewModel,
             [Frozen] Mock<IModelMapper> mockMapper,
-            PaymentOrderController controller)
+            [Greedy] PaymentOrderController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map<UpdateProviderPaymentsPriorityRequest>(viewModel))
@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
         public async Task And_UpdateProviderPaymentsPriority_Fails_Then_Redirect_To_Error(
             PaymentOrderViewModel viewModel,
             [Frozen] Mock<IModelMapper> mockMapper,
-            PaymentOrderController controller)
+            [Greedy] PaymentOrderController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map<UpdateProviderPaymentsPriorityRequest>(viewModel))

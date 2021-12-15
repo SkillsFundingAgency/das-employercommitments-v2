@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.TransferReques
             UpdateTransferApprovalForSenderRequest request,
             TransferRequestForSenderViewModel viewModel,
             [Frozen] Mock<IModelMapper> mockMapper,
-            TransferRequestController controller)
+            [Greedy] TransferRequestController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map<UpdateTransferApprovalForSenderRequest>(viewModel))
@@ -75,7 +75,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.TransferReques
         public async Task And_TransferDetailsForSender_Fails_Then_Redirect_To_Error(
             TransferRequestForSenderViewModel viewModel,
             [Frozen] Mock<IModelMapper> mockMapper,
-            TransferRequestController controller)
+            [Greedy] TransferRequestController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map<UpdateTransferApprovalForSenderRequest>(viewModel))
