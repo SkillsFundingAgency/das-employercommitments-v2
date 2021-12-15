@@ -60,7 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
             var emailOverlaps = (await emailOverlapsTask).ApprenticeshipEmailOverlaps.ToList();
 
-            var courses = await GroupCourses(draftApprenticeships, emailOverlaps);
+            var courses = await GroupCourses(draftApprenticeships, emailOverlaps, cohort);
             var viewOrApprove = cohort.WithParty == CommitmentsV2.Types.Party.Employer ? "Approve" : "View";
             var isAgreementSigned = await IsAgreementSigned(cohort.AccountLegalEntityId);
 
@@ -87,7 +87,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             };
         }
 
-        private async Task<IReadOnlyCollection<DetailsViewCourseGroupingModel>> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships, List<ApprenticeshipEmailOverlap> emailOverlaps)
+        private async Task<IReadOnlyCollection<DetailsViewCourseGroupingModel>> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships, List<ApprenticeshipEmailOverlap> emailOverlaps, GetCohortResponse cohortResponse)
         {
             var groupedByCourse = draftApprenticeships
                 .GroupBy(a => new { a.CourseCode, a.CourseName })
@@ -111,7 +111,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                             StartDate = a.StartDate,
                             OriginalStartDate = a.OriginalStartDate,
                             HasOverlappingEmail = emailOverlaps.Any(x=>x.Id == a.Id),
-                            ULN = a.Uln
+                            ULN = a.Uln,
+                            IsComplete = IsDraftApprenticeshipComplete(a, cohortResponse)
                         })
                 .ToList()
                 })
@@ -124,6 +125,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
             return groupedByCourse;
         }
+
+        private bool IsDraftApprenticeshipComplete(DraftApprenticeshipDto draftApprenticeship, GetCohortResponse cohortResponse) =>
+                !(
+                  string.IsNullOrWhiteSpace(draftApprenticeship.FirstName) || string.IsNullOrWhiteSpace(draftApprenticeship.LastName) 
+                  || draftApprenticeship.DateOfBirth == null ||  string.IsNullOrWhiteSpace(draftApprenticeship.CourseName) 
+                  || draftApprenticeship.StartDate == null || draftApprenticeship.EndDate == null || draftApprenticeship.Cost == null 
+                  || (cohortResponse.ApprenticeEmailIsRequired && string.IsNullOrWhiteSpace(draftApprenticeship.Email) && !cohortResponse.IsLinkedToChangeOfPartyRequest)
+                 );
+        
 
         private Task CheckUlnOverlap(List<DetailsViewCourseGroupingModel> courseGroups)
         {

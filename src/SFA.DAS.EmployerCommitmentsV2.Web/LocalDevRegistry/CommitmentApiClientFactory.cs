@@ -30,6 +30,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web
                .Build();
 
                 httpClient.BaseAddress = new Uri(_configuration.ApiBaseUrl);
+                var byteArray = System.Text.Encoding.ASCII.GetBytes($"employer:password1234");
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
                 var restHttpClient = new CommitmentsRestHttpClient(httpClient, _loggerFactory);
                 return new CommitmentsApiClient(restHttpClient);
