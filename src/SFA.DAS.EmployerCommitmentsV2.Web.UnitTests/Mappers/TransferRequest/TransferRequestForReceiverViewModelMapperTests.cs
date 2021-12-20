@@ -1,17 +1,14 @@
 ﻿using AutoFixture;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.TransferRequest;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
 using SFA.DAS.Encoding;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,10 +18,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
     public class TransferConfirmationViewModelMapperTests
     {
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+        private Mock<IApprovalsApiClient> _mockApprovalsApiClient;
         private Mock<IEncodingService> _mockEncodingService;
         
         private GetTransferRequestResponse _getTransferRequestResponse;
         private TransferRequestRequest _request;
+
+        private GetPledgeApplicationResponse _getPledgeApplicationResponse;
+        private int _getPledgeApplicationId;
         
         private TransferRequestForReceiverViewModelMapper _mapper;
 
@@ -42,15 +43,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .With(x => x.TransferRequestHashedId, $"A{TransferRequestIdFirst}")
                 .Create();
 
+            _getPledgeApplicationId = autoFixture.Create<int>();
+
             _getTransferRequestResponse = autoFixture.Build<GetTransferRequestResponse>()
                 .With(x => x.ReceivingEmployerAccountId, ReceivingEmployerAccountIdFirst)
                 .With(x => x.TransferRequestId, TransferRequestIdFirst)
+                .With(x => x.PledgeApplicationId, _getPledgeApplicationId)
                 .Create();
             
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _mockCommitmentsApiClient.Setup(r => r.GetTransferRequestForReceiver(It.IsAny<long>(), It.IsAny<long>(), CancellationToken.None))
                 .ReturnsAsync(_getTransferRequestResponse);
-            
+
+            _getPledgeApplicationResponse = autoFixture.Create<GetPledgeApplicationResponse>();
+
+            _mockApprovalsApiClient = new Mock<IApprovalsApiClient>();
+            _mockApprovalsApiClient.Setup(r => r.GetPledgeApplication(_getPledgeApplicationId, CancellationToken.None))
+                .ReturnsAsync(_getPledgeApplicationResponse);
+
             _mockEncodingService = new Mock<IEncodingService>();
             
             _mockEncodingService.Setup(t => t.Encode(It.IsAny<long>(), EncodingType.AccountId))
@@ -61,10 +71,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .Returns((long value, EncodingType encodingType) => $"T{value}");
             _mockEncodingService.Setup(t => t.Encode(It.IsAny<long>(), EncodingType.CohortReference))
                 .Returns((long value, EncodingType encodingType) => $"C{value}");
+            _mockEncodingService.Setup(t => t.Encode(It.IsAny<long>(), EncodingType.PledgeId))
+                .Returns((long value, EncodingType encodingType) => $"PL{value}");
+            _mockEncodingService.Setup(t => t.Encode(It.IsAny<long>(), EncodingType.PledgeApplicationId))
+                .Returns((long value, EncodingType encodingType) => $"PA{value}");
             _mockEncodingService.Setup(t => t.Decode(It.IsAny<string>(), It.IsAny<EncodingType>()))
                 .Returns((string value, EncodingType encodingType) => long.Parse(Regex.Replace(value, "[A-Za-z ]", "")));
 
-            _mapper = new TransferRequestForReceiverViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object);
+            _mapper = new TransferRequestForReceiverViewModelMapper(_mockCommitmentsApiClient.Object, _mockApprovalsApiClient.Object, _mockEncodingService.Object);
         }
 
         [Test]
@@ -165,6 +179,36 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.AreEqual(_getTransferRequestResponse.FundingCap, result.FundingCap);
+        }
+
+        [Test]
+        public async Task AutoApproval_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(_getTransferRequestResponse.AutoApproval, result.AutoApprovalEnabled);
+        }
+
+        [Test]
+        public async Task PledgeApplicationId_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual($"PA{_getTransferRequestResponse.PledgeApplicationId}", result.HashedPledgeApplicationId);
+        }
+
+        [Test]
+        public async Task PledgeId_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual($"PL{_getPledgeApplicationResponse.PledgeId}", result.HashedPledgeId);
         }
 
         [TestCase(TransferApprovalStatus.Pending, 1500.0, 12000, true)]

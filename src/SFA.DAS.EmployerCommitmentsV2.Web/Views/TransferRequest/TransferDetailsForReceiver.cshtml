@@ -74,7 +74,20 @@
                         @Model.TransferApprovalStatusDesc by
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        @Model.TransferApprovalSetBy
+                        @{
+                            if (Model.AutomaticallyApproved)
+                            {
+                                <p>The transfer sending employer chose to automatically approve these details when they approved your <a href="@LinkGenerator.ReceiverApplicationDetails(Model.TransferReceiverHashedAccountId, Model.HashedPledgeApplicationId)">application</a> for pledge @Model.HashedPledgeId.</p>
+                            }
+                            else if (Model.AutomaticallyRejected)
+                            {
+                                <p>The cost was greater than the amount the transfer sending employer agreed to fund when they approved your <a href="@LinkGenerator.ReceiverApplicationDetails(Model.TransferReceiverHashedAccountId, Model.HashedPledgeApplicationId)">application</a> for pledge @Model.HashedPledgeId.</p>
+                            }
+                            else
+                            {
+                                @Model.TransferApprovalSetBy
+                            }
+                        }
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">

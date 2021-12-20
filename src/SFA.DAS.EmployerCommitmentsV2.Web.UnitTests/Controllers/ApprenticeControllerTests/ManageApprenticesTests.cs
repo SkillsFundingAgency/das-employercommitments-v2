@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             IndexRequest request,
             IndexViewModel expectedViewModel,
             [Frozen] Mock<IModelMapper> apprenticeshipMapper,
-            ApprenticeController controller)
+            [Greedy] ApprenticeController controller)
         {
             //Arrange
             apprenticeshipMapper
@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             IndexRequest request,
             IndexViewModel expectedViewModel,
             [Frozen] Mock<IModelMapper> apprenticeshipMapper,
-            ApprenticeController controller)
+            [Greedy] ApprenticeController controller)
         {
             //Arrange
             expectedViewModel.FilterModel.ReverseSort = false;
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
            IndexViewModel expectedViewModel,
            [Frozen] Mock<IModelMapper> apprenticeshipMapper,
            [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
-           ApprenticeController controller)
+           [Greedy] ApprenticeController controller)
         {
             //Arrange
             request.FromSearch = false;
@@ -86,7 +86,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             IndexViewModel expectedViewModel,
             [Frozen] Mock<IModelMapper> apprenticeshipMapper,
             [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
-            ApprenticeController controller)
+            [Greedy] ApprenticeController controller)
         {
             //Arrange
             request.FromSearch = true;
@@ -113,7 +113,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             IndexViewModel expectedViewModel,
             [Frozen] Mock<IModelMapper> apprenticeshipMapper,
             [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
-            ApprenticeController controller)
+            [Greedy] ApprenticeController controller)
         {
             //Arrange
             request.FromSearch = true;
@@ -140,7 +140,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             IndexViewModel expectedViewModel,
             [Frozen] Mock<IModelMapper> apprenticeshipMapper,
             [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
-            ApprenticeController controller)
+            [Greedy] ApprenticeController controller)
         {
             //Arrange
             request.FromSearch = true;
@@ -167,7 +167,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             IndexViewModel expectedViewModel,
             [Frozen] Mock<IModelMapper> apprenticeshipMapper,
             [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
-            ApprenticeController controller)
+            [Greedy] ApprenticeController controller)
         {
             //Arrange
             request.FromSearch = true;

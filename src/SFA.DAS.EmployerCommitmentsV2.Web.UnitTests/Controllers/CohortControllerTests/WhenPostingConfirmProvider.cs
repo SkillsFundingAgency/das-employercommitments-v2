@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             [Frozen] Mock<IValidator<ConfirmProviderViewModel>> mockValidator,
             [Frozen] Mock<IModelMapper> mockMapper,
             AssignRequest mapperResult,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             mockMapper.Setup(x => x.Map<AssignRequest>(It.IsAny<ConfirmProviderViewModel>()))
                 .ReturnsAsync(mapperResult);
@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             [Frozen] Mock<IValidator<ConfirmProviderViewModel>> mockValidator,
             [Frozen] Mock<IModelMapper> mockMapper,
             SelectProviderViewModel mapperResult,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             mockMapper.Setup(x => x.Map<SelectProviderViewModel>(It.IsAny<ConfirmProviderViewModel>()))
                 .ReturnsAsync(mapperResult);

@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             string schemesLink,
             [Frozen] Mock<IModelMapper> mockMapper,
             [Frozen] Mock<ILinkGenerator> mockLinkGenerator,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map<IndexViewModel>(request))

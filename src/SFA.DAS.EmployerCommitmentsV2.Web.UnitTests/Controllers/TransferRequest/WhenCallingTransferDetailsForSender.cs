@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
             TransferRequestRequest request,
             TransferRequestForSenderViewModel viewModel,
             [Frozen] Mock<IModelMapper> mockMapper,
-            TransferRequestController controller)
+            [Greedy] TransferRequestController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map<TransferRequestForSenderViewModel>(request))

@@ -25,6 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution
             AddConfiguration<EncodingConfig>(ConfigurationKeys.Encoding);
             AddConfiguration<AccountApiConfiguration>(ConfigurationKeys.AccountApiConfiguration);
             AddConfiguration<ZenDeskConfiguration>(ConfigurationKeys.ZenDeskConfiguration);
+            AddConfiguration<ApprovalsApiClientConfiguration>(ConfigurationKeys.ApprovalsApiClientConfiguration);
         }
 
         private void AddConfiguration<T>(string key) where T : class

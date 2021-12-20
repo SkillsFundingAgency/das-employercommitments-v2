@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderCo
             PaymentOrderRequest request,
             PaymentOrderViewModel viewModel,
             [Frozen] Mock<IModelMapper> mockMapper,
-            PaymentOrderController controller)
+            [Greedy] PaymentOrderController controller)
         {
             mockMapper
                 .Setup(mapper => mapper.Map<PaymentOrderViewModel>(request))

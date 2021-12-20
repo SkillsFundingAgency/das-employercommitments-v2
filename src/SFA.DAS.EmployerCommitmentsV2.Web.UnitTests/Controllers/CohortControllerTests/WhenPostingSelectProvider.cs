@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             long providerId,
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             GetProviderResponse apiResponse,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             viewModel.ProviderId = providerId.ToString();
             
@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             HttpResponseMessage error,
             [Frozen] Mock<IModelMapper> modelMapper,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             modelMapper.Setup(x => x.Map<SelectProviderRequest>(viewModel))
                 .ReturnsAsync(new SelectProviderRequest());
@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             GetProviderResponse apiResponse,
             HttpResponseMessage error,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             error.StatusCode = HttpStatusCode.NetworkAuthenticationRequired;
             viewModel.ProviderId = providerId.ToString();
@@ -92,7 +92,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
             [Frozen] Mock<IModelMapper> mockMapper,
             GetProviderResponse apiResponse,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             viewModel.ProviderId = providerId.ToString();
             mockValidator
@@ -117,7 +117,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             [Frozen] Mock<IModelMapper> mockMapper,
             GetProviderResponse apiResponse,
             ConfirmProviderRequest confirmProviderRequest,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             var actionName = "ConfirmProvider";
             viewModel.ProviderId = providerId.ToString();

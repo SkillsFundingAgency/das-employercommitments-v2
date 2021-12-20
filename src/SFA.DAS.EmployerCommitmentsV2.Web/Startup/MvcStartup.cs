@@ -16,6 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         {
             services.AddMvc(o =>
                 {
+                    o.EnableEndpointRouting = false;
                     o.AddAuthorization();
                     o.AddValidation();
                     o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
@@ -23,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                     o.ModelBinderProviders.Insert(0, new SuppressArgumentExceptionModelBinderProvider());
                 })
                 .AddControllersAsServices()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .SetDefaultNavigationSection(NavigationSection.ApprenticesHome)
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddDraftApprenticeshipViewModelValidator>());
 

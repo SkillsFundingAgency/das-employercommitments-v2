@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         [Test, MoqAutoData]
         public void And_Employer_Adding_Apprentices_Then_Redirect_To_Add_Apprentice(
             AssignViewModel viewModel,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             var expectedRouteValues = new RouteValueDictionary(new
             {
@@ -47,8 +47,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         [Test, MoqAutoData]
         public void And_Provider_Adding_Apprentices_Then_Redirect_To_Message(
             AssignViewModel viewModel,
-            CohortController controller)
+            [Frozen] Mock<ITempDataProvider> tempDataProvider,
+            [Greedy] CohortController controller)
         {
+            var tempdata = new TempDataDictionary(new DefaultHttpContext(), tempDataProvider.Object);
+            controller.TempData = tempdata;
+
             var expectedRouteValues = new RouteValueDictionary(new
             {
                 viewModel.AccountHashedId,
@@ -74,7 +78,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         public void And_Provider_Adding_Apprentices_Then_Legal_Entity_Name_Stored_In_TempData(
             [Frozen] AssignViewModel viewModel,
             [Frozen] Mock<ITempDataProvider> tempDataProvider,
-            [Frozen] CohortController controller)
+            [Frozen, Greedy] CohortController controller)
         {
             var tempdata = new TempDataDictionary(new DefaultHttpContext(), tempDataProvider.Object);
             controller.TempData = tempdata;
@@ -99,7 +103,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         [Test, MoqAutoData]
         public void And_Unknown_Adding_Apprentices_Then_Redirect_To_Error(
             AssignViewModel viewModel,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             viewModel.WhoIsAddingApprentices = (WhoIsAddingApprentices)55;
 
@@ -114,7 +118,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         public void And_Employer_Adding_Apprentices_And_No_Reservation_Then_Redirect_To_Reservation_Selection(
             [Frozen] Mock<ILinkGenerator> linkGenerator,
             AssignViewModel viewModel,
-            CohortController controller)
+            [Greedy] CohortController controller)
         {
             const string reservationsUrl = "RESERVATIONS-URL";
             linkGenerator.Setup(x => x.ReservationsLink(It.IsAny<string>())).Returns(reservationsUrl);
