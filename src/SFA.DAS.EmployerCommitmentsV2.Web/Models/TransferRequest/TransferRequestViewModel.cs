@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest
         public bool AutoApprovalEnabled { get; set; }
         public string HashedPledgeId { get; set; }
         public string HashedPledgeApplicationId { get; set; }
-        public bool AutomaticallyApproved => AutoApprovalEnabled && TransferApprovalStatus == TransferApprovalStatus.Approved;
-        public bool AutomaticallyRejected => AutoApprovalEnabled && TransferApprovalStatus == TransferApprovalStatus.Rejected;
+        public bool AutomaticallyApproved => AutoApprovalEnabled && HashedPledgeId != string.Empty && TransferApprovalStatus == TransferApprovalStatus.Approved;
+        public bool AutomaticallyRejected => AutoApprovalEnabled && HashedPledgeId != string.Empty && TransferApprovalStatus == TransferApprovalStatus.Rejected;
     }
 }
