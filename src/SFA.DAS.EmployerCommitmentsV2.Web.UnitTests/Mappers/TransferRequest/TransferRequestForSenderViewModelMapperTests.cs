@@ -15,7 +15,7 @@ using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
 {
-    public class TransferRequestForReceiverViewModelMapperTests
+    public class TransferRequestForSenderViewModelMapperTests
     {
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
         private Mock<IApprovalsApiClient> _mockApprovalsApiClient;
@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
         private GetPledgeApplicationResponse _getPledgeApplicationResponse;
         private int _getPledgeApplicationId;
         
-        private TransferRequestForReceiverViewModelMapper _mapper;
+        private TransferRequestForSenderViewModelMapper _mapper;
 
         private const long AccountIdFirst = 12;
         private const long TransferRequestIdFirst = 34;
@@ -52,7 +52,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
                 .Create();
             
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockCommitmentsApiClient.Setup(r => r.GetTransferRequestForReceiver(It.IsAny<long>(), It.IsAny<long>(), CancellationToken.None))
+            _mockCommitmentsApiClient.Setup(r => r.GetTransferRequestForSender(It.IsAny<long>(), It.IsAny<long>(), CancellationToken.None))
                 .ReturnsAsync(_getTransferRequestResponse);
 
             _getPledgeApplicationResponse = autoFixture.Create<GetPledgeApplicationResponse>();
@@ -78,17 +78,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             _mockEncodingService.Setup(t => t.Decode(It.IsAny<string>(), It.IsAny<EncodingType>()))
                 .Returns((string value, EncodingType encodingType) => long.Parse(Regex.Replace(value, "[A-Za-z ]", "")));
 
-            _mapper = new TransferRequestForReceiverViewModelMapper(_mockCommitmentsApiClient.Object, _mockApprovalsApiClient.Object, _mockEncodingService.Object);
+            _mapper = new TransferRequestForSenderViewModelMapper(_mockCommitmentsApiClient.Object, _mockApprovalsApiClient.Object, _mockEncodingService.Object);
         }
 
         [Test]
-        public async Task GetTransferRequestForReceiverIsCalled()
+        public async Task GetTransferRequestForSenderIsCalled()
         {
             //Act
             await _mapper.Map(_request);
 
             //Assert
-            _mockCommitmentsApiClient.Verify(t => t.GetTransferRequestForReceiver(_request.AccountId, _request.TransferRequestId, It.IsAny<CancellationToken>()), Times.Once());
+            _mockCommitmentsApiClient.Verify(t => t.GetTransferRequestForSender(_request.AccountId, _request.TransferRequestId, It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Test]
@@ -98,17 +98,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual($"A{_getTransferRequestResponse.ReceivingEmployerAccountId}", result.TransferReceiverHashedAccountId);
+            Assert.AreEqual($"P{_getTransferRequestResponse.ReceivingEmployerAccountId}", result.TransferReceiverPublicHashedAccountId);
         }
 
         [Test]
-        public async Task TransferSenderPublicHashedAccountId_IsMapped()
+        public async Task TransferSenderHashedAccountId_IsMapped()
         {
             //Act
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual($"P{_getTransferRequestResponse.SendingEmployerAccountId}", result.TransferSenderPublicHashedAccountId);
+            Assert.AreEqual($"A{_getTransferRequestResponse.SendingEmployerAccountId}", result.TransferSenderHashedAccountId);
         }
 
         [Test]
@@ -118,7 +118,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_getTransferRequestResponse.TransferSenderName, result.TransferSenderName);
+            Assert.AreEqual(_getTransferRequestResponse.LegalEntityName, result.TransferReceiverName);
         }
 
         [Test]
@@ -192,16 +192,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
         }
 
         [Test]
-        public async Task PledgeApplicationId_IsMapped()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            Assert.AreEqual($"PA{_getTransferRequestResponse.PledgeApplicationId}", result.HashedPledgeApplicationId);
-        }
-
-        [Test]
         public async Task PledgeId_IsMapped()
         {
             //Act
@@ -235,6 +225,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
         }
 
         [Test]
+        public async Task PledgeApplicationId_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual($"PA{_getTransferRequestResponse.PledgeApplicationId}", result.HashedPledgeApplicationId);
+        }
+
+        [Test]
         public async Task When_PledgeApplication_Is_Null_Then_It_Is_Not_Mapped()
         {
             var autoFixture = new Fixture();
@@ -245,10 +245,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
                 .Create();
 
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockCommitmentsApiClient.Setup(r => r.GetTransferRequestForReceiver(It.IsAny<long>(), It.IsAny<long>(), CancellationToken.None))
+            _mockCommitmentsApiClient.Setup(r => r.GetTransferRequestForSender(It.IsAny<long>(), It.IsAny<long>(), CancellationToken.None))
                 .ReturnsAsync(_getTransferRequestResponse);
 
-            _mapper = new TransferRequestForReceiverViewModelMapper(_mockCommitmentsApiClient.Object, _mockApprovalsApiClient.Object, _mockEncodingService.Object);
+            _mapper = new TransferRequestForSenderViewModelMapper(_mockCommitmentsApiClient.Object, _mockApprovalsApiClient.Object, _mockEncodingService.Object);
 
             var result = await _mapper.Map(_request);
 

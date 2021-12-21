@@ -39,8 +39,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.TransferRequest
                                          || transferRequestResponse.Status == TransferApprovalStatus.Approved)
                                          && transferRequestResponse.TransferCost < transferRequestResponse.FundingCap,
                 AutoApprovalEnabled = transferRequestResponse.AutoApproval,
-                HashedPledgeId = _encodingService.Encode(getPledgeApplicationResponse.PledgeId, EncodingType.PledgeId),
-                HashedPledgeApplicationId = _encodingService.Encode(transferRequestResponse.PledgeApplicationId, EncodingType.PledgeApplicationId)
+                HashedPledgeId = getPledgeApplicationResponse == null ? string.Empty : _encodingService.Encode(getPledgeApplicationResponse.PledgeId, EncodingType.PledgeId),
+                HashedPledgeApplicationId = !transferRequestResponse.PledgeApplicationId.HasValue ? string.Empty : _encodingService.Encode(transferRequestResponse.PledgeApplicationId.Value, EncodingType.PledgeApplicationId)
             };
         }
 

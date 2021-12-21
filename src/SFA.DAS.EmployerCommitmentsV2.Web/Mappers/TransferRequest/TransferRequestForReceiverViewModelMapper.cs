@@ -20,7 +20,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.TransferRequest
         public async Task<TransferRequestForReceiverViewModel> Map(TransferRequestRequest source)
         {
             var transferRequestResponse = await _commitmentsApiClient.GetTransferRequestForReceiver(source.AccountId, source.TransferRequestId);
-            var pledgeApplicationResponse = await _approvalsApiClient.GetPledgeApplication(transferRequestResponse.PledgeApplicationId);
+
+            GetPledgeApplicationResponse pledgeApplicationResponse = null;
+
+            if (transferRequestResponse.PledgeApplicationId.HasValue)
+            {
+                pledgeApplicationResponse = await _approvalsApiClient.GetPledgeApplication(transferRequestResponse.PledgeApplicationId.Value);
+            }
 
             var viewModel = Map(transferRequestResponse, pledgeApplicationResponse);
             return viewModel;
