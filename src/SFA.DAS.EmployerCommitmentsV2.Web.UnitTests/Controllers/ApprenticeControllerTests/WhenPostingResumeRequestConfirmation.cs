@@ -4,13 +4,11 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,12 +29,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             _mockModelMapper = new Mock<IModelMapper>();
             _mockCookieStorageService = new Mock<ICookieStorageService<IndexRequest>>();
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockLinkGenerator = new Mock<ILinkGenerator>();
 
             _controller = new ApprenticeController(_mockModelMapper.Object,
                 _mockCookieStorageService.Object,
                 _mockCommitmentsApiClient.Object,
-                _mockLinkGenerator.Object,
                 Mock.Of<ILogger<ApprenticeController>>());
             _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
         }

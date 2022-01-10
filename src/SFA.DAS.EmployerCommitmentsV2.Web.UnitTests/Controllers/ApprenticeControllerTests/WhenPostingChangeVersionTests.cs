@@ -9,7 +9,6 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using SFA.DAS.EmployerUrlHelper;
 using System;
 using System.Threading.Tasks;
 
@@ -47,7 +46,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             _controller = new ApprenticeController(_mockModelMapper.Object, 
                 Mock.Of<ICookieStorageService<IndexRequest>>(),
                 _mockCommitmentsApiClient.Object,
-                Mock.Of<ILinkGenerator>(),
                 Mock.Of<ILogger<ApprenticeController>>());
 
             _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);

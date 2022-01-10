@@ -4,9 +4,6 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
@@ -34,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             
             var result = await _fixture.CancelChangeOfProviderRequest(_viewModel);
 
-            _fixture.VerifyRedirectsToApprenticeDetailsPage(result as RedirectResult);
+            _fixture.VerifyRedirectsToApprenticeDetailsPage(result as RedirectToRouteResult);
         }
 
         [Test]
@@ -51,16 +48,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     public class WhenPostingCancelChangeOfProviderRequestTestsFixture : ApprenticeControllerTestFixtureBase
     {
         private readonly ChangeOfProviderRequest _request;
-        private const string ApprenticeDetailsV1Url = "https://employercommitmentsv1/apprentice/details";
-
+      
         public WhenPostingCancelChangeOfProviderRequestTestsFixture() : base() 
         {
             _request = _autoFixture.Build<ChangeOfProviderRequest>().Create();
-
-            _mockMapper.Setup(m => m.Map<ChangeOfProviderRequest>(It.IsAny<CancelChangeOfProviderRequestViewModel>()))
-                .ReturnsAsync(_request);
-
-            _mockLinkGenerator.Setup(g => g.CommitmentsLink(It.IsAny<string>())).Returns(ApprenticeDetailsV1Url);
+            _mockMapper.Setup(m => m.Map<ChangeOfProviderRequest>(It.IsAny<CancelChangeOfProviderRequestViewModel>())).ReturnsAsync(_request);
         }
 
         public async Task<IActionResult> CancelChangeOfProviderRequest(CancelChangeOfProviderRequestViewModel viewModel)
@@ -68,9 +60,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             return await _controller.CancelChangeOfProviderRequest(viewModel);
         }
 
-        public void VerifyRedirectsToApprenticeDetailsPage(RedirectResult result)
+        public void VerifyRedirectsToApprenticeDetailsPage(IActionResult result)
         {
-            Assert.AreEqual(ApprenticeDetailsV1Url, result.Url);
+            var redirectResult = (RedirectToRouteResult)result;
+            Assert.AreEqual(RouteNames.ApprenticeDetail, redirectResult.RouteName);
         }
 
         public void VerifyRedirectsToConfirmAndSendPage(IActionResult result)
@@ -90,6 +83,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.AreEqual(_request.NewEndYear, routeValues["NewEndYear"]);
             Assert.AreEqual(_request.NewPrice, routeValues["NewPrice"]);
         }
-
     }
 }

@@ -16,7 +16,6 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
-using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateRequest;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
@@ -33,7 +32,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IModelMapper _modelMapper;
         private readonly ICookieStorageService<IndexRequest> _cookieStorage;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly ILinkGenerator _linkGenerator;
         private readonly ILogger<ApprenticeController> _logger;        
         private const string ApprenticePausedMessage = "Apprenticeship paused";
         private const string ApprenticeResumeMessage = "Apprenticeship resumed";
@@ -46,12 +44,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private const string ChangesRejectedMessage = "Changes rejected";
         private const string ChangesUndoneMessage = "Changes undone";
 
-        public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILinkGenerator linkGenerator, ILogger<ApprenticeController> logger)
+        public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILogger<ApprenticeController> logger)
         {
             _modelMapper = modelMapper;
             _cookieStorage = cookieStorage;
             _commitmentsApiClient = commitmentsApiClient;
-            _linkGenerator = linkGenerator;
             _logger = logger;            
         }
 
@@ -377,7 +374,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (viewModel.CancelRequest.Value)
             {
-                return Redirect(_linkGenerator.ApprenticeDetails(viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId));
+                return RedirectToRoute(RouteNames.ApprenticeDetail);
             }
 
             var request = await _modelMapper.Map<ChangeOfProviderRequest>(viewModel);
