@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
@@ -101,13 +100,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             _viewModel = autoFixture.Create<SendNewTrainingProviderViewModel>();
 
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _linkGenerator = new Mock<ILinkGenerator>();
-            _linkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns<string>(s => s);
 
             _controller = new ApprenticeController(Mock.Of<IModelMapper>(),
                 Mock.Of<ICookieStorageService<IndexRequest>>(),
                 _commitmentsApiClient.Object,
-                _linkGenerator.Object,
                 Mock.Of<ILogger<ApprenticeController>>());
         }
 
