@@ -564,13 +564,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpGet]
         [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
         [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
-        public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, NotificationParameters notification = null)
+        public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request)
         {
-            var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
-
-            if (notification?.ShowNotification == true)
-                TempData.AddFlashMessage(notification.NotificationTitle, notification.NotificationBody, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
-
+            var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);                
             return View("details", viewModel);
         }    
 
@@ -869,11 +865,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             await _commitmentsApiClient.ResendApprenticeshipInvitation(request.ApprenticeshipId, new SaveDataRequest { UserInfo = authenticationService.UserInfo }, CancellationToken.None);
 
+            TempData.AddFlashMessage("The invitation email has been resent.", null, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+
             return RedirectToAction("ApprenticeshipDetails", new {
                 AccountHashedId = request.AccountHashedId,
-                ApprenticeshipHashedId = request.ApprenticeshipHashedId,
-                ShowNotification = true,
-                NotificationTitle = "The invitation email has been resent."
+                ApprenticeshipHashedId = request.ApprenticeshipHashedId
             });
         }
     }
