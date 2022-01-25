@@ -15,6 +15,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateRequest;
@@ -563,9 +564,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpGet]
         [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
         [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
-        public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request)
+        public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, NotificationParameters notification = null)
         {
             var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
+
+            if (notification?.ShowNotification == true)
+                TempData.AddFlashMessage(notification.NotificationTitle, notification.NotificationBody, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
 
             return View("details", viewModel);
         }    
@@ -857,6 +861,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var viewModel = await _modelMapper.Map<DataLockRequestRestartViewModel>(request);
 
             return View(viewModel);
+        }
+
+        [Route("{apprenticeshipHashedId}/details/resend-email-invitation")]
+        [HttpGet]
+        public async Task<IActionResult> ResendEmailInvitation([FromServices] IAuthenticationService authenticationService, ResendEmailInvitationRequest request)
+        {
+            await _commitmentsApiClient.ResendApprenticeshipInvitation(request.ApprenticeshipId, new SaveDataRequest { UserInfo = authenticationService.UserInfo }, CancellationToken.None);
+
+            return RedirectToAction("ApprenticeshipDetails", new {
+                AccountHashedId = request.AccountHashedId,
+                ApprenticeshipHashedId = request.ApprenticeshipHashedId,
+                ShowNotification = true,
+                NotificationTitle = "The invitation email has been resent."
+            });
         }
     }
 }
