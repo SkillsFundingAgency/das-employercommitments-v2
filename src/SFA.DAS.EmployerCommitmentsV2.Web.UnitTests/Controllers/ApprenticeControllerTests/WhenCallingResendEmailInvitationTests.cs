@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
-using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
@@ -25,15 +26,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var result = await _fixture.ResendEmailInvitation();
 
-            result.VerifyReturnsRedirectToActionResult();
-
-            _fixture.VerifyRedirect(result as RedirectToActionResult);
+            _fixture.VerifyResendApprenticeshipInvitationApiIsCalled();            
+            _fixture.VerifyRedirect(result);
         }
     }
 
     public class WhenCallingResendEmailInvitationTestsFixture : ApprenticeControllerTestFixtureBase
     {
-        private readonly ResendEmailInvitationRequest _request;
+        private ResendEmailInvitationRequest _request;
         public UserInfo UserInfo;
         public Mock<IAuthenticationService> AuthenticationService { get; }
 
@@ -41,8 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             _request = _autoFixture.Create<ResendEmailInvitationRequest>();
 
-            var autoFixture = new Fixture();
-            UserInfo = autoFixture.Create<UserInfo>();
+            UserInfo = new Fixture().Create<UserInfo>();
             AuthenticationService = new Mock<IAuthenticationService>();
             AuthenticationService.Setup(x => x.UserInfo).Returns(UserInfo);
         }
@@ -52,9 +51,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             return await _controller.ResendEmailInvitation(AuthenticationService.Object, _request);
         }
 
-        public void VerifyRedirect(RedirectToActionResult redirect)
+        public void VerifyResendApprenticeshipInvitationApiIsCalled()
         {
-            Assert.AreEqual(redirect.ActionName, "ApprenticeshipDetails");
+            _mockCommitmentsApiClient.Verify(x => x.ResendApprenticeshipInvitation(
+                _request.ApprenticeshipId, It.Is<SaveDataRequest>(o => o.UserInfo != null), It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        public void VerifyRedirect(IActionResult result)
+        {
+            result.VerifyReturnsRedirectToActionResult().WithActionName("ApprenticeshipDetails");
+
+            var redirect = result as RedirectToActionResult;
+            
             Assert.AreEqual(redirect.RouteValues["AccountHashedId"], _request.AccountHashedId);
             Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], _request.ApprenticeshipHashedId);
         }
