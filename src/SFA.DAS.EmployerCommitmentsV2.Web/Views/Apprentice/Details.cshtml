@@ -194,12 +194,15 @@
                             <table>
                                 <tr>
                                     <td id="email-address">@Model.Email</td>
-                                </tr>                                    
-                                <tr>
-                                    <td>
-                                        <a id="resend-email-invitation-link" href="@Url.Action("ResendEmailInvitation", new ResendEmailInvitationRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link">Resend invitation email</a>
-                                    </td>
                                 </tr>
+                                @if (!string.IsNullOrEmpty(Model.Email))
+                                {
+                                    <tr>
+                                        <td>
+                                            <a id="resend-email-invitation-link" href="@Url.Action("ResendEmailInvitation", new ResendEmailInvitationRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link">Resend invitation email</a>
+                                        </td>
+                                    </tr>
+                                }
                             </table>
                         </td>
                     </tr>
