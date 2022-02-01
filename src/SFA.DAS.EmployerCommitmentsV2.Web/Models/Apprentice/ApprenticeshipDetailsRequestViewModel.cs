@@ -56,6 +56,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool OnlySingleOption => VersionOptions != null && VersionOptions.Count() == 1;
         private bool IsCompletedOrStopped => ApprenticeshipStatus == ApprenticeshipStatus.Stopped || ApprenticeshipStatus == ApprenticeshipStatus.Completed;
         private bool PreDatesStandardVersioning => IsCompletedOrStopped && Option == null;
+        public bool EmailAddressConfirmedByApprentice { get; set; }
+        public bool CanResendInvitation => !string.IsNullOrEmpty(Email) && !EmailAddressConfirmedByApprentice;
 
         public ActionRequiredBanner GetActionRequiredBanners()
         {

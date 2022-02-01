@@ -195,7 +195,7 @@
                                 <tr>
                                     <td id="email-address">@Model.Email</td>
                                 </tr>
-                                @if (!string.IsNullOrEmpty(Model.Email))
+                                @if (Model.CanResendInvitation)
                                 {
                                     <tr>
                                         <td>

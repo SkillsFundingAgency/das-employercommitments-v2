@@ -109,7 +109,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     EmailShouldBePresent = apprenticeship.EmailShouldBePresent,
                     HasNewerVersions = await HasNewerVersions(currentTrainingProgramme),
                     Option = apprenticeship.Option,
-                    VersionOptions = currentTrainingProgramme.Options
+                    VersionOptions = currentTrainingProgramme.Options,
+                    EmailAddressConfirmedByApprentice = apprenticeship.EmailAddressConfirmedByApprentice
                 };
 
                 return result;
