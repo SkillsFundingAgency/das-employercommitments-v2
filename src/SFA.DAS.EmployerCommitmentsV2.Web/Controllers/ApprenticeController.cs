@@ -865,10 +865,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             try
             {
                 await _commitmentsApiClient.ResendApprenticeshipInvitation(request.ApprenticeshipId, new SaveDataRequest { UserInfo = authenticationService.UserInfo }, CancellationToken.None);
-            }
-            catch { }
 
-            TempData.AddFlashMessage("The invitation email has been resent.", null, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                TempData.AddFlashMessage("The invitation email has been resent.", null, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+            }
+            catch { }            
 
             return RedirectToAction("ApprenticeshipDetails", new {
                 AccountHashedId = request.AccountHashedId,
