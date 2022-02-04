@@ -59,6 +59,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         [Display(Name = "Unique Learner Number (ULN)")]
         public string Uln { get; set; }
 
+        public DeliveryModel? DeliveryModel { get; set; }
         public string CourseCode { get; set; }
         public string StandardUId { get; set; }
         public string CourseOption { get; set; }

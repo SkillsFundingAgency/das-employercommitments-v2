@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.CommitmentsV2.Types
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared.DraftApprenticeshipViewModel
 
 @Html.HiddenFor(x => x.ReservationId)
@@ -125,6 +126,29 @@ else
             @Html.HiddenFor(x => x.Uln)
         </span>
     </div>
+
+    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.DeliveryModel, "govuk-form-group--error")">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                Delivery model
+            </legend>
+            <div class="govuk-radios">
+                <div class="govuk-radios__item">
+                    <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Normal" id="DeliveryModelNormal">
+                    <label for="DeliveryModelNormal" class="govuk-label govuk-radios__label">
+                        Normal
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Flexible" id="DeliveryModelFlexible">
+                    <label for="DeliveryModelNormal" class="govuk-label govuk-radios__label">
+                        Flexible
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
     <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
         <label asp-for="CourseCode" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
         <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
