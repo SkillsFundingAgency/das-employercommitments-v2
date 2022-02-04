@@ -25,7 +25,6 @@
     <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="6.0.95" />
     <PackageReference Include="SFA.DAS.Commitments.Api.Client" Version="8.5.4" />
     <PackageReference Include="SFA.DAS.Commitments.Api.Types" Version="8.5.4" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="8.5.4" />
     <PackageReference Include="SFA.DAS.Employer.Shared.UI" Version="2.0.21" />
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.77" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />
