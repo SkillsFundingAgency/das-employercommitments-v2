@@ -132,6 +132,7 @@ else
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                 Delivery model
             </legend>
+            @Html.ValidationMessageFor(m => m.DeliveryModel, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DeliveryModel) })
             <div class="govuk-radios">
                 <div class="govuk-radios__item">
                     <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Normal" id="DeliveryModelNormal">

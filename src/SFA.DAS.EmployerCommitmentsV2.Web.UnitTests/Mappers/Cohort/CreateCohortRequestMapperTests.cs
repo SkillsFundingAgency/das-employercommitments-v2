@@ -72,6 +72,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(_source.Email, _result.Email);
         }
 
+        [Test]
+        public void ThenDeliveryModelIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.DeliveryModel, _result.DeliveryModel);
+        }
 
         [Test]
         public void ThenCourseCodeIsMappedCorrectly()

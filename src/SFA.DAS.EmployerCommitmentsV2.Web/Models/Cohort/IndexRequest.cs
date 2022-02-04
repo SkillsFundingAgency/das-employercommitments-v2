@@ -1,7 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Authorization.ModelBinding;
+using SFA.DAS.CommitmentsV2.Types;
+using System;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 {
@@ -13,6 +13,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string AccountLegalEntityHashedId { get; set; }
 
         public string StartMonthYear { get; set; }
+        public DeliveryModel? DeliveryModel { get; set; }
         public string CourseCode { get; set; }
     }
 }
