@@ -13,7 +13,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string AccountLegalEntityHashedId { get; set; }
 
         public string StartMonthYear { get; set; }
-        public DeliveryModel? DeliveryModel { get; set; }
         public string CourseCode { get; set; }
     }
 }
