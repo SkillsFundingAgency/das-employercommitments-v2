@@ -189,7 +189,22 @@
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Email address</th>
-                        <td id="email-address" class="govuk-table__cell">@Model.Email</td>
+                        
+                        <td class="govuk-table__cell">
+                            <table>
+                                <tr>
+                                    <td id="email-address">@Model.Email</td>
+                                </tr>
+                                @if (Model.CanResendInvitation)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a id="resend-email-invitation-link" href="@Url.Action("ResendEmailInvitation", new ResendEmailInvitationRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link">Resend invitation email</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
                     </tr>
                 }
                 <tr class="govuk-table__row">

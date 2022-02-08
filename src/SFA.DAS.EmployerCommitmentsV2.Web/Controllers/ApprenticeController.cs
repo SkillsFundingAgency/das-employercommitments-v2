@@ -565,8 +565,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
         public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request)
         {
-            var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
-
+            var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);                
             return View("details", viewModel);
         }    
 
@@ -857,6 +856,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var viewModel = await _modelMapper.Map<DataLockRequestRestartViewModel>(request);
 
             return View(viewModel);
+        }
+
+        [Route("{apprenticeshipHashedId}/details/resend-email-invitation")]
+        [HttpGet]
+        public async Task<IActionResult> ResendEmailInvitation([FromServices] IAuthenticationService authenticationService, ResendEmailInvitationRequest request)
+        {
+            try
+            {
+                await _commitmentsApiClient.ResendApprenticeshipInvitation(request.ApprenticeshipId, new SaveDataRequest { UserInfo = authenticationService.UserInfo }, CancellationToken.None);
+
+                TempData.AddFlashMessage("The invitation email has been resent.", null, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+            }
+            catch { }            
+
+            return RedirectToAction("ApprenticeshipDetails", new {
+                AccountHashedId = request.AccountHashedId,
+                ApprenticeshipHashedId = request.ApprenticeshipHashedId
+            });
         }
     }
 }
