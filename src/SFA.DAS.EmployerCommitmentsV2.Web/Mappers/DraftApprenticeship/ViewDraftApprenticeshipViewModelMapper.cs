@@ -3,6 +3,9 @@ using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.CommitmentsV2.Types.Dtos;
+using System;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 {
@@ -31,6 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 Email = draftApprenticeship.Email,
                 Uln = draftApprenticeship.Uln,
                 DateOfBirth = draftApprenticeship.DateOfBirth,
+                DeliveryModel = GetDeliveryModel(draftApprenticeship.DeliveryModel),
                 TrainingCourse = trainingCourse?.TrainingProgramme.Name,
                 HasStandardOptions = draftApprenticeship.HasStandardOptions,
                 Version = draftApprenticeship.TrainingCourseVersion,
@@ -43,6 +47,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
             };
 
             return result;
+        }
+
+        private string GetDeliveryModel(DeliveryModelDto deliveryModel)
+        {
+            return deliveryModel.Code switch
+            {
+                DeliveryModel.Flexible => "Flexi-job",
+                _ => null,
+            };
         }
 
         private string GetCourseOption(string draftApprenticeshipTrainingCourseOption)

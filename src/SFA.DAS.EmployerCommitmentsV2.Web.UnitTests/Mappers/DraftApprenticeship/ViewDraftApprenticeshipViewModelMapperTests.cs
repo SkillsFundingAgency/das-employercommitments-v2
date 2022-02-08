@@ -7,6 +7,7 @@ using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
@@ -121,6 +122,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public void ThenLegalEntityNameIsMappedCorrectly()
         {
             Assert.AreEqual(_request.Cohort.LegalEntityName, _result.LegalEntityName);
+        }
+
+        [TestCase(DeliveryModel.Normal, null)]
+        [TestCase(DeliveryModel.Flexible, "Flexi-job")]
+        public async Task ThenDeliveryModelIsMappedCorrectly(DeliveryModel delivery, string display)
+        {
+            _draftApprenticeship.DeliveryModel = new DeliveryModelDto(delivery);
+            _result = await _mapper.Map(_request) as ViewDraftApprenticeshipViewModel;
+            Assert.AreEqual(display, _result.DeliveryModel);
         }
 
         [Test]
