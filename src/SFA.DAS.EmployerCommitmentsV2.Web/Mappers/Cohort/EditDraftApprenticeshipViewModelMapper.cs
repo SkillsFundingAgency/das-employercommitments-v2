@@ -20,6 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 LastName = source.LastName,
                 Email = source.Email,
                 Uln = source.UniqueLearnerNumber,
+                DeliveryModel = source.DeliveryModel,
                 CourseCode = source.CourseCode,
                 Cost = source.Cost,
                 Reference = source.OriginatorReference

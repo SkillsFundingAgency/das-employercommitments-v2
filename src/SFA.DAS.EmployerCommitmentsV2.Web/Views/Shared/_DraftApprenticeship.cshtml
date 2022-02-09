@@ -161,7 +161,7 @@ else
     }
     else
     {
-        <input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Normal">
+        <input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@(Model.DeliveryModel ?? DeliveryModel.Normal)">
     }
 
     <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">

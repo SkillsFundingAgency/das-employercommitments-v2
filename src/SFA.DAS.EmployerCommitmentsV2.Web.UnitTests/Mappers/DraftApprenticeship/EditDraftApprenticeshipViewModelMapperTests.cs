@@ -8,6 +8,7 @@ using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;
@@ -140,6 +141,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public void UniqueLearnerNumberIsMappedCorrectly()
         {
             Assert.AreEqual(_draftApprenticeshipResponse.Uln, _result.Uln);
+        }
+
+        [Test]
+        public void DeliveryModelIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeshipResponse.DeliveryModel.Code, _result.DeliveryModel);
+            Assert.AreEqual(_draftApprenticeshipResponse.DeliveryModel.Description, _result.DeliveryModel.ToString());
         }
 
         [Test]
