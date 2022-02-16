@@ -99,6 +99,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             }
             vm.OriginalApprenticeship.Version = apprenticeship.Version;
 
+            if (source.DeliveryModel != apprenticeship.DeliveryModel.Code)
+            {
+                vm.DeliveryModel = source.DeliveryModel;
+            }
+            vm.OriginalApprenticeship.DeliveryModel = apprenticeship.DeliveryModel.Code;
+
             if (source.CourseCode != apprenticeship.CourseCode)
             {
                 var courseDetails = !string.IsNullOrEmpty(source.Version)

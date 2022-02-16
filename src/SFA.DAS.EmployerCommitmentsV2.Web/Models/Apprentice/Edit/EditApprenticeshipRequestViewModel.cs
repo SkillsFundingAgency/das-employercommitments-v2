@@ -56,6 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         [SuppressArgumentException(nameof(DateOfBirth), "The date of birth is not valid")]
         public int? BirthYear { get => DateOfBirth.Year; set => DateOfBirth.Year = value; }
 
+        public DeliveryModel DeliveryModel { get; set; }
         public string CourseCode { get; set; }
 
         public string Version { get; set; }
