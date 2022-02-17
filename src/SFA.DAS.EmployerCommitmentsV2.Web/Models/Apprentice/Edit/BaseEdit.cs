@@ -57,7 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
         public int? BirthDay { get; set; }
         public int? BirthMonth { get; set; }
         public int? BirthYear { get; set; }
-        public DeliveryModel DeliveryModel { get; set; }
+        public DeliveryModel? DeliveryModel { get; set; }
         public string CourseCode { get; set; }
         public string Version { get; set; }
         public string Option { get; set; }

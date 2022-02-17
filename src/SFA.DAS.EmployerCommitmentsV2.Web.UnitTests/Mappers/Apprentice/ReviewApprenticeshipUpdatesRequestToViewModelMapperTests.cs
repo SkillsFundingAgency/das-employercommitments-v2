@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 using AutoFixture.Kernel;
 using Moq;
 using NUnit.Framework;
@@ -185,6 +185,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var viewModel = await fixture.Map();
 
             Assert.AreEqual(fixture.ApprenticeshipUpdate.EndDate, viewModel.ApprenticeshipUpdates.EndDate);
+        }
+
+        [Test]
+        public async Task OriginalApprenticeship_DeliveryModel_IsMapped()
+        {
+            var viewModel = await fixture.Map();
+
+            Assert.AreEqual(fixture.GetApprenticeshipResponse.DeliveryModel.Code, viewModel.OriginalApprenticeship.DeliveryModel);
         }
 
         [Test]

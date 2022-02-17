@@ -14,5 +14,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
                 DeliveryModel.Flexible => "Flexi-job",
                 _ => null,
             };
+
+        public static bool IsAbnormal(this DeliveryModel? deliveryModel) =>
+            deliveryModel != null && deliveryModel != DeliveryModel.Normal;
     }
 }

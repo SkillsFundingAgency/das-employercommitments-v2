@@ -68,6 +68,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                         ULN = apprenticeship.Uln,
                         StartDate = apprenticeship.StartDate,
                         EndDate = apprenticeship.EndDate,
+                        DeliveryModel = apprenticeship.DeliveryModel.Code,
                         CourseCode = apprenticeship.CourseCode,
                         CourseName = apprenticeship.CourseName,
                         Version = apprenticeship.Version,
