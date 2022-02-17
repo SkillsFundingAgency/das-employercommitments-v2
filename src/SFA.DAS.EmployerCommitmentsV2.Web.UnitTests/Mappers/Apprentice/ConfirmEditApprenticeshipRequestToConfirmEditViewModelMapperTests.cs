@@ -262,7 +262,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
     {
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
 
-        public GetApprenticeshipResponse ApprenticeshipResponse;
+        internal GetApprenticeshipResponse ApprenticeshipResponse;
         private GetPriceEpisodesResponse _priceEpisodeResponse;
 
         private ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapper _mapper;
