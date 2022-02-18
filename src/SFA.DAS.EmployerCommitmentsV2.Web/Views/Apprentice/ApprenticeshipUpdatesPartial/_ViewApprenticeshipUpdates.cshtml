@@ -43,6 +43,14 @@
 
                     </tr>
                 }
+                @if (Model.ApprenticeshipUpdates.DeliveryModel != null)
+                {
+                    <tr>
+                        <th scope="row" class="govuk-table__header">Apprenticeship delivery model</th>
+                        <td class="govuk-table__cell">@Model.OriginalApprenticeship.DeliveryModel.Value.ToDisplayString()</td>
+                        <td class="govuk-table__cell">@Model.ApprenticeshipUpdates.DeliveryModel.Value.ToDisplayString()</td>
+                    </tr>
+                }
                 @if (!string.IsNullOrWhiteSpace(Model.ApprenticeshipUpdates.CourseCode))
                 {
                     <tr>
