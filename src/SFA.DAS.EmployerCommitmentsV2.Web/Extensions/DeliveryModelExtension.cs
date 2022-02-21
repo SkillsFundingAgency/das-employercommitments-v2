@@ -15,10 +15,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
                 _ => "Normal"
             };
 
-        public static string ToNonNormalDescription(this DeliveryModelDto deliveryModel) =>
-            deliveryModel.Code.ToNonNormalDescription();
+        public static string ToAbnormalDescription(this DeliveryModelDto deliveryModel) =>
+            deliveryModel.Code.ToAbnormalDescription();
 
-        public static string ToNonNormalDescription(this DeliveryModel deliveryModel) =>
+        public static string ToAbnormalDescription(this DeliveryModel deliveryModel) =>
             deliveryModel switch
             {
                 DeliveryModel.Flexible => "Flexi-job",
