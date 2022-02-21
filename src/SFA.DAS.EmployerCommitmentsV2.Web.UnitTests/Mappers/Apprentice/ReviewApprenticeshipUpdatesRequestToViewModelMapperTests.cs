@@ -14,6 +14,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.CommitmentsV2.Types.Dtos;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetApprenticeshipUpdatesResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
@@ -97,6 +99,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var viewModel = await fixture.Map();
 
             Assert.AreEqual(fixture.ApprenticeshipUpdate.TrainingCode, viewModel.ApprenticeshipUpdates.CourseCode);
+        }
+
+        [TestCase(DeliveryModel.Normal)]
+        [TestCase(DeliveryModel.Flexible)]
+        public async Task DeliveryModel_IsMapped(DeliveryModel dm)
+        {
+            fixture.ApprenticeshipUpdate.DeliveryModel = new DeliveryModelDto(dm);
+            var viewModel = await fixture.Map();
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.DeliveryModel.Code, viewModel.ApprenticeshipUpdates.DeliveryModel);
+        }
+
+        [TestCase(DeliveryModel.Normal)]
+        [TestCase(DeliveryModel.Flexible)]
+        public async Task DeliveryModelOnOriginal_IsMapped(DeliveryModel dm)
+        {
+            fixture.GetApprenticeshipResponse.DeliveryModel = new DeliveryModelDto(dm);
+            var viewModel = await fixture.Map();
+            Assert.AreEqual(fixture.GetApprenticeshipResponse.DeliveryModel.Code, viewModel.OriginalApprenticeship.DeliveryModel);
         }
 
         [Test]
