@@ -26,6 +26,7 @@
     @Html.HiddenFor(x => x.BirthMonth)
     @Html.HiddenFor(x => x.BirthYear)
     @Html.HiddenFor(x => x.Uln)
+    @Html.HiddenFor(x => x.DeliveryModel ?? DeliveryModel.Normal)
     @Html.HiddenFor(x => x.CourseCode)
 
     <dl class="das-definition-list">
