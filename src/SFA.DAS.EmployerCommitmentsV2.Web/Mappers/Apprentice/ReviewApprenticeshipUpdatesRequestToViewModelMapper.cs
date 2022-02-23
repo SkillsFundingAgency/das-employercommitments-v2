@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                         Cost = update.Cost,
                         StartDate = update.StartDate,
                         EndDate = update.EndDate,
-                        DeliveryModel = update.DeliveryModel.Code,
+                        DeliveryModel = update.DeliveryModel,
                         CourseCode = update.TrainingCode,
                         CourseName = update.TrainingName,
                         Version = update.Version,

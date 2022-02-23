@@ -105,9 +105,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [TestCase(DeliveryModel.Flexible)]
         public async Task DeliveryModel_IsMapped(DeliveryModel dm)
         {
-            fixture.ApprenticeshipUpdate.DeliveryModel = new DeliveryModelDto(dm);
+            fixture.ApprenticeshipUpdate.DeliveryModel = dm;
             var viewModel = await fixture.Map();
-            Assert.AreEqual(fixture.ApprenticeshipUpdate.DeliveryModel.Code, viewModel.ApprenticeshipUpdates.DeliveryModel);
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.DeliveryModel, viewModel.ApprenticeshipUpdates.DeliveryModel);
         }
 
         [TestCase(DeliveryModel.Normal)]

@@ -7,6 +7,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
@@ -62,7 +63,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 Cost = update.Cost,
                 StartDate = update.StartDate,
                 EndDate = update.EndDate,
-                DeliveryModel = update.DeliveryModel.Code,
+                DeliveryModel = update.DeliveryModel?? DeliveryModel.Normal,
                 CourseCode = update.TrainingCode,
                 CourseName = update.TrainingName,
                 Version = update.Version,
