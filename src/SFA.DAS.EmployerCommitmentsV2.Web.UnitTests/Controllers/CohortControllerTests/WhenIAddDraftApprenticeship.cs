@@ -82,7 +82,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 .SetupEncodingService()
                 .WithCreatedCohort("ABC123", 123)
                 .WithDraftApprenticeship(123)
-                .WithReviewCohortLink("someurl")
                 .WithTrainingProvider();
 
             await fixtures.CheckPost();
@@ -129,15 +128,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures ForPostRequest()
         {
             PostRequest = new ApprenticeViewModel {ProviderId = 1};
-            return this;
-        }
-
-        public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithReviewCohortLink(string url)
-        {
-            LinkGeneratorMock
-                .Setup(lg => lg.CommitmentsLink(It.IsAny<string>()))
-                .Returns(url);
-
             return this;
         }
 

@@ -24,7 +24,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         private CohortController _controller;
         private SelectLegalEntityViewModel _selectLegalEntityViewModel;
         private SelectLegalEntityRequest _chooseOrganisationRequest;
-        private string _linkGeneratorResult;
         private Mock<IModelMapper> _modelMapper;
         private Mock<ILinkGenerator> _linkGenerator;        
         private const string LegalEntityCode = "LCODE";
@@ -107,14 +106,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         [TestCase(false, EmployerAgreementStatus.Expired, 1, ExpectedAction.AgreementNotSigned)]
         public async Task Then_with_single_legal_entity_then_redirects_correctly(bool isTransfer, EmployerAgreementStatus status, int templateVersionNumber, ExpectedAction expectedAction)
         {
-            //Arrange            
-            if (expectedAction == ExpectedAction.AgreementNotSigned)
-                _linkGeneratorResult = $"accounts/{_chooseOrganisationRequest.AccountHashedId}/apprentices/{LegalEntityCode}/AgreementNotSigned";
-
-            if (expectedAction == ExpectedAction.SelectProvider)
-                _linkGeneratorResult = $"accounts/{_chooseOrganisationRequest.AccountHashedId}/apprentices/provider/create";
-
-            _linkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns(_linkGeneratorResult);
+            //Arrange                        
             _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<SelectLegalEntityRequest>(r => r == _chooseOrganisationRequest)))
                          .ReturnsAsync(new SelectLegalEntityViewModel
                          {

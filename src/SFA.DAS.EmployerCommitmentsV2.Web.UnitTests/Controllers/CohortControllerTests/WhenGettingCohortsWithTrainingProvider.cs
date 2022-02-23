@@ -37,7 +37,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         private readonly CohortsByAccountRequest _request;
         private readonly WithTrainingProviderViewModel _viewModel;
         private IActionResult _result;
-        private readonly string _linkGeneratorResult;
 
         public WhenGettingCohortsWithTrainingProviderFixture()
         {
@@ -50,14 +49,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             modelMapper.Setup(x => x.Map<WithTrainingProviderViewModel>(It.Is<CohortsByAccountRequest>(r => r == _request)))
                 .ReturnsAsync(_viewModel);
 
-            _linkGeneratorResult = autoFixture.Create<string>();
-            var linkGenerator = new Mock<ILinkGenerator>();
-            linkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>()))
-                .Returns(_linkGeneratorResult);
-
             CohortController = new CohortController(Mock.Of<ICommitmentsApiClient>(),
                 Mock.Of<ILogger<CohortController>>(),
-                linkGenerator.Object,
+                Mock.Of<ILinkGenerator>(),
                 modelMapper.Object,
                 Mock.Of<IAuthorizationService>(),
                 Mock.Of<IEncodingService>());

@@ -135,9 +135,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 linkGenerator.Setup(x => x.AccountsLink(It.IsAny<string>()))
                     .Returns(_linkGeneratorResult);
 
-                linkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>()))
-                    .Returns(_linkGeneratorResult);
-
                 _controller = new CohortController(_commitmentsApiClient.Object,
                     Mock.Of<ILogger<CohortController>>(),
                     linkGenerator.Object,
