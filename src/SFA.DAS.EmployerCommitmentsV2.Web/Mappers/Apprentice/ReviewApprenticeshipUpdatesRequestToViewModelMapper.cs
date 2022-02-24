@@ -1,7 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 using System;
 using System.Linq;
@@ -69,7 +68,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                         ULN = apprenticeship.Uln,
                         StartDate = apprenticeship.StartDate,
                         EndDate = apprenticeship.EndDate,
-                        DeliveryModel = apprenticeship.DeliveryModel.Code,
+                        DeliveryModel = apprenticeship.DeliveryModel,
                         CourseCode = apprenticeship.CourseCode,
                         CourseName = apprenticeship.CourseName,
                         Version = apprenticeship.Version,

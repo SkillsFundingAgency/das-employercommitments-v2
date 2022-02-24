@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -99,11 +98,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             }
             vm.OriginalApprenticeship.Version = apprenticeship.Version;
 
-            if (source.DeliveryModel != apprenticeship.DeliveryModel.Code)
+            if (source.DeliveryModel != apprenticeship.DeliveryModel)
             {
                 vm.DeliveryModel = source.DeliveryModel;
             }
-            vm.OriginalApprenticeship.DeliveryModel = apprenticeship.DeliveryModel.Code;
+            vm.OriginalApprenticeship.DeliveryModel = apprenticeship.DeliveryModel;
 
             if (source.CourseCode != apprenticeship.CourseCode)
             {

@@ -139,7 +139,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             result.FirstName.Should().Be(_getApprenticeshipResponse.FirstName);
             result.LastName.Should().Be(_getApprenticeshipResponse.LastName);
             result.Email.Should().Be(_getApprenticeshipResponse.Email);
-            result.DeliveryModel.Should().Be(_getApprenticeshipResponse.DeliveryModel.Code);
+            result.DeliveryModel.Should().Be(_getApprenticeshipResponse.DeliveryModel);
             result.CourseCode.Should().Be(_getApprenticeshipResponse.CourseCode);
             result.Version.Should().Be(_getApprenticeshipResponse.Version);
             result.TrainingName.Should().Be(_getApprenticeshipResponse.CourseName);

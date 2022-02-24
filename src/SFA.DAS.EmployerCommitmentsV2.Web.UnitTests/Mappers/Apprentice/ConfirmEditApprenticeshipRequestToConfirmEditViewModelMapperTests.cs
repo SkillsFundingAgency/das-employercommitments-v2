@@ -13,7 +13,6 @@ using SFA.DAS.CommitmentsV2.Types;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetPriceEpisodesResponse;
 using SFA.DAS.Encoding;
 using SFA.DAS.CommitmentsV2.Shared.Models;
-using SFA.DAS.CommitmentsV2.Types.Dtos;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 {
@@ -107,14 +106,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [TestCase(DeliveryModel.Flexible, DeliveryModel.Normal)]
         public async Task WhenDeliveryModelIsChanged(DeliveryModel original, DeliveryModel changedTo)
         {
-            fixture.ApprenticeshipResponse.DeliveryModel = new DeliveryModelDto(original);
+            fixture.ApprenticeshipResponse.DeliveryModel = original;
             fixture.source.DeliveryModel = changedTo;
 
             var result = await fixture.Map();
 
             Assert.AreNotEqual(fixture.source.DeliveryModel, fixture.ApprenticeshipResponse.DeliveryModel);
             Assert.AreEqual(fixture.source.DeliveryModel, result.DeliveryModel);
-            Assert.AreEqual(fixture.ApprenticeshipResponse.DeliveryModel.Code, result.OriginalApprenticeship.DeliveryModel);
+            Assert.AreEqual(fixture.ApprenticeshipResponse.DeliveryModel, result.OriginalApprenticeship.DeliveryModel);
         }
 
         [Test]

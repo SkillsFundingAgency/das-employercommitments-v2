@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 LastName = apprenticeship.LastName,
                 Email = apprenticeship.Email,
                 ULN= apprenticeship.Uln,
-                DeliveryModel = apprenticeship.DeliveryModel.Code,
+                DeliveryModel = apprenticeship.DeliveryModel,
                 CourseCode = apprenticeship.CourseCode,
                 Version = apprenticeship.Version,
                 Option = apprenticeship.Option == string.Empty ? "TBC" : apprenticeship.Option,

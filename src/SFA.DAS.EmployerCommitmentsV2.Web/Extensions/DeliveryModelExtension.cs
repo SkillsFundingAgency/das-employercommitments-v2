@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.CommitmentsV2.Types.Dtos;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 {
@@ -14,9 +13,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
                 DeliveryModel.Flexible => "Flexi-job",
                 _ => "Normal"
             };
-
-        public static string ToAbnormalDescription(this DeliveryModelDto deliveryModel) =>
-            deliveryModel.Code.ToAbnormalDescription();
 
         public static string ToAbnormalDescription(this DeliveryModel deliveryModel) =>
             deliveryModel switch

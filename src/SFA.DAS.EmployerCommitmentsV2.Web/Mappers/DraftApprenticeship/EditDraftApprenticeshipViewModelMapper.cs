@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 LastName = draftApprenticeship.LastName,
                 Email = draftApprenticeship.Email,
                 Uln = draftApprenticeship.Uln,
-                DeliveryModel = draftApprenticeship.DeliveryModel.Code,
+                DeliveryModel = draftApprenticeship.DeliveryModel,
                 CourseCode = draftApprenticeship.CourseCode,
                 StandardUId = draftApprenticeship.StandardUId,
                 Cost = draftApprenticeship.Cost,
