@@ -1,5 +1,6 @@
 ﻿@using SFA.DAS.EmployerUrlHelper.Mvc
 @using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
@@ -72,8 +73,12 @@
 
         @foreach (var course in Model.Courses)
         {
-
-    <h3 class="govuk-heading-m">@course.Count x @course.DisplayCourseName</h3>
+            <h3 class="govuk-heading-m">@course.Count x @course.DisplayCourseName 
+                @if (@course.DeliveryModel == DeliveryModel.Flexible)
+                {
+                    <span class="govuk-tag">Flexi job</span>
+                }
+            </h3>
     @foreach (var draftApprenticeship in course.DraftApprenticeships)
     {
         if (draftApprenticeship.HasOverlappingUln && !course.ErrorHasOverlappingUlnDisplayed)
