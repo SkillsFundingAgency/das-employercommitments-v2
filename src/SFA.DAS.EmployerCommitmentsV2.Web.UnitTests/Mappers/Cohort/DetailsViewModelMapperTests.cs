@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
+﻿using AutoFixture;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -20,6 +12,14 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
 using SFA.DAS.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -127,30 +127,30 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             foreach (var course in result.Courses)
             {
                 var expectedCount = fixture.DraftApprenticeshipsResponse.DraftApprenticeships
-                    .Count(a => a.CourseCode == course.CourseCode && a.CourseName == course.CourseName);
+                    .Count(a => a.CourseCode == course.CourseCode && a.CourseName == course.CourseName && course.DeliveryModel == a.DeliveryModel.Code);
 
                 Assert.AreEqual(expectedCount, course.Count);
             }
         }
 
         [Test]
-        public async Task DraftApprenticeshipCourseOrderIsByCourseName()
+        public async Task DraftApprenticeshipCourseOrderIsByCourseNameAndDeliveryModel()
         {
             var fixture = new DetailsViewModelMapperTestsFixture();
             var result = await fixture.Map();
 
             var expectedSequence = fixture.DraftApprenticeshipsResponse.DraftApprenticeships
-                .Select(c => new { c.CourseName, c.CourseCode })
+                .Select(c => new { c.CourseName, c.CourseCode, DeliveryModel = c.DeliveryModel.Code })
                 .Distinct()
-                .OrderBy(c => c.CourseName).ThenBy(c => c.CourseCode)
+                .OrderBy(c => c.CourseName).ThenBy(c => c.CourseCode).ThenBy(c => c.DeliveryModel)
                 .ToList();
 
             var actualSequence = result.Courses
-                .Select(c => new { c.CourseName, c.CourseCode })
-                .OrderBy(c => c.CourseName).ThenBy(c => c.CourseCode)
+                .Select(c => new { c.CourseName, c.CourseCode, c.DeliveryModel })
+                .OrderBy(c => c.CourseName).ThenBy(c => c.CourseCode).ThenBy(c => c.DeliveryModel)
                 .ToList();
 
-            fixture.AssertSequenceOrder(expectedSequence, actualSequence, (e, a) => e.CourseName == a.CourseName && e.CourseCode == a.CourseCode);
+            fixture.AssertSequenceOrder(expectedSequence, actualSequence, (e, a) => e.CourseName == a.CourseName && e.CourseCode == a.CourseCode && e.DeliveryModel == a.DeliveryModel);
         }
 
         [Test]
@@ -162,7 +162,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             foreach (var course in result.Courses)
             {
                 var expectedSequence = fixture.DraftApprenticeshipsResponse.DraftApprenticeships
-                    .Where(a => a.CourseName == course.CourseName && a.CourseCode == course.CourseCode)
+                    .Where(a => a.CourseName == course.CourseName && a.CourseCode == course.CourseCode && a.DeliveryModel.Code == course.DeliveryModel)
                     .Select(a => $"{a.FirstName} {a.LastName}")
                     .OrderBy(a => a)
                     .ToList();
@@ -598,6 +598,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await fixture.Map();
             Assert.IsTrue(result.Courses.First().DraftApprenticeships.First().IsComplete);
         }
+
+        [Test]
+        public async Task Course4Has2CourseLines()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(2, result.Courses.Count(c=>c.CourseCode == "C4"));
+        }
+
+        [TestCase(DeliveryModel.Flexible)]
+        [TestCase(DeliveryModel.Normal)]
+        public async Task Course4HasCorrectDeployMethod(DeliveryModel dm)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+            Assert.AreEqual(1, result.Courses.Count(c => c.CourseCode == "C4" && c.DeliveryModel == dm));
+        }
     }
 
     public class DetailsViewModelMapperTestsFixture
@@ -782,7 +799,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
         private IReadOnlyCollection<DraftApprenticeshipDto> CreateDraftApprenticeshipDtos(Fixture autoFixture)
         {
-            var draftApprenticeships = autoFixture.CreateMany<DraftApprenticeshipDto>(6).ToArray();
+            var draftApprenticeships = autoFixture.CreateMany<DraftApprenticeshipDto>(8).ToArray();
             SetCourseDetails(draftApprenticeships[0], "Course1", "C1", 1000);
             SetCourseDetails(draftApprenticeships[1], "Course1", "C1", 2100);
             SetCourseDetails(draftApprenticeships[2], "Course1", "C1", 2000, DefaultStartDate.AddMonths(1));
@@ -792,10 +809,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             SetCourseDetails(draftApprenticeships[5], "Course3", "C3", null, DefaultStartDate.AddMonths(2));
 
+            SetCourseDetails(draftApprenticeships[6], "Course4", "C4", null, null, null, DeliveryModel.Flexible);
+            SetCourseDetails(draftApprenticeships[7], "Course4", "C4", null, null, null, DeliveryModel.Normal);
+
             return draftApprenticeships;
         }
 
-        private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode, int? cost, DateTime? startDate = null, DateTime? originalStartDate = null)
+        private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode, int? cost, DateTime? startDate = null, DateTime? originalStartDate = null, DeliveryModel dm = DeliveryModel.Normal)
         {
             startDate = startDate ?? DefaultStartDate;
 
@@ -804,6 +824,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             draftApprenticeship.Cost = cost;
             draftApprenticeship.StartDate = startDate;
             draftApprenticeship.OriginalStartDate = originalStartDate;
+            draftApprenticeship.DeliveryModel = new DeliveryModelDto(dm);
         }
 
         public DetailsViewModelMapperTestsFixture SetIsAgreementSigned(bool isAgreementSigned)

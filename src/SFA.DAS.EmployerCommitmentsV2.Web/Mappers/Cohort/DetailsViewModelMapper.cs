@@ -90,11 +90,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         private async Task<IReadOnlyCollection<DetailsViewCourseGroupingModel>> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships, List<ApprenticeshipEmailOverlap> emailOverlaps, GetCohortResponse cohortResponse)
         {
             var groupedByCourse = draftApprenticeships
-                .GroupBy(a => new { a.CourseCode, a.CourseName })
+                .GroupBy(a => new { a.CourseCode, a.CourseName, a.DeliveryModel.Code })
                 .Select(course => new DetailsViewCourseGroupingModel
                 {
                     CourseCode = course.Key.CourseCode,
                     CourseName = course.Key.CourseName,
+                    DeliveryModel = course.Key.Code,
                     DraftApprenticeships = course
                         // Sort before on raw properties rather than use displayName property post select for performance reasons
                         .OrderBy(a => a.FirstName)
