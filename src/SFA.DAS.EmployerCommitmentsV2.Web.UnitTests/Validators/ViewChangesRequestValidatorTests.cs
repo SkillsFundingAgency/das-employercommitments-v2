@@ -1,14 +1,11 @@
-﻿using FluentValidation.TestHelper;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using System;
-using System.Linq.Expressions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class ViewChangesRequestValidatorTests
+    public class ViewChangesRequestValidatorTests : ValidatorTestBase<ViewChangesRequest, ViewChangesRequestValidator>
     {
         [TestCase("5143541", true)]
         [TestCase(" ", false)]
@@ -16,7 +13,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [TestCase(null, false)]
         public void ThenAccountHashedIdIsValidated(string accountHashedId, bool expectedValid)
         {
-            var request = new ViewChangesRequest() { AccountHashedId = accountHashedId };
+            var request = new ViewChangesRequest { AccountHashedId = accountHashedId };
             AssertValidationResult(x => x.AccountHashedId, request, expectedValid);
         }
 
@@ -26,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [TestCase(null, false)]
         public void ThenApprenticeshipHashedIdIsValidated(string apprenticeshipHashedId, bool expectedValid)
         {
-            var request = new ViewChangesRequest() { ApprenticeshipHashedId = apprenticeshipHashedId };
+            var request = new ViewChangesRequest { ApprenticeshipHashedId = apprenticeshipHashedId };
             AssertValidationResult(x => x.ApprenticeshipHashedId, request, expectedValid);
         }
 
@@ -35,22 +32,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [TestCase(null, false)]
         public void ThenApprenticeshipIdIsValidated(long apprenticeshipId, bool expectedValid)
         {
-            var request = new ViewChangesRequest() { ApprenticeshipId = apprenticeshipId };
+            var request = new ViewChangesRequest { ApprenticeshipId = apprenticeshipId };
             AssertValidationResult(x => x.ApprenticeshipId, request, expectedValid);
-        }
-
-        private void AssertValidationResult<T>(Expression<Func<ViewChangesRequest, T>> property, ViewChangesRequest instance, bool expectedValid)
-        {
-            var validator = new ViewChangesRequestValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
         }
     }
 }

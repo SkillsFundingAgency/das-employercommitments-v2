@@ -1,17 +1,11 @@
-﻿using System;
-using System.Linq.Expressions;
-using FluentValidation.TestHelper;
-using NUnit.Framework;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+﻿using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
-    [TestFixture()]
-    public class AddDraftApprenticeshipViewModelValidatorTests
+    [TestFixture]
+    public class AddDraftApprenticeshipViewModelValidatorTests : ValidatorTestBase<AddDraftApprenticeshipViewModel, AddDraftApprenticeshipViewModelValidator>
     {
         [TestCase(12, 12, 2000, true)]
         [TestCase(31, 2, 2000, false)]
@@ -45,19 +39,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             var model = new AddDraftApprenticeshipViewModel { EndMonth = month, EndYear = year };
             AssertValidationResult(request => request.EndDate, model, expectedValid);
-        }
-        private void AssertValidationResult<T>(Expression<Func<AddDraftApprenticeshipViewModel, T>> property, AddDraftApprenticeshipViewModel instance, bool expectedValid)
-        {
-            var validator = new AddDraftApprenticeshipViewModelValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
         }
     }
 }

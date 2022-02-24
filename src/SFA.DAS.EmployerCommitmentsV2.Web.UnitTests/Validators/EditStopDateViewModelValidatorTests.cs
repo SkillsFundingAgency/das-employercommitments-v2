@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Linq;
+using AutoFixture;
+using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using AutoFixture;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using Moq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
-    public class EditStopDateViewModelValidatorTests
+    public class EditStopDateViewModelValidatorTests : ValidatorTestBase<EditStopDateViewModel, EditStopDateViewModelValidator>
     {
-        private EditStopDateViewModelValidator _validator;
         private Fixture _autoFixture;
         private Mock<ICurrentDateTime> _currentDateTime;
 
@@ -25,7 +23,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
                  .With(m => m.NewStopDate, new CommitmentsV2.Shared.Models.MonthYearModel("032021")));
             _currentDateTime = new Mock<ICurrentDateTime>();
             _currentDateTime.Setup(x => x.UtcNow).Returns(new DateTime(2021, 3 ,1));
-            _validator = new EditStopDateViewModelValidator(_currentDateTime.Object);
+        }
+
+        protected override EditStopDateViewModelValidator ValidatorInitialize()
+        {
+            return new EditStopDateViewModelValidator(_currentDateTime.Object);
         }
 
 
@@ -39,11 +41,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var viewModel = _autoFixture.Create<EditStopDateViewModel>();
             viewModel.AccountHashedId = accountHashedId;
 
-            //Act
-            var result = _validator.Validate(viewModel);
-
             //Assert
-            Assert.AreEqual(expectedValid, result.IsValid);
+            AssertValidationResult(r => r.AccountHashedId, viewModel, expectedValid);
         }
 
         [TestCase("5143541", true)]
@@ -56,11 +55,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var viewModel = _autoFixture.Create<EditStopDateViewModel>();
             viewModel.ApprenticeshipHashedId = apprenticeshipHashedId;
 
-            //Act
-            var result = _validator.Validate(viewModel);
-
             //Assert
-            Assert.AreEqual(expectedValid, result.IsValid);
+            AssertValidationResult(r => r.ApprenticeshipHashedId, viewModel, expectedValid);
         }
 
         [TestCase(null, null, false, "Enter the stop date for this apprenticeship")]
@@ -73,14 +69,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             //Arrange
             var viewModel = _autoFixture.Create<EditStopDateViewModel>();
             viewModel.NewStopMonth = newStopMonth;
-            viewModel.NewStopYear = newStopYear;            
-
-            //Act
-            var result = _validator.Validate(viewModel);
+            viewModel.NewStopYear = newStopYear;
 
             //Assert
-            Assert.AreEqual(expectedValid, result.IsValid);
-            if (errorMessage != null) Assert.AreEqual(errorMessage, result.Errors.Single().ErrorMessage);
+            AssertValidationResult(r => r.NewStopDate, viewModel, expectedValid);
         }
     }
 }

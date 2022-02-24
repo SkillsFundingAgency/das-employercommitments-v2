@@ -1,15 +1,13 @@
-﻿using FluentValidation.TestHelper;
+﻿using System;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using System;
-using System.Linq.Expressions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
-    public class WhatIsTheNewStartDateViewModelValidatorTests
+    public class WhatIsTheNewStartDateViewModelValidatorTests : ValidatorTestBase<WhatIsTheNewStartDateViewModel, WhatIsTheNewStartDateViewModelValidator>
     {
         private readonly DateTime _stopDate = new DateTime(2020, 12, 10);
 
@@ -28,12 +26,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             NewStartDateBeforeStopDateError = $"The start date must be on or after {_stopDate.ToString("MMMM yyyy")}";
         }
 
-        [SetUp]
-        public void Arrange()
+        protected override WhatIsTheNewStartDateViewModelValidator ValidatorInitialize()
         {
             _mockAcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
 
             _mockAcademicYearDateProvider.Setup(p => p.CurrentAcademicYearEndDate).Returns(new DateTime(2020, 7, 31));
+
+            return new WhatIsTheNewStartDateViewModelValidator(_mockAcademicYearDateProvider.Object);
         }
 
         [Test]
@@ -122,20 +121,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             };
 
             AssertValidationResult(x => x.NewStartDate, model, true);
-        }
-
-        private void AssertValidationResult<T>(Expression<Func<WhatIsTheNewStartDateViewModel, T>> property, WhatIsTheNewStartDateViewModel instance, bool expectedValid, string expectedErrorMessage = null)
-        {
-            var validator = new WhatIsTheNewStartDateViewModelValidator(_mockAcademicYearDateProvider.Object);
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance).WithErrorMessage(expectedErrorMessage);
-            }
         }
     }
 }

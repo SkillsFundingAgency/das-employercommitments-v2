@@ -1,14 +1,11 @@
-﻿using FluentValidation.TestHelper;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using System;
-using System.Linq.Expressions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class SendNewTrainingProviderRequestValidatorTests
+    public class SendNewTrainingProviderRequestValidatorTests : ValidatorTestBase<SendNewTrainingProviderRequest, SendNewTrainingProviderRequestValidator>
     {
         [TestCase("5143541", true)]
         [TestCase(" ", false)]
@@ -54,20 +51,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             var request = new SendNewTrainingProviderRequest() { AccountId = accountId };
             AssertValidationResult(x => x.AccountId, request, expectedValid);
-        }
-
-        private void AssertValidationResult<T>(Expression<Func<SendNewTrainingProviderRequest, T>> property, SendNewTrainingProviderRequest instance, bool expectedValid)
-        {
-            var validator = new SendNewTrainingProviderRequestValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
         }
     }
 }

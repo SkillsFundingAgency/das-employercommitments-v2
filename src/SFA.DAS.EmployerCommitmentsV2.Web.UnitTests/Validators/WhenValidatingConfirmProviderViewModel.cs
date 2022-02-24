@@ -6,22 +6,14 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
-    public class WhenValidatingConfirmProviderViewModel
+    public class WhenValidatingConfirmProviderViewModel : ValidatorTestBase<ConfirmProviderViewModel, ConfirmProviderViewModelValidator>
     {
-
         [Test, MoqAutoData]
-        public void And_The_ViewModel_Is_Populated_Correctly_Then_The_Validator_Returns_Valid(
-            ConfirmProviderViewModel viewModel,
-            long providerId,
-            string employerAccountLegalEntityPublicHashedId,
-            string providerName,
-            ConfirmProviderViewModelValidator validator)
+        public void And_The_ViewModel_Is_Populated_Correctly_Then_The_Validator_Returns_Valid(ConfirmProviderViewModel viewModel)
         {
             viewModel.UseThisProvider = true;
-         
-            var result = validator.Validate(viewModel);
 
-            Assert.True(result.IsValid);
+            AssertValidationResult(x => x.UseThisProvider, viewModel, true);
         }
 
         [Test, MoqAutoData]
@@ -32,15 +24,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             string providerName,
             ConfirmProviderViewModelValidator validator)
         {
-            viewModel.ProviderId = providerId;
-            viewModel.ProviderName = providerName;
             viewModel.UseThisProvider = null;
-            viewModel.AccountLegalEntityHashedId = employerAccountLegalEntityPublicHashedId;
-
-            var result = validator.Validate(viewModel);
-
-            Assert.False(result.IsValid);
-            Assert.AreEqual("Select a training provider", result.Errors.First().ErrorMessage);
+            AssertValidationResult(x => x.UseThisProvider, viewModel, false, "Select a training provider");
         }
     }
 }

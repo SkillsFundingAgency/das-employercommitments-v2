@@ -6,24 +6,14 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class ReviewApprenticeshipUpdatesViewModelValidatorTests
+    public class ReviewApprenticeshipUpdatesViewModelValidatorTests : ValidatorTestBase<ReviewApprenticeshipUpdatesViewModel, ReviewApprenticeshipUpdatesViewModelValidator>
     {
-        private ReviewApprenticeshipUpdatesViewModelValidator _validator;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _validator = new ReviewApprenticeshipUpdatesViewModelValidator();
-        }
-
         [Test, MoqAutoData]
         public void WhenApproveChangesIsNull_ThenValidatorReturnsInvalid(ReviewApprenticeshipUpdatesViewModel viewModel)
         {
             viewModel.ApproveChanges = null;
 
-            var result = _validator.Validate(viewModel);
-
-            Assert.False(result.IsValid);
+            AssertValidationResult(x => x.ApproveChanges, viewModel, false);
         }
 
         [Test, MoqAutoData]
@@ -31,9 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             viewModel.ApproveChanges = false;
 
-            var result = _validator.Validate(viewModel);
-
-            Assert.True(result.IsValid);
+            AssertValidationResult(x => x.ApproveChanges, viewModel, true);
         }
 
         [Test, MoqAutoData]
@@ -41,9 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             viewModel.ApproveChanges = true;
 
-            var result = _validator.Validate(viewModel);
-
-            Assert.True(result.IsValid);
+            AssertValidationResult(x => x.ApproveChanges, viewModel, true);
         }
     }
 }

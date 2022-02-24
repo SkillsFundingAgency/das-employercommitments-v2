@@ -6,24 +6,14 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class ViewApprenticeshipUpdatesViewModelValidatorTests
+    public class ViewApprenticeshipUpdatesViewModelValidatorTests : ValidatorTestBase<ViewApprenticeshipUpdatesViewModel, ViewApprenticeshipUpdatesViewModelValidator>
     {
-        private ViewApprenticeshipUpdatesViewModelValidator _validator;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _validator = new ViewApprenticeshipUpdatesViewModelValidator();
-        }
-
         [Test, MoqAutoData]
         public void WhenUndoChangesIsNull_ThenValidatorReturnsInvalid(ViewApprenticeshipUpdatesViewModel viewModel)
         {
             viewModel.UndoChanges = null;
 
-            var result = _validator.Validate(viewModel);
-
-            Assert.False(result.IsValid);
+            AssertValidationResult(x => x.UndoChanges, viewModel, false);
         }
 
         [Test, MoqAutoData]
@@ -31,9 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             viewModel.UndoChanges = false;
 
-            var result = _validator.Validate(viewModel);
-
-            Assert.True(result.IsValid);
+            AssertValidationResult(x => x.UndoChanges, viewModel, true);
         }
 
         [Test, MoqAutoData]
@@ -41,9 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             viewModel.UndoChanges = true;
 
-            var result = _validator.Validate(viewModel);
-
-            Assert.True(result.IsValid);
+            AssertValidationResult(x => x.UndoChanges, viewModel, true);
         }
     }
 }

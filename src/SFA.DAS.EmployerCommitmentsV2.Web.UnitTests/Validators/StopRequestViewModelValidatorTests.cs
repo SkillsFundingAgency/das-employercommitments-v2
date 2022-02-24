@@ -1,16 +1,14 @@
-﻿using FluentValidation.TestHelper;
+﻿using System;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using System;
-using System.Linq.Expressions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class StopRequestViewModelValidatorTests
+    public class StopRequestViewModelValidatorTests : ValidatorTestBase<StopRequestViewModel, StopRequestViewModelValidator>
     {
         private readonly DateTime _startDate = new DateTime(2020, 12, 10);
 
@@ -21,8 +19,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         private const string StopDateIsInFutureError = "The stop date cannot be in the future";
         private readonly string StopDateBeforeStartDateError = "The stop date cannot be before the apprenticeship started";
 
-        public StopRequestViewModelValidatorTests()
+        protected override StopRequestViewModelValidator ValidatorInitialize()
         {
+            var currentDateMock = new Mock<ICurrentDateTime>();
+            currentDateMock.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+            return new StopRequestViewModelValidator(currentDateMock.Object);
         }
 
         [Test]
@@ -84,22 +85,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var model = new StopRequestViewModel { StopMonth = month, StopYear = year, StartDate = _startDate };
 
             AssertValidationResult(x => x.StopDate, model, true);
-        }
-
-        private void AssertValidationResult<T>(Expression<Func<StopRequestViewModel, T>> property, StopRequestViewModel instance, bool expectedValid, string expectedErrorMessage = null)
-        {
-            var currentDateMock = new Mock<ICurrentDateTime>();
-            currentDateMock.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
-            var validator = new StopRequestViewModelValidator(currentDateMock.Object);
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance).WithErrorMessage(expectedErrorMessage);
-            }
         }
     }
 }

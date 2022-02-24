@@ -1,16 +1,13 @@
-﻿using System;
-using System.Linq;
+﻿using AutoFixture;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
-    public class WhatIsTheNewPriceViewModelValidatorTests
+    public class WhatIsTheNewPriceViewModelValidatorTests : ValidatorTestBase<WhatIsTheNewPriceViewModel, WhatIsTheNewPriceViewModelValidator>
     {
-        private WhatIsTheNewPriceViewModelValidator _validator;
-        private Fixture _autoFixture;
+        private IFixture _autoFixture;
 
         [SetUp]
         public void Arrange()
@@ -24,8 +21,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
                     .With(m => m.NewStartYear, 2020)
                     .With(m => m.NewEndMonth, 9)
                     .With(m => m.NewEndYear, 2020));
-
-            _validator = new WhatIsTheNewPriceViewModelValidator();
         }
 
         [TestCase("5143541", true)]
@@ -38,11 +33,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();
             viewModel.AccountHashedId = accountHashedId;
 
-            //Act
-            var result = _validator.Validate(viewModel);
-
             //Assert
-            Assert.AreEqual(expectedValid, result.IsValid);
+            AssertValidationResult(x => x.AccountHashedId, viewModel, expectedValid);
         }
 
         [TestCase("5143541", true)]
@@ -55,11 +47,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();
             viewModel.ApprenticeshipHashedId = apprenticeshipHashedId;
 
-            //Act
-            var result = _validator.Validate(viewModel);
-
             //Assert
-            Assert.AreEqual(expectedValid, result.IsValid);
+            AssertValidationResult(x => x.ApprenticeshipHashedId, viewModel, expectedValid);
         }
 
 
@@ -73,48 +62,49 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();
             viewModel.NewPrice = newPrice;
 
-            //Act
-            var result = _validator.Validate(viewModel);
-
             //Assert
-            Assert.AreEqual(expectedValid, result.IsValid);
-            if (errorMessage != null) Assert.IsTrue(result.Errors.Any(e => e.ErrorMessage == errorMessage));
+            AssertValidationResult(x => x.NewPrice, viewModel, expectedValid, errorMessage);
         }
-       
+
         [TestCase("012021", "062021", true, null)]
         [TestCase("132021", "062021", false, "The specified condition was not met for 'New Start Month Year'.")]
-        [TestCase("012021", "162021", false, "The specified condition was not met for 'New End Month Year'.")]
-        public void WhenValidatingWhatIsThePrice_ValidateTheNewEndMonthYearAndTheNewStartMonthYear(string newStartMonthYear, string newEndMonthYear, bool expectedValid, string errorMessage)
+        public void WhenValidatingWhatIsThePrice_ValidateTheNewStartMonthYear(string newStartMonthYear, string newEndMonthYear, bool expectedValid, string errorMessage)
         {
             //Arrange
             var viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();
             viewModel.NewStartMonthYear = newStartMonthYear;
             viewModel.NewEndMonthYear = newEndMonthYear;
 
-            //Act
-            var result = _validator.Validate(viewModel);
-
             //Assert
-            Assert.AreEqual(expectedValid, result.IsValid);
-            if (errorMessage != null) Assert.IsTrue(result.Errors.Any(e => e.ErrorMessage == errorMessage));
+            AssertValidationResult(x => x.NewStartMonthYear, viewModel, expectedValid, errorMessage);
         }
 
-        [TestCase("012021", "062020", false, "The new planned training end date must be after  new planned start date")]
-        public void WhenValidatingWhatIsThePrice_ValidateTheNewEndMonthYearIsAfterTheNewStartMonthYear(string newStartMonthYear, string newEndMonthYear, bool expectedValid, string errorMessage)
+        [TestCase("012021", "062021", true, null)]
+        [TestCase("012021", "162021", false, "The specified condition was not met for 'New End Month Year'.")]
+        public void WhenValidatingWhatIsThePrice_ValidateTheNewEndMonthYear(string newStartMonthYear, string newEndMonthYear, bool expectedValid, string errorMessage)
         {
             //Arrange
-            var viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();            
+            var viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();
+            viewModel.NewStartMonthYear = newStartMonthYear;
+            viewModel.NewEndMonthYear = newEndMonthYear;
+
+            //Assert
+            AssertValidationResult(x => x.NewEndMonthYear, viewModel, expectedValid, errorMessage);
+        }
+
+        [Test]
+        public void WhenValidatingWhatIsThePrice_ValidateTheNewEndMonthYearIsAfterTheNewStartMonthYear()
+        {
+            //Arrange
+            const string errorMessage = "The new planned training end date must be after  new planned start date";
+            var viewModel = _autoFixture.Create<WhatIsTheNewPriceViewModel>();
             viewModel.NewStartMonth = 1;
             viewModel.NewStartYear = 2021;
             viewModel.NewEndMonth = 6;
             viewModel.NewEndYear = 2020;
 
             //Act
-            var result = _validator.Validate(viewModel);
-
-            //Assert
-            Assert.AreEqual(expectedValid, result.IsValid);
-            if (errorMessage != null) Assert.IsTrue(result.Errors.Any(e => e.ErrorMessage == errorMessage));
+            AssertValidationResult(x => x.NewEndYear, viewModel, false, errorMessage);
         }
 
     }
