@@ -1,5 +1,6 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared.DraftApprenticeshipViewModel
 @inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService
 
@@ -43,7 +44,13 @@
         <dt class="das-definition-list__title">Unique learner number</dt>
         <dd class="das-definition-list__definition">@Model.Uln</dd>
     </dl>
-
+    @if (Model.DeliveryModel == DeliveryModel.Flexible)
+    {
+        <dl class="das-definition-list">
+            <dt class="das-definition-list__title">Apprenticeship delivery model</dt>
+            <dd class="das-definition-list__definition">@Model.DeliveryModel.ToDescription()</dd>
+        </dl>
+    }
     <dl class="das-definition-list">
         <dt class="das-definition-list__title">Apprenticeship training course</dt>
         <dd class="das-definition-list__definition">@Model.Courses.Single(x => x.CourseCode == Model.CourseCode).Name</dd>
