@@ -149,7 +149,7 @@
             <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
             @if (Model.IsLockedForUpdate || Model.IsUpdateLockedForStartDateAndCourse || Model.IsContinuation)
             {
-                @if(Model.DeliveryModel != DeliveryModel.Normal)
+                @if(Model.DeliveryModel != DeliveryModel.Regular)
                 {
                     <dl class="das-definition-list">
                         <dt asp-for="DeliveryModel" class="das-definition-list__title">Apprenticeship delivery model</dt>
@@ -178,18 +178,18 @@
                             @Html.ValidationMessageFor(m => m.DeliveryModel, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DeliveryModel) })
                             <div class="govuk-radios">
                                 <div class="govuk-radios__item">
-                                    <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Normal" id="DeliveryModelNormal" aria-describedby="DeliveryModelNormal-hint">
+                                    <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Regular" id="DeliveryModelNormal" aria-describedby="DeliveryModelNormal-hint">
                                     <label for="DeliveryModelNormal" class="govuk-label govuk-radios__label">
-                                        Normal
+                                        Regular
                                     </label>
                                     <div id="DeliveryModelNormal-hint" class="govuk-hint govuk-radios__hint">
                                         The apprentice will have a single employer
                                     </div>
                                 </div>
                                 <div class="govuk-radios__item">
-                                    <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Flexible" id="DeliveryModelFlexible" aria-describedby="DeliveryModelFlexible-hint">
+                                    <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.PortableFlexiJob" id="DeliveryModelFlexible" aria-describedby="DeliveryModelFlexible-hint">
                                     <label for="DeliveryModelFlexible" class="govuk-label govuk-radios__label">
-                                        Flexi-job
+                                        Portable flexi-job
                                     </label>
                                     <div id="DeliveryModelFlexible-hint" class="govuk-hint govuk-radios__hint">
                                         The apprentice will move between multiple employers

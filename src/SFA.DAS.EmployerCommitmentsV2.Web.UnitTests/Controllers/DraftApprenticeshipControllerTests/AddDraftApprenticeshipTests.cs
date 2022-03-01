@@ -113,7 +113,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 AccountLegalEntityId = Request.AccountLegalEntityId,
                 ReservationId = Request.ReservationId,
                 StartDate = new MonthYearModel(Request.StartMonthYear),
-                DeliveryModel = DeliveryModel.Normal,
+                DeliveryModel = DeliveryModel.Regular,
                 CourseCode = Request.CourseCode
             };
 

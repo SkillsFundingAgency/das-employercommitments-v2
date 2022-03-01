@@ -99,8 +99,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(fixture.ApprenticeshipUpdate.TrainingCode, viewModel.ApprenticeshipUpdates.CourseCode);
         }
 
-        [TestCase(DeliveryModel.Normal)]
-        [TestCase(DeliveryModel.Flexible)]
+        [TestCase(DeliveryModel.Regular)]
+        [TestCase(DeliveryModel.PortableFlexiJob)]
         public async Task DeliveryModel_IsMapped(DeliveryModel dm)
         {
             fixture.ApprenticeshipUpdate.DeliveryModel = dm;
@@ -108,8 +108,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(fixture.ApprenticeshipUpdate.DeliveryModel, viewModel.ApprenticeshipUpdates.DeliveryModel);
         }
 
-        [TestCase(DeliveryModel.Normal)]
-        [TestCase(DeliveryModel.Flexible)]
+        [TestCase(DeliveryModel.Regular)]
+        [TestCase(DeliveryModel.PortableFlexiJob)]
         public async Task DeliveryModelOnOriginal_IsMapped(DeliveryModel dm)
         {
             fixture.GetApprenticeshipResponse.DeliveryModel = dm;

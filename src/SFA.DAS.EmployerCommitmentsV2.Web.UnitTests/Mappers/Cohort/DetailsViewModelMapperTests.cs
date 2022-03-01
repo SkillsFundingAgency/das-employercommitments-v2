@@ -607,8 +607,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(2, result.Courses.Count(c=>c.CourseCode == "C4"));
         }
 
-        [TestCase(DeliveryModel.Flexible)]
-        [TestCase(DeliveryModel.Normal)]
+        [TestCase(DeliveryModel.PortableFlexiJob)]
+        [TestCase(DeliveryModel.Regular)]
         public async Task Course4HasCorrectDeployMethod(DeliveryModel dm)
         {
             var fixture = new DetailsViewModelMapperTestsFixture();
@@ -809,13 +809,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             SetCourseDetails(draftApprenticeships[5], "Course3", "C3", null, DefaultStartDate.AddMonths(2));
 
-            SetCourseDetails(draftApprenticeships[6], "Course4", "C4", null, null, null, DeliveryModel.Flexible);
-            SetCourseDetails(draftApprenticeships[7], "Course4", "C4", null, null, null, DeliveryModel.Normal);
+            SetCourseDetails(draftApprenticeships[6], "Course4", "C4", null, null, null, DeliveryModel.PortableFlexiJob);
+            SetCourseDetails(draftApprenticeships[7], "Course4", "C4", null, null, null, DeliveryModel.Regular);
 
             return draftApprenticeships;
         }
 
-        private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode, int? cost, DateTime? startDate = null, DateTime? originalStartDate = null, DeliveryModel dm = DeliveryModel.Normal)
+        private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode, int? cost, DateTime? startDate = null, DateTime? originalStartDate = null, DeliveryModel dm = DeliveryModel.Regular)
         {
             startDate = startDate ?? DefaultStartDate;
 
