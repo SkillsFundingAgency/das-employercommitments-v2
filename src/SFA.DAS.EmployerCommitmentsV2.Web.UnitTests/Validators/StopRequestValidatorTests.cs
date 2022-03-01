@@ -1,14 +1,11 @@
-﻿using FluentValidation.TestHelper;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using System;
-using System.Linq.Expressions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class StopRequestValidatorTests
+    public class StopRequestValidatorTests : ValidatorTestBase<StopRequest, StopRequestValidator>
     {
         [TestCase("", false)]
         [TestCase(" ", false)]
@@ -30,21 +27,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var request = new StopRequest { ApprenticeshipHashedId = apprenticeshipHashedId };
 
             AssertValidationResult(x => x.ApprenticeshipHashedId, request, expectedValid);
-        }
-
-
-        private void AssertValidationResult<T>(Expression<Func<StopRequest, T>> property, StopRequest instance, bool expectedValid)
-        {
-            var validator = new StopRequestValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
         }
     }
 }

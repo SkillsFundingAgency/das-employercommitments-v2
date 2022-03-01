@@ -1,16 +1,11 @@
-﻿using FluentValidation.TestHelper;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class PauseRequestValidatorTests
+    public class PauseRequestValidatorTests : ValidatorTestBase<PauseRequest, PauseRequestValidator>
     {
         [TestCase("", false)]
         [TestCase(" ", false)]
@@ -32,21 +27,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var request = new PauseRequest { ApprenticeshipHashedId = apprenticeshipHashedId };
 
             AssertValidationResult(x => x.ApprenticeshipHashedId, request, expectedValid);
-        }
-
-
-        private void AssertValidationResult<T>(Expression<Func<PauseRequest, T>> property, PauseRequest instance, bool expectedValid)
-        {
-            var validator = new PauseRequestValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
         }
     }
 }

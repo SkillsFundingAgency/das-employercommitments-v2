@@ -1,14 +1,11 @@
 ﻿using NUnit.Framework;
-using System;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using System.Linq.Expressions;
-using FluentValidation.TestHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture()]
-    public class ChangeStatusRequestViewModelValidatorTests
+    public class ChangeStatusRequestViewModelValidatorTests : ValidatorTestBase<ChangeStatusRequestViewModel, ChangeStatusRequestViewModelValidator>
     {
         [TestCase(ChangeStatusType.Stop)]
         [TestCase(ChangeStatusType.Pause)]
@@ -26,19 +23,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var model = new ChangeStatusRequestViewModel { SelectedStatusChange = null };
 
             AssertValidationResult(request => request.SelectedStatusChange, model, false);
-        }
-        private void AssertValidationResult<T>(Expression<Func<ChangeStatusRequestViewModel, T>> property, ChangeStatusRequestViewModel instance, bool expectedValid)
-        {
-            var validator = new ChangeStatusRequestViewModelValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
         }
     }
 }

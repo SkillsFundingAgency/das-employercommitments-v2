@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
-    public class ChangeOfProviderRequestValidatorTests
+    public class ChangeOfProviderRequestValidatorTests : ValidatorTestBase<ChangeOfProviderRequest, ChangeOfProviderRequestValidator>
     {
         [TestCase("5143541", true)]
         [TestCase(" ", false)]
@@ -84,20 +84,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             var request = new ChangeOfProviderRequest() { NewPrice= newPrice };
             AssertValidationResult(x => x.NewPrice, request, expectedValid);
-        }
-
-        private void AssertValidationResult<T>(Expression<Func<ChangeOfProviderRequest, T>> property, ChangeOfProviderRequest instance, bool expectedValid)
-        {
-            var validator = new ChangeOfProviderRequestValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
         }
     }
 }

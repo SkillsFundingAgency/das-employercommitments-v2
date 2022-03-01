@@ -1,14 +1,11 @@
-﻿using System;
-using System.Linq.Expressions;
-using FluentValidation.TestHelper;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture()]
-    public class EditDraftApprenticeshipViewModelValidatorTests
+    public class EditDraftApprenticeshipViewModelValidatorTests : ValidatorTestBase<EditDraftApprenticeshipViewModel, EditDraftApprenticeshipViewModelValidator>
     {
         [TestCase(12, 12, 2000, true)]
         [TestCase(31, 2, 2000, false)]
@@ -42,19 +39,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             var model = new EditDraftApprenticeshipViewModel { EndMonth = month, EndYear = year };
             AssertValidationResult(request => request.EndDate, model, expectedValid);
-        }
-        private void AssertValidationResult<T>(Expression<Func<EditDraftApprenticeshipViewModel, T>> property, EditDraftApprenticeshipViewModel instance, bool expectedValid)
-        {
-            var validator = new EditDraftApprenticeshipViewModelValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
         }
     }
 }

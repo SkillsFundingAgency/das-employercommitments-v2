@@ -1,25 +1,21 @@
 using System;
-using System.Linq.Expressions;
-using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using SFA.DAS.Testing;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
     [Parallelizable]
-    public class AddDraftApprenticeshipRequestValidatorTests : FluentTest<AddDraftApprenticeshipRequestValidatorTestsFixture>
+    public class AddDraftApprenticeshipRequestValidatorTests : ValidatorTestBase<AddDraftApprenticeshipRequest, AddDraftApprenticeshipRequestValidator>
     {
         [TestCase(null, false)]
         [TestCase("", false)]
         [TestCase("AAA111", true)]
         public void Validate_WhenValidatingAccountHashedId_ThenShouldBeValidated(string accountHashedId, bool isValid)
         {
-            Test(
-                f => f.Request.AccountHashedId = accountHashedId,
-                f => f.Verify(r => r.AccountHashedId, isValid));
+            var model = new AddDraftApprenticeshipRequest { AccountHashedId = accountHashedId };
+            AssertValidationResult(request => request.AccountHashedId, model, isValid);
         }
         
         [TestCase(null, false)]
@@ -27,19 +23,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [TestCase("AAA111", true)]
         public void Validate_WhenValidatingCohortReference_ThenShouldBeValidated(string cohortReference, bool isValid)
         {
-            Test(
-                f => f.Request.CohortReference = cohortReference,
-                f => f.Verify(r => r.CohortReference, isValid));
+            var model = new AddDraftApprenticeshipRequest { CohortReference = cohortReference };
+            AssertValidationResult(request => request.CohortReference, model, isValid);
         }
         
         [TestCase(-1, false)]
         [TestCase(0, false)]
         [TestCase(1, true)]
-        public void Validate_WhenValidatingCohortId_ThenShouldBeValidated(long accountLegalEntityId, bool isValid)
+        public void Validate_WhenValidatingCohortId_ThenShouldBeValidated(long cohortId, bool isValid)
         {
-            Test(
-                f => f.Request.CohortId = accountLegalEntityId,
-                f => f.Verify(r => r.CohortId, isValid));
+            var model = new AddDraftApprenticeshipRequest { CohortId = cohortId };
+            AssertValidationResult(request => request.CohortId, model, isValid);
         }
         
         [TestCase(null, false)]
@@ -47,9 +41,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [TestCase("AAA111", true)]
         public void Validate_WhenValidatingAccountLegalEntityHashedId_ThenShouldBeValidated(string accountLegalEntityHashedId, bool isValid)
         {
-            Test(
-                f => f.Request.AccountLegalEntityHashedId = accountLegalEntityHashedId,
-                f => f.Verify(r => r.AccountLegalEntityHashedId, isValid));
+            var model = new AddDraftApprenticeshipRequest { AccountLegalEntityHashedId = accountLegalEntityHashedId };
+            AssertValidationResult(request => request.AccountLegalEntityHashedId, model, isValid);
         }
         
         [TestCase(-1, false)]
@@ -57,18 +50,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [TestCase(1, true)]
         public void Validate_WhenValidatingAccountLegalEntityId_ThenShouldBeValidated(long accountLegalEntityId, bool isValid)
         {
-            Test(
-                f => f.Request.AccountLegalEntityId = accountLegalEntityId,
-                f => f.Verify(r => r.AccountLegalEntityId, isValid));
+            var model = new AddDraftApprenticeshipRequest { AccountLegalEntityId = accountLegalEntityId };
+            AssertValidationResult(request => request.AccountLegalEntityId, model, isValid);
         }
         
         [TestCase(false, false)]
         [TestCase(true, true)]
         public void Validate_WhenValidatingReservationId_ThenShouldBeValidated(bool reservationIdHasValue, bool isValid)
         {
-            Test(
-                f => f.Request.ReservationId = reservationIdHasValue ? Guid.NewGuid() : Guid.Empty,
-                f => f.Verify(r => r.ReservationId, isValid));
+            var model = new AddDraftApprenticeshipRequest { ReservationId = reservationIdHasValue ? Guid.NewGuid() : Guid.Empty };
+            AssertValidationResult(request => request.ReservationId, model, isValid);
         }
         
         [TestCase(null, true)]
@@ -78,33 +69,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [TestCase("01082019", false)]
         public void Validate_WhenValidatingStartMonthYear_ThenShouldBeValidated(string startMonthYear, bool isValid)
         {
-            Test(
-                f => f.Request.StartMonthYear = startMonthYear,
-                f => f.Verify(r => r.StartMonthYear, isValid));
-        }
-    }
-
-    public class AddDraftApprenticeshipRequestValidatorTestsFixture
-    {
-        public AddDraftApprenticeshipRequest Request { get; set; }
-        public AddDraftApprenticeshipRequestValidator Validator { get; set; }
-
-        public AddDraftApprenticeshipRequestValidatorTestsFixture()
-        {
-            Request = new AddDraftApprenticeshipRequest();
-            Validator = new AddDraftApprenticeshipRequestValidator();
-        }
-
-        public void Verify<T>(Expression<Func<AddDraftApprenticeshipRequest, T>> property, bool isValid)
-        {
-            if (isValid)
-            {
-                Validator.ShouldNotHaveValidationErrorFor(property, Request);
-            }
-            else
-            {
-                Validator.ShouldHaveValidationErrorFor(property, Request);
-            }
+            var model = new AddDraftApprenticeshipRequest { StartMonthYear = startMonthYear };
+            AssertValidationResult(request => request.StartMonthYear, model, isValid);
         }
     }
 }

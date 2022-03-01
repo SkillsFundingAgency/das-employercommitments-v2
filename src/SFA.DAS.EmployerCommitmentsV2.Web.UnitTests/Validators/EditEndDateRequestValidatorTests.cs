@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
-    public class EditEndDateRequestValidatorTests
+    public class EditEndDateRequestValidatorTests : ValidatorTestBase<EditEndDateRequest, EditEndDateRequestValidator>
     {
         [TestCase("5143541", true)]
         [TestCase(" ", false)]
@@ -27,20 +27,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             var request = new EditEndDateRequest() { ApprenticeshipHashedId = apprenticeshipHashedId };
             AssertValidationResult(x => x.ApprenticeshipHashedId, request, expectedValid);
-        }
-
-        private void AssertValidationResult<T>(Expression<Func<EditEndDateRequest, T>> property, EditEndDateRequest instance, bool expectedValid)
-        {
-            var validator = new EditEndDateRequestValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
         }
     }
 }

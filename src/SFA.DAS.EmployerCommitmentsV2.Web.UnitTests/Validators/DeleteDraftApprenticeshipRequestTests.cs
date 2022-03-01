@@ -1,14 +1,11 @@
-﻿using System;
-using System.Linq.Expressions;
-using FluentValidation.TestHelper;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class DeleteDraftApprenticeshipRequestTests
+    public class DeleteDraftApprenticeshipRequestTests : ValidatorTestBase<DeleteApprenticeshipRequest, DeleteDraftApprenticeshipRequestValidator>
     {
         [TestCase("5143541", true)]
         [TestCase(" ", false)]
@@ -46,21 +43,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var request = new DeleteApprenticeshipRequest() { DraftApprenticeshipId = draftApprenticeshipId};
             AssertValidationResult(x => x.DraftApprenticeshipId, request, expectedValid);
         }
-        
-        private void AssertValidationResult<T>(Expression<Func<DeleteApprenticeshipRequest, T>> property, DeleteApprenticeshipRequest instance, bool expectedValid)
-        {
-            var validator = new DeleteDraftApprenticeshipRequestValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
-        }
     }
-
-
 }

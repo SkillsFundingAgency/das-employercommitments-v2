@@ -6,18 +6,15 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class ChangeVersionViewModelValidatorTests
+    public class ChangeVersionViewModelValidatorTests : ValidatorTestBase<ChangeVersionViewModel, ChangeVersionViewModelValidator>
     {
         [Test, MoqAutoData]
         public void When_SelectedVersionIsNull_Then_ReturnInvalid(
-            ChangeVersionViewModel viewModel,
-            ChangeVersionViewModelValidator validator)
+            ChangeVersionViewModel viewModel)
         {
             viewModel.SelectedVersion = null;
 
-            var result = validator.Validate(viewModel);
-
-            Assert.False(result.IsValid);
+            AssertValidationResult(r => r.SelectedVersion, viewModel, false);
         }
     }
 }

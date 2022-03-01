@@ -8,7 +8,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class FinishedRequestValidatorTests
+    public class FinishedRequestValidatorTests : ValidatorTestBase<FinishedRequest, FinishedRequestValidator>
     {
         [TestCase(null, false)]
         [TestCase("", false)]
@@ -44,20 +44,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             var model = new FinishedRequest { CohortId = cohortId };
             AssertValidationResult(request => request.CohortId, model, expectToBeValid);
-        }
-
-        private void AssertValidationResult<T>(Expression<Func<FinishedRequest, T>> property, FinishedRequest instance, bool expectedValid)
-        {
-            var validator = new FinishedRequestValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
         }
     }
 }

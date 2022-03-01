@@ -1,14 +1,11 @@
-﻿using FluentValidation.TestHelper;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using System;
-using System.Linq.Expressions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class ConfirmStopRequestValidatorTests
+    public class ConfirmStopRequestValidatorTests : ValidatorTestBase<ConfirmStopRequest, ConfirmStopRequestValidator>
     {
         [TestCase("", false)]
         [TestCase(" ", false)]
@@ -40,20 +37,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var request = new ConfirmStopRequest { MadeRedundant = madeRedundant };
 
             AssertValidationResult(x => x.MadeRedundant, request, expectedValid);
-        }
-
-        private void AssertValidationResult<T>(Expression<Func<ConfirmStopRequest, T>> property, ConfirmStopRequest instance, bool expectedValid)
-        {
-            var validator = new ConfirmStopRequestValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
         }
     }
 }
