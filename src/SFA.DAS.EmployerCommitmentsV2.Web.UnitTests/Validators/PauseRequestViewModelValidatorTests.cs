@@ -6,24 +6,14 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class PauseRequestViewModelValidatorTests
+    public class PauseRequestViewModelValidatorTests : ValidatorTestBase<PauseRequestViewModel, PauseRequestViewModelValidator>
     {
-        private PauseRequestViewModelValidator _validator;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _validator = new PauseRequestViewModelValidator();
-        }
-
         [Test, MoqAutoData]
         public void WhenPauseConfirmedIsNull_ThenValidatorReturnsInvalid(PauseRequestViewModel viewModel)
         {
             viewModel.PauseConfirmed = null;
 
-            var result = _validator.Validate(viewModel);
-
-            Assert.False(result.IsValid);
+            AssertValidationResult(x => x.PauseConfirmed, viewModel, false);
         }
 
         [Test, MoqAutoData]
@@ -31,9 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             viewModel.PauseConfirmed = false;
 
-            var result = _validator.Validate(viewModel);
-
-            Assert.True(result.IsValid);
+            AssertValidationResult(x => x.PauseConfirmed, viewModel, true);
         }
 
         [Test, MoqAutoData]
@@ -41,9 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             viewModel.PauseConfirmed = true;
 
-            var result = _validator.Validate(viewModel);
-
-            Assert.True(result.IsValid);
+            AssertValidationResult(x => x.PauseConfirmed, viewModel, true);
         }
     }
 }

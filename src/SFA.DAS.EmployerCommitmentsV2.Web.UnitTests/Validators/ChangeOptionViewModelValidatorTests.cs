@@ -6,18 +6,15 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class ChangeOptionViewModelValidatorTests
+    public class ChangeOptionViewModelValidatorTests : ValidatorTestBase<ChangeOptionViewModel, ChangeOptionViewModelValidator>
     {
         [Test, MoqAutoData]
         public void When_SelectedOptionIsNull_Then_ReturnInvalid(
-               ChangeOptionViewModel viewModel,
-               ChangeOptionViewModelValidator validator)
+               ChangeOptionViewModel viewModel)
         {
             viewModel.SelectedOption = null;
 
-            var result = validator.Validate(viewModel);
-
-            Assert.False(result.IsValid);
+            AssertValidationResult(r => r.SelectedOption, viewModel, false);
         }
 
         [Test, MoqAutoData]
@@ -29,9 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             viewModel.ReturnToChangeVersion = false;
             viewModel.SelectedOption = viewModel.CurrentOption;
 
-            var result = validator.Validate(viewModel);
-
-            Assert.False(result.IsValid);
+            AssertValidationResult(r => r.SelectedOption, viewModel, false);
         }
     }
 }

@@ -1,14 +1,11 @@
-﻿using FluentValidation.TestHelper;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using System;
-using System.Linq.Expressions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class ChangeProviderRequestedConfirmationValidatorTests
+    public class ChangeProviderRequestedConfirmationValidatorTests : ValidatorTestBase<ChangeProviderRequestedConfirmationRequest, ChangeProviderRequestedConfirmationValidator>
     {
         [TestCase(1, true)]
         [TestCase(default(long), false)]
@@ -48,21 +45,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var request = new ChangeProviderRequestedConfirmationRequest { ApprenticeshipHashedId = apprenticeshipHashedId };
 
             AssertValidationResult(x => x.ApprenticeshipHashedId, request, expectedValid);
-        }
-
-
-        private void AssertValidationResult<T>(Expression<Func<ChangeProviderRequestedConfirmationRequest, T>> property, ChangeProviderRequestedConfirmationRequest instance, bool expectedValid)
-        {
-            var validator = new ChangeProviderRequestedConfirmationValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
         }
     }
 }

@@ -1,58 +1,36 @@
-﻿using System.Linq;
+﻿using AutoFixture.NUnit3;
 using NUnit.Framework;
-using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using AutoFixture;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
-    public class SelectTransferConnectionViewModelValidatorTests
+    public class SelectTransferConnectionViewModelValidatorTests : ValidatorTestBase<SelectTransferConnectionViewModel, SelectTransferConnectionViewModelValidator>
     {
-        private SelectTransferConnectionViewModelValidator _validator;
-        private Fixture _autoFixture;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _autoFixture = new Fixture();
-            _autoFixture.Customize<SelectTransferConnectionViewModel>(c =>
-                c.With(m => m.AccountHashedId, "VNR9P")
-                 .With(m => m.TransferConnectionCode, "1234"));                  
-
-            _validator = new SelectTransferConnectionViewModelValidator();
-        }
-
-        [TestCase("5143541", true)]
-        [TestCase(" ", false)]
-        [TestCase("", false)]
-        [TestCase(null, false)]
-        public void WhenValidatingSelectTransferConnection_ValidateTheAccountHashedId(string accountHashedId, bool expectedValid)
+        [Test]
+        [InlineAutoData("5143541", true)]
+        [InlineAutoData(" ", false)]
+        [InlineAutoData("", false)]
+        [InlineAutoData(null, false)]
+        public void WhenValidatingSelectTransferConnection_ValidateTheAccountHashedId(string accountHashedId, bool expectedValid, SelectTransferConnectionViewModel viewModel)
         {
             //Arrange
-            var viewModel = _autoFixture.Create<SelectTransferConnectionViewModel>();
             viewModel.AccountHashedId = accountHashedId;
 
-            //Act
-            var result = _validator.Validate(viewModel);
-
             //Assert
-            Assert.AreEqual(expectedValid, result.IsValid);
+            AssertValidationResult(x => x.AccountHashedId, viewModel, expectedValid);
         }
-        
-        [TestCase(" ", false, "Please choose an option")]
-        [TestCase("", false, "Please choose an option")]        
-        public void WhenValidatingSelectTransferConnection_ValidateTransferConnectionCode(string transferConnectionCode, bool expectedValid, string errorMessage)
+
+        [Test]
+        [InlineAutoData(" ", false, "Please choose an option")]
+        [InlineAutoData("", false, "Please choose an option")]        
+        public void WhenValidatingSelectTransferConnection_ValidateTransferConnectionCode(string transferConnectionCode, bool expectedValid, string errorMessage, SelectTransferConnectionViewModel viewModel)
         {
             //Arrange
-            var viewModel = _autoFixture.Create<SelectTransferConnectionViewModel>();
             viewModel.TransferConnectionCode = transferConnectionCode;
 
-            //Act
-            var result = _validator.Validate(viewModel);
-
             //Assert
-            Assert.AreEqual(expectedValid, result.IsValid);
-            if (errorMessage != null) Assert.IsTrue(result.Errors.Any(e => e.ErrorMessage == errorMessage));
+            AssertValidationResult(x => x.TransferConnectionCode, viewModel, expectedValid, errorMessage);
         }
 
     }

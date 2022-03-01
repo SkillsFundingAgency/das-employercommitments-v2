@@ -90,7 +90,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     public class WhenPostingSendRequestNewTrainingProviderTestsFixture
     {
         private readonly Mock<ICommitmentsApiClient> _commitmentsApiClient;
-        private readonly Mock<ILinkGenerator> _linkGenerator;
         private ApprenticeController _controller;
         private SendNewTrainingProviderViewModel _viewModel;
 

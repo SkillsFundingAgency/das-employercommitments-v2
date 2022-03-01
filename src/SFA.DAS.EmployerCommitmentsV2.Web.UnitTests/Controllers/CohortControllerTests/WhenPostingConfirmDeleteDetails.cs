@@ -50,7 +50,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             public CohortController CohortController { get; }
             public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; }
             public Mock<IAuthenticationService> AuthenticationService { get; }
-            public Mock<ILinkGenerator> LinkGenerator { get; }
 
             public WhenPostingConfirmDeleteDetailsTestFixture()
             {
@@ -63,12 +62,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 AuthenticationService = new Mock<IAuthenticationService>();
                 AuthenticationService.Setup(x => x.UserInfo).Returns(UserInfo);
 
-                LinkGenerator = new Mock<ILinkGenerator>();
-                LinkGenerator.Setup(x => x.CommitmentsLink(It.IsAny<string>())).Returns<string>(s => s); 
-
                 CohortController = new CohortController(CommitmentsApiClient.Object,
                     Mock.Of<ILogger<CohortController>>(),
-                    LinkGenerator.Object,
+                    Mock.Of<ILinkGenerator>(),
                     Mock.Of<IModelMapper>(),
                     Mock.Of<IAuthorizationService>(),
                     Mock.Of<IEncodingService>());

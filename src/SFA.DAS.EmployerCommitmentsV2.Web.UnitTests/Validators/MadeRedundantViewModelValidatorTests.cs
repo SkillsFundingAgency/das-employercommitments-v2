@@ -6,24 +6,14 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class MadeRedundantViewModelValidatorTests
+    public class MadeRedundantViewModelValidatorTests : ValidatorTestBase<MadeRedundantViewModel, MadeRedundantViewModelValidator>
     {
-        private MadeRedundantViewModelValidator _validator;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _validator = new MadeRedundantViewModelValidator();
-        }
-
         [Test, MoqAutoData]
         public void WhenMadeRedundantConfirmedIsNull_ThenValidatorReturnsInvalid(MadeRedundantViewModel viewModel)
         {
             viewModel.MadeRedundant = null;
 
-            var result = _validator.Validate(viewModel);
-
-            Assert.False(result.IsValid);
+            AssertValidationResult(r => r.MadeRedundant, viewModel, false);
         }
 
         [Test, MoqAutoData]
@@ -31,9 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             viewModel.MadeRedundant = false;
 
-            var result = _validator.Validate(viewModel);
-
-            Assert.True(result.IsValid);
+            AssertValidationResult(r => r.MadeRedundant, viewModel, true);
         }
 
         [Test, MoqAutoData]
@@ -41,9 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             viewModel.MadeRedundant = true;
 
-            var result = _validator.Validate(viewModel);
-
-            Assert.True(result.IsValid);
+            AssertValidationResult(r => r.MadeRedundant, viewModel, true);
         }
     }
 }

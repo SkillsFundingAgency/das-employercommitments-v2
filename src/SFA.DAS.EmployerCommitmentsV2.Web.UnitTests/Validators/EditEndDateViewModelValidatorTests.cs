@@ -1,13 +1,10 @@
-﻿using FluentValidation.TestHelper;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using System;
-using System.Linq.Expressions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
-    public class EditEndDateViewModelValidatorTests
+    public class EditEndDateViewModelValidatorTests : ValidatorTestBase<EditEndDateViewModel, EditEndDateViewModelValidator>
     {
         [TestCase(12, 2000, true)]
         [TestCase(13, 2000, false)]
@@ -38,20 +35,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             var viewModel = new EditEndDateViewModel() { ApprenticeshipHashedId = apprenticeshipHashedId };
             AssertValidationResult(x => x.ApprenticeshipHashedId, viewModel, expectedValid);
-        }
-
-        private void AssertValidationResult<T>(Expression<Func<EditEndDateViewModel, T>> property, EditEndDateViewModel instance, bool expectedValid)
-        {
-            var validator = new EditEndDateViewModelValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
         }
     }
 }

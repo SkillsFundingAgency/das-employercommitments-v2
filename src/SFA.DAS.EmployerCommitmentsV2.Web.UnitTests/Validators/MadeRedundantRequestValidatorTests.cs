@@ -1,14 +1,11 @@
-﻿using FluentValidation.TestHelper;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
-using System;
-using System.Linq.Expressions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class MadeRedundantRequestValidatorTests
+    public class MadeRedundantRequestValidatorTests : ValidatorTestBase<MadeRedundantRequest, MadeRedundantRequestValidator>
     {
         [TestCase("", false)]
         [TestCase(" ", false)]
@@ -30,20 +27,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             var request = new MadeRedundantRequest { ApprenticeshipHashedId = apprenticeshipHashedId };
 
             AssertValidationResult(x => x.ApprenticeshipHashedId, request, expectedValid);
-        }
-
-        private void AssertValidationResult<T>(Expression<Func<MadeRedundantRequest, T>> property, MadeRedundantRequest instance, bool expectedValid)
-        {
-            var validator = new MadeRedundantRequestValidator();
-
-            if (expectedValid)
-            {
-                validator.ShouldNotHaveValidationErrorFor(property, instance);
-            }
-            else
-            {
-                validator.ShouldHaveValidationErrorFor(property, instance);
-            }
         }
     }
 }
