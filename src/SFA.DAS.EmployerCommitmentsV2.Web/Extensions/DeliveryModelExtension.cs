@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
                 _ => "Regular"
             };
 
-        public static string ToAbnormalDescription(this DeliveryModel deliveryModel) =>
+        public static string ToIrregularDescription(this DeliveryModel deliveryModel) =>
             deliveryModel switch
             {
                 DeliveryModel.PortableFlexiJob => "Portable flexi-job",
