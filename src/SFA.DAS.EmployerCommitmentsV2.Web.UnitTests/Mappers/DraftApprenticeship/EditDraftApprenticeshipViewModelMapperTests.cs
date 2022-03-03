@@ -143,6 +143,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         }
 
         [Test]
+        public void DeliveryModelIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeshipResponse.DeliveryModel, _result.DeliveryModel);
+        }
+
+        [Test]
         public void CourseCodeIsMappedCorrectly()
         {
             Assert.AreEqual(_draftApprenticeshipResponse.CourseCode, _result.CourseCode);

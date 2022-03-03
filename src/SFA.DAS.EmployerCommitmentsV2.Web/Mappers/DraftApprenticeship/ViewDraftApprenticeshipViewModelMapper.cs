@@ -3,6 +3,10 @@ using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.CommitmentsV2.Types.Dtos;
+using System;
+using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 {
@@ -31,6 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 Email = draftApprenticeship.Email,
                 Uln = draftApprenticeship.Uln,
                 DateOfBirth = draftApprenticeship.DateOfBirth,
+                DeliveryModel = draftApprenticeship.DeliveryModel.ToAbnormalDescription(),
                 TrainingCourse = trainingCourse?.TrainingProgramme.Name,
                 HasStandardOptions = draftApprenticeship.HasStandardOptions,
                 Version = draftApprenticeship.TrainingCourseVersion,

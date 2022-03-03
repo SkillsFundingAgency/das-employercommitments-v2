@@ -200,6 +200,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _fixture.VerifyCourseCodeIsMapped();
         }
 
+        [TestCase(DeliveryModel.Flexible)]
+        [TestCase(DeliveryModel.Normal)]
+        public async Task DeliveryModel_IsMapped(DeliveryModel dm)
+        {
+            _fixture.ApprenticeshipResponse.DeliveryModel = dm;
+
+            //Act
+            await _fixture.Map();
+
+            _fixture.VerifyDeliveryModelIsMapped();
+        }
+
         [Test]
         public async Task Version_IsMapped()
         {
@@ -472,6 +484,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         internal void VerifyCourseCodeIsMapped()
         {
             Assert.AreEqual(ApprenticeshipResponse.CourseCode, _viewModel.CourseCode);
+        }
+
+        internal void VerifyDeliveryModelIsMapped()
+        {
+            Assert.AreEqual(ApprenticeshipResponse.DeliveryModel, _viewModel.DeliveryModel);
         }
 
         internal void VerifyVersionIsMapped()

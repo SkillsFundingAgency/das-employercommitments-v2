@@ -99,6 +99,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
+        public async Task ThenDeliveryModelIsMappedCorrectly()
+        {
+            var result = await _act();
+            Assert.AreEqual(_source.DeliveryModel, result.DeliveryModel);
+        }
+
+        [Test]
         public async Task ThenCourseCodeIsMappedCorrectly()
         {
             var result = await _act();

@@ -18,12 +18,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 DateOfBirth = source.DateOfBirth.Date,
                 Email = source.Email, 
                 Uln = source.Uln,
+                DeliveryModel = source.DeliveryModel,
                 CourseCode = source.CourseCode,
                 Cost = source.Cost,
                 StartDate = source.StartDate.Date,
                 EndDate = source.EndDate.Date,
                 OriginatorReference = source.Reference,
-                ReservationId = source.ReservationId
+                ReservationId = source.ReservationId,
             });
         }
     }

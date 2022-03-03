@@ -1,6 +1,8 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService
 
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditApprenticeshipRequestViewModel
 
@@ -147,6 +149,16 @@
             <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
             @if (Model.IsLockedForUpdate || Model.IsUpdateLockedForStartDateAndCourse || Model.IsContinuation)
             {
+                @if(Model.DeliveryModel != DeliveryModel.Normal)
+                {
+                    <dl class="das-definition-list">
+                        <dt asp-for="DeliveryModel" class="das-definition-list__title">Apprenticeship delivery model</dt>
+                        <dd class="das-definition-list__definition" id="trainingName">@Model.DeliveryModel.ToDescription()</dd>
+                    </dl>
+                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+                }
+                @Html.HiddenFor(x => x.DeliveryModel)
+
                 <dl class="das-definition-list">
                     <dt asp-for="TrainingName" class="das-definition-list__title">Apprenticeship training course</dt>
                     <dd class="das-definition-list__definition" id="trainingName">@Model.TrainingName </dd>
@@ -156,6 +168,43 @@
             }
             else
             {
+                @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.DeliveryModel))
+                {
+                    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.DeliveryModel, "govuk-form-group--error")">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                Delivery model
+                            </legend>
+                            @Html.ValidationMessageFor(m => m.DeliveryModel, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DeliveryModel) })
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Normal" id="DeliveryModelNormal" aria-describedby="DeliveryModelNormal-hint">
+                                    <label for="DeliveryModelNormal" class="govuk-label govuk-radios__label">
+                                        Normal
+                                    </label>
+                                    <div id="DeliveryModelNormal-hint" class="govuk-hint govuk-radios__hint">
+                                        The apprentice will have a single employer
+                                    </div>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Flexible" id="DeliveryModelFlexible" aria-describedby="DeliveryModelFlexible-hint">
+                                    <label for="DeliveryModelFlexible" class="govuk-label govuk-radios__label">
+                                        Flexi-job
+                                    </label>
+                                    <div id="DeliveryModelFlexible-hint" class="govuk-hint govuk-radios__hint">
+                                        The apprentice will move between multiple employers
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+                }
+                else
+                {
+                    @Html.HiddenFor(x => x.DeliveryModel)
+                }
+
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
                     <label for="trainingCourse" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
                     <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>

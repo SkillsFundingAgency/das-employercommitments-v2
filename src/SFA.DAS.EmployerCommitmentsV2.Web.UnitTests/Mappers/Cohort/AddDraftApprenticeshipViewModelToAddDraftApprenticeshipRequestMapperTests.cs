@@ -31,6 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                     r.DateOfBirth.Should().Be(f.ViewModel.DateOfBirth.Date);
                     r.Uln.Should().Be(f.ViewModel.Uln);
                     r.CourseCode.Should().Be(f.ViewModel.CourseCode);
+                    r.DeliveryModel.Should().Be(f.ViewModel.DeliveryModel);
                     r.Cost.Should().Be(f.ViewModel.Cost);
                     r.StartDate.Should().Be(f.ViewModel.StartDate.Date);
                     r.EndDate.Should().Be(f.ViewModel.EndDate.Date);
@@ -56,6 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 BirthMonth = 2,
                 BirthYear = 2000,
                 Uln = "AAA000",
+                DeliveryModel = CommitmentsV2.Types.DeliveryModel.Normal,
                 CourseCode = "111",
                 Cost = 3,
                 StartMonth = 8,

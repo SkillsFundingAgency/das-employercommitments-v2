@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ConfirmEditApprenticeshipViewModel
@@ -35,6 +36,7 @@
             @Html.HiddenFor(x => x.BirthYear)
             @Html.HiddenFor(x => x.BirthDay)
             @Html.HiddenFor(x => x.Cost)
+            @Html.HiddenFor(x => x.DeliveryModel)
             @Html.HiddenFor(x => x.CourseCode)
             @Html.HiddenFor(x => x.Version)
             @Html.HiddenFor(x => x.Option)
@@ -45,19 +47,26 @@
                 <div class="govuk-grid-column-full">
                     <dl class="govuk-summary-list">
                         <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key"> Name </dt>
-                            <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.Name</dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key"> Unique learner number </dt>
-                            <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.ULN</dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key"> Apprenticeship training course </dt>
-                            <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.CourseName</dd>
-                        </div>
-                    </dl>
+                        <dt class="govuk-summary-list__key"> Name </dt>
+                        <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.Name</dd>
                 </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Unique learner number </dt>
+                    <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.ULN</dd>
+                </div>
+                @if (Model.OriginalApprenticeship.DeliveryModel == DeliveryModel.Flexible)
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key"> Apprenticeship delivery model</dt>
+                        <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.DeliveryModel.ToDescription()</dd>
+                    </div>
+                }
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Apprenticeship training course </dt>
+                    <dd class="govuk-summary-list__value"> @Model.OriginalApprenticeship.CourseName</dd>
+                </div>
+                </dl>
+            </div>
             </div>
 
             <div class="govuk-grid-row">
@@ -99,6 +108,14 @@
                                     </td>
                                     <td class="govuk-table__cell">@Model.DateOfBirth.Value.ToGdsFormat()</td>
 
+                                </tr>
+                            }
+                            @if (Model.DeliveryModel.HasValue)
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Apprenticeship delivery model</th>
+                                    <td class="govuk-table__cell">@Model.OriginalApprenticeship.DeliveryModel </td>
+                                    <td class="govuk-table__cell">@Model.DeliveryModel</td>
                                 </tr>
                             }
                             @if (!string.IsNullOrWhiteSpace(Model.CourseCode))

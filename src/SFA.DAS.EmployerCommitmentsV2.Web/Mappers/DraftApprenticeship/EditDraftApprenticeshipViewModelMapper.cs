@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
@@ -37,6 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 LastName = draftApprenticeship.LastName,
                 Email = draftApprenticeship.Email,
                 Uln = draftApprenticeship.Uln,
+                DeliveryModel = draftApprenticeship.DeliveryModel,
                 CourseCode = draftApprenticeship.CourseCode,
                 StandardUId = draftApprenticeship.StandardUId,
                 Cost = draftApprenticeship.Cost,

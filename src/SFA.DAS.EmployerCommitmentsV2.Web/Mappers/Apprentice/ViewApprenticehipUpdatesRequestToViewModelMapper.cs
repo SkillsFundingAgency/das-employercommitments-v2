@@ -2,11 +2,11 @@
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
@@ -62,6 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 Cost = update.Cost,
                 StartDate = update.StartDate,
                 EndDate = update.EndDate,
+                DeliveryModel = update.DeliveryModel,
                 CourseCode = update.TrainingCode,
                 CourseName = update.TrainingName,
                 Version = update.Version,
@@ -80,6 +81,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 ULN = apprenticeship.Uln,
                 StartDate = apprenticeship.StartDate,
                 EndDate = apprenticeship.EndDate,
+                DeliveryModel = apprenticeship.DeliveryModel,
                 CourseCode = apprenticeship.CourseCode,
                 CourseName = apprenticeship.CourseName,
                 Version = apprenticeship.Version,

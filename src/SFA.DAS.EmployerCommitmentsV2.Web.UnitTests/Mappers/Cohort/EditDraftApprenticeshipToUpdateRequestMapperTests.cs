@@ -7,6 +7,7 @@ using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
@@ -38,6 +39,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _mapper = new UpdateDraftApprenticeshipRequestMapper(_mockCommitmentsApiClient.Object);
 
             _source = fixture.Build<EditDraftApprenticeshipViewModel>()
+                .With(x => x.DeliveryModel, DeliveryModel.Flexible)
                 .With(x => x.CourseCode, fixture.Create<int>().ToString())
                 .With(x => x.BirthDay, birthDate?.Day)
                 .With(x => x.BirthMonth, birthDate?.Month)
@@ -89,6 +91,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _act();
             Assert.AreEqual(_source.Email, result.Email);
+        }
+
+        [Test]
+        public async Task ThenDeliveryModelIsMappedCorrectly()
+        {
+            var result = await _act();
+            Assert.AreEqual(_source.DeliveryModel, result.DeliveryModel);
         }
 
         [Test]

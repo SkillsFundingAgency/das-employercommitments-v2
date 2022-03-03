@@ -59,6 +59,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool EmailAddressConfirmedByApprentice { get; set; }
         public bool CanResendInvitation => !string.IsNullOrEmpty(Email) && !EmailAddressConfirmedByApprentice;
 
+        public string DeliveryModel { get; set; }
+
         public ActionRequiredBanner GetActionRequiredBanners()
         {
             var actionRequiredBanner = ActionRequiredBanner.None;
