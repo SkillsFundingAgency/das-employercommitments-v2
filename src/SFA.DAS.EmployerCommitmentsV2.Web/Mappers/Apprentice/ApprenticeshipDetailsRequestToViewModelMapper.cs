@@ -77,7 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     PauseDate = apprenticeship.PauseDate,
                     CompletionDate = apprenticeship.CompletionDate,
                     TrainingName = currentTrainingProgramme.Name,
-                    DeliveryModel = apprenticeship.DeliveryModel.ToAbnormalDescription(),
+                    DeliveryModel = apprenticeship.DeliveryModel.ToIrregularDescription(),
                     Version = apprenticeship.Version,
                     TrainingType = currentTrainingProgramme.ProgrammeType,
                     Cost = priceEpisodes.PriceEpisodes.GetPrice(),

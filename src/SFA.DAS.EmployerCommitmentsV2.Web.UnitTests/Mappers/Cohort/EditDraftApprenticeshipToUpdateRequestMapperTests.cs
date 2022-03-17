@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _mapper = new UpdateDraftApprenticeshipRequestMapper(_mockCommitmentsApiClient.Object);
 
             _source = fixture.Build<EditDraftApprenticeshipViewModel>()
-                .With(x => x.DeliveryModel, DeliveryModel.Flexible)
+                .With(x => x.DeliveryModel, DeliveryModel.PortableFlexiJob)
                 .With(x => x.CourseCode, fixture.Create<int>().ToString())
                 .With(x => x.BirthDay, birthDate?.Day)
                 .With(x => x.BirthMonth, birthDate?.Month)

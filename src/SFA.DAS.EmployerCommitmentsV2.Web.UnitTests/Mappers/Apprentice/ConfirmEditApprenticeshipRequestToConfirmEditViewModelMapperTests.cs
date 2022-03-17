@@ -102,8 +102,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(fixture.ApprenticeshipResponse.DateOfBirth, result.OriginalApprenticeship.DateOfBirth);
         }
 
-        [TestCase(DeliveryModel.Normal, DeliveryModel.Flexible)]
-        [TestCase(DeliveryModel.Flexible, DeliveryModel.Normal)]
+        [TestCase(DeliveryModel.Regular, DeliveryModel.PortableFlexiJob)]
+        [TestCase(DeliveryModel.PortableFlexiJob, DeliveryModel.Regular)]
         public async Task WhenDeliveryModelIsChanged(DeliveryModel original, DeliveryModel changedTo)
         {
             fixture.ApprenticeshipResponse.DeliveryModel = original;

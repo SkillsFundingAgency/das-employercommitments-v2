@@ -57,7 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 BirthMonth = 2,
                 BirthYear = 2000,
                 Uln = "AAA000",
-                DeliveryModel = CommitmentsV2.Types.DeliveryModel.Normal,
+                DeliveryModel = CommitmentsV2.Types.DeliveryModel.Regular,
                 CourseCode = "111",
                 Cost = 3,
                 StartMonth = 8,
