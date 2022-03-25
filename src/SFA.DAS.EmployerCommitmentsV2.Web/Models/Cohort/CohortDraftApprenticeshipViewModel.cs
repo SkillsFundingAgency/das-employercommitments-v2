@@ -32,26 +32,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 
         public string DisplayName => $"{FirstName} {LastName}";
 
-        public string DisplayDateOfBirth => DateOfBirth.HasValue ? DateOfBirth.Value.ToGdsFormat() : "-";
+        public string DisplayDateOfBirth => DateOfBirth?.ToGdsFormat() ?? "-";
 
-        public string DisplayTrainingDates
-        {
-            get
-            {
-                if (StartDate.HasValue && EndDate.HasValue)
-                {
-                    return $"{StartDate.Value.ToGdsFormatWithoutDay()} to {EndDate.Value.ToGdsFormatWithoutDay()}";
-                }
+        public string DisplayTrainingDates => ToGdsFormatDateRange(StartDate, EndDate);
 
-                return "-";
-            }
-        }
+        public string DisplayEmploymentDates => ToGdsFormatDateRange(StartDate, EmploymentEndDate);
 
-        public string DisplayCost => Cost.HasValue ? $"{Cost.Value.ToGdsCostFormat()}" : "-";
+        public string DisplayCost => Cost?.ToGdsCostFormat() ?? "-";
+        public string DisplayEmploymentPrice => EmploymentPrice?.ToGdsCostFormat() ?? "-";
 
         public DateTime? OriginalStartDate { get; set; }
 
         public bool HasOverlappingUln { get; set; }
         public bool HasOverlappingEmail { get; set; }
+        public int? EmploymentPrice { get; set; }
+        public DateTime? EmploymentEndDate { get; set; }
+
+        private string ToGdsFormatDateRange(DateTime? start, DateTime? end)
+        {
+            if (start.HasValue && end.HasValue)
+                return $"{start.Value.ToGdsFormatWithoutDay()} to {end.Value.ToGdsFormatWithoutDay()}";
+            else
+                return "-";
+        }
     }
 }

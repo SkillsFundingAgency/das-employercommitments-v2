@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using AutoFixture.Dsl;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -131,6 +132,34 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
                 Assert.AreEqual(expectedCount, course.Count);
             }
+        }
+
+        [TestCase(DeliveryModel.Regular, false)]
+        [TestCase(DeliveryModel.PortableFlexiJob, true)]
+        public async Task DraftApprenticeshipCourseIsPortableFlexiJobIsMappedCorrectly(DeliveryModel deliveryModel, bool isPortableFlexiJob)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateDraftApprenticeship(build => build.With(x => x.DeliveryModel, deliveryModel));
+            var result = await fixture.Map();
+            Assert.AreEqual(isPortableFlexiJob, result.Courses.First().IsPortableFlexiJob);
+        }
+
+        [TestCase("2019-11-01", null, "-")]
+        [TestCase(null, "2019-11-01", "-")]
+        [TestCase("2019-11-01", "2019-12-01", "Nov 2019 to Dec 2019")]
+        public async Task DraftApprenticeshipEmploymentDatesAreMappedCorrectly(string startDate, string employmentEndDate, string display)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateDraftApprenticeship(build => build
+                    .With(x => x.StartDate, TryParseNullableDate(startDate))
+                    .With(x => x.EmploymentEndDate, TryParseNullableDate(employmentEndDate)));
+            var result = await fixture.Map();
+            Assert.AreEqual(display, result.Courses.First().DraftApprenticeships.First().DisplayEmploymentDates);
+        }
+
+        private DateTime? TryParseNullableDate(string startDate)
+        {
+            return DateTime.TryParse(startDate, out DateTime parsed) ? parsed : (DateTime?)null;
         }
 
         [Test]
@@ -744,9 +773,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             return this;
         }
 
-        public DetailsViewModelMapperTestsFixture CreateDraftApprenticeship()
+        public DetailsViewModelMapperTestsFixture CreateDraftApprenticeship(
+            Func<IPostprocessComposer<DraftApprenticeshipDto>, IPostprocessComposer<DraftApprenticeshipDto>> build = null)
         {
-            var draftApprenticeship = _autoFixture.Create<DraftApprenticeshipDto>();
+            build ??= x => x;
+            var draftApprenticeship = build(_autoFixture.Build<DraftApprenticeshipDto>()).Create();
 
             DraftApprenticeshipsResponse.DraftApprenticeships = new List<DraftApprenticeshipDto>() { draftApprenticeship };
             return this;
