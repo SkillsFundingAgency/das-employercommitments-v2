@@ -1,19 +1,18 @@
-﻿using System;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.CommitmentsV2.Types.Dtos;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.Encoding;
+using SFA.DAS.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
-using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.CommitmentsV2.Types.Dtos;
-using SFA.DAS.EAS.Account.Api.Client;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.Encoding;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
-using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -21,14 +20,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
-        private readonly IAccountApiClient _accountsApiClient;
 
-        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, 
-            IAccountApiClient accountsApiClient)
+        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
-            _accountsApiClient = accountsApiClient;
         }
 
         public async Task<DetailsViewModel> Map(DetailsRequest source)
