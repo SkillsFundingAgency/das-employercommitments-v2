@@ -597,6 +597,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequest request)
         {
             var viewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
+            if (viewModel.DeliveryModel == DeliveryModel.PortableFlexiJob)
+                return RedirectToAction(nameof(ApprenticeshipDetails), request);
             return View(viewModel);
         }
 

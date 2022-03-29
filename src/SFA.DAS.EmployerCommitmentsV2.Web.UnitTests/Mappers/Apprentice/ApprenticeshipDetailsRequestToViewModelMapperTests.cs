@@ -482,6 +482,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(expectedTriageOption, result.EnableEdit);
         }
 
+        [TestCase(DeliveryModel.Regular, true)]
+        [TestCase(DeliveryModel.PortableFlexiJob, false)]
+        public async Task DeliveryModel_EnableEdit_Mapped(DeliveryModel deliveryModel, bool expectedEnableEdit)
+        {
+            _apprenticeshipResponse.DeliveryModel = deliveryModel;
+            _mockCommitmentsApiClient.WithEditableState();
+
+            var result = await _mapper.Map(_request);
+
+            Assert.AreEqual(expectedEnableEdit, result.EnableEdit);
+        }
+
         [TestCase(ApprenticeshipStatus.Live, true)]
         [TestCase(ApprenticeshipStatus.Paused, true)]
         [TestCase(ApprenticeshipStatus.WaitingToStart, true)]
@@ -701,6 +713,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             Assert.AreEqual(_getTrainingProgrammeByStandardUId.TrainingProgramme.Options, result.VersionOptions);
+        }
+    }
+
+    public static class MockCommitmentsApiExtensions
+    {
+        public static Mock<ICommitmentsApiClient> WithEditableState(this Mock<ICommitmentsApiClient> client)
+        {
+            client.Setup(c => c.GetApprenticeshipUpdates(It.IsAny<long>(), It.IsAny<GetApprenticeshipUpdatesRequest>(), CancellationToken.None))
+                .ReturnsAsync(new GetApprenticeshipUpdatesResponse { ApprenticeshipUpdates = new ApprenticeshipUpdate[] { } });
+            client.Setup(c => c.GetApprenticeshipDatalocksStatus(It.IsAny<long>(), CancellationToken.None))
+                .ReturnsAsync(new GetDataLocksResponse { DataLocks = new DataLock[] { } });
+            return client;
         }
     }
 }
