@@ -130,8 +130,8 @@
                 <th scope="col" class="govuk-table__header">Name</th>
                 <th scope="col" class="govuk-table__header">Date of birth</th>
                 <th scope="col" class="govuk-table__header">Training dates</th>
-                <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Planned end date for this employment</th>
-                <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Agreed price for this employment</th>
+                <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Employment end date</th>
+                <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Training price for this employment</th>
                 <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header govuk-table__header--numeric">Total training price</th>
                 <th asp-show="!@course.IsPortableFlexiJob" scope="col" class="govuk-table__header govuk-table__header--numeric">Price</th>
                 <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Action</span></th>
@@ -165,19 +165,10 @@
                             @draftApprenticeship.DisplayTrainingDates
                         }
                     </td>
-                    <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell" data-label="Planned end date for this employment">
-                        @if (draftApprenticeship.HasOverlappingUln)
-                        {
-                            <span class="das-table-cell--highlight">
-                                @draftApprenticeship.DisplayEmploymentDates
-                            </span>
-                        }
-                        else
-                        {
-                            @draftApprenticeship.DisplayEmploymentDates
-                        }
+                    <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell" data-label="Employment end date">
+                        @draftApprenticeship.DisplayEmploymentDates
                     </td>
-                    <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell govuk-table__cell--numeric" data-label="Agreed price for this employment">
+                    <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell govuk-table__cell--numeric" data-label="Training price for this employment">
                         @draftApprenticeship.DisplayEmploymentPrice
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Price">

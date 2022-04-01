@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 
         public string DisplayTrainingDates => ToGdsFormatDateRange(StartDate, EndDate);
 
-        public string DisplayEmploymentDates => ToGdsFormatDateRange(StartDate, EmploymentEndDate);
+        public string DisplayEmploymentDates => EmploymentEndDate?.ToGdsFormatWithoutDay() ?? "-";
 
         public string DisplayCost => Cost?.ToGdsCostFormat() ?? "-";
         public string DisplayEmploymentPrice => EmploymentPrice?.ToGdsCostFormat() ?? "-";

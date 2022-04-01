@@ -145,8 +145,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [TestCase("2019-11-01", null, "-")]
-        [TestCase(null, "2019-11-01", "-")]
-        [TestCase("2019-11-01", "2019-12-01", "Nov 2019 to Dec 2019")]
+        [TestCase(null, "2019-11-01", "Nov 2019")]
+        [TestCase("2019-11-01", "2019-12-01", "Dec 2019")]
         public async Task DraftApprenticeshipEmploymentDatesAreMappedCorrectly(string startDate, string employmentEndDate, string display)
         {
             var fixture = new DetailsViewModelMapperTestsFixture()
