@@ -132,8 +132,8 @@
                 <th scope="col" class="govuk-table__header">Training dates</th>
                 <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Employment end date</th>
                 <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Training price for this employment</th>
-                <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header govuk-table__header--numeric">Total training price</th>
-                <th asp-show="!@course.IsPortableFlexiJob" scope="col" class="govuk-table__header govuk-table__header--numeric">Price</th>
+                <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Total training price</th>
+                <th asp-show="!@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Price</th>
                 <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Action</span></th>
             </tr>
         </thead>
@@ -168,10 +168,10 @@
                     <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell" data-label="Employment end date">
                         @draftApprenticeship.DisplayEmploymentDates
                     </td>
-                    <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell govuk-table__cell--numeric" data-label="Training price for this employment">
+                    <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell" data-label="Training price for this employment">
                         @draftApprenticeship.DisplayEmploymentPrice
                     </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Price">
+                    <td class="govuk-table__cell" data-label="Price">
                         @if (@draftApprenticeship.ExceedsFundingBandCap)
                         {
                             <span class="das-table-cell--highlight">
