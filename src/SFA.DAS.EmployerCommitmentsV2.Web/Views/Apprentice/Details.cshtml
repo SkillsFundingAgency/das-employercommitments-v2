@@ -228,6 +228,10 @@
         </h2>
         <table class="govuk-table  govuk-!-margin-bottom-8">
             <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header das-table-cell-width-45">Apprenticeship training course </th>
+                    <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.TrainingName </td>
+                </tr>
                 @if(Model.DeliveryModel != null)
                 {
                 <tr class="govuk-table__row">
@@ -235,10 +239,6 @@
                     <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.DeliveryModel</td>
                 </tr>
                 }
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header das-table-cell-width-45">Apprenticeship training course </th>
-                    <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.TrainingName </td>
-                </tr>
                 @if (!string.IsNullOrEmpty(Model.Version))
                 {
                     <tr class="govuk-table__row">
