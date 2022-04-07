@@ -60,6 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 bool dataLockPriceTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockPriceTriaged();
 
                 bool enableEdit = EnableEdit(apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged);
+                enableEdit &= apprenticeship.DeliveryModel == DeliveryModel.Regular;
 
                 var pendingChangeOfProviderRequest = changeofPartyRequests.ChangeOfPartyRequests?
                     .Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();

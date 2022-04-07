@@ -60,5 +60,27 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                          && r.Cohort == _cohort)),
                 Times.Once);
         }
+
+        [TestCase(DeliveryModel.Regular, Party.Employer, typeof(EditDraftApprenticeshipRequest))]
+        [TestCase(DeliveryModel.Regular, Party.Provider, typeof(ViewDraftApprenticeshipRequest))]
+        [TestCase(DeliveryModel.Regular, Party.TransferSender, typeof(ViewDraftApprenticeshipRequest))]
+        [TestCase(DeliveryModel.PortableFlexiJob, Party.Employer, typeof(ViewDraftApprenticeshipRequest))]
+        [TestCase(DeliveryModel.PortableFlexiJob, Party.Provider, typeof(ViewDraftApprenticeshipRequest))]
+        [TestCase(DeliveryModel.PortableFlexiJob, Party.TransferSender, typeof(ViewDraftApprenticeshipRequest))]
+        public async Task When_Mapping_The_Mapping_Request_Is_View_Only_When_Portable(DeliveryModel deliveryModel, Party withParty, Type expectedMappingRequestType)
+        {
+            _modelMapper.Setup(x => x.Map<IDraftApprenticeshipViewModel>(It.IsAny<EditDraftApprenticeshipRequest>()))
+                .ReturnsAsync(new EditDraftApprenticeshipViewModel { DeliveryModel = deliveryModel });
+
+            _cohort.WithParty = withParty;
+            await _mapper.Map(_request);
+
+            _modelMapper.Verify(
+                x => x.Map<IDraftApprenticeshipViewModel>(It.Is<IDraftApprenticeshipRequest>(
+                    r => r.GetType() == expectedMappingRequestType
+                         && r.Request == _request
+                         && r.Cohort == _cohort)),
+                Times.Once);
+        }
     }
 }
