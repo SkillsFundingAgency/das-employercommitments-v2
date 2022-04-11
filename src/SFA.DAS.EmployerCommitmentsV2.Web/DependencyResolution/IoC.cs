@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
             registry.IncludeRegistry<WebRegistry>();
             registry.IncludeRegistry<ApprovalsApiClientRegistry>();
 
-            // Enable if you want to by pass MI locally.
+            // Enable in appsettings if you want to bypass MI when developing locally
             if (config["UseLocalDevRegistry"] != null && bool.Parse(config["UseLocalDevRegistry"]))
             {
                 registry.IncludeRegistry<LocalDevRegistry.LocalDevRegistry>();
