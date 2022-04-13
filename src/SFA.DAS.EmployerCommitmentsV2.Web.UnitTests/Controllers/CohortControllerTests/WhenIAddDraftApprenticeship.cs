@@ -13,6 +13,7 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
 
@@ -41,8 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = await fixtures.CheckGet();
 
-            result
-                .VerifyReturnsViewModel()
+            result.VerifyReturnsViewModel()
                 .WithModel<ApprenticeViewModel>();
         }
 
@@ -127,7 +127,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures ForPostRequest()
         {
-            PostRequest = new ApprenticeViewModel {ProviderId = 1};
+            PostRequest = new ApprenticeViewModel { ProviderId = 1 };
             return this;
         }
 
@@ -191,18 +191,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             return controller;
         }
 
-        public Task<IActionResult> CheckGet()
+        public async Task<IActionResult> CheckGet()
         {
             var controller = CreateController();
 
-            return controller.Apprentice(GetRequest);
+            return await controller.AddDraftApprenticeship(GetRequest);
         }
 
-        public Task<IActionResult> CheckPost()
+        public async Task<IActionResult> CheckPost()
         {
             var controller = CreateController();
 
-            return controller.Apprentice(PostRequest);
+            return await controller.AddDraftApprenticeship(PostRequest);
         }
     }
 }

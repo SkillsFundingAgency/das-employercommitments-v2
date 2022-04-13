@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29306.81
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.EmployerCommitmentsV2.Web", "SFA.DAS.EmployerCommitmentsV2.Web\SFA.DAS.EmployerCommitmentsV2.Web.csproj", "{9547D23A-9A20-4CFF-87AC-8B65FCB095D9}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.EmployerCommitmentsV2.Web.UnitTests", "SFA.DAS.EmployerCommitmentsV2.Web.UnitTests\SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.csproj", "{CFF6AE71-EF2C-4623-BF67-DFA5A423CEA1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.EmployerCommitmentsV2.UnitTests", "SFA.DAS.EmployerCommitmentsV2.UnitTests\SFA.DAS.EmployerCommitmentsV2.UnitTests.csproj", "{A6BF4848-4FAF-47D7-BE20-A3F0DED9F483}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.EmployerCommitmentsV2.Api.FakeServers", "SFA.DAS.EmployerCommitmentsV2.Api.FakeServers\SFA.DAS.EmployerCommitmentsV2.Api.FakeServers.csproj", "{CC545EBB-887E-44A3-BA0A-80791E0D2372}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{A6BF4848-4FAF-47D7-BE20-A3F0DED9F483}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6BF4848-4FAF-47D7-BE20-A3F0DED9F483}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6BF4848-4FAF-47D7-BE20-A3F0DED9F483}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC545EBB-887E-44A3-BA0A-80791E0D2372}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC545EBB-887E-44A3-BA0A-80791E0D2372}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC545EBB-887E-44A3-BA0A-80791E0D2372}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC545EBB-887E-44A3-BA0A-80791E0D2372}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +56,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CFF6AE71-EF2C-4623-BF67-DFA5A423CEA1} = {4724640C-DAC5-4EDE-BFAD-FB6F6871509F}
 		{A6BF4848-4FAF-47D7-BE20-A3F0DED9F483} = {4724640C-DAC5-4EDE-BFAD-FB6F6871509F}
+		{CC545EBB-887E-44A3-BA0A-80791E0D2372} = {4724640C-DAC5-4EDE-BFAD-FB6F6871509F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {546C0349-1457-4863-9336-C195FC9B49D7}

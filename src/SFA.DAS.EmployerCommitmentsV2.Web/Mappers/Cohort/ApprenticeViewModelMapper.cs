@@ -42,7 +42,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 TransferSenderId = source.TransferSenderId,
                 EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
                 Origin = source.Origin,
-                AutoCreatedReservation = source.AutoCreated
+                AutoCreatedReservation = source.AutoCreated,
+                DeliveryModel = source.DeliveryModel,
             };
 
             return result;

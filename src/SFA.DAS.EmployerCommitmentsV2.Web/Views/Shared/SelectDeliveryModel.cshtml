@@ -1,0 +1,46 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.CommitmentsV2.Types
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared.SelectDeliveryModelViewModel
+
+@{
+    ViewData["Title"] = "Apprenticeships";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+        <h1 class="govuk-heading-xl">Select the apprenticeship delivery model</h1>
+
+        <form id="selectDeliveryModel" novalidate method="post">
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.DeliveryModel, "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        Select delivery model
+                    </legend>
+                    @Html.ValidationMessageFor(m => m.DeliveryModel, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DeliveryModel)})
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Regular" id="DeliveryModelRegular">
+                            <label for="DeliveryModelRegular" class="govuk-label govuk-radios__label">
+                                Regular
+                            </label>
+                            <div id="DeliveryModelNormal-hint" class="govuk-hint govuk-radios__hint">
+                                The apprentice will have a single employment contract
+                            </div>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.PortableFlexiJob" id="DeliveryModelFlexible">
+                            <label for="DeliveryModelFlexible" class="govuk-label govuk-radios__label">
+                                Portable flexi-job
+                            </label>
+                            <div id="DeliveryModelFlexible-hint" class="govuk-hint govuk-radios__hint">
+                                The apprentice will move between multiple employment contracts
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <button type="submit" class="govuk-button">Continue</button>
+        </form>
+    </div>
+</div>
