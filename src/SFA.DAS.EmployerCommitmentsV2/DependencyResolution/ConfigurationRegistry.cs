@@ -5,7 +5,6 @@ using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.Encoding;
-using SFA.DAS.Http.Configuration;
 using StructureMap;
 
 namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution

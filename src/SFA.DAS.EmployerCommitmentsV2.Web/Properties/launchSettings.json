@@ -12,7 +12,8 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "APPSETTING_EnvironmentName": "LOCAL"
       }
     },
     "SFA.DAS.EmployerCommitmentsV2.Web": {
@@ -20,7 +21,8 @@
       "launchBrowser": true,
       "applicationUrl": "https://localhost:44376;http://localhost:63543",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "APPSETTING_EnvironmentName": "LOCAL"
       }
     }
   }

@@ -15,7 +15,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.LocalDevRegistry
             {
                 For<ICommitmentsApiClientFactory>().ClearAll().Use<LocalDevApiClientFactory>();
                 For<ICommitmentPermissionsApiClientFactory>().ClearAll().Use<LocalDevApiClientFactory>();
-                For<IAccountApiClient>().ClearAll().Use<LocalAccountApiClient>();
             }
         }
     }

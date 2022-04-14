@@ -652,7 +652,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public DetailsRequest Source;
         public DetailsViewModel Result;
         public Mock<ICommitmentsApiClient> CommitmentsApiClient;
-        public Mock<IAccountApiClient> AccountApiClient;
         public Mock<IEncodingService> EncodingService;
         public GetCohortResponse Cohort;
         public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
@@ -690,9 +689,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             CommitmentsApiClient.Setup(x => x.GetEmailOverlapChecks(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(EmailOverlapResponse);
 
-            AccountApiClient = new Mock<IAccountApiClient>();
-            AccountApiClient.Setup(x => x.GetLegalEntity(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(LegalEntityViewModel);
-
             _fundingPeriods = new List<TrainingProgrammeFundingPeriod>
             {
                 new TrainingProgrammeFundingPeriod{ EffectiveFrom = _startFundingPeriod, EffectiveTo = _endFundingPeriod, FundingCap = 1000},
@@ -711,7 +707,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             EncodingService = new Mock<IEncodingService>();
             SetEncodingOfApprenticeIds();
 
-            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, AccountApiClient.Object);
+            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object);
             Source = _autoFixture.Create<DetailsRequest>();
         }
 
