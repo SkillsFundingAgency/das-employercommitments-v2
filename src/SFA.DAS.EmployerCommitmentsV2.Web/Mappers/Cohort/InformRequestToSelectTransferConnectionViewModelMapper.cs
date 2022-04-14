@@ -31,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         }
 
         public async Task<List<TransferConnection>> GetTransferConnectionsForAccount(string accountHashedId)
-        {            
+        {
             var listOfTransferConnections = await _accountsApiClient.GetTransferConnections(accountHashedId);
 
             if (listOfTransferConnections == null)
@@ -41,7 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
             return listOfTransferConnections.Select(x => new TransferConnection
             {
-                TransferConnectionCode = _encodingService.Encode( x.FundingEmployerAccountId, EncodingType.PublicAccountId),
+                TransferConnectionCode = _encodingService.Encode(x.FundingEmployerAccountId, EncodingType.PublicAccountId),
                 TransferConnectionName = x.FundingEmployerAccountName
             }).ToList();
         }

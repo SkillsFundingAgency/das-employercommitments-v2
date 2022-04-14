@@ -1,8 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
@@ -11,13 +7,21 @@ using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.CommitmentsV2.Api.Types.Validation;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerUrlHelper;
-using SFA.DAS.Http;
-using System.Linq;
 using SFA.DAS.Encoding;
+using SFA.DAS.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -256,15 +260,90 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("add/apprentice")]
-        public async Task<IActionResult> Apprentice(ApprenticeRequest request)
+        public IActionResult Apprentice(ApprenticeRequest request)
         {
-            var model = await _modelMapper.Map<ApprenticeViewModel>(request);
-            return View(model);
+            //if (_authorizationService.IsAuthorized(EmployerFeature.DeliveryModel))
+            //{
+                return RedirectToAction(nameof(SelectCourse), request);
+            //}
+            //else
+            //{
+                //return RedirectToAction(nameof(AddDraftApprenticeship), request);
+            //}
+        }
+
+        [HttpGet]
+        [Route("add/select-course")]
+        public async Task<IActionResult> SelectCourse(ApprenticeRequest request)
+        {
+            var selectCourseViewModel = await _modelMapper.Map<SelectCourseViewModel>(request);
+            return View("SelectCourse", selectCourseViewModel);
         }
 
         [HttpPost]
-        [Route("add/apprentice")]
-        public async Task<IActionResult> Apprentice(ApprenticeViewModel model)
+        [Route("add/select-course")]
+        public async Task<IActionResult> SelectCourse(SelectCourseViewModel model)
+        {
+            if (string.IsNullOrEmpty(model.CourseCode))
+            {
+                throw new CommitmentsApiModelException(new List<ErrorDetail>
+                    {new ErrorDetail(nameof(model.CourseCode), "You must select a training course")});
+            }
+
+            var request = await _modelMapper.Map<ApprenticeRequest>(model);
+            return RedirectToAction(nameof(SelectDeliveryModel), request);
+        }
+
+        [HttpGet]
+        [ActionName(nameof(SelectDeliveryModel))]
+        [Route("add/select-delivery-model")]
+        public async Task<IActionResult> SelectDeliveryModel(ApprenticeRequest request)
+        {
+            var model = await _modelMapper.Map<SelectDeliveryModelViewModel>(request);
+
+            if (model.DeliveryModels.Length > 1)
+            {
+                return View("SelectDeliveryModel", model);
+            }
+
+            request.DeliveryModel = model.DeliveryModels.FirstOrDefault();
+            return RedirectToAction(nameof(AddDraftApprenticeship), request);
+        }
+
+        [HttpPost]
+        [Route("add/select-delivery-model")]
+        public async Task<IActionResult> SetDeliveryModel(SelectDeliveryModelViewModel model)
+        {
+            if (model.DeliveryModel == null)
+            {
+                throw new CommitmentsApiModelException(new List<ErrorDetail>
+                    {new ErrorDetail("DeliveryModel", "You must select the apprenticeship delivery model")});
+            }
+
+            var request = await _modelMapper.Map<ApprenticeRequest>(model);
+            return RedirectToAction(nameof(AddDraftApprenticeship), request);
+        }
+
+        [HttpGet]
+        [Route("add/apprenticeship")]
+        public async Task<IActionResult> AddDraftApprenticeship(ApprenticeRequest request)
+        {
+            //var model = GetStoredDraftApprenticeshipState();
+            //if (model == null)
+            //{
+              var  model = await _modelMapper.Map<ApprenticeViewModel>(request);
+            //}
+            //else
+            //{
+            //    model.CourseCode = request.CourseCode;
+            //    model.DeliveryModel = request.DeliveryModel;
+            //}
+            return View("Apprentice", model);
+        }
+
+        [HttpPost]
+        [Route("add/apprenticeship")]
+        public async Task<IActionResult> AddDraftApprenticeship(ApprenticeViewModel model)
         {
             var request = await _modelMapper.Map<CreateCohortRequest>(model);
             var newCohort = await _commitmentsApiClient.CreateCohort(request);
@@ -272,7 +351,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var draftApprenticeshipsResponse = await _commitmentsApiClient.GetDraftApprenticeships(newCohort.CohortId);
 
             var draftApprenticeship = draftApprenticeshipsResponse.DraftApprenticeships.SingleOrDefault();
-           
+
             if (draftApprenticeship?.CourseCode != null)
             {
                 var draftApprenticeshipHashedId = _encodingService.Encode(draftApprenticeship.Id, EncodingType.ApprenticeshipId);

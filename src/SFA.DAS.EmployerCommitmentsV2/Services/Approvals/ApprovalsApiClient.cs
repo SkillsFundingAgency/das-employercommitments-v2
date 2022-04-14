@@ -18,5 +18,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
         {
             return await _client.Get<GetPledgeApplicationResponse>($"PledgeApplications/{pledgeApplicationId}", null, cancellationToken);
         }
+
+        public async Task<ProviderCourseDeliveryModels> GetProviderCourseDeliveryModels(long providerId, string courseCode, CancellationToken cancellationToken = default)
+        {
+            return await _client.Get<ProviderCourseDeliveryModels>($"Providers/{providerId}/courses/{courseCode}", null, cancellationToken);
+        }
     }
 }
