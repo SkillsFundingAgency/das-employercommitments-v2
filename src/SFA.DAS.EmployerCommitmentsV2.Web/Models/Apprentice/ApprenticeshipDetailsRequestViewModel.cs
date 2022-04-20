@@ -3,6 +3,7 @@ using SFA.DAS.CommitmentsV2.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.CommitmentsV2.Shared.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
@@ -60,6 +61,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool CanResendInvitation => !string.IsNullOrEmpty(Email) && !EmailAddressConfirmedByApprentice;
 
         public string DeliveryModel { get; set; }
+        public int? EmploymentPrice { get; set; }
+        public string EmploymentPriceDisplay => EmploymentPrice?.ToGdsCostFormat() ?? string.Empty;
+        public DateTime? EmploymentEndDate { get; set; }
+        public string EmploymentEndDateDisplay => EmploymentEndDate?.ToGdsFormatWithoutDay() ?? string.Empty;
 
         public ActionRequiredBanner GetActionRequiredBanners()
         {

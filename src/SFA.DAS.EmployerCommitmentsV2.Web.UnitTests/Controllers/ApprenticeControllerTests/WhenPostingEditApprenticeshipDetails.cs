@@ -162,7 +162,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequestViewModel viewModel)
         {
-            return await _controller.EditApprenticeship(viewModel);
+            return await _controller.EditApprenticeship(null, null, viewModel);
         }     
 
         public void SetUpGetApprenticeship(GetApprenticeshipResponse response)

@@ -2,7 +2,9 @@
 @using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.CommitmentsV2.Api.Client
 @inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService
+@inject ICommitmentsApiClient CommitmentsApiClient
 
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditApprenticeshipRequestViewModel
 
@@ -11,12 +13,16 @@
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "edit-apprentices-detail";
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/edit-apprentice-details";
+
+    Model.Cost = (int?) Model.Cost;
+    Model.CourseCode = ViewData.ModelState[nameof(Model.CourseCode)]?.AttemptedValue ?? Model.CourseCode;
+    Model.DeliveryModel = ViewData.ModelState[nameof(Model.DeliveryModel)]?.AttemptedValue.ToEnum<DeliveryModel>() ?? Model.DeliveryModel;
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
-        <h1 class="govuk-heading-xl" >Edit apprentice details</h1>
+        <h1 class="govuk-heading-xl">Edit apprentice details</h1>
 
         <form id="editApprenticeship" novalidate method="post">
             @Html.AntiForgeryToken()
@@ -25,6 +31,7 @@
             @Html.HiddenFor(x => x.HashedApprenticeshipId)
             @Html.HiddenFor(x => x.Version)
             @Html.HiddenFor(x => x.Option)
+            @Html.HiddenFor(x => x.EmailShouldBePresent)
 
             @if (Model.IsContinuation)
             {
@@ -149,7 +156,14 @@
             <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
             @if (Model.IsLockedForUpdate || Model.IsUpdateLockedForStartDateAndCourse || Model.IsContinuation)
             {
-                @if(Model.DeliveryModel != DeliveryModel.Regular)
+                <dl class="das-definition-list">
+                    <dt asp-for="TrainingName" class="das-definition-list__title">Apprenticeship training course</dt>
+                    <dd class="das-definition-list__definition" id="trainingName">@Model.TrainingName </dd>
+                    @Html.HiddenFor(x => x.CourseCode)
+                    @Html.HiddenFor(x => x.TrainingName)
+                </dl>
+
+                @if (Model.DeliveryModel != DeliveryModel.Regular)
                 {
                     <dl class="das-definition-list">
                         <dt asp-for="DeliveryModel" class="das-definition-list__title">Apprenticeship delivery model</dt>
@@ -158,61 +172,52 @@
                     <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 }
                 @Html.HiddenFor(x => x.DeliveryModel)
-
-                <dl class="das-definition-list">
-                    <dt asp-for="TrainingName" class="das-definition-list__title">Apprenticeship training course</dt>
-                    <dd class="das-definition-list__definition" id="trainingName">@Model.TrainingName </dd>
-                    @Html.HiddenFor(x => x.CourseCode)
-                    @Html.HiddenFor(x => x.TrainingName)
-                </dl>
             }
             else
             {
                 @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.DeliveryModel))
                 {
-                    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.DeliveryModel, "govuk-form-group--error")">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                Delivery model
-                            </legend>
-                            @Html.ValidationMessageFor(m => m.DeliveryModel, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DeliveryModel) })
-                            <div class="govuk-radios">
-                                <div class="govuk-radios__item">
-                                    <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Regular" id="DeliveryModelNormal" aria-describedby="DeliveryModelNormal-hint">
-                                    <label for="DeliveryModelNormal" class="govuk-label govuk-radios__label">
-                                        Regular
-                                    </label>
-                                    <div id="DeliveryModelNormal-hint" class="govuk-hint govuk-radios__hint">
-                                        The apprentice will have a single employer
-                                    </div>
-                                </div>
-                                <div class="govuk-radios__item">
-                                    <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.PortableFlexiJob" id="DeliveryModelFlexible" aria-describedby="DeliveryModelFlexible-hint">
-                                    <label for="DeliveryModelFlexible" class="govuk-label govuk-radios__label">
-                                        Portable flexi-job
-                                    </label>
-                                    <div id="DeliveryModelFlexible-hint" class="govuk-hint govuk-radios__hint">
-                                        The apprentice will move between multiple employers
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
+                    if (!string.IsNullOrWhiteSpace(Model.CourseCode))
+                    {
+                        Model.TrainingName = (await CommitmentsApiClient.GetTrainingProgramme(Model.CourseCode)).TrainingProgramme.Name;
+                    }
+
+                    <div class="govuk-form-group">
+                        <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Apprenticeship training course</p>
+                        <p class="govuk-body">
+                            @Model.TrainingName
+                            <button type="submit" name="ChangeCourse" value="Edit" class="das-button--inline-link">
+                                Edit<span class="govuk-visually-hidden"> aprenticeship training course</span>
+                            </button>
+                        </p>
                     </div>
-                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+                    <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
+
+                    if (Model.DeliveryModel != DeliveryModel.Regular)
+                    {
+                        <div class="govuk-form-group">
+                            <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Delivery model</p>
+                            <p class="govuk-body">
+                                @Model.DeliveryModel.ToDescription()
+                                <button type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
+                                    Edit<span class="govuk-visually-hidden"> delivery model</span>
+                                </button>
+                            </p>
+                        </div>
+                    }
                 }
                 else
                 {
-                    @Html.HiddenFor(x => x.DeliveryModel)
+                    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
+                        <label for="trainingCourse" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
+                        <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
+                        @Html.ValidationMessageFor(m => m.CourseCode, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.CourseCode) })
+                        <select class="govuk-select govuk-!-width-three-quarters" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "CourseCode", "Name"))" aria-describedby="course-name-hint" id="trainingCourse">
+                            <option value="">Please select</option>
+                        </select>
+                    </div>
                 }
-
-                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
-                    <label for="trainingCourse" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
-                    <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
-                    @Html.ValidationMessageFor(m => m.CourseCode, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.CourseCode) })
-                    <select class="govuk-select govuk-!-width-three-quarters" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "CourseCode", "Name"))" aria-describedby="course-name-hint" id="trainingCourse">
-                        <option value="">Please select</option>
-                    </select>
-                </div>
+                @Html.HiddenFor(x => x.DeliveryModel)
             }
 
             <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />

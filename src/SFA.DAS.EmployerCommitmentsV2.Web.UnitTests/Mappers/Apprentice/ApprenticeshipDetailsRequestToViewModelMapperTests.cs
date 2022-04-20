@@ -331,6 +331,38 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(_priceEpisodesResponse.PriceEpisodes.First().Cost, result.Cost);
         }
 
+        [TestCase(DeliveryModel.PortableFlexiJob, "Portable flexi-job")]
+        [TestCase(DeliveryModel.Regular, null)]
+        public async Task DeliveryModel_IsMapped(DeliveryModel dm, string expected)
+        {
+            _apprenticeshipResponse.DeliveryModel = dm;
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(expected, result.DeliveryModel);
+        }
+
+        [Test]
+        public async Task EmploymentEndDate_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(_apprenticeshipResponse.EmploymentEndDate, result.EmploymentEndDate);
+        }
+
+        [Test]
+        public async Task EmploymentPrice_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(_apprenticeshipResponse.EmploymentPrice, result.EmploymentPrice);
+        }
+
         [TestCase(ApprenticeshipStatus.Live, "Live")]
         [TestCase(ApprenticeshipStatus.Paused, "Paused")]
         [TestCase(ApprenticeshipStatus.WaitingToStart, "Waiting to start")]
@@ -480,18 +512,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.AreEqual(expectedTriageOption, result.EnableEdit);
-        }
-
-        [TestCase(DeliveryModel.Regular, true)]
-        [TestCase(DeliveryModel.PortableFlexiJob, false)]
-        public async Task DeliveryModel_EnableEdit_Mapped(DeliveryModel deliveryModel, bool expectedEnableEdit)
-        {
-            _apprenticeshipResponse.DeliveryModel = deliveryModel;
-            _mockCommitmentsApiClient.WithEditableState();
-
-            var result = await _mapper.Map(_request);
-
-            Assert.AreEqual(expectedEnableEdit, result.EnableEdit);
         }
 
         [TestCase(ApprenticeshipStatus.Live, true)]

@@ -48,16 +48,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Stubs
 
         private async Task<UserDto> GetUser(long accountId, Guid userRef, CancellationToken cancellationToken)
         {
-            var users = await GetUsers(accountId, cancellationToken).ConfigureAwait(false); ;
+            var users = await GetUsers(accountId, userRef, cancellationToken).ConfigureAwait(false); ;
             return users.FirstOrDefault(x => x.UserRef == userRef);
         }
 
-        private async Task<IList<UserDto>> GetUsers(long accountId, CancellationToken cancellationToken)
+        private async Task<IList<UserDto>> GetUsers(long accountId, Guid currentUserRef, CancellationToken cancellationToken)
         {
             var response = await _httpClient.GetAsync($"accounts/{accountId}/users", cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
             {
-                return new List<UserDto>();
+                // This is a temp fix to overcome the now defunct Employer UserAccounts heroku stub, if the stub fails we simply return the current user
+                // so we can run this locally, the stub can be run locally, but the ROI isn't worthwhile considering we not generaLLY interested in permissions
+                return new List<UserDto> { new UserDto { UserRef = currentUserRef, Roles = new HashSet<UserRole> { UserRole.Owner } } };
             }
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var items = JsonConvert.DeserializeObject<List<UserDto>>(content);
