@@ -114,7 +114,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 .ReturnsAsync(ViewModel.Object);
 
             AuthorizationServiceMock = new Mock<IAuthorizationService>();
-            AuthorizationServiceMock.Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval)).Returns(false);
 
             Sut = new DraftApprenticeshipController(
                 ModelMapperMock.Object,
