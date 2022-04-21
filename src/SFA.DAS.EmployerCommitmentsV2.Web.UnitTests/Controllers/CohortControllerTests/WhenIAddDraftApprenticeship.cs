@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -101,7 +102,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 .ReturnsAsync(new ApprenticeViewModel());
             AuthorizationServiceMock = new Mock<IAuthorizationService>();
             EncodingServiceMock = new Mock<IEncodingService>();
-        }
+            TempData = new Mock<ITempDataDictionary>();
+    }
 
         public Mock<ILinkGenerator> LinkGeneratorMock { get; }
         public ILinkGenerator LinkGenerator => LinkGeneratorMock.Object;
@@ -115,7 +117,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         public IEncodingService EncodingService => EncodingServiceMock.Object;
         public ApprenticeRequest GetRequest { get; private set; }
         public ApprenticeViewModel PostRequest { get; private set; }
-        
+
+        public Mock<ITempDataDictionary> TempData;
+
         public Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }
         public ICommitmentsApiClient CommitmentsApiClient => CommitmentsApiClientMock.Object;
 
@@ -188,6 +192,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 AuthorizationService,
                 Mock.Of<IEncodingService>()
             );
+            controller.TempData = TempData.Object;
             return controller;
         }
 
@@ -202,7 +207,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             var controller = CreateController();
 
-            return await controller.AddDraftApprenticeship(PostRequest);
+            return await controller.AddDraftApprenticeshipOrRoute(string.Empty, string.Empty, PostRequest);
         }
     }
 }

@@ -23,6 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var birthDate = fixture.Create<DateTime?>();
             var startDate = fixture.Create<DateTime?>();
             var endDate = fixture.Create<DateTime?>();
+            var employmentEndDate = fixture.Create<DateTime?>();
 
             _mapper = new CreateCohortRequestMapper();
 
@@ -35,6 +36,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 .With(x => x.EndYear, endDate?.Year)
                 .With(x => x.StartMonth, startDate?.Month)
                 .With(x => x.StartYear, startDate?.Year)
+                .With(x => x.EmploymentEndMonth, employmentEndDate?.Month)
+                .With(x => x.EmploymentEndYear, employmentEndDate?.Year)
                 .Without(x => x.StartDate)
                 .Without(x => x.Courses)
                 .Create();
@@ -91,6 +94,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
+        public void ThenEmploymentPriceIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.EmploymentPrice, _result.EmploymentPrice);
+        }
+
+        [Test]
         public void ThenStartDateIsMappedCorrectly()
         {
             Assert.AreEqual(_source.StartDate.Date, _result.StartDate);
@@ -100,6 +109,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public void ThenEndDateIsMappedCorrectly()
         {
             Assert.AreEqual(_source.EndDate.Date, _result.EndDate);
+        }
+
+        [Test]
+        public void ThenEmploymentEndDateIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.EmploymentEndDate.Date, _result.EmploymentEndDate);
         }
 
         [Test]
