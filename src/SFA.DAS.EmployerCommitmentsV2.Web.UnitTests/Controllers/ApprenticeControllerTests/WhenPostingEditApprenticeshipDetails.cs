@@ -51,6 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             _viewModel = _autoFixture.Build<EditApprenticeshipRequestViewModel>()
                 .Without(x => x.StartDate)
                 .Without(x => x.EndDate)
+                .Without(x => x.EmploymentEndDate)
                 .Without(x => x.DateOfBirth)
                 .With(x => x.CourseCode, _apprenticeshipResponse.CourseCode)
                 .Create();

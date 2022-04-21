@@ -37,6 +37,8 @@
             @Html.HiddenFor(x => x.BirthDay)
             @Html.HiddenFor(x => x.Cost)
             @Html.HiddenFor(x => x.DeliveryModel)
+            @Html.HiddenFor(x => x.EmploymentEndDate)
+            @Html.HiddenFor(x => x.EmploymentPrice)
             @Html.HiddenFor(x => x.CourseCode)
             @Html.HiddenFor(x => x.Version)
             @Html.HiddenFor(x => x.Option)
@@ -117,7 +119,37 @@
                                     <td class="govuk-table__cell">@Model.OriginalApprenticeship.DeliveryModel </td>
                                     <td class="govuk-table__cell">@Model.DeliveryModel</td>
                                 </tr>
+                                @if (Model.DeliveryModel == DeliveryModel.Regular)
+                                {
+                                    <tr>
+                                        <th scope="row" class="govuk-table__header">Employment end date</th>
+                                        <td class="govuk-table__cell">@(Model.OriginalApprenticeship.EmploymentEndDate.HasValue ? Model.OriginalApprenticeship.EmploymentEndDate.Value.ToGdsFormat() : "Not applicable")</td>
+                                        <td class="govuk-table__cell">Not applicable</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="govuk-table__header">Employment price</th>
+                                        <td class="govuk-table__cell">@(Model.OriginalApprenticeship.EmploymentPrice.HasValue ? Model.OriginalApprenticeship.EmploymentPrice.FormatCost() : "Not applicable")</td>
+                                        <td class="govuk-table__cell">Not applicable</td>
+                                    </tr>
+                                }
                             }
+                            @if (Model.EmploymentEndDate.HasValue)
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Employment end date</th>
+                                    <td class="govuk-table__cell">@(Model.OriginalApprenticeship.EmploymentEndDate.HasValue ? Model.OriginalApprenticeship.EmploymentEndDate.Value.ToGdsFormat() : "Not applicable")</td>
+                                    <td class="govuk-table__cell">@Model.EmploymentEndDate.Value.ToGdsFormat()</td>
+                                </tr>
+                            }
+                            @if (Model.EmploymentPrice.HasValue)
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">Employment price</th>
+                                    <td class="govuk-table__cell">@(Model.OriginalApprenticeship.EmploymentPrice.HasValue ? Model.OriginalApprenticeship.EmploymentPrice.FormatCost() : "Not applicable")</td>
+                                    <td class="govuk-table__cell">@Model.EmploymentPrice.FormatCost()</td>
+                                </tr>
+                            }
+
                             @if (!string.IsNullOrWhiteSpace(Model.CourseCode))
                             {
                                 <tr>

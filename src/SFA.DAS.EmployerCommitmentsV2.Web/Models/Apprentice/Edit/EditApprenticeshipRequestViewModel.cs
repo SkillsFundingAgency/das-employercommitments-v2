@@ -16,13 +16,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
             DateOfBirth = new DateModel();
             StartDate = new MonthYearModel("");
             EndDate = new MonthYearModel("");
+            EmploymentEndDate = new MonthYearModel("");
         }
 
-        public EditApprenticeshipRequestViewModel(DateTime? dateOfBirth, DateTime? startDate, DateTime? endDate) : base()
+        public EditApprenticeshipRequestViewModel(DateTime? dateOfBirth, DateTime? startDate, DateTime? endDate, DateTime? employmentEndDate = null) : base()
         {
             DateOfBirth = dateOfBirth == null ? new DateModel() : new DateModel(dateOfBirth.Value);
             StartDate = startDate == null ? new MonthYearModel("") : new MonthYearModel($"{startDate.Value.Month}{startDate.Value.Year}");
             EndDate = endDate == null ? new MonthYearModel("") : new MonthYearModel($"{endDate.Value.Month}{endDate.Value.Year}");
+            EmploymentEndDate = employmentEndDate == null ? new MonthYearModel("") : new MonthYearModel($"{employmentEndDate.Value.Month}{employmentEndDate.Value.Year}");
         }
 
         public string FirstName { get; set; }
@@ -89,5 +91,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool EmailAddressConfirmedByApprentice { get; set; }
         public bool EmailShouldBePresent { get; set; }
         public bool HasOptions { get; set; }
+
+        public int? EmploymentPrice { get; set; }
+
+        public MonthYearModel EmploymentEndDate { get; set; }
+
+        [Display(Name = "Month")]
+        [SuppressArgumentException(nameof(EmploymentEndDate), "The employment end date is not valid")]
+        public int? EmploymentEndMonth { get => EmploymentEndDate.Month; set => EmploymentEndDate.Month = value; }
+
+        [Display(Name = "Year")]
+        [SuppressArgumentException(nameof(EmploymentEndDate), "The employment end date is not valid")]
+        public int? EmploymentEndYear { get => EmploymentEndDate.Year; set => EmploymentEndDate.Year = value; }
+
     }
 }

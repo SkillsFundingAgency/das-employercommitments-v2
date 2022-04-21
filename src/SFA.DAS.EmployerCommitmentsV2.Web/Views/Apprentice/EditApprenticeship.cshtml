@@ -271,6 +271,21 @@
                 </dl>
                 @Html.HiddenFor(x => x.EndMonth)
                 @Html.HiddenFor(x => x.EndYear)
+
+                @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
+                {
+                    <dl class="das-definition-list">
+                        <dt class="das-definition-list__title">Planned end date for this employment</dt>
+                        <dd class="das-definition-list__definition" id="endDate">
+                            @if (Model.EmploymentEndDate.Date.HasValue)
+                            {
+                                @Model.EmploymentEndDate.Date.Value.ToGdsFormatLongMonthWithoutDay()
+                            }
+                        </dd>
+                    </dl>
+                    @Html.HiddenFor(x => x.EmploymentEndMonth)
+                    @Html.HiddenFor(x => x.EmploymentEndYear)
+                }
             }
             else
             {
@@ -301,6 +316,34 @@
                         </div>
                     </fieldset>
                 </div>
+                @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
+                {
+                    <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.EmploymentEndDate, "govuk-form-group--error")">
+                        <fieldset class="govuk-fieldset" aria-describedby="finish-date-hint" role="group">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                Planned end date for this employment
+                            </legend>
+                            <span id="employment-finish-date-hint" class="govuk-hint">
+                                For example, 09 2019
+                            </span>
+                            @Html.ValidationMessageFor(m => m.EmploymentEndDate, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.EmploymentEndDate) })
+                            <div class="govuk-date-input">
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label asp-for="EmploymentEndMonth" class="govuk-label govuk-date-input__label">Month</label>
+                                        <input asp-for="EmploymentEndMonth" min="1" max="12" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number">
+                                    </div>
+                                </div>
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label asp-for="EmploymentEndYear" class="govuk-label govuk-date-input__label">Year</label>
+                                        <input asp-for="EmploymentEndYear" min="1900" max="9999" class="govuk-input govuk-date-input__input govuk-input--width-4" type="number">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                }
             }
 
             <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
@@ -317,6 +360,14 @@
                     If you want to change the total agreed apprenticeship price, you'll need to ask your training provider to make the changes on your behalf.
                     We'll ask you to approve any changes they make.
                 </div>
+                @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
+                {
+                    <dl class="das-definition-list">
+                        <dt asp-for="Cost" class="das-definition-list__title">Agreed price for this employment (excluding VAT)</dt>
+                        <dd class="das-definition-list__definition" id="cost">@(Model.EmploymentPrice.FormatCost())</dd>
+                        @Html.HiddenFor(x => x.EmploymentPrice)
+                    </dl>
+                }
             }
             else
             {
@@ -326,8 +377,21 @@
                         Enter the price, including any end-point assessment costs, in whole pounds. <br /> For example, for £1,500 enter 1500
                     </span>
                     @Html.ValidationMessageFor(m => m.Cost, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Cost) })
-                    <input asp-for="Cost" class="govuk-input govuk-input--width-5" inputmode="numeric" pattern="[0-9]*" maxlength="7" min="1" max="9999999" id="cost" />
+                    <span class="govuk-body govuk-!-font-weight-bold">£ </span>
+                    <input asp-for="Cost" class="govuk-input govuk-input--width-5" inputmode="numeric" pattern="[0-9]*" maxlength="7" min="1" max="9999999" id="cost" type="number" />
                 </div>
+                @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
+                {
+                    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmploymentPrice, "govuk-form-group--error")">
+                        <label asp-for="EmploymentPrice" class="govuk-label govuk-!-font-weight-bold">Agreed price for this employment (excluding VAT)</label>
+                        <span id="employment-price-hint" class="govuk-hint">
+                            Enter the price in whole pounds. For example, for £1,500 enter 1500
+                        </span>
+                        @Html.ValidationMessageFor(m => m.EmploymentPrice, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.EmploymentPrice) })
+                        <span class="govuk-body govuk-!-font-weight-bold">£ </span>
+                        <input asp-for="EmploymentPrice" class="govuk-input govuk-input--width-5 length-limit" inputmode="numeric" pattern="[0-9]*" maxlength="7" min="1" max="9999999" id="price" type="number" />
+                    </div>
+                }
             }
 
             <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />

@@ -60,6 +60,30 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task DeliveryModel_IsMapped()
+        {
+            var viewModel = await fixture.Map();
+
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.DeliveryModel, viewModel.ApprenticeshipUpdates.DeliveryModel);
+        }
+
+        [Test]
+        public async Task EmploymentEndDate_IsMapped()
+        {
+            var viewModel = await fixture.Map();
+
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.EmploymentEndDate, viewModel.ApprenticeshipUpdates.EmploymentEndDate);
+        }
+
+        [Test]
+        public async Task EmploymentPrice_IsMapped()
+        {
+            var viewModel = await fixture.Map();
+
+            Assert.AreEqual(fixture.ApprenticeshipUpdate.EmploymentPrice, viewModel.ApprenticeshipUpdates.EmploymentPrice);
+        }
+
+        [Test]
         public async Task Email_IsMapped()
         {
             var viewModel = await fixture.Map();
@@ -169,6 +193,30 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var viewModel = await fixture.Map();
 
             Assert.AreEqual(fixture.ApprenticeshipUpdate.EndDate, viewModel.ApprenticeshipUpdates.EndDate);
+        }
+
+        [Test]
+        public async Task OriginalApprenticeship_DeliveryModel_IsMapped()
+        {
+            var viewModel = await fixture.Map();
+
+            Assert.AreEqual(fixture.GetApprenticeshipResponse.DeliveryModel, viewModel.OriginalApprenticeship.DeliveryModel);
+        }
+
+        [Test]
+        public async Task OriginalApprenticeship_EmploymentEndDate_IsMapped()
+        {
+            var viewModel = await fixture.Map();
+
+            Assert.AreEqual(fixture.GetApprenticeshipResponse.EmploymentEndDate, viewModel.OriginalApprenticeship.EmploymentEndDate);
+        }
+
+        [Test]
+        public async Task OriginalApprenticeship_EmploymentPrice_IsMapped()
+        {
+            var viewModel = await fixture.Map();
+
+            Assert.AreEqual(fixture.GetApprenticeshipResponse.EmploymentPrice, viewModel.OriginalApprenticeship.EmploymentPrice);
         }
 
         [Test]

@@ -33,7 +33,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 DeliveryModel = source.DeliveryModel,
                 TrainingCode = source.CourseCode,
                 Version = source.Version,
-                Option = source.Option == "TBC" ? string.Empty : source.Option
+                Option = source.Option == "TBC" ? string.Empty : source.Option,
+                EmploymentEndDate = source.EmploymentEndDate.Date,
+                EmploymentPrice = source.EmploymentPrice
             };
             return Task.FromResult(result);
         }

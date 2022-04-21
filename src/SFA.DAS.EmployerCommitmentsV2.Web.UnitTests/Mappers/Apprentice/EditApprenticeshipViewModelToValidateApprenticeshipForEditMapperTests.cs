@@ -119,6 +119,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test, MoqAutoData]
+        public async Task EmploymentEndDate_IsMapped(
+            EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
+        {
+            var result = await mapper.Map(request);
+
+            Assert.AreEqual(request.EmploymentEndDate.Date, result.EmploymentEndDate);
+        }
+
+        [Test, MoqAutoData]
+        public async Task EmploymentPrice_IsMapped(
+            EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
+        {
+            var result = await mapper.Map(request);
+
+            Assert.AreEqual(request.EmploymentPrice, result.EmploymentPrice);
+        }
+
+        [Test, MoqAutoData]
         public async Task CourseCode_IsMapped(
         EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper mapper)
         {
@@ -143,6 +161,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     composer.Without(p => p.DateOfBirth)
                             .Without(p => p.EndDate)
                             .Without(p => p.StartDate)
+                            .Without(p => p.EmploymentEndDate)
                             .With(p => p.BirthDay, 1)
                             .With(p => p.BirthMonth, 12)
                             .With(p => p.BirthYear, 2000)
@@ -150,6 +169,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                             .With(p => p.StartYear, 2019)
                             .With(p => p.EndMonth, 6)
                             .With(p => p.EndYear, 2021)
+                            .With(p => p.EmploymentEndMonth, 6)
+                            .With(p => p.EmploymentEndYear, 2020)
                     );
             }
         }

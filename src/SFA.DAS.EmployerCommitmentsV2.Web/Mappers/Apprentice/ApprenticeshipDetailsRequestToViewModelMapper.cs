@@ -44,12 +44,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
                 await Task.WhenAll(apprenticeshipTask, priceEpisodesTask, apprenticeshipUpdatesTask, apprenticeshipDataLocksStatusTask, changeofPartyRequestsTask, changeOfProviderChainTask);
 
-                var apprenticeship = apprenticeshipTask.Result;
-                var priceEpisodes = priceEpisodesTask.Result;
-                var apprenticeshipUpdates = apprenticeshipUpdatesTask.Result;
-                var apprenticeshipDataLocksStatus = apprenticeshipDataLocksStatusTask.Result;
-                var changeofPartyRequests = changeofPartyRequestsTask.Result;
-                var changeOfProviderChain = changeOfProviderChainTask.Result;
+                var apprenticeship = await apprenticeshipTask;
+                var priceEpisodes = await priceEpisodesTask;
+                var apprenticeshipUpdates = await apprenticeshipUpdatesTask;
+                var apprenticeshipDataLocksStatus = await apprenticeshipDataLocksStatusTask;
+                var changeofPartyRequests = await changeofPartyRequestsTask;
+                var changeOfProviderChain = await changeOfProviderChainTask;
 
                 var currentTrainingProgramme = await GetTrainingProgramme(apprenticeship.CourseCode, apprenticeship.StandardUId);
                 
