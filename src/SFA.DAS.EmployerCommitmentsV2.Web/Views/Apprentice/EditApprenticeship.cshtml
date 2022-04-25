@@ -349,7 +349,14 @@
             <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
             @if (Model.IsLockedForUpdate)
             {
-
+                @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
+                {
+                    <dl class="das-definition-list">
+                        <dt asp-for="Cost" class="das-definition-list__title">Training Price for this employment</dt>
+                        <dd class="das-definition-list__definition" id="cost">@(Model.EmploymentPrice.FormatCost())</dd>
+                        @Html.HiddenFor(x => x.EmploymentPrice)
+                    </dl>
+                }
                 <dl class="das-definition-list">
                     <dt asp-for="Cost" class="das-definition-list__title">Total agreed apprenticeship price (excluding VAT)</dt>
                     <dd class="das-definition-list__definition" id="cost">@Model.Cost</dd>
@@ -360,26 +367,9 @@
                     If you want to change the total agreed apprenticeship price, you'll need to ask your training provider to make the changes on your behalf.
                     We'll ask you to approve any changes they make.
                 </div>
-                @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
-                {
-                    <dl class="das-definition-list">
-                        <dt asp-for="Cost" class="das-definition-list__title">Training Price for this employment</dt>
-                        <dd class="das-definition-list__definition" id="cost">@(Model.EmploymentPrice.FormatCost())</dd>
-                        @Html.HiddenFor(x => x.EmploymentPrice)
-                    </dl>
-                }
             }
             else
             {
-                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Cost, "govuk-form-group--error")">
-                    <label for="cost" class="govuk-label govuk-label--s">Total agreed apprenticeship price (excluding VAT)</label>
-                    <span id="price-hint" class="govuk-hint">
-                        Enter the price, including any end-point assessment costs, in whole pounds. <br /> For example, for £1,500 enter 1500
-                    </span>
-                    @Html.ValidationMessageFor(m => m.Cost, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Cost) })
-                    <span class="govuk-body govuk-!-font-weight-bold">£ </span>
-                    <input asp-for="Cost" class="govuk-input govuk-input--width-5" inputmode="numeric" pattern="[0-9]*" maxlength="7" min="1" max="9999999" id="cost" type="number" />
-                </div>
                 @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
                 {
                     <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmploymentPrice, "govuk-form-group--error")">
@@ -392,6 +382,15 @@
                         <input asp-for="EmploymentPrice" class="govuk-input govuk-input--width-5 length-limit" inputmode="numeric" pattern="[0-9]*" maxlength="7" min="1" max="9999999" id="price" type="number" />
                     </div>
                 }
+                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Cost, "govuk-form-group--error")">
+                    <label for="cost" class="govuk-label govuk-label--s">Total agreed apprenticeship price (excluding VAT)</label>
+                    <span id="price-hint" class="govuk-hint">
+                        Enter the price, including any end-point assessment costs, in whole pounds. <br /> For example, for £1,500 enter 1500
+                    </span>
+                    @Html.ValidationMessageFor(m => m.Cost, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Cost) })
+                    <span class="govuk-body govuk-!-font-weight-bold">£ </span>
+                    <input asp-for="Cost" class="govuk-input govuk-input--width-5" inputmode="numeric" pattern="[0-9]*" maxlength="7" min="1" max="9999999" id="cost" type="number" />
+                </div>
             }
 
             <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
