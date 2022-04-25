@@ -363,7 +363,7 @@
                 @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
                 {
                     <dl class="das-definition-list">
-                        <dt asp-for="Cost" class="das-definition-list__title">Agreed price for this employment (excluding VAT)</dt>
+                        <dt asp-for="Cost" class="das-definition-list__title">Training Price for this employment</dt>
                         <dd class="das-definition-list__definition" id="cost">@(Model.EmploymentPrice.FormatCost())</dd>
                         @Html.HiddenFor(x => x.EmploymentPrice)
                     </dl>
@@ -383,7 +383,7 @@
                 @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
                 {
                     <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmploymentPrice, "govuk-form-group--error")">
-                        <label asp-for="EmploymentPrice" class="govuk-label govuk-!-font-weight-bold">Agreed price for this employment (excluding VAT)</label>
+                        <label asp-for="EmploymentPrice" class="govuk-label govuk-!-font-weight-bold">Training Price for this employment</label>
                         <span id="employment-price-hint" class="govuk-hint">
                             Enter the price in whole pounds. For example, for £1,500 enter 1500
                         </span>
