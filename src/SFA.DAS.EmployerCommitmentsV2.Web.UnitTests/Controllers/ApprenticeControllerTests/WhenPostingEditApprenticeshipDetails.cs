@@ -152,6 +152,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             await _fixture.EditApprenticeship(_viewModel);
             _fixture.VerifyMapperIsCalled();
         }
+
+        [Test]
+        public async Task AndSelectCourseIsToBeChangedThenTheUserIsRedirectedToSelectCoursePage()
+        {
+            var result = await _fixture.EditChangingCourse(_viewModel);
+            _fixture.VerifyRedirectedTo(result, "SelectCourseForEdit");
+        }
+
+        [Test]
+        public async Task AndSelectDeliveryModelIsToBeChangedThenTheUserIsRedirectedToSelectDeliveryModelPage()
+        {
+            var result = await _fixture.EditChangingDeliveryModel(_viewModel);
+            _fixture.VerifyRedirectedTo(result, "SelectDeliveryModelForEdit");
+        }
+
     }
 
     public class WhenPostingEditApprenticeshipDetailsFixture : ApprenticeControllerTestFixtureBase
@@ -164,7 +179,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequestViewModel viewModel)
         {
             return await _controller.EditApprenticeship(null, null, viewModel);
-        }     
+        }
+
+        public async Task<IActionResult> EditChangingCourse(EditApprenticeshipRequestViewModel viewModel)
+        {
+            return await _controller.EditApprenticeship("Edit", null, viewModel);
+        }
+
+        public async Task<IActionResult> EditChangingDeliveryModel(EditApprenticeshipRequestViewModel viewModel)
+        {
+            return await _controller.EditApprenticeship(null, "Edit", viewModel);
+        }
 
         public void SetUpGetApprenticeship(GetApprenticeshipResponse response)
         {
@@ -217,6 +242,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public void VerifyRedirectToChangeOption(RedirectToActionResult result)
         {
             result.ActionName.Should().Be("ChangeOption");
+        }
+        
+        public void VerifyRedirectedTo(IActionResult actionResult, string actionName)
+        {
+            actionResult.VerifyReturnsRedirectToActionResult().WithActionName(actionName);
         }
     }
 }

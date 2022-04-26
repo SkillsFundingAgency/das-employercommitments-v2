@@ -31,10 +31,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string LastName { get; set; }
         public string Email { get; set; }
         public string HashedApprenticeshipId { get; set; }
-        [JsonIgnore]
         public long ApprenticeshipId { get; set; }
         public string AccountHashedId { get; set; }
-        [JsonIgnore]
         public long AccountId { get; set; }
         public string ULN { get; set; }
         public string TrainingName { get; set; }

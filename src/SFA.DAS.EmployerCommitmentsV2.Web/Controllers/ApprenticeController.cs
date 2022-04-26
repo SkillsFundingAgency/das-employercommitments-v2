@@ -600,7 +600,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{apprenticeshipHashedId}/edit")]
         public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequest request)
         {
-            var viewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
+            var viewModel = TempData.Get<EditApprenticeshipRequestViewModel>(ViewModelForEdit) ?? await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
             return View(viewModel);
         }
 
