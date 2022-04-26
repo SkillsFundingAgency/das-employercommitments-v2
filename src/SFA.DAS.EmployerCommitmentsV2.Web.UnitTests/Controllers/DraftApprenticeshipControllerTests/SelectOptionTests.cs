@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             _mockModelMapper = new Mock<IModelMapper>();
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
-            _controller = new DraftApprenticeshipController(_mockModelMapper.Object, _mockCommitmentsApiClient.Object, Mock.Of<IAuthorizationService>(), Mock.Of<IEncodingService>());
+            _controller = new DraftApprenticeshipController(_mockModelMapper.Object, _mockCommitmentsApiClient.Object, Mock.Of<IEncodingService>());
 
             _mockModelMapper.Setup(m => m.Map<UpdateDraftApprenticeshipRequest>(_viewModel))
                 .ReturnsAsync(_updateRequest);
