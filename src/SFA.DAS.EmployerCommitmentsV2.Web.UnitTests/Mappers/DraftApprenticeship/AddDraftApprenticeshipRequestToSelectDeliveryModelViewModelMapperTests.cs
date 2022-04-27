@@ -1,28 +1,33 @@
 ﻿using AutoFixture;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
-using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
 {
     [TestFixture]
-    public class ApprenticeRequestToSelectDeliveryModelViewModelMapperTests
+    public class AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapperTests
     {
-        private ApprenticeRequestToSelectDeliveryModelViewModelMapper _mapper;
-        private ApprenticeRequest _source;
+        private AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper _mapper;
+        private AddDraftApprenticeshipRequest _source;
+        private Mock<ICommitmentsApiClient> _commitmentsApiClient;
+        private GetCohortResponse _getCohortResponse;
         private Mock<IApprovalsApiClient> _approvalsApiClient;
         private ProviderCourseDeliveryModels _providerCourseDeliveryModels;
         private long _providerId;
         private string _courseCode;
+        private long _cohortId;
         private SelectDeliveryModelViewModel _result;
-        
+
         [SetUp]
         public async Task Arrange()
         {
@@ -30,22 +35,34 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             _providerId = autoFixture.Create<long>();
             _courseCode = autoFixture.Create<string>();
+            _cohortId = autoFixture.Create<long>();
 
-            _source = autoFixture.Build<ApprenticeRequest>()
+            _source = autoFixture.Build<AddDraftApprenticeshipRequest>()
                 .With(x => x.StartMonthYear, "062020")
-                .With(x => x.AccountId, 12345)
                 .With(x => x.CourseCode, "Course1")
                 .With(x => x.ProviderId, _providerId)
                 .With(x => x.CourseCode, _courseCode)
+                .With(x => x.CohortId, _cohortId)
                 .With(x => x.DeliveryModel, DeliveryModel.PortableFlexiJob)
-                .Without(x => x.TransferSenderId).Create();
-                        
+                .Create();
+
+            _getCohortResponse = autoFixture.Build<GetCohortResponse>()
+                .With(x => x.LevyStatus, ApprenticeshipEmployerType.Levy)
+                .With(x => x.WithParty, Party.Employer)
+                .With(x => x.ProviderId, _providerId)
+                .Without(x => x.TransferSenderId)
+                .Create();
+
+            _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
+            _commitmentsApiClient.Setup(x => x.GetCohort(_source.CohortId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_getCohortResponse);
+
             _providerCourseDeliveryModels = autoFixture.Create<ProviderCourseDeliveryModels>();
 
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
             _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
-            _mapper = new ApprenticeRequestToSelectDeliveryModelViewModelMapper(_approvalsApiClient.Object);
+            _mapper = new AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(_commitmentsApiClient.Object, _approvalsApiClient.Object);
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }
 
@@ -65,6 +82,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public void AccountLegalEntityHashedIdIsMappedCorrectly()
         {
             Assert.AreEqual(_source.AccountLegalEntityHashedId, _result.AccountLegalEntityHashedId);
+        }
+
+        [Test]
+        public void CohortIdIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.CohortId, _result.CohortId);
+        }
+
+        [Test]
+        public void CohortReferenceIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.CohortReference, _result.CohortReference);
         }
 
         [Test]

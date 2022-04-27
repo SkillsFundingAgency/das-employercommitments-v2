@@ -256,13 +256,15 @@ else
                 <div class="govuk-date-input__item">
                     <div class="govuk-form-group">
                         <label asp-for="EmploymentEndMonth" class="govuk-label govuk-date-input__label">Month</label>
-                        <input asp-for="EmploymentEndMonth" min="1" max="12" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number">
+                        <input asp-for="EmploymentEndMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
+                           class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" />
                     </div>
                 </div>
                 <div class="govuk-date-input__item">
                     <div class="govuk-form-group">
                         <label asp-for="EmploymentEndYear" class="govuk-label govuk-date-input__label">Year</label>
-                        <input asp-for="EmploymentEndYear" min="1900" max="9999" class="govuk-input govuk-date-input__input govuk-input--width-4" type="number">
+                        <input asp-for="EmploymentEndYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
+                           class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" />
                     </div>
                 </div>
             </div>
@@ -276,7 +278,7 @@ else
         Enter the price, including any end-point assessment costs, in whole pounds. For example, for £1,500 enter 1500
     </span>
     @Html.ValidationMessageFor(m => m.Cost, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Cost) })
-    <input asp-for="Cost" class="govuk-input govuk-input--width-5" inputmode="numeric" pattern="[0-9]*" maxlength="7" min="1" max="9999999" />
+    <span class="govuk-body govuk-!-font-weight-bold">£ </span><input asp-for="Cost" class="govuk-input govuk-input--width-5" inputmode="numeric" pattern="[0-9]*" maxlength="7" min="1" max="9999999" />
 </div>
 
 @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)

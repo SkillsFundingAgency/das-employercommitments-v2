@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.Services;
@@ -82,6 +83,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public Mock<IEncodingService> EncodingService { get; set; }
         public DraftApprenticeshipController Controller { get; set; }
         public Mock<ILinkGenerator> LinkGenerator { get; set; }
+        public Mock<ITempDataDictionary> TempData;
 
         public AddDraftApprenticeshipTestsFixture()
         {
@@ -127,6 +129,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             LinkGenerator = new Mock<ILinkGenerator>();
             AuthorizationService = new Mock<IAuthorizationService>();
             EncodingService = new Mock<IEncodingService>();
+            TempData = new Mock<ITempDataDictionary>();
 
             AuthorizationService.Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval)).Returns(false);
 
@@ -138,6 +141,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 CommitmentsApiClient.Object,
                 AuthorizationService.Object,
                 Mock.Of<IEncodingService>());
+
+            Controller.TempData = TempData.Object;
 
             CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammes(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammesResponse{TrainingProgrammes = Courses});
             CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammeStandards(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse{TrainingProgrammes = StandardCourses});
@@ -151,12 +156,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
         public Task<IActionResult> Get()
         {
-            return Controller.AddDraftApprenticeship(Request);
+            return Controller.AddDraftApprenticeshipDetails(Request);
         }
 
         public Task<IActionResult> Post()
         {
-            return Controller.AddDraftApprenticeship(ViewModel);
+            return Controller.AddDraftApprenticeshipDetails(string.Empty, string.Empty, ViewModel);
         }
 
         public AddDraftApprenticeshipTestsFixture SetInvalidModelState()
