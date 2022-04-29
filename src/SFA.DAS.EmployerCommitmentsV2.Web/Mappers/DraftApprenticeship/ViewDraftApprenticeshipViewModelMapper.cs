@@ -44,7 +44,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 StartDate = draftApprenticeship.StartDate,
                 EndDate = draftApprenticeship.EndDate,
                 Reference = draftApprenticeship.Reference,
-                LegalEntityName = source.Cohort.LegalEntityName
+                LegalEntityName = source.Cohort.LegalEntityName,
+                EmploymentEndDate = draftApprenticeship.EmploymentEndDate,
+                EmploymentPrice = draftApprenticeship.EmploymentPrice
             };
 
             return result;

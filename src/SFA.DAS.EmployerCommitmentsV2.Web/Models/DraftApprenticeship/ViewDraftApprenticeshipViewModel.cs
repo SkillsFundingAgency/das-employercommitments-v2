@@ -21,5 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public string Reference { get; set; }
         public string LegalEntityName { get; set; }
         public bool HasStandardOptions { get; set; }
+        public DateTime? EmploymentEndDate { get; set; }
+        public int? EmploymentPrice { get; set; }
     }
 }

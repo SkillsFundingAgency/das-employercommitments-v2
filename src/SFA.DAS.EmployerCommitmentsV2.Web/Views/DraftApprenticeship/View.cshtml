@@ -14,117 +14,139 @@
 
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    First name
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @Model.FirstName
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Last name
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @Model.LastName
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Email address
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @DisplayOptionalField(Model.Email)
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Unique learner number
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @DisplayOptionalField(Model.Uln)
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Date of birth
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @DisplayOptionalField(Model.DateOfBirth)
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Apprenticeship training course
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @DisplayOptionalField(Model.TrainingCourse)
-                </dd>
-            </div>
-            @if (Model.DeliveryModel != null)
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                    Apprenticeship delivery model
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.DeliveryModel
-                    </dd>
-                </div>
-            }
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Version
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @DisplayOptionalField(Model.Version)
-                </dd>
-            </div>
-            @if (Model.HasStandardOptions)
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Option
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @DisplayOptionalField(Model.CourseOption)
-                    </dd>
-                </div>
-            }
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Planned training start date
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @DisplayOptionalEstimatedDate(Model.StartDate)
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Planned training end date
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @DisplayOptionalEstimatedDate(Model.EndDate)
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Total agreed apprenticeship price
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @DisplayCost(Model.Cost)
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Reference
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @DisplayOptionalField(Model.Reference)
-                </dd>
-            </div>
-        </dl>
+            <dt class="govuk-summary-list__key">
+                First name
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.FirstName
+            </dd>
     </div>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Last name
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @Model.LastName
+        </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Email address
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @DisplayOptionalField(Model.Email)
+        </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Unique learner number
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @DisplayOptionalField(Model.Uln)
+        </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Date of birth
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @DisplayOptionalField(Model.DateOfBirth)
+        </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Apprenticeship training course
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @DisplayOptionalField(Model.TrainingCourse)
+        </dd>
+    </div>
+    @if (Model.DeliveryModel != null)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Apprenticeship delivery model
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.DeliveryModel
+            </dd>
+        </div>
+    }
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Version
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @DisplayOptionalField(Model.Version)
+        </dd>
+    </div>
+    @if (Model.HasStandardOptions)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Option
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @DisplayOptionalField(Model.CourseOption)
+            </dd>
+        </div>
+    }
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Planned training start date
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @DisplayOptionalEstimatedDate(Model.StartDate)
+        </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Planned training end date
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @DisplayOptionalEstimatedDate(Model.EndDate)
+        </dd>
+    </div>
+    @if (Model.DeliveryModel != null)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Planned end date for this employment
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @DisplayOptionalEstimatedDate(Model.EmploymentEndDate)
+            </dd>
+        </div>
+    }
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Total agreed apprenticeship price
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @DisplayCost(Model.Cost)
+        </dd>
+    </div>
+    @if (Model.DeliveryModel != null)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Training price for this employment
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @DisplayCost(Model.EmploymentPrice)
+            </dd>
+        </div>
+    }
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Reference
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @DisplayOptionalField(Model.Reference)
+        </dd>
+    </div>
+    </dl>
+</div>
 </div>
 
 @functions
