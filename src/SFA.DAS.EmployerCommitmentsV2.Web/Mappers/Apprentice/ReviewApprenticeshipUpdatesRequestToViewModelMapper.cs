@@ -57,7 +57,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                         CourseCode = update.TrainingCode,
                         CourseName = update.TrainingName,
                         Version = update.Version,
-                        Option = update.Option
+                        Option = update.Option,
+                        EmploymentEndDate = update.EmploymentEndDate,
+                        EmploymentPrice = update.EmploymentPrice
                     },
                     OriginalApprenticeship = new BaseEdit
                     {
@@ -72,7 +74,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                         CourseCode = apprenticeship.CourseCode,
                         CourseName = apprenticeship.CourseName,
                         Version = apprenticeship.Version,
-                        Option = apprenticeship.Option
+                        Option = apprenticeship.Option,
+                        EmploymentEndDate = apprenticeship.EmploymentEndDate,
+                        EmploymentPrice = apprenticeship.EmploymentPrice
                     }
                 };
 
