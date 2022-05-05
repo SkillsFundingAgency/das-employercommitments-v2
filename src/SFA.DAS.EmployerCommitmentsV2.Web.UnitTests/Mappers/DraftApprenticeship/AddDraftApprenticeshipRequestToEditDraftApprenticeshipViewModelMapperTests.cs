@@ -2,26 +2,25 @@
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
 {
     [TestFixture]
-    public class SelectCourseViewModelToAddDraftApprenticeshipRequestMapperTests
+    public class AddDraftApprenticeshipRequestToEditDraftApprenticeshipViewModelMapperTests
     {
-        private SelectCourseViewModelToAddDraftApprenticeshipRequestMapper _mapper;
-        private AddDraftApprenticeshipRequest _result;
-        private SelectCourseViewModel _source;
+        private AddDraftApprenticeshipRequestToEditDraftApprenticeshipViewModelMapper _mapper;
+        private EditDraftApprenticeshipViewModel _result;
+        private AddDraftApprenticeshipRequest _source;
 
         [SetUp]
         public async Task Arrange()
         {
             var autoFixture = new Fixture();
 
-            _source = autoFixture.Build<SelectCourseViewModel>().Without(x => x.Courses).Create();
+            _source = autoFixture.Build<AddDraftApprenticeshipRequest>().Create();
 
-            _mapper = new SelectCourseViewModelToAddDraftApprenticeshipRequestMapper();
+            _mapper = new AddDraftApprenticeshipRequestToEditDraftApprenticeshipViewModelMapper();
 
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }
@@ -30,18 +29,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public void AccountHashedIdIsMappedCorrectly()
         {
             Assert.AreEqual(_source.AccountHashedId, _result.AccountHashedId);
-        }
-
-        [Test]
-        public void AccountLegalEntityIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.AccountLegalEntityId, _result.AccountLegalEntityId);
-        }
-
-        [Test]
-        public void AccountLegalEntityHashedIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.AccountLegalEntityHashedId, _result.AccountLegalEntityHashedId);
         }
 
         [Test]
@@ -83,12 +70,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public void ReservationIdIsMappedCorrectly()
         {
             Assert.AreEqual(_source.ReservationId, _result.ReservationId);
-        }
-
-        [Test]
-        public void StartDateIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.StartMonthYear, _result.StartMonthYear);
         }
     }
 }

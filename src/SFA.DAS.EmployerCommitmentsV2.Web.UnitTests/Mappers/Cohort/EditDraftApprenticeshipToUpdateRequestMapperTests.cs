@@ -115,6 +115,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
+        public async Task ThenEmploymentPriceIsMappedCorrectly()
+        {
+            var result = await _act();
+            Assert.AreEqual(_source.EmploymentPrice, result.EmploymentPrice);
+        }
+
+        [Test]
         public async Task ThenStartDateIsMappedCorrectly()
         {
             var result = await _act();
@@ -126,6 +133,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _act();
             Assert.AreEqual(_source.EndDate.Date, result.EndDate);
+        }
+
+        [Test]
+        public async Task ThenEmploymentEndDateIsMappedCorrectly()
+        {
+            var result = await _act();
+            Assert.AreEqual(_source.EmploymentEndDate.Date, result.EmploymentEndDate);
         }
 
         [Test]

@@ -161,6 +161,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         }
 
         [Test]
+        public void EmploymentPriceIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeshipResponse.EmploymentPrice, _result.EmploymentPrice);
+        }
+
+        [Test]
         public void StartDateIsMappedCorrectly()
         {
             Assert.AreEqual(_draftApprenticeshipResponse.StartDate.ToMonthYearString(), _result.StartDate.Date.ToMonthYearString());
@@ -170,6 +176,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public void EndDateIsMappedCorrectly()
         {
             Assert.AreEqual(_draftApprenticeshipResponse.EndDate.ToMonthYearString(), _result.EndDate.Date.ToMonthYearString());
+        }
+
+        [Test]
+        public void EmploymentEndDateIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeshipResponse.EmploymentEndDate.ToMonthYearString(), _result.EmploymentEndDate.Date.ToMonthYearString());
         }
 
         [Test]

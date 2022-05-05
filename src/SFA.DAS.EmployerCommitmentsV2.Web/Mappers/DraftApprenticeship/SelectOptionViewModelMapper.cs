@@ -35,7 +35,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 StandardTitle = draftApprenticeship.TrainingCourseName,
                 CourseOption = draftApprenticeship.TrainingCourseOption,
                 Options = standard.TrainingProgramme.Options,
-                StandardUrl = standard.TrainingProgramme.StandardPageUrl
+                StandardUrl = standard.TrainingProgramme.StandardPageUrl,
+                DeliveryModel = draftApprenticeship.DeliveryModel,
+                Cost = draftApprenticeship.Cost,
+                EmploymentPrice = draftApprenticeship.EmploymentPrice,
+                EmploymentEndMonth = draftApprenticeship.EmploymentEndDate.HasValue ? draftApprenticeship.EmploymentEndDate.Value.Month : null,
+                EmploymentEndYear = draftApprenticeship.EmploymentEndDate.HasValue ? draftApprenticeship.EmploymentEndDate.Value.Year : null,
             };
         }
     }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.Encoding;
@@ -42,6 +43,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 CourseCode = draftApprenticeship.CourseCode,
                 StandardUId = draftApprenticeship.StandardUId,
                 Cost = draftApprenticeship.Cost,
+                EmploymentPrice = draftApprenticeship.EmploymentPrice,
+                EmploymentEndMonth = draftApprenticeship.EmploymentEndDate.HasValue ? draftApprenticeship.EmploymentEndDate.Value.Month : null,
+                EmploymentEndYear = draftApprenticeship.EmploymentEndDate.HasValue ? draftApprenticeship.EmploymentEndDate.Value.Year : null,
                 Reference = draftApprenticeship.Reference,
                 AccountHashedId = source.Request.AccountHashedId,
                 ProviderName = cohort.ProviderName,

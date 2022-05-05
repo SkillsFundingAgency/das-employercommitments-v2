@@ -41,8 +41,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 Version = draftApprenticeship.TrainingCourseVersion,
                 CourseOption = GetCourseOption(draftApprenticeship.TrainingCourseOption),
                 Cost = draftApprenticeship.Cost,
+                EmploymentPrice = draftApprenticeship.EmploymentPrice,
                 StartDate = draftApprenticeship.StartDate,
                 EndDate = draftApprenticeship.EndDate,
+                EmploymentEndDate = draftApprenticeship.EmploymentEndDate,
                 Reference = draftApprenticeship.Reference,
                 LegalEntityName = source.Cohort.LegalEntityName
             };

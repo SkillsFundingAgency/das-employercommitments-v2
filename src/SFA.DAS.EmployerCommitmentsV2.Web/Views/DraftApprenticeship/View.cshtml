@@ -107,6 +107,25 @@
                     @DisplayOptionalEstimatedDate(Model.EndDate)
                 </dd>
             </div>
+            @if (Model.DeliveryModel != null)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Planned end date for this employment
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @DisplayOptionalEstimatedDate(Model.EmploymentEndDate)
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Training price for this employment
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @DisplayCost(Model.EmploymentPrice)
+                    </dd>
+                </div>
+            }
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     Total agreed apprenticeship price

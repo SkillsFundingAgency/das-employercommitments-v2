@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 .WithCohortWithEmployer()
                 .WithCohort();
 
-            var result = await fixtures.Sut.EditDraftApprenticeship(new EditDraftApprenticeshipViewModel { AccountHashedId = fixtures.AccountHashedId, CohortId = fixtures.CohortId, CohortReference = fixtures.CohortReference, DraftApprenticeshipId = fixtures.DraftApprenticeshipId });
+            var result = await fixtures.Sut.EditDraftApprenticeship(string.Empty, string.Empty, new EditDraftApprenticeshipViewModel { AccountHashedId = fixtures.AccountHashedId, CohortId = fixtures.CohortId, CohortReference = fixtures.CohortReference, DraftApprenticeshipId = fixtures.DraftApprenticeshipId });
 
             fixtures.CommitmentsApiClientMock.Verify(cs => cs.UpdateDraftApprenticeship(fixtures.CohortId, fixtures.DraftApprenticeshipId, It.IsAny<UpdateDraftApprenticeshipRequest>(), It.IsAny<CancellationToken>()), Times.Once);
             var redirect = result.VerifyReturnsRedirect();
@@ -74,7 +74,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             var fixtures = new DetailsTestFixture()
                 .WithCohort();
 
-            var result = await fixtures.Sut.EditDraftApprenticeship(new EditDraftApprenticeshipViewModel { AccountHashedId = fixtures.AccountHashedId, CohortId = fixtures.CohortId, CohortReference = fixtures.CohortReference, DraftApprenticeshipId = fixtures.DraftApprenticeshipId });
+            var result = await fixtures.Sut.EditDraftApprenticeship(string.Empty, string.Empty, new EditDraftApprenticeshipViewModel { AccountHashedId = fixtures.AccountHashedId, CohortId = fixtures.CohortId, CohortReference = fixtures.CohortReference, DraftApprenticeshipId = fixtures.DraftApprenticeshipId });
 
             fixtures.CommitmentsApiClientMock.Verify(cs => cs.UpdateDraftApprenticeship(fixtures.CohortId, fixtures.DraftApprenticeshipId, It.IsAny<UpdateDraftApprenticeshipRequest>(), It.IsAny<CancellationToken>()), Times.Once);
             var redirect = result.VerifyReturnsRedirectToActionResult();
