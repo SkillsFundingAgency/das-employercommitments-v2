@@ -2,12 +2,12 @@
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using System;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
 {
+    [TestFixture]
     public class AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapperTests
     {
         private AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapper _mapper;
