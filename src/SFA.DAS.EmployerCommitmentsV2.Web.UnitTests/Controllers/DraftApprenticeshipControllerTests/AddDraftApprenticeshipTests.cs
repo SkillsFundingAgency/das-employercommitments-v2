@@ -124,6 +124,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             CohortDetailsUrl = $"accounts/{Request.AccountHashedId}/apprentices/{Request.CohortReference}/details";
             CommitmentsApiModelException = new CommitmentsApiModelException(new List<ErrorDetail> { new ErrorDetail("Foo", "Bar") });
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+            AuthorizationService = new Mock<IAuthorizationService>();
             ModelMapper = new Mock<IModelMapper>();
             LinkGenerator = new Mock<ILinkGenerator>();
             EncodingService = new Mock<IEncodingService>();
@@ -135,6 +136,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             Controller = new DraftApprenticeshipController(
                 ModelMapper.Object,
                 CommitmentsApiClient.Object,
+                AuthorizationService.Object,
                 Mock.Of<IEncodingService>());
 
             Controller.TempData = TempData.Object;
