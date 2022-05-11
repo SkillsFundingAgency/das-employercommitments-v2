@@ -107,7 +107,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/changestatus")]
-        [DasAuthorize(CommitmentOperation.AccessApprenticeship, EmployerFeature.ManageApprenticesV2)]
         [HttpGet]
         public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
         {
@@ -116,7 +115,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/changestatus")]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [HttpPost]
         public IActionResult ChangeStatus(ChangeStatusRequestViewModel viewModel)
         {
@@ -509,7 +507,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/pause")]
-        [DasAuthorize(CommitmentOperation.AccessApprenticeship, EmployerFeature.ManageApprenticesV2)]
         [HttpGet]
         public async Task<IActionResult> PauseApprenticeship(PauseRequest request)
         {
@@ -518,7 +515,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{apprenticeshipHashedId}/details/pause")]
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [HttpPost]
         public async Task<IActionResult> PauseApprenticeship(PauseRequestViewModel viewModel)
         {
@@ -534,7 +530,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });            
         }
 
-        [DasAuthorize(CommitmentOperation.AccessApprenticeship, EmployerFeature.ManageApprenticesV2)]
         [Route("{apprenticeshipHashedId}/details/resume")]
         [HttpGet]
         public async Task<IActionResult> ResumeApprenticeship(ResumeRequest request)
@@ -543,7 +538,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
-        [DasAuthorize(EmployerFeature.ManageApprenticesV2)]
         [Route("{apprenticeshipHashedId}/details/resume")]
         [HttpPost]
         public async Task<IActionResult> ResumeApprenticeship(ResumeRequestViewModel viewModel)

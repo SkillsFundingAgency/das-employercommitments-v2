@@ -28,7 +28,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     {
         private readonly IModelMapper _modelMapper;
         private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly IAuthorizationService _authorizationService;
         private readonly IEncodingService _encodingService;
 
         public const string ApprenticeDeletedMessage = "Apprentice record deleted";
@@ -36,12 +35,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public DraftApprenticeshipController(
             IModelMapper modelMapper,
 			ICommitmentsApiClient commitmentsApiClient,
-            IAuthorizationService authorizationService,
             IEncodingService encodingService)
         {
             _modelMapper = modelMapper;
             _commitmentsApiClient = commitmentsApiClient;
-            _authorizationService = authorizationService;
             _encodingService = encodingService;
         }
 

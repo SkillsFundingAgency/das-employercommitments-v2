@@ -69,7 +69,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
 
         [Test]
-        public async Task PostDetails_WithValidModel__WithEnhancedApproval_ShouldSaveDraftApprenticeshipAndRedirectToSelectOptionPage()
+        public async Task PostDetails_WithValidModel_ShouldSaveDraftApprenticeshipAndRedirectToSelectOptionPage()
         {
             var fixtures = new DetailsTestFixture()
                 .WithCohort();
@@ -114,12 +114,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 .ReturnsAsync(ViewModel.Object);
 
             AuthorizationServiceMock = new Mock<IAuthorizationService>();
-            AuthorizationServiceMock.Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval)).Returns(false);
 
             Sut = new DraftApprenticeshipController(
                 ModelMapperMock.Object,
                 CommitmentsApiClientMock.Object,
-                AuthorizationServiceMock.Object,
                 Mock.Of<IEncodingService>());
         }
 
