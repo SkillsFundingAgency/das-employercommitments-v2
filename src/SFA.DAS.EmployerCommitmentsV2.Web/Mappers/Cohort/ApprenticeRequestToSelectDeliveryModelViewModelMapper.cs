@@ -9,7 +9,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
     public class ApprenticeRequestToSelectDeliveryModelViewModelMapper : IMapper<ApprenticeRequest, SelectDeliveryModelViewModel>
     {
-        private IApprovalsApiClient _approvalsApiClient;
+        private readonly IApprovalsApiClient _approvalsApiClient;
 
         public ApprenticeRequestToSelectDeliveryModelViewModelMapper(IApprovalsApiClient approvalsApiClient)
             => _approvalsApiClient = approvalsApiClient;

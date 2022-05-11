@@ -8,7 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 {
     public class EditDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapper : IMapper<EditDraftApprenticeshipViewModel, AddDraftApprenticeshipRequest>
     {
-        private ICommitmentsApiClient _commitmentsApiClient;
+        private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
 
         public EditDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)

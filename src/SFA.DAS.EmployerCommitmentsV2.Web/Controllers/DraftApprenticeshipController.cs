@@ -234,7 +234,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             request.DeliveryModel = model.DeliveryModels.FirstOrDefault();
             var editModel = await _modelMapper.Map<EditDraftApprenticeshipViewModel>(request);
-            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), request);
+            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), editModel);
         }
 
         [HttpPost]
