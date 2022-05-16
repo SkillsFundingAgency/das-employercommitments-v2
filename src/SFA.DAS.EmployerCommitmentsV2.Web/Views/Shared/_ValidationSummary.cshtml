@@ -1,5 +1,7 @@
 ﻿@if (!ViewData.ModelState.IsValid)
 {
+    var validationOrder = ViewBag.ValidationOrder != null ? ViewBag.ValidationOrder.Split(',') : new string[] { };
+
     <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
         <h2 class="govuk-error-summary__title" id="error-summary-title">
             There is a problem
@@ -10,7 +12,7 @@
                 @{
                     var explorer = ViewData.ModelExplorer;
                     var customErrorKeys = ViewData["CustomErrorKeys"] as Dictionary<string, string>;
-                    foreach (var property in explorer.Properties)
+                    foreach (var property in explorer.Properties.OrderBy(x => Array.IndexOf(validationOrder, x.Metadata.PropertyName)))
                     {
                         var propertyName = property.Metadata.PropertyName;
                         var state = ViewData.ModelState[propertyName];
