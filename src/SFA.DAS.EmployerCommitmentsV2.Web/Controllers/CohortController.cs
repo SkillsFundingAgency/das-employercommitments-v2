@@ -262,14 +262,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add/apprentice")]
         public IActionResult Apprentice(ApprenticeRequest request)
         {
-            //if (_authorizationService.IsAuthorized(EmployerFeature.DeliveryModel))
-            //{
+            if (_authorizationService.IsAuthorized(EmployerFeature.DeliveryModel))
+            {
                 return RedirectToAction(nameof(SelectCourse), request);
-            //}
-            //else
-            //{
-                //return RedirectToAction(nameof(AddDraftApprenticeship), request);
-            //}
+            }
+            else
+            {
+                return RedirectToAction(nameof(AddDraftApprenticeship), request);
+            }
         }
 
         [HttpGet]
@@ -328,22 +328,34 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add/apprenticeship")]
         public async Task<IActionResult> AddDraftApprenticeship(ApprenticeRequest request)
         {
-            //var model = GetStoredDraftApprenticeshipState();
-            //if (model == null)
-            //{
-              var  model = await _modelMapper.Map<ApprenticeViewModel>(request);
-            //}
-            //else
-            //{
-            //    model.CourseCode = request.CourseCode;
-            //    model.DeliveryModel = request.DeliveryModel;
-            //}
+            var model = GetStoredDraftApprenticeshipState();
+            if (model == null)
+            {
+                model = await _modelMapper.Map<ApprenticeViewModel>(request);
+            }
+            else
+            {
+                model.CourseCode = request.CourseCode;
+                model.DeliveryModel = request.DeliveryModel;
+            }
             return View("Apprentice", model);
         }
 
         [HttpPost]
         [Route("add/apprenticeship")]
-        public async Task<IActionResult> AddDraftApprenticeship(ApprenticeViewModel model)
+        public async Task<IActionResult> AddDraftApprenticeshipOrRoute(string changeCourse, string changeDeliveryModel, ApprenticeViewModel model)
+        {
+            if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
+            {
+                StoreDraftApprenticeshipState(model);
+                var request = await _modelMapper.Map<ApprenticeRequest>(model);
+                return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request);
+            }
+
+            return await SaveDraftApprenticeship(model);
+        }
+
+        public async Task<IActionResult> SaveDraftApprenticeship(ApprenticeViewModel model)
         {
             var request = await _modelMapper.Map<CreateCohortRequest>(model);
             var newCohort = await _commitmentsApiClient.CreateCohort(request);
@@ -539,6 +551,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var response = await _modelMapper.Map<AgreementNotSignedViewModel>(viewModel);
 
             return View(response);
+        }
+
+        private void StoreDraftApprenticeshipState(ApprenticeViewModel model)
+        {
+            TempData.Put(nameof(ApprenticeViewModel), model);
+        }
+
+        private ApprenticeViewModel GetStoredDraftApprenticeshipState()
+        {
+            return TempData.Get<ApprenticeViewModel>(nameof(ApprenticeViewModel));
         }
     }
 }

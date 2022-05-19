@@ -7,6 +7,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.Encoding;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -59,6 +60,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             result.StandardTitle.Should().Be(_getDraftApprenticeshipResponse.TrainingCourseName);
             result.CourseOption.Should().Be(_getDraftApprenticeshipResponse.TrainingCourseOption);
             result.StandardUrl.Should().Be(_GetTrainingProgrammeResponse.TrainingProgramme.StandardPageUrl);
+            result.DeliveryModel.Should().Be(_getDraftApprenticeshipResponse.DeliveryModel);
+            result.Cost.Should().Be(_getDraftApprenticeshipResponse.Cost);
+            result.EmploymentPrice.Should().Be(_getDraftApprenticeshipResponse.EmploymentPrice);
+            result.EmploymentEndDate.MonthYear.Should().Be(_getDraftApprenticeshipResponse.EmploymentEndDate.Value.ToString("MMyyyy"));
         }
 
         [Test]

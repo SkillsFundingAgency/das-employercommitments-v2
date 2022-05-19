@@ -1,7 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.Encoding;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
@@ -35,7 +34,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 StandardTitle = draftApprenticeship.TrainingCourseName,
                 CourseOption = draftApprenticeship.TrainingCourseOption,
                 Options = standard.TrainingProgramme.Options,
-                StandardUrl = standard.TrainingProgramme.StandardPageUrl
+                StandardUrl = standard.TrainingProgramme.StandardPageUrl,
+                DeliveryModel = draftApprenticeship.DeliveryModel,
+                Cost = draftApprenticeship.Cost,
+                EmploymentPrice = draftApprenticeship.EmploymentPrice,
+                EmploymentEndMonth = draftApprenticeship.EmploymentEndDate.HasValue ? draftApprenticeship.EmploymentEndDate.Value.Month : (int?)null,
+                EmploymentEndYear = draftApprenticeship.EmploymentEndDate.HasValue ? draftApprenticeship.EmploymentEndDate.Value.Year : (int?)null,
             };
         }
     }

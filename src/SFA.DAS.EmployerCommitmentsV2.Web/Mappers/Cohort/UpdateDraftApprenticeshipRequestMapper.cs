@@ -31,8 +31,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 CourseCode = source.CourseCode,
                 CourseOption = draftApprenticeship.TrainingCourseOption,
                 Cost = source.Cost,
+                EmploymentPrice = source.EmploymentPrice,
                 StartDate = source.StartDate.Date,
                 EndDate = source.EndDate.Date,
+                EmploymentEndDate = source.EmploymentEndDate.Date,
                 Reference = source.Reference
             };
         }

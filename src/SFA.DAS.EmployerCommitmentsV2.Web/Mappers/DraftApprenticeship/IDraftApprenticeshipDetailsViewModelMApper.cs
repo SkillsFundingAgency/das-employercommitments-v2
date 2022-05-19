@@ -23,12 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
             var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
 
             if (cohort.WithParty == Party.Employer)
-            {
-                var model = await MapToEditModel(source, cohort);
-
-                if (model.DeliveryModel != DeliveryModel.PortableFlexiJob)
-                    return model;
-            }
+                return await MapToEditModel(source, cohort);
 
             return await MapToViewModel(source, cohort);
         }
@@ -38,7 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
             return (EditDraftApprenticeshipViewModel)await _modelMapper.Map<IDraftApprenticeshipViewModel>(new EditDraftApprenticeshipRequest
             {
                 Cohort = cohort,
-                Request = source
+                Request = source,
             });
         }
 
