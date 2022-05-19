@@ -11,7 +11,6 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -606,7 +605,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
             {
                 TempData.Put(ViewModelForEdit, viewModel);
-                return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), new { viewModel.HashedApprenticeshipId });
+                return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId  });
             }
 
 
@@ -678,7 +677,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             TempData.Put(ViewModelForEdit, draft);
 
-            return RedirectToAction(nameof(SelectDeliveryModelForEdit), new { draft.HashedApprenticeshipId });
+            return RedirectToAction(nameof(SelectDeliveryModelForEdit));
         }
 
         [HttpGet]
@@ -700,7 +699,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpPost]
-        [Route("{HashedApprenticeshipId}/edit/select-delivery-model")]
+        [Route("{ApprenticeshipHashedId}/edit/select-delivery-model")]
         [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
         public IActionResult SetDeliveryModelForEdit(SelectDeliveryModelViewModel model)
         {
@@ -713,7 +712,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
             draft.DeliveryModel = model.DeliveryModel.Value;
             TempData.Put(ViewModelForEdit, draft);
-            return RedirectToAction("EditApprenticeship", new { draft.HashedApprenticeshipId });
+            return RedirectToAction("EditApprenticeship");
         }
 
         [HttpGet]
