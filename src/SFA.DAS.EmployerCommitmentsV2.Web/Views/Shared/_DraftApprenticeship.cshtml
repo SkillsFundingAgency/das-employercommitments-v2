@@ -9,6 +9,13 @@
 @Html.HiddenFor(x => x.ReservationId)
 @Html.HiddenFor(x => x.StandardUId)
 
+@{
+    var startDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Planned training start date" : "Planned apprenticeship training start date";
+    var endDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Projected training finish date" : "Projected apprenticeship training finish date";
+
+    ViewBag.ValidationOrder = "FirstName,LastName,Email,DateOfBirth,Uln,StartDate,EndDate,EmploymentEndDate,Cost,EmploymentPrice,Reference";
+}
+
 <div class="govuk-form-group">
     <fieldset class="govuk-fieldset">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
@@ -188,11 +195,11 @@ else
 <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.StartDate, "govuk-form-group--error")">
     <fieldset class="govuk-fieldset" aria-describedby="start-date-hint" role="group">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-            Planned training start date
+            @startDateLabel
         </legend>
         <span id="start-date-hint" class="govuk-hint">
             For example, 09 2021 <br />
-            The standard version will be based on the start date provided
+            The standard version will be based on the planned training start date provided
         </span>
         @Html.ValidationMessageFor(m => m.StartDate, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.StartDate) })
         <div class="govuk-date-input">
@@ -216,7 +223,7 @@ else
 <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.EndDate, "govuk-form-group--error")">
     <fieldset class="govuk-fieldset" aria-describedby="finish-date-hint" role="group">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-            Planned training end date
+            @endDateLabel
         </legend>
         <span id="finish-date-hint" class="govuk-hint">
             For example, 09 2019

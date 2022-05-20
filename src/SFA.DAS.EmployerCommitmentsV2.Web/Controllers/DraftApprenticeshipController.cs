@@ -163,16 +163,92 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewName, viewModel);
         }
 
+        [HttpGet]
+        [Route("{DraftApprenticeshipHashedId}/edit-display", Name="EditDraftApprenticeshipDisplay")]
+        public IActionResult EditDraftApprenticeshipDisplay(EditDraftApprenticeshipViewModel model)
+        {
+            var localModel = GetStoredEditDraftApprenticeshipState();
+
+            if (localModel != null)
+            {
+                localModel.CourseCode = model.CourseCode;
+                localModel.DeliveryModel = model.DeliveryModel;
+                return View("Edit", localModel);
+            }
+
+            return View("Edit", model);
+        }
+
         [HttpPost]
         [Route("{DraftApprenticeshipHashedId}")]
         [Route("{DraftApprenticeshipHashedId}/edit")]
-        public async Task<IActionResult> EditDraftApprenticeship(EditDraftApprenticeshipViewModel model)
+        [Route("{DraftApprenticeshipHashedId}/edit-display")]
+        public async Task<IActionResult> EditDraftApprenticeship(string changeCourse, string changeDeliveryModel, EditDraftApprenticeshipViewModel model)
         {
+            if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
+            {
+                StoreEditDraftApprenticeshipState(model);
+                var req = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
+                return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), req);
+            }
+
             var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
 
             await _commitmentsApiClient.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
 
             return RedirectToAction("SelectOption", "DraftApprenticeship", new { model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId });
+        }
+
+        [HttpGet]
+        [Route("{DraftApprenticeshipHashedId}/edit/select-course")]
+        public async Task<IActionResult> SelectCourseForEdit(AddDraftApprenticeshipRequest request)
+        {
+            var selectCourseViewModel = await _modelMapper.Map<SelectCourseViewModel>(request);
+            return View("SelectCourse", selectCourseViewModel);
+        }
+
+        [HttpPost]
+        [Route("{DraftApprenticeshipHashedId}/edit/select-course")]
+        public async Task<ActionResult> SetCourseForEdit(SelectCourseViewModel model)
+        {
+            if (string.IsNullOrEmpty(model.CourseCode))
+            {
+                throw new CommitmentsApiModelException(new List<ErrorDetail>
+                    {new ErrorDetail(nameof(model.CourseCode), "You must select a training course")});
+            }
+
+            var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
+            return RedirectToAction(nameof(SelectDeliveryModelForEdit), request);
+        }
+
+        [HttpGet]
+        [Route("{DraftApprenticeshipHashedId}/edit/select-delivery-model")]
+        public async Task<IActionResult> SelectDeliveryModelForEdit(AddDraftApprenticeshipRequest request)
+        {
+            var model = await _modelMapper.Map<SelectDeliveryModelViewModel>(request);
+
+            if (model.DeliveryModels.Length > 1)
+            {
+                return View("SelectDeliveryModel", model);
+            }
+
+            request.DeliveryModel = model.DeliveryModels.FirstOrDefault();
+            var editModel = await _modelMapper.Map<EditDraftApprenticeshipViewModel>(request);
+            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), editModel);
+        }
+
+        [HttpPost]
+        [Route("{DraftApprenticeshipHashedId}/edit/select-delivery-model")]
+        public async Task<IActionResult> SetDeliveryModelForEdit(SelectDeliveryModelViewModel model)
+        {
+            if (model.DeliveryModel == null)
+            {
+                throw new CommitmentsApiModelException(new List<ErrorDetail>
+                    {new ErrorDetail("DeliveryModel", "You must select the apprenticeship delivery model")});
+            }
+
+            var editModel = await _modelMapper.Map<EditDraftApprenticeshipViewModel>(model);
+            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), editModel);
         }
 
         [HttpGet]
@@ -280,6 +356,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private AddDraftApprenticeshipViewModel GetStoredDraftApprenticeshipState()
         {
             return TempData.Get<AddDraftApprenticeshipViewModel>(nameof(AddDraftApprenticeshipViewModel));
+        }
+
+        private void StoreEditDraftApprenticeshipState(EditDraftApprenticeshipViewModel model)
+        {
+            TempData.Put(nameof(EditDraftApprenticeshipViewModel), model);
+        }
+
+        private EditDraftApprenticeshipViewModel GetStoredEditDraftApprenticeshipState()
+        {
+            return TempData.Get<EditDraftApprenticeshipViewModel>(nameof(EditDraftApprenticeshipViewModel));
         }
     }
 }

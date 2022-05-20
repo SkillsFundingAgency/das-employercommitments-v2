@@ -109,5 +109,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
         public int? EndYear { get; set; }
 
         public string ProviderName { get; set; }
+
+        [JsonIgnore]
+        public DateTime? EmploymentEndDate
+        {
+            get
+            {
+                if (EmploymentEndMonth.HasValue && EmploymentEndYear.HasValue)
+                {
+                    return new DateTime(EmploymentEndYear.Value, EmploymentEndMonth.Value, 1);
+                }
+                return null;
+            }
+            set
+            {
+                if (value.HasValue)
+                {
+                    EmploymentEndMonth = value.Value.Month;
+                    EmploymentEndYear = value.Value.Year;
+                }
+            }
+        }
+        public int? EmploymentEndMonth { get; set; }
+        public int? EmploymentEndYear { get; set; }
+        public int? EmploymentPrice { get; set; }
     }
 }

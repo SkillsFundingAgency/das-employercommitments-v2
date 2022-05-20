@@ -1,26 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.Services;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
-using SFA.DAS.Testing;
 using SFA.DAS.Encoding;
+using SFA.DAS.Testing;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {
@@ -46,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 f => f.SetCohortWithOtherParty(),
                 f => f.Get(),
                 (f, r) => r.Should().NotBeNull()
-                    .And.BeEquivalentTo(new {ActionName = "Details", ControllerName = "Cohort"}, op => op.ExcludingMissingMembers()));
+                    .And.BeEquivalentTo(new { ActionName = "Details", ControllerName = "Cohort" }, op => op.ExcludingMissingMembers()));
         }
 
         [Test]
@@ -56,7 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 f => f.Post(),
                 f => f.CommitmentsApiClient.Verify(c => c.AddDraftApprenticeship(f.ViewModel.CohortId.Value, f.AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>())));
         }
-        
+
         [Test]
         public async Task WhenPostingAction_ThenShouldRedirectToSelectOptionPage()
         {
@@ -93,7 +92,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 ProviderName = "Foobar",
                 WithParty = Party.Employer
             };
-            
+
             Request = new AddDraftApprenticeshipRequest
             {
                 AccountHashedId = "AAA000",
@@ -105,7 +104,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 StartMonthYear = "092019",
                 CourseCode = "DDD333"
             };
-            
+
             ViewModel = new AddDraftApprenticeshipViewModel
             {
                 AccountHashedId = Request.AccountHashedId,
@@ -125,13 +124,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             CohortDetailsUrl = $"accounts/{Request.AccountHashedId}/apprentices/{Request.CohortReference}/details";
             CommitmentsApiModelException = new CommitmentsApiModelException(new List<ErrorDetail> { new ErrorDetail("Foo", "Bar") });
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+            AuthorizationService = new Mock<IAuthorizationService>();
             ModelMapper = new Mock<IModelMapper>();
             LinkGenerator = new Mock<ILinkGenerator>();
-            AuthorizationService = new Mock<IAuthorizationService>();
             EncodingService = new Mock<IEncodingService>();
             TempData = new Mock<ITempDataDictionary>();
-
-            AuthorizationService.Setup(x => x.IsAuthorized(EmployerFeature.EnhancedApproval)).Returns(false);
 
             EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.ApprenticeshipId))
                 .Returns("APP123");
@@ -147,7 +144,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammes(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammesResponse{TrainingProgrammes = Courses});
             CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammeStandards(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse{TrainingProgrammes = StandardCourses});
             CommitmentsApiClient.Setup(c => c.AddDraftApprenticeship(ViewModel.CohortId.Value, AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new AddDraftApprenticeshipResponse { DraftApprenticeshipId = 123456});
+                .ReturnsAsync(new AddDraftApprenticeshipResponse { DraftApprenticeshipId = 123456 });
 
             ModelMapper.Setup(m => m.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(ViewModel)).Returns(Task.FromResult(AddDraftApprenticeshipRequest));
 
@@ -167,7 +164,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public AddDraftApprenticeshipTestsFixture SetInvalidModelState()
         {
             Controller.ModelState.AddModelError("Foo", "Bar");
-            
+
             return this;
         }
 
@@ -175,7 +172,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             ModelMapper.Setup(x => x.Map<AddDraftApprenticeshipViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
                 .Throws(new CohortEmployerUpdateDeniedException("Cohort With Other Party"));
-            
+
             return this;
         }
     }

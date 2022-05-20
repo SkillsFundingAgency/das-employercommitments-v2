@@ -66,7 +66,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public int? EmploymentEndMonth { get => EmploymentEndDate.Month; set => EmploymentEndDate.Month = value; }
 
         [Display(Name = "Year")]
-        [SuppressArgumentException(nameof(EndDate), "The employment end date is not valid")]
+        [SuppressArgumentException(nameof(EmploymentEndDate), "The employment end date is not valid")]
         public int? EmploymentEndYear { get => EmploymentEndDate.Year; set => EmploymentEndDate.Year = value; }
 
         [Display(Name = "Unique Learner Number (ULN)")]
@@ -93,11 +93,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public MonthYearModel EndDate { get; }
 
         [Display(Name = "Month")]
-        [SuppressArgumentException(nameof(EndDate), "The end date is not valid")]
+        [SuppressArgumentException(nameof(EndDate), "The training end date is not valid")]
         public int? EndMonth { get => EndDate.Month; set => EndDate.Month = value; }
 
         [Display(Name = "Year")]
-        [SuppressArgumentException(nameof(EndDate), "The end date is not valid")]
+        [SuppressArgumentException(nameof(EndDate), "The training end date is not valid")]
         public int? EndYear { get => EndDate.Year; set => EndDate.Year = value; }
 
         [Display(Name = "Total agreed apprenticeship price (excluding VAT)")]

@@ -18,6 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 CohortReference = source.CohortReference,
                 CourseCode = source.CourseCode,
                 DeliveryModel = source.DeliveryModel,
+                DraftApprenticeshipHashedId = source.DraftApprenticeshipHashedId,
                 ProviderId = source.ProviderId,
                 ReservationId = source.ReservationId.HasValue ? source.ReservationId.Value : System.Guid.Empty,
                 StartMonthYear = source.StartMonthYear,

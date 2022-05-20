@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
 {
     [TestFixture]
-    public class SelectCourseViewModelToAddDraftApprenticeshipRequestMapperTests
+    public class SelectDeliveryModelViewModelToEditDraftApprenticeshipViewModelMapperTests
     {
-        private SelectCourseViewModelToAddDraftApprenticeshipRequestMapper _mapper;
-        private AddDraftApprenticeshipRequest _result;
-        private SelectCourseViewModel _source;
+        private SelectDeliveryModelViewModelToEditDraftApprenticeshipViewModelMapper _mapper;
+        private EditDraftApprenticeshipViewModel _result;
+        private SelectDeliveryModelViewModel _source;
 
         [SetUp]
         public async Task Arrange()
         {
             var autoFixture = new Fixture();
 
-            _source = autoFixture.Build<SelectCourseViewModel>().Without(x => x.Courses).Create();
+            _source = autoFixture.Build<SelectDeliveryModelViewModel>().Without(x => x.DeliveryModels).Create();
 
-            _mapper = new SelectCourseViewModelToAddDraftApprenticeshipRequestMapper();
+            _mapper = new SelectDeliveryModelViewModelToEditDraftApprenticeshipViewModelMapper();
 
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }
@@ -30,18 +30,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public void AccountHashedIdIsMappedCorrectly()
         {
             Assert.AreEqual(_source.AccountHashedId, _result.AccountHashedId);
-        }
-
-        [Test]
-        public void AccountLegalEntityIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.AccountLegalEntityId, _result.AccountLegalEntityId);
-        }
-
-        [Test]
-        public void AccountLegalEntityHashedIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.AccountLegalEntityHashedId, _result.AccountLegalEntityHashedId);
         }
 
         [Test]
@@ -83,12 +71,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public void ReservationIdIsMappedCorrectly()
         {
             Assert.AreEqual(_source.ReservationId, _result.ReservationId);
-        }
-
-        [Test]
-        public void StartDateIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.StartMonthYear, _result.StartMonthYear);
         }
     }
 }

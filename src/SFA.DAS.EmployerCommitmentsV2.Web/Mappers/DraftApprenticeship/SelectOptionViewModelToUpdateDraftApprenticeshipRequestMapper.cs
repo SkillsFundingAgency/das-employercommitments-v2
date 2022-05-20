@@ -29,10 +29,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 CourseCode = response.CourseCode,
                 CourseOption = source.CourseOption == "N/A" ? string.Empty : source.CourseOption,
                 Cost = response.Cost,
+                EmploymentPrice = response.EmploymentPrice,
                 StartDate = response.StartDate,
                 EndDate = response.EndDate,
+                EmploymentEndDate = response.EmploymentEndDate,
                 Reference = response.Reference,
-                ReservationId = response.ReservationId
+                ReservationId = response.ReservationId,
+                DeliveryModel = response.DeliveryModel,
             };
         }
     }

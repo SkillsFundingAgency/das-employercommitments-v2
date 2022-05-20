@@ -48,13 +48,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         }
 
         [Test]
-        public async Task PostAddDraftApprenticeship_WithValidModel_WithEnhancedApproval_WithoutCourseSelected_ShouldRedirectToCohortDetailsV2()
+        public async Task PostAddDraftApprenticeship_WithValidModel_WithoutCourseSelected_ShouldRedirectToCohortDetailsV2()
         {
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
                 .ForPostRequest()
                 .SetupEncodingService()
                 .WithCreatedCohort("ABC123", 123)
-                .WithDraftApprenticeship(123, withCourseSelected : false);
+                .WithDraftApprenticeship(123, withCourseSelected: false);
 
             var result = await fixtures.CheckPost();
 
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         }
 
         [Test]
-        public async Task PostAddDraftApprenticeship_WithValidModel_WithEnhancedApproval_WithCourseSelected_ShouldRedirectToSelectOptions()
+        public async Task PostAddDraftApprenticeship_WithValidModel_WithCourseSelected_ShouldRedirectToSelectOptions()
         {
             var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
                 .ForPostRequest()

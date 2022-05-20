@@ -172,7 +172,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 AuthorizationServiceMock.Object,
                 Mock.Of<IEncodingService>());          
             
-
             Sut.TempData = new Mock<ITempDataDictionary>().Object;
         }
 
