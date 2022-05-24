@@ -152,10 +152,10 @@
                 <dd class="das-definition-list__definition" id="uln">@Model.ULN</dd>
                 @Html.HiddenFor(x => x.ULN)
             </dl>
-            
+
+            <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
             @if (Model.IsLockedForUpdate || Model.IsUpdateLockedForStartDateAndCourse || Model.IsContinuation)
             {
-                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 <dl class="das-definition-list">
                     <dt asp-for="TrainingName" class="das-definition-list__title">Apprenticeship training course</dt>
                     <dd class="das-definition-list__definition" id="trainingName">@Model.TrainingName </dd>
@@ -165,7 +165,6 @@
 
                 @if (Model.DeliveryModel != DeliveryModel.Regular)
                 {
-                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                     <dl class="das-definition-list">
                         <dt asp-for="DeliveryModel" class="das-definition-list__title">Apprenticeship delivery model</dt>
                         <dd class="das-definition-list__definition" id="trainingName">@Model.DeliveryModel.ToDescription()</dd>
@@ -175,6 +174,7 @@
             }
             else
             {
+                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.DeliveryModel))
                 {
                     if (!string.IsNullOrWhiteSpace(Model.CourseCode))
@@ -195,7 +195,6 @@
 
                     if (Model.DeliveryModel != DeliveryModel.Regular)
                     {
-                        <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                         <div class="govuk-form-group">
                             <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Delivery model</p>
                             <p class="govuk-body">
@@ -275,7 +274,6 @@
 
                 @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
                 {
-                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                     <dl class="das-definition-list">
                         <dt class="das-definition-list__title">Planned end date for this employment</dt>
                         <dd class="das-definition-list__definition" id="endDate">
@@ -320,7 +318,6 @@
                 </div>
                 @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
                 {
-                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                     <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.EmploymentEndDate, "govuk-form-group--error")">
                         <fieldset class="govuk-fieldset" aria-describedby="finish-date-hint" role="group">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
@@ -348,19 +345,18 @@
                     </div>
                 }
             }
-            
+
+            <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
             @if (Model.IsLockedForUpdate)
             {
                 @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
                 {
-                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                     <dl class="das-definition-list">
                         <dt asp-for="Cost" class="das-definition-list__title">Agreed training price for this period of employment (excluding VAT)</dt>
                         <dd class="das-definition-list__definition" id="cost">@(Model.EmploymentPrice.FormatCost())</dd>
                         @Html.HiddenFor(x => x.EmploymentPrice)
                     </dl>
                 }
-                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 <dl class="das-definition-list">
                     <dt asp-for="Cost" class="das-definition-list__title">Total agreed apprenticeship price (excluding VAT)</dt>
                     <dd class="das-definition-list__definition" id="cost">@Model.Cost</dd>
