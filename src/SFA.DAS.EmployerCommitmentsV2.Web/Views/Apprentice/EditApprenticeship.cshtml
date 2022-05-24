@@ -224,7 +224,7 @@
             @if (Model.IsLockedForUpdate || Model.IsUpdateLockedForStartDateAndCourse)
             {
                 <dl class="das-definition-list">
-                    <dt class="das-definition-list__title">Planned training start date</dt>
+                    <dt class="das-definition-list__title">Planned apprenticeship training start date</dt>
                     <dd class="das-definition-list__definition" id="startDate">@Model.StartDate.Date.Value.ToGdsFormatLongMonthWithoutDay()</dd>
                 </dl>
                 @Html.HiddenFor(x => x.StartMonth)
@@ -235,7 +235,7 @@
                 <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.StartDate, "govuk-form-group--error")">
                     <fieldset class="govuk-fieldset" aria-describedby="start-date-hint" role="group">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                            Planned training start date
+                            Planned apprenticeship training start date
                         </legend>
                         <span id="start-date-hint" class="govuk-hint">
                             For example, 09 2017 <br />
@@ -266,7 +266,7 @@
             @if (Model.IsEndDateLockedForUpdate)
             {
                 <dl class="das-definition-list">
-                    <dt class="das-definition-list__title">Planned training finish date</dt>
+                    <dt class="das-definition-list__title">Projected apprenticeship training finish date</dt>
                     <dd class="das-definition-list__definition" id="endDate">@Model.EndDate.Date.Value.ToGdsFormatLongMonthWithoutDay()</dd>
                 </dl>
                 @Html.HiddenFor(x => x.EndMonth)
@@ -292,7 +292,7 @@
                 <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.EndDate, "govuk-form-group--error")">
                     <fieldset class="govuk-fieldset" aria-describedby="finish-date-hint" role="group">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                            Planned training end date
+                            Projected apprenticeship training finish date
                         </legend>
                         <span id="finish-date-hint" class="govuk-hint">
                             For example, 09 2019
@@ -352,7 +352,7 @@
                 @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
                 {
                     <dl class="das-definition-list">
-                        <dt asp-for="Cost" class="das-definition-list__title">Training Price for this employment</dt>
+                        <dt asp-for="Cost" class="das-definition-list__title">Agreed training price for this period of employment (excluding VAT)</dt>
                         <dd class="das-definition-list__definition" id="cost">@(Model.EmploymentPrice.FormatCost())</dd>
                         @Html.HiddenFor(x => x.EmploymentPrice)
                     </dl>
@@ -373,7 +373,7 @@
                 @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
                 {
                     <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmploymentPrice, "govuk-form-group--error")">
-                        <label asp-for="EmploymentPrice" class="govuk-label govuk-!-font-weight-bold">Training Price for this employment</label>
+                        <label asp-for="EmploymentPrice" class="govuk-label govuk-!-font-weight-bold">Agreed training price for this period of employment (excluding VAT)</label>
                         <span id="employment-price-hint" class="govuk-hint">
                             Enter the price in whole pounds. For example, for £1,500 enter 1500
                         </span>
