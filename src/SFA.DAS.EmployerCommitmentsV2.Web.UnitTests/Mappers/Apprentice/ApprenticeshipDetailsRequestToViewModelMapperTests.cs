@@ -587,6 +587,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Arrange 
             _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
             _apprenticeshipResponse.ContinuedById = continuedBy;
+            _apprenticeshipResponse.DeliveryModel = DeliveryModel.Regular;
             
             //Act
             var result = await _mapper.Map(_request);
@@ -605,6 +606,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Arrange
             _apprenticeshipResponse.Status = apprenticeshipStatus;
             _apprenticeshipResponse.ContinuedById = null;
+            _apprenticeshipResponse.DeliveryModel = DeliveryModel.Regular;
 
             //Act
             var result = await _mapper.Map(_request);
@@ -612,6 +614,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Assert
             Assert.AreEqual(expected, result.ShowChangeTrainingProviderLink);
         }
+
+        [TestCase(DeliveryModel.PortableFlexiJob, false)]
+        [TestCase(DeliveryModel.Regular, true)]
+        public async Task ShowChangeTrainingProviderLink_IsMapped_When_DeliveryModelIsSet(DeliveryModel dm, bool expected)
+        {
+            //Arrange 
+            _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
+            _apprenticeshipResponse.ContinuedById = null;
+            _apprenticeshipResponse.DeliveryModel = dm;
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(expected, result.ShowChangeTrainingProviderLink);
+        }
+
 
         [TestCase(ApprenticeshipIdFirst, 0, 3)]
         [TestCase(ApprenticeshipIdMiddle, 1, 3)]
