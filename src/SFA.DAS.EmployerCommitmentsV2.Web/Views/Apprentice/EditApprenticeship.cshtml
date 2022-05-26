@@ -173,7 +173,7 @@
                 @Html.HiddenFor(x => x.DeliveryModel)
             }
             else
-            {
+            {                
                 @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.DeliveryModel))
                 {
                     if (!string.IsNullOrWhiteSpace(Model.CourseCode))
@@ -181,6 +181,7 @@
                         Model.TrainingName = (await CommitmentsApiClient.GetTrainingProgramme(Model.CourseCode)).TrainingProgramme.Name;
                     }
 
+                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                     <div class="govuk-form-group">
                         <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Apprenticeship training course</p>
                         <p class="govuk-body">
@@ -207,6 +208,7 @@
                 }
                 else
                 {
+                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                     <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
                         <label for="trainingCourse" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
                         <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
