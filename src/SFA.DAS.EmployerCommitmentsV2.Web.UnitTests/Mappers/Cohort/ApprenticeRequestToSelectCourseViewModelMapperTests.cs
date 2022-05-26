@@ -115,5 +115,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             Assert.AreEqual(_source.DeliveryModel, _result.DeliveryModel);
         }
+
+        [Test]
+        public void TransferSenderIdIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.TransferSenderId, _result.TransferSenderId);
+        }
     }
 }

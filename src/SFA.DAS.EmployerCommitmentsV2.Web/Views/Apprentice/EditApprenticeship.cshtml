@@ -152,10 +152,10 @@
                 <dd class="das-definition-list__definition" id="uln">@Model.ULN</dd>
                 @Html.HiddenFor(x => x.ULN)
             </dl>
-
-            <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+            
             @if (Model.IsLockedForUpdate || Model.IsUpdateLockedForStartDateAndCourse || Model.IsContinuation)
             {
+                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 <dl class="das-definition-list">
                     <dt asp-for="TrainingName" class="das-definition-list__title">Apprenticeship training course</dt>
                     <dd class="das-definition-list__definition" id="trainingName">@Model.TrainingName </dd>

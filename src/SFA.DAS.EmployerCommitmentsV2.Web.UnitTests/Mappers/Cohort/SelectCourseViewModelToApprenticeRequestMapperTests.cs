@@ -73,5 +73,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             Assert.AreEqual(_source.StartMonthYear, _result.StartMonthYear);
         }
+
+        [Test]
+        public void TransferSenderIdIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.TransferSenderId, _result.TransferSenderId);
+        }
     }
 }

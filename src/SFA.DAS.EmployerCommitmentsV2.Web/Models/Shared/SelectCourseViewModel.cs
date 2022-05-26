@@ -20,5 +20,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public string CourseCode { get; set; }
         public string StartMonthYear { get; set; }
         public DeliveryModel? DeliveryModel { get; set; }
+        public string TransferSenderId { get; set; }
     }
 }
