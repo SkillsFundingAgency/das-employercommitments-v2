@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,6 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -21,6 +21,8 @@ using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.E
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.CommitmentsV2.Types;
 using System.Linq;
+using SFA.DAS.CommitmentsV2.Api.Types.Validation;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -43,6 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private const string AlertDetailsWhenApproved = "An alert has been sent to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service.";
         private const string ChangesRejectedMessage = "Changes rejected";
         private const string ChangesUndoneMessage = "Changes undone";
+        private const string ViewModelForEdit = "ViewModelForEdit";
 
         public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILogger<ApprenticeController> logger)
         {
@@ -590,16 +593,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{apprenticeshipHashedId}/edit")]
         public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequest request)
         {
-            var viewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
-            if (viewModel.DeliveryModel == DeliveryModel.PortableFlexiJob)
-                return RedirectToAction(nameof(ApprenticeshipDetails), request);
+            var viewModel = TempData.Get<EditApprenticeshipRequestViewModel>(ViewModelForEdit) ?? await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
             return View(viewModel);
         }
 
         [HttpPost]
         [Route("{apprenticeshipHashedId}/edit", Name = RouteNames.EditApprenticeship)]
-        public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequestViewModel viewModel)
+        public async Task<IActionResult> EditApprenticeship(string changeCourse, string changeDeliveryModel, EditApprenticeshipRequestViewModel viewModel)
         {
+
+            if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
+            {
+                TempData.Put(ViewModelForEdit, viewModel);
+                return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId  });
+            }
+
+
             var apprenticeship = await _commitmentsApiClient.GetApprenticeship(viewModel.ApprenticeshipId);
             // Only calculate the version if the course changes, or the start date changes and is > than the original start date.
             var triggerCalculate = viewModel.CourseCode != apprenticeship.CourseCode || apprenticeship.StartDate < viewModel.StartDate.Date.Value;
@@ -640,6 +649,70 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             return RedirectToAction("ConfirmEditApprenticeship", new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, accountHashedId = viewModel.AccountHashedId });
+        }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/edit/select-course")]
+        [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+        public async Task<IActionResult> SelectCourseForEdit(EditApprenticeshipRequest request)
+        {
+            var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
+            var model = await _modelMapper.Map<SelectCourseViewModel>(draft);
+            return View("SelectCourse", model);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/edit/select-course")]
+        [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+        public IActionResult SetCourseForEdit(SelectCourseViewModel model)
+        {
+            if (string.IsNullOrEmpty(model.CourseCode))
+            {
+                throw new CommitmentsApiModelException(new List<ErrorDetail>
+                    {new ErrorDetail(nameof(model.CourseCode), "You must select a training course")});
+            }
+
+            var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
+            draft.CourseCode = model.CourseCode;
+
+            TempData.Put(ViewModelForEdit, draft);
+
+            return RedirectToAction(nameof(SelectDeliveryModelForEdit));
+        }
+
+        [HttpGet]
+        [Route("{apprenticeshipHashedId}/edit/select-delivery-model")]
+        [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+        public async Task<IActionResult> SelectDeliveryModelForEdit(EditApprenticeshipRequest request)
+        {
+            var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
+            var model = await _modelMapper.Map<SelectDeliveryModelViewModel>(draft);
+
+            if (model.DeliveryModels.Length > 1)
+            {
+                return View("SelectDeliveryModel", model);
+            }
+            draft.DeliveryModel = model.DeliveryModels.FirstOrDefault();
+            TempData.Put(ViewModelForEdit, draft);
+
+            return RedirectToAction("EditApprenticeship", request);
+        }
+
+        [HttpPost]
+        [Route("{ApprenticeshipHashedId}/edit/select-delivery-model")]
+        [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+        public IActionResult SetDeliveryModelForEdit(SelectDeliveryModelViewModel model)
+        {
+            if (model.DeliveryModel == null)
+            {
+                throw new CommitmentsApiModelException(new List<ErrorDetail>
+                    {new ErrorDetail("DeliveryModel", "You must select the apprenticeship delivery model")});
+            }
+
+            var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
+            draft.DeliveryModel = model.DeliveryModel.Value;
+            TempData.Put(ViewModelForEdit, draft);
+            return RedirectToAction("EditApprenticeship");
         }
 
         [HttpGet]

@@ -213,6 +213,39 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task EmploymentPrice_IsMapped()
+        {
+            //Act
+            await _fixture.Map();
+
+            //Assert
+            _fixture.VerifyEmploymentPriceIsMapped();
+        }
+
+        [Test]
+        public async Task NullEmploymentEndDate_IsMapped()
+        {
+            //Act
+            await _fixture.Map();
+
+            //Assert
+            _fixture.VerifyEmploymentEndDateIsMapped();
+        }
+
+
+        [Test]
+        public async Task EmploymentEndDate_IsMapped()
+        {
+            _fixture.ApprenticeshipResponse.EmploymentEndDate = new DateTime(2021, 09, 01);
+
+            //Act
+            await _fixture.Map();
+
+            //Assert
+            _fixture.VerifyEmploymentEndDateIsMapped();
+        }
+
+        [Test]
         public async Task Version_IsMapped()
         {
             //Act
@@ -486,6 +519,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(ApprenticeshipResponse.CourseCode, _viewModel.CourseCode);
         }
 
+        internal void VerifyEmploymentPriceIsMapped()
+        {
+            Assert.AreEqual(ApprenticeshipResponse.EmploymentPrice, _viewModel.EmploymentPrice);
+        }
+
+        internal void VerifyEmploymentEndDateIsMapped()
+        {
+            Assert.AreEqual(ApprenticeshipResponse.EmploymentEndDate, _viewModel.EmploymentEndDate.Date);
+        }
+
         internal void VerifyDeliveryModelIsMapped()
         {
             Assert.AreEqual(ApprenticeshipResponse.DeliveryModel, _viewModel.DeliveryModel);
@@ -567,6 +610,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .With(x => x.CourseCode, "ABC")
                 .With(x => x.Version, "1.0")
                 .With(x => x.DateOfBirth, autoFixture.Create<DateTime>())
+                .Without(x => x.EmploymentEndDate)
                 .Create();
             _priceEpisodesResponse = autoFixture.Build<GetPriceEpisodesResponse>()
                  .With(x => x.PriceEpisodes, new List<PriceEpisode> {

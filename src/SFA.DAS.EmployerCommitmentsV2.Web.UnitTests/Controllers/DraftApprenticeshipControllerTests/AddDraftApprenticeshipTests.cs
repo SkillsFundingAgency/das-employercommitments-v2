@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.Services;
@@ -81,6 +82,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public Mock<IEncodingService> EncodingService { get; set; }
         public DraftApprenticeshipController Controller { get; set; }
         public Mock<ILinkGenerator> LinkGenerator { get; set; }
+        public Mock<ITempDataDictionary> TempData;
 
         public AddDraftApprenticeshipTestsFixture()
         {
@@ -122,9 +124,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             CohortDetailsUrl = $"accounts/{Request.AccountHashedId}/apprentices/{Request.CohortReference}/details";
             CommitmentsApiModelException = new CommitmentsApiModelException(new List<ErrorDetail> { new ErrorDetail("Foo", "Bar") });
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+            AuthorizationService = new Mock<IAuthorizationService>();
             ModelMapper = new Mock<IModelMapper>();
             LinkGenerator = new Mock<ILinkGenerator>();
             EncodingService = new Mock<IEncodingService>();
+            TempData = new Mock<ITempDataDictionary>();
 
             EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.ApprenticeshipId))
                 .Returns("APP123");
@@ -132,10 +136,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             Controller = new DraftApprenticeshipController(
                 ModelMapper.Object,
                 CommitmentsApiClient.Object,
+                AuthorizationService.Object,
                 Mock.Of<IEncodingService>());
 
-            CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammes(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammesResponse { TrainingProgrammes = Courses });
-            CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammeStandards(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse { TrainingProgrammes = StandardCourses });
+            Controller.TempData = TempData.Object;
+
+            CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammes(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammesResponse{TrainingProgrammes = Courses});
+            CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammeStandards(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse{TrainingProgrammes = StandardCourses});
             CommitmentsApiClient.Setup(c => c.AddDraftApprenticeship(ViewModel.CohortId.Value, AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new AddDraftApprenticeshipResponse { DraftApprenticeshipId = 123456 });
 
@@ -146,12 +153,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
         public Task<IActionResult> Get()
         {
-            return Controller.AddDraftApprenticeship(Request);
+            return Controller.AddDraftApprenticeshipDetails(Request);
         }
 
         public Task<IActionResult> Post()
         {
-            return Controller.AddDraftApprenticeship(ViewModel);
+            return Controller.AddDraftApprenticeshipDetails(string.Empty, string.Empty, ViewModel);
         }
 
         public AddDraftApprenticeshipTestsFixture SetInvalidModelState()

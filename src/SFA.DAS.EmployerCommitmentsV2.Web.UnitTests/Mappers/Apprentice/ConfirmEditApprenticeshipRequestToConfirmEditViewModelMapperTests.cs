@@ -117,6 +117,30 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task WhenEmploymentEndDateIsChanged()
+        {
+            var newDate = fixture.ApprenticeshipResponse.EmploymentEndDate.Value.AddMonths(-1);
+            fixture.source.EmploymentEndDate = new CommitmentsV2.Shared.Models.MonthYearModel(newDate.Month.ToString() + newDate.Year);
+
+            var result = await fixture.Map();
+
+            Assert.AreNotEqual(fixture.source.EmploymentEndDate.Date, fixture.ApprenticeshipResponse.EmploymentEndDate);
+            Assert.AreEqual(fixture.source.EmploymentEndDate.Date, result.EmploymentEndDate);
+            Assert.AreEqual(fixture.ApprenticeshipResponse.EmploymentEndDate, result.OriginalApprenticeship.EmploymentEndDate);
+        }
+
+        [Test]
+        public async Task WhenEmploymentPriceIsChanged()
+        {
+            fixture.source.EmploymentPrice = 1234;
+            var result = await fixture.Map();
+
+            Assert.AreNotEqual(fixture.source.EmploymentPrice, fixture.ApprenticeshipResponse.EmploymentPrice);
+            Assert.AreEqual(fixture.source.EmploymentPrice, result.EmploymentPrice);
+            Assert.AreEqual(fixture.ApprenticeshipResponse.EmploymentPrice, result.OriginalApprenticeship.EmploymentPrice);
+        }
+
+        [Test]
         public async Task WhenStartDateIsChanged()
         {
             var newStartDate = fixture.ApprenticeshipResponse.StartDate.AddMonths(-1);
@@ -279,6 +303,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .With(x => x.Version, "1.0")
                 .With(x => x.StartDate, new DateTime(2020, 1, 1))
                 .With(x => x.EndDate, new DateTime(2021, 1, 1))
+                .With(x => x.EmploymentEndDate, new DateTime(2020, 9, 1))
                 .With(x => x.DateOfBirth, new DateTime(1990,1,1))
                 .Create();
 

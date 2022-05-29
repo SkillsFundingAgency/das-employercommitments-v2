@@ -60,7 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             };
 
             object serializedModel = JsonConvert.SerializeObject(editApprenticeViewModel);
-            _tempDataDictionary.Setup(s => s.TryGetValue("EditApprenticeshipRequestViewModel", out serializedModel)).Returns(true);
+            _tempDataDictionary.Setup(s => s.Peek("EditApprenticeshipRequestViewModel")).Returns(serializedModel);
         }
 
         public async Task<IActionResult> ChangeVersion()

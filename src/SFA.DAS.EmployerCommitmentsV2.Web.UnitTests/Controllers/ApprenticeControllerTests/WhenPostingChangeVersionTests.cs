@@ -32,11 +32,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var baseDate = DateTime.Now;
             var startDate = new MonthYearModel(baseDate.ToString("MMyyyy"));
             var endDate = new MonthYearModel(baseDate.AddYears(2).ToString("MMyyyy"));
+            var employmentEndDate = new MonthYearModel(baseDate.AddYears(1).ToString("MMyyyy"));
             var dateOfBirth = new MonthYearModel(baseDate.AddYears(-18).ToString("MMyyyy"));
 
             _editRequestViewModel = autoFixture.Build<EditApprenticeshipRequestViewModel>()
                     .With(x => x.StartDate, startDate)
                     .With(x => x.EndDate, endDate)
+                    .With(x => x.EmploymentEndDate, employmentEndDate)
                     .With(x => x.DateOfBirth, dateOfBirth)
                 .Create();
 

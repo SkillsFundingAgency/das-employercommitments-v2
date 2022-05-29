@@ -1,0 +1,39 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared.SelectCourseViewModel
+
+@{
+    ViewData["Title"] = "Apprenticeships";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+        <h1 class="govuk-heading-xl">Select standard</h1>
+
+        <form id="addApprenticeship" novalidate method="post">
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
+                <label asp-for="CourseCode" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
+                <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
+                @Html.ValidationMessageFor(m => m.CourseCode, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.CourseCode) })
+                <select class="govuk-select govuk-!-width-three-quarters" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "CourseCode", "Name"))" aria-describedby="course-name-hint">
+                    <option value="">Please select an option</option>
+                </select>
+            </div>
+
+            <button type="submit" class="govuk-button">Continue</button>
+
+        </form>
+    </div>
+</div>
+
+@*
+    @section  Scripts
+    {
+    <script src="/libs/accessible-autocomplete/accessible-autocomplete.min.js"></script>
+    <script>
+    accessibleAutocomplete.enhanceSelectElement({
+    selectElement: document.querySelector('#CourseCode')
+    })
+    </script>
+    }
+*@

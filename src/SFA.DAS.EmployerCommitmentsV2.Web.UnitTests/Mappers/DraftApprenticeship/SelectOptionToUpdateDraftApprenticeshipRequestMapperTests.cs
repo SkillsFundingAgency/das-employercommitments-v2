@@ -58,6 +58,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             result.Reference.Should().Be(_getDraftApprenticeshipResponse.Reference);
             result.ReservationId.Should().Be(_getDraftApprenticeshipResponse.ReservationId);
             result.CourseOption.Should().Be(_viewModel.CourseOption);
+            result.Cost.Should().Be(_getDraftApprenticeshipResponse.Cost);
+            result.EmploymentPrice.Should().Be(_getDraftApprenticeshipResponse.EmploymentPrice);
+            result.EmploymentEndDate.Value.Should().Be(_getDraftApprenticeshipResponse.EmploymentEndDate.Value);
+            result.DeliveryModel.Should().Be(_getDraftApprenticeshipResponse.DeliveryModel);
         }
 
         [Test]

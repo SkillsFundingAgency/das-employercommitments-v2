@@ -53,6 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     .With(x => x.StartDate, startDate)
                     .With(x => x.EndDate, endDate)
                     .With(x => x.DateOfBirth, dateOfBirth)
+                    .Without(x=>x.EmploymentEndDate)
                 .Create();
 
             _editViewModel = _fixture.Build<EditApprenticeshipRequestViewModel>()
@@ -61,6 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     .With(x => x.StartDate, new MonthYearModel(startDate.ToString("MMyyyy")))
                     .With(x => x.EndDate, new MonthYearModel(endDate.ToString("MMyyyy")))
                     .With(x => x.DateOfBirth, new MonthYearModel(dateOfBirth.ToString("MMyyyy")))
+                    .With(x => x.EmploymentEndDate, new MonthYearModel(""))
                 .Create();
 
             var priceEpisode = _fixture.Build<PriceEpisode>()
@@ -168,7 +170,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             object viewModel = JsonConvert.SerializeObject(_editViewModel);
 
-            _mockTempDataDictionary.Setup(d => d.TryGetValue("EditApprenticeshipRequestViewModel", out viewModel)).Returns(true);
+            _mockTempDataDictionary.Setup(d => d.Peek("EditApprenticeshipRequestViewModel")).Returns(viewModel);
         }
     }
 }

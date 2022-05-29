@@ -104,6 +104,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             }
             vm.OriginalApprenticeship.DeliveryModel = apprenticeship.DeliveryModel;
 
+            if (source.EmploymentEndDate.Date != apprenticeship.EmploymentEndDate)
+            {
+                vm.EmploymentEndDate = source.EmploymentEndDate.Date;
+            }
+            vm.OriginalApprenticeship.EmploymentEndDate = apprenticeship.EmploymentEndDate;
+
+            if (source.EmploymentPrice != apprenticeship.EmploymentPrice)
+            {
+                vm.EmploymentPrice = source.EmploymentPrice;
+            }
+            vm.OriginalApprenticeship.EmploymentPrice = apprenticeship.EmploymentPrice;
+
             if (source.CourseCode != apprenticeship.CourseCode)
             {
                 var courseDetails = !string.IsNullOrEmpty(source.Version)

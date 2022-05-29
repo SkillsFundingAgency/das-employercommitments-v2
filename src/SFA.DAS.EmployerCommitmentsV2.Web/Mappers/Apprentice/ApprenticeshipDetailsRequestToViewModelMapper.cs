@@ -44,12 +44,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
                 await Task.WhenAll(apprenticeshipTask, priceEpisodesTask, apprenticeshipUpdatesTask, apprenticeshipDataLocksStatusTask, changeofPartyRequestsTask, changeOfProviderChainTask);
 
-                var apprenticeship = apprenticeshipTask.Result;
-                var priceEpisodes = priceEpisodesTask.Result;
-                var apprenticeshipUpdates = apprenticeshipUpdatesTask.Result;
-                var apprenticeshipDataLocksStatus = apprenticeshipDataLocksStatusTask.Result;
-                var changeofPartyRequests = changeofPartyRequestsTask.Result;
-                var changeOfProviderChain = changeOfProviderChainTask.Result;
+                var apprenticeship = await apprenticeshipTask;
+                var priceEpisodes = await priceEpisodesTask;
+                var apprenticeshipUpdates = await apprenticeshipUpdatesTask;
+                var apprenticeshipDataLocksStatus = await apprenticeshipDataLocksStatusTask;
+                var changeofPartyRequests = await changeofPartyRequestsTask;
+                var changeOfProviderChain = await changeOfProviderChainTask;
 
                 var currentTrainingProgramme = await GetTrainingProgramme(apprenticeship.CourseCode, apprenticeship.StandardUId);
                 
@@ -60,7 +60,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 bool dataLockPriceTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockPriceTriaged();
 
                 bool enableEdit = EnableEdit(apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged);
-                enableEdit &= apprenticeship.DeliveryModel == DeliveryModel.Regular;
 
                 var pendingChangeOfProviderRequest = changeofPartyRequests.ChangeOfPartyRequests?
                     .Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
@@ -112,7 +111,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     HasNewerVersions = await HasNewerVersions(currentTrainingProgramme),
                     Option = apprenticeship.Option,
                     VersionOptions = currentTrainingProgramme.Options,
-                    EmailAddressConfirmedByApprentice = apprenticeship.EmailAddressConfirmedByApprentice
+                    EmailAddressConfirmedByApprentice = apprenticeship.EmailAddressConfirmedByApprentice,
+                    EmploymentEndDate = apprenticeship.EmploymentEndDate,
+                    EmploymentPrice = apprenticeship.EmploymentPrice,
                 };
 
                 return result;

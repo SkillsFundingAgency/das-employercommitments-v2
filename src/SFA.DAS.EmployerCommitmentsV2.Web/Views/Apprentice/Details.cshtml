@@ -8,7 +8,7 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
 
 @{
-    ViewBag.Title = "Apprentice detail - Manage Apprentices";
+    ViewBag.Title = "Apprentice details";
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "apprentices-detail";
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/apprentice-details";
@@ -278,7 +278,7 @@
                     <td id="start-date" class="govuk-table__cell" colspan="2">
                         @if (@Model.StartDate.HasValue)
                         {
-                            @Model.StartDate.Value.ToGdsFormatLongMonthWithoutDay()
+                            @Model.StartDate.Value.ToGdsFormatWithoutDay()
                         }
                     </td>
                     <td class="govuk-table__cell"></td>
@@ -288,7 +288,7 @@
                     <td id="end-date" class="govuk-table__cell" colspan="2">
                         @if (Model.EndDate.HasValue)
                         {
-                            @Model.EndDate.Value.ToGdsFormatLongMonthWithoutDay()
+                            @Model.EndDate.Value.ToGdsFormatWithoutDay()
                         }
                     </td>
                     @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
@@ -302,9 +302,26 @@
                         <td class="govuk-table__cell"></td>
                     }
                 </tr>
+
+                @if(Model.DeliveryModel != null)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Planned end date for this employment</th>
+                        <td id="apprentice-end-date" class="govuk-table__cell">@Model.EmploymentEndDateDisplay</td>
+                        <td class="govuk-table__cell"></td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Training price for this employment</th>
+                        <td id="apprentice-end-date" class="govuk-table__cell">@Model.EmploymentPriceDisplay</td>
+                        <td class="govuk-table__cell"></td>
+                    </tr>
+                }
+
+
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Total agreed apprenticeship price</th>
-                    <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost() excluding VAT</td>
+                    <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost()</td>
                     <td class="govuk-table__cell"></td>
                 </tr>
                 <tr class="govuk-table__row">

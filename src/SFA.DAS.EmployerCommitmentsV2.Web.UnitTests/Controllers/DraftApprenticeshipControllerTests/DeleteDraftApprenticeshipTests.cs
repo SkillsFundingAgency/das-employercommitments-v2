@@ -169,9 +169,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             Sut = new DraftApprenticeshipController(
                 ModelMapperMock.Object,
                 CommitmentApiClient.Object,
+                AuthorizationServiceMock.Object,
                 Mock.Of<IEncodingService>());          
             
-
             Sut.TempData = new Mock<ITempDataDictionary>().Object;
         }
 

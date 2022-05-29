@@ -41,6 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             var baseDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             var startDate = baseDate;
+            var employmentEndDate = baseDate.AddYears(1);
             var endDate = baseDate.AddYears(2);
             var dateOfBirth = baseDate.AddYears(-18);
 
@@ -48,6 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     .With(x => x.StartDate, startDate)
                     .With(x => x.EndDate, endDate)
                     .With(x => x.DateOfBirth, dateOfBirth)
+                    .With(x => x.EmploymentEndDate, employmentEndDate)
                 .Create();
 
             _editViewModel = _fixture.Build<EditApprenticeshipRequestViewModel>()
@@ -56,6 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     .With(x => x.StartDate, new MonthYearModel(startDate.ToString("MMyyyy")))
                     .With(x => x.EndDate, new MonthYearModel(endDate.ToString("MMyyyy")))
                     .With(x => x.DateOfBirth, new MonthYearModel(dateOfBirth.ToString("MMyyyy")))
+                    .With(x => x.EmploymentEndDate, new MonthYearModel(employmentEndDate.ToString("MMyyyy")))
                 .Create();
 
             _getVersionResponse = _fixture.Create<GetTrainingProgrammeResponse>();
@@ -195,8 +198,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             object viewModel = JsonConvert.SerializeObject(_editViewModel);
 
-            _mockTempDataDictionary.Setup(d => d.TryGetValue("EditApprenticeshipRequestViewModel", out viewModel))
-                .Returns(true);
+            _mockTempDataDictionary.Setup(d => d.Peek("EditApprenticeshipRequestViewModel"))
+                .Returns(viewModel);
         }
     }
 }

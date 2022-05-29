@@ -331,6 +331,38 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(_priceEpisodesResponse.PriceEpisodes.First().Cost, result.Cost);
         }
 
+        [TestCase(DeliveryModel.PortableFlexiJob, "Portable flexi-job")]
+        [TestCase(DeliveryModel.Regular, null)]
+        public async Task DeliveryModel_IsMapped(DeliveryModel dm, string expected)
+        {
+            _apprenticeshipResponse.DeliveryModel = dm;
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(expected, result.DeliveryModel);
+        }
+
+        [Test]
+        public async Task EmploymentEndDate_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(_apprenticeshipResponse.EmploymentEndDate, result.EmploymentEndDate);
+        }
+
+        [Test]
+        public async Task EmploymentPrice_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(_apprenticeshipResponse.EmploymentPrice, result.EmploymentPrice);
+        }
+
         [TestCase(ApprenticeshipStatus.Live, "Live")]
         [TestCase(ApprenticeshipStatus.Paused, "Paused")]
         [TestCase(ApprenticeshipStatus.WaitingToStart, "Waiting to start")]
@@ -482,18 +514,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(expectedTriageOption, result.EnableEdit);
         }
 
-        [TestCase(DeliveryModel.Regular, true)]
-        [TestCase(DeliveryModel.PortableFlexiJob, false)]
-        public async Task DeliveryModel_EnableEdit_Mapped(DeliveryModel deliveryModel, bool expectedEnableEdit)
-        {
-            _apprenticeshipResponse.DeliveryModel = deliveryModel;
-            _mockCommitmentsApiClient.WithEditableState();
-
-            var result = await _mapper.Map(_request);
-
-            Assert.AreEqual(expectedEnableEdit, result.EnableEdit);
-        }
-
         [TestCase(ApprenticeshipStatus.Live, true)]
         [TestCase(ApprenticeshipStatus.Paused, true)]
         [TestCase(ApprenticeshipStatus.WaitingToStart, true)]
@@ -567,6 +587,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Arrange 
             _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
             _apprenticeshipResponse.ContinuedById = continuedBy;
+            _apprenticeshipResponse.DeliveryModel = DeliveryModel.Regular;
             
             //Act
             var result = await _mapper.Map(_request);
@@ -585,6 +606,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Arrange
             _apprenticeshipResponse.Status = apprenticeshipStatus;
             _apprenticeshipResponse.ContinuedById = null;
+            _apprenticeshipResponse.DeliveryModel = DeliveryModel.Regular;
 
             //Act
             var result = await _mapper.Map(_request);
@@ -592,6 +614,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Assert
             Assert.AreEqual(expected, result.ShowChangeTrainingProviderLink);
         }
+
+        [TestCase(DeliveryModel.PortableFlexiJob, false)]
+        [TestCase(DeliveryModel.Regular, true)]
+        public async Task ShowChangeTrainingProviderLink_IsMapped_When_DeliveryModelIsSet(DeliveryModel dm, bool expected)
+        {
+            //Arrange 
+            _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
+            _apprenticeshipResponse.ContinuedById = null;
+            _apprenticeshipResponse.DeliveryModel = dm;
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(expected, result.ShowChangeTrainingProviderLink);
+        }
+
 
         [TestCase(ApprenticeshipIdFirst, 0, 3)]
         [TestCase(ApprenticeshipIdMiddle, 1, 3)]

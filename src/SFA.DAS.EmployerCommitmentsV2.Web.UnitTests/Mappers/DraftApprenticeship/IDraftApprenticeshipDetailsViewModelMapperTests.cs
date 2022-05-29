@@ -64,10 +64,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         [TestCase(DeliveryModel.Regular, Party.Employer, typeof(EditDraftApprenticeshipRequest))]
         [TestCase(DeliveryModel.Regular, Party.Provider, typeof(ViewDraftApprenticeshipRequest))]
         [TestCase(DeliveryModel.Regular, Party.TransferSender, typeof(ViewDraftApprenticeshipRequest))]
-        [TestCase(DeliveryModel.PortableFlexiJob, Party.Employer, typeof(ViewDraftApprenticeshipRequest))]
+        [TestCase(DeliveryModel.PortableFlexiJob, Party.Employer, typeof(EditDraftApprenticeshipRequest))]
         [TestCase(DeliveryModel.PortableFlexiJob, Party.Provider, typeof(ViewDraftApprenticeshipRequest))]
         [TestCase(DeliveryModel.PortableFlexiJob, Party.TransferSender, typeof(ViewDraftApprenticeshipRequest))]
-        public async Task When_Mapping_The_Mapping_Request_Is_View_Only_When_Portable(DeliveryModel deliveryModel, Party withParty, Type expectedMappingRequestType)
+        public async Task When_Mapping_The_Mapping_Request_Is_Not_View_Only_When_Portable(DeliveryModel deliveryModel, Party withParty, Type expectedMappingRequestType)
         {
             _modelMapper.Setup(x => x.Map<IDraftApprenticeshipViewModel>(It.IsAny<EditDraftApprenticeshipRequest>()))
                 .ReturnsAsync(new EditDraftApprenticeshipViewModel { DeliveryModel = deliveryModel });
