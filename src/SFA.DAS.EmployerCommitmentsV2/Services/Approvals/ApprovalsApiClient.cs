@@ -18,5 +18,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
         {
             return await _client.Get<GetPledgeApplicationResponse>($"PledgeApplications/{pledgeApplicationId}", null, cancellationToken);
         }
+
+        public async Task<GetAgencyResponse> GetAgency(int legalIdentityId, CancellationToken cancellationToken = default)
+        {
+            return await _client.Get<GetAgencyResponse>($"rofjaa/agency/{legalIdentityId}", null, cancellationToken);
+        }
     }
 }

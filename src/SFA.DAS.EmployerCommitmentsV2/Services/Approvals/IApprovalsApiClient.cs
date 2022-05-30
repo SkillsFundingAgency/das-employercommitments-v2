@@ -7,5 +7,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
     public interface IApprovalsApiClient
     {
         Task<GetPledgeApplicationResponse> GetPledgeApplication(int pledgeApplicationId, CancellationToken cancellationToken = default);
+        Task<GetAgencyResponse> GetAgency(int legalIdentityId, CancellationToken cancellationToken = default);
     }
 }
