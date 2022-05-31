@@ -274,10 +274,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             // redirect to add apprentice page
             return await Task.Run<ActionResult>(() =>
             {
-                if (true)
-                {
-                    return RedirectToAction("Apprentice", "Cohort", routeValues);
-                }
+                return RedirectToAction("Apprentice", "Cohort", routeValues);
             });
         }
 

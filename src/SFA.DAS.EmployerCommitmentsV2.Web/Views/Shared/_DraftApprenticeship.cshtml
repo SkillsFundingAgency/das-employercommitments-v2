@@ -146,7 +146,7 @@ else
                     Delivery model
                 </legend>
 
-                <span id="uln">@Model.DeliveryModel.ToDescription()</span> <a href="@Url.Action("SelectDeliveryModel", "Cohort", new { ReservationId = Model.ReservationId, ProviderId = Model.ProviderId, AccountLegalEntityHashedId = Model.LegalEntityId })">Edit</a>
+                <span id="uln">@Model.DeliveryModel.ToDescription()</span> <a href="@Url.Action("SelectDeliveryModel", "Cohort", new { ReservationId = Model.ReservationId, ProviderId = Model.ProviderId, AccountLegalEntityHashedId = Model.LegalEntityId, SelectedDeliveryModelId = (int)Model.DeliveryModel })">Edit</a>
 
 
 

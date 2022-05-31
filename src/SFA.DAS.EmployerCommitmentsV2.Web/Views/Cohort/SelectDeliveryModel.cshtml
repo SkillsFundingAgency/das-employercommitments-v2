@@ -35,7 +35,7 @@
                                     @entity.Name - @entity.Text
                                 </label>
                             </div>
-                       }
+                        }
                     </div>
                 </fieldset>
             </div>
@@ -48,4 +48,20 @@
 @section Back
 {
     <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new {Model.AccountHashedId})">Back to Apprentices</a>
+}
+
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            var url = new URL(document.URL);
+            var SelectedDeliveryModelId = url.searchParams.get("SelectedDeliveryModelId");
+            if (SelectedDeliveryModelId != null) {
+                $('#DeliveryModel-' + SelectedDeliveryModelId).attr('checked', true);
+            } else {
+                $('#DeliveryModel-0' + SelectedDeliveryModelId).attr('checked', true);
+            }
+        });
+    </script>
 }
