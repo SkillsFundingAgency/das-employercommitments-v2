@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
 
         public async Task<GetAgencyResponse> GetAgency(int legalIdentityId, CancellationToken cancellationToken = default)
         {
-            return await _client.Get<GetAgencyResponse>($"rofjaa/agency/{legalIdentityId}", null, cancellationToken);
+            return await _client.Get<GetAgencyResponse>($"https://localhost:5001/api/agencies/{legalIdentityId}", null, cancellationToken);
         }
     }
 }

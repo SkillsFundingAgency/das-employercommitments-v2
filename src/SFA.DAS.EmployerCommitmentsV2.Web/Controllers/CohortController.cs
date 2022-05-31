@@ -215,7 +215,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             if (!model.ReservationId.HasValue && model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
             {
                 var url = _linkGenerator.ReservationsLink(
-                    $"accounts/{model.AccountHashedId}/reservations/{model.AccountLegalEntityHashedId}/select?providerId={model.ProviderId}&transferSenderId={model.TransferSenderId}&encodedPledgeApplicationId={model.EncodedPledgeApplicationId}");
+                     $"accounts/{model.AccountHashedId}/reservations/{model.AccountLegalEntityHashedId}/select?providerId={model.ProviderId}&transferSenderId={model.TransferSenderId}&encodedPledgeApplicationId={model.EncodedPledgeApplicationId}");
                 return Redirect(url);
             }
 
@@ -244,6 +244,44 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("add/selectdeliverymodel")]
+        public async Task<IActionResult> SelectDeliveryModel(SelectDeliveryModelRequest request)
+        {
+            // map request to view model
+            var selectDeliveryModelViewModel = await _modelMapper.Map<SelectDeliveryModelViewModel>(request);
+            return View(selectDeliveryModelViewModel);
+        }
+
+        [HttpPost]
+        [Route("add/selectdeliverymodel")]
+        public async Task<IActionResult> SelectDeliveryModel(SelectDeliveryModelViewModel model)
+        {
+            // setup route values
+            var routeValues = new
+            {
+                model.AccountHashedId,
+                model.AccountLegalEntityHashedId,
+                model.ReservationId,
+                model.StartMonthYear,
+                model.CourseCode,
+                model.ProviderId,
+                model.TransferSenderId,
+                model.EncodedPledgeApplicationId,
+                model.DeliveryModel
+            };
+
+            // redirect to add apprentice page
+            return await Task.Run<ActionResult>(() =>
+            {
+                if (true)
+                {
+                    return RedirectToAction("Apprentice", "Cohort", routeValues);
+                }
+            });
+        }
+
+
         private Origin DetermineOrigin(AssignViewModel source)
         {
             if (source.ReservationId.HasValue)
@@ -258,7 +296,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add/apprentice")]
         public async Task<IActionResult> Apprentice(ApprenticeRequest request)
         {
+            // If a delivery model id is not set redirect user to choose one maintain route
+            if (request.DeliveryModel == null)
+            {
+                var routeValues = new
+                {
+                    request.AccountHashedId,
+                    request.AccountLegalEntityHashedId,
+                    request.ReservationId,
+                    request.StartMonthYear,
+                    request.CourseCode,
+                    request.ProviderId,
+                    request.TransferSenderId,
+                    request.EncodedPledgeApplicationId
+                };
+                return RedirectToAction("SelectDeliveryModel", "Cohort", routeValues);
+            }
+
             var model = await _modelMapper.Map<ApprenticeViewModel>(request);
+
+            // Set delivery model type
+            model.DeliveryModel = (CommitmentsV2.Types.DeliveryModel)request.DeliveryModel;
+
             return View(model);
         }
 

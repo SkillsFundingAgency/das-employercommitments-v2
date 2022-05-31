@@ -6,5 +6,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
     {
         public long AccountId { get; set; }
         public bool AutoCreated { get; set; }
+        public int? DeliveryModel { get; set; }
     }
 }

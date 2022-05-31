@@ -176,26 +176,35 @@
                                 Delivery model
                             </legend>
                             @Html.ValidationMessageFor(m => m.DeliveryModel, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DeliveryModel) })
-                            <div class="govuk-radios">
-                                <div class="govuk-radios__item">
-                                    <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Regular" id="DeliveryModelNormal" aria-describedby="DeliveryModelNormal-hint">
-                                    <label for="DeliveryModelNormal" class="govuk-label govuk-radios__label">
-                                        Regular
-                                    </label>
-                                    <div id="DeliveryModelNormal-hint" class="govuk-hint govuk-radios__hint">
-                                        The apprentice will have a single employer
-                                    </div>
-                                </div>
-                                <div class="govuk-radios__item">
-                                    <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.PortableFlexiJob" id="DeliveryModelFlexible" aria-describedby="DeliveryModelFlexible-hint">
-                                    <label for="DeliveryModelFlexible" class="govuk-label govuk-radios__label">
-                                        Portable flexi-job
-                                    </label>
-                                    <div id="DeliveryModelFlexible-hint" class="govuk-hint govuk-radios__hint">
-                                        The apprentice will move between multiple employers
-                                    </div>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Regular" id="DeliveryModelNormal" aria-describedby="DeliveryModelNormal-hint">
+                                <label for="DeliveryModelNormal" class="govuk-label govuk-radios__label">
+                                    Regular
+                                </label>
+                                <div id="DeliveryModelNormal-hint" class="govuk-hint govuk-radios__hint">
+                                    The apprentice will have a single employer
                                 </div>
                             </div>
+                            <div class="govuk-radios__item">
+                                <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.PortableFlexiJob" id="DeliveryModelFlexible" aria-describedby="DeliveryModelFlexible-hint">
+                                <label for="DeliveryModelFlexible" class="govuk-label govuk-radios__label">
+                                    Portable flexi-job
+                                </label>
+                                <div id="DeliveryModelFlexible-hint" class="govuk-hint govuk-radios__hint">
+                                    The apprentice will move between multiple employers
+                                </div>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.PortableFlexiJob" id="DeliveryModelFjaa" aria-describedby="DeliveryModelFjaa-hint">
+                                <label for="DeliveryModelFjaa" class="govuk-label govuk-radios__label">
+                                    Flexi-Job Agency
+                                </label>
+                                <div id="DeliveryModelFjaa-hint" class="govuk-hint govuk-radios__hint">
+                                    The apprentice will move between multiple employers
+                                </div>
+                            </div>
+                        </div>
                         </fieldset>
                     </div>
                     <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />

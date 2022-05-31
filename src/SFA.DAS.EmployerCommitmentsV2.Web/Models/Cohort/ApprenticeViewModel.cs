@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Authorization.ModelBinding;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
@@ -17,5 +18,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public bool AutoCreatedReservation { get; set; }
         public string EncodedPledgeApplicationId { get; set; }
         public long? PledgeApplicationId { get; set; }
+        public bool FjaaAgencyExists { get; set; }
     }
 }

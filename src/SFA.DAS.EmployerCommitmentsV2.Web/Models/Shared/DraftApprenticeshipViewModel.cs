@@ -25,6 +25,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
 
         public long ProviderId { get; set; }
         public string ProviderName { get; set; }
+        public string AccountLegalEntityHashedId { get; set; }
+        public string AccountLegalEntityId { get; set; }
+
+        public string LegalEntityId { get; set; }
+
 
         public string CohortReference { get; set; }
         public long? CohortId { get; set; }

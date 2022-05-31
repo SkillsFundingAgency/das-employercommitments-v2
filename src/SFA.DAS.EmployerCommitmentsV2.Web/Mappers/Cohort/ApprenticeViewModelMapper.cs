@@ -4,16 +4,19 @@ using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
     public class ApprenticeViewModelMapper : IMapper<ApprenticeRequest, ApprenticeViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly IFjaaAgencyService _fjaaAgencyService;
 
-        public ApprenticeViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
+        public ApprenticeViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IFjaaAgencyService fjaaAgencyService)
         {
             _commitmentsApiClient = commitmentsApiClient;
+            _fjaaAgencyService = fjaaAgencyService;
         }
 
         public async Task<ApprenticeViewModel> Map(ApprenticeRequest source)
@@ -27,11 +30,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
             var provider = await _commitmentsApiClient.GetProvider(source.ProviderId);
 
+            bool agencyExists = await _fjaaAgencyService.AgencyExists((int)source.AccountLegalEntityId);
+
             var result = new ApprenticeViewModel
             {
                 AccountHashedId = source.AccountHashedId,
                 AccountLegalEntityId = source.AccountLegalEntityId,
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
+                LegalEntityId = source.AccountLegalEntityHashedId,
                 LegalEntityName = ale.LegalEntityName,
                 StartDate = new MonthYearModel(source.StartMonthYear),
                 ReservationId = source.ReservationId,
@@ -42,7 +48,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 TransferSenderId = source.TransferSenderId,
                 EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
                 Origin = source.Origin,
-                AutoCreatedReservation = source.AutoCreated
+                AutoCreatedReservation = source.AutoCreated,
+                FjaaAgencyExists = agencyExists
             };
 
             return result;

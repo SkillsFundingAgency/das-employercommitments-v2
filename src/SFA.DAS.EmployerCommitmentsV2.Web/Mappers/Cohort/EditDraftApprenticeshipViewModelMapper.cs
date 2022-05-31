@@ -12,6 +12,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             {
                 DraftApprenticeshipId = source.DraftApprenticeshipId,
                 DraftApprenticeshipHashedId = source.DraftApprenticeshipHashedId,
+                AccountLegalEntityHashedId = source.DraftApprenticeshipHashedId,
+                LegalEntityId = source.DraftApprenticeshipHashedId,
                 CohortId = source.CohortId,
                 CohortReference = source.CohortReference,
                 ProviderId = source.ProviderId,
