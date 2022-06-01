@@ -6,6 +6,7 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using SFA.DAS.Encoding;
 using SFA.DAS.Http;
 using System;
@@ -20,11 +21,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
+        private readonly IFjaaAgencyService _iFjaaAgencyService;
 
-        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
+        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, IFjaaAgencyService iFjaaAgencyService)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
+            _iFjaaAgencyService = iFjaaAgencyService;
         }
 
         public async Task<DetailsViewModel> Map(DetailsRequest source)
@@ -45,7 +48,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
                 return _commitmentsApiClient.IsAgreementSigned(request);
             }
-
+            
             var cohortTask = _commitmentsApiClient.GetCohort(source.CohortId);
             var draftApprenticeshipsTask = _commitmentsApiClient.GetDraftApprenticeships(source.CohortId);
             var emailOverlapsTask = _commitmentsApiClient.GetEmailOverlapChecks(source.CohortId);
@@ -55,10 +58,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             cohort = await cohortTask;
             var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
             var emailOverlaps = (await emailOverlapsTask).ApprenticeshipEmailOverlaps.ToList();
+            bool isFjaaAgency = await _iFjaaAgencyService.AgencyExists((int)cohort.AccountLegalEntityId);
 
-            var courses = await GroupCourses(draftApprenticeships, emailOverlaps, cohort);
+            var courses = await GroupCourses(draftApprenticeships, emailOverlaps, cohort, isFjaaAgency);
             var viewOrApprove = cohort.WithParty == CommitmentsV2.Types.Party.Employer ? "Approve" : "View";
             var isAgreementSigned = await IsAgreementSigned(cohort.AccountLegalEntityId);
+            
 
             return new DetailsViewModel
             {
@@ -83,7 +88,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             };
         }
 
-        private async Task<IReadOnlyCollection<DetailsViewCourseGroupingModel>> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships, List<ApprenticeshipEmailOverlap> emailOverlaps, GetCohortResponse cohortResponse)
+        private async Task<IReadOnlyCollection<DetailsViewCourseGroupingModel>> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships, List<ApprenticeshipEmailOverlap> emailOverlaps, GetCohortResponse cohortResponse, bool isFjaaAgency = false)
         {
             var groupedByCourse = draftApprenticeships
                 .GroupBy(a => new { a.CourseCode, a.CourseName, a.DeliveryModel })
@@ -91,7 +96,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 {
                     CourseCode = course.Key.CourseCode,
                     CourseName = course.Key.CourseName,
-                    DeliveryModel = course.Key.DeliveryModel,
+                    // TODO - Change enum to flexi below
+                    DeliveryModel = isFjaaAgency ? DeliveryModel.PortableFlexiJob : course.Key.DeliveryModel,
                     DraftApprenticeships = course
                         // Sort before on raw properties rather than use displayName property post select for performance reasons
                         .OrderBy(a => a.FirstName)
