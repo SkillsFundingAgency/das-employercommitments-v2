@@ -49,12 +49,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         protected void AddDeliveryModel(int deliveryModel)
         {
-            if (deliveryModel == 0) { _models.Add(new DeliveryModelMapped() { Id = 0, Name = "Regular", Text = "The apprentice will have a single employment contract" }); }
-            if (deliveryModel == 1) { _models.Add(new DeliveryModelMapped() { Id = 1, Name = "Portable flexi-job", Text = "The apprentice will move between multiple employment contracts" }); }
-            if (deliveryModel == 2)
-            {
-                _models.Add(new DeliveryModelMapped() { Id = 2, Name = "Flexi-job agency", Text = "The apprentice will have a single employment contract with their flexi-job apprenticeship agency as they move between host businesses" });
-            }
+            if (deliveryModel == 0) { _models.Add(new DeliveryModelMapped() { Id = 0, Name = "Regular", Description = "The apprentice will have a single employment contract" }); }
+            if (deliveryModel == 1) { _models.Add(new DeliveryModelMapped() { Id = 1, Name = "Portable flexi-job", Description = "The apprentice will move between multiple employment contracts" }); }
+            if (deliveryModel == 2) { _models.Add(new DeliveryModelMapped() { Id = 2, Name = "Flexi-job agency", Description = "The apprentice will have a single employment contract with their flexi-job apprenticeship agency as they move between host businesses" }); }
         }
 
     }

@@ -137,21 +137,14 @@ else
     </div>
 
     @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.DeliveryModel))
-        {
-         
-
+    {
         <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.DeliveryModel, "govuk-form-group--error")">
             <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                     Delivery model
                 </legend>
-
                 <span id="uln">@Model.DeliveryModel.ToDescription()</span> <a href="@Url.Action("SelectDeliveryModel", "Cohort", new { ReservationId = Model.ReservationId, ProviderId = Model.ProviderId, AccountLegalEntityHashedId = Model.LegalEntityId, SelectedDeliveryModelId = (int)Model.DeliveryModel })">Edit</a>
-
-
-
                 @Html.ValidationMessageFor(m => m.DeliveryModel, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DeliveryModel) })
-
             </fieldset>
         </div>
     }
