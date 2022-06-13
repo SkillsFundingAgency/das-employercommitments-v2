@@ -134,6 +134,25 @@
                     @DisplayCost(Model.Cost)
                 </dd>
             </div>
+            @if (Model.RecognisePriorLearning == true)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Duration reduction (weeks)
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.DurationReducedBy
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Price reduction
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @DisplayCost(Model.PriceReducedBy)
+                    </dd>
+                </div>
+            }
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     Reference
