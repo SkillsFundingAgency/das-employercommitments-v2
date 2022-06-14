@@ -28,15 +28,19 @@
                             The apprentice will have a single employment contract
                         </div>
                     </div>
-                    <div class="govuk-radios__item">
-                        <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.PortableFlexiJob" id="DeliveryModelFlexible">
-                        <label for="DeliveryModelFlexible" class="govuk-label govuk-radios__label">
-                            Portable flexi-job
-                        </label>
-                        <div id="DeliveryModelFlexible-hint" class="govuk-hint govuk-radios__hint">
-                            The apprentice will move between multiple employment contracts
+
+                    @if (!Model.FjaaAgencyExists)
+                    {
+                        <div class="govuk-radios__item">
+                            <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.PortableFlexiJob" id="DeliveryModelFlexible">
+                            <label for="DeliveryModelFlexible" class="govuk-label govuk-radios__label">
+                                Portable flexi-job
+                            </label>
+                            <div id="DeliveryModelFlexible-hint" class="govuk-hint govuk-radios__hint">
+                                The apprentice will move between multiple employment contracts
+                            </div>
                         </div>
-                    </div>
+                     }
 
                     @if (Model.FjaaAgencyExists)
                     {
@@ -51,7 +55,7 @@
                         </div>
                     }
 
-                </div>
+                    </div>
                 </fieldset>
             </div>
             <button type="submit" class="govuk-button">Continue</button>
