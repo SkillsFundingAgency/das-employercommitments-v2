@@ -329,6 +329,20 @@
                     <td id="employer-reference" class="govuk-table__cell" colspan="2">@Model.EmployerReference</td>
                     <td class="govuk-table__cell"></td>
                 </tr>
+                @if(Model.RecognisePriorLearning == true)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Duration reduction (weeks)</th>
+                        <td id="apprentice-end-date" class="govuk-table__cell">@Model.DurationReducedBy</td>
+                        <td class="govuk-table__cell"></td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Price reduction</th>
+                        <td id="apprentice-end-date" class="govuk-table__cell">@Model.PriceReducedBy.FormatCost()</td>
+                        <td class="govuk-table__cell"></td>
+                    </tr>
+                }
                 @if (Model.TrainingType == ProgrammeType.Standard)
                 {
                     <tr class="govuk-table__row">
