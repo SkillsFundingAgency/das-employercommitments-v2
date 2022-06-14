@@ -40,8 +40,12 @@
 
   <ItemGroup>
     <Folder Include="Models\Apprentice\DataLock\" />
+    <Folder Include="Models\Agency\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Models\Agency\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
