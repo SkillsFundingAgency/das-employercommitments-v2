@@ -35,8 +35,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 
             if (agencyExists && !portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
             if (agencyExists && portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
-            if (!agencyExists && portableAllowed == true) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
-            if (!agencyExists && !portableAllowed == true) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+            if (!agencyExists && portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+            if (!agencyExists && !portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
 
             return new SelectDeliveryModelViewModel
             {

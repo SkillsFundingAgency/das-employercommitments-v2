@@ -29,17 +29,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
             bool portableAllowed = _deliveryModels.Contains(DeliveryModel.PortableFlexiJob) ? true : false;
 
-            //Employer is listed on the RoFJAA & is not involved in Portable flexi-job pilot = Regular & Flexi - Job Agency delivery models available for selection
             if (agencyExists && !portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
-
-            //Employer is listed on the RoFJAA & is also involved in Portable flexi - job pilot = Regular & Flexi - Job Agency delivery models available for selection
             if (agencyExists && portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
-
-            //Employer is not listed on the RoFJAA & is involved in Portable flexi - job pilot = Regular & Portable Flexi - Job delivery models available for selection
-            if (!agencyExists && portableAllowed == true) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
-
-            //Employer is not listed on the RoFJAA & is not involved in Portable flexi - job pilot = Regular delivery model automatically selected(options not surfaced to the user)
-            if (!agencyExists && !portableAllowed == true) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+            if (!agencyExists && portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+            if (!agencyExists && !portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
 
             return new SelectDeliveryModelViewModel
             { 
