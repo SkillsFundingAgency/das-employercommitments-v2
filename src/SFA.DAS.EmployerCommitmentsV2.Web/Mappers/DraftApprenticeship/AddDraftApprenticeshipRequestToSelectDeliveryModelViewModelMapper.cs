@@ -33,8 +33,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 
             bool portableAllowed = _deliveryModels.Contains(DeliveryModel.PortableFlexiJob) ? true : false;
 
-            if (agencyExists && portableAllowed == false) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
+            if (agencyExists && !portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
+            if (agencyExists && portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
             if (!agencyExists && portableAllowed == true) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+            if (!agencyExists && !portableAllowed == true) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
 
             return new SelectDeliveryModelViewModel
             {
