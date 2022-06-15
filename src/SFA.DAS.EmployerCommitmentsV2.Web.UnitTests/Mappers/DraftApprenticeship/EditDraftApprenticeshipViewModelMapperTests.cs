@@ -10,6 +10,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;
 using SFA.DAS.Encoding;
 
@@ -25,8 +26,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
         private GetDraftApprenticeshipResponse _draftApprenticeshipResponse;
         private Mock<IEncodingService> _encodingService;
+        private Mock<IFjaaAgencyService> _fjaaAgencyService;
         private string _encodedApprenticeshipId;
         private string _cohortReference;
+        private int _agencyId;
         private GetCohortResponse _cohort;
         private List<TrainingProgramme> _allTrainingProgrammes;
         private List<TrainingProgramme> _standardTrainingProgrammes;
@@ -40,6 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _standardTrainingProgrammes = autoFixture.CreateMany<TrainingProgramme>().ToList();
             _encodedApprenticeshipId = autoFixture.Create<string>();
             _cohortReference = autoFixture.Create<string>();
+            _agencyId = autoFixture.Create<int>();
 
             _encodingService = new Mock<IEncodingService>();
             _encodingService
@@ -75,9 +79,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _commitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_cohort);
 
+            _fjaaAgencyService = new Mock<IFjaaAgencyService>();
+            _fjaaAgencyService.Setup(x => x.AgencyExists(_agencyId)).ReturnsAsync(false);
+
+
             _source = autoFixture.Create<EditDraftApprenticeshipRequest>();
             _source.Cohort = _cohort;
-            _mapper = new EditDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object);
+            _mapper = new EditDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object, _fjaaAgencyService.Object);
 
             _result = await _mapper.Map(TestHelper.Clone(_source)) as EditDraftApprenticeshipViewModel;
         }

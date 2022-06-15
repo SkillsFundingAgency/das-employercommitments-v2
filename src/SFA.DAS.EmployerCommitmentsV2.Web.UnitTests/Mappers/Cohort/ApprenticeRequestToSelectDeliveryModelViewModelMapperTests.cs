@@ -7,6 +7,7 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,8 +19,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private ApprenticeRequestToSelectDeliveryModelViewModelMapper _mapper;
         private ApprenticeRequest _source;
         private Mock<IApprovalsApiClient> _approvalsApiClient;
+        private Mock<IFjaaAgencyService> _fjaaAgencyService;
         private ProviderCourseDeliveryModels _providerCourseDeliveryModels;
         private long _providerId;
+        private int _agencyId;
         private string _courseCode;
         private SelectDeliveryModelViewModel _result;
         
@@ -30,6 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             _providerId = autoFixture.Create<long>();
             _courseCode = autoFixture.Create<string>();
+            _agencyId = autoFixture.Create<int>();
 
             _source = autoFixture.Build<ApprenticeRequest>()
                 .With(x => x.StartMonthYear, "062020")
@@ -45,7 +49,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
             _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
-            _mapper = new ApprenticeRequestToSelectDeliveryModelViewModelMapper(_approvalsApiClient.Object);
+            _fjaaAgencyService = new Mock<IFjaaAgencyService>();
+            _fjaaAgencyService.Setup(x => x.AgencyExists(_agencyId)).ReturnsAsync(false);
+
+            _mapper = new ApprenticeRequestToSelectDeliveryModelViewModelMapper(_approvalsApiClient.Object, _fjaaAgencyService.Object);
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }
 

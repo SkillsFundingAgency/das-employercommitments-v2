@@ -20,6 +20,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public DeliveryModel? DeliveryModel { get; set; }
         public DeliveryModel[] DeliveryModels { get; set; }
         public string TransferSenderId { get; set; }
-        public bool FjaaAgencyExists { get; set; }
     }
 }

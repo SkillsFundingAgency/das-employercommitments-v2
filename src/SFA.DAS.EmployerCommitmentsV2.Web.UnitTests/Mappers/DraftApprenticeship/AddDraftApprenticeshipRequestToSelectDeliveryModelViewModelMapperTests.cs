@@ -11,6 +11,7 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
 {
@@ -22,10 +23,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
         private GetCohortResponse _getCohortResponse;
         private Mock<IApprovalsApiClient> _approvalsApiClient;
+        private Mock<IFjaaAgencyService> _fjaaAgencyService;
         private ProviderCourseDeliveryModels _providerCourseDeliveryModels;
         private long _providerId;
         private string _courseCode;
         private long _cohortId;
+        private int _agencyId;
         private SelectDeliveryModelViewModel _result;
 
         [SetUp]
@@ -36,6 +39,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _providerId = autoFixture.Create<long>();
             _courseCode = autoFixture.Create<string>();
             _cohortId = autoFixture.Create<long>();
+            _agencyId = autoFixture.Create<int>();
 
             _source = autoFixture.Build<AddDraftApprenticeshipRequest>()
                 .With(x => x.StartMonthYear, "062020")
@@ -62,7 +66,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
             _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
-            _mapper = new AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(_commitmentsApiClient.Object, _approvalsApiClient.Object);
+            _fjaaAgencyService = new Mock<IFjaaAgencyService>();
+            _fjaaAgencyService.Setup(x => x.AgencyExists(_agencyId)).ReturnsAsync(false);
+
+            _mapper = new AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(_commitmentsApiClient.Object, _approvalsApiClient.Object, _fjaaAgencyService.Object);
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }
 

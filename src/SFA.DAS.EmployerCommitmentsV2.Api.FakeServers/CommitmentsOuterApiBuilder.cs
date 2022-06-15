@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Api.FakeServers
                     .WithHeader("Content-Type", "application/json")
                     .WithBodyAsJson(new
                     {
-                        DeliveryModels = new[] { "Regular", "PortableFlexiJob" },
+                        DeliveryModels = new[] { "Regular", "PortableFlexiJob", "FlexiJobAgency" },
                     }));
 
             _server

@@ -5,7 +5,8 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitmentsV2.Web.Services;
-
+using SFA.DAS.CommitmentsV2.Types;
+using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -13,18 +14,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly IApprovalsApiClient _approvalsApiClient;
         private readonly IFjaaAgencyService _fjaaAgencyService;
+        protected List<DeliveryModel> _deliveryModels;
 
         public ApprenticeRequestToSelectDeliveryModelViewModelMapper(IApprovalsApiClient approvalsApiClient, IFjaaAgencyService fjaaAgencyService)
-        {
-            _approvalsApiClient = approvalsApiClient;
-            _fjaaAgencyService = fjaaAgencyService;
-        }
+            => (_approvalsApiClient, _fjaaAgencyService) = (approvalsApiClient, fjaaAgencyService);
 
         public async Task<SelectDeliveryModelViewModel> Map(ApprenticeRequest source)
         {
             var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(source.ProviderId, source.CourseCode);
 
+            _deliveryModels = response.DeliveryModels.ToList();
+
             bool agencyExists = await _fjaaAgencyService.AgencyExists((int)source.AccountLegalEntityId);
+
+            bool portableAllowed = _deliveryModels.Contains(DeliveryModel.PortableFlexiJob) ? true : false;
+
+            if (agencyExists && portableAllowed == false) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
+            if (!agencyExists && portableAllowed == true) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
 
             return new SelectDeliveryModelViewModel
             { 
@@ -33,13 +39,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 CourseCode = source.CourseCode,
                 DeliveryModel = source.DeliveryModel,
-                DeliveryModels = response.DeliveryModels.ToArray(),
+                DeliveryModels = _deliveryModels.ToArray(),
                 ProviderId = source.ProviderId,
                 ReservationId = source.ReservationId,
                 StartMonthYear = source.StartMonthYear,
-                TransferSenderId = source.TransferSenderId,
-                FjaaAgencyExists = agencyExists
+                TransferSenderId = source.TransferSenderId
             };
         }
+
+        protected void RemoveDeliveryModel(int deliveryModelId)
+        {
+            _deliveryModels.Remove((DeliveryModel)deliveryModelId);
+        }
+
     }
 }

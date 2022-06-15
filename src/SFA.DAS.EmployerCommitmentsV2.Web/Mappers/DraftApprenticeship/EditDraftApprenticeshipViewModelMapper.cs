@@ -33,8 +33,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 
             var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(source.Request.CohortId, source.Request.DraftApprenticeshipId);
 
-            bool agencyExists = await _fjaaAgencyService.AgencyExists((int)source.Cohort.AccountLegalEntityId);
-
             return new EditDraftApprenticeshipViewModel(draftApprenticeship.DateOfBirth, draftApprenticeship.StartDate, draftApprenticeship.EndDate)
             {
                 DraftApprenticeshipId = draftApprenticeship.Id,
@@ -58,7 +56,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 ProviderName = cohort.ProviderName,
                 LegalEntityName = source.Cohort.LegalEntityName,
                 IsContinuation = draftApprenticeship.IsContinuation,
-                FjaaAgencyExists = agencyExists,
                 Courses = (cohort.IsFundedByTransfer || cohort.LevyStatus == ApprenticeshipEmployerType.NonLevy) && !draftApprenticeship.IsContinuation
                     ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
                     : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes

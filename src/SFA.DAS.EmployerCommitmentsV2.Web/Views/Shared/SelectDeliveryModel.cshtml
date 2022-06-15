@@ -29,7 +29,7 @@
                         </div>
                     </div>
 
-                    @if (!Model.FjaaAgencyExists)
+                    @if (Model.DeliveryModels.ToList().Contains(DeliveryModel.PortableFlexiJob))
                     {
                         <div class="govuk-radios__item">
                             <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.PortableFlexiJob" id="DeliveryModelFlexible">
@@ -42,10 +42,10 @@
                         </div>
                      }
 
-                    @if (Model.FjaaAgencyExists)
+                    @if (Model.DeliveryModels.ToList().Contains(DeliveryModel.FlexiJobAgency))
                     {
                         <div class="govuk-radios__item">
-                            <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.PortableFlexiJob" id="DeliveryModelFjaa">
+                            <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.FlexiJobAgency" id="DeliveryModelFjaa">
                             <label for="DeliveryModelFjaa" class="govuk-label govuk-radios__label">
                                 Flexi-job agency
                             </label>
