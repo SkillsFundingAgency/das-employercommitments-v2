@@ -34,12 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
             if (_authorizationService.IsAuthorized(EmployerFeature.FJAA))
             {
                 bool agencyExists = await _fjaaAgencyService.AgencyExists((int)source.AccountLegalEntityId);
-                bool portable = _deliveryModels.Contains(DeliveryModel.PortableFlexiJob) ? true : false;
-
-                if (agencyExists && !portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
-                if (agencyExists && portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
-                if (!agencyExists && portable) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
-                if (!agencyExists && !portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+                _deliveryModels = await _fjaaAgencyService.AssignDeliveryModels(_deliveryModels, agencyExists);
             }
 
             return new SelectDeliveryModelViewModel
