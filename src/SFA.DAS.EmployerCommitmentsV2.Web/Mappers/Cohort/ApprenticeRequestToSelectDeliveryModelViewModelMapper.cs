@@ -22,17 +22,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         public async Task<SelectDeliveryModelViewModel> Map(ApprenticeRequest source)
         {
             var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(source.ProviderId, source.CourseCode);
-
             _deliveryModels = response.DeliveryModels.ToList();
 
             bool agencyExists = await _fjaaAgencyService.AgencyExists((int)source.AccountLegalEntityId);
+            bool portable = _deliveryModels.Contains(DeliveryModel.PortableFlexiJob) ? true : false;
 
-            bool portableAllowed = _deliveryModels.Contains(DeliveryModel.PortableFlexiJob) ? true : false;
-
-            if (agencyExists && !portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
-            if (agencyExists && portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
-            if (!agencyExists && portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
-            if (!agencyExists && !portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+            if (agencyExists && !portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
+            if (agencyExists && portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
+            if (!agencyExists && portable) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+            if (!agencyExists && !portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
 
             return new SelectDeliveryModelViewModel
             { 

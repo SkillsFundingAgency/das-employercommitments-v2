@@ -26,17 +26,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
             var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
 
             var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(cohort.ProviderId.HasValue ? cohort.ProviderId.Value : 0, source.CourseCode);
-
             _deliveryModels = response.DeliveryModels.ToList();
 
             bool agencyExists = await _fjaaAgencyService.AgencyExists((int)source.AccountLegalEntityId);
+            bool portable = _deliveryModels.Contains(DeliveryModel.PortableFlexiJob) ? true : false;
 
-            bool portableAllowed = _deliveryModels.Contains(DeliveryModel.PortableFlexiJob) ? true : false;
-
-            if (agencyExists && !portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
-            if (agencyExists && portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
-            if (!agencyExists && portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
-            if (!agencyExists && !portableAllowed) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+            if (agencyExists && !portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
+            if (agencyExists && portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
+            if (!agencyExists && portable) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+            if (!agencyExists && !portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
 
             return new SelectDeliveryModelViewModel
             {

@@ -45,12 +45,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 .Without(x => x.TransferSenderId).Create();
                         
             _providerCourseDeliveryModels = autoFixture.Create<ProviderCourseDeliveryModels>();
-
+          
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
             _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
             _fjaaAgencyService = new Mock<IFjaaAgencyService>();
-            _fjaaAgencyService.Setup(x => x.AgencyExists(_agencyId)).ReturnsAsync(false);
+            //_fjaaAgencyService.Setup(x => x.AgencyExists(_agencyId)).ReturnsAsync(true);
 
             _mapper = new ApprenticeRequestToSelectDeliveryModelViewModelMapper(_approvalsApiClient.Object, _fjaaAgencyService.Object);
             _result = await _mapper.Map(TestHelper.Clone(_source));

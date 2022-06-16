@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
             _fjaaAgencyService = new Mock<IFjaaAgencyService>();
-            _fjaaAgencyService.Setup(x => x.AgencyExists(_agencyId)).ReturnsAsync(false);
+            //_fjaaAgencyService.Setup(x => x.AgencyExists(_agencyId)).ReturnsAsync(true);
 
             _mapper = new AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(_commitmentsApiClient.Object, _approvalsApiClient.Object, _fjaaAgencyService.Object);
             _result = await _mapper.Map(TestHelper.Clone(_source));
