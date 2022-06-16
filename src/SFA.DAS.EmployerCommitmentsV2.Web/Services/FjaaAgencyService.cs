@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Services
             return false;
         }
 
-        public async Task<List<DeliveryModel>> AssignDeliveryModels(List<DeliveryModel> models, bool agencyExists)
+        public Task<List<DeliveryModel>> AssignDeliveryModels(List<DeliveryModel> models, bool agencyExists)
         {
             bool portable = models.Contains(DeliveryModel.PortableFlexiJob) ? true : false;
 
@@ -41,7 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Services
             if (!agencyExists && portable) { models.Remove(DeliveryModel.FlexiJobAgency); }
             if (!agencyExists && !portable) { models.Remove(DeliveryModel.PortableFlexiJob); models.Remove(DeliveryModel.FlexiJobAgency); }
 
-            return models;
+            return Task.FromResult(models);
         }
     }
 }
