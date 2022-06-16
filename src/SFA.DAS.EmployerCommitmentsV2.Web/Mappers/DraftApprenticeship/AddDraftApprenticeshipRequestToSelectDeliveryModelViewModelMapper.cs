@@ -1,6 +1,8 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.Authorization.Services;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
@@ -16,10 +18,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IApprovalsApiClient _approvalsApiClient;
         private readonly IFjaaAgencyService _fjaaAgencyService;
+        private readonly IAuthorizationService _authorizationService;
         protected List<DeliveryModel> _deliveryModels;
 
-        public AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient, IFjaaAgencyService fjaaAgencyService)
-            => (_commitmentsApiClient, _approvalsApiClient, _fjaaAgencyService) = (commitmentsApiClient, approvalsApiClient, fjaaAgencyService);
+        public AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient, IFjaaAgencyService fjaaAgencyService, IAuthorizationService authorizationService)
+            => (_commitmentsApiClient, _approvalsApiClient, _fjaaAgencyService, _authorizationService) = (commitmentsApiClient, approvalsApiClient, fjaaAgencyService, authorizationService);
 
         public async Task<SelectDeliveryModelViewModel> Map(AddDraftApprenticeshipRequest source)
         {
@@ -28,13 +31,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
             var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(cohort.ProviderId.HasValue ? cohort.ProviderId.Value : 0, source.CourseCode);
             _deliveryModels = response.DeliveryModels.ToList();
 
-            bool agencyExists = await _fjaaAgencyService.AgencyExists((int)source.AccountLegalEntityId);
-            bool portable = _deliveryModels.Contains(DeliveryModel.PortableFlexiJob) ? true : false;
+            if (_authorizationService.IsAuthorized(EmployerFeature.FJAA))
+            {
+                bool agencyExists = await _fjaaAgencyService.AgencyExists((int)source.AccountLegalEntityId);
+                bool portable = _deliveryModels.Contains(DeliveryModel.PortableFlexiJob) ? true : false;
 
-            if (agencyExists && !portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
-            if (agencyExists && portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
-            if (!agencyExists && portable) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
-            if (!agencyExists && !portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+                if (agencyExists && !portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
+                if (agencyExists && portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
+                if (!agencyExists && portable) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+                if (!agencyExists && !portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+            }
 
             return new SelectDeliveryModelViewModel
             {

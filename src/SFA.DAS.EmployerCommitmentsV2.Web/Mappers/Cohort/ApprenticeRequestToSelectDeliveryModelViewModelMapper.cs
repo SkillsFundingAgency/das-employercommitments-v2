@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using SFA.DAS.CommitmentsV2.Types;
 using System.Collections.Generic;
+using SFA.DAS.Authorization.Services;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -14,23 +16,27 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly IApprovalsApiClient _approvalsApiClient;
         private readonly IFjaaAgencyService _fjaaAgencyService;
+        private readonly IAuthorizationService _authorizationService;
         protected List<DeliveryModel> _deliveryModels;
 
-        public ApprenticeRequestToSelectDeliveryModelViewModelMapper(IApprovalsApiClient approvalsApiClient, IFjaaAgencyService fjaaAgencyService)
-            => (_approvalsApiClient, _fjaaAgencyService) = (approvalsApiClient, fjaaAgencyService);
+        public ApprenticeRequestToSelectDeliveryModelViewModelMapper(IApprovalsApiClient approvalsApiClient, IFjaaAgencyService fjaaAgencyService, IAuthorizationService authorizationService)
+            => (_approvalsApiClient, _fjaaAgencyService, _authorizationService) = (approvalsApiClient, fjaaAgencyService, authorizationService);
 
         public async Task<SelectDeliveryModelViewModel> Map(ApprenticeRequest source)
         {
             var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(source.ProviderId, source.CourseCode);
             _deliveryModels = response.DeliveryModels.ToList();
 
-            bool agencyExists = await _fjaaAgencyService.AgencyExists((int)source.AccountLegalEntityId);
-            bool portable = _deliveryModels.Contains(DeliveryModel.PortableFlexiJob) ? true : false;
+            if (_authorizationService.IsAuthorized(EmployerFeature.FJAA))
+            {
+                bool agencyExists = await _fjaaAgencyService.AgencyExists((int)source.AccountLegalEntityId);
+                bool portable = _deliveryModels.Contains(DeliveryModel.PortableFlexiJob) ? true : false;
 
-            if (agencyExists && !portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
-            if (agencyExists && portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
-            if (!agencyExists && portable) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
-            if (!agencyExists && !portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+                if (agencyExists && !portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
+                if (agencyExists && portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); }
+                if (!agencyExists && portable) { this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+                if (!agencyExists && !portable) { this.RemoveDeliveryModel((int)DeliveryModel.PortableFlexiJob); this.RemoveDeliveryModel((int)DeliveryModel.FlexiJobAgency); }
+            }
 
             return new SelectDeliveryModelViewModel
             { 
