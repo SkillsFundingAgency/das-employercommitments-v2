@@ -19,7 +19,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
         private readonly IApprovalsApiClient _approvalsApiClient;
         private readonly IFjaaAgencyService _fjaaAgencyService;
         private readonly IAuthorizationService _authorizationService;
-        protected List<DeliveryModel> _deliveryModels;
 
         public AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient, IFjaaAgencyService fjaaAgencyService, IAuthorizationService authorizationService)
             => (_commitmentsApiClient, _approvalsApiClient, _fjaaAgencyService, _authorizationService) = (commitmentsApiClient, approvalsApiClient, fjaaAgencyService, authorizationService);
@@ -29,12 +28,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
             var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
 
             var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(cohort.ProviderId.HasValue ? cohort.ProviderId.Value : 0, source.CourseCode);
-            _deliveryModels = response.DeliveryModels.ToList();
+            var deliveryModels = response.DeliveryModels.ToList();
 
             if (_authorizationService.IsAuthorized(EmployerFeature.FJAA))
             {
                 bool agencyExists = await _fjaaAgencyService.AgencyExists((int)source.AccountLegalEntityId);
-                _deliveryModels = await _fjaaAgencyService.AssignDeliveryModels(_deliveryModels, agencyExists);
+                deliveryModels = await _fjaaAgencyService.AssignDeliveryModels(deliveryModels, agencyExists);
             }
 
             return new SelectDeliveryModelViewModel
@@ -46,16 +45,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 CohortReference = source.CohortReference,
                 CourseCode = source.CourseCode,
                 DeliveryModel = source.DeliveryModel,
-                DeliveryModels = _deliveryModels.ToArray(),
+                DeliveryModels = deliveryModels.ToArray(),
                 ProviderId = source.ProviderId,
                 ReservationId = source.ReservationId,
                 StartMonthYear = source.StartMonthYear,
             };
-        }
-
-        protected void RemoveDeliveryModel(int deliveryModelId)
-        {
-            _deliveryModels.Remove((DeliveryModel)deliveryModelId);
         }
     }
 }
