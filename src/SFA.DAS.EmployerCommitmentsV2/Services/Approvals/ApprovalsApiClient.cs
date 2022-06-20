@@ -19,9 +19,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
             return await _client.Get<GetPledgeApplicationResponse>($"PledgeApplications/{pledgeApplicationId}", null, cancellationToken);
         }
 
-        public async Task<ProviderCourseDeliveryModels> GetProviderCourseDeliveryModels(long providerId, string courseCode, int legalEntityId, CancellationToken cancellationToken = default)
+        public async Task<ProviderCourseDeliveryModels> GetProviderCourseDeliveryModels(long providerId, string courseCode, string encodedAccountId, long accountLegalEntityId = 0, CancellationToken cancellationToken = default)
         {
-            return await _client.Get<ProviderCourseDeliveryModels>($"Providers/{providerId}/courses/{courseCode}?legalEntityId={legalEntityId}", null, cancellationToken);
+            return await _client.Get<ProviderCourseDeliveryModels>($"Providers/{providerId}/courses/{courseCode}?encodedAccountId={encodedAccountId}&accountLegalEntityId={accountLegalEntityId}", null, cancellationToken);
         }
     }
 }
