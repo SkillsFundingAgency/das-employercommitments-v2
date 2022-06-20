@@ -26,6 +26,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private int _agencyId;
         private int _legalEntityId;
         private string _courseCode;
+        private long _accountLegalEntityId;
+        private string _encodedAccountId;
         private SelectDeliveryModelViewModel _result;
         
         [SetUp]
@@ -37,6 +39,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _courseCode = autoFixture.Create<string>();
             _agencyId = autoFixture.Create<int>();
             _legalEntityId = autoFixture.Create<int>();
+            _accountLegalEntityId = autoFixture.Create<long>();
+            _encodedAccountId = autoFixture.Create<string>();
 
             _source = autoFixture.Build<ApprenticeRequest>()
                 .With(x => x.StartMonthYear, "062020")
@@ -50,7 +54,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _providerCourseDeliveryModels = autoFixture.Create<ProviderCourseDeliveryModels>();
           
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
-            _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, _legalEntityId, It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
+            _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, _encodedAccountId, _accountLegalEntityId, It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
             _authService = new Mock<IAuthorizationService>();
 

@@ -33,7 +33,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private Mock<IAuthorizationService> _authorizationService;
         private SelectDeliveryModelViewModel _result;
         private long _cohortId;
-        private int _legalEntityId;
+        private long _accountLegalEntityId;
+        private string _encodedAccountId;
         private Fixture _autoFixture;
 
         [SetUp]
@@ -41,7 +42,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             _autoFixture = new Fixture();
             _cohortId = _autoFixture.Create<long>();
-            _legalEntityId = _autoFixture.Create<int>();
+            _accountLegalEntityId = _autoFixture.Create<long>();
+            _encodedAccountId = _autoFixture.Create<string>();
 
             _standardTrainingProgrammes = _autoFixture.CreateMany<TrainingProgramme>().ToList();
             _allTrainingProgrammes = _autoFixture.CreateMany<TrainingProgramme>().ToList();
@@ -84,7 +86,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 });
 
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
-            _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_getCohortResponse.ProviderId.Value, _source.CourseCode, _legalEntityId,
+            _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_getCohortResponse.ProviderId.Value, _source.CourseCode, _encodedAccountId, _accountLegalEntityId,
                     It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
             _authorizationService = new Mock<IAuthorizationService>();
