@@ -31,6 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private ProviderCourseDeliveryModels _providerCourseDeliveryModels;
         private SelectDeliveryModelViewModel _result;
         private long _cohortId;
+        private int _legalEntityId;
         private Fixture _autoFixture;
 
         [SetUp]
@@ -38,6 +39,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             _autoFixture = new Fixture();
             _cohortId = _autoFixture.Create<long>();
+            _legalEntityId = _autoFixture.Create<int>();
 
             _standardTrainingProgrammes = _autoFixture.CreateMany<TrainingProgramme>().ToList();
             _allTrainingProgrammes = _autoFixture.CreateMany<TrainingProgramme>().ToList();
@@ -80,7 +82,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 });
 
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
-            _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_getCohortResponse.ProviderId.Value, _source.CourseCode,
+            _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_getCohortResponse.ProviderId.Value, _source.CourseCode, _legalEntityId,
                     It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
             _mapper = new EditApprenticeshipRequestViewModelToSelectDeliveryModelViewModelMapper(_commitmentsApiClient.Object, _approvalsApiClient.Object);

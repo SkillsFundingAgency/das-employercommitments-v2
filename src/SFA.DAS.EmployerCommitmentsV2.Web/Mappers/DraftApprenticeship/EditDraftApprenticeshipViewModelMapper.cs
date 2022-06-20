@@ -15,16 +15,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
-        private readonly IFjaaAgencyService _fjaaAgencyService;
 
         public EditDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient,
-            IEncodingService encodingService,
-            IFjaaAgencyService fjaaAgencyService
-            )
+            IEncodingService encodingService            )
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
-            _fjaaAgencyService = fjaaAgencyService;
         }
 
         public async Task<IDraftApprenticeshipViewModel> Map(EditDraftApprenticeshipRequest source)

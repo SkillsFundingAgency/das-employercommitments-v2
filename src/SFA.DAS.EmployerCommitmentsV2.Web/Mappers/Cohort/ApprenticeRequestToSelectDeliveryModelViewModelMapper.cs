@@ -15,22 +15,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     public class ApprenticeRequestToSelectDeliveryModelViewModelMapper : IMapper<ApprenticeRequest, SelectDeliveryModelViewModel>
     {
         private readonly IApprovalsApiClient _approvalsApiClient;
-        private readonly IFjaaAgencyService _fjaaAgencyService;
         private readonly IAuthorizationService _authorizationService;
 
-        public ApprenticeRequestToSelectDeliveryModelViewModelMapper(IApprovalsApiClient approvalsApiClient, IFjaaAgencyService fjaaAgencyService, IAuthorizationService authorizationService)
-            => (_approvalsApiClient, _fjaaAgencyService, _authorizationService) = (approvalsApiClient, fjaaAgencyService, authorizationService);
+        public ApprenticeRequestToSelectDeliveryModelViewModelMapper(IApprovalsApiClient approvalsApiClient, IAuthorizationService authorizationService)
+            => (_approvalsApiClient, _authorizationService) = (approvalsApiClient, authorizationService);
 
         public async Task<SelectDeliveryModelViewModel> Map(ApprenticeRequest source)
         {
-            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(source.ProviderId, source.CourseCode);
-            var deliveryModels = response.DeliveryModels.ToList();
+            int legalEntityId = 0;
 
             if (_authorizationService.IsAuthorized(EmployerFeature.FJAA))
             {
-                bool agencyExists = await _fjaaAgencyService.AgencyExists((int)source.AccountLegalEntityId);
-                deliveryModels = await _fjaaAgencyService.AssignDeliveryModels(deliveryModels, agencyExists);
+                legalEntityId = (int)source.AccountLegalEntityId;
             }
+
+            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(source.ProviderId, source.CourseCode, legalEntityId);
+            var deliveryModels = response.DeliveryModels.ToList();
 
             return new SelectDeliveryModelViewModel
             { 

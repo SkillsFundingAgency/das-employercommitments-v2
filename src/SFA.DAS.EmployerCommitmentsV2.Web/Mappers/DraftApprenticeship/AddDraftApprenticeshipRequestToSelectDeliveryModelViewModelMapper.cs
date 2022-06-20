@@ -17,24 +17,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IApprovalsApiClient _approvalsApiClient;
-        private readonly IFjaaAgencyService _fjaaAgencyService;
         private readonly IAuthorizationService _authorizationService;
 
-        public AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient, IFjaaAgencyService fjaaAgencyService, IAuthorizationService authorizationService)
-            => (_commitmentsApiClient, _approvalsApiClient, _fjaaAgencyService, _authorizationService) = (commitmentsApiClient, approvalsApiClient, fjaaAgencyService, authorizationService);
+        public AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient, IAuthorizationService authorizationService)
+            => (_commitmentsApiClient, _approvalsApiClient, _authorizationService) = (commitmentsApiClient, approvalsApiClient, authorizationService);
 
         public async Task<SelectDeliveryModelViewModel> Map(AddDraftApprenticeshipRequest source)
         {
-            var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
-
-            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(cohort.ProviderId.HasValue ? cohort.ProviderId.Value : 0, source.CourseCode);
-            var deliveryModels = response.DeliveryModels.ToList();
+            int legalEntityId = 0;
 
             if (_authorizationService.IsAuthorized(EmployerFeature.FJAA))
             {
-                bool agencyExists = await _fjaaAgencyService.AgencyExists((int)source.AccountLegalEntityId);
-                deliveryModels = await _fjaaAgencyService.AssignDeliveryModels(deliveryModels, agencyExists);
+                legalEntityId = (int)source.AccountLegalEntityId;
             }
+
+            var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
+
+            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(cohort.ProviderId.HasValue ? cohort.ProviderId.Value : 0, source.CourseCode, legalEntityId);
+
+            var deliveryModels = response.DeliveryModels.ToList();
 
             return new SelectDeliveryModelViewModel
             {

@@ -26,7 +26,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
         private GetDraftApprenticeshipResponse _draftApprenticeshipResponse;
         private Mock<IEncodingService> _encodingService;
-        private Mock<IFjaaAgencyService> _fjaaAgencyService;
         private string _encodedApprenticeshipId;
         private string _cohortReference;
         private int _agencyId;
@@ -79,13 +78,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _commitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_cohort);
 
-            _fjaaAgencyService = new Mock<IFjaaAgencyService>();
-            //_fjaaAgencyService.Setup(x => x.AgencyExists(_agencyId)).ReturnsAsync(true);
-
-
             _source = autoFixture.Create<EditDraftApprenticeshipRequest>();
             _source.Cohort = _cohort;
-            _mapper = new EditDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object, _fjaaAgencyService.Object);
+            _mapper = new EditDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object);
 
             _result = await _mapper.Map(TestHelper.Clone(_source)) as EditDraftApprenticeshipViewModel;
         }
