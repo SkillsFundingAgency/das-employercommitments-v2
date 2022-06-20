@@ -30,7 +30,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             }
 
             var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(source.ProviderId, source.CourseCode, legalEntityId);
-            var deliveryModels = response.DeliveryModels.ToList();
 
             return new SelectDeliveryModelViewModel
             { 
@@ -39,7 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 CourseCode = source.CourseCode,
                 DeliveryModel = source.DeliveryModel,
-                DeliveryModels = deliveryModels.ToArray(),
+                DeliveryModels = response.DeliveryModels.ToArray(),
                 ProviderId = source.ProviderId,
                 ReservationId = source.ReservationId,
                 StartMonthYear = source.StartMonthYear,

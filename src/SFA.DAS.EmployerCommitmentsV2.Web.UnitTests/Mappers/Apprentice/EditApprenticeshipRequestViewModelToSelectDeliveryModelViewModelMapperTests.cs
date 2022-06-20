@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
@@ -29,6 +30,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private List<TrainingProgramme> _standardTrainingProgrammes;
         private List<TrainingProgramme> _allTrainingProgrammes;
         private ProviderCourseDeliveryModels _providerCourseDeliveryModels;
+        private Mock<IAuthorizationService> _authorizationService;
         private SelectDeliveryModelViewModel _result;
         private long _cohortId;
         private int _legalEntityId;
@@ -85,7 +87,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_getCohortResponse.ProviderId.Value, _source.CourseCode, _legalEntityId,
                     It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
-            _mapper = new EditApprenticeshipRequestViewModelToSelectDeliveryModelViewModelMapper(_commitmentsApiClient.Object, _approvalsApiClient.Object);
+            _authorizationService = new Mock<IAuthorizationService>();
+
+            _mapper = new EditApprenticeshipRequestViewModelToSelectDeliveryModelViewModelMapper(_commitmentsApiClient.Object, _approvalsApiClient.Object, _authorizationService.Object);
 
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }

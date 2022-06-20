@@ -35,8 +35,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 
             var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(cohort.ProviderId.HasValue ? cohort.ProviderId.Value : 0, source.CourseCode, legalEntityId);
 
-            var deliveryModels = response.DeliveryModels.ToList();
-
             return new SelectDeliveryModelViewModel
             {
                 AccountHashedId = source.AccountHashedId,
@@ -46,7 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 CohortReference = source.CohortReference,
                 CourseCode = source.CourseCode,
                 DeliveryModel = source.DeliveryModel,
-                DeliveryModels = deliveryModels.ToArray(),
+                DeliveryModels = response.DeliveryModels.ToArray(),
                 ProviderId = source.ProviderId,
                 ReservationId = source.ReservationId,
                 StartMonthYear = source.StartMonthYear,
