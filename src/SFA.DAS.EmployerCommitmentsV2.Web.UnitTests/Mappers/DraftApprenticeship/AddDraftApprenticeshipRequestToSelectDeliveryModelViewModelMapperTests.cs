@@ -69,7 +69,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _providerCourseDeliveryModels = autoFixture.Create<ProviderCourseDeliveryModels>();
 
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
-            _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, _encodedAccountId, _accountLegalEntityId, It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
+            _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, _accountLegalEntityId, It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
             _authService = new Mock<IAuthorizationService>();
 

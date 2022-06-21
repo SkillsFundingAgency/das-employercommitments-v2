@@ -23,15 +23,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         public async Task<SelectDeliveryModelViewModel> Map(ApprenticeRequest source)
         {
             long accountLegalEntityId = 0;
-            string encodedAccountId = string.Empty;
 
             if (_authorizationService.IsAuthorized(EmployerFeature.FJAA))
             {
                 accountLegalEntityId = source.AccountLegalEntityId;
-                encodedAccountId = source.AccountHashedId;
             }
 
-            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(source.ProviderId, source.CourseCode, encodedAccountId, accountLegalEntityId);
+            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(source.ProviderId, source.CourseCode, accountLegalEntityId);
 
             return new SelectDeliveryModelViewModel
             { 

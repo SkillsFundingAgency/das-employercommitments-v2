@@ -25,15 +25,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             var cohort = await _commitmentsApiClient.GetCohort(apprenticeship.CohortId);
 
             long accountLegalEntityId = 0;
-            string encodedAccountId = string.Empty;
 
             if (_authorizationService.IsAuthorized(EmployerFeature.FJAA))
             {
                 accountLegalEntityId = cohort.AccountLegalEntityId;
-                encodedAccountId = source.AccountHashedId;
             }
 
-            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(cohort.ProviderId.HasValue ? cohort.ProviderId.Value : 0, source.CourseCode, encodedAccountId, accountLegalEntityId);
+            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(cohort.ProviderId.HasValue ? cohort.ProviderId.Value : 0, source.CourseCode, accountLegalEntityId);
 
             return new SelectDeliveryModelViewModel
             {

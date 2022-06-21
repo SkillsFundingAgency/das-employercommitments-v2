@@ -86,7 +86,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 });
 
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
-            _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_getCohortResponse.ProviderId.Value, _source.CourseCode, _encodedAccountId, _accountLegalEntityId,
+            _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_getCohortResponse.ProviderId.Value, _source.CourseCode, _accountLegalEntityId,
                     It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
             _authorizationService = new Mock<IAuthorizationService>();
