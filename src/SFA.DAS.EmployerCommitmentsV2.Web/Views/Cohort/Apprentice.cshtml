@@ -33,6 +33,8 @@
             @Html.HiddenFor(x => x.Origin)
             @Html.HiddenFor(x => x.EncodedPledgeApplicationId)
 
+            <button type="submit" id="defaultButton" aria-hidden="true" class="govuk-visually-hidden" tabindex="-1"></button>
+
             <partial name="_DraftApprenticeship" for="@Model" />
 
             <button id="continue-button" type="submit" class="govuk-button">Save and continue</button>
