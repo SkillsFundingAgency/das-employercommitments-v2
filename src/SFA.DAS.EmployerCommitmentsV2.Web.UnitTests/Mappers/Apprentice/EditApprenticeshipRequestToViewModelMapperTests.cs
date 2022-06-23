@@ -671,7 +671,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             Assert.AreEqual(ApprenticeshipResponse.ProviderId, _viewModel.ProviderId);
         }
-
-
     }
 }
