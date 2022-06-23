@@ -41,11 +41,9 @@
 
   <ItemGroup>
     <Folder Include="Models\Apprentice\DataLock\" />
-    <Folder Include="Models\Agency\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Models\Agency\" />
     <None Remove="SFA.DAS.CommitmentsV2.Shared" />
   </ItemGroup>
   <ItemGroup>
