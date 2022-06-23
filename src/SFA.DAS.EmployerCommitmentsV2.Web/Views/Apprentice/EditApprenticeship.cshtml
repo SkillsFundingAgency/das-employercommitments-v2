@@ -3,8 +3,11 @@
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.CommitmentsV2.Api.Client
+@using SFA.DAS.EmployerCommitmentsV2.Web.Services
 @inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService
 @inject ICommitmentsApiClient CommitmentsApiClient
+@inject IDeliveryModelService DeliveryModelService
+
 
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditApprenticeshipRequestViewModel
 
@@ -13,8 +16,9 @@
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "edit-apprentices-detail";
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/edit-apprentice-details";
+    var multipleDeliveryModels = await DeliveryModelService.HasMultipleDeliveryModels(Model.ProviderId, Model.CourseCode);
 
-    Model.Cost = (int?) Model.Cost;
+    Model.Cost = (int?)Model.Cost;
     Model.CourseCode = ViewData.ModelState[nameof(Model.CourseCode)]?.AttemptedValue ?? Model.CourseCode;
     Model.DeliveryModel = ViewData.ModelState[nameof(Model.DeliveryModel)]?.AttemptedValue.ToEnum<DeliveryModel>() ?? Model.DeliveryModel;
 }
@@ -32,6 +36,7 @@
             @Html.HiddenFor(x => x.Version)
             @Html.HiddenFor(x => x.Option)
             @Html.HiddenFor(x => x.EmailShouldBePresent)
+            @Html.HiddenFor(x => x.ProviderId)
 
             @if (Model.IsContinuation)
             {
@@ -152,7 +157,7 @@
                 <dd class="das-definition-list__definition" id="uln">@Model.ULN</dd>
                 @Html.HiddenFor(x => x.ULN)
             </dl>
-            
+
             @if (Model.IsLockedForUpdate || Model.IsUpdateLockedForStartDateAndCourse || Model.IsContinuation)
             {
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
@@ -168,12 +173,12 @@
                     <dl class="das-definition-list">
                         <dt asp-for="DeliveryModel" class="das-definition-list__title">Apprenticeship delivery model</dt>
                         <dd class="das-definition-list__definition" id="trainingName">@Model.DeliveryModel.ToDescription()</dd>
-                    </dl>                    
+                    </dl>
                 }
                 @Html.HiddenFor(x => x.DeliveryModel)
             }
             else
-            {                
+            {
                 @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.DeliveryModel))
                 {
                     if (!string.IsNullOrWhiteSpace(Model.CourseCode))
@@ -193,7 +198,7 @@
                     </div>
                     <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
 
-                    if (Model.DeliveryModel != DeliveryModel.Regular)
+                    if (multipleDeliveryModels)
                     {
                         <div class="govuk-form-group">
                             <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Delivery model</p>

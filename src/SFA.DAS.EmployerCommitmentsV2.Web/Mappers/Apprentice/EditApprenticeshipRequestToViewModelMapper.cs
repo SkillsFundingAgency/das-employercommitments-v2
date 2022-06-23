@@ -69,7 +69,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 AccountHashedId = source.AccountHashedId,
                 EmailAddressConfirmedByApprentice = apprenticeship.EmailAddressConfirmedByApprentice,
                 EmailShouldBePresent = apprenticeship.EmailShouldBePresent,
-                EmploymentPrice = apprenticeship.EmploymentPrice
+                EmploymentPrice = apprenticeship.EmploymentPrice,
+                ProviderId = apprenticeship.ProviderId
             };
 
             return result;

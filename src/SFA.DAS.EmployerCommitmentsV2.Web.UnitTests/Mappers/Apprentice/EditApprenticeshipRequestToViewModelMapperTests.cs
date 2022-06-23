@@ -380,6 +380,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(expectedIsEndDateLockedForUpdate, viewModel.IsEndDateLockedForUpdate);
         }
 
+        [Test]
+        public async Task ProviderId_IsMapped()
+        {
+            //Act
+            await _fixture.Map();
+
+            //Assert
+            _fixture.VerifyEmailIsMapped();
+        }
     }
 
     public class EditApprenticeshipRequestToViewModelMapperTestsFixture
@@ -657,5 +666,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _mapper = new EditApprenticeshipRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockAcademicYearDateProvider.Object, _mockCurrentDateTimeProvider.Object);
         }
+
+        internal void VerifyProviderIdIsMapped()
+        {
+            Assert.AreEqual(ApprenticeshipResponse.ProviderId, _viewModel.ProviderId);
+        }
+
+
     }
 }
