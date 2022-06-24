@@ -191,7 +191,7 @@
                         <br />
                             @if (!Model.IsReadOnly)
                             {
-                                <a class="govuk-link edit-apprentice" href="@Url.RouteUrl("Details-View", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">View</a>
+                                <a class="govuk-link view-apprentice" href="@Url.RouteUrl("Details-View", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">View</a>
                             }
                         <br />
                         @if (!Model.IsReadOnly)
