@@ -21,5 +21,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public string StartMonthYear { get; set; }
         public DeliveryModel? DeliveryModel { get; set; }
         public string TransferSenderId { get; set; }
+        public string EncodedPledgeApplicationId { get; set; }
     }
 }
