@@ -126,22 +126,14 @@
                     </dd>
                 </div>
             }
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Total agreed apprenticeship price
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @DisplayCost(Model.Cost)
-                </dd>
-            </div>
             @if (Model.RecognisePriorLearning == true)
             {
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
-                        Duration reduction (weeks)
+                        Duration reduction
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        @Model.DurationReducedBy
+                        @Model.DurationReducedBy&nbsp;weeks
                     </dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -153,6 +145,14 @@
                     </dd>
                 </div>
             }
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Total agreed apprenticeship price
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @DisplayCost(Model.Cost)
+                </dd>
+            </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     Reference
