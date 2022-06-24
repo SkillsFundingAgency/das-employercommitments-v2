@@ -6,6 +6,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Features
 
         public const string ManageApprenticesV2 = Prefix + "ManageApprenticesV2";
         public const string DeliveryModel = Prefix + "DeliveryModel";
-        public const string FJAA = Prefix + "FJAA";
     }
 }
