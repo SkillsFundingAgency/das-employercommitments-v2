@@ -15,10 +15,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     public class ApprenticeRequestToSelectDeliveryModelViewModelMapper : IMapper<ApprenticeRequest, SelectDeliveryModelViewModel>
     {
         private readonly IApprovalsApiClient _approvalsApiClient;
-        private readonly IAuthorizationService _authorizationService;
 
-        public ApprenticeRequestToSelectDeliveryModelViewModelMapper(IApprovalsApiClient approvalsApiClient, IAuthorizationService authorizationService)
-            => (_approvalsApiClient, _authorizationService) = (approvalsApiClient, authorizationService);
+        public ApprenticeRequestToSelectDeliveryModelViewModelMapper(IApprovalsApiClient approvalsApiClient)
+            => (_approvalsApiClient) = (approvalsApiClient);
 
         public async Task<SelectDeliveryModelViewModel> Map(ApprenticeRequest source)
         {

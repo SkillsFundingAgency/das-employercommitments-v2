@@ -17,10 +17,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IApprovalsApiClient _approvalsApiClient;
-        private readonly IAuthorizationService _authorizationService;
 
-        public AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient, IAuthorizationService authorizationService)
-            => (_commitmentsApiClient, _approvalsApiClient, _authorizationService) = (commitmentsApiClient, approvalsApiClient, authorizationService);
+        public AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient)
+            => (_commitmentsApiClient, _approvalsApiClient) = (commitmentsApiClient, approvalsApiClient);
 
         public async Task<SelectDeliveryModelViewModel> Map(AddDraftApprenticeshipRequest source)
         {

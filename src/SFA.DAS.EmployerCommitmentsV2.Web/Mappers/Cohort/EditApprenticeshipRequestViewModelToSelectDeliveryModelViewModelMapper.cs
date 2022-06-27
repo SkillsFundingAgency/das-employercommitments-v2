@@ -14,10 +14,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IApprovalsApiClient _approvalsApiClient;
-        private readonly IAuthorizationService _authorizationService;
 
-        public EditApprenticeshipRequestViewModelToSelectDeliveryModelViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient, IAuthorizationService authorizationService)
-            => (_commitmentsApiClient, _approvalsApiClient, _authorizationService) = (commitmentsApiClient, approvalsApiClient, authorizationService);
+        public EditApprenticeshipRequestViewModelToSelectDeliveryModelViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient)
+            => (_commitmentsApiClient, _approvalsApiClient) = (commitmentsApiClient, approvalsApiClient);
 
         public async Task<SelectDeliveryModelViewModel> Map(EditApprenticeshipRequestViewModel source)
         {

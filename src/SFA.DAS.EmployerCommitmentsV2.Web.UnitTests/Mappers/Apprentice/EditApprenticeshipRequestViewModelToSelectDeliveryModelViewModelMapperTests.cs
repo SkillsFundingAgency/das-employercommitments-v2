@@ -30,11 +30,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private List<TrainingProgramme> _standardTrainingProgrammes;
         private List<TrainingProgramme> _allTrainingProgrammes;
         private ProviderCourseDeliveryModels _providerCourseDeliveryModels;
-        private Mock<IAuthorizationService> _authorizationService;
         private SelectDeliveryModelViewModel _result;
         private long _cohortId;
         private long _accountLegalEntityId;
-        private string _encodedAccountId;
         private Fixture _autoFixture;
 
         [SetUp]
@@ -43,7 +41,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _autoFixture = new Fixture();
             _cohortId = _autoFixture.Create<long>();
             _accountLegalEntityId = _autoFixture.Create<long>();
-            _encodedAccountId = _autoFixture.Create<string>();
 
             _standardTrainingProgrammes = _autoFixture.CreateMany<TrainingProgramme>().ToList();
             _allTrainingProgrammes = _autoFixture.CreateMany<TrainingProgramme>().ToList();
@@ -51,19 +48,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _getApprenticeshipResponse = _autoFixture.Build<GetApprenticeshipResponse>()
                 .With(x => x.CohortId, _cohortId)
+                .With(x => x.AccountLegalEntityId, _accountLegalEntityId)
                 .Create();
 
             _getCohortResponse = _autoFixture.Build<GetCohortResponse>()
                 .With(x => x.LevyStatus, ApprenticeshipEmployerType.Levy)
                 .With(x => x.WithParty, Party.Employer)
+                .With(x => x.AccountLegalEntityId, _accountLegalEntityId)
                 .Without(x => x.TransferSenderId)
                 .Create();
 
             _source = _autoFixture.Build<EditApprenticeshipRequestViewModel>()
-                .With(x=>x.DateOfBirth, new DateModel())
-                .With(x=>x.StartDate, new MonthYearModel(""))
-                .With(x=>x.EndDate, new MonthYearModel(""))
-                .With(x=>x.EmploymentEndDate, new MonthYearModel(""))
+                .With(x => x.DateOfBirth, new DateModel())
+                .With(x => x.StartDate, new MonthYearModel(""))
+                .With(x => x.EndDate, new MonthYearModel(""))
+                .With(x => x.EmploymentEndDate, new MonthYearModel(""))
                 .With(x => x.DeliveryModel, DeliveryModel.PortableFlexiJob)
                 .Create();
 
@@ -89,9 +88,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_getCohortResponse.ProviderId.Value, _source.CourseCode, _accountLegalEntityId,
                     It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
-            _authorizationService = new Mock<IAuthorizationService>();
-
-            _mapper = new EditApprenticeshipRequestViewModelToSelectDeliveryModelViewModelMapper(_commitmentsApiClient.Object, _approvalsApiClient.Object, _authorizationService.Object);
+            _mapper = new EditApprenticeshipRequestViewModelToSelectDeliveryModelViewModelMapper(_commitmentsApiClient.Object, _approvalsApiClient.Object);
 
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }

@@ -28,7 +28,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private Mock<IEncodingService> _encodingService;
         private string _encodedApprenticeshipId;
         private string _cohortReference;
-        private int _agencyId;
         private GetCohortResponse _cohort;
         private List<TrainingProgramme> _allTrainingProgrammes;
         private List<TrainingProgramme> _standardTrainingProgrammes;
@@ -42,7 +41,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _standardTrainingProgrammes = autoFixture.CreateMany<TrainingProgramme>().ToList();
             _encodedApprenticeshipId = autoFixture.Create<string>();
             _cohortReference = autoFixture.Create<string>();
-            _agencyId = autoFixture.Create<int>();
 
             _encodingService = new Mock<IEncodingService>();
             _encodingService

@@ -23,11 +23,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private Mock<IAuthorizationService> _authService;
         private ProviderCourseDeliveryModels _providerCourseDeliveryModels;
         private long _providerId;
-        private int _agencyId;
-        private int _legalEntityId;
         private string _courseCode;
         private long _accountLegalEntityId;
-        private string _encodedAccountId;
         private SelectDeliveryModelViewModel _result;
         
         [SetUp]
@@ -37,16 +34,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             _providerId = autoFixture.Create<long>();
             _courseCode = autoFixture.Create<string>();
-            _agencyId = autoFixture.Create<int>();
-            _legalEntityId = autoFixture.Create<int>();
             _accountLegalEntityId = autoFixture.Create<long>();
-            _encodedAccountId = autoFixture.Create<string>();
 
             _source = autoFixture.Build<ApprenticeRequest>()
                 .With(x => x.StartMonthYear, "062020")
                 .With(x => x.AccountId, 12345)
                 .With(x => x.CourseCode, "Course1")
                 .With(x => x.ProviderId, _providerId)
+                .With(x => x.AccountLegalEntityId, _accountLegalEntityId)
                 .With(x => x.CourseCode, _courseCode)
                 .With(x => x.DeliveryModel, DeliveryModel.PortableFlexiJob)
                 .Without(x => x.TransferSenderId).Create();
@@ -56,9 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
             _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, _accountLegalEntityId, It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
-            _authService = new Mock<IAuthorizationService>();
-
-            _mapper = new ApprenticeRequestToSelectDeliveryModelViewModelMapper(_approvalsApiClient.Object, _authService.Object);
+            _mapper = new ApprenticeRequestToSelectDeliveryModelViewModelMapper(_approvalsApiClient.Object);
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }
 
