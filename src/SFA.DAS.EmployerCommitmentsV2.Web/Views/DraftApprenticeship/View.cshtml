@@ -117,14 +117,6 @@
                         @DisplayOptionalEstimatedDate(Model.EmploymentEndDate)
                     </dd>
                 </div>
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Training price for this employment
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @DisplayCost(Model.EmploymentPrice)
-                    </dd>
-                </div>
             }
             @if (Model.RecognisePriorLearning == true)
             {
@@ -136,6 +128,20 @@
                         @Model.DurationReducedBy&nbsp;weeks
                     </dd>
                 </div>
+            }
+            @if (Model.DeliveryModel != null)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Training price for this employment
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @DisplayCost(Model.EmploymentPrice)
+                    </dd>
+                </div>
+            }
+            @if (Model.RecognisePriorLearning == true)
+            {
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                         Price reduction
