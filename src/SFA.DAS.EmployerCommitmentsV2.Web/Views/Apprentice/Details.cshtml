@@ -302,6 +302,15 @@
                         <td class="govuk-table__cell"></td>
                     }
                 </tr>
+                
+                @if (Model.DeliveryModel != null)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Planned end date for this employment</th>
+                        <td id="apprentice-end-date" class="govuk-table__cell">@Model.EmploymentEndDateDisplay</td>
+                        <td class="govuk-table__cell"></td>
+                    </tr>
+                }
 
                 @if(Model.RecognisePriorLearning == true)
                 {
@@ -320,12 +329,6 @@
 
                 @if(Model.DeliveryModel != null)
                 {
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header">Planned end date for this employment</th>
-                        <td id="apprentice-end-date" class="govuk-table__cell">@Model.EmploymentEndDateDisplay</td>
-                        <td class="govuk-table__cell"></td>
-                    </tr>
-
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Training price for this employment</th>
                         <td id="apprentice-end-date" class="govuk-table__cell">@Model.EmploymentPriceDisplay</td>
