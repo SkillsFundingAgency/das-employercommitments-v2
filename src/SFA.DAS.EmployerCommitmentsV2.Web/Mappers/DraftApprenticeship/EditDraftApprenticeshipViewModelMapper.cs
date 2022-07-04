@@ -6,6 +6,7 @@ using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.Encoding;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 {
@@ -16,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
         private readonly IEncodingService _encodingService;
 
         public EditDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient,
-            IEncodingService encodingService)
+            IEncodingService encodingService            )
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;

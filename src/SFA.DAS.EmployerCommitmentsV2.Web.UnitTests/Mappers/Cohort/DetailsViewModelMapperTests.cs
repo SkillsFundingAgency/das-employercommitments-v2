@@ -556,24 +556,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(apprenticeshipId, course.DraftApprenticeships.First(x => x.HasOverlappingEmail).Id);
         }
 
-        [Test]
-        public async Task EmailOverlapIsMappedCorrectlyToDraftApprenticeshipsAndToSummaryLineWhenTwoEmailOverlapsExistOnSameCourse()
-        {
-            var f = new DetailsViewModelMapperTestsFixture().WithTwoEmailOverlappingOnSameCourse();
-            var apprenticeshipId1 = f.EmailOverlapResponse.ApprenticeshipEmailOverlaps.First().Id;
-            var apprenticeshipId2 = f.EmailOverlapResponse.ApprenticeshipEmailOverlaps.Last().Id;
-
-            var result = await f.Map();
-            var course = result.Courses.FirstOrDefault();
-
-            Assert.NotNull(course);
-            Assert.NotNull(course.EmailOverlaps);
-            Assert.AreEqual(2, course.EmailOverlaps.NumberOfEmailOverlaps);
-            Assert.AreEqual(2, course.DraftApprenticeships.Count(x => x.HasOverlappingEmail));
-            Assert.IsTrue(course.DraftApprenticeships.First(x => x.Id == apprenticeshipId1).HasOverlappingEmail);
-            Assert.IsTrue(course.DraftApprenticeships.First(x => x.Id == apprenticeshipId2).HasOverlappingEmail);
-        }
-
         [TestCase(true, true)]
         [TestCase(false, false)]
         public async Task ShowHasOverlappingUlnIsMappedCorrectlyWhenOverlap(bool hasOverlap, bool hasUlnOverlap)

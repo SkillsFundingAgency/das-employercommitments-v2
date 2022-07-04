@@ -40,6 +40,7 @@
     <PackageReference Include="StructureMap.AspNetCore" Version="2.0.0" />
     <PackageReference Include="WebEssentials.AspNetCore.CdnTagHelpers" Version="1.0.16" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="8.20.26" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,6 +51,9 @@
     <Folder Include="Models\Apprentice\DataLock\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="SFA.DAS.CommitmentsV2.Shared" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
