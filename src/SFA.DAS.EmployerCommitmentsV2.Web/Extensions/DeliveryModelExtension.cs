@@ -11,14 +11,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             deliveryModel switch
             {
                 DeliveryModel.PortableFlexiJob => "Portable flexi-job",
+                DeliveryModel.FlexiJobAgency => "Flexi-job agency",
                 _ => "Regular"
             };
 
-        public static string ToIrregularDescription(this DeliveryModel deliveryModel) =>
-            deliveryModel switch
+        public static string ToIrregularDescription(this DeliveryModel deliveryModel)
+        {
+            return deliveryModel switch
             {
                 DeliveryModel.PortableFlexiJob => "Portable flexi-job",
+                DeliveryModel.FlexiJobAgency => "Flexi-job agency",
                 _ => null,
             };
+        }
     }
 }

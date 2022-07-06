@@ -18,16 +18,19 @@
                         Select delivery model
                     </legend>
                     @Html.ValidationMessageFor(m => m.DeliveryModel, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DeliveryModel)})
-                    <div class="govuk-radios">
-                        <div class="govuk-radios__item">
-                            <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Regular" id="DeliveryModelRegular">
-                            <label for="DeliveryModelRegular" class="govuk-label govuk-radios__label">
-                                Regular
-                            </label>
-                            <div id="DeliveryModelNormal-hint" class="govuk-hint govuk-radios__hint">
-                                The apprentice will have a single employment contract
-                            </div>
+                <div class="govuk-radios">
+                    <div class="govuk-radios__item">
+                        <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.Regular" id="DeliveryModelRegular">
+                        <label for="DeliveryModelRegular" class="govuk-label govuk-radios__label">
+                            Regular
+                        </label>
+                        <div id="DeliveryModelNormal-hint" class="govuk-hint govuk-radios__hint">
+                            The apprentice will have a single employment contract
                         </div>
+                    </div>
+
+                    @if (Model.DeliveryModels.ToList().Contains(DeliveryModel.PortableFlexiJob))
+                    {
                         <div class="govuk-radios__item">
                             <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.PortableFlexiJob" id="DeliveryModelFlexible">
                             <label for="DeliveryModelFlexible" class="govuk-label govuk-radios__label">
@@ -37,6 +40,21 @@
                                 The apprentice will move between multiple employment contracts
                             </div>
                         </div>
+                     }
+
+                    @if (Model.DeliveryModels.ToList().Contains(DeliveryModel.FlexiJobAgency))
+                    {
+                        <div class="govuk-radios__item">
+                            <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@DeliveryModel.FlexiJobAgency" id="DeliveryModelFjaa">
+                            <label for="DeliveryModelFjaa" class="govuk-label govuk-radios__label">
+                                Flexi-job agency
+                            </label>
+                            <div id="DeliveryModelFjaa-hint" class="govuk-hint govuk-radios__hint">
+                                The apprentice will have a single employment contract with their flexi-job apprenticeship agency as they move between different host employers
+                            </div>
+                        </div>
+                    }
+
                     </div>
                 </fieldset>
             </div>

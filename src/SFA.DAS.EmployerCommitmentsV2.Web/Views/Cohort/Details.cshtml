@@ -3,6 +3,7 @@
 @using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
 
 @{
@@ -73,139 +74,140 @@
 
         @foreach (var course in Model.Courses)
         {
-            <h3 class="govuk-heading-m">@course.Count x @course.DisplayCourseName 
-                @if (@course.DeliveryModel == DeliveryModel.PortableFlexiJob)
+            <h3 class="govuk-heading-m">
+                @course.Count x @course.DisplayCourseName
+                @if (@course.DeliveryModel != DeliveryModel.Regular)
                 {
-                    <span class="govuk-tag">Portable flexi job</span>
+                    <span class="govuk-tag">@course.DeliveryModel.ToDescription()</span>
                 }
             </h3>
-    @foreach (var draftApprenticeship in course.DraftApprenticeships)
-    {
-        if (draftApprenticeship.HasOverlappingUln && !course.ErrorHasOverlappingUlnDisplayed)
-        {
-            <div class="govuk-inset-text das-inset-text--highlight">
-                <h3 class="govuk-heading-s">Apprenticeship can't have overlapping training dates</h3>
-                <p>
-                     You must update training dates to be able to approve
-                </p>
-            </div>
-            course.ErrorHasOverlappingUlnDisplayed = true;
-        }
-        if (draftApprenticeship.HasOverlappingEmail && !course.ErrorEmailOverlapsDisplayed)
-        {
-            <div class="govuk-inset-text das-inset-text--highlight">
-                <h3 class="govuk-heading-s">@course.EmailOverlaps.DisplayEmailOverlapsMessage</h3>
-                <p>
-                    You must enter a unique email address for each apprentice.
-                </p>
-            </div>
-            course.ErrorEmailOverlapsDisplayed = true;
-        }
-        if (!draftApprenticeship.IsComplete && !course.ErrorIsCompletedDisplayed)
-        {
-            <div class="govuk-inset-text das-inset-text--highlight">
-                <h3 class="govuk-heading-s">Apprentice record incomplete</h3>
-                <p>
-                    You must complete the apprentice record to be able to approve
-                </p>
-            </div>
-            course.ErrorIsCompletedDisplayed = true;
-        }
-        if (draftApprenticeship.ExceedsFundingBandCap && !course.ErrorFundingBandExcessDisplayed)
-        {
-            <div class="govuk-inset-text das-inset-text--highlight">
-                <h3 class="govuk-heading-s">@course.FundingBandExcess.FundingBandCapExcessHeader</h3>
-                <p>
-                    @course.FundingBandExcess.FundingBandCapExcessLabel
-                    <text><a target="_blank" href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band maximum</a>@course.FundingBandExcess.DisplaySingleFundingBandCap</text>
-                    You'll need to pay the difference directly to the training provider.
-                </p>
-            </div>
-            course.ErrorFundingBandExcessDisplayed = true;
-        }
-    }
-    <table class="govuk-table das-table--responsive">
-        <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Name</th>
-                <th scope="col" class="govuk-table__header">Date of birth</th>
-                <th scope="col" class="govuk-table__header">Training dates</th>
-                <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Employment end date</th>
-                <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Training price for this employment</th>
-                <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Total training price</th>
-                <th asp-show="!@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Price</th>
-                <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Action</span></th>
-            </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-
             @foreach (var draftApprenticeship in course.DraftApprenticeships)
             {
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell" data-label="Name">
-                        @if (draftApprenticeship.HasOverlappingEmail || !draftApprenticeship.IsComplete)
-                        {
-                            <span class="das-table-cell--highlight das-breakable">@draftApprenticeship.DisplayName</span>
-                        }
-                        else
-                        {
-                            <span class="das-breakable">@draftApprenticeship.DisplayName</span>
-                        }
-                    </td>
-                    <td class="govuk-table__cell" data-label="Date of birth">@draftApprenticeship.DisplayDateOfBirth</td>
-                    <td class="govuk-table__cell" data-label="Training dates">
-                        @if (draftApprenticeship.HasOverlappingUln)
-                        {
-                            <span class="das-table-cell--highlight">
-                                @draftApprenticeship.DisplayTrainingDates
-                            </span>
-                        }
-                        else
-                        {
-                            @draftApprenticeship.DisplayTrainingDates
-                        }
-                    </td>
-                    <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell" data-label="Employment end date">
-                        @draftApprenticeship.DisplayEmploymentDates
-                    </td>
-                    <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell" data-label="Training price for this employment">
-                        @draftApprenticeship.DisplayEmploymentPrice
-                    </td>
-                    <td class="govuk-table__cell" data-label="Price">
-                        @if (@draftApprenticeship.ExceedsFundingBandCap)
-                        {
-                            <span class="das-table-cell--highlight">
-                                @draftApprenticeship.DisplayCost
-                            </span>
-                        }
-                        else
-                        {
-                            @draftApprenticeship.DisplayCost
-                        }
-                    </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <a class="govuk-link edit-apprentice" href="@Url.RouteUrl("Details", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">
-                            @(Model.IsReadOnly ? "View" : "Edit")
-                            <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
-                        </a>
-                        <br />
-                            @if (!Model.IsReadOnly)
-                            {
-                                <a class="govuk-link view-apprentice" href="@Url.RouteUrl("Details-View", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">View</a>
-                            }
-                        <br />
-                        @if (!Model.IsReadOnly)
-                        {
-                            <a class="govuk-link delete-apprentice" href="@Url.RouteUrl("DeleteDraftApprenticeship", new { draftApprenticeship.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = DeleteDraftApprenticeshipOrigin.CohortDetails })">
-                                Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
-                            </a>
-                        }
-                    </td>
-                </tr>
+                if (draftApprenticeship.HasOverlappingUln && !course.ErrorHasOverlappingUlnDisplayed)
+                {
+                    <div class="govuk-inset-text das-inset-text--highlight">
+                        <h3 class="govuk-heading-s">Apprenticeship can't have overlapping training dates</h3>
+                        <p>
+                            You must update training dates to be able to approve
+                        </p>
+                    </div>
+                    course.ErrorHasOverlappingUlnDisplayed = true;
+                }
+                if (draftApprenticeship.HasOverlappingEmail && !course.ErrorEmailOverlapsDisplayed)
+                {
+                    <div class="govuk-inset-text das-inset-text--highlight">
+                        <h3 class="govuk-heading-s">@course.EmailOverlaps.DisplayEmailOverlapsMessage</h3>
+                        <p>
+                            You must enter a unique email address for each apprentice.
+                        </p>
+                    </div>
+                    course.ErrorEmailOverlapsDisplayed = true;
+                }
+                if (!draftApprenticeship.IsComplete && !course.ErrorIsCompletedDisplayed)
+                {
+                    <div class="govuk-inset-text das-inset-text--highlight">
+                        <h3 class="govuk-heading-s">Apprentice record incomplete</h3>
+                        <p>
+                            You must complete the apprentice record to be able to approve
+                        </p>
+                    </div>
+                    course.ErrorIsCompletedDisplayed = true;
+                }
+                if (draftApprenticeship.ExceedsFundingBandCap && !course.ErrorFundingBandExcessDisplayed)
+                {
+                    <div class="govuk-inset-text das-inset-text--highlight">
+                        <h3 class="govuk-heading-s">@course.FundingBandExcess.FundingBandCapExcessHeader</h3>
+                        <p>
+                            @course.FundingBandExcess.FundingBandCapExcessLabel
+                            <text><a target="_blank" href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band maximum</a>@course.FundingBandExcess.DisplaySingleFundingBandCap</text>
+                            You'll need to pay the difference directly to the training provider.
+                        </p>
+                    </div>
+                    course.ErrorFundingBandExcessDisplayed = true;
+                }
             }
-        </tbody>
-    </table>
-}
+            <table class="govuk-table das-table--responsive">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Name</th>
+                        <th scope="col" class="govuk-table__header">Date of birth</th>
+                        <th scope="col" class="govuk-table__header">Training dates</th>
+                        <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Employment end date</th>
+                        <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Training price for this employment</th>
+                        <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Total training price</th>
+                        <th asp-show="!@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Price</th>
+                        <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Action</span></th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+
+                    @foreach (var draftApprenticeship in course.DraftApprenticeships)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="Name">
+                                @if (draftApprenticeship.HasOverlappingEmail || !draftApprenticeship.IsComplete)
+                                {
+                                    <span class="das-table-cell--highlight das-breakable">@draftApprenticeship.DisplayName</span>
+                                }
+                                else
+                                {
+                                    <span class="das-breakable">@draftApprenticeship.DisplayName</span>
+                                }
+                            </td>
+                            <td class="govuk-table__cell" data-label="Date of birth">@draftApprenticeship.DisplayDateOfBirth</td>
+                            <td class="govuk-table__cell" data-label="Training dates">
+                                @if (draftApprenticeship.HasOverlappingUln)
+                                {
+                                    <span class="das-table-cell--highlight">
+                                        @draftApprenticeship.DisplayTrainingDates
+                                    </span>
+                                }
+                                else
+                                {
+                                    @draftApprenticeship.DisplayTrainingDates
+                                }
+                            </td>
+                            <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell" data-label="Employment end date">
+                                @draftApprenticeship.DisplayEmploymentDates
+                            </td>
+                            <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell" data-label="Training price for this employment">
+                                @draftApprenticeship.DisplayEmploymentPrice
+                            </td>
+                            <td class="govuk-table__cell" data-label="Price">
+                                @if (@draftApprenticeship.ExceedsFundingBandCap)
+                                {
+                                    <span class="das-table-cell--highlight">
+                                        @draftApprenticeship.DisplayCost
+                                    </span>
+                                }
+                                else
+                                {
+                                    @draftApprenticeship.DisplayCost
+                                }
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <a class="govuk-link edit-apprentice" href="@Url.RouteUrl("Details", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">
+                                    @(Model.IsReadOnly ? "View" : "Edit")
+                                    <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
+                                </a>
+                                <br />
+                                @if (!Model.IsReadOnly)
+                                {
+                                    <a class="govuk-link view-apprentice" href="@Url.RouteUrl("Details-View", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">View</a>
+                                }
+                                <br />
+                                @if (!Model.IsReadOnly)
+                                {
+                                    <a class="govuk-link delete-apprentice" href="@Url.RouteUrl("DeleteDraftApprenticeship", new { draftApprenticeship.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = DeleteDraftApprenticeshipOrigin.CohortDetails })">
+                                        Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
 
         <table class="govuk-table">
             <tbody class="govuk-table__body">

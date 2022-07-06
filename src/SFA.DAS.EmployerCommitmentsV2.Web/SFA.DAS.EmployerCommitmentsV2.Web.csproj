@@ -51,6 +51,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="SFA.DAS.CommitmentsV2.Shared" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
