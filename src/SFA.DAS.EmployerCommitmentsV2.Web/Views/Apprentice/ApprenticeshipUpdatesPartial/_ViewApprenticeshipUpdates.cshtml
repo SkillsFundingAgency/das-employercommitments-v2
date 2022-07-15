@@ -52,7 +52,7 @@
                         <td class="govuk-table__cell">@Model.ApprenticeshipUpdates.DeliveryModel.ToDescription()</td>
                     </tr>
 
-                    @if (Model.ApprenticeshipUpdates.DeliveryModel == DeliveryModel.Regular)
+                    @if (Model.ApprenticeshipUpdates.DeliveryModel.Equals(DeliveryModel.Regular))
                     {
                         <tr>
                             <th scope="row" class="govuk-table__header">Planned end date of this employment</th>
@@ -66,7 +66,7 @@
                         </tr>
                     }
                 }
-                @if (Model.ApprenticeshipUpdates.EmploymentEndDate.HasValue)
+                @if (Model.ApprenticeshipUpdates.EmploymentEndDate.HasValue && Model.ApprenticeshipUpdates.DeliveryModel.Equals(DeliveryModel.PortableFlexiJob))
                 {
                     <tr>
                         <th scope="row" class="govuk-table__header">Planned end date of this employment</th>
@@ -74,7 +74,7 @@
                         <td class="govuk-table__cell">@Model.ApprenticeshipUpdates.EmploymentEndDate.Value.ToGdsFormat()</td>
                     </tr>
                 }
-                @if (Model.ApprenticeshipUpdates.EmploymentPrice.HasValue)
+                @if (Model.ApprenticeshipUpdates.EmploymentPrice.HasValue && Model.ApprenticeshipUpdates.DeliveryModel.Equals(DeliveryModel.PortableFlexiJob))
                 {
                     <tr>
                         <th scope="row" class="govuk-table__header">Training price for this employment</th>

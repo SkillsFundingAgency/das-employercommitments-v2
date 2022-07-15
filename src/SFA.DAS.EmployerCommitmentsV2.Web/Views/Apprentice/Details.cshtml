@@ -303,7 +303,7 @@
                     }
                 </tr>
 
-                @if(Model.DeliveryModel != null)
+                @if(Model.DeliveryModel.Equals(DeliveryModel.PortableFlexiJob))
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Planned end date for this employment</th>

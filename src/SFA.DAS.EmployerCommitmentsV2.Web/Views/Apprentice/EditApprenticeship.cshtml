@@ -317,7 +317,7 @@
                         </div>
                     </fieldset>
                 </div>
-                @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
+                @if (Model.DeliveryModel.Equals(DeliveryModel.PortableFlexiJob))
                 {
                     <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.EmploymentEndDate, "govuk-form-group--error")">
                         <fieldset class="govuk-fieldset" aria-describedby="finish-date-hint" role="group">
