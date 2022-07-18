@@ -45,7 +45,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                                                        ApprenticeshipStatus == ApprenticeshipStatus.Paused ||
                                                        ApprenticeshipStatus == ApprenticeshipStatus.Live ||
                                                        ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart) &&
-                                                       !HasContinuation && DeliveryModel == null);
+                                                       !HasContinuation &&
+                                                       DeliveryModel != CommitmentsV2.Types.DeliveryModel.PortableFlexiJob
+                                                       );
+
         public List<TrainingProviderHistory> TrainingProviderHistory { get; set; }
         public ConfirmationStatus? ConfirmationStatus { get; set; }
         public string Email { get; set; }
