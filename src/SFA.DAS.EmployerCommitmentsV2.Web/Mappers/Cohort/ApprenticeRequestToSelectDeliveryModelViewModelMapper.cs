@@ -4,6 +4,11 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Web.Services;
+using SFA.DAS.CommitmentsV2.Types;
+using System.Collections.Generic;
+using SFA.DAS.Authorization.Services;
+using SFA.DAS.EmployerCommitmentsV2.Features;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -12,11 +17,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         private readonly IApprovalsApiClient _approvalsApiClient;
 
         public ApprenticeRequestToSelectDeliveryModelViewModelMapper(IApprovalsApiClient approvalsApiClient)
-            => _approvalsApiClient = approvalsApiClient;
+            => (_approvalsApiClient) = (approvalsApiClient);
 
         public async Task<SelectDeliveryModelViewModel> Map(ApprenticeRequest source)
         {
-            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(source.ProviderId, source.CourseCode);
+            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(source.ProviderId, source.CourseCode, source.AccountLegalEntityId);
 
             return new SelectDeliveryModelViewModel
             { 
@@ -29,7 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 ProviderId = source.ProviderId,
                 ReservationId = source.ReservationId,
                 StartMonthYear = source.StartMonthYear,
-                TransferSenderId = source.TransferSenderId,
+                TransferSenderId = source.TransferSenderId
             };
         }
     }
