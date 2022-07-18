@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Service
             _response = fixture.Create<ProviderCourseDeliveryModels>();
 
             _outerApiClient = new Mock<IApprovalsApiClient>();
-            _outerApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, It.IsAny<CancellationToken>())).ReturnsAsync(_response);
+            _outerApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, 0, It.IsAny<CancellationToken>())).ReturnsAsync(_response);
 
             _mapper = new DeliveryModelService(_outerApiClient.Object);
         }
