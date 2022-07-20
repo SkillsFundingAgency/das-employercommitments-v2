@@ -49,6 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 EmploymentEndYear = draftApprenticeship.EmploymentEndDate.HasValue ? draftApprenticeship.EmploymentEndDate.Value.Year : (int?)null,
                 Reference = draftApprenticeship.Reference,
                 AccountHashedId = source.Request.AccountHashedId,
+                ProviderId = source.Cohort.ProviderId.Value,
                 ProviderName = cohort.ProviderName,
                 LegalEntityName = source.Cohort.LegalEntityName,
                 IsContinuation = draftApprenticeship.IsContinuation,

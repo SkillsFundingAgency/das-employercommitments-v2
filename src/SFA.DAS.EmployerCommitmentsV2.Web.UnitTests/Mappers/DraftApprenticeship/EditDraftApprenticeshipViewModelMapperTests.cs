@@ -204,6 +204,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         }
 
         [Test]
+        public void ProviderIdsMappedCorrectly()
+        {
+            Assert.AreEqual(_cohort.ProviderId, _result.ProviderId);
+        }
+
+        [Test]
         public void LegalEntityNameIsMappedCorrectly()
         {
             Assert.AreEqual(_source.Cohort.LegalEntityName, _result.LegalEntityName);
