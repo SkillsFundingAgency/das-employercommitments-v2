@@ -13,9 +13,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Services
             _approvalsApiClient = approvalsApiClient;
         }
 
-        public async Task<bool> HasMultipleDeliveryModels(long providerId, string courseCode)
+        public async Task<bool> HasMultipleDeliveryModels(long providerId, string courseCode, long accountLegalEntity)
         {
-            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(providerId, courseCode);
+            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(providerId, courseCode, accountLegalEntity);
             return (response?.DeliveryModels.Count() > 1);
         }
     }

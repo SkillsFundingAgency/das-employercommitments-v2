@@ -103,5 +103,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public int? EmploymentEndYear { get => EmploymentEndDate.Year; set => EmploymentEndDate.Year = value; }
 
         public long ProviderId { get; set; }
+        public long AccountLegalEntityId { get; set; }
     }
 }

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SFA.DAS.Authorization.ModelBinding;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Attributes;
 using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
 {
-    public class DraftApprenticeshipViewModel
+    public class DraftApprenticeshipViewModel : IAuthorizationContextModel
     {
         public DraftApprenticeshipViewModel(DateTime? dateOfBirth, DateTime? startDate, DateTime? endDate, DateTime? employmentEndDate = null) : base()
         {
@@ -114,5 +115,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public IEnumerable<TrainingProgramme> Courses { get; set; }
 
         public bool IsContinuation { get; set; }
+        public long AccountLegalEntityId { get; set; }
+        public string AccountLegalEntityHashedId { get; set; }
     }
 }

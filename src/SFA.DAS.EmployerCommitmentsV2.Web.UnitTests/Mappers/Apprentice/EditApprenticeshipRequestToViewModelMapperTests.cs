@@ -387,8 +387,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             await _fixture.Map();
 
             //Assert
-            _fixture.VerifyEmailIsMapped();
+            _fixture.VerifyProviderIdIsMapped();
         }
+
+        [Test]
+        public async Task AccountLegalEntityId_IsMapped()
+        {
+            //Act
+            await _fixture.Map();
+
+            //Assert
+            _fixture.VerifyAccountLegalEntityIdIsMapped();
+        }
+
     }
 
     public class EditApprenticeshipRequestToViewModelMapperTestsFixture
@@ -671,5 +682,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             Assert.AreEqual(ApprenticeshipResponse.ProviderId, _viewModel.ProviderId);
         }
+
+        internal void VerifyAccountLegalEntityIdIsMapped()
+        {
+            Assert.AreEqual(ApprenticeshipResponse.AccountLegalEntityId, _viewModel.AccountLegalEntityId);
+        }
+
     }
 }

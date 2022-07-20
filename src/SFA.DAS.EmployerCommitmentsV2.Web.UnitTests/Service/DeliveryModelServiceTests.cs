@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Service
         [Test]
         public async Task ThenReturnsTrueWhenMultipleDeliveryModelsExist()
         {
-            var result = await _mapper.HasMultipleDeliveryModels(_providerId, _courseCode);
+            var result = await _mapper.HasMultipleDeliveryModels(_providerId, _courseCode, 0);
             Assert.IsTrue(result);
         }
 
@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Service
         public async Task ThenReturnsFalseWhenMultipleDeliveryModelsDoNotExist()
         {
             _response.DeliveryModels = new List<DeliveryModel> { DeliveryModel.Regular };
-            var result = await _mapper.HasMultipleDeliveryModels(_providerId, _courseCode);
+            var result = await _mapper.HasMultipleDeliveryModels(_providerId, _courseCode, 0);
             Assert.IsFalse(result);
         }
     }
