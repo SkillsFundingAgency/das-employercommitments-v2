@@ -55,7 +55,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 IsContinuation = draftApprenticeship.IsContinuation,
                 Courses = (cohort.IsFundedByTransfer || cohort.LevyStatus == ApprenticeshipEmployerType.NonLevy) && !draftApprenticeship.IsContinuation
                     ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
-                    : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes
+                    : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes,
+                AccountLegalEntityId = cohort.AccountLegalEntityId,
+                AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.AccountLegalEntityId)
             };
         }
     }
