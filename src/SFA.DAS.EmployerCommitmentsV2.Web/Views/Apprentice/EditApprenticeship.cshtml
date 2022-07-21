@@ -16,7 +16,7 @@
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "edit-apprentices-detail";
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/edit-apprentice-details";
-    var multipleDeliveryModels = await DeliveryModelService.HasMultipleDeliveryModels(Model.ProviderId, Model.CourseCode, Model.AccountLegalEntityId);
+    var multipleDeliveryModels = await DeliveryModelService.HasMultipleDeliveryModels(Model.ProviderId, Model.CourseCode, Model.AccountLegalEntityHashedId);
 
     Model.Cost = (int?)Model.Cost;
     Model.CourseCode = ViewData.ModelState[nameof(Model.CourseCode)]?.AttemptedValue ?? Model.CourseCode;
@@ -37,7 +37,7 @@
             @Html.HiddenFor(x => x.Option)
             @Html.HiddenFor(x => x.EmailShouldBePresent)
             @Html.HiddenFor(x => x.ProviderId)
-            @Html.HiddenFor(x => x.AccountLegalEntityId)
+            @Html.HiddenFor(x => x.AccountLegalEntityHashedId)
 
             @if (Model.IsContinuation)
             {

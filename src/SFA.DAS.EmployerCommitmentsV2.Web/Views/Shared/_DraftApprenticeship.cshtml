@@ -14,7 +14,7 @@
 @{
     var startDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Planned training start date" : "Planned apprenticeship training start date";
     var endDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Projected training finish date" : "Projected apprenticeship training finish date";
-    var multipleDeliveryModels = await DeliveryModelService.HasMultipleDeliveryModels(Model.ProviderId, Model.CourseCode, Model.AccountLegalEntityId);
+    var multipleDeliveryModels = await DeliveryModelService.HasMultipleDeliveryModels(Model.ProviderId, Model.CourseCode, Model.AccountLegalEntityHashedId);
 
     ViewBag.ValidationOrder = "FirstName,LastName,Email,DateOfBirth,Uln,StartDate,EndDate,EmploymentEndDate,Cost,EmploymentPrice,Reference";
 }
