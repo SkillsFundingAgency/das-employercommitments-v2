@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Service
             _outerApiClient = new Mock<IApprovalsApiClient>();
             _outerApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, 1234, It.IsAny<CancellationToken>())).ReturnsAsync(_response);
             _encodingService = new Mock<IEncodingService>();
-            _encodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.AccountLegalEntityId))
+            _encodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.PublicAccountLegalEntityId))
                 .Returns(1234);
 
             _mapper = new DeliveryModelService(_outerApiClient.Object, _encodingService.Object);

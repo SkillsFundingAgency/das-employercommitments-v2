@@ -57,7 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                     ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
                     : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes,
                 AccountLegalEntityId = cohort.AccountLegalEntityId,
-                AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.AccountLegalEntityId)
+                AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId)
             };
         }
     }

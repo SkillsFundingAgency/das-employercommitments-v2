@@ -678,7 +678,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _mockCurrentDateTimeProvider = new Mock<ICurrentDateTime>();
 
             _mockEncodingService = new Mock<IEncodingService>();
-            _mockEncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.AccountLegalEntityId))
+            _mockEncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.PublicAccountLegalEntityId))
                 .Returns("ALEID");
 
             _mapper = new EditApprenticeshipRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockAcademicYearDateProvider.Object, _mockCurrentDateTimeProvider.Object, _mockEncodingService.Object);

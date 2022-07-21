@@ -74,7 +74,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 EmailShouldBePresent = apprenticeship.EmailShouldBePresent,
                 EmploymentPrice = apprenticeship.EmploymentPrice,
                 ProviderId = apprenticeship.ProviderId,
-                AccountLegalEntityHashedId = _encodingService.Encode(apprenticeship.AccountLegalEntityId, EncodingType.AccountLegalEntityId)
+                AccountLegalEntityHashedId = _encodingService.Encode(apprenticeship.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId)
             };
 
             return result;

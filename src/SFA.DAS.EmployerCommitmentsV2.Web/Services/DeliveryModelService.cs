@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Services
 
         public async Task<bool> HasMultipleDeliveryModels(long providerId, string courseCode, string accountLegalEntity)
         {
-            var aleId = _encodingService.Decode(accountLegalEntity, EncodingType.AccountLegalEntityId);
+            var aleId = _encodingService.Decode(accountLegalEntity, EncodingType.PublicAccountLegalEntityId);
 
             var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(providerId, courseCode, aleId);
             return (response?.DeliveryModels.Count() > 1);

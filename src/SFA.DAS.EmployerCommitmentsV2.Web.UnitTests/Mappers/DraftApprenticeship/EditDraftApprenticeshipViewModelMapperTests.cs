@@ -52,7 +52,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                 .Setup(x => x.Encode(It.IsAny<long>(), It.Is<EncodingType>(e => e == EncodingType.CohortReference)))
                 .Returns(_cohortReference);
             _encodingService
-                .Setup(x => x.Encode(It.IsAny<long>(), EncodingType.AccountLegalEntityId))
+                .Setup(x => x.Encode(It.IsAny<long>(), EncodingType.PublicAccountLegalEntityId))
                 .Returns(_aleHashedId);
 
             _draftApprenticeshipResponse = autoFixture.Create<GetDraftApprenticeshipResponse>();
