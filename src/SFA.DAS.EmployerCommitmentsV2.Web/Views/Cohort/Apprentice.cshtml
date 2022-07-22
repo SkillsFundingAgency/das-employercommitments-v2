@@ -27,8 +27,6 @@
 
         <form id="addApprenticeship" novalidate method="post">
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(x => x.ProviderId)
-            @Html.HiddenFor(x => x.AccountLegalEntityHashedId)
             @Html.HiddenFor(x => x.TransferSenderId)
             @Html.HiddenFor(x => x.Origin)
             @Html.HiddenFor(x => x.EncodedPledgeApplicationId)
