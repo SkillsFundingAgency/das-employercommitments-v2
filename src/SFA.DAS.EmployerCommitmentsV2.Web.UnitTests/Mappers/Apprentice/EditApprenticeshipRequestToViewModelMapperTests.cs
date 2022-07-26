@@ -11,6 +11,7 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using SFA.DAS.Encoding;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetPriceEpisodesResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
@@ -380,6 +381,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(expectedIsEndDateLockedForUpdate, viewModel.IsEndDateLockedForUpdate);
         }
 
+        [Test]
+        public async Task ProviderId_IsMapped()
+        {
+            //Act
+            await _fixture.Map();
+
+            //Assert
+            _fixture.VerifyProviderIdIsMapped();
+        }
+
+        [Test]
+        public async Task AccountLegalEntityId_IsMapped()
+        {
+            //Act
+            await _fixture.Map();
+
+            //Assert
+            _fixture.VerifyAccountLegalEntityIdIsMapped();
+        }
+
     }
 
     public class EditApprenticeshipRequestToViewModelMapperTestsFixture
@@ -389,6 +410,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
         private Mock<IAcademicYearDateProvider> _mockAcademicYearDateProvider;
         private Mock<ICurrentDateTime> _mockCurrentDateTimeProvider;
+        private Mock<IEncodingService> _mockEncodingService;
         
         private GetPriceEpisodesResponse _priceEpisodesResponse;
         private GetCohortResponse _cohortResponse;
@@ -655,7 +677,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _mockCurrentDateTimeProvider = new Mock<ICurrentDateTime>();
 
-            _mapper = new EditApprenticeshipRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockAcademicYearDateProvider.Object, _mockCurrentDateTimeProvider.Object);
+            _mockEncodingService = new Mock<IEncodingService>();
+            _mockEncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.PublicAccountLegalEntityId))
+                .Returns("ALEID");
+
+            _mapper = new EditApprenticeshipRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockAcademicYearDateProvider.Object, _mockCurrentDateTimeProvider.Object, _mockEncodingService.Object);
         }
+
+        internal void VerifyProviderIdIsMapped()
+        {
+            Assert.AreEqual(ApprenticeshipResponse.ProviderId, _viewModel.ProviderId);
+        }
+
+        internal void VerifyAccountLegalEntityIdIsMapped()
+        {
+            Assert.AreEqual("ALEID", _viewModel.AccountLegalEntityHashedId);
+        }
+
     }
 }

@@ -28,6 +28,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private Mock<IEncodingService> _encodingService;
         private string _encodedApprenticeshipId;
         private string _cohortReference;
+        private string _aleHashedId;
         private GetCohortResponse _cohort;
         private List<TrainingProgramme> _allTrainingProgrammes;
         private List<TrainingProgramme> _standardTrainingProgrammes;
@@ -41,6 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _standardTrainingProgrammes = autoFixture.CreateMany<TrainingProgramme>().ToList();
             _encodedApprenticeshipId = autoFixture.Create<string>();
             _cohortReference = autoFixture.Create<string>();
+            _aleHashedId = autoFixture.Create<string>();
 
             _encodingService = new Mock<IEncodingService>();
             _encodingService
@@ -49,6 +51,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _encodingService
                 .Setup(x => x.Encode(It.IsAny<long>(), It.Is<EncodingType>(e => e == EncodingType.CohortReference)))
                 .Returns(_cohortReference);
+            _encodingService
+                .Setup(x => x.Encode(It.IsAny<long>(), EncodingType.PublicAccountLegalEntityId))
+                .Returns(_aleHashedId);
 
             _draftApprenticeshipResponse = autoFixture.Create<GetDraftApprenticeshipResponse>();
             _draftApprenticeshipResponse.IsContinuation = false;
@@ -204,6 +209,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         }
 
         [Test]
+        public void ProviderIdsMappedCorrectly()
+        {
+            Assert.AreEqual(_cohort.ProviderId, _result.ProviderId);
+        }
+
+        [Test]
         public void LegalEntityNameIsMappedCorrectly()
         {
             Assert.AreEqual(_source.Cohort.LegalEntityName, _result.LegalEntityName);
@@ -254,6 +265,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _draftApprenticeshipResponse.IsContinuation = isContinuation;
             _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
             Assert.AreEqual(_draftApprenticeshipResponse.IsContinuation, _result.IsContinuation);
+        }
+
+        [Test]
+        public void AccountLegalEntityIdIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.Cohort.AccountLegalEntityId, _result.AccountLegalEntityId);
+        }
+
+        [Test]
+        public void AccountLegalEntityHashedIdIsMappedCorrectly()
+        {
+            Assert.AreEqual(_aleHashedId, _result.AccountLegalEntityHashedId);
         }
     }
 }
