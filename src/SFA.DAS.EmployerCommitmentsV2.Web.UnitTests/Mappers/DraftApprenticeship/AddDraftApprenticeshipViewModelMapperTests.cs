@@ -149,33 +149,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             Assert.AreEqual(_cohort.LegalEntityName, _result.LegalEntityName);
         }
 
-        [TestCase(123, true)]
-        [TestCase(null, false)]
-        public async Task CoursesAreMappedCorrectlyWithLevy(long? transferSenderId, bool fundedByTransfer)
-        {
-            _cohort.LevyStatus = ApprenticeshipEmployerType.Levy;
-            _cohort.TransferSenderId = transferSenderId;
-
-            _result = await _mapper.Map(_source);
-
-            Assert.AreEqual(fundedByTransfer
-                    ?  _standardTrainingProgrammes
-                    : _allTrainingProgrammes,
-                _result.Courses);
-        }
-
-        [TestCase(123)]
-        [TestCase(null)]
-        public async Task CoursesAreMappedCorrectlyWithoutLevy(long? transferSenderId)
-        {
-            _cohort.LevyStatus = ApprenticeshipEmployerType.NonLevy;
-            _cohort.TransferSenderId = transferSenderId;
-
-            _result = await _mapper.Map(_source);
-
-            Assert.AreEqual(_standardTrainingProgrammes, _result.Courses);
-        }
-
         [Test]
         public void ThrowsWhenCohortNotWithEditingParty()
         {
