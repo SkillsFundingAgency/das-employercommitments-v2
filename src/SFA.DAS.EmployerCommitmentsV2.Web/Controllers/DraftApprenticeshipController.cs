@@ -49,12 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add")]
         public IActionResult AddNewDraftApprenticeship(AddDraftApprenticeshipRequest request)
         {
-            if (_authorizationService.IsAuthorized(EmployerFeature.DeliveryModel))
-            {
-                return RedirectToAction(nameof(SelectCourse), request);
-            }
-
-            return RedirectToAction(nameof(AddDraftApprenticeshipDetails), request);
+            return RedirectToAction(nameof(SelectCourse), request);
         }
 
         [HttpGet]
@@ -160,6 +155,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             var viewModel = await _modelMapper.Map<IDraftApprenticeshipViewModel>(request);
             var viewName = viewModel is EditDraftApprenticeshipViewModel ? "Edit" : "View";
+            return View(viewName, viewModel);
+        }
+
+        [HttpGet]
+        [Route("{DraftApprenticeshipHashedId}/view", Name = "Details-View")]
+        public async Task<IActionResult> ViewDetails(DetailsRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ViewDraftApprenticeshipViewModel>(request);
+            var viewName = "View";
             return View(viewName, viewModel);
         }
 

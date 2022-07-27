@@ -23,5 +23,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public string Reference { get; set; }
         public string LegalEntityName { get; set; }
         public bool HasStandardOptions { get; set; }
+        public bool? RecognisePriorLearning { get; set; }
+        public int? DurationReducedBy { get; set; }
+        public int? PriceReducedBy { get; set; }
     }
 }

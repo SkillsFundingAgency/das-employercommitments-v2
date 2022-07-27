@@ -80,6 +80,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             var redirect = result.VerifyReturnsRedirectToActionResult();
             Assert.AreEqual("SelectOption", redirect.ActionName);
         }
+
+        [Test]
+        public async Task GetViewDetails_Cohort_With_Employer_ShouldReturnViewPage()
+        {
+            var fixtures = new DetailsTestFixture()
+                .WithCohortWithEmployer();
+
+            var result = await fixtures.Sut.ViewDetails(fixtures.DetailsRequest);
+            var viewResult = result.VerifyReturnsViewModel();
+            Assert.AreEqual("View", viewResult.ViewName);
+        }
     }
 
     public class DetailsTestFixture

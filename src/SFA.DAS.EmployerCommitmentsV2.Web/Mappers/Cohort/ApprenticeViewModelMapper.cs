@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 CourseCode = source.CourseCode,
                 ProviderId = (int)source.ProviderId,
                 ProviderName = provider.Name,
-                Courses = await GetCoursesIfPreDeliveryModel(source.TransferSenderId, ale.LevyStatus),
+                Courses = null,
                 TransferSenderId = source.TransferSenderId,
                 EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
                 Origin = source.Origin,
@@ -47,21 +47,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             };
 
             return result;
-        }
-
-        private async Task<IEnumerable<TrainingProgramme>> GetCoursesIfPreDeliveryModel(string transferSenderId, ApprenticeshipEmployerType levyStatus)
-        {
-            if (_authorizationService.IsAuthorized(EmployerFeature.DeliveryModel))
-            {
-                return null;
-            }
-            else
-            {
-                return !string.IsNullOrWhiteSpace(transferSenderId) ||
-                          levyStatus == ApprenticeshipEmployerType.NonLevy
-                ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
-                : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes;
-            }
         }
     }
 }
