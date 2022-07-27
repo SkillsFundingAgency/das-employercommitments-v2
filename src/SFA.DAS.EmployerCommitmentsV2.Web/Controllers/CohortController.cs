@@ -160,7 +160,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
 
                 var confirmProviderRequest = await _modelMapper.Map<ConfirmProviderRequest>(request);
-                return RedirectToAction("ConfirmProvider", confirmProviderRequest);
+                return RedirectToAction("ConfirmProvider", confirmProviderRequest.CloneBaseValues());
             }
             catch (RestHttpClientException ex)
             {
@@ -168,7 +168,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 {
                     ModelState.AddModelError(nameof(request.ProviderId), "Check UK Provider Reference Number");
                     var returnModel = await _modelMapper.Map<SelectProviderRequest>(request);
-                    return RedirectToAction("SelectProvider", returnModel);
+                    return RedirectToAction("SelectProvider", returnModel.CloneBaseValues());
                 }
 
                 _logger.LogError(
@@ -193,15 +193,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [Route("add/confirm-provider")]
         [HttpPost]
-        public async Task<IActionResult> ConfirmProvider(ConfirmProviderViewModel request)
+        public async Task<IActionResult> ConfirmProvider(ConfirmProviderViewModel model)
         {
-            if (request.UseThisProvider.Value)
+            if (model.UseThisProvider.Value)
             {
-                var model = await _modelMapper.Map<AssignRequest>(request);
-                return RedirectToAction("assign", model);
+                var request = await _modelMapper.Map<AssignRequest>(model);
+                return RedirectToAction("assign", request.CloneBaseValues());
             }
 
-            var returnModel = await _modelMapper.Map<SelectProviderViewModel>(request);
+            var returnModel = await _modelMapper.Map<SelectProviderViewModel>(model);
             return RedirectToAction("SelectProvider", returnModel);
         }
 
@@ -264,11 +264,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (_authorizationService.IsAuthorized(EmployerFeature.DeliveryModel))
             {
-                return RedirectToAction(nameof(SelectCourse), request);
+                return RedirectToAction(nameof(SelectCourse), request.CloneBaseValues());
             }
             else
             {
-                return RedirectToAction(nameof(AddDraftApprenticeship), request);
+                return RedirectToAction(nameof(AddDraftApprenticeship), request.CloneBaseValues());
             }
         }
 
@@ -291,7 +291,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             var request = await _modelMapper.Map<ApprenticeRequest>(model);
-            return RedirectToAction(nameof(SelectDeliveryModel), request);
+            return RedirectToAction(nameof(SelectDeliveryModel), request.CloneBaseValues());
         }
 
         [HttpGet]
@@ -307,7 +307,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             request.DeliveryModel = model.DeliveryModels.FirstOrDefault();
-            return RedirectToAction(nameof(AddDraftApprenticeship), request);
+            return RedirectToAction(nameof(AddDraftApprenticeship), request.CloneBaseValues());
         }
 
         [HttpPost]
@@ -321,7 +321,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             var request = await _modelMapper.Map<ApprenticeRequest>(model);
-            return RedirectToAction(nameof(AddDraftApprenticeship), request);
+            return RedirectToAction(nameof(AddDraftApprenticeship), request.CloneBaseValues());
         }
 
         [HttpGet]
@@ -349,7 +349,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 StoreDraftApprenticeshipState(model);
                 var request = await _modelMapper.Map<ApprenticeRequest>(model);
-                return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request);
+                return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request.CloneBaseValues());
             }
 
             return await SaveDraftApprenticeship(model);
@@ -492,11 +492,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (hasSignedMinimumRequiredAgreementVersion)
             {
-                return RedirectToAction("SelectProvider", new SelectProviderRequest
+                return RedirectToAction("SelectProvider", new BaseSelectProviderRequest
                 {
                     AccountHashedId = request.AccountHashedId,
                     TransferSenderId = request.transferConnectionCode,
-                    AccountLegalEntityId = autoSelectLegalEntity.Id,
                     AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId,
                     EncodedPledgeApplicationId = request.EncodedPledgeApplicationId
                 });

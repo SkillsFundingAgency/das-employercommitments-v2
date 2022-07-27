@@ -51,10 +51,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         {
             if (_authorizationService.IsAuthorized(EmployerFeature.DeliveryModel))
             {
-                return RedirectToAction(nameof(SelectCourse), request);
+                return RedirectToAction(nameof(SelectCourse), request.CloneBaseValues());
             }
 
-            return RedirectToAction(nameof(AddDraftApprenticeshipDetails), request);
+            return RedirectToAction(nameof(AddDraftApprenticeshipDetails), request.CloneBaseValues());
         }
 
         [HttpGet]
@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
-            return RedirectToAction(nameof(SelectDeliveryModel), request);
+            return RedirectToAction(nameof(SelectDeliveryModel), request.CloneBaseValues());
         }
 
         [HttpGet]
@@ -91,7 +91,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             request.DeliveryModel = model.DeliveryModels.FirstOrDefault();
-            return RedirectToAction(nameof(AddDraftApprenticeshipDetails), request);
+            return RedirectToAction(nameof(AddDraftApprenticeshipDetails), request.CloneBaseValues());
         }
 
         [HttpPost]
@@ -105,7 +105,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
-            return RedirectToAction(nameof(AddDraftApprenticeshipDetails), request);
+            return RedirectToAction(nameof(AddDraftApprenticeshipDetails), request.CloneBaseValues());
         }
 
         [HttpGet]
@@ -141,7 +141,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 StoreDraftApprenticeshipState(model);
                 var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
-                return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request);
+                return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request.CloneBaseValues());
             }
 
             var addDraftApprenticeshipRequest = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(model);
@@ -198,7 +198,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 StoreEditDraftApprenticeshipState(model);
                 var req = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
-                return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), req);
+                return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), req.CloneBaseValues());
             }
 
             var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipRequest>(model);
@@ -227,7 +227,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
-            return RedirectToAction(nameof(SelectDeliveryModelForEdit), request);
+            return RedirectToAction(nameof(SelectDeliveryModelForEdit), request.CloneBaseValues());
         }
 
         [HttpGet]
