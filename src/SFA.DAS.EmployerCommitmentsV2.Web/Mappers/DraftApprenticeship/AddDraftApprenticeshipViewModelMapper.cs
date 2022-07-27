@@ -52,16 +52,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 
         private async Task<IEnumerable<TrainingProgramme>> GetCoursesIfPreDeliveryModel(bool IsFundedByTransfer, ApprenticeshipEmployerType levyStatus)
         {
-            if (_authorizationService.IsAuthorized(EmployerFeature.DeliveryModel))
-            {
-                return null;
-            }
-            else
-            {
-                return IsFundedByTransfer || levyStatus == ApprenticeshipEmployerType.NonLevy
-                    ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
-                    : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes;  
-            }
+            return null;
         }
     }
 }

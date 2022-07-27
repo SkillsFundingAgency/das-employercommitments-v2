@@ -103,8 +103,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             ModelMapperMock = new Mock<IModelMapper>();
             TempDataMock = new Mock<ITempDataDictionary>();
-            AuthorizationServiceMock = new Mock<IAuthorizationService>();
-            AuthorizationServiceMock.Setup(x => x.IsAuthorized(EmployerFeature.DeliveryModel)).Returns(true);
 
             Sut = new ApprenticeController(ModelMapperMock.Object, Mock.Of<ICookieStorageService<IndexRequest>>(), Mock.Of<ICommitmentsApiClient>(), Mock.Of<ILogger<ApprenticeController>>());
             Sut.TempData = TempDataMock.Object;

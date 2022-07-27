@@ -262,14 +262,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add/apprentice")]
         public IActionResult Apprentice(ApprenticeRequest request)
         {
-            if (_authorizationService.IsAuthorized(EmployerFeature.DeliveryModel))
-            {
-                return RedirectToAction(nameof(SelectCourse), request);
-            }
-            else
-            {
-                return RedirectToAction(nameof(AddDraftApprenticeship), request);
-            }
+            return RedirectToAction(nameof(SelectCourse), request);
         }
 
         [HttpGet]
