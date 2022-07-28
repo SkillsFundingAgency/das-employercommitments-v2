@@ -117,5 +117,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public bool IsContinuation { get; set; }
         public long AccountLegalEntityId { get; set; }
         public string AccountLegalEntityHashedId { get; set; }
+        public bool? HasMultipleDeliveryModelOptions { get; set; }
     }
 }

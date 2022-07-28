@@ -65,7 +65,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 IsContinuation = draftApprenticeship.IsContinuation,
                 Courses = courses,
                 AccountLegalEntityId = cohort.AccountLegalEntityId,
-                AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId)
+                AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
+                HasMultipleDeliveryModelOptions = draftApprenticeship.HasMultipleDeliveryModelOptions
             };
         }
     }

@@ -14,7 +14,9 @@
 @{
     var startDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Planned training start date" : "Planned apprenticeship training start date";
     var endDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Projected training finish date" : "Projected apprenticeship training finish date";
-    var multipleDeliveryModels = await DeliveryModelService.HasMultipleDeliveryModels(Model.ProviderId, Model.CourseCode, Model.AccountLegalEntityHashedId);
+
+    var multipleDeliveryModels = Model.HasMultipleDeliveryModelOptions.HasValue ? Model.HasMultipleDeliveryModelOptions.Value
+        : await DeliveryModelService.HasMultipleDeliveryModels(Model.ProviderId, Model.CourseCode, Model.AccountLegalEntityHashedId);
 
     ViewBag.ValidationOrder = "FirstName,LastName,Email,DateOfBirth,Uln,StartDate,EndDate,EmploymentEndDate,Cost,EmploymentPrice,Reference";
 }
@@ -63,13 +65,6 @@
         <dt class="das-definition-list__title">Apprenticeship training course</dt>
         <dd class="das-definition-list__definition">@Model.Courses.Single(x => x.CourseCode == Model.CourseCode).Name</dd>
     </dl>
-    @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
-    {
-        <dl class="das-definition-list">
-            <dt class="das-definition-list__title">Apprenticeship delivery model</dt>
-            <dd class="das-definition-list__definition">@Model.DeliveryModel.ToDescription()</dd>
-        </dl>
-    }
 }
 else
 {
@@ -166,22 +161,29 @@ else
         </p>
     </div>
 
-    if (multipleDeliveryModels)
-    {
-        <div class="govuk-form-group">
-            <p class="govuk-label govuk-!-font-weight-bold">Delivery model</p>
-            <p class="govuk-body">
-                @Model.DeliveryModel.ToDescription()
-                <button type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
-                    Edit<span class="govuk-visually-hidden"> delivery model</span>
-                </button>
-            </p>
-        </div>
-    }
-
     <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
 
     <input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
+}
+
+@if (multipleDeliveryModels)
+{
+    <div class="govuk-form-group">
+        <p class="govuk-label govuk-!-font-weight-bold">Delivery model</p>
+        <p class="govuk-body">
+            @Model.DeliveryModel.ToDescription()
+            <button type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
+                Edit<span class="govuk-visually-hidden"> delivery model</span>
+            </button>
+        </p>
+    </div>
+}
+else if (Model.DeliveryModel != null && Model.DeliveryModel != DeliveryModel.Regular)
+{
+    <dl class="das-definition-list">
+        <dt class="das-definition-list__title">Apprenticeship delivery model</dt>
+        <dd class="das-definition-list__definition">@Model.DeliveryModel.ToDescription()</dd>
+    </dl>
 }
 
 <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.StartDate, "govuk-form-group--error")">

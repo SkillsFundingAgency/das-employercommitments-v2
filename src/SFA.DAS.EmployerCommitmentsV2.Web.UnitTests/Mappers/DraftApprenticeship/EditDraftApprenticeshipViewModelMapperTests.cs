@@ -283,5 +283,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         {
             Assert.AreEqual(_aleHashedId, _result.AccountLegalEntityHashedId);
         }
+
+        [Test]
+        public void HasMultipleDeliveryModelOptionsIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeshipResponse.HasMultipleDeliveryModelOptions, _result.HasMultipleDeliveryModelOptions);
+        }
     }
 }
