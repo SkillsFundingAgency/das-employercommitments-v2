@@ -8,9 +8,10 @@ using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;
 using SFA.DAS.Encoding;
 
@@ -24,7 +25,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private EditDraftApprenticeshipViewModel _result;
 
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
-        private GetDraftApprenticeshipResponse _draftApprenticeshipResponse;
+        private Mock<IApprovalsApiClient> _apiClient;
+        private GetEditDraftApprenticeshipResponse _draftApprenticeshipResponse;
         private Mock<IEncodingService> _encodingService;
         private string _encodedApprenticeshipId;
         private string _cohortReference;
@@ -55,12 +57,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                 .Setup(x => x.Encode(It.IsAny<long>(), EncodingType.PublicAccountLegalEntityId))
                 .Returns(_aleHashedId);
 
-            _draftApprenticeshipResponse = autoFixture.Create<GetDraftApprenticeshipResponse>();
+            _draftApprenticeshipResponse = autoFixture.Create<GetEditDraftApprenticeshipResponse>();
             _draftApprenticeshipResponse.IsContinuation = false;
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _commitmentsApiClient.Setup(x =>
-                    x.GetDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_draftApprenticeshipResponse);
+            
             _commitmentsApiClient
                 .Setup(x => x.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse
@@ -75,6 +75,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                     TrainingProgrammes = _allTrainingProgrammes
                 });
 
+            _apiClient = new Mock<IApprovalsApiClient>();
+            _apiClient.Setup(x =>
+                    x.GetEditDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_draftApprenticeshipResponse);
+
             _cohort = autoFixture.Create<GetCohortResponse>();
             _cohort.WithParty = Party.Employer;
             _cohort.ChangeOfPartyRequestId = null;
@@ -83,7 +88,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             _source = autoFixture.Create<EditDraftApprenticeshipRequest>();
             _source.Cohort = _cohort;
-            _mapper = new EditDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object);
+            _mapper = new EditDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object, _apiClient.Object);
 
             _result = await _mapper.Map(TestHelper.Clone(_source)) as EditDraftApprenticeshipViewModel;
         }
@@ -91,7 +96,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         [Test]
         public void DraftApprenticeshipIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.Id, _result.DraftApprenticeshipId);
+            Assert.AreEqual(_source.Request.DraftApprenticeshipId, _result.DraftApprenticeshipId);
         }
 
         [Test]
@@ -151,7 +156,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         [Test]
         public void DeliveryModelIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.DeliveryModel, _result.DeliveryModel);
+            Assert.AreEqual((DeliveryModel)_draftApprenticeshipResponse.DeliveryModel, _result.DeliveryModel);
         }
 
         [Test]
@@ -191,9 +196,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         }
 
         [Test]
-        public void OriginatorReferenceIsMappedCorrectly()
+        public void ReferenceIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.Reference, _result.Reference);
+            Assert.AreEqual(_draftApprenticeshipResponse.EmployerReference, _result.Reference);
         }
 
         [Test]
