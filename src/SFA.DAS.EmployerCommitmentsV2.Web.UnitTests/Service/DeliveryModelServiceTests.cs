@@ -53,15 +53,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Service
             var result = await _mapper.HasMultipleDeliveryModels(_providerId, _courseCode, "ALEID");
             Assert.IsFalse(result);
         }
-
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase(" ")]
-        public async Task ThenReturnsFalseWhenCourseIsEmpty(string courseCode)
-        {
-            _response.DeliveryModels = new List<DeliveryModel> { DeliveryModel.Regular, DeliveryModel.FlexiJobAgency };
-            var result = await _mapper.HasMultipleDeliveryModels(_providerId, courseCode, "PALID");
-            Assert.IsFalse(result);
-        }
     }
 }
