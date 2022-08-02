@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.Encoding;
@@ -18,8 +19,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Services
 
         public async Task<bool> HasMultipleDeliveryModels(long providerId, string courseCode, string accountLegalEntity)
         {
+            if (String.IsNullOrWhiteSpace(courseCode))
+            {
+                return false;
+            }
             var aleId = _encodingService.Decode(accountLegalEntity, EncodingType.PublicAccountLegalEntityId);
-
             var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(providerId, courseCode, aleId);
             return (response?.DeliveryModels.Count() > 1);
         }
