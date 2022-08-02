@@ -164,6 +164,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
+        [Route("{DraftApprenticeshipHashedId}/view", Name = "Details-View")]
+        public async Task<IActionResult> ViewDetails(DetailsRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ViewDraftApprenticeshipViewModel>(request);
+            var viewName = "View";
+            return View(viewName, viewModel);
+        }
+
+        [HttpGet]
         [Route("{DraftApprenticeshipHashedId}/edit-display", Name="EditDraftApprenticeshipDisplay")]
         public IActionResult EditDraftApprenticeshipDisplay(EditDraftApprenticeshipViewModel model)
         {
