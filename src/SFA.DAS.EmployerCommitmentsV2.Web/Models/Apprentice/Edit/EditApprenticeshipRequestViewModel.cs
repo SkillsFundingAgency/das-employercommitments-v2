@@ -104,5 +104,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         public long ProviderId { get; set; }
         public string AccountLegalEntityHashedId { get; set; }
+        public bool HasMultipleDeliveryModels { get; set; }
     }
 }

@@ -16,7 +16,6 @@
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "edit-apprentices-detail";
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/edit-apprentice-details";
-    var multipleDeliveryModels = await DeliveryModelService.HasMultipleDeliveryModels(Model.ProviderId, Model.CourseCode, Model.AccountLegalEntityHashedId);
 
     Model.Cost = (int?)Model.Cost;
     Model.CourseCode = ViewData.ModelState[nameof(Model.CourseCode)]?.AttemptedValue ?? Model.CourseCode;
@@ -38,6 +37,7 @@
             @Html.HiddenFor(x => x.EmailShouldBePresent)
             @Html.HiddenFor(x => x.ProviderId)
             @Html.HiddenFor(x => x.AccountLegalEntityHashedId)
+            @Html.HiddenFor(x => x.HasMultipleDeliveryModels)
 
             @if (Model.IsContinuation)
             {
@@ -197,7 +197,7 @@
                 </div>
                 <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
 
-                if (multipleDeliveryModels)
+                if (Model.HasMultipleDeliveryModels)
                 {
                     <div class="govuk-form-group">
                         <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Delivery model</p>

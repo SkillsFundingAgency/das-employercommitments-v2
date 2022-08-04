@@ -14,7 +14,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
         private readonly IApprovalsApiClient _apiClient;
-        
 
         public EditDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient,
             IEncodingService encodingService, IApprovalsApiClient apiClient)

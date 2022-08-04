@@ -7,6 +7,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
@@ -17,16 +18,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         private readonly IAcademicYearDateProvider _academicYearDateProvider;
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IEncodingService _encodingService;
+        private readonly IApprovalsApiClient _apiClient;
 
-        public EditApprenticeshipRequestToViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IAcademicYearDateProvider academicYearDateProvider, ICurrentDateTime currentDateTime, IEncodingService encodingService)
+        public EditApprenticeshipRequestToViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IAcademicYearDateProvider academicYearDateProvider, ICurrentDateTime currentDateTime, IEncodingService encodingService, IApprovalsApiClient apiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _academicYearDateProvider = academicYearDateProvider;
             _currentDateTime = currentDateTime;
             _encodingService = encodingService;
+            _apiClient = apiClient;
         }
         public async Task<EditApprenticeshipRequestViewModel> Map(EditApprenticeshipRequest source)
         {
+            var editApprenticeship = await _apiClient.GetEditApprenticeship(source.AccountId, source.ApprenticeshipId);
+
             var apprenticeshipTask = _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId, CancellationToken.None);
             var priceEpisodesTask = _commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId, CancellationToken.None);
             var accountDetailsTask = _commitmentsApiClient.GetAccount(source.AccountId);
@@ -74,7 +79,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 EmailShouldBePresent = apprenticeship.EmailShouldBePresent,
                 EmploymentPrice = apprenticeship.EmploymentPrice,
                 ProviderId = apprenticeship.ProviderId,
-                AccountLegalEntityHashedId = _encodingService.Encode(apprenticeship.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId)
+                AccountLegalEntityHashedId = _encodingService.Encode(apprenticeship.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
+                HasMultipleDeliveryModels = editApprenticeship.HasMultipleDeliveryModelOptions
             };
 
             return result;
