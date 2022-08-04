@@ -37,7 +37,7 @@
             @Html.HiddenFor(x => x.EmailShouldBePresent)
             @Html.HiddenFor(x => x.ProviderId)
             @Html.HiddenFor(x => x.AccountLegalEntityHashedId)
-            @Html.HiddenFor(x => x.HasMultipleDeliveryModels)
+            @Html.HiddenFor(x => x.HasMultipleDeliveryModelOptions)
 
             @if (Model.IsContinuation)
             {
@@ -197,7 +197,7 @@
                 </div>
                 <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
 
-                if (Model.HasMultipleDeliveryModels)
+                if (Model.HasMultipleDeliveryModelOptions)
                 {
                     <div class="govuk-form-group">
                         <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Delivery model</p>

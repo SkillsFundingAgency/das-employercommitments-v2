@@ -3,5 +3,6 @@
     public class GetEditApprenticeshipResponse
     {
         public bool HasMultipleDeliveryModelOptions { get; set; }
+        public bool IsFundedByTransfer { get; set; }
     }
 }

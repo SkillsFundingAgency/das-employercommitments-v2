@@ -37,15 +37,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             var accountDetailsTask = _commitmentsApiClient.GetAccount(source.AccountId);
 
             var apprenticeship = await apprenticeshipTask;
-            var commitmentTask = _commitmentsApiClient.GetCohort(apprenticeship.CohortId);
             var courseDetailsTask = _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
 
             var accountDetails = await accountDetailsTask;
             var priceEpisodes = await priceEpisodesTask;
-            var commitment = await commitmentTask;
             var courseDetails = await courseDetailsTask;
 
-            var courses = accountDetails.LevyStatus == ApprenticeshipEmployerType.NonLevy || commitment.IsFundedByTransfer
+            var courses = accountDetails.LevyStatus == ApprenticeshipEmployerType.NonLevy || editApprenticeship.IsFundedByTransfer
                 ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards(CancellationToken.None)).TrainingProgrammes
                 : (await _commitmentsApiClient.GetAllTrainingProgrammes(CancellationToken.None)).TrainingProgrammes;
 
@@ -53,7 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                                     ||
                                     IsLiveAndIsNotWithInFundingPeriod(apprenticeship)
                                     ||
-                                    IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(apprenticeship, commitment);
+                                    IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(apprenticeship, editApprenticeship.IsFundedByTransfer);
 
             var result = new EditApprenticeshipRequestViewModel(apprenticeship.DateOfBirth, apprenticeship.StartDate, apprenticeship.EndDate, apprenticeship.EmploymentEndDate)
             {
@@ -70,7 +68,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 Courses = courses,
                 IsContinuation = apprenticeship.IsContinuation,
                 IsLockedForUpdate = isLockedForUpdate,
-                IsUpdateLockedForStartDateAndCourse = commitment.IsFundedByTransfer && !apprenticeship.HasHadDataLockSuccess,
+                IsUpdateLockedForStartDateAndCourse = editApprenticeship.IsFundedByTransfer && !apprenticeship.HasHadDataLockSuccess,
                 IsEndDateLockedForUpdate = IsEndDateLocked(isLockedForUpdate, apprenticeship.HasHadDataLockSuccess, apprenticeship.Status),
                 TrainingName = courseDetails.TrainingProgramme.Name,
                 HashedApprenticeshipId = source.ApprenticeshipHashedId,
@@ -80,15 +78,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 EmploymentPrice = apprenticeship.EmploymentPrice,
                 ProviderId = apprenticeship.ProviderId,
                 AccountLegalEntityHashedId = _encodingService.Encode(apprenticeship.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
-                HasMultipleDeliveryModels = editApprenticeship.HasMultipleDeliveryModelOptions
+                HasMultipleDeliveryModelOptions = editApprenticeship.HasMultipleDeliveryModelOptions
             };
 
             return result;
         }
 
-        private bool IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(GetApprenticeshipResponse apprenticeship, GetCohortResponse commitment)
+        private bool IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(GetApprenticeshipResponse apprenticeship, bool isFundedByTransfer)
         {
-            return commitment.IsFundedByTransfer
+            return isFundedByTransfer
                     && HasHadDataLockSuccess(apprenticeship) 
                     && IsWaitingToStart(apprenticeship);
         }
