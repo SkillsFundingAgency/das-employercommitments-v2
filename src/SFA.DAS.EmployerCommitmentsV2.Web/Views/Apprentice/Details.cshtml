@@ -284,7 +284,7 @@
                     <td class="govuk-table__cell"></td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">Planned training finish date</th>
+                    <th scope="row" class="govuk-table__header">Planned training end date</th>
                     <td id="end-date" class="govuk-table__cell" colspan="2">
                         @if (Model.EndDate.HasValue)
                         {
@@ -310,15 +310,32 @@
                         <td id="apprentice-end-date" class="govuk-table__cell">@Model.EmploymentEndDateDisplay</td>
                         <td class="govuk-table__cell"></td>
                     </tr>
+                }
 
+                @if (Model.RecognisePriorLearning == true)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Duration reduction due to prior learning</th>
+                        <td id="apprentice-end-date" class="govuk-table__cell">@Model.DurationReducedBy &nbsp;weeks</td>
+                        <td class="govuk-table__cell"></td>
+                    </tr>
+                }
+                @if(Model.DeliveryModel != null)
+                {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Training price for this employment</th>
                         <td id="apprentice-end-date" class="govuk-table__cell">@Model.EmploymentPriceDisplay</td>
                         <td class="govuk-table__cell"></td>
                     </tr>
                 }
-
-
+                @if(Model.RecognisePriorLearning == true)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Price reduction due to prior learning</th>
+                        <td id="apprentice-end-date" class="govuk-table__cell">@Model.PriceReducedBy.FormatCost()</td>
+                        <td class="govuk-table__cell"></td>
+                    </tr>
+                }
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Total agreed apprenticeship price</th>
                     <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost()</td>

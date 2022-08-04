@@ -46,7 +46,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 EndDate = draftApprenticeship.EndDate,
                 EmploymentEndDate = draftApprenticeship.EmploymentEndDate,
                 Reference = draftApprenticeship.Reference,
-                LegalEntityName = source.Cohort.LegalEntityName
+                LegalEntityName = source.Cohort.LegalEntityName,
+                RecognisePriorLearning = draftApprenticeship.RecognisePriorLearning,
+                DurationReducedBy = draftApprenticeship.DurationReducedBy,
+                PriceReducedBy = draftApprenticeship.PriceReducedBy,
             };
 
             return result;

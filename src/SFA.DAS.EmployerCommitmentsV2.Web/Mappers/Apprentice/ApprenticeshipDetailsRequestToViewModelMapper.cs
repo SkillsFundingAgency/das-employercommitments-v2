@@ -114,6 +114,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     EmailAddressConfirmedByApprentice = apprenticeship.EmailAddressConfirmedByApprentice,
                     EmploymentEndDate = apprenticeship.EmploymentEndDate,
                     EmploymentPrice = apprenticeship.EmploymentPrice,
+                    RecognisePriorLearning = apprenticeship.RecognisePriorLearning,
+                    DurationReducedBy = apprenticeship.DurationReducedBy,
+                    PriceReducedBy = apprenticeship.PriceReducedBy,
                 };
 
                 return result;

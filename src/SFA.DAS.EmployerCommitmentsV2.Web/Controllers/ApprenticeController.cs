@@ -695,7 +695,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             draft.DeliveryModel = model.DeliveryModels.FirstOrDefault();
             TempData.Put(ViewModelForEdit, draft);
 
-            return RedirectToAction("EditApprenticeship", request);
+            return RedirectToAction("EditApprenticeship", new { request.AccountHashedId, request.ApprenticeshipHashedId });
         }
 
         [HttpPost]

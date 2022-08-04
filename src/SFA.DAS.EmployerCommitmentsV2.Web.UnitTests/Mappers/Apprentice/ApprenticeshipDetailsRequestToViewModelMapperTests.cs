@@ -753,6 +753,36 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             Assert.AreEqual(_getTrainingProgrammeByStandardUId.TrainingProgramme.Options, result.VersionOptions);
         }
+
+        [Test]
+        public async Task RecognisePriorLearning_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(_apprenticeshipResponse.RecognisePriorLearning, result.RecognisePriorLearning);
+        }
+
+        [Test]
+        public async Task PriceReducedByIsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(_apprenticeshipResponse.PriceReducedBy, result.PriceReducedBy);
+        }
+
+        [Test]
+        public async Task DurationReducedByIsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(_apprenticeshipResponse.DurationReducedBy, result.DurationReducedBy);
+        }
     }
 
     public static class MockCommitmentsApiExtensions
