@@ -30,18 +30,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         }
         public async Task<EditApprenticeshipRequestViewModel> Map(EditApprenticeshipRequest source)
         {
-            var editApprenticeship = await _apiClient.GetEditApprenticeship(source.AccountId, source.ApprenticeshipId);
-
+            var editApprenticeshipTask =  _apiClient.GetEditApprenticeship(source.AccountId, source.ApprenticeshipId);
             var apprenticeshipTask = _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId, CancellationToken.None);
             var priceEpisodesTask = _commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId, CancellationToken.None);
             var accountDetailsTask = _commitmentsApiClient.GetAccount(source.AccountId);
 
-            var apprenticeship = await apprenticeshipTask;
-            var courseDetailsTask = _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
+            await Task.WhenAll(editApprenticeshipTask, apprenticeshipTask, accountDetailsTask, priceEpisodesTask);
 
-            var accountDetails = await accountDetailsTask;
-            var priceEpisodes = await priceEpisodesTask;
-            var courseDetails = await courseDetailsTask;
+            var apprenticeship = apprenticeshipTask.Result;
+            var editApprenticeship = editApprenticeshipTask.Result;
+            var accountDetails = accountDetailsTask.Result;
+            var priceEpisodes = priceEpisodesTask.Result;
 
             var courses = accountDetails.LevyStatus == ApprenticeshipEmployerType.NonLevy || editApprenticeship.IsFundedByTransfer
                 ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards(CancellationToken.None)).TrainingProgrammes
@@ -70,7 +69,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 IsLockedForUpdate = isLockedForUpdate,
                 IsUpdateLockedForStartDateAndCourse = editApprenticeship.IsFundedByTransfer && !apprenticeship.HasHadDataLockSuccess,
                 IsEndDateLockedForUpdate = IsEndDateLocked(isLockedForUpdate, apprenticeship.HasHadDataLockSuccess, apprenticeship.Status),
-                TrainingName = courseDetails.TrainingProgramme.Name,
+                TrainingName = apprenticeship.CourseName,
                 HashedApprenticeshipId = source.ApprenticeshipHashedId,
                 AccountHashedId = source.AccountHashedId,
                 EmailAddressConfirmedByApprentice = apprenticeship.EmailAddressConfirmedByApprentice,

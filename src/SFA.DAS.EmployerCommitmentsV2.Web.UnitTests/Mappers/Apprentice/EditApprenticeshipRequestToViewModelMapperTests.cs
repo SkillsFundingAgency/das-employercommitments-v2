@@ -29,16 +29,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task GetTrainingProgrammeIsCalled()
-        {
-            //Act
-            await _fixture.Map();
-
-            //Assert
-            _fixture.VerifyGetTrainingProgrammeIsCalled();
-        }
-
-        [Test]
         public async Task GetApprenticeshipIsCalled()
         {
             //Act
@@ -434,7 +424,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private AccountResponse _accountResponse;
         private GetAllTrainingProgrammeStandardsResponse _allTrainingProgrammeStandardsResponse;
         private GetAllTrainingProgrammesResponse _allTrainingProgrammeResponse;
-        private GetTrainingProgrammeResponse _trainingProgrammeResponse;
         private EditApprenticeshipRequestToViewModelMapper _mapper;
         private EditApprenticeshipRequestViewModel _viewModel;
         private IEnumerable<TrainingProgramme> _courses;
@@ -444,13 +433,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _viewModel = await _mapper.Map(_request);
             return _viewModel;
         }
-
-        internal EditApprenticeshipRequestToViewModelMapperTestsFixture VerifyGetTrainingProgrammeIsCalled()
-        {
-            _mockCommitmentsApiClient.Verify(t => t.GetTrainingProgramme(ApprenticeshipResponse.CourseCode, It.IsAny<CancellationToken>()), Times.Once());
-            return this;
-        }
-
 
         internal EditApprenticeshipRequestToViewModelMapperTestsFixture VerifyGetApprenticeshipIsCalled()
         {
@@ -667,16 +649,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _allTrainingProgrammeStandardsResponse = autoFixture.Create<GetAllTrainingProgrammeStandardsResponse>();
             _allTrainingProgrammeResponse = autoFixture.Create<GetAllTrainingProgrammesResponse>();
    
-            _trainingProgrammeResponse = autoFixture.Build<GetTrainingProgrammeResponse>().Create();
-
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _mockCommitmentsApiClient.Setup(r => r.GetApprenticeship(It.IsAny<long>(), CancellationToken.None))
                 .ReturnsAsync(ApprenticeshipResponse);
             _mockCommitmentsApiClient.Setup(c => c.GetPriceEpisodes(It.IsAny<long>(), CancellationToken.None))
                 .ReturnsAsync(_priceEpisodesResponse);
-
-            _mockCommitmentsApiClient.Setup(t => t.GetTrainingProgramme(ApprenticeshipResponse.CourseCode, It.IsAny<CancellationToken>()))
-               .ReturnsAsync(_trainingProgrammeResponse);
 
             _mockApprovalsOuterApiClient = new Mock<IApprovalsApiClient>();
             _mockApprovalsOuterApiClient.Setup(t => t.GetEditApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
