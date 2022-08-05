@@ -177,7 +177,7 @@
                     <p class="govuk-body">
                         @Model.TrainingName
                         <button type="submit" name="ChangeCourse" value="Edit" class="das-button--inline-link">
-                            Edit<span class="govuk-visually-hidden"> aprenticeship training course</span>
+                            Edit<span class="govuk-visually-hidden"> apprenticeship training course</span>
                         </button>
                     </p>
                 </div>
@@ -187,11 +187,11 @@
             @if (Model.HasMultipleDeliveryModelOptions)
             {
                 <div class="govuk-form-group">
-                    <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Delivery model</p>
+                    <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Apprenticeship delivery model</p>
                     <p class="govuk-body">
                         @Model.DeliveryModel.ToDescription()
                         <button type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
-                            Edit<span class="govuk-visually-hidden"> delivery model</span>
+                            Edit<span class="govuk-visually-hidden"> apprenticeship delivery model</span>
                         </button>
                     </p>
                 </div>
