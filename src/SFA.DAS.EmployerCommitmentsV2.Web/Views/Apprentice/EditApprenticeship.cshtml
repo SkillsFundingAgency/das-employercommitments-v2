@@ -184,7 +184,9 @@
                 <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
             }
 
-            @if (Model.HasMultipleDeliveryModelOptions)
+        <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />    
+
+        @if (Model.HasMultipleDeliveryModelOptions)
             {
                 <div class="govuk-form-group">
                     <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Apprenticeship delivery model</p>
