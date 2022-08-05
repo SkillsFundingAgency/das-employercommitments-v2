@@ -4,10 +4,6 @@
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.CommitmentsV2.Api.Client
 @using SFA.DAS.EmployerCommitmentsV2.Web.Services
-@inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService
-@inject ICommitmentsApiClient CommitmentsApiClient
-@inject IDeliveryModelService DeliveryModelService
-
 
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditApprenticeshipRequestViewModel
 
@@ -41,6 +37,7 @@
             @Html.HiddenFor(x => x.IsLockedForUpdate)
             @Html.HiddenFor(x => x.IsUpdateLockedForStartDateAndCourse)
             @Html.HiddenFor(x => x.IsContinuation)
+            @Html.HiddenFor(x => x.TrainingName)
 
             @if (Model.IsContinuation)
             {
@@ -174,11 +171,6 @@
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(Model.CourseCode))
-                {
-                    Model.TrainingName = (await CommitmentsApiClient.GetTrainingProgramme(Model.CourseCode)).TrainingProgramme.Name;
-                }
-
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 <div class="govuk-form-group">
                     <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Apprenticeship training course</p>
