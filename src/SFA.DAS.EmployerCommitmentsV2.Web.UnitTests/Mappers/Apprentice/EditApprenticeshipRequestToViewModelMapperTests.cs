@@ -49,16 +49,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task GetCohortIsCalled()
-        {
-            //Act
-            await _fixture.Map();
-
-            //Assert
-            _fixture.VerifyGetCohortIsCalled();
-        }
-
-        [Test]
         public async Task GetAccountIsCalled()
         {
             //Act
@@ -443,12 +433,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         internal EditApprenticeshipRequestToViewModelMapperTestsFixture VerifyGetPriceEpisodeIsCalled()
         {
             _mockCommitmentsApiClient.Verify(t => t.GetPriceEpisodes(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
-            return this;
-        }
-
-        internal EditApprenticeshipRequestToViewModelMapperTestsFixture VerifyGetCohortIsCalled()
-        {
-            _mockCommitmentsApiClient.Verify(t => t.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
             return this;
         }
 
