@@ -135,9 +135,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             Assert.AreEqual(_request.Cohort.LegalEntityName, _result.LegalEntityName);
         }
 
-        [TestCase(DeliveryModel.Regular, null)]
-        [TestCase(DeliveryModel.PortableFlexiJob, "Portable flexi-job")]
-        public async Task ThenDeliveryModelIsMappedCorrectly(DeliveryModel delivery, string display)
+        [TestCase(DeliveryModel.Regular, DeliveryModel.Regular)]
+        [TestCase(DeliveryModel.PortableFlexiJob, DeliveryModel.PortableFlexiJob)]
+        public async Task ThenDeliveryModelIsMappedCorrectly(DeliveryModel delivery, DeliveryModel display)
         {
             _draftApprenticeship.DeliveryModel = delivery;
             _result = await _mapper.Map(_request) as ViewDraftApprenticeshipViewModel;

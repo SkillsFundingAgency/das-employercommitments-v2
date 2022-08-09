@@ -45,7 +45,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                                                        ApprenticeshipStatus == ApprenticeshipStatus.Paused ||
                                                        ApprenticeshipStatus == ApprenticeshipStatus.Live ||
                                                        ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart) &&
-                                                       !HasContinuation && DeliveryModel == null);
+                                                       !HasContinuation &&
+                                                       DeliveryModel != CommitmentsV2.Types.DeliveryModel.PortableFlexiJob
+                                                       );
+
         public List<TrainingProviderHistory> TrainingProviderHistory { get; set; }
         public ConfirmationStatus? ConfirmationStatus { get; set; }
         public string Email { get; set; }
@@ -60,7 +63,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool EmailAddressConfirmedByApprentice { get; set; }
         public bool CanResendInvitation => !string.IsNullOrEmpty(Email) && !EmailAddressConfirmedByApprentice;
 
-        public string DeliveryModel { get; set; }
+        public DeliveryModel? DeliveryModel { get; set; }
         public int? EmploymentPrice { get; set; }
         public string EmploymentPriceDisplay => EmploymentPrice?.ToGdsCostFormat() ?? string.Empty;
         public DateTime? EmploymentEndDate { get; set; }
