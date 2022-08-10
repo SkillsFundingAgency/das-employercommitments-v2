@@ -236,7 +236,7 @@
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header das-table-cell-width-45">Apprenticeship delivery model</th>
-                        <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.DeliveryModel</td>
+                        <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.DeliveryModel.ToDescription()</td>
                     </tr>
                 }
                 @if (!string.IsNullOrEmpty(Model.Version))
@@ -305,13 +305,13 @@
                             <td class="govuk-table__cell"></td>
                         }
                     </tr>
-
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header">Planned end date for this employment</th>
-                        <td id="apprentice-end-date" class="govuk-table__cell">@Model.EmploymentEndDateDisplay</td>
-                        <td class="govuk-table__cell"></td>
-                    </tr>
                 }
+
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Planned end date for this employment</th>
+                    <td id="apprentice-end-date" class="govuk-table__cell">@Model.EmploymentEndDateDisplay</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
 
                 @if (Model.RecognisePriorLearning == true)
                 {
