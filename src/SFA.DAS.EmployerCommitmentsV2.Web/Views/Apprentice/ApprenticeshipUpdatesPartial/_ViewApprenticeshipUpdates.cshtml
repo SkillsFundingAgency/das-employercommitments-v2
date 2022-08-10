@@ -52,7 +52,7 @@
                         <td class="govuk-table__cell">@Model.ApprenticeshipUpdates.DeliveryModel.ToDescription()</td>
                     </tr>
 
-                    @if (Model.ApprenticeshipUpdates.DeliveryModel == DeliveryModel.Regular)
+                    @if (Model.ApprenticeshipUpdates.DeliveryModel == DeliveryModel.PortableFlexiJob)
                     {
                         <tr>
                             <th scope="row" class="govuk-table__header">Planned end date of this employment</th>
@@ -179,4 +179,3 @@
         </table>
     </div>
 </div>
-

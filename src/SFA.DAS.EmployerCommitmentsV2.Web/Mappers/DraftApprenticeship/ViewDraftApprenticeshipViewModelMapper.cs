@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 Email = draftApprenticeship.Email,
                 Uln = draftApprenticeship.Uln,
                 DateOfBirth = draftApprenticeship.DateOfBirth,
-                DeliveryModel = draftApprenticeship.DeliveryModel.ToIrregularDescription(),
+                DeliveryModel = draftApprenticeship.DeliveryModel,
                 TrainingCourse = trainingCourse?.TrainingProgramme.Name,
                 HasStandardOptions = draftApprenticeship.HasStandardOptions,
                 Version = draftApprenticeship.TrainingCourseVersion,
