@@ -49,12 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("add")]
         public IActionResult AddNewDraftApprenticeship(AddDraftApprenticeshipRequest request)
         {
-            if (_authorizationService.IsAuthorized(EmployerFeature.DeliveryModel))
-            {
-                return RedirectToAction(nameof(SelectCourse), request.CloneBaseValues());
-            }
-
-            return RedirectToAction(nameof(AddDraftApprenticeshipDetails), request.CloneBaseValues());
+            return RedirectToAction(nameof(SelectCourse), request.CloneBaseValues());
         }
 
         [HttpGet]
