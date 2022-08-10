@@ -501,15 +501,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 });
             }
             
-            return RedirectToAction("AgreementNotSigned", new LegalEntitySignedAgreementViewModel
+            var model = new LegalEntitySignedAgreementViewModel
             {
-                AccountHashedId = request.AccountHashedId,                
-                LegalEntityId = autoSelectLegalEntity.Id,
+                AccountHashedId = request.AccountHashedId,
+                AccountLegalEntityId = autoSelectLegalEntity.Id,
                 CohortRef = request.cohortRef,
                 LegalEntityName = autoSelectLegalEntity.Name,
                 TransferConnectionCode = request.transferConnectionCode,
-                AccountLegalEntityPublicHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId
-            });
+                AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId
+            };
+
+            return RedirectToAction("AgreementNotSigned", model.CloneBaseValues());
 
         }
 
@@ -526,22 +528,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 {
                     AccountHashedId = selectedLegalEntity.AccountHashedId,
                     TransferSenderId = selectedLegalEntity.TransferConnectionCode,                    
-                    AccountLegalEntityHashedId = response.AccountLegalEntityPublicHashedId,
+                    AccountLegalEntityHashedId = response.AccountLegalEntityHashedId,
                     EncodedPledgeApplicationId = selectedLegalEntity.EncodedPledgeApplicationId
                 });               
             }
 
-            return RedirectToAction("AgreementNotSigned", new LegalEntitySignedAgreementViewModel
+            var model = new LegalEntitySignedAgreementViewModel
             {
                 AccountHashedId = selectedLegalEntity.AccountHashedId,
-                LegalEntityId = selectedLegalEntity.LegalEntityId,
+                AccountLegalEntityId = selectedLegalEntity.LegalEntityId,
                 CohortRef = selectedLegalEntity.CohortRef,
                 LegalEntityName = response.LegalEntityName,
-                AccountLegalEntityPublicHashedId = response.AccountLegalEntityPublicHashedId,
+                AccountLegalEntityHashedId = response.AccountLegalEntityHashedId,
                 EncodedPledgeApplicationId = selectedLegalEntity.EncodedPledgeApplicationId
-            });
-        }
+            };
 
+            return RedirectToAction("AgreementNotSigned", model.CloneBaseValues());
+        }
 
         [HttpGet]
         [Route("AgreementNotSigned")]
