@@ -12,9 +12,15 @@
 @Html.HiddenFor(x => x.StandardUId)
 
 @{
+    var editCourseLabel = "Add";
     var startDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Planned training start date" : "Planned apprenticeship training start date";
     var endDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Projected training finish date" : "Projected apprenticeship training finish date";
     var multipleDeliveryModels = await DeliveryModelService.HasMultipleDeliveryModels(Model.ProviderId, Model.CourseCode, Model.AccountLegalEntityHashedId);
+
+    if (!string.IsNullOrWhiteSpace(Model.CourseCode))
+    {
+        editCourseLabel = "Edit";
+    }
 
     ViewBag.ValidationOrder = "FirstName,LastName,Email,DateOfBirth,Uln,StartDate,EndDate,EmploymentEndDate,Cost,EmploymentPrice,Reference";
 }
@@ -163,7 +169,7 @@ else
             <p class="govuk-body">
                 @Model.CourseName
                 <button type="submit" name="ChangeCourse" value="Edit" class="das-button--inline-link">
-                    Edit<span class="govuk-visually-hidden"> aprenticeship training course</span>
+                    @editCourseLabel<span class="govuk-visually-hidden"> apprenticeship training course</span>
                 </button>
             </p>
         </div>
