@@ -119,12 +119,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
-        public void CoursesAreMappedCorrectly()
-        {
-            Assert.AreEqual(_allTrainingProgrammes, _result.Courses);
-        }
-
-        [Test]
         public void TransferSenderIdIsMappedCorrectly()
         {
             Assert.AreEqual(_source.TransferSenderId, _result.TransferSenderId);
@@ -146,24 +140,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public void AutoCreatedReservationIsMappedCorrectly()
         {
             Assert.AreEqual(_source.AutoCreated, _result.AutoCreatedReservation);
-        }
-
-        [Test]
-        public async Task TransferFundedCohortsAllowStandardCoursesOnlyWhenEmployerIsLevy()
-        {
-            _source.TransferSenderId = "test";
-            _result = await _mapper.Map(TestHelper.Clone(_source));
-            _result.Courses.Should().BeEquivalentTo(_standardTrainingProgrammes);
-        }
-
-        [TestCase("12345")]
-        [TestCase(null)]
-        public async Task NonLevyCohortsAllowStandardCoursesOnlyRegardlessOfTransferStatus(string transferSenderId)
-        {
-            _source.TransferSenderId = transferSenderId;
-            _accountLegalEntityResponse.LevyStatus = ApprenticeshipEmployerType.NonLevy;
-            _result = await _mapper.Map(TestHelper.Clone(_source));
-            _result.Courses.Should().BeEquivalentTo(_standardTrainingProgrammes);
         }
     }
 }
