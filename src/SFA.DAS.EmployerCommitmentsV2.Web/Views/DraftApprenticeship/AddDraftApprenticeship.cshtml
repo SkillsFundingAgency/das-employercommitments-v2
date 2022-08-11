@@ -28,6 +28,8 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.CohortReference)
 
+            <button type="submit" id="defaultButton" aria-hidden="true" class="govuk-visually-hidden" tabindex="-1"></button>
+
             <partial name="_DraftApprenticeship" for="@Model" />
 
             <button type="submit" id="continue-button" class="govuk-button">Save and continue</button>
