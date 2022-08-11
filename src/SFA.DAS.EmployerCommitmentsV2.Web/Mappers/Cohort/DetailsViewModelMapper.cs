@@ -67,6 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 WithParty = cohort.WithParty,
                 AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
                 LegalEntityName = cohort.LegalEntityName,
+                ProviderId = cohort.ProviderId ?? 0,
                 ProviderName = cohort.ProviderName,
                 TransferSenderHashedId = cohort.TransferSenderId == null ? null : _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId),
                 EncodedPledgeApplicationId = cohort.PledgeApplicationId == null ? null : _encodingService.Encode(cohort.PledgeApplicationId.Value, EncodingType.PledgeApplicationId),
