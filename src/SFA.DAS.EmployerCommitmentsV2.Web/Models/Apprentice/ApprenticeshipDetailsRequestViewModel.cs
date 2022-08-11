@@ -28,9 +28,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public ApprenticeshipStatus ApprenticeshipStatus { get; set; }
         public string ProviderName { get; set; }
         public PendingChanges PendingChanges { get; set; }
+
         public bool CanEditStatus => (ApprenticeshipStatus == ApprenticeshipStatus.Live ||
                                      ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart ||
                                      ApprenticeshipStatus == ApprenticeshipStatus.Paused);
+
         public string EmployerReference { get; set; }
         public string CohortReference { get; set; }
         public bool EnableEdit { get; set; }
@@ -41,19 +43,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool HasPendingChangeOfProviderRequest { get; set; }
         public Party? PendingChangeOfProviderRequestWithParty { get; set; }
         public bool HasContinuation { get; set; }
+
         public bool ShowChangeTrainingProviderLink => ((ApprenticeshipStatus == ApprenticeshipStatus.Stopped ||
                                                        ApprenticeshipStatus == ApprenticeshipStatus.Paused ||
                                                        ApprenticeshipStatus == ApprenticeshipStatus.Live ||
                                                        ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart) &&
                                                        !HasContinuation && DeliveryModel == null);
+
         public List<TrainingProviderHistory> TrainingProviderHistory { get; set; }
         public ConfirmationStatus? ConfirmationStatus { get; set; }
         public string Email { get; set; }
         public bool EmailShouldBePresent { get; set; }
         public bool HasNewerVersions { get; set; }
+
         // If It's completed or stopped and option is null, dont show options as it could predate standard versioning
         // even if the version has options
         public bool ShowOptions => VersionOptions != null && VersionOptions.Any() && !PreDatesStandardVersioning;
+
         public bool OnlySingleOption => VersionOptions != null && VersionOptions.Count() == 1;
         private bool IsCompletedOrStopped => ApprenticeshipStatus == ApprenticeshipStatus.Stopped || ApprenticeshipStatus == ApprenticeshipStatus.Completed;
         private bool PreDatesStandardVersioning => IsCompletedOrStopped && Option == null;
@@ -68,6 +74,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool? RecognisePriorLearning { get; set; }
         public int? DurationReducedBy { get; set; }
         public int? PriceReducedBy { get; set; }
+
+        public bool HasPendingOverlappingTrainingDateRequest { get; set; }
+
         public ActionRequiredBanner GetActionRequiredBanners()
         {
             var actionRequiredBanner = ActionRequiredBanner.None;

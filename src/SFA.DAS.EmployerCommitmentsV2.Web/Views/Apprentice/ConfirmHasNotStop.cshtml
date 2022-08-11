@@ -1,0 +1,79 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ConfirmHasNotStopViewModel
+
+@{
+    string pageTitle;
+    string pageHeading;
+
+    pageHeading = pageTitle = "Confirm if an apprenticeship has stopped";
+    ViewBag.Title = pageTitle;
+    ViewBag.GaData.Vpv = "/accounts/apprentices/manage/confirm-has-not-stop-apprenticeship";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <partial name="_ValidationSummary" />
+
+        <form method="post">
+
+            @Html.AntiForgeryToken()
+
+            <h1 class="govuk-heading-xl">@pageHeading</h1>
+
+            <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Name </dt>
+                    <dd class="govuk-summary-list__value"> @Model.ApprenticeName</dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Unique learner number </dt>
+                    <dd class="govuk-summary-list__value"> @Model.ULN</dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Apprenticeship training course </dt>
+                    <dd class="govuk-summary-list__value"> @Model.Course</dd>
+                </div>
+
+            </dl>
+
+             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.StopConfirmed,  "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <span id="error-message-@nameof(ConfirmHasNotStopViewModel.StopConfirmed)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(ConfirmHasNotStopViewModel.StopConfirmed)].Errors.First().ErrorMessage
+                        </span>
+                    }
+
+                    <h1 class="govuk-heading-l">@pageHeading</h1>
+
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="StopConfirmed" name="StopConfirmed" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="StopConfirmed">
+                                Yes, this apprenticeship has stopped
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="StopConfirmed-no" name="StopConfirmed" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="StopConfirmed-no">
+                                No, this apprenticeship has not stopped
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <button class="govuk-button" type="submit" id="submit-status-change">Continue</button>
+        </form>
+
+    </div>
+</div>
+
+@section Back
+ {
+    <div class="das-js-back-link"></div>
+}

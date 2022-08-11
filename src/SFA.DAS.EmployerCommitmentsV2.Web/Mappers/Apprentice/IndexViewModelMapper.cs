@@ -16,7 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         private readonly IEncodingService _encodingService;
 
         public IndexViewModelMapper(
-            ICommitmentsApiClient client, 
+            ICommitmentsApiClient client,
             IModelMapper modelMapper,
             IEncodingService encodingService)
         {
@@ -47,9 +47,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
             var statusFilters = new[]
             {
-                ApprenticeshipStatus.WaitingToStart, 
+                ApprenticeshipStatus.WaitingToStart,
                 ApprenticeshipStatus.Live,
-                ApprenticeshipStatus.Paused, 
+                ApprenticeshipStatus.Paused,
                 ApprenticeshipStatus.Stopped,
                 ApprenticeshipStatus.Completed
             };
@@ -58,7 +58,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             {
                 Alerts.ChangesForReview ,
                 Alerts.ChangesPending,
-                Alerts.ChangesRequested
+                Alerts.ChangesRequested,
+                Alerts.ConfirmDates
             };
 
             var filterModel = new ApprenticesFilterModel
@@ -83,7 +84,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             if (response.TotalApprenticeships >= Constants.ApprenticesSearch.NumberOfApprenticesRequiredForSearch)
             {
                 var filters = await _client.GetApprenticeshipsFilterValues(
-                    new GetApprenticeshipFiltersRequest{EmployerAccountId = decodedAccountId});
+                    new GetApprenticeshipFiltersRequest { EmployerAccountId = decodedAccountId });
 
                 filterModel.ProviderFilters = filters.ProviderNames;
                 filterModel.CourseFilters = filters.CourseNames;
