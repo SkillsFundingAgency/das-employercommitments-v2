@@ -34,12 +34,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             return new LegalEntitySignedAgreementViewModel
             {
                 AccountHashedId = source.AccountHashedId,
-                LegalEntityId = source.LegalEntityId,
+                AccountLegalEntityId = source.LegalEntityId,
                 TransferConnectionCode = source.TransferConnectionCode,
                 CohortRef = source.CohortRef,
                 HasSignedMinimumRequiredAgreementVersion = hasSignedMinimumRequiredAgreementVersion,
                 LegalEntityName = legalEntity.Name ?? string.Empty,
-                AccountLegalEntityPublicHashedId = legalEntity.AccountLegalEntityPublicHashedId,
+                AccountLegalEntityHashedId = legalEntity.AccountLegalEntityPublicHashedId,
                 EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
             };
         }
