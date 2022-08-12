@@ -119,19 +119,6 @@
                                     <td class="govuk-table__cell">@Model.OriginalApprenticeship.DeliveryModel.ToDescription()</td>
                                     <td class="govuk-table__cell">@Model.DeliveryModel.ToDescription()</td>
                                 </tr>
-                                @if (Model.DeliveryModel.Equals(DeliveryModel.PortableFlexiJob))
-                                {
-                                    <tr>
-                                        <th scope="row" class="govuk-table__header">Planned end date of this employment</th>
-                                        <td class="govuk-table__cell">@(Model.OriginalApprenticeship.EmploymentEndDate.HasValue ? Model.OriginalApprenticeship.EmploymentEndDate.Value.ToGdsFormat() : "Not applicable")</td>
-                                        <td class="govuk-table__cell">Not applicable</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row" class="govuk-table__header">Training price for this employment</th>
-                                        <td class="govuk-table__cell">@(Model.OriginalApprenticeship.EmploymentPrice.HasValue ? Model.OriginalApprenticeship.EmploymentPrice.FormatCost() : "Not applicable")</td>
-                                        <td class="govuk-table__cell">Not applicable</td>
-                                    </tr>
-                                }
                             }
                             @if (Model.EmploymentEndDate.HasValue && Model.DeliveryModel.Equals(DeliveryModel.PortableFlexiJob))
                             {
