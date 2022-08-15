@@ -2,6 +2,7 @@
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+using SFA.DAS.Encoding;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
@@ -9,13 +10,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
     public class SelectDeliveryModelViewModelToAddDraftApprenticeshipRequestMapper : IMapper<SelectDeliveryModelViewModel, AddDraftApprenticeshipRequest>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly IEncodingService _encodingService;
 
-        public SelectDeliveryModelViewModelToAddDraftApprenticeshipRequestMapper(ICommitmentsApiClient commitmentsApiClient)
-            => _commitmentsApiClient = commitmentsApiClient;
+        public SelectDeliveryModelViewModelToAddDraftApprenticeshipRequestMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
+            => (_commitmentsApiClient, _encodingService) = (commitmentsApiClient, encodingService);
 
         public async Task<AddDraftApprenticeshipRequest> Map(SelectDeliveryModelViewModel source)
         {
-            var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
+            var cohortId = _encodingService.Decode(source.CohortReference, EncodingType.CohortReference);
+            var cohort = await _commitmentsApiClient.GetCohort(cohortId);
 
             return new AddDraftApprenticeshipRequest
             {
