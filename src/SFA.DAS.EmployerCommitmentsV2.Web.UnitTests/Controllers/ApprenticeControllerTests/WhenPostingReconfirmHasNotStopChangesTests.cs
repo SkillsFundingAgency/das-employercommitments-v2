@@ -22,9 +22,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     public class WhenPostingReconfirmHasNotStopChangesTests : ApprenticeControllerTestBase
     {
         private string ApprenticeHasNotStoppedConrimedMessage;
-        private const string FlashMessageBody = "FlashMessageBody";
-        private const string FlashMessageTitle = "FlashMessageTitle";
-        private const string FlashMessageLevel = "FlashMessageLevel";
 
         [SetUp]
         public void Arrange()
