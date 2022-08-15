@@ -981,12 +981,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpPost]
         [Route("{apprenticeshipHashedId}/details/reconfirmHasNotStop")]
-        public IActionResult ReconfirmHasNotStopChanges(ReconfirmHasNotStopViewModel viewModel)
+        public async Task<IActionResult> ReconfirmHasNotStopChangesAsync(ReconfirmHasNotStopViewModel viewModel)
         {
             if (viewModel.StopConfirmed.HasValue && viewModel.StopConfirmed.Value)
             {
-                //TODO - create end point
-                // await _commitmentsApiClient.GetOverlappingTrainingDateRequest(viewModel.ApprenticeshipId, stopApprenticeshipRequest, CancellationToken.None);
+                await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(new ResolveApprenticeshipOverlappingTrainingDateRequest
+                {
+                    ApprenticeshipId = viewModel.ApprenticeshipId,
+                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprentieshipIsStillActive
+                }, CancellationToken.None);
+
                 TempData.AddFlashMessage($"Apprenticeship confirmed for {viewModel.ULN}", ITempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
 
