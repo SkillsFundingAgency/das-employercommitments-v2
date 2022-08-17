@@ -134,7 +134,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public UpdateDraftApprenticeshipRequest _updateDraftApprenticeshipRequest;
         public EditDraftApprenticeshipViewModel _editDraftApprenticeshipViewModel;
         public AddDraftApprenticeshipRequest _addDraftApprenticeshipRequest;
-        public SelectDeliveryModelViewModel _selectDeliveryModelViewModel_WithDeliveryModels;
+        public SelectDeliveryModelForEditViewModel _selectDeliveryModelViewModel_WithDeliveryModels;
         public SelectDeliveryModelViewModel _selectDeliveryModelViewModel_WithOutDeliveryModels;
         public SelectCourseViewModel _selectCourseViewModel;
 
@@ -169,8 +169,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             _addDraftApprenticeshipRequest = _autoFixture.Build<AddDraftApprenticeshipRequest>().Create();
             _selectCourseViewModel = _autoFixture.Build<SelectCourseViewModel>().Create();
 
-            _selectDeliveryModelViewModel_WithDeliveryModels = _autoFixture.Build<SelectDeliveryModelViewModel>()
-                    .With(x => x.DeliveryModels, _autoFixture.CreateMany<DeliveryModel>().ToArray()).Create();
+            _selectDeliveryModelViewModel_WithDeliveryModels = _autoFixture.Build<SelectDeliveryModelForEditViewModel>()
+                    .With(x => x.DeliveryModels).Create();
             _selectDeliveryModelViewModel_WithOutDeliveryModels = _autoFixture.Build<SelectDeliveryModelViewModel>()
                     .With(x => x.DeliveryModels, new DeliveryModel[0]).Create();
 
@@ -228,7 +228,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             return await _controller.SelectDeliveryModelForEdit(request);
         }
 
-        public async Task<IActionResult> PostSetDeliveryModelForEdit(SelectDeliveryModelViewModel model)
+        public async Task<IActionResult> PostSetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
         {
             return await _controller.SetDeliveryModelForEdit(model);
         }

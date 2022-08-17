@@ -229,21 +229,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{DraftApprenticeshipHashedId}/edit/select-delivery-model")]
         public async Task<IActionResult> SelectDeliveryModelForEdit(AddDraftApprenticeshipRequest request)
         {
-            var model = await _modelMapper.Map<SelectDeliveryModelViewModel>(request);
-
-            if (model.DeliveryModels.Length > 1)
+            var model = await _modelMapper.Map<SelectDeliveryModelForEditViewModel>(request);
+         
+            if (model.DeliveryModels.Count > 1)
             {
                 return View("SelectDeliveryModel", model);
             }
 
-            request.DeliveryModel = model.DeliveryModels.FirstOrDefault();
+            request.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?)model.DeliveryModels.FirstOrDefault();
+
             var editModel = await _modelMapper.Map<EditDraftApprenticeshipViewModel>(request);
+            editModel.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?) model.DeliveryModel;
+
             return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), editModel);
         }
 
         [HttpPost]
         [Route("{DraftApprenticeshipHashedId}/edit/select-delivery-model")]
-        public async Task<IActionResult> SetDeliveryModelForEdit(SelectDeliveryModelViewModel model)
+        public async Task<IActionResult> SetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
         {
             if (model.DeliveryModel == null)
             {
@@ -252,6 +255,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             var editModel = await _modelMapper.Map<EditDraftApprenticeshipViewModel>(model);
+            editModel.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?) model.DeliveryModel;
+
             return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), editModel);
         }
 
