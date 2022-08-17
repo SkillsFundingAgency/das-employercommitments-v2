@@ -4,10 +4,6 @@
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.CommitmentsV2.Api.Client
 @using SFA.DAS.EmployerCommitmentsV2.Web.Services
-@inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService
-@inject ICommitmentsApiClient CommitmentsApiClient
-@inject IDeliveryModelService DeliveryModelService
-
 
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditApprenticeshipRequestViewModel
 
@@ -16,7 +12,6 @@
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "edit-apprentices-detail";
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/edit-apprentice-details";
-    var multipleDeliveryModels = await DeliveryModelService.HasMultipleDeliveryModels(Model.ProviderId, Model.CourseCode, Model.AccountLegalEntityHashedId);
 
     Model.Cost = (int?)Model.Cost;
     Model.CourseCode = ViewData.ModelState[nameof(Model.CourseCode)]?.AttemptedValue ?? Model.CourseCode;
@@ -38,6 +33,11 @@
             @Html.HiddenFor(x => x.EmailShouldBePresent)
             @Html.HiddenFor(x => x.ProviderId)
             @Html.HiddenFor(x => x.AccountLegalEntityHashedId)
+            @Html.HiddenFor(x => x.HasMultipleDeliveryModelOptions)
+            @Html.HiddenFor(x => x.IsLockedForUpdate)
+            @Html.HiddenFor(x => x.IsUpdateLockedForStartDateAndCourse)
+            @Html.HiddenFor(x => x.IsContinuation)
+            @Html.HiddenFor(x => x.TrainingName)
 
             <button type="submit" id="defaultButton" aria-hidden="true" class="govuk-visually-hidden" tabindex="-1"></button>
 
@@ -170,50 +170,48 @@
                     @Html.HiddenFor(x => x.CourseCode)
                     @Html.HiddenFor(x => x.TrainingName)
                 </dl>
-
-                @if (Model.DeliveryModel != DeliveryModel.Regular)
-                {
-                    <dl class="das-definition-list">
-                        <dt asp-for="DeliveryModel" class="das-definition-list__title">Apprenticeship delivery model</dt>
-                        <dd class="das-definition-list__definition" id="trainingName">@Model.DeliveryModel.ToDescription()</dd>
-                    </dl>
-                }
-                @Html.HiddenFor(x => x.DeliveryModel)
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(Model.CourseCode))
-                {
-                    Model.TrainingName = (await CommitmentsApiClient.GetTrainingProgramme(Model.CourseCode)).TrainingProgramme.Name;
-                }
-
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 <div class="govuk-form-group">
                     <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Apprenticeship training course</p>
                     <p class="govuk-body">
                         @Model.TrainingName
                         <button type="submit" name="ChangeCourse" value="Edit" class="das-button--inline-link">
-                            Edit<span class="govuk-visually-hidden"> aprenticeship training course</span>
+                            Edit<span class="govuk-visually-hidden"> apprenticeship training course</span>
                         </button>
                     </p>
                 </div>
                 <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
-
-                if (multipleDeliveryModels)
-                {
-                    <div class="govuk-form-group">
-                        <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Delivery model</p>
-                        <p class="govuk-body">
-                            @Model.DeliveryModel.ToDescription()
-                            <button type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
-                                Edit<span class="govuk-visually-hidden"> delivery model</span>
-                            </button>
-                        </p>
-                    </div>
-                }
-               
-                @Html.HiddenFor(x => x.DeliveryModel)
             }
+
+        <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />    
+
+        @if (Model.HasMultipleDeliveryModelOptions)
+            {
+                <div class="govuk-form-group">
+                    <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Apprenticeship delivery model</p>
+                    <p class="govuk-body">
+                        @Model.DeliveryModel.ToDescription()
+                        <button type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
+                            Edit<span class="govuk-visually-hidden"> apprenticeship delivery model</span>
+                        </button>
+                    </p>
+                </div>
+            }
+            else
+            {
+                if (Model.DeliveryModel != DeliveryModel.Regular)
+                {
+                    <dl class="das-definition-list">
+                        <dt asp-for="DeliveryModel" class="das-definition-list__title">Apprenticeship delivery model</dt>
+                        <dd class="das-definition-list__definition" id="trainingName">@Model.DeliveryModel.ToDescription()</dd>
+                    </dl>
+                }
+            }
+
+            @Html.HiddenFor(x => x.DeliveryModel)
 
             <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
             @if (Model.IsLockedForUpdate || Model.IsUpdateLockedForStartDateAndCourse)
