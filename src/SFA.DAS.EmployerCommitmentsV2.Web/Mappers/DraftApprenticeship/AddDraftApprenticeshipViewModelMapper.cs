@@ -41,27 +41,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 CourseCode = source.CourseCode,
                 ProviderId = source.ProviderId,
                 ProviderName = cohort.ProviderName,
-                Courses = await GetCoursesIfPreDeliveryModel(cohort.IsFundedByTransfer, cohort.LevyStatus),   
+                Courses = null,
                 TransferSenderHashedId = cohort.IsFundedByTransfer ? _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId) : string.Empty,
                 AutoCreatedReservation = source.AutoCreated,
                 DeliveryModel = source.DeliveryModel,
             };
 
             return result;
-        }
-
-        private async Task<IEnumerable<TrainingProgramme>> GetCoursesIfPreDeliveryModel(bool IsFundedByTransfer, ApprenticeshipEmployerType levyStatus)
-        {
-            if (_authorizationService.IsAuthorized(EmployerFeature.DeliveryModel))
-            {
-                return null;
-            }
-            else
-            {
-                return IsFundedByTransfer || levyStatus == ApprenticeshipEmployerType.NonLevy
-                    ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
-                    : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes;  
-            }
         }
     }
 }

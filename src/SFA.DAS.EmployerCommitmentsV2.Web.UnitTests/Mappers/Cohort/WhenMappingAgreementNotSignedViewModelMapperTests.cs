@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_legalEntitySignedAgreementViewModel);
 
             //Assert           
-            Assert.AreEqual(_legalEntitySignedAgreementViewModel.AccountLegalEntityPublicHashedId, result.AccountLegalEntityPublicHashedId);
+            Assert.AreEqual(_legalEntitySignedAgreementViewModel.AccountLegalEntityHashedId, result.AccountLegalEntityHashedId);
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_legalEntitySignedAgreementViewModel);
 
             //Assert           
-            Assert.AreEqual(_legalEntitySignedAgreementViewModel.LegalEntityId, result.LegalEntityId);
+            Assert.AreEqual(_legalEntitySignedAgreementViewModel.AccountLegalEntityId, result.AccountLegalEntityId);
         }
 
         [Test]

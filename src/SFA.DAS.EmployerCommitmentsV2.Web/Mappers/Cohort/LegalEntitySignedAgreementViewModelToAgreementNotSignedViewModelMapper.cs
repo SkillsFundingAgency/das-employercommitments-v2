@@ -30,10 +30,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             return new AgreementNotSignedViewModel
             {   
                 AccountHashedId = source.AccountHashedId,
-                AccountLegalEntityPublicHashedId = source.AccountLegalEntityPublicHashedId,
+                AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 CohortRef = source.CohortRef,
                 HasSignedMinimumRequiredAgreementVersion = source.HasSignedMinimumRequiredAgreementVersion,
-                LegalEntityId = source.LegalEntityId,
+                AccountLegalEntityId = source.AccountLegalEntityId,
                 LegalEntityName = source.LegalEntityName,
                 TransferConnectionCode = source.TransferConnectionCode,
                 EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,

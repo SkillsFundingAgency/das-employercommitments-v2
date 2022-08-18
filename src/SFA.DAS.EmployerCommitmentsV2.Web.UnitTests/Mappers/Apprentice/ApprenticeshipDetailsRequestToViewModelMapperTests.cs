@@ -339,9 +339,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(_priceEpisodesResponse.PriceEpisodes.First().Cost, result.Cost);
         }
 
-        [TestCase(DeliveryModel.PortableFlexiJob, "Portable flexi-job")]
+        [TestCase(DeliveryModel.PortableFlexiJob, DeliveryModel.PortableFlexiJob)]
         [TestCase(DeliveryModel.Regular, null)]
-        public async Task DeliveryModel_IsMapped(DeliveryModel dm, string expected)
+        public async Task DeliveryModel_IsMapped(DeliveryModel dm, DeliveryModel expected)
         {
             _apprenticeshipResponse.DeliveryModel = dm;
             //Act

@@ -12,9 +12,15 @@
 @Html.HiddenFor(x => x.StandardUId)
 
 @{
+    var editCourseLabel = "Add";
     var startDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Planned training start date" : "Planned apprenticeship training start date";
     var endDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Projected training finish date" : "Projected apprenticeship training finish date";
     var multipleDeliveryModels = await DeliveryModelService.HasMultipleDeliveryModels(Model.ProviderId, Model.CourseCode, Model.AccountLegalEntityHashedId);
+
+    if (!string.IsNullOrWhiteSpace(Model.CourseCode))
+    {
+        editCourseLabel = "Edit";
+    }
 
     ViewBag.ValidationOrder = "FirstName,LastName,Email,DateOfBirth,Uln,StartDate,EndDate,EmploymentEndDate,Cost,EmploymentPrice,Reference";
 }
@@ -151,50 +157,35 @@ else
         </span>
     </div>
 
-    @if (AuthorizationService.IsAuthorized(SFA.DAS.EmployerCommitmentsV2.Features.EmployerFeature.DeliveryModel))
+    if (!string.IsNullOrWhiteSpace(Model.CourseCode))
     {
-        if (!string.IsNullOrWhiteSpace(Model.CourseCode))
-        {
-            Model.CourseName = (await CommitmentsApiClient.GetTrainingProgramme(Model.CourseCode)).TrainingProgramme.Name;
-        }
+        Model.CourseName = (await CommitmentsApiClient.GetTrainingProgramme(Model.CourseCode)).TrainingProgramme.Name;
+    }
 
+    <div class="govuk-form-group">
+        <p class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</p>
+        <p class="govuk-body">
+            @Model.CourseName
+            <button type="submit" name="ChangeCourse" value="Edit" class="das-button--inline-link">
+                @editCourseLabel<span class="govuk-visually-hidden"> apprenticeship training course</span>
+            </button>
+        </p>
+    </div>
+
+    if (multipleDeliveryModels)
+    {
         <div class="govuk-form-group">
-            <p class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</p>
+            <p class="govuk-label govuk-!-font-weight-bold">Delivery model</p>
             <p class="govuk-body">
-                @Model.CourseName
-                <button type="submit" name="ChangeCourse" value="Edit" class="das-button--inline-link">
-                    Edit<span class="govuk-visually-hidden"> aprenticeship training course</span>
+                @Model.DeliveryModel.ToDescription()
+                <button type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
+                    Edit<span class="govuk-visually-hidden"> delivery model</span>
                 </button>
             </p>
         </div>
-
-        if (multipleDeliveryModels)
-        {
-            <div class="govuk-form-group">
-                <p class="govuk-label govuk-!-font-weight-bold">Delivery model</p>
-                <p class="govuk-body">
-                    @Model.DeliveryModel.ToDescription()
-                    <button type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
-                        Edit<span class="govuk-visually-hidden"> delivery model</span>
-                    </button>
-                </p>
-            </div>
-        }
-
-        <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
-    }
-    else
-    {
-        <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
-            <label asp-for="CourseCode" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
-            <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
-            @Html.ValidationMessageFor(m => m.CourseCode, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.CourseCode) })
-            <select class="govuk-select govuk-!-width-three-quarters" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "CourseCode", "Name"))" aria-describedby="course-name-hint">
-                <option value="">Please select an option</option>
-            </select>
-        </div>
     }
 
+    <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
     <input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
 }
 

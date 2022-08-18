@@ -7,6 +7,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
@@ -17,30 +18,31 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         private readonly IAcademicYearDateProvider _academicYearDateProvider;
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IEncodingService _encodingService;
+        private readonly IApprovalsApiClient _apiClient;
 
-        public EditApprenticeshipRequestToViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IAcademicYearDateProvider academicYearDateProvider, ICurrentDateTime currentDateTime, IEncodingService encodingService)
+        public EditApprenticeshipRequestToViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IAcademicYearDateProvider academicYearDateProvider, ICurrentDateTime currentDateTime, IEncodingService encodingService, IApprovalsApiClient apiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _academicYearDateProvider = academicYearDateProvider;
             _currentDateTime = currentDateTime;
             _encodingService = encodingService;
+            _apiClient = apiClient;
         }
         public async Task<EditApprenticeshipRequestViewModel> Map(EditApprenticeshipRequest source)
         {
+            var editApprenticeshipTask =  _apiClient.GetEditApprenticeship(source.AccountId, source.ApprenticeshipId);
             var apprenticeshipTask = _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId, CancellationToken.None);
             var priceEpisodesTask = _commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId, CancellationToken.None);
             var accountDetailsTask = _commitmentsApiClient.GetAccount(source.AccountId);
 
-            var apprenticeship = await apprenticeshipTask;
-            var commitmentTask = _commitmentsApiClient.GetCohort(apprenticeship.CohortId);
-            var courseDetailsTask = _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
+            await Task.WhenAll(editApprenticeshipTask, apprenticeshipTask, accountDetailsTask, priceEpisodesTask);
 
-            var accountDetails = await accountDetailsTask;
-            var priceEpisodes = await priceEpisodesTask;
-            var commitment = await commitmentTask;
-            var courseDetails = await courseDetailsTask;
+            var apprenticeship = apprenticeshipTask.Result;
+            var editApprenticeship = editApprenticeshipTask.Result;
+            var accountDetails = accountDetailsTask.Result;
+            var priceEpisodes = priceEpisodesTask.Result;
 
-            var courses = accountDetails.LevyStatus == ApprenticeshipEmployerType.NonLevy || commitment.IsFundedByTransfer
+            var courses = accountDetails.LevyStatus == ApprenticeshipEmployerType.NonLevy || editApprenticeship.IsFundedByTransfer
                 ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards(CancellationToken.None)).TrainingProgrammes
                 : (await _commitmentsApiClient.GetAllTrainingProgrammes(CancellationToken.None)).TrainingProgrammes;
 
@@ -48,7 +50,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                                     ||
                                     IsLiveAndIsNotWithInFundingPeriod(apprenticeship)
                                     ||
-                                    IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(apprenticeship, commitment);
+                                    IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(apprenticeship, editApprenticeship.IsFundedByTransfer);
 
             var result = new EditApprenticeshipRequestViewModel(apprenticeship.DateOfBirth, apprenticeship.StartDate, apprenticeship.EndDate, apprenticeship.EmploymentEndDate)
             {
@@ -65,24 +67,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 Courses = courses,
                 IsContinuation = apprenticeship.IsContinuation,
                 IsLockedForUpdate = isLockedForUpdate,
-                IsUpdateLockedForStartDateAndCourse = commitment.IsFundedByTransfer && !apprenticeship.HasHadDataLockSuccess,
+                IsUpdateLockedForStartDateAndCourse = editApprenticeship.IsFundedByTransfer && !apprenticeship.HasHadDataLockSuccess,
                 IsEndDateLockedForUpdate = IsEndDateLocked(isLockedForUpdate, apprenticeship.HasHadDataLockSuccess, apprenticeship.Status),
-                TrainingName = courseDetails.TrainingProgramme.Name,
+                TrainingName = apprenticeship.CourseName,
                 HashedApprenticeshipId = source.ApprenticeshipHashedId,
                 AccountHashedId = source.AccountHashedId,
                 EmailAddressConfirmedByApprentice = apprenticeship.EmailAddressConfirmedByApprentice,
                 EmailShouldBePresent = apprenticeship.EmailShouldBePresent,
                 EmploymentPrice = apprenticeship.EmploymentPrice,
                 ProviderId = apprenticeship.ProviderId,
-                AccountLegalEntityHashedId = _encodingService.Encode(apprenticeship.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId)
+                AccountLegalEntityHashedId = _encodingService.Encode(apprenticeship.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
+                HasMultipleDeliveryModelOptions = editApprenticeship.HasMultipleDeliveryModelOptions
             };
 
             return result;
         }
 
-        private bool IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(GetApprenticeshipResponse apprenticeship, GetCohortResponse commitment)
+        private bool IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(GetApprenticeshipResponse apprenticeship, bool isFundedByTransfer)
         {
-            return commitment.IsFundedByTransfer
+            return isFundedByTransfer
                     && HasHadDataLockSuccess(apprenticeship) 
                     && IsWaitingToStart(apprenticeship);
         }

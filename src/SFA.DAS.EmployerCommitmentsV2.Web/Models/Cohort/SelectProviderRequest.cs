@@ -1,15 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Authorization.ModelBinding;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 {
-    public class SelectProviderRequest : IndexRequest
+    public class SelectProviderRequest : BaseSelectProviderRequest
+    {
+        public long AccountLegalEntityId { get; set; }
+    }
+
+    public class BaseSelectProviderRequest : IndexRequest
     {
         public string TransferSenderId { get; set; }
-        public long AccountLegalEntityId { get; set; }
         public Origin Origin { get; set; }
 
         [FromQuery]
         public string EncodedPledgeApplicationId { get; set; }
+
+        public BaseSelectProviderRequest CloneBaseValues() =>
+            this.ExplicitClone();
     }
 }

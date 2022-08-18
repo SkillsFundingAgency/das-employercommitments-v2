@@ -1,12 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.Encoding;
-using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 {
@@ -15,24 +13,35 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
+        private readonly IApprovalsApiClient _apiClient;
 
         public EditDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient,
-            IEncodingService encodingService            )
+            IEncodingService encodingService, IApprovalsApiClient apiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
+            _apiClient = apiClient;
         }
 
         public async Task<IDraftApprenticeshipViewModel> Map(EditDraftApprenticeshipRequest source)
         {
             var cohort = source.Cohort;
 
-            var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(source.Request.CohortId, source.Request.DraftApprenticeshipId);
+            var draftApprenticeship = await _apiClient.GetEditDraftApprenticeship(source.Request.AccountId, source.Request.CohortId,
+                source.Request.DraftApprenticeshipId);
+
+            //all data should come from a single call to the outer api (above)
+            //however, this list appears to be populated only to select .Single() in the view itself
+            //so this should be refactored away altogether and just the name of the course provided instead
+            var courses = (cohort.IsFundedByTransfer || cohort.LevyStatus == ApprenticeshipEmployerType.NonLevy) &&
+                          !draftApprenticeship.IsContinuation
+                ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
+                : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes;
 
             return new EditDraftApprenticeshipViewModel(draftApprenticeship.DateOfBirth, draftApprenticeship.StartDate, draftApprenticeship.EndDate)
             {
-                DraftApprenticeshipId = draftApprenticeship.Id,
-                DraftApprenticeshipHashedId = _encodingService.Encode(draftApprenticeship.Id, EncodingType.ApprenticeshipId),
+                DraftApprenticeshipId = source.Request.DraftApprenticeshipId,
+                DraftApprenticeshipHashedId = _encodingService.Encode(source.Request.DraftApprenticeshipId, EncodingType.ApprenticeshipId),
                 CohortId = source.Request.CohortId,
                 CohortReference = _encodingService.Encode(source.Request.CohortId, EncodingType.CohortReference),
                 ReservationId = draftApprenticeship.ReservationId,
@@ -40,24 +49,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 LastName = draftApprenticeship.LastName,
                 Email = draftApprenticeship.Email,
                 Uln = draftApprenticeship.Uln,
-                DeliveryModel = draftApprenticeship.DeliveryModel,
+                DeliveryModel = (DeliveryModel) draftApprenticeship.DeliveryModel,
                 CourseCode = draftApprenticeship.CourseCode,
                 StandardUId = draftApprenticeship.StandardUId,
                 Cost = draftApprenticeship.Cost,
                 EmploymentPrice = draftApprenticeship.EmploymentPrice,
                 EmploymentEndMonth = draftApprenticeship.EmploymentEndDate.HasValue ? draftApprenticeship.EmploymentEndDate.Value.Month : (int?)null,
                 EmploymentEndYear = draftApprenticeship.EmploymentEndDate.HasValue ? draftApprenticeship.EmploymentEndDate.Value.Year : (int?)null,
-                Reference = draftApprenticeship.Reference,
+                Reference = draftApprenticeship.EmployerReference,
                 AccountHashedId = source.Request.AccountHashedId,
                 ProviderId = source.Cohort.ProviderId.Value,
                 ProviderName = cohort.ProviderName,
                 LegalEntityName = source.Cohort.LegalEntityName,
                 IsContinuation = draftApprenticeship.IsContinuation,
-                Courses = (cohort.IsFundedByTransfer || cohort.LevyStatus == ApprenticeshipEmployerType.NonLevy) && !draftApprenticeship.IsContinuation
-                    ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
-                    : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes,
+                Courses = courses,
                 AccountLegalEntityId = cohort.AccountLegalEntityId,
-                AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId)
+                AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
+                HasMultipleDeliveryModelOptions = draftApprenticeship.HasMultipleDeliveryModelOptions
             };
         }
     }
