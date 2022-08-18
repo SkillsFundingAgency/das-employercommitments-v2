@@ -247,9 +247,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{DraftApprenticeshipHashedId}/edit/select-delivery-model")]
         public async Task<IActionResult> SetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
         {
-
             var draft = GetStoredEditDraftApprenticeshipState();
             draft.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?) model.DeliveryModel;
+            StoreEditDraftApprenticeshipState(draft);
 
             if (model.DeliveryModel == null)
             {
