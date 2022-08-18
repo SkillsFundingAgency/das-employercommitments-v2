@@ -95,7 +95,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         [TestCase(false)]
         public async Task WhenGettingSelectDeliveryModelForEdit(bool hasDeliveryModels)
         {
-            var result = await _testFixture.GetSelectDeliveryModelForEdit(_testFixture._addDraftApprenticeshipRequest, hasDeliveryModels);
+            var result = await _testFixture.GetSelectDeliveryModelForEdit(_testFixture._selectDeliveryModelViewModel_WithDeliveryModels, hasDeliveryModels);
 
             if (hasDeliveryModels)
             {
@@ -216,7 +216,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             return await _controller.SetCourseForEdit(model);
         }
 
-        public async Task<IActionResult> GetSelectDeliveryModelForEdit(AddDraftApprenticeshipRequest request, bool hasDeliveryModels)
+        public async Task<IActionResult> GetSelectDeliveryModelForEdit(SelectDeliveryModelForEditViewModel request, bool hasDeliveryModels)
         {
             if (hasDeliveryModels)
                 _modelMapper.Setup(m => m.Map<SelectDeliveryModelForEditViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
@@ -225,7 +225,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 _modelMapper.Setup(m => m.Map<SelectDeliveryModelViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
                     .ReturnsAsync(_selectDeliveryModelViewModel_WithOutDeliveryModels);
 
-            return await _controller.SelectDeliveryModelForEdit(request);
+            return await _controller.SelectDeliveryModelForEdit(new EditDraftApprenticeshipViewModel());
         }
 
         public async Task<IActionResult> PostSetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)

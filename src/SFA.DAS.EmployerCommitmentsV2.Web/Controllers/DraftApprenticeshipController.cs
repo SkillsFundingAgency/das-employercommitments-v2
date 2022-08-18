@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -227,7 +228,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("{DraftApprenticeshipHashedId}/edit/select-delivery-model")]
-        public async Task<IActionResult> SelectDeliveryModelForEdit(AddDraftApprenticeshipRequest request)
+        public async Task<IActionResult> SelectDeliveryModelForEdit(EditDraftApprenticeshipViewModel request)
         {
             var editModel = await _modelMapper.Map<SelectDeliveryModelForEditViewModel>(request);
             editModel.DeliveryModel = (EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel?) request.DeliveryModel;
@@ -246,16 +247,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{DraftApprenticeshipHashedId}/edit/select-delivery-model")]
         public async Task<IActionResult> SetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
         {
+
+            var draft = GetStoredEditDraftApprenticeshipState();
+            draft.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?) model.DeliveryModel;
+
             if (model.DeliveryModel == null)
             {
                 throw new CommitmentsApiModelException(new List<ErrorDetail>
                     {new ErrorDetail("DeliveryModel", "You must select the apprenticeship delivery model")});
             }
 
-            var editModel = await _modelMapper.Map<EditDraftApprenticeshipViewModel>(model);
-            editModel.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?) model.DeliveryModel;
-
-            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), editModel);
+            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), draft);
         }
 
         [HttpGet]
