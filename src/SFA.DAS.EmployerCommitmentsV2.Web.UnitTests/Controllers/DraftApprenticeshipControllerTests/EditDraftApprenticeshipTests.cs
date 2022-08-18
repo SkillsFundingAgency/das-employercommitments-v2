@@ -219,7 +219,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public async Task<IActionResult> GetSelectDeliveryModelForEdit(AddDraftApprenticeshipRequest request, bool hasDeliveryModels)
         {
             if (hasDeliveryModels)
-                _modelMapper.Setup(m => m.Map<SelectDeliveryModelViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
+                _modelMapper.Setup(m => m.Map<SelectDeliveryModelForEditViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
                     .ReturnsAsync(_selectDeliveryModelViewModel_WithDeliveryModels);
             else
                 _modelMapper.Setup(m => m.Map<SelectDeliveryModelViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
