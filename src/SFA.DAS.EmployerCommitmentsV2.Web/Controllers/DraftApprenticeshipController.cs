@@ -230,15 +230,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{DraftApprenticeshipHashedId}/edit/select-delivery-model")]
         public async Task<IActionResult> SelectDeliveryModelForEdit(EditDraftApprenticeshipViewModel request)
         {
-            var editModel = await _modelMapper.Map<SelectDeliveryModelForEditViewModel>(request);
-            editModel.DeliveryModel = (EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel?) request.DeliveryModel;
+            var model = await _modelMapper.Map<SelectDeliveryModelForEditViewModel>(request);
 
-            if (editModel.DeliveryModels.Count > 1)
+            if (model != null)
             {
-                return View(editModel);
-            }
+                model.DeliveryModel = (EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel?) request.DeliveryModel;
 
-            request.DeliveryModel = (SFA.DAS.CommitmentsV2.Types.DeliveryModel) editModel.DeliveryModels.FirstOrDefault();
+                if (model.DeliveryModels.Count > 1)
+                {
+                    return View(model);
+                }
+
+                request.DeliveryModel = (SFA.DAS.CommitmentsV2.Types.DeliveryModel) model.DeliveryModels.FirstOrDefault();
+            }
 
             return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), request);
         }
@@ -248,8 +252,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> SetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
         {
             var draft = GetStoredEditDraftApprenticeshipState();
-            draft.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?) model.DeliveryModel;
-            StoreEditDraftApprenticeshipState(draft);
+
+            if (draft != null)
+            {
+                draft.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?) model.DeliveryModel;
+                StoreEditDraftApprenticeshipState(draft);
+
+                return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), draft);
+            }
 
             if (model.DeliveryModel == null)
             {
@@ -257,7 +267,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     {new ErrorDetail("DeliveryModel", "You must select the apprenticeship delivery model")});
             }
 
-            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), draft);
+            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), model);
         }
 
         [HttpGet]
