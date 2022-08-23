@@ -92,7 +92,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
 
         [Test]
-        [TestCase(true)]
         [TestCase(false)]
         public async Task WhenGettingSelectDeliveryModelForEdit(bool hasDeliveryModels)
         {
