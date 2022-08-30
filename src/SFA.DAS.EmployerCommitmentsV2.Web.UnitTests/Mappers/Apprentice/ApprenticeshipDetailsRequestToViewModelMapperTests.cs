@@ -47,8 +47,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private const long ApprenticeshipIdLast = 256;
         private const string ApprenticeshipEmail = "a@a.com";
 
-        private long _providerId;
-        private int _apprenticeshipId;
         private GetApprenticeshipDetailsResponse _apprenticeshipDetailsResponse;
 
 
@@ -77,9 +75,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .Create();       
             _dataLocksResponse = autoFixture.Build<GetDataLocksResponse>().Create();
             _changeOfPartyRequestsResponse = autoFixture.Build<GetChangeOfPartyRequestsResponse>().Create();
-
-            _providerId = autoFixture.Create<long>();
-            _apprenticeshipId = autoFixture.Create<int>();
 
             var trainingProgrammeByStandardUId = autoFixture.Build<TrainingProgramme>()
                 .With(x => x.CourseCode, _apprenticeshipResponse.CourseCode)
@@ -139,7 +134,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _apprenticeshipDetailsResponse = autoFixture.Create<GetApprenticeshipDetailsResponse>();
 
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
-            _approvalsApiClient.Setup(x => x.GetApprenticeshipDetails(_providerId, _apprenticeshipId, It.IsAny<CancellationToken>())).ReturnsAsync(_apprenticeshipDetailsResponse);
+            _approvalsApiClient.Setup(x => x.GetApprenticeshipDetails(_apprenticeshipResponse.ProviderId, _apprenticeshipResponse.Id, It.IsAny<CancellationToken>())).ReturnsAsync(_apprenticeshipDetailsResponse);
 
 
             _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
@@ -690,6 +685,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 }
             };
 
+            _apprenticeshipDetailsResponse = autoFixture.Create<GetApprenticeshipDetailsResponse>();
+
+            _approvalsApiClient = new Mock<IApprovalsApiClient>();
+            _approvalsApiClient.Setup(x => x.GetApprenticeshipDetails(_apprenticeshipResponse.ProviderId, _apprenticeshipResponse.Id, It.IsAny<CancellationToken>())).ReturnsAsync(_apprenticeshipDetailsResponse);
+
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
+
             //Act
             var result = await _mapper.Map(_request);
 
@@ -720,6 +722,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _mockCommitmentsApiClient.Setup(x => x.GetApprenticeship(It.IsAny<long>(), CancellationToken.None))
                 .ReturnsAsync(_apprenticeshipResponse);
+
+            _apprenticeshipDetailsResponse = autoFixture.Create<GetApprenticeshipDetailsResponse>();
+
+            _approvalsApiClient = new Mock<IApprovalsApiClient>();
+            _approvalsApiClient.Setup(x => x.GetApprenticeshipDetails(_apprenticeshipResponse.ProviderId, _apprenticeshipResponse.Id, It.IsAny<CancellationToken>())).ReturnsAsync(_apprenticeshipDetailsResponse);
+
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
 
             // Act 
             var result = await _mapper.Map(_request);
