@@ -186,10 +186,9 @@
                 <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
             }
 
-        <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />    
-
-        @if (Model.HasMultipleDeliveryModelOptions)
+            @if (Model.HasMultipleDeliveryModelOptions)
             {
+                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 <div class="govuk-form-group">
                     <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Apprenticeship delivery model</p>
                     <p class="govuk-body">
@@ -204,6 +203,7 @@
             {
                 if (Model.DeliveryModel != DeliveryModel.Regular)
                 {
+                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                     <dl class="das-definition-list">
                         <dt asp-for="DeliveryModel" class="das-definition-list__title">Apprenticeship delivery model</dt>
                         <dd class="das-definition-list__definition" id="trainingName">@Model.DeliveryModel.ToDescription()</dd>
