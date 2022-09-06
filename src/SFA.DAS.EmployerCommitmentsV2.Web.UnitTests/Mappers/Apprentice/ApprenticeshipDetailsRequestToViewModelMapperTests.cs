@@ -793,7 +793,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             //Arrange
             _overlappingTrainingDateRequestResponce = autoFixture.Create<GetOverlappingTrainingDateRequestResponce>();
-            _overlappingTrainingDateRequestResponce.Status = OverlappingTrainingDateRequestStatus.Pending;
+            _overlappingTrainingDateRequestResponce.OverlappingTrainingDateRequest.First().Status = OverlappingTrainingDateRequestStatus.Pending;
 
             _mockCommitmentsApiClient
                 .Setup(c => c.GetOverlappingTrainingDateRequest(It.IsAny<long>(), CancellationToken.None))
@@ -832,7 +832,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             //Arrange
             _overlappingTrainingDateRequestResponce = autoFixture.Create<GetOverlappingTrainingDateRequestResponce>();
-            _overlappingTrainingDateRequestResponce.Status = OverlappingTrainingDateRequestStatus.Rejected;
+            foreach (var request in _overlappingTrainingDateRequestResponce.OverlappingTrainingDateRequest)
+            {
+                request.Status = OverlappingTrainingDateRequestStatus.Rejected;
+            }
 
             _mockCommitmentsApiClient
               .Setup(c => c.GetOverlappingTrainingDateRequest(It.IsAny<long>(), CancellationToken.None))
@@ -845,6 +848,47 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.AreEqual(false, result.HasPendingOverlappingTrainingDateRequest);
+        }
+
+        [TestCase(OverlappingTrainingDateRequestStatus.Pending, false)]
+        [TestCase(OverlappingTrainingDateRequestStatus.Resolved, true)]
+        [TestCase(OverlappingTrainingDateRequestStatus.Rejected, true)]
+        public async Task CheckEnableEdit_WhenMappingOverlappingTrainingDateRequest_IsMapped(OverlappingTrainingDateRequestStatus status, bool expected)
+        {
+            //Arrange
+            _apprenticeshipUpdatesResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
+            {
+                new ApprenticeshipUpdate()
+                {
+                    OriginatingParty = Party.None
+                }
+            };
+
+            _dataLocksResponse.DataLocks = new List<DataLock>();
+
+            _apprenticeshipResponse.Status = ApprenticeshipStatus.Live;
+
+            _overlappingTrainingDateRequestResponce = autoFixture.Create<GetOverlappingTrainingDateRequestResponce>();
+
+            foreach (var request in _overlappingTrainingDateRequestResponce.OverlappingTrainingDateRequest)
+            {
+                request.Status = status;
+            }
+
+            _mockCommitmentsApiClient.Setup(r => r.GetApprenticeship(It.IsAny<long>(), CancellationToken.None))
+             .ReturnsAsync(_apprenticeshipResponse);
+            _mockCommitmentsApiClient.Setup(c => c.GetApprenticeshipUpdates(It.IsAny<long>(), It.IsAny<GetApprenticeshipUpdatesRequest>(), CancellationToken.None))
+                .ReturnsAsync(_apprenticeshipUpdatesResponse);
+            _mockCommitmentsApiClient.Setup(c => c.GetApprenticeshipDatalocksStatus(It.IsAny<long>(), CancellationToken.None))
+                .ReturnsAsync(_dataLocksResponse);
+            _mockCommitmentsApiClient.Setup(c => c.GetOverlappingTrainingDateRequest(It.IsAny<long>(), CancellationToken.None))
+               .ReturnsAsync(_overlappingTrainingDateRequestResponce);
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(expected, result.EnableEdit);
         }
     }
 
