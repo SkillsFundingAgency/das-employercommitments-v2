@@ -16,6 +16,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {
@@ -91,7 +92,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
 
         [Test]
-        [TestCase(true)]
         [TestCase(false)]
         public async Task WhenGettingSelectDeliveryModelForEdit(bool hasDeliveryModels)
         {
@@ -102,7 +102,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 Assert.NotNull(result);
                 Assert.IsInstanceOf(typeof(ViewResult), result);
                 Assert.AreEqual("SelectDeliveryModel", (result as ViewResult).ViewName);
-                Assert.IsInstanceOf(typeof(SelectDeliveryModelViewModel), (result as ViewResult).Model);
+                Assert.IsInstanceOf(typeof(SelectDeliveryModelForEditViewModel), (result as ViewResult).Model);
             }
             else
             {
@@ -134,8 +134,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public UpdateDraftApprenticeshipRequest _updateDraftApprenticeshipRequest;
         public EditDraftApprenticeshipViewModel _editDraftApprenticeshipViewModel;
         public AddDraftApprenticeshipRequest _addDraftApprenticeshipRequest;
-        public SelectDeliveryModelViewModel _selectDeliveryModelViewModel_WithDeliveryModels;
-        public SelectDeliveryModelViewModel _selectDeliveryModelViewModel_WithOutDeliveryModels;
+        public SelectDeliveryModelForEditViewModel _selectDeliveryModelViewModel_WithDeliveryModels;
+        public SelectDeliveryModelForEditViewModel _selectDeliveryModelViewModel_WithOutDeliveryModels;
         public SelectCourseViewModel _selectCourseViewModel;
 
         public EditDraftApprenticeshipTestsFixture()
@@ -161,18 +161,33 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 .With(x => x.EndYear, endDate?.Year)
                 .With(x => x.StartMonth, startDate?.Month)
                 .With(x => x.StartYear, startDate?.Year)
+                .With(x => x.DeliveryModel, DeliveryModel.Regular)
                 .Without(x => x.StartDate)
                 .Without(x => x.Courses)
                 .Create();
+
 
             _updateDraftApprenticeshipRequest = _autoFixture.Build<UpdateDraftApprenticeshipRequest>().Create();
             _addDraftApprenticeshipRequest = _autoFixture.Build<AddDraftApprenticeshipRequest>().Create();
             _selectCourseViewModel = _autoFixture.Build<SelectCourseViewModel>().Create();
 
-            _selectDeliveryModelViewModel_WithDeliveryModels = _autoFixture.Build<SelectDeliveryModelViewModel>()
-                    .With(x => x.DeliveryModels, _autoFixture.CreateMany<DeliveryModel>().ToArray()).Create();
-            _selectDeliveryModelViewModel_WithOutDeliveryModels = _autoFixture.Build<SelectDeliveryModelViewModel>()
-                    .With(x => x.DeliveryModels, new DeliveryModel[0]).Create();
+            var someDms = _autoFixture
+                            .Create<Generator<EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel>>()
+                            .Take(2)
+                            .ToList();
+
+            var noDms = _autoFixture
+                            .Create<Generator<EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel>>()
+                            .Take(0)
+                            .ToList();
+
+            _selectDeliveryModelViewModel_WithDeliveryModels = (SelectDeliveryModelForEditViewModel)_autoFixture.Build<SelectDeliveryModelForEditViewModel>()
+                    .With(x => x.DeliveryModels, someDms)
+                    .With(x => x.DeliveryModel, EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel.Regular)
+                    .Create();
+
+            _selectDeliveryModelViewModel_WithOutDeliveryModels = _autoFixture.Build<SelectDeliveryModelForEditViewModel>()
+                    .With(x => x.DeliveryModels, noDms).Create();
 
             _modelMapper.Setup(m => m.Map<UpdateDraftApprenticeshipRequest>(It.IsAny<EditDraftApprenticeshipViewModel>()))
                 .ReturnsAsync(_updateDraftApprenticeshipRequest);
@@ -194,6 +209,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 Mock.Of<IEncodingService>());
 
             _controller.TempData = _tempData.Object;
+
         }
 
         public async Task<IActionResult> GetEditDraftApprenticeshipDisplay(EditDraftApprenticeshipViewModel model)
@@ -219,16 +235,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public async Task<IActionResult> GetSelectDeliveryModelForEdit(AddDraftApprenticeshipRequest request, bool hasDeliveryModels)
         {
             if (hasDeliveryModels)
-                _modelMapper.Setup(m => m.Map<SelectDeliveryModelViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
+            {
+                _modelMapper.Setup(m => m.Map<SelectDeliveryModelForEditViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
                     .ReturnsAsync(_selectDeliveryModelViewModel_WithDeliveryModels);
-            else
-                _modelMapper.Setup(m => m.Map<SelectDeliveryModelViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
-                    .ReturnsAsync(_selectDeliveryModelViewModel_WithOutDeliveryModels);
 
-            return await _controller.SelectDeliveryModelForEdit(request);
+                _modelMapper.Setup(x => x.Map<IDraftApprenticeshipViewModel>(It.IsAny<EditDraftApprenticeshipRequest>()))
+                    .ReturnsAsync(new EditDraftApprenticeshipViewModel());
+            }
+            else
+            { 
+                _modelMapper.Setup(m => m.Map<SelectDeliveryModelForEditViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
+                    .ReturnsAsync(_selectDeliveryModelViewModel_WithOutDeliveryModels);
+            }
+
+            return await _controller.SelectDeliveryModelForEdit(_editDraftApprenticeshipViewModel);
         }
 
-        public async Task<IActionResult> PostSetDeliveryModelForEdit(SelectDeliveryModelViewModel model)
+        public async Task<IActionResult> PostSetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
         {
             return await _controller.SetDeliveryModelForEdit(model);
         }
