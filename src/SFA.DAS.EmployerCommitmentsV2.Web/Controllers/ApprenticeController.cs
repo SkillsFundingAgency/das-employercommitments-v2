@@ -991,7 +991,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprentieshipIsStillActive
                 }, CancellationToken.None);
 
-                TempData.AddFlashMessage($"Apprenticeship confirmed for {viewModel.ULN}", ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                TempData.AddFlashMessage($"Apprenticeship confirmed", ITempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
 
             return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest

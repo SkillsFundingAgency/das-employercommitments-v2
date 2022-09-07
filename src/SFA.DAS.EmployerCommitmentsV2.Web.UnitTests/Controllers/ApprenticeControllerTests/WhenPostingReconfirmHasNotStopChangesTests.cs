@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             var redirect = result.VerifyReturnsRedirectToActionResult();
 
-            Assert.IsTrue(_controller.TempData.Values.Contains($"Apprenticeship confirmed for {viewModel.ULN}"));
+            Assert.IsTrue(_controller.TempData.Values.Contains($"Apprenticeship confirmed"));
             Assert.AreEqual(redirect.ActionName, "ApprenticeshipDetails");
             Assert.AreEqual(redirect.RouteValues["AccountHashedId"], viewModel.AccountHashedId);
             Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], viewModel.ApprenticeshipHashedId);
