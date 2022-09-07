@@ -1,0 +1,28 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared.IDeliveryModelSelection
+
+<div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.DeliveryModel, " govuk-form-group--error")">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+            Select delivery model
+        </legend>
+        @Html.ValidationMessageFor(m => m.DeliveryModel, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DeliveryModel) })
+        <div class="govuk-radios">
+
+            @foreach (var deliveryModelOption in @Model.DeliveryModels)
+            {
+                <div class="govuk-radios__item">
+                    <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@deliveryModelOption" id="@deliveryModelOption">
+                    <label for="@deliveryModelOption" class="govuk-label govuk-radios__label">
+                        @deliveryModelOption.GetReferenceDataDescription()
+                    </label>
+                    <div id="@deliveryModelOption-hint" class="govuk-hint govuk-radios__hint">
+                        @deliveryModelOption.GetReferenceDataHint()
+                    </div>
+                </div>
+            }
+        </div>
+    </fieldset>
+</div>
