@@ -39,7 +39,7 @@
             </div>
         }
 
-        @if (!Model.IsAgreementSigned || !Model.IsCompleteForEmployer || Model.HasOverlappingUln || Model.HasEmailOverlaps)
+        @if ((!Model.IsAgreementSigned || !Model.IsCompleteForEmployer || Model.HasOverlappingUln || Model.HasEmailOverlaps) && !Model.ShowRofjaaRemovalBanner)
         {
             <div class="govuk-notification-banner">
                 <div class="govuk-notification-banner__header">
