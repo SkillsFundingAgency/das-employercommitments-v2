@@ -15,6 +15,30 @@
 <div class="govuk-grid-row">
     <div>
 
+        @if (Model.ShowRofjaaRemovalBanner)
+        {
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <div class="govuk-notification-banner">
+                        <div class="govuk-notification-banner__header">
+                            <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                                Important
+                            </h2>
+                        </div>
+                        <div class="govuk-notification-banner__content">
+                            <p class="govuk-notification-banner__heading">
+                                <strong>You are no longer on the Register of Flexi-Job Apprenticeship Agencies</strong>
+                            </p>
+                            <p>
+                                You need to edit the delivery model for each Flexi-Job Apprenticeship or delete them.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        }
+
         @if (!Model.IsAgreementSigned || !Model.IsCompleteForEmployer || Model.HasOverlappingUln || Model.HasEmailOverlaps)
         {
             <div class="govuk-notification-banner">
@@ -303,7 +327,7 @@
                 <button type="submit" id="continue-button" class="govuk-button">Save and submit</button>
 
                 <p>
-                    <a href="@Url.RouteUrl("Review", new {Model.AccountHashedId })" class="govuk-link">Save and exit</a>
+                    <a href="@Url.RouteUrl("Review", new { Model.AccountHashedId })" class="govuk-link">Save and exit</a>
                 </p>
 
             </form>
