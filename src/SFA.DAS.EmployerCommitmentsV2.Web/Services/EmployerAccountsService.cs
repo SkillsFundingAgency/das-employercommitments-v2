@@ -38,39 +38,40 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Services
 
         public async Task<List<LegalEntity>> GetLegalEntitiesForAccount(string accountId)
         {
-            var listOfEntities = await _accountsApiClient.GetLegalEntitiesConnectedToAccount(accountId);
-            if (listOfEntities.Count == 0) return new List<LegalEntity>();
+            return await Task.FromResult(new List<LegalEntity>());
+            //var listOfEntities = await _accountsApiClient.GetLegalEntitiesConnectedToAccount(accountId);
+            //if (listOfEntities.Count == 0) return new List<LegalEntity>();
 
-            var bag = new ConcurrentBag<LegalEntity>();
+            //var bag = new ConcurrentBag<LegalEntity>();
 
-            await listOfEntities.ParallelForEachAsync(async entity =>
-                {
-                    var legalEntityViewModel =
-                        await _accountsApiClient.GetLegalEntity(accountId, Convert.ToInt64(entity.Id));
+            //await listOfEntities.ParallelForEachAsync(async entity =>
+            //    {
+            //        var legalEntityViewModel =
+            //            await _accountsApiClient.GetLegalEntity(accountId, Convert.ToInt64(entity.Id));
 
-                    bag.Add(new LegalEntity
-                    {
-                        Name = legalEntityViewModel.Name,
-                        RegisteredAddress = legalEntityViewModel.Address,
-                        Source = legalEntityViewModel.SourceNumeric,
-                        Agreements =
-                            legalEntityViewModel.Agreements.Select(agreementSource => new Agreement
-                            {
-                                Id = agreementSource.Id,
-                                SignedDate = agreementSource.SignedDate,
-                                SignedByName = agreementSource.SignedByName,
-                                Status = (EmployerAgreementStatus) agreementSource.Status,
-                                TemplateVersionNumber = agreementSource.TemplateVersionNumber
-                            }).ToList(),
-                        Code = legalEntityViewModel.Code,
-                        Id = legalEntityViewModel.LegalEntityId,
-                        AccountLegalEntityPublicHashedId = legalEntityViewModel.AccountLegalEntityPublicHashedId
-                    });
-                },
-                MaxConcurrentThreads
-            );
+            //        bag.Add(new LegalEntity
+            //        {
+            //            Name = legalEntityViewModel.Name,
+            //            RegisteredAddress = legalEntityViewModel.Address,
+            //            Source = legalEntityViewModel.SourceNumeric,
+            //            Agreements =
+            //                legalEntityViewModel.Agreements.Select(agreementSource => new Agreement
+            //                {
+            //                    Id = agreementSource.Id,
+            //                    SignedDate = agreementSource.SignedDate,
+            //                    SignedByName = agreementSource.SignedByName,
+            //                    Status = (EmployerAgreementStatus) agreementSource.Status,
+            //                    TemplateVersionNumber = agreementSource.TemplateVersionNumber
+            //                }).ToList(),
+            //            Code = legalEntityViewModel.Code,
+            //            Id = legalEntityViewModel.LegalEntityId,
+            //            AccountLegalEntityPublicHashedId = legalEntityViewModel.AccountLegalEntityPublicHashedId
+            //        });
+            //    },
+            //    MaxConcurrentThreads
+            //);
 
-            return bag.OrderBy(le => le.Id).ToList();
+            //return bag.OrderBy(le => le.Id).ToList();
         }
     }
 }

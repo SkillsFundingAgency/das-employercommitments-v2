@@ -32,18 +32,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         public async Task<List<TransferConnection>> GetTransferConnectionsForAccount(string accountHashedId)
         {
-            var listOfTransferConnections = await _accountsApiClient.GetTransferConnections(accountHashedId);
+            //var listOfTransferConnections = await _accountsApiClient.GetTransferConnections(accountHashedId);
 
-            if (listOfTransferConnections == null)
-            {
-                return new List<TransferConnection>();
-            }
+            //if (listOfTransferConnections == null)
+            //{
+            //    return new List<TransferConnection>();
+            //}
 
-            return listOfTransferConnections.Select(x => new TransferConnection
-            {
-                TransferConnectionCode = _encodingService.Encode(x.FundingEmployerAccountId, EncodingType.PublicAccountId),
-                TransferConnectionName = x.FundingEmployerAccountName
-            }).ToList();
+            //listOfTransferConnections = await _accountsApiClient.GetTransferConnections(accountHashedId);
+
+            //return listOfTransferConnections.Select(x => new TransferConnection
+            //{
+            //    TransferConnectionCode = _encodingService.Encode(x.FundingEmployerAccountId, EncodingType.PublicAccountId),
+            //    TransferConnectionName = x.FundingEmployerAccountName
+            //}).ToList();
+
+            return await Task.FromResult(new List<TransferConnection>());
         }
 
     }
