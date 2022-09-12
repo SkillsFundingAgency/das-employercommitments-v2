@@ -71,6 +71,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool? RecognisePriorLearning { get; set; }
         public int? DurationReducedBy { get; set; }
         public int? PriceReducedBy { get; set; }
+        public bool HasMultipleDeliveryModelOptions { get; set; }
+
         public ActionRequiredBanner GetActionRequiredBanners()
         {
             var actionRequiredBanner = ActionRequiredBanner.None;
