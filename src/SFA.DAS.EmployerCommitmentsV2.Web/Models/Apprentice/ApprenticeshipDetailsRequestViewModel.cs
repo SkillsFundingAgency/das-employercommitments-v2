@@ -79,6 +79,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         public bool HasPendingOverlappingTrainingDateRequest { get; set; }
 
+        public bool HasMultipleDeliveryModelOptions { get; set; }
+
         public ActionRequiredBanner GetActionRequiredBanners()
         {
             var actionRequiredBanner = ActionRequiredBanner.None;

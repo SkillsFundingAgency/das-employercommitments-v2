@@ -250,7 +250,7 @@
                     <th scope="row" class="govuk-table__header das-table-cell-width-45">Apprenticeship training course </th>
                     <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.TrainingName </td>
                 </tr>
-                @if (Model.DeliveryModel != null)
+                @if (!Model.DeliveryModel.Equals(DeliveryModel.Regular) || Model.HasMultipleDeliveryModelOptions)
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header das-table-cell-width-45">Apprenticeship delivery model</th>

@@ -3,6 +3,8 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
@@ -18,14 +20,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
         private readonly ILogger<ApprenticeshipDetailsRequestToViewModelMapper> _logger;
+        private readonly IApprovalsApiClient _approvalsApiClient;
 
         public ApprenticeshipDetailsRequestToViewModelMapper(
-            ICommitmentsApiClient commitmentsApiClient,
+            ICommitmentsApiClient commitmentsApiClient, 
             IEncodingService encodingService,
+            IApprovalsApiClient approvalsApiClient,
             ILogger<ApprenticeshipDetailsRequestToViewModelMapper> logger)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
+            _approvalsApiClient = approvalsApiClient;
             _logger = logger;
         }
 
@@ -74,6 +79,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     overlappingTrainingDateRequestResponse?.OverlappingTrainingDateRequest?.Any(x => x.Status == OverlappingTrainingDateRequestStatus.Pending) == true;
 
                 bool enableEdit = EnableEdit(apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged, hasPendingoverlappingTrainingDateRequest);
+
+
+                var apprenticeshipDetails = await _approvalsApiClient.GetApprenticeshipDetails(apprenticeship.ProviderId, apprenticeshipId, CancellationToken.None);
 
                 var result = new ApprenticeshipDetailsRequestViewModel
                 {
@@ -129,6 +137,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     DurationReducedBy = apprenticeship.DurationReducedBy,
                     PriceReducedBy = apprenticeship.PriceReducedBy,
                     HasPendingOverlappingTrainingDateRequest = hasPendingoverlappingTrainingDateRequest
+                    HasMultipleDeliveryModelOptions = apprenticeshipDetails.HasMultipleDeliveryModelOptions
                 };
 
                 return result;
