@@ -20,24 +20,6 @@
         <partial name="DetailsPartials/_ActionRequiredBanner" />
         <partial name="DetailsPartials/_ChangesToThisApprenticeshipBanner" />
 
-          @if (Model.HasPendingOverlappingTrainingDateRequest)
-        {
-            <div class="govuk-notification-banner">
-                <div class="govuk-notification-banner__header">
-                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-                        Important
-                    </h2>
-                </div>
-                <div class="govuk-notification-banner__content">
-                    <p class="govuk-notification-banner__heading">
-                         You have an outstanding request that needs to be reviewed and confirmed.
-                         <br>
-                         <a href="@Url.Action("ConfirmHasNotStop", new ConfirmHasNotStopRequest {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})" class="govuk-link">Confirm changes</a>
-                    </p>
-                </div>
-            </div>
-        }
-
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
 
         @{ if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped && Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)

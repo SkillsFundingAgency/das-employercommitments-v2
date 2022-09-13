@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         private readonly IApprovalsApiClient _approvalsApiClient;
 
         public ApprenticeshipDetailsRequestToViewModelMapper(
-            ICommitmentsApiClient commitmentsApiClient, 
+            ICommitmentsApiClient commitmentsApiClient,
             IEncodingService encodingService,
             IApprovalsApiClient approvalsApiClient,
             ILogger<ApprenticeshipDetailsRequestToViewModelMapper> logger)
@@ -80,7 +80,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
                 bool enableEdit = EnableEdit(apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged, hasPendingoverlappingTrainingDateRequest);
 
-
                 var apprenticeshipDetails = await _approvalsApiClient.GetApprenticeshipDetails(apprenticeship.ProviderId, apprenticeshipId, CancellationToken.None);
 
                 var result = new ApprenticeshipDetailsRequestViewModel
@@ -136,7 +135,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     RecognisePriorLearning = apprenticeship.RecognisePriorLearning,
                     DurationReducedBy = apprenticeship.DurationReducedBy,
                     PriceReducedBy = apprenticeship.PriceReducedBy,
-                    HasPendingOverlappingTrainingDateRequest = hasPendingoverlappingTrainingDateRequest
+                    HasPendingOverlappingTrainingDateRequest = hasPendingoverlappingTrainingDateRequest,
                     HasMultipleDeliveryModelOptions = apprenticeshipDetails.HasMultipleDeliveryModelOptions
                 };
 

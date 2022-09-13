@@ -103,6 +103,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                 ? ActionRequiredBanner.DataLockRestart
                 : actionRequiredBanner;
 
+            actionRequiredBanner |= HasPendingOverlappingTrainingDateRequest
+              ? ActionRequiredBanner.PendingOverlappingTrainingDateRequest
+              : actionRequiredBanner;
+
             return actionRequiredBanner;
         }
 
@@ -137,7 +141,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         PendingChangeForApproval = 1,
         InFlightChangeOfProviderPendingEmployer = 2,
         DataLockChange = 4,
-        DataLockRestart = 8
+        DataLockRestart = 8,
+        PendingOverlappingTrainingDateRequest = 16
     }
 
     [Flags]
