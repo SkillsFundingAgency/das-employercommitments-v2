@@ -40,5 +40,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Api.FakeServers
 
             return this;
         }
+
+        internal CommitmentsOuterApiBuilder WithEmployerApprenticeshipsEdit()
+        {
+            _server
+                .Given(Request.Create()
+                    .WithPath("/employer/*/apprentices/*/edit*")
+                    .UsingGet())
+                .RespondWith(Response.Create()
+                    .WithStatusCode(HttpStatusCode.OK)
+                    .WithHeader("Content-Type", "application/json")
+                    .WithBodyAsJson(new
+                    {
+                        HasMultipleDeliveryModelOptions = true,
+                        IsFundedByTransfer = false, 
+                        CourseName = "My Course Name",
+                    }));
+
+            return this;
+        }
+
     }
 }
