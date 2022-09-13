@@ -24,6 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
                 HasPendingChangeOfProviderRequest = hasPendingChangeOfProviderRequest,
                 PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequestWithParty,
                 PendingDataLockChange = pendingDataLockChange,
+                PendingDataLockRestart = pendingDataLockRestart,
                 HasPendingOverlappingTrainingDateRequest = pendingOverlappingTrainingDateRequest
             };
 
@@ -44,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
             new object[] { PendingChanges.ReadyForApproval, true, Party.Employer, false, false, false, ActionRequiredBanner.PendingChangeForApproval | ActionRequiredBanner.InFlightChangeOfProviderPendingEmployer },
             new object[] { PendingChanges.None, false, Party.None, true, true, false, ActionRequiredBanner.DataLockChange | ActionRequiredBanner.DataLockRestart },
             new object[] { PendingChanges.ReadyForApproval, true, Party.Employer, true, true, false, ActionRequiredBanner.PendingChangeForApproval | ActionRequiredBanner.InFlightChangeOfProviderPendingEmployer | ActionRequiredBanner.DataLockChange | ActionRequiredBanner.DataLockRestart },
-             new object[] { PendingChanges.None, false, Party.None, false, false, true, ActionRequiredBanner.PendingOverlappingTrainingDateRequest }
+            new object[] { PendingChanges.None, false, Party.None, false, false, true, ActionRequiredBanner.PendingOverlappingTrainingDateRequest }
         };
 
         [TestCaseSource(nameof(ChangeToApprenticeshipBannerCases))]
