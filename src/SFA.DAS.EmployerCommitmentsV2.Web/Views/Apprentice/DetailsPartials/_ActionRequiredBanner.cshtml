@@ -49,7 +49,7 @@
             {
                 <p class="govuk-notification-banner__heading">
                     You have an outstanding request that needs to be reviewed and confirmed.
-                    <a  id="overlapping-trainingDate-requests-link" class="govuk-notification-banner__link" href="@Url.Action("ConfirmHasNotStop", new ConfirmHasNotStopRequest {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Confirm changes</a>
+                    <a  id="overlapping-trainingDate-requests-link" class="govuk-notification-banner__link" href="@Url.Action("ConfirmHasNotStop", new  {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Confirm changes</a>
                 </p>
             }
         </div>
