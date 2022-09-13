@@ -497,7 +497,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
                 TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
-
             return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
         }
 
@@ -994,7 +993,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 TempData.AddFlashMessage($"Apprenticeship confirmed", ITempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
 
-            return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest
+            return RedirectToAction(nameof(ApprenticeshipDetails), new
             {
                 AccountHashedId = viewModel.AccountHashedId,
                 ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
