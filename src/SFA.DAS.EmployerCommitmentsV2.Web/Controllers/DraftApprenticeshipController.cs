@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -236,7 +237,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 model.DeliveryModel = (EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel?) request.DeliveryModel;
 
-                if (model.DeliveryModels.Count > 1)
+                if (model.DeliveryModels.Count > 1 || model.HasUnavailableFlexiJobAgencyDeliveryModel)
                 {
                     return View(model);
                 }

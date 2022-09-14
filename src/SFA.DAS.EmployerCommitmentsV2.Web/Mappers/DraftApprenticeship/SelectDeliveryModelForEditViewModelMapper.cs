@@ -1,12 +1,11 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
-namespace SFA.DAS.ProviderCommitments.Web.Mappers.DraftApprenticeship
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 {
     public class SelectDeliveryModelForEditViewModelMapper : IMapper<EditDraftApprenticeshipViewModel, SelectDeliveryModelForEditViewModel>
     {
@@ -25,7 +24,8 @@ namespace SFA.DAS.ProviderCommitments.Web.Mappers.DraftApprenticeship
             {
                 DeliveryModel = apiResponse.DeliveryModel,
                 DeliveryModels = apiResponse.DeliveryModels,
-                LegalEntityName = apiResponse.EmployerName
+                LegalEntityName = apiResponse.EmployerName,
+                HasUnavailableFlexiJobAgencyDeliveryModel = apiResponse.HasUnavailableDeliveryModel && apiResponse.DeliveryModel == DeliveryModel.FlexiJobAgency
             };
         }
     }

@@ -91,13 +91,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             Assert.AreEqual("SelectDeliveryModelForEdit", (result as RedirectToActionResult).ActionName);
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public async Task WhenGettingSelectDeliveryModelForEdit(bool hasDeliveryModels)
+        [TestCase(true, true)]
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        [TestCase(false, false)]
+        public async Task WhenGettingSelectDeliveryModelForEdit(bool hasDeliveryModels, bool hasUnavailableDeliveryModel)
         {
-            var result = await _testFixture.GetSelectDeliveryModelForEdit(_testFixture._addDraftApprenticeshipRequest, hasDeliveryModels);
+            var result = await _testFixture.GetSelectDeliveryModelForEdit(_testFixture._addDraftApprenticeshipRequest, hasDeliveryModels, hasUnavailableDeliveryModel);
 
-            if (hasDeliveryModels)
+            if (hasDeliveryModels || hasUnavailableDeliveryModel)
             {
                 Assert.NotNull(result);
                 Assert.IsInstanceOf(typeof(ViewResult), result);
@@ -180,7 +182,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                             .Take(0)
                             .ToList();
 
-            _selectDeliveryModelViewModel_WithDeliveryModels = (SelectDeliveryModelForEditViewModel)_autoFixture.Build<SelectDeliveryModelForEditViewModel>()
+            _selectDeliveryModelViewModel_WithDeliveryModels = _autoFixture.Build<SelectDeliveryModelForEditViewModel>()
                     .With(x => x.DeliveryModels, someDms)
                     .With(x => x.DeliveryModel, EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel.Regular)
                     .Create();
@@ -231,7 +233,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             return await _controller.SetCourseForEdit(model);
         }
 
-        public async Task<IActionResult> GetSelectDeliveryModelForEdit(AddDraftApprenticeshipRequest request, bool hasDeliveryModels)
+        public async Task<IActionResult> GetSelectDeliveryModelForEdit(AddDraftApprenticeshipRequest request, bool hasDeliveryModels, bool hasUnavailableFlexiJobAgencyDeliveryModel)
         {
             if (hasDeliveryModels)
             {
@@ -246,6 +248,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 _modelMapper.Setup(m => m.Map<SelectDeliveryModelForEditViewModel>(It.IsAny<EditDraftApprenticeshipViewModel>()))
                     .ReturnsAsync(_selectDeliveryModelViewModel_WithOutDeliveryModels);
             }
+
+            if (hasUnavailableFlexiJobAgencyDeliveryModel)
+            {
+                _selectDeliveryModelViewModel_WithDeliveryModels.DeliveryModel = EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel.FlexiJobAgency;
+                _selectDeliveryModelViewModel_WithOutDeliveryModels.DeliveryModel = EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel.FlexiJobAgency;
+                _selectDeliveryModelViewModel_WithDeliveryModels.HasUnavailableFlexiJobAgencyDeliveryModel = true;
+                _selectDeliveryModelViewModel_WithOutDeliveryModels.HasUnavailableFlexiJobAgencyDeliveryModel = true;
+            }
+
 
             return await _controller.SelectDeliveryModelForEdit(_editDraftApprenticeshipViewModel);
         }
