@@ -91,7 +91,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             Assert.AreEqual("SelectDeliveryModelForEdit", (result as RedirectToActionResult).ActionName);
         }
 
-        [Test]
+        [TestCase(true)]
         [TestCase(false)]
         public async Task WhenGettingSelectDeliveryModelForEdit(bool hasDeliveryModels)
         {
@@ -101,7 +101,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             {
                 Assert.NotNull(result);
                 Assert.IsInstanceOf(typeof(ViewResult), result);
-                Assert.AreEqual("SelectDeliveryModel", (result as ViewResult).ViewName);
                 Assert.IsInstanceOf(typeof(SelectDeliveryModelForEditViewModel), (result as ViewResult).Model);
             }
             else
@@ -236,7 +235,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             if (hasDeliveryModels)
             {
-                _modelMapper.Setup(m => m.Map<SelectDeliveryModelForEditViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
+                _modelMapper.Setup(m => m.Map<SelectDeliveryModelForEditViewModel>(It.IsAny<EditDraftApprenticeshipViewModel>()))
                     .ReturnsAsync(_selectDeliveryModelViewModel_WithDeliveryModels);
 
                 _modelMapper.Setup(x => x.Map<IDraftApprenticeshipViewModel>(It.IsAny<EditDraftApprenticeshipRequest>()))
@@ -244,7 +243,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             }
             else
             { 
-                _modelMapper.Setup(m => m.Map<SelectDeliveryModelForEditViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
+                _modelMapper.Setup(m => m.Map<SelectDeliveryModelForEditViewModel>(It.IsAny<EditDraftApprenticeshipViewModel>()))
                     .ReturnsAsync(_selectDeliveryModelViewModel_WithOutDeliveryModels);
             }
 
