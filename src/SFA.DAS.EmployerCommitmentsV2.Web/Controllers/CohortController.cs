@@ -53,6 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{cohortReference}")]
+        [Route("{cohortReference}/details")]
         [DasAuthorize(CommitmentOperation.AccessCohort)]
         public async Task<IActionResult> Details(DetailsRequest request)
         {
@@ -61,6 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [Route("{cohortReference}")]
+        [Route("{cohortReference}/details")]
         [DasAuthorize(CommitmentOperation.AccessCohort)]
         [HttpPost]
         public async Task<IActionResult> Details(DetailsViewModel viewModel)

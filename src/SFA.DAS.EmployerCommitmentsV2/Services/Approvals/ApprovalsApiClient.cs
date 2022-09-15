@@ -1,4 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.Commitments.Api.Types.Apprenticeship;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.Http;
 using System.Threading;
@@ -34,6 +35,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
         public async Task<GetEditApprenticeshipResponse> GetEditApprenticeship(long accountId, long apprenticeshipId, CancellationToken cancellationToken = default)
         {
             return await _client.Get<GetEditApprenticeshipResponse>($"employer/{accountId}/apprentices/{apprenticeshipId}/edit", null, cancellationToken);
+        }
+
+        public async Task<GetApprenticeshipDetailsResponse> GetApprenticeshipDetails(long providerId, long apprenticeshipId, CancellationToken cancellationToken = default)
+        {
+            return await _client.Get<GetApprenticeshipDetailsResponse>($"provider/{providerId}/apprentices/{apprenticeshipId}/details", null, cancellationToken);
         }
 
         public async Task<GetEditDraftApprenticeshipSelectDeliveryModelResponse> GetEditDraftApprenticeshipSelectDeliveryModel(long providerId, long cohortId, long draftApprenticeshipId, CancellationToken cancellationToken = default)
