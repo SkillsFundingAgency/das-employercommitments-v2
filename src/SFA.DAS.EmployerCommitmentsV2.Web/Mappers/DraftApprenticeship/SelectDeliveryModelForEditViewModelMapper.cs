@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+using DeliveryModel = SFA.DAS.CommitmentsV2.Types.DeliveryModel;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 {
@@ -25,7 +25,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 DeliveryModel = apiResponse.DeliveryModel,
                 DeliveryModels = apiResponse.DeliveryModels,
                 LegalEntityName = apiResponse.EmployerName,
-                HasUnavailableFlexiJobAgencyDeliveryModel = apiResponse.HasUnavailableDeliveryModel && apiResponse.DeliveryModel == DeliveryModel.FlexiJobAgency
+                HasUnavailableFlexiJobAgencyDeliveryModel = apiResponse.HasUnavailableDeliveryModel && source.DeliveryModel == DeliveryModel.FlexiJobAgency,
+                ShowFlexiJobAgencyDeliveryModelConfirmation = apiResponse.HasUnavailableDeliveryModel &&
+                                                              source.DeliveryModel == DeliveryModel.FlexiJobAgency &&
+                                                              apiResponse.DeliveryModels.Count == 1
             };
         }
     }

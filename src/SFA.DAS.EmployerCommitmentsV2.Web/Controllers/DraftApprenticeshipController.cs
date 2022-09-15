@@ -177,6 +177,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (localModel != null)
             {
+                if (localModel.DeliveryModel != model.DeliveryModel)
+                {
+                    localModel.HasChangedDeliveryModel = true;
+                }
+
                 localModel.CourseCode = model.CourseCode;
                 localModel.DeliveryModel = model.DeliveryModel;
                 return View("Edit", localModel);
