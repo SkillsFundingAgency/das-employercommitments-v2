@@ -25,6 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 DeliveryModel = apiResponse.DeliveryModel,
                 DeliveryModels = apiResponse.DeliveryModels,
                 LegalEntityName = apiResponse.EmployerName,
+                CourseCode = source.CourseCode,
                 HasUnavailableFlexiJobAgencyDeliveryModel = apiResponse.HasUnavailableDeliveryModel && source.DeliveryModel == DeliveryModel.FlexiJobAgency,
                 ShowFlexiJobAgencyDeliveryModelConfirmation = apiResponse.HasUnavailableDeliveryModel &&
                                                               source.DeliveryModel == DeliveryModel.FlexiJobAgency &&

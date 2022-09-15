@@ -13,7 +13,8 @@
         <h1 class="govuk-heading-xl">@Model.PageTitle</h1>
 
         <form id="selectDeliveryModel" novalidate method="post">
-            
+            <input type="hidden" asp-for="CourseCode" />
+
             @if (Model.ShowFlexiJobAgencyDeliveryModelConfirmation)
             {
                 <p>
@@ -27,7 +28,7 @@
             }
             else
             {
-                <partial name="_SelectDeliveryModelPartial"/>    
+                <partial name="_SelectDeliveryModelPartial"/>
             }
 
             <button type="submit" class="govuk-button">Continue</button>
