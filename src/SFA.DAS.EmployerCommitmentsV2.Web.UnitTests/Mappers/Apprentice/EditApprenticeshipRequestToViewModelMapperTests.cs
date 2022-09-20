@@ -395,7 +395,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _fixture.VerifyHasMultipleDeliveryModelsIsMapped();
         }
-
     }
 
     public class EditApprenticeshipRequestToViewModelMapperTestsFixture
@@ -468,6 +467,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         internal EditApprenticeshipRequestToViewModelMapperTestsFixture WithMultipleDeliveryModels(bool value)
         {
             _getEditApprenticeshipResponse.HasMultipleDeliveryModelOptions = value;
+            return this;
+        }
+
+        internal EditApprenticeshipRequestToViewModelMapperTestsFixture WithDeliveryModel(EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel deliveryModel)
+        {
+            _getEditApprenticeshipResponse.DeliveryModel = deliveryModel;
+            return this;
+        }
+
+        internal EditApprenticeshipRequestToViewModelMapperTestsFixture WithUnavailableDeliveryModel(
+            bool hasUnavailableDeliveryModel)
+        {
+            _getEditApprenticeshipResponse.HasUnavailableDeliveryModel = hasUnavailableDeliveryModel;
             return this;
         }
 
@@ -628,7 +640,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     new PriceEpisode { Cost = 1000, ToDate = DateTime.Now.AddMonths(-1)}})
                 .Create();
 
-            _getEditApprenticeshipResponse = autoFixture.Create<GetEditApprenticeshipResponse>();
+            _getEditApprenticeshipResponse = autoFixture.Build<GetEditApprenticeshipResponse>().With(x => x.HasUnavailableDeliveryModel, false).Create();
             _accountResponse = autoFixture.Create<AccountResponse>();
             _allTrainingProgrammeStandardsResponse = autoFixture.Create<GetAllTrainingProgrammeStandardsResponse>();
             _allTrainingProgrammeResponse = autoFixture.Create<GetAllTrainingProgrammesResponse>();

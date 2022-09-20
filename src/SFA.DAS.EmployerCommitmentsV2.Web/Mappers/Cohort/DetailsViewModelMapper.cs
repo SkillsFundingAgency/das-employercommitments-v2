@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -20,11 +21,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
+        private readonly IApprovalsApiClient _approvalsApiClient;
 
-        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
+        public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, IApprovalsApiClient approvalsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
+            _approvalsApiClient = approvalsApiClient;
         }
 
         public async Task<DetailsViewModel> Map(DetailsRequest source)
@@ -47,12 +50,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             }
 
             var cohortTask = _commitmentsApiClient.GetCohort(source.CohortId);
+            var cohortDetailsTask = _approvalsApiClient.GetCohortDetails(source.AccountId, source.CohortId);
             var draftApprenticeshipsTask = _commitmentsApiClient.GetDraftApprenticeships(source.CohortId);
             var emailOverlapsTask = _commitmentsApiClient.GetEmailOverlapChecks(source.CohortId);
 
-            await Task.WhenAll(cohortTask, draftApprenticeshipsTask, emailOverlapsTask);
+            await Task.WhenAll(cohortTask, draftApprenticeshipsTask, emailOverlapsTask, cohortDetailsTask);
 
             cohort = await cohortTask;
+            var cohortDetails = cohortDetailsTask.Result;
             var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
             var emailOverlaps = (await emailOverlapsTask).ApprenticeshipEmailOverlaps.ToList();
 
@@ -66,8 +71,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 CohortReference = source.CohortReference,
                 WithParty = cohort.WithParty,
                 AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
-                LegalEntityName = cohort.LegalEntityName,
-                ProviderName = cohort.ProviderName,
+                LegalEntityName = cohortDetails.LegalEntityName,
+                ProviderName = cohortDetails.ProviderName,
                 TransferSenderHashedId = cohort.TransferSenderId == null ? null : _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId),
                 EncodedPledgeApplicationId = cohort.PledgeApplicationId == null ? null : _encodingService.Encode(cohort.PledgeApplicationId.Value, EncodingType.PledgeApplicationId),
                 Message = cohort.LatestMessageCreatedByProvider,
@@ -79,7 +84,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 IsAgreementSigned = isAgreementSigned,
                 IsCompleteForEmployer = cohort.IsCompleteForEmployer,
                 HasEmailOverlaps = emailOverlaps.Any(),
-                ShowAddAnotherApprenticeOption = !cohort.IsLinkedToChangeOfPartyRequest
+                ShowAddAnotherApprenticeOption = !cohort.IsLinkedToChangeOfPartyRequest,
+                ShowRofjaaRemovalBanner = cohortDetails.HasUnavailableFlexiJobAgencyDeliveryModel
             };
         }
 
