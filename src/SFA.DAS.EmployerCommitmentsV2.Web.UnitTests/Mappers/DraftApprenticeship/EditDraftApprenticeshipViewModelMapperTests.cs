@@ -289,22 +289,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         {
             Assert.AreEqual(_draftApprenticeshipResponse.HasMultipleDeliveryModelOptions, _result.HasMultipleDeliveryModelOptions);
         }
-
-        [TestCase(true, EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel.FlexiJobAgency, true)]
-        [TestCase(true, EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel.PortableFlexiJob, false)]
-        [TestCase(true, EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel.Regular, false)]
-        [TestCase(false, EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel.FlexiJobAgency, false)]
-        [TestCase(false, EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel.PortableFlexiJob, false)]
-        [TestCase(false, EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel.Regular, false)]
-
-        public async Task ThenHasUnavailableFlexiJobAgencyDeliveryModelIsMappedCorrectly(bool hasUnavailableDeliveryModel, EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel deliveryModel, bool expectedResult)
-        {
-            _draftApprenticeshipResponse.DeliveryModel = deliveryModel;
-            _draftApprenticeshipResponse.HasUnavailableDeliveryModel = hasUnavailableDeliveryModel;
-
-            _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
-
-            Assert.AreEqual(expectedResult, _result.HasUnavailableFlexiJobDeliveryModel);
-        }
     }
 }

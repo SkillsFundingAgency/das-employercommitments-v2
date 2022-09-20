@@ -40,6 +40,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
         public int? DurationReducedBy { get; set; }
         public int? PriceReducedBy { get; set; }
         public bool RecognisingPriorLearningStillNeedsToBeConsidered { get; set; }
-        public bool HasUnavailableDeliveryModel { get; set; }
     }
 }
