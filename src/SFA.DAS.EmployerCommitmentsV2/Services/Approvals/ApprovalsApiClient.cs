@@ -4,6 +4,7 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
 {
@@ -45,6 +46,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
         public async Task<GetEditDraftApprenticeshipSelectDeliveryModelResponse> GetEditDraftApprenticeshipSelectDeliveryModel(long providerId, long cohortId, long draftApprenticeshipId, CancellationToken cancellationToken = default)
         {
             return await _client.Get<GetEditDraftApprenticeshipSelectDeliveryModelResponse>($"provider/{providerId}/unapproved/{cohortId}/apprentices/{draftApprenticeshipId}/edit/select-delivery-model", null, cancellationToken);
+        }
+
+        public async Task ValidateDraftApprenticeshipForOverlappingTrainingDateRequest(ValidateDraftApprenticeshipApimRequest data)
+        {
+            await _client.PostAsJson<object>($"OverlappingTrainingDateRequest/validate", data);
         }
     }
 }

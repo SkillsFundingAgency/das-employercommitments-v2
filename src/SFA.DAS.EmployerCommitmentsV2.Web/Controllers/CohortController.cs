@@ -22,6 +22,8 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -35,6 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IModelMapper _modelMapper;
         private readonly IAuthorizationService _authorizationService;
         private readonly IEncodingService _encodingService;
+        private readonly IApprovalsApiClient _approvalsApiClient;
 
         public CohortController(
             ICommitmentsApiClient commitmentsApiClient,
@@ -42,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             ILinkGenerator linkGenerator,
             IModelMapper modelMapper,
             IAuthorizationService authorizationService,
-            IEncodingService encodingService)
+            IEncodingService encodingService, IApprovalsApiClient approvalsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _logger = logger;
@@ -50,6 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             _modelMapper = modelMapper;
             _authorizationService = authorizationService;
             _encodingService = encodingService;
+            _approvalsApiClient = approvalsApiClient;
         }
 
         [Route("{cohortReference}")]
@@ -548,6 +552,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             var response = await _modelMapper.Map<AgreementNotSignedViewModel>(viewModel);
 
             return View(response);
+        }
+
+        [HttpPost]
+        [Route("add/validate")]
+        public async Task<IActionResult> Validate(DraftApprenticeshipViewModel model)
+        {
+            var request = await _modelMapper.Map<ValidateDraftApprenticeshipApimRequest>(model);
+            try
+            {
+                await _approvalsApiClient.ValidateDraftApprenticeshipForOverlappingTrainingDateRequest(request);
+            }
+            catch (CommitmentsApiModelException ex)
+            {
+                return Json(ex.Errors);
+            }
+            return new OkResult();
         }
 
         private void StoreDraftApprenticeshipState(ApprenticeViewModel model)

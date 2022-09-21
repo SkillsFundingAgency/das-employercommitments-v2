@@ -19,11 +19,12 @@
     "SFA.DAS.EmployerCommitmentsV2.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:44376;http://localhost:63543",
+      "launchUrl": "VN48RP/unapproved",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "APPSETTING_EnvironmentName": "LOCAL"
-      }
+      },
+      "applicationUrl": "https://localhost:44376;http://localhost:63543"
     }
   }
 }
