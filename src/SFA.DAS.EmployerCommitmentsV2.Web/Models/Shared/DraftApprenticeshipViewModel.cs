@@ -118,5 +118,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public long AccountLegalEntityId { get; set; }
         public string AccountLegalEntityHashedId { get; set; }
         public bool? HasMultipleDeliveryModelOptions { get; set; }
+        public bool? IsOnFlexiPaymentPilot { get; set; }
+        public DateTime? ActualStartDate { get; set; }
     }
 }

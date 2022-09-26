@@ -11,6 +11,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
@@ -54,7 +55,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 Mock.Of<ILinkGenerator>(),
                 modelMapper.Object,
                 Mock.Of<IAuthorizationService>(),
-                Mock.Of<IEncodingService>());
+                Mock.Of<IEncodingService>(),
+                Mock.Of<IApprovalsApiClient>());
         }
 
         public CohortController CohortController { get; set; }

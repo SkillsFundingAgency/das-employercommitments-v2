@@ -12,6 +12,7 @@ using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
@@ -41,7 +42,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
               _linkGenerator.Object,
               _modelMapper.Object,
               Mock.Of<IAuthorizationService>(),
-              Mock.Of<IEncodingService>());
+              Mock.Of<IEncodingService>(),
+              Mock.Of<IApprovalsApiClient>());
         }
       
 
