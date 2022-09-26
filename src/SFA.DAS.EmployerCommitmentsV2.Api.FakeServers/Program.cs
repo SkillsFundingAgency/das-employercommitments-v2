@@ -8,6 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Api.FakeServers
         {
             CommitmentsOuterApiBuilder.Create(44328)
                .WithCourseDeliveryModels()
+               .WithEmployerApprenticeshipsEdit()
                .Build();
 
             Console.WriteLine("Approvals Outer API running on port 44328");
