@@ -60,7 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                 ApprenticeConfirmation = model.ConfirmationStatus.ToDisplayString(),
                 Status = model.ApprenticeshipStatus.GetDescription(),
                 Alerts = GenerateAlerts(model.Alerts),
-                DeliveryModel = ToDeliveryModelDescription(model.DeliveryModel)
+                DeliveryModel = model.DeliveryModel.ToDescription(),
             };
         }
 
@@ -78,17 +78,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
             }
 
             return alertString;
-        }
-
-        private static string ToDeliveryModelDescription(DeliveryModel deliveryModel)
-        {
-            return deliveryModel switch
-            {
-                CommitmentsV2.Types.DeliveryModel.FlexiJobAgency => "Flexi-job agency",
-                CommitmentsV2.Types.DeliveryModel.PortableFlexiJob => "Portable flexi-job",
-                CommitmentsV2.Types.DeliveryModel.Regular => "Regular",
-                _ => null
-            };
         }
     }
 }
