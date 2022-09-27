@@ -24,6 +24,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Web.Filters;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -555,6 +556,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpPost]
+        [AjaxValidation]
         [Route("add/validate")]
         public async Task<IActionResult> Validate(DraftApprenticeshipViewModel model)
         {
