@@ -82,16 +82,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         private static string ToDeliveryModelDescription(DeliveryModel deliveryModel)
         {
-            switch (deliveryModel)
+            return deliveryModel switch
             {
-                case CommitmentsV2.Types.DeliveryModel.FlexiJobAgency:
-                    return "Flexi-job agency";
-                case CommitmentsV2.Types.DeliveryModel.PortableFlexiJob:
-                    return "Portable flexi-job";
-                case CommitmentsV2.Types.DeliveryModel.Regular:
-                    return "Regular";
-            }
-            return null;
+                CommitmentsV2.Types.DeliveryModel.FlexiJobAgency => "Flexi-job agency",
+                CommitmentsV2.Types.DeliveryModel.PortableFlexiJob => "Portable flexi-job",
+                CommitmentsV2.Types.DeliveryModel.Regular => "Regular",
+                _ => null
+            };
         }
     }
 }
