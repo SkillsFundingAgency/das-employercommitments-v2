@@ -165,5 +165,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
 
             result.Alerts.Should().Be(expectedAlertString);
         }
+
+        [Test, AutoData]
+        public void Then_Maps_DeliveryModel(GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source)
+        {
+            ApprenticeshipDetailsCsvModel result = source;
+
+            result.DeliveryModel.Should().Be(source.DeliveryModel.GetDescription());
+        }
     }
 }

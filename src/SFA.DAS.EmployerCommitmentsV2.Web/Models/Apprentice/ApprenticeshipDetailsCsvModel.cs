@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using CsvHelper.Configuration.Attributes;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
@@ -39,6 +38,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string Status { get ; private set ; }
         [Name("Alerts")]
         public string Alerts { get ; private set ; }
+        [Name("Delivery model")]
+        public string DeliveryModel { get; private set; }
+
 
         public static implicit operator ApprenticeshipDetailsCsvModel(GetApprenticeshipsResponse.ApprenticeshipDetailsResponse model)
         {
@@ -57,7 +59,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                 TotalAgreedPrice = $"{model.TotalAgreedPrice.Value as object:n0}",
                 ApprenticeConfirmation = model.ConfirmationStatus.ToDisplayString(),
                 Status = model.ApprenticeshipStatus.GetDescription(),
-                Alerts = GenerateAlerts(model.Alerts)
+                Alerts = GenerateAlerts(model.Alerts),
+                DeliveryModel = model.DeliveryModel.GetDescription(),
             };
         }
 
