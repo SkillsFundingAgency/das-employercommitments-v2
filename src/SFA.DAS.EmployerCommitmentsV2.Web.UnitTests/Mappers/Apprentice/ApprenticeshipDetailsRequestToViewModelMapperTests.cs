@@ -291,6 +291,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task CanResendInvitationLink_IsFalse_WhenStopped()
+        {
+            //Act
+            _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.IsFalse(result.CanResendInvitation);
+        }
+
+        [Test]
         public async Task PauseDate_IsMapped()
         {
             //Act
