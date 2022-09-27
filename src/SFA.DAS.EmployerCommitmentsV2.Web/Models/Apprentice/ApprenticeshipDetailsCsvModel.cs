@@ -14,6 +14,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string ApprenticeName { get ; private set ; }
         [Name("Apprenticeship training course")]
         public string CourseName { get; private set; }
+        [Name("Apprenticeship Delivery model")]
+        public string DeliveryModel { get; private set; }
         [Name("Planned start date")]
         public string PlannedStartDate { get; private set; }
         [Name("Planned end date")]
@@ -38,9 +40,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string Status { get ; private set ; }
         [Name("Alerts")]
         public string Alerts { get ; private set ; }
-        [Name("Delivery model")]
-        public string DeliveryModel { get; private set; }
-
 
         public static implicit operator ApprenticeshipDetailsCsvModel(GetApprenticeshipsResponse.ApprenticeshipDetailsResponse model)
         {
