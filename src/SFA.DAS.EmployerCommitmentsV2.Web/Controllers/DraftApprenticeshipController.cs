@@ -256,6 +256,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             if (draft != null)
             {
                 draft.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?) model.DeliveryModel;
+                draft.CourseCode = model.CourseCode;
                 StoreEditDraftApprenticeshipState(draft);
 
                 return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), draft);
