@@ -108,7 +108,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             else
             {
                 Assert.IsInstanceOf(typeof(RedirectToActionResult), result);
-                Assert.AreEqual(result, (result as Microsoft.AspNetCore.Mvc.ViewResult));
+                Assert.AreEqual("EditDraftApprenticeshipDisplay", (result as Microsoft.AspNetCore.Mvc.ViewResult).ViewName);
             }
         }
 
