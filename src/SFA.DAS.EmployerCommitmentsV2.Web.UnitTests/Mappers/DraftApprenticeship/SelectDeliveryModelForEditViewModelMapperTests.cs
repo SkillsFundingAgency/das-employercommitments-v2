@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
             _approvalsApiClient.Setup(x => x.GetEditDraftApprenticeshipSelectDeliveryModel(It.IsAny<long>(),
-                    It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                    It.IsAny<long>(), It.IsAny<long>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_response);
 
             _mapper = new SelectDeliveryModelForEditViewModelMapper(_approvalsApiClient.Object);
