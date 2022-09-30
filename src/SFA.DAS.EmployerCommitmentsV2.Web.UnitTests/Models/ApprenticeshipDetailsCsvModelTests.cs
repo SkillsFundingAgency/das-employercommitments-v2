@@ -1,9 +1,11 @@
 ﻿using System;
+using AutoFixture;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -164,6 +166,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
             ApprenticeshipDetailsCsvModel result = source;
 
             result.Alerts.Should().Be(expectedAlertString);
+        }
+
+        [TestCase(DeliveryModel.Regular, "Regular")]
+        [TestCase(DeliveryModel.PortableFlexiJob, "Portable flexi-job")]
+        [TestCase(DeliveryModel.FlexiJobAgency, "Flexi-job agency")]
+        public void Then_Maps_DeliveryModel(DeliveryModel deliveryModel, string desc)
+        {
+            var f = new Fixture();
+            var source = f.Build<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>()
+                .With(x => x.DeliveryModel, deliveryModel).Create();
+
+            ApprenticeshipDetailsCsvModel result = source;
+
+            result.DeliveryModel.Should().Be(desc);
         }
     }
 }
