@@ -113,6 +113,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                             IsComplete = IsDraftApprenticeshipComplete(a, cohortResponse),
                             EmploymentPrice = a.EmploymentPrice,
                             EmploymentEndDate = a.EmploymentEndDate,
+                            IsOnFlexiPaymentPilot = a.IsOnFlexiPaymentPilot
                         })
                 .ToList()
                 })
