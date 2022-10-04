@@ -27,8 +27,22 @@
 
 <div id="draftApprenticeshipSection1">
     
+    <h1 class="govuk-heading-xl">Add apprentice details</h1>
+    <div class="govuk-inset-text">
+        <p class="govuk-body">
+            You must add the apprentice’s:
+            <ul>
+                <li>first name</li>
+                <li>last name</li>
+                <li>email address</li>
+            </ul>
+            Fill in as many other fields as you can. You're able to return to make changes or add more information at any time.
+        </p>
+        <p class="govuk-body">You'll only be able to authorise payments for this apprentice once all the fields have been completed - either by yourself or your training provider.</p>
+    </div>
+
     <h1 class="govuk-heading-xl">Personal details</h1>
-    
+
     <div class="govuk-inset-text">
         <p class="govuk-body">You'll only be able to authorise payments for this apprentice once all the fields have been completed - either by yourself or your training provider.</p>
     </div>
@@ -105,13 +119,13 @@
                 </legend>
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.FirstName, "govuk-form-group--error")">
                     <label asp-for="FirstName" class="govuk-label">First name</label>
-                    @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.FirstName) })
-                    <input asp-for="FirstName" class="govuk-input" />
+                    @Html.ValidationMessageFor(m => m.FirstName, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.FirstName)})
+                    <input asp-for="FirstName" class="govuk-input"/>
                 </div>
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.LastName, "govuk-form-group--error")">
                     <label asp-for="LastName" class="govuk-label">Last name</label>
-                    @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
-                    <input asp-for="LastName" class="govuk-input" />
+                    @Html.ValidationMessageFor(m => m.LastName, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName)})
+                    <input asp-for="LastName" class="govuk-input"/>
                 </div>
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
                     <details class="govuk-details" data-module="govuk-details">
@@ -129,8 +143,8 @@
                             </ul>
                         </div>
                     </details>
-                    @Html.ValidationMessageFor(m => m.Email, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email) })
-                    <input asp-for="Email" class="govuk-input" />
+                    @Html.ValidationMessageFor(m => m.Email, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email)})
+                    <input asp-for="Email" class="govuk-input"/>
                 </div>
             </fieldset>
         </div>
@@ -142,27 +156,27 @@
                 <span id="dob-hint" class="govuk-hint">
                     For example, 31 3 1980
                 </span>
-                @Html.ValidationMessageFor(m => m.DateOfBirth, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DateOfBirth) })
+                @Html.ValidationMessageFor(m => m.DateOfBirth, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DateOfBirth)})
                 <div class="govuk-date-input" id="DateOfBirth">
                     <div class="govuk-date-input__item">
                         <div class="govuk-form-group">
                             <label asp-for="BirthDay" class="govuk-label govuk-date-input__label">Day</label>
                             <input asp-for="BirthDay" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="31"
-                               class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit">
+                                   class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit">
                         </div>
                     </div>
                     <div class="govuk-date-input__item">
                         <div class="govuk-form-group">
                             <label asp-for="BirthMonth" class="govuk-label govuk-date-input__label">Month</label>
                             <input asp-for="BirthMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
-                               class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit">
+                                   class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit">
                         </div>
                     </div>
                     <div class="govuk-date-input__item">
                         <div class="govuk-form-group">
                             <label asp-for="BirthYear" class="govuk-label govuk-date-input__label">Year</label>
                             <input asp-for="BirthYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
-                               class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit">
+                                   class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit">
                         </div>
                     </div>
                 </div>
@@ -200,9 +214,9 @@
         <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
         <input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
     }
-    
-    <input type="hidden" asp-for="IsOnFlexiPaymentPilot" />
-    
+
+    <input type="hidden" asp-for="IsOnFlexiPaymentPilot"/>
+
     <button type="button" class="govuk-button das-js-show" onclick="javascript: continueJourney();">Save and continue</button>
 
 </div>
