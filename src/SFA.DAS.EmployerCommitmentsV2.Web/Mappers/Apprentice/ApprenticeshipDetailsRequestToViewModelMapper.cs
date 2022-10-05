@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         private readonly IApprovalsApiClient _approvalsApiClient;
 
         public ApprenticeshipDetailsRequestToViewModelMapper(
-            ICommitmentsApiClient commitmentsApiClient, 
+            ICommitmentsApiClient commitmentsApiClient,
             IEncodingService encodingService,
             IApprovalsApiClient approvalsApiClient,
             ILogger<ApprenticeshipDetailsRequestToViewModelMapper> logger)
@@ -45,29 +45,40 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 var apprenticeshipUpdatesTask = _commitmentsApiClient.GetApprenticeshipUpdates(apprenticeshipId, new GetApprenticeshipUpdatesRequest() { Status = ApprenticeshipUpdateStatus.Pending }, CancellationToken.None);
                 var apprenticeshipDataLocksStatusTask = _commitmentsApiClient.GetApprenticeshipDatalocksStatus(apprenticeshipId, CancellationToken.None);
                 var changeofPartyRequestsTask = _commitmentsApiClient.GetChangeOfPartyRequests(apprenticeshipId, CancellationToken.None);
-                var changeOfProviderChainTask  = _commitmentsApiClient.GetChangeOfProviderChain(apprenticeshipId, CancellationToken.None);
+                var changeOfProviderChainTask = _commitmentsApiClient.GetChangeOfProviderChain(apprenticeshipId, CancellationToken.None);
+                var overlappingTrainingDateRequestTask = _commitmentsApiClient.GetOverlappingTrainingDateRequest(apprenticeshipId, CancellationToken.None);
 
-                await Task.WhenAll(apprenticeshipTask, priceEpisodesTask, apprenticeshipUpdatesTask, apprenticeshipDataLocksStatusTask, changeofPartyRequestsTask, changeOfProviderChainTask);
+                await Task.WhenAll(apprenticeshipTask,
+                    priceEpisodesTask,
+                    apprenticeshipUpdatesTask,
+                    apprenticeshipDataLocksStatusTask,
+                    changeofPartyRequestsTask,
+                    changeOfProviderChainTask,
+                    overlappingTrainingDateRequestTask);
 
-                var apprenticeship = await apprenticeshipTask;
-                var priceEpisodes = await priceEpisodesTask;
-                var apprenticeshipUpdates = await apprenticeshipUpdatesTask;
-                var apprenticeshipDataLocksStatus = await apprenticeshipDataLocksStatusTask;
-                var changeofPartyRequests = await changeofPartyRequestsTask;
-                var changeOfProviderChain = await changeOfProviderChainTask;
+                var apprenticeship = apprenticeshipTask.Result;
+                var priceEpisodes = priceEpisodesTask.Result;
+                var apprenticeshipUpdates = apprenticeshipUpdatesTask.Result;
+                var apprenticeshipDataLocksStatus = apprenticeshipDataLocksStatusTask.Result;
+                var changeofPartyRequests = changeofPartyRequestsTask.Result;
+                var changeOfProviderChain = changeOfProviderChainTask.Result;
+                var overlappingTrainingDateRequestResponse = overlappingTrainingDateRequestTask.Result;
 
                 var currentTrainingProgramme = await GetTrainingProgramme(apprenticeship.CourseCode, apprenticeship.StandardUId);
-                
+
                 PendingChanges pendingChange = GetPendingChanges(apprenticeshipUpdates);
 
                 bool dataLockCourseTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseTriaged();
                 bool dataLockCourseChangedTraiged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseChangeTriaged();
                 bool dataLockPriceTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockPriceTriaged();
 
-                bool enableEdit = EnableEdit(apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged);
-
                 var pendingChangeOfProviderRequest = changeofPartyRequests.ChangeOfPartyRequests?
                     .Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
+
+                var hasPendingoverlappingTrainingDateRequest = overlappingTrainingDateRequestResponse != null &&
+                    overlappingTrainingDateRequestResponse?.OverlappingTrainingDateRequest?.Any(x => x.Status == OverlappingTrainingDateRequestStatus.Pending) == true;
+
+                bool enableEdit = EnableEdit(apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged, hasPendingoverlappingTrainingDateRequest);
 
                 var apprenticeshipDetails = await _approvalsApiClient.GetApprenticeshipDetails(apprenticeship.ProviderId, apprenticeshipId, CancellationToken.None);
 
@@ -124,6 +135,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     RecognisePriorLearning = apprenticeship.RecognisePriorLearning,
                     DurationReducedBy = apprenticeship.DurationReducedBy,
                     PriceReducedBy = apprenticeship.PriceReducedBy,
+                    HasPendingOverlappingTrainingDateRequest = hasPendingoverlappingTrainingDateRequest,
                     HasMultipleDeliveryModelOptions = apprenticeshipDetails.HasMultipleDeliveryModelOptions
                 };
 
@@ -152,15 +164,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             }
         }
 
-        private static bool EnableEdit(CommitmentsV2.Api.Types.Responses.GetApprenticeshipResponse apprenticeship, PendingChanges pendingChange, 
-            bool dataLockCourseTriaged, bool dataLockCourseChangedTraiged, bool dataLockPriceTriaged)
-        {         
+        private static bool EnableEdit(CommitmentsV2.Api.Types.Responses.GetApprenticeshipResponse apprenticeship, PendingChanges pendingChange,
+            bool dataLockCourseTriaged, bool dataLockCourseChangedTraiged, bool dataLockPriceTriaged, bool hasPendingoverlappingTrainingDateRequest)
+        {
             return pendingChange == PendingChanges.None
                             && !dataLockCourseTriaged
                             && !dataLockCourseChangedTraiged
                             && !dataLockPriceTriaged
-                            && new[] { ApprenticeshipStatus.WaitingToStart, ApprenticeshipStatus.Live, ApprenticeshipStatus.Paused }.Contains(apprenticeship.Status);
-
+                            && new[] { ApprenticeshipStatus.WaitingToStart, ApprenticeshipStatus.Live, ApprenticeshipStatus.Paused }.Contains(apprenticeship.Status)
+                            && !hasPendingoverlappingTrainingDateRequest;
         }
 
         private static PendingChanges GetPendingChanges(CommitmentsV2.Api.Types.Responses.GetApprenticeshipUpdatesResponse apprenticeshipUpdates)
@@ -184,7 +196,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     return true;
                 }
             }
-            
+
             return false;
         }
     }

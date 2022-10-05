@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using CsvHelper.Configuration.Attributes;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
@@ -15,6 +14,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string ApprenticeName { get ; private set ; }
         [Name("Apprenticeship training course")]
         public string CourseName { get; private set; }
+        [Name("Apprenticeship delivery model")]
+        public string DeliveryModel { get; private set; }
         [Name("Planned start date")]
         public string PlannedStartDate { get; private set; }
         [Name("Planned end date")]
@@ -57,7 +58,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
                 TotalAgreedPrice = $"{model.TotalAgreedPrice.Value as object:n0}",
                 ApprenticeConfirmation = model.ConfirmationStatus.ToDisplayString(),
                 Status = model.ApprenticeshipStatus.GetDescription(),
-                Alerts = GenerateAlerts(model.Alerts)
+                Alerts = GenerateAlerts(model.Alerts),
+                DeliveryModel = model.DeliveryModel.ToDescription(),
             };
         }
 
