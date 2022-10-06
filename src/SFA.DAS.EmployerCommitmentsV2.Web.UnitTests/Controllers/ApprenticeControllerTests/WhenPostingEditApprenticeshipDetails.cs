@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 .With(x => x.CourseCode, _apprenticeshipResponse.CourseCode)
                 .Create();
 
-            _viewModel.StartDate = new MonthYearModel(_apprenticeshipResponse.StartDate.ToString("MMyyyy"));
+            _viewModel.StartDate = new MonthYearModel(_apprenticeshipResponse.StartDate.Value.ToString("MMyyyy"));
             
             _fixture.SetUpGetApprenticeship(_apprenticeshipResponse);
         }   
