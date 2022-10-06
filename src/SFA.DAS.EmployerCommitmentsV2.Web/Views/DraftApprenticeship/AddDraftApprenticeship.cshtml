@@ -10,8 +10,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
-        <h1 class="govuk-heading-xl">Add an apprentice</h1>
-
+        
         <form id="addApprenticeship" novalidate method="post">
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.CohortReference)
