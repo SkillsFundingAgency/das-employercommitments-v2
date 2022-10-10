@@ -47,9 +47,20 @@
             }
             @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.PendingOverlappingTrainingDateRequest))
             {
+                var redirectToPage = "ConfirmHasNotStop";
+                switch (Model.ApprenticeshipStatus)
+                {
+                    case ApprenticeshipStatus.Stopped:
+                        redirectToPage = "ConfirmWhenApprenticeshipStopped";
+                        break;
+                     case ApprenticeshipStatus.Completed:
+                        redirectToPage = "ConfirmHasValidEndDate";
+                        break;
+                };
+
                 <p class="govuk-notification-banner__heading">
                     You have an outstanding request that needs to be reviewed and confirmed.
-                    <a  id="overlapping-trainingDate-requests-link" class="govuk-notification-banner__link" href="@Url.Action("ConfirmHasNotStop", new  {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Confirm changes</a>
+                    <a id="overlapping-trainingDate-requests-link" class="govuk-notification-banner__link" href="@Url.Action(redirectToPage, new  {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Confirm changes</a>
                 </p>
             }
         </div>
