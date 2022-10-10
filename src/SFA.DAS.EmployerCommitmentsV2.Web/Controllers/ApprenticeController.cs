@@ -983,8 +983,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{apprenticeshipHashedId}/details/confirmHasValidEndDate")]
         public async Task<IActionResult> ConfirmHasValidEndDateChanges(ConfirmHasValidEndDateViewModel viewModel)
         {
-            if (viewModel.EndDateConfirmed.HasValue)
-            {
                 if (viewModel.EndDateConfirmed.Value)
                 {
                     await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(new ResolveApprenticeshipOverlappingTrainingDateRequest
@@ -996,15 +994,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     TempData.AddFlashMessage(ApprenticeEndDateConfirmed, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
 
                     return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
-
                 }
                 else
                 {
                     return RedirectToAction(nameof(EditEndDate), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
                 }
-            }
-
-            return View(viewModel);
         }
 
         [Route("{apprenticeshipHashedId}/details/reconfirmHasNotStop")]

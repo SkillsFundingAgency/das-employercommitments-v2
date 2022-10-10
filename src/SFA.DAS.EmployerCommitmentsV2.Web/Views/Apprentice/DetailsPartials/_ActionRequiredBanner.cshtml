@@ -45,18 +45,18 @@
                     <a id="datalock-restart-link" class="govuk-notification-banner__link" href="@Url.Action("DataLockRequestRestart", new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">View details</a>
                 </p>
             }
-            @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.PendingOverlappingTrainingDateRequest) && Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
+            @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.PendingOverlappingTrainingDateRequest))
             {
                 <p class="govuk-notification-banner__heading">
                     You have an outstanding request that needs to be reviewed and confirmed.
-                    <a  id="overlapping-trainingDate-requests-link" class="govuk-notification-banner__link" href="@Url.Action("confirmHasValidEndDate", new  {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Confirm changes</a>
-                </p>
-            }
-            else if (actionRequiredBanners.HasFlag(ActionRequiredBanner.PendingOverlappingTrainingDateRequest))
-            {
-                <p class="govuk-notification-banner__heading">
-                    You have an outstanding request that needs to be reviewed and confirmed.
-                    <a  id="overlapping-trainingDate-requests-link" class="govuk-notification-banner__link" href="@Url.Action("ConfirmHasNotStop", new  {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Confirm changes</a>
+                    @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
+                    {
+                        <a id="overlapping-trainingDate-requests-link" class="govuk-notification-banner__link" href="@Url.Action("confirmHasValidEndDate", new  {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Confirm changes</a>
+                    }
+                    else
+                    {
+                        <a id="overlapping-trainingDate-requests-link" class="govuk-notification-banner__link" href="@Url.Action("ConfirmHasNotStop", new  {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Confirm changes</a>
+                    }
                 </p>
             }
         </div>

@@ -1,13 +1,13 @@
-﻿using Moq;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Testing.AutoFixture;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 {
