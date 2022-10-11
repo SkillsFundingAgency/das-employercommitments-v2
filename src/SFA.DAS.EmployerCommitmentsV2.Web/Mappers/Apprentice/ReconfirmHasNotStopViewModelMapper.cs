@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System;
@@ -6,24 +7,26 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class StopRequestToViewModelMapper : IMapper<StopRequest, StopRequestViewModel>
+    public class ReconfirmHasNotStopViewModelMapper : IMapper<ReConfirmHasNotStopRequest, ReconfirmHasNotStopViewModel>
     {
         private readonly ICommitmentsApiClient _client;
-        public StopRequestToViewModelMapper(ICommitmentsApiClient client)
+
+        public ReconfirmHasNotStopViewModelMapper(ICommitmentsApiClient client)
         {
             _client = client;
         }
 
-        public async Task<StopRequestViewModel> Map(StopRequest source)
+        public async Task<ReconfirmHasNotStopViewModel> Map(ReConfirmHasNotStopRequest source)
         {
             var apprenticeship = await _client.GetApprenticeship(source.ApprenticeshipId);
 
-            return new StopRequestViewModel
+            return new ReconfirmHasNotStopViewModel
             {
                 AccountHashedId = source.AccountHashedId,
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
-                StartDate = apprenticeship.StartDate.Value,
-                IsCoPJourney = source.IsCoPJourney
+                ApprenticeName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
+                ULN = apprenticeship.Uln,
+                Course = apprenticeship.CourseName
             };
         }
     }

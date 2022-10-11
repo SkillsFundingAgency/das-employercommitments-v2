@@ -33,7 +33,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
         public void ThenDisplayTrainingDatesIsCorrect(DateTime? startDate, DateTime? endDate,
             string expectedDisplayTrainingDates)
         {
-            _viewModel = new CohortDraftApprenticeshipViewModel {StartDate = startDate, EndDate = endDate};
+            _viewModel = new CohortDraftApprenticeshipViewModel {StartDate = startDate, ActualStartDate = null, EndDate = endDate};
+            Assert.AreEqual(expectedDisplayTrainingDates, _viewModel.DisplayTrainingDates);
+        }
+
+        [TestCase(null, null, "-")]
+        [TestCase("2019-01-13", null, "-")]
+        [TestCase(null, "2019-02-01", "-")]
+        [TestCase("2019-01-12", "2019-02-01", "12 Jan 2019 to Feb 2019")]
+        public void ThenDisplayTrainingDatesIsCorrectForPilotUsers(DateTime? startDate, DateTime? endDate,
+            string expectedDisplayTrainingDates)
+        {
+            _viewModel = new CohortDraftApprenticeshipViewModel {StartDate = null, ActualStartDate = startDate, EndDate = endDate};
             Assert.AreEqual(expectedDisplayTrainingDates, _viewModel.DisplayTrainingDates);
         }
 

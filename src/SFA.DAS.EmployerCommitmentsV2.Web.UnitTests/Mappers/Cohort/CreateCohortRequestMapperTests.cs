@@ -146,5 +146,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             Assert.AreEqual(_source.PledgeApplicationId, _result.PledgeApplicationId);
         }
+
+        [Test]
+        public void ThenIsOnFlexiPaymentPilotIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.IsOnFlexiPaymentPilot, _result.IsOnFlexiPaymentPilot);
+        }
     }
 }

@@ -4,8 +4,8 @@
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
 
-@{ 
-   var actionRequiredBanners = Model.GetActionRequiredBanners();
+@{
+    var actionRequiredBanners = Model.GetActionRequiredBanners();
 }
 
 @if (actionRequiredBanners > ActionRequiredBanner.None)
@@ -43,6 +43,13 @@
                 <p class="govuk-notification-banner__heading">
                     The apprentice’s training provider has asked you to stop this apprenticeship and to create a new apprentice request with the updated apprenticeship training course.
                     <a id="datalock-restart-link" class="govuk-notification-banner__link" href="@Url.Action("DataLockRequestRestart", new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">View details</a>
+                </p>
+            }
+            @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.PendingOverlappingTrainingDateRequest))
+            {
+                <p class="govuk-notification-banner__heading">
+                    You have an outstanding request that needs to be reviewed and confirmed.
+                    <a  id="overlapping-trainingDate-requests-link" class="govuk-notification-banner__link" href="@Url.Action("ConfirmHasNotStop", new  {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Confirm changes</a>
                 </p>
             }
         </div>

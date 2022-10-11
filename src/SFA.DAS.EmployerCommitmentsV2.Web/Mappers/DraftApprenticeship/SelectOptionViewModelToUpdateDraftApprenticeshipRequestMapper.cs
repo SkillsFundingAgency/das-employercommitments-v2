@@ -31,11 +31,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 Cost = response.Cost,
                 EmploymentPrice = response.EmploymentPrice,
                 StartDate = response.StartDate,
+                ActualStartDate = response.ActualStartDate,
                 EndDate = response.EndDate,
                 EmploymentEndDate = response.EmploymentEndDate,
                 Reference = response.Reference,
                 ReservationId = response.ReservationId,
                 DeliveryModel = response.DeliveryModel,
+                IsOnFlexiPaymentPilot = response.IsOnFlexiPaymentPilot
             };
         }
     }
