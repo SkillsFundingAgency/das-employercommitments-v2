@@ -136,6 +136,7 @@
                         <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Training price for this employment</th>
                         <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Total training price</th>
                         <th asp-show="!@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Price</th>
+                        <th scope="col" class="govuk-table__header">Pilot User?</th>
                         <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Action</span></th>
                     </tr>
                 </thead>
@@ -184,6 +185,9 @@
                                 {
                                     @draftApprenticeship.DisplayCost
                                 }
+                            </td>
+                            <td class="govuk-table__cell" data-label="IsOnFlexiPaymentPilot">
+                                @draftApprenticeship.DislayIsPilot
                             </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <a class="govuk-link edit-apprentice" href="@Url.RouteUrl("Details", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">
