@@ -21,6 +21,8 @@
 
             @Html.AntiForgeryToken()
 
+             @Html.HiddenFor(x => x.StopDate, new {id="StopDate"})
+
             <h1 class="govuk-heading-xl">@pageHeading</h1>
 
             <p>
@@ -51,8 +53,8 @@
                 <fieldset class="govuk-fieldset">
                     @if (!ViewData.ModelState.IsValid)
                     {
-                        <span id="error-message-@nameof(ConfirmHasNotStopViewModel.StopConfirmed)" class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(ConfirmHasNotStopViewModel.StopConfirmed)].Errors.First().ErrorMessage
+                        <span id="error-message-@nameof(ConfirmWhenApprenticeshipStoppedViewModel.IsCorrectStopDate)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(ConfirmWhenApprenticeshipStoppedViewModel.IsCorrectStopDate)].Errors.First().ErrorMessage
                         </span>
                     }
 
