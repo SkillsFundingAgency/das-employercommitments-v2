@@ -181,7 +181,7 @@
 
     <h1 class="govuk-heading-xl">Training details</h1>
 
-    if (!string.IsNullOrWhiteSpace(Model.CourseCode))
+    @if (!string.IsNullOrWhiteSpace(Model.CourseCode))
     {
         Model.CourseName = (await CommitmentsApiClient.GetTrainingProgramme(Model.CourseCode)).TrainingProgramme.Name;
     }
@@ -196,7 +196,7 @@
         </p>
     </div>
 
-    if (multipleDeliveryModels)
+    @if (multipleDeliveryModels)
     {
         <div class="govuk-form-group">
             <p class="govuk-label govuk-!-font-weight-bold">Delivery model</p>
