@@ -90,6 +90,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     ULN = apprenticeship.Uln,
                     DateOfBirth = apprenticeship.DateOfBirth,
                     StartDate = apprenticeship.StartDate,
+                    ActualStartDate = apprenticeship.ActualStartDate,
                     EndDate = apprenticeship.EndDate,
                     StopDate = apprenticeship.StopDate,
                     PauseDate = apprenticeship.PauseDate,
