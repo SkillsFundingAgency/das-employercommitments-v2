@@ -131,7 +131,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 !(
                   string.IsNullOrWhiteSpace(draftApprenticeship.FirstName) || string.IsNullOrWhiteSpace(draftApprenticeship.LastName) 
                   || draftApprenticeship.DateOfBirth == null ||  string.IsNullOrWhiteSpace(draftApprenticeship.CourseName) 
-                  || draftApprenticeship.StartDate == null || draftApprenticeship.EndDate == null || draftApprenticeship.Cost == null 
+                  || (draftApprenticeship.StartDate == null && draftApprenticeship.ActualStartDate == null) || draftApprenticeship.EndDate == null || draftApprenticeship.Cost == null 
                   || (cohortResponse.ApprenticeEmailIsRequired && string.IsNullOrWhiteSpace(draftApprenticeship.Email) && !cohortResponse.IsLinkedToChangeOfPartyRequest)
                  );
         
