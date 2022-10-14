@@ -281,7 +281,7 @@
         </fieldset>
     </div>
     
-    @if (Model.IsOnFlexiPaymentPilot.HasValue)
+    @if (Model.IsOnFlexiPaymentPilot.HasValue && Model.IsProviderOnFlexiPaymentPilot)
     {
         <div class="govuk-form-group">
             <h2 class="govuk-heading-m">Pilot programme</h2>
