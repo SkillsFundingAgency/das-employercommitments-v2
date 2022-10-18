@@ -66,7 +66,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             //Assert
             var redirect = result.VerifyReturnsRedirectToActionResult();
 
-            Assert.IsTrue(_controller.TempData.Values.Contains("Current stop date confirmed January 2022"));
+            Assert.IsTrue(_controller.TempData.Values.Contains("Current stop date confirmed"));
+            Assert.IsTrue(_controller.TempData.Values.Contains("January 2022"));
             Assert.AreEqual(redirect.ActionName, "ApprenticeshipDetails");
             Assert.AreEqual(redirect.RouteValues["AccountHashedId"], viewModel.AccountHashedId);
             Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], viewModel.ApprenticeshipHashedId);

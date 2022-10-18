@@ -1020,7 +1020,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipStopped
                 }, CancellationToken.None);
 
-                TempData.AddFlashMessage($"Current stop date confirmed {viewModel.StopDate.ToGdsFormatLongMonthNameWithoutDay()}", ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                TempData.AddFlashMessage("Current stop date confirmed", viewModel.StopDate.ToGdsFormatLongMonthNameWithoutDay(), ITempDataDictionaryExtensions.FlashMessageLevel.Success);
 
                 return RedirectToAction(nameof(ApprenticeshipDetails), new
                 {
