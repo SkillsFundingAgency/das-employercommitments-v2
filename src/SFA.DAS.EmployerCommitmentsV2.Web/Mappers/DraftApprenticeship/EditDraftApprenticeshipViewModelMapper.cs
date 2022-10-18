@@ -67,7 +67,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
                 HasMultipleDeliveryModelOptions = draftApprenticeship.HasMultipleDeliveryModelOptions,
                 IsOnFlexiPaymentPilot = draftApprenticeship.IsOnFlexiPaymentPilot ?? false,
-                ActualStartDate = draftApprenticeship.ActualStartDate
+                ActualStartDate = draftApprenticeship.ActualStartDate,
+                IsProviderOnFlexiPaymentPilot = draftApprenticeship.IsProviderOnFlexiPaymentPilot
             };
         }
     }

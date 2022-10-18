@@ -301,5 +301,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         {
             Assert.AreEqual(_draftApprenticeshipResponse.ActualStartDate, _result.ActualStartDate);
         }
+
+        [Test]
+        public void IsIsProviderOnFlexiPaymentPilotIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeshipResponse.IsProviderOnFlexiPaymentPilot, _result.IsProviderOnFlexiPaymentPilot);
+        }
+
     }
 }

@@ -280,6 +280,25 @@
             </div>
         </fieldset>
     </div>
+    
+    @if (Model.IsOnFlexiPaymentPilot.HasValue && Model.IsProviderOnFlexiPaymentPilot)
+    {
+        <div class="govuk-form-group">
+            <h2 class="govuk-heading-m">Pilot programme</h2>
+            <span class="govuk-fieldset__legend govuk-fieldset__legend--s">Will this apprentice be part of the Flexible Payments pilot programme?</span>
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        What is the pilot programme?
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    The Department of Education are testing changes to the service to improve the way in which payments are processed via a pilot. If your Training Provider is part of this pilot they have the option to opt this apprentice into the pilot.
+                </div>
+            </details>
+            <span class="govuk-hint">@(Model.IsOnFlexiPaymentPilot is true ? "Yes" : "No")</span>
+        </div>
+    }
 
     @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
     {
