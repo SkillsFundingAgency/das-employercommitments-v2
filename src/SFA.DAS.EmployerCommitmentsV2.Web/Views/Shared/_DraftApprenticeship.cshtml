@@ -190,7 +190,7 @@
         <p class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</p>
         <p class="govuk-body">
             @Model.CourseName
-            <button type="submit" name="ChangeCourse" value="Edit" class="das-button--inline-link">
+            <button id="change-course-link" type="submit" name="ChangeCourse" value="Edit" class="das-button--inline-link">
                 @editCourseLabel<span class="govuk-visually-hidden"> apprenticeship training course</span>
             </button>
         </p>
@@ -202,7 +202,7 @@
             <p class="govuk-label govuk-!-font-weight-bold">Delivery model</p>
             <p class="govuk-body">
                 @Model.DeliveryModel.ToDescription()
-                <button type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
+                <button id="change-delivery-model-link" type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
                     Edit<span class="govuk-visually-hidden"> delivery model</span>
                 </button>
             </p>
@@ -441,11 +441,14 @@
     }
 
     function handleSubmit(e) {
+        var submitterId = e.originalEvent.submitter.id;
+        if (submitterId === "change-course-link" || submitterId === "change-delivery-model-link") return;
         e.preventDefault();
         e.returnValue = false;
 
         validateDraftApprenticeship(submitForm);
     }
+
 
     function submitForm($form) {
         $form.off('submit');
