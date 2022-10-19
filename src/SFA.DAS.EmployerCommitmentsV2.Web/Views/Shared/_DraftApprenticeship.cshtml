@@ -28,7 +28,7 @@
 
 <div id="draftApprenticeshipSection1">
 
-    @if (Model.GetType() == typeof(EditDraftApprenticeshipViewModel))
+    @if (Model is EditDraftApprenticeshipViewModel)
     {
         <h1 class="govuk-heading-xl">Edit personal details</h1>
     }
@@ -185,7 +185,7 @@
 
 <div id="draftApprenticeshipSection2" class="das-js-hide">
 
-    @if (Model.GetType() == typeof(EditDraftApprenticeshipViewModel))
+    @if (Model is EditDraftApprenticeshipViewModel)
     {
         <h1 class="govuk-heading-xl">Edit training details</h1>
     }
