@@ -983,22 +983,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("{apprenticeshipHashedId}/details/confirmHasValidEndDate")]
         public async Task<IActionResult> ConfirmHasValidEndDateChanges(ConfirmHasValidEndDateViewModel viewModel)
         {
-                if (viewModel.EndDateConfirmed.Value)
+            if (viewModel.EndDateConfirmed.Value)
+            {
+                await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(new ResolveApprenticeshipOverlappingTrainingDateRequest
                 {
-                    await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(new ResolveApprenticeshipOverlappingTrainingDateRequest
-                    {
-                        ApprenticeshipId = viewModel.ApprenticeshipId,
-                        ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipEndDateUpdate
-                    }, CancellationToken.None);
+                    ApprenticeshipId = viewModel.ApprenticeshipId,
+                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipEndDateUpdate
+                }, CancellationToken.None);
 
-                    TempData.AddFlashMessage(ApprenticeEndDateConfirmed, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                TempData.AddFlashMessageWithDetail(ApprenticeEndDateConfirmed, viewModel.EndDate.ToGdsFormatLongMonthNameWithoutDay(), ITempDataDictionaryExtensions.FlashMessageLevel.Success);
 
-                    return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
-                }
-                else
-                {
-                    return RedirectToAction(nameof(EditEndDate), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
-                }
+                return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
+            }
+            else
+            {
+                return RedirectToAction(nameof(EditEndDate), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+            }
         }
 
         [Route("{apprenticeshipHashedId}/details/reconfirmHasNotStop")]
