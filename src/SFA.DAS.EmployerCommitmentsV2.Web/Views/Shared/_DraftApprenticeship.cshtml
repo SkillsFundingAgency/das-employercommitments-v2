@@ -155,26 +155,45 @@
                         <div class="govuk-form-group">
                             <label asp-for="BirthDay" class="govuk-label govuk-date-input__label">Day</label>
                             <input asp-for="BirthDay" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="31"
-                               class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit">
+                                   class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit">
                         </div>
                     </div>
                     <div class="govuk-date-input__item">
                         <div class="govuk-form-group">
                             <label asp-for="BirthMonth" class="govuk-label govuk-date-input__label">Month</label>
                             <input asp-for="BirthMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
-                               class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit">
+                                   class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit">
                         </div>
                     </div>
                     <div class="govuk-date-input__item">
                         <div class="govuk-form-group">
                             <label asp-for="BirthYear" class="govuk-label govuk-date-input__label">Year</label>
                             <input asp-for="BirthYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
-                               class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit">
+                                   class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit">
                         </div>
                     </div>
                 </div>
             </fieldset>
         </div>
+
+        @if (Model.IsOnFlexiPaymentPilot.HasValue && Model.IsProviderOnFlexiPaymentPilot)
+        {
+            <div class="govuk-form-group">
+                <h2 class="govuk-heading-m">Pilot programme</h2>
+                <span class="govuk-fieldset__legend govuk-fieldset__legend--s">Will this apprentice be part of the Flexible Payments pilot programme?</span>
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            What is the pilot programme?
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        The Department of Education are testing changes to the service to improve the way in which payments are processed via a pilot. If your Training Provider is part of this pilot they have the option to opt this apprentice into the pilot.
+                    </div>
+                </details>
+                <span class="govuk-hint">@(Model.IsOnFlexiPaymentPilot is true ? "Yes" : "No")</span>
+            </div>
+        }
     }
 
     <input type="hidden" asp-for="IsOnFlexiPaymentPilot" />
@@ -293,25 +312,6 @@
             </div>
         </fieldset>
     </div>
-    
-    @if (Model.IsOnFlexiPaymentPilot.HasValue && Model.IsProviderOnFlexiPaymentPilot)
-    {
-        <div class="govuk-form-group">
-            <h2 class="govuk-heading-m">Pilot programme</h2>
-            <span class="govuk-fieldset__legend govuk-fieldset__legend--s">Will this apprentice be part of the Flexible Payments pilot programme?</span>
-            <details class="govuk-details" data-module="govuk-details">
-                <summary class="govuk-details__summary">
-                    <span class="govuk-details__summary-text">
-                        What is the pilot programme?
-                    </span>
-                </summary>
-                <div class="govuk-details__text">
-                    The Department of Education are testing changes to the service to improve the way in which payments are processed via a pilot. If your Training Provider is part of this pilot they have the option to opt this apprentice into the pilot.
-                </div>
-            </details>
-            <span class="govuk-hint">@(Model.IsOnFlexiPaymentPilot is true ? "Yes" : "No")</span>
-        </div>
-    }
 
     @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
     {
