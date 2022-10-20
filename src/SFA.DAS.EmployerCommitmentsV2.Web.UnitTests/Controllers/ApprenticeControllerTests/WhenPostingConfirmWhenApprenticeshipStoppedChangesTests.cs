@@ -73,7 +73,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], viewModel.ApprenticeshipHashedId);
 
             _mockCommitmentsApiClient
-                .Verify(x => x.ResolveOverlappingTrainingDateRequest(It.Is<ResolveApprenticeshipOverlappingTrainingDateRequest>(x => x.ResolutionType == OverlappingTrainingDateRequestResolutionType.ApprenticeshipStopped), CancellationToken.None), Times.Once);
+                .Verify(x => x.ResolveOverlappingTrainingDateRequest(It.Is<ResolveApprenticeshipOverlappingTrainingDateRequest>(x => x.ResolutionType == OverlappingTrainingDateRequestResolutionType.ApprenticeshipStopDateIsCorrect), CancellationToken.None), Times.Once);
         }
     }
 }

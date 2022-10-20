@@ -988,7 +988,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(new ResolveApprenticeshipOverlappingTrainingDateRequest
                 {
                     ApprenticeshipId = viewModel.ApprenticeshipId,
-                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipEndDateUpdate
+                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipEndDateIsCorrect
                 }, CancellationToken.None);
 
                 TempData.AddFlashMessageWithDetail(ApprenticeEndDateConfirmed, viewModel.EndDate.ToGdsFormatLongMonthNameWithoutDay(), ITempDataDictionaryExtensions.FlashMessageLevel.Success);
@@ -1018,7 +1018,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(new ResolveApprenticeshipOverlappingTrainingDateRequest
                 {
                     ApprenticeshipId = viewModel.ApprenticeshipId,
-                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprentieshipIsStillActive
+                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipIsStillActive
                 }, CancellationToken.None);
 
                 TempData.AddFlashMessage($"Apprenticeship confirmed", ITempDataDictionaryExtensions.FlashMessageLevel.Success);
@@ -1048,10 +1048,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(new ResolveApprenticeshipOverlappingTrainingDateRequest
                 {
                     ApprenticeshipId = viewModel.ApprenticeshipId,
-                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipStopped
+                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipStopDateIsCorrect
                 }, CancellationToken.None);
 
-                TempData.AddFlashMessage("Current stop date confirmed", viewModel.StopDate.ToGdsFormatLongMonthNameWithoutDay(), ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                TempData.AddFlashMessageWithDetail("Current stop date confirmed", viewModel.StopDate.ToGdsFormatLongMonthNameWithoutDay(), ITempDataDictionaryExtensions.FlashMessageLevel.Success);
 
                 return RedirectToAction(nameof(ApprenticeshipDetails), new
                 {
