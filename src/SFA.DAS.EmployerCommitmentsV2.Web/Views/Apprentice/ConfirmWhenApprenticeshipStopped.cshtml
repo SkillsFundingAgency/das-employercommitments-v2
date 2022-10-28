@@ -1,0 +1,89 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ConfirmWhenApprenticeshipStoppedViewModel
+
+@{
+    string pageTitle;
+    string pageHeading;
+
+    pageHeading = pageTitle = "Confirm when apprenticeship training stopped";
+    ViewBag.Title = pageTitle;
+    ViewBag.GaData.Vpv = "/accounts/apprentices/manage/confirm-when-apprenticeship-training-stopped";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <partial name="_ValidationSummary" />
+
+        <form method="post">
+
+            @Html.AntiForgeryToken()
+
+             @Html.HiddenFor(x => x.StopDate, new {id="StopDate"})
+
+            <h1 class="govuk-heading-xl">@pageHeading</h1>
+
+            <p>
+                We have received notification of a new apprenticeship for a learner with this unique learner number.
+                For the training to continue, you need to confirm the date when apprenticeship training stopped.
+             </p>
+
+            <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Name </dt>
+                    <dd class="govuk-summary-list__value"> @Model.ApprenticeName</dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Unique learner number </dt>
+                    <dd class="govuk-summary-list__value"> @Model.ULN</dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Apprenticeship training course </dt>
+                    <dd class="govuk-summary-list__value"> @Model.Course</dd>
+                </div>
+                 <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"> Current stop date </dt>
+                    <dd class="govuk-summary-list__value"> @Model.StopDate.ToGdsFormatLongMonthWithoutDay()</dd>
+                </div>
+            </dl>
+
+             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.IsCorrectStopDate,  "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <span id="error-message-@nameof(ConfirmWhenApprenticeshipStoppedViewModel.IsCorrectStopDate)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(ConfirmWhenApprenticeshipStoppedViewModel.IsCorrectStopDate)].Errors.First().ErrorMessage
+                        </span>
+                    }
+
+                  <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Is this apprenticeship training stop date correct?</h2>
+
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="IsCorrectStopDate" name="IsCorrectStopDate" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="IsCorrectStopDate">
+                                Yes, that date is correct
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="IsCorrectStopDate-no" name="IsCorrectStopDate" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="IsCorrectStopDate-no">
+                                No, that is the wrong date
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <button class="govuk-button" type="submit" id="submit-status-change">Continue</button>
+        </form>
+
+    </div>
+</div>
+
+@section Back
+ {
+    <div class="das-js-back-link"></div>
+}
