@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         {
            if (apprenticeship.Status == CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart)
             {
-                return apprenticeship.StartDate;
+                return apprenticeship.StartDate.Value;
             }
 
             return new DateTime(source.StopYear.Value, source.StopMonth.Value, 1);

@@ -50,6 +50,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 RecognisePriorLearning = draftApprenticeship.RecognisePriorLearning,
                 DurationReducedBy = draftApprenticeship.DurationReducedBy,
                 PriceReducedBy = draftApprenticeship.PriceReducedBy,
+                ActualStartDate = draftApprenticeship.ActualStartDate,
+                IsOnFlexiPaymentPilot = draftApprenticeship.IsOnFlexiPaymentPilot
             };
 
             return result;

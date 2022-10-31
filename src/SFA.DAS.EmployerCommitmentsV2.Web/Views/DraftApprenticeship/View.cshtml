@@ -92,14 +92,28 @@
                     </dd>
                 </div>
             }
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Planned training start date
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @DisplayOptionalEstimatedDate(Model.StartDate)
-                </dd>
-            </div>
+            @if (!(Model.IsOnFlexiPaymentPilot ?? false))
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Planned training start date
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @DisplayOptionalEstimatedDate(Model.StartDate)
+                    </dd>
+                </div>
+            }
+            else
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Actual start date
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @DisplayOptionalField(Model.ActualStartDate)
+                    </dd>
+                </div>
+            }
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     Planned training end date

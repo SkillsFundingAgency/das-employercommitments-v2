@@ -106,12 +106,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                             DateOfBirth = a.DateOfBirth,
                             EndDate = a.EndDate,
                             StartDate = a.StartDate,
+                            ActualStartDate = a.ActualStartDate,
                             OriginalStartDate = a.OriginalStartDate,
                             HasOverlappingEmail = emailOverlaps.Any(x=>x.Id == a.Id),
                             ULN = a.Uln,
                             IsComplete = IsDraftApprenticeshipComplete(a, cohortResponse),
                             EmploymentPrice = a.EmploymentPrice,
                             EmploymentEndDate = a.EmploymentEndDate,
+                            IsOnFlexiPaymentPilot = a.IsOnFlexiPaymentPilot
                         })
                 .ToList()
                 })
@@ -129,7 +131,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 !(
                   string.IsNullOrWhiteSpace(draftApprenticeship.FirstName) || string.IsNullOrWhiteSpace(draftApprenticeship.LastName) 
                   || draftApprenticeship.DateOfBirth == null ||  string.IsNullOrWhiteSpace(draftApprenticeship.CourseName) 
-                  || draftApprenticeship.StartDate == null || draftApprenticeship.EndDate == null || draftApprenticeship.Cost == null 
+                  || (draftApprenticeship.StartDate == null && draftApprenticeship.ActualStartDate == null) || draftApprenticeship.EndDate == null || draftApprenticeship.Cost == null 
                   || (cohortResponse.ApprenticeEmailIsRequired && string.IsNullOrWhiteSpace(draftApprenticeship.Email) && !cohortResponse.IsLinkedToChangeOfPartyRequest)
                  );
         

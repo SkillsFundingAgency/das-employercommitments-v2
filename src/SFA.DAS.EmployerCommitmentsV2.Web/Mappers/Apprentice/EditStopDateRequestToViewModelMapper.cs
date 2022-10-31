@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     AccountHashedId = source.AccountHashedId,
                     ApprenticeshipULN = apprenticeship.Uln,                    
                     ApprenticeshipHashedId = source.ApprenticeshipHashedId,
-                    ApprenticeshipStartDate = apprenticeship.StartDate,
+                    ApprenticeshipStartDate = apprenticeship.StartDate.Value,
                     CurrentStopDate = apprenticeship.StopDate.Value
                 };
 
