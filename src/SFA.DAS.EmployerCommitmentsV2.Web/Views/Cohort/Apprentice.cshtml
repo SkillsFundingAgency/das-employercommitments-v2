@@ -11,20 +11,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
-        <h1 class="govuk-heading-xl">Add apprentice details</h1>
-        <div class="govuk-inset-text">
-            <p class="govuk-body">
-                You must add the apprentice’s:
-                <ul>
-                    <li>first name</li>
-                    <li>last name</li>
-                    <li>email address</li>
-                </ul>
-                Fill in as many other fields as you can. You're able to return to make changes or add more information at any time.
-            </p>
-            <p class="govuk-body">You'll only be able to authorise payments for this apprentice once all the fields have been completed - either by yourself or your training provider.</p>
-        </div>
-
+        
         <form id="addApprenticeship" novalidate method="post">
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.TransferSenderId)
@@ -35,7 +22,7 @@
 
             <partial name="_DraftApprenticeship" for="@Model" />
 
-            <button id="continue-button" type="submit" class="govuk-button">Save and continue</button>
+            <button id="continue-button" type="submit" class="govuk-button das-js-hide">Save and continue</button>
         </form>
 
     </div>

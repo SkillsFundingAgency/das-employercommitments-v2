@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 selectedVersion = editViewModel.Version;
                 selectedOption = editViewModel.Option;
 
-                if (selectedCourseCode != apprenticeship.CourseCode || editViewModel.StartDate.Date.Value != apprenticeship.StartDate.Date)
+                if (selectedCourseCode != apprenticeship.CourseCode || editViewModel.StartDate.Date.Value != apprenticeship.StartDate?.Date)
                 {
                     returnToEdit = true; 
                 }

@@ -12,11 +12,6 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
-        <h1 class="govuk-heading-xl">Edit apprentice details</h1>
-        <div class="govuk-inset-text">
-            <p class="govuk-body">You'll only be able to authorise payments for this apprentice once all the fields have been completed - either by yourself or your training provider</p>
-        </div>
-
         <form id="addApprenticeship" novalidate method="post">
             @Html.AntiForgeryToken()
 
@@ -24,7 +19,7 @@
 
             <partial name="_DraftApprenticeship" for="@Model" />
 
-            <button type="submit" id="continue-button" class="govuk-button">Save</button>
+            <button type="submit" id="continue-button" class="govuk-button das-js-hide">Save</button>
 
             <a class="govuk-button govuk-button--warning das-float-right" href="@Url.RouteUrl("DeleteDraftApprenticeship", new { Model.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = DeleteDraftApprenticeshipOrigin.EditDraftApprenticeship })">
                 Delete

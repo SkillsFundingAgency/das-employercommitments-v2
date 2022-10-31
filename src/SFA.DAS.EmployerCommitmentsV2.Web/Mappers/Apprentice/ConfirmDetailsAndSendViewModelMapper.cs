@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 ApprenticeFullName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
                 ApprenticeshipStopDate = apprenticeship.StopDate,
                 CurrentProviderName = apprenticeship.ProviderName,
-                CurrentStartDate = apprenticeship.StartDate,
+                CurrentStartDate = apprenticeship.StartDate.Value,
                 CurrentEndDate = apprenticeship.EndDate,
                 CurrentPrice = decimal.ToInt32(priceHistory.PriceEpisodes.GetPrice()),
                 EmployerWillAdd = source.EmployerWillAdd,

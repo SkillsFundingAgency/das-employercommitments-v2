@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             var priceEpisode = _fixture.Build<PriceEpisode>()
                 .With(x => x.ApprenticeshipId, _getApprenticeshipResponse.Id)
-                .With(x => x.FromDate, _getApprenticeshipResponse.StartDate.AddDays(-1))
+                .With(x => x.FromDate, _getApprenticeshipResponse.StartDate.Value.AddDays(-1))
                 .Without(x => x.ToDate)
                 .Create();
 
