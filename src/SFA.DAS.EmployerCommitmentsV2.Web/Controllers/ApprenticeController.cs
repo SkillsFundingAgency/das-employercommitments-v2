@@ -46,6 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private const string ChangesRejectedMessage = "Changes rejected";
         private const string ChangesUndoneMessage = "Changes undone";
         private const string ViewModelForEdit = "ViewModelForEdit";
+        private const string ApprenticeEndDateConfirmed = "Current planned end date confirmed ";
 
         public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILogger<ApprenticeController> logger)
         {
@@ -951,6 +952,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
+        [Route("{apprenticeshipHashedId}/details/confirmHasValidEndDate")]
+        [HttpGet]
+        public async Task<IActionResult> ConfirmHasValidEndDate(ConfirmHasValidEndDateRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ConfirmHasValidEndDateViewModel>(request);
+            return View(viewModel);
+        }
+
         [HttpPost]
         [Route("{apprenticeshipHashedId}/details/confirmHasNotStop")]
         public IActionResult ConfirmHasNotStopChanges(ConfirmHasNotStopViewModel viewModel)
@@ -970,6 +979,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/details/confirmHasValidEndDate")]
+        public async Task<IActionResult> ConfirmHasValidEndDateChanges(ConfirmHasValidEndDateViewModel viewModel)
+        {
+            if (viewModel.EndDateConfirmed.Value)
+            {
+                await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(new ResolveApprenticeshipOverlappingTrainingDateRequest
+                {
+                    ApprenticeshipId = viewModel.ApprenticeshipId,
+                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipEndDateIsCorrect
+                }, CancellationToken.None);
+
+                TempData.AddFlashMessageWithDetail(ApprenticeEndDateConfirmed, viewModel.EndDate.ToGdsFormatLongMonthNameWithoutDay(), ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+
+                return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
+            }
+            else
+            {
+                return RedirectToAction(nameof(EditEndDate), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+            }
+        }
+
         [Route("{apprenticeshipHashedId}/details/reconfirmHasNotStop")]
         [HttpGet]
         public async Task<IActionResult> ReconfirmHasNotStop(ReConfirmHasNotStopRequest request)
@@ -987,7 +1018,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(new ResolveApprenticeshipOverlappingTrainingDateRequest
                 {
                     ApprenticeshipId = viewModel.ApprenticeshipId,
-                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprentieshipIsStillActive
+                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipIsStillActive
                 }, CancellationToken.None);
 
                 TempData.AddFlashMessage($"Apprenticeship confirmed", ITempDataDictionaryExtensions.FlashMessageLevel.Success);
@@ -998,6 +1029,44 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 AccountHashedId = viewModel.AccountHashedId,
                 ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
             });
+        }
+
+        [Route("{apprenticeshipHashedId}/details/confirmWhenApprenticeshipStopped")]
+        [HttpGet]
+        public async Task<IActionResult> ConfirmWhenApprenticeshipStopped(ConfirmWhenApprenticeshipStoppedRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ConfirmWhenApprenticeshipStoppedViewModel>(request);
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("{apprenticeshipHashedId}/details/confirmWhenApprenticeshipStopped")]
+        public async Task<IActionResult> ConfirmWhenApprenticeshipStopped(ConfirmWhenApprenticeshipStoppedViewModel viewModel)
+        {
+            if (viewModel.IsCorrectStopDate.Value)
+            {
+                await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(new ResolveApprenticeshipOverlappingTrainingDateRequest
+                {
+                    ApprenticeshipId = viewModel.ApprenticeshipId,
+                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipStopDateIsCorrect
+                }, CancellationToken.None);
+
+                TempData.AddFlashMessageWithDetail("Current stop date confirmed", viewModel.StopDate.ToGdsFormatLongMonthNameWithoutDay(), ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+
+                return RedirectToAction(nameof(ApprenticeshipDetails), new
+                {
+                    AccountHashedId = viewModel.AccountHashedId,
+                    ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+                });
+            }
+            else
+            {
+                return RedirectToAction(nameof(EditStopDate), new
+                {
+                    AccountHashedId = viewModel.AccountHashedId,
+                    ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+                });
+            }
         }
     }
 }
