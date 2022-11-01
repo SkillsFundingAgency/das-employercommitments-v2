@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
 
         public async Task<GetCohortDetailsResponse> GetCohortDetails(long accountId, long cohortId, CancellationToken cancellationToken = default)
         {
-            return await _client.Get<GetCohortDetailsResponse>($"employer/{accountId}/unapproved/{cohortId}", null, cancellationToken);
+            return await _client.Get<GetCohortDetailsResponse>($"employer/{accountId}/unapproved/{cohortId}");
         }
     }
 }
