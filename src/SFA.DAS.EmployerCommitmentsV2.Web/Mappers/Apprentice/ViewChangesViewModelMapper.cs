@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
                 ApprenticeName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
                 CurrentProviderName = apprenticeship.ProviderName,
-                CurrentStartDate = apprenticeship.StartDate,
+                CurrentStartDate = apprenticeship.StartDate.Value,
                 CurrentEndDate = apprenticeship.EndDate,
                 CurrentPrice = priceHistory.PriceEpisodes.GetPrice(),
                 NewProviderName = newProvider.Name,

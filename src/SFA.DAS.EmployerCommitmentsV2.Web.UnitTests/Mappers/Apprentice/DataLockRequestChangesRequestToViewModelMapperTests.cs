@@ -337,7 +337,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         internal void VerifyStartDateIsMapped()
         {
-            var startDate = new DateTime(_apprenticeshipResponse.StartDate.Year, _apprenticeshipResponse.StartDate.Month, 1);
+            var startDate = new DateTime(_apprenticeshipResponse.StartDate.Value.Year, _apprenticeshipResponse.StartDate.Value.Month, 1);
             Assert.AreEqual(startDate, _viewModel.OriginalApprenticeship.StartDate);
         }
 

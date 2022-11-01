@@ -22,8 +22,8 @@
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
             <div class="govuk-warning-text__text">
                 <span class="govuk-warning-text__assistive">Warning</span>
-                <p>@Model.LegalEntityName doesn't have an accepted agreement with the Education and Skills Funding Agency (ESFA). @CanContinueText</p>
-                <p>Only account owners can accept ESFA agreements. If you're not sure who the owner is, you can <a href="@LinkGenerator.YourTeam(Model.AccountHashedId)" class="govuk-link">check your team details</a>.</p>
+                <p>@Model.LegalEntityName does not have an accepted agreement with the Department for Education (<abbr>DfE</abbr>). Without an accepted agreement you can add apprentice details, but will not be able to authorise payments to training providers.</p>
+                <p>Only account owners can accept DfE agreements. If you are not sure who the owner is, you can <a href="@LinkGenerator.YourTeam(Model.AccountHashedId)" class="govuk-link">check your team details</a>.</p>
             </div>
         </div>      
 

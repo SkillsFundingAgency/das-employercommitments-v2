@@ -11,6 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public string LastName { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public DateTime? StartDate { get; set; }
+        public DateTime? ActualStartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int? Cost { get; set; }
         public int? FundingBandCap { get; set; }
@@ -34,7 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 
         public string DisplayDateOfBirth => DateOfBirth?.ToGdsFormat() ?? "-";
 
-        public string DisplayTrainingDates => ToGdsFormatDateRange(StartDate, EndDate);
+        public string DisplayTrainingDates => ToGdsFormatDateRange();
 
         public string DisplayEmploymentDates => EmploymentEndDate?.ToGdsFormatWithoutDay() ?? "-";
 
@@ -48,12 +49,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public int? EmploymentPrice { get; set; }
         public DateTime? EmploymentEndDate { get; set; }
 
-        private string ToGdsFormatDateRange(DateTime? start, DateTime? end)
+        public bool? IsOnFlexiPaymentPilot { get; set; }
+        public string DislayIsPilot => !IsOnFlexiPaymentPilot.HasValue ? "-" : IsOnFlexiPaymentPilot.Value ? "Yes" : "No";
+
+        private string ToGdsFormatDateRange()
         {
-            if (start.HasValue && end.HasValue)
-                return $"{start.Value.ToGdsFormatWithoutDay()} to {end.Value.ToGdsFormatWithoutDay()}";
-            else
-                return "-";
+            if (ActualStartDate.HasValue && EndDate.HasValue)
+                return $"{ActualStartDate.Value.ToGdsFormat()} to {EndDate.Value.ToGdsFormatWithoutDay()}";
+            if (StartDate.HasValue && EndDate.HasValue)
+                return $"{StartDate.Value.ToGdsFormatWithoutDay()} to {EndDate.Value.ToGdsFormatWithoutDay()}";
+
+            return "-";
         }
     }
 }

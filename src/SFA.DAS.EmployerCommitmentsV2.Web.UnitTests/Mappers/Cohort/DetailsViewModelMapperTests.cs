@@ -591,14 +591,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [TestCase(nameof(DraftApprenticeshipDto.LastName))]
         [TestCase(nameof(DraftApprenticeshipDto.CourseName))]
         [TestCase(nameof(DraftApprenticeshipDto.DateOfBirth))]
-        [TestCase(nameof(DraftApprenticeshipDto.StartDate))]
         [TestCase(nameof(DraftApprenticeshipDto.EndDate))]
         [TestCase(nameof(DraftApprenticeshipDto.Cost))]
-        public async Task IsCompleteMappedCorrectlyWhenAManadatoryFieldIsNull(string propertyName)
+        public async Task IsCompleteMappedCorrectlyWhenAMandatoryFieldIsNull(string propertyName)
         {
             var fixture = new DetailsViewModelMapperTestsFixture()
                 .CreateDraftApprenticeship()
                 .SetValueOfDraftApprenticeshipProperty(propertyName, null);
+            var result = await fixture.Map();
+            Assert.IsFalse(result.Courses.First().DraftApprenticeships.First().IsComplete);
+        }
+
+        [Test]
+        public async Task IsCompleteIsFalseWhenStartDatesAreBothNull()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateDraftApprenticeship()
+                .SetValueOfDraftApprenticeshipProperty("StartDate", null)
+                .SetValueOfDraftApprenticeshipProperty("ActualStartDate", null);
             var result = await fixture.Map();
             Assert.IsFalse(result.Courses.First().DraftApprenticeships.First().IsComplete);
         }

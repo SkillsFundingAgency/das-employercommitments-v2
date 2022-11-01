@@ -15,6 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string ULN { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public DateTime? StartDate { get; set; }
+        public DateTime? ActualStartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public DateTime? StopDate { get; set; }
         public DateTime? PauseDate { get; set; }

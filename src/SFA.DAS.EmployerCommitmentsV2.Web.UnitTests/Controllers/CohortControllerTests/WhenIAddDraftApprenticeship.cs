@@ -12,6 +12,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
@@ -190,7 +191,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 LinkGenerator,
                 ModelMapper,
                 AuthorizationService,
-                Mock.Of<IEncodingService>()
+                Mock.Of<IEncodingService>(),
+                Mock.Of<IApprovalsApiClient>()
             );
             controller.TempData = TempData.Object;
             return controller;
