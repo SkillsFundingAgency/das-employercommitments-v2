@@ -101,7 +101,7 @@
 
         <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Uln, "govuk-form-group--error")">
             <label asp-for="Uln" class="govuk-label govuk-!-font-weight-bold">Unique learner number</label>
-            <span id="dob-hint" class="govuk-hint">
+            <span id="uln-hint" class="govuk-hint">
                 <span id="uln">@(Model.Uln == null ? "This will be added by your training provider." : Model.Uln)</span>
                 @Html.HiddenFor(x => x.Uln)
             </span>
@@ -359,7 +359,7 @@
     </div>
 
     <div class="govuk-inset-text">
-        <h3 class="govuk-heading-s">End-point assessments</h3>
+        <h2 class="govuk-heading-s">End-point assessments</h2>
         <p>We'll ask you to confirm the <a class="govuk-link" href="https://www.gov.uk/government/publications/using-the-register-of-apprentice-assessment-organisations" target="_blank" title="Opens in a new window">apprentice assessment organisation</a> for this apprentice. We'll do this before the end of the apprenticeship.</p>
     </div>
 
