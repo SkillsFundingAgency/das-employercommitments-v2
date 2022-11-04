@@ -41,7 +41,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
         public int? PriceReducedBy { get; set; }
         public bool RecognisingPriorLearningStillNeedsToBeConsidered { get; set; }
         public bool? IsOnFlexiPaymentPilot { get; set; }
-        public bool IsProviderOnFlexiPaymentPilot { get; set; }
         public DateTime? ActualStartDate { get; set; }
     }
 }

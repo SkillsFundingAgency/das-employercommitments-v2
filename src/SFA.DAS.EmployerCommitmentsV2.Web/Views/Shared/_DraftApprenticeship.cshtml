@@ -101,7 +101,7 @@
 
         <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Uln, "govuk-form-group--error")">
             <label asp-for="Uln" class="govuk-label govuk-!-font-weight-bold">Unique learner number</label>
-            <span id="dob-hint" class="govuk-hint">
+            <span id="uln-hint" class="govuk-hint">
                 <span id="uln">@(Model.Uln == null ? "This will be added by your training provider." : Model.Uln)</span>
                 @Html.HiddenFor(x => x.Uln)
             </span>
@@ -294,25 +294,6 @@
         </fieldset>
     </div>
     
-    @if (Model.IsOnFlexiPaymentPilot.HasValue && Model.IsProviderOnFlexiPaymentPilot)
-    {
-        <div class="govuk-form-group">
-            <h2 class="govuk-heading-m">Pilot programme</h2>
-            <span class="govuk-fieldset__legend govuk-fieldset__legend--s">Will this apprentice be part of the Flexible Payments pilot programme?</span>
-            <details class="govuk-details" data-module="govuk-details">
-                <summary class="govuk-details__summary">
-                    <span class="govuk-details__summary-text">
-                        What is the pilot programme?
-                    </span>
-                </summary>
-                <div class="govuk-details__text">
-                    The Department of Education are testing changes to the service to improve the way in which payments are processed via a pilot. If your Training Provider is part of this pilot they have the option to opt this apprentice into the pilot.
-                </div>
-            </details>
-            <span class="govuk-hint">@(Model.IsOnFlexiPaymentPilot is true ? "Yes" : "No")</span>
-        </div>
-    }
-
     @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
     {
         <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.EmploymentEndDate, "govuk-form-group--error")">
@@ -378,7 +359,7 @@
     </div>
 
     <div class="govuk-inset-text">
-        <h3 class="govuk-heading-s">End-point assessments</h3>
+        <h2 class="govuk-heading-s">End-point assessments</h2>
         <p>We'll ask you to confirm the <a class="govuk-link" href="https://www.gov.uk/government/publications/using-the-register-of-apprentice-assessment-organisations" target="_blank" title="Opens in a new window">apprentice assessment organisation</a> for this apprentice. We'll do this before the end of the apprenticeship.</p>
     </div>
 
@@ -403,6 +384,7 @@
         }
 
         $("#LastName").closest("form").on('submit', handleSubmit);
+        window.scrollTo(0, 0);
     }
 
     function resetErrors() {
