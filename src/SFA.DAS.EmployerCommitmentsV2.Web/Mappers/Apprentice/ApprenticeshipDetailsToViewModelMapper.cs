@@ -29,7 +29,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 PlannedEndDate = source.EndDate,
                 Status = source.ApprenticeshipStatus,
                 ConfirmationStatus = source.ConfirmationStatus,
-                Alerts = source.Alerts.Select(x => x.GetDescription()) 
+                Alerts = source.Alerts.Select(x => x.GetDescription()) ,
+                ActualStartDate = source.ActualStartDate,
+                IsOnFlexiPaymentPilot = source.IsOnFlexiPaymentPilot
             };
 
             return Task.FromResult(result);
