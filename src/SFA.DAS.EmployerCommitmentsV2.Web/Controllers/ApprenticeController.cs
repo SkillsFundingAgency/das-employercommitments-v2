@@ -987,7 +987,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(new ResolveApprenticeshipOverlappingTrainingDateRequest
                 {
                     ApprenticeshipId = viewModel.ApprenticeshipId,
-                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprentieshipIsStillActive
+                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipIsStillActive
                 }, CancellationToken.None);
 
                 TempData.AddFlashMessage($"Apprenticeship confirmed", ITempDataDictionaryExtensions.FlashMessageLevel.Success);
