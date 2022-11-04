@@ -259,10 +259,17 @@
     else
     {
         <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ActualStartDate, "govuk-form-group--error")">
-            <label asp-for="ActualStartDate" class="govuk-label govuk-!-font-weight-bold">Actual Start Date</label>
+            <label asp-for="ActualStartDate" class="govuk-label govuk-!-font-weight-bold">Actual training start date</label>
             <span id="startdate-hint" class="govuk-hint">
-                <span id="actualStartDate">@Model.ActualStartDate?.ToGdsFormat()</span>
-                @Html.HiddenFor(x => x.ActualStartDate)
+                @if (@Model.ActualStartDate.HasValue)
+                {
+                    <span id="actualStartDate">@Model.ActualStartDate?.ToGdsFormat()</span>
+                    @Html.HiddenFor(x => x.ActualStartDate)
+                }
+                else
+                {
+                    <span>This will be added by your Training Provider</span>
+                }
             </span>
         </div>
     }
