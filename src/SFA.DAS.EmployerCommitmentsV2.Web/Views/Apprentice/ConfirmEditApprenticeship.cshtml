@@ -237,9 +237,9 @@
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ConfirmChanges,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        <h1 class="govuk-fieldset__heading">
+                        <h2 class="govuk-fieldset__heading">
                             Do you want to make these changes?
-                        </h1>
+                        </h2>
                     </legend>
                     <div class="govuk-radios">
                         @Html.ValidationMessageFor(m => m.ConfirmChanges, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ConfirmChanges) })
