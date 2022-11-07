@@ -13,5 +13,6 @@ Functionality within EmployerCommitmentsV2 requires Commitments Api v2 (https://
   * SFA.DAS.EmployerUrlHelper
   * SFA.DAS.Encoding
   * SFA.DAS.Reservations.Api.Client
+  * SFA.DAS.EmployerAccounts.Api.Client
 * Start Microsoft Azure Storage Emulator
 * Run SFA.DAS.EmployerCommitmentsV2.Web (run under kestrel)
