@@ -62,6 +62,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             result.EmploymentPrice.Should().Be(_getDraftApprenticeshipResponse.EmploymentPrice);
             result.EmploymentEndDate.Value.Should().Be(_getDraftApprenticeshipResponse.EmploymentEndDate.Value);
             result.DeliveryModel.Should().Be(_getDraftApprenticeshipResponse.DeliveryModel);
+            result.ActualStartDate.Should().Be(_getDraftApprenticeshipResponse.ActualStartDate);
+            result.IsOnFlexiPaymentPilot.Should().Be(_getDraftApprenticeshipResponse.IsOnFlexiPaymentPilot);
         }
 
         [Test]

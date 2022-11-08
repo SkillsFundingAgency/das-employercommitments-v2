@@ -9,6 +9,7 @@ using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
@@ -140,7 +141,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                     linkGenerator.Object,
                     modelMapper.Object,
                     Mock.Of<IAuthorizationService>(),
-                    Mock.Of<IEncodingService>());
+                    Mock.Of<IEncodingService>(),
+                    Mock.Of<IApprovalsApiClient>());
             }
 
             public async Task Post(CohortDetailsOptions option)

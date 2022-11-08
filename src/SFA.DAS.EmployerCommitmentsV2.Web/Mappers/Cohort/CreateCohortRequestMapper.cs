@@ -30,7 +30,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 EmploymentEndDate = source.EmploymentEndDate.Date,
                 OriginatorReference = source.Reference,
                 TransferSenderId = source.DecodedTransferSenderId,
-                PledgeApplicationId = (int?)source.PledgeApplicationId
+                PledgeApplicationId = (int?)source.PledgeApplicationId,
+                IsOnFlexiPaymentPilot = source.IsOnFlexiPaymentPilot
             });
         }
      }
