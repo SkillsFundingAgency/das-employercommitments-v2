@@ -444,7 +444,6 @@
         validateDraftApprenticeship(submitForm);
     }
 
-
     function submitForm($form) {
         $form.off('submit');
         $form.submit();
@@ -459,5 +458,21 @@
         });
 
         return indexed_array;
+    }
+
+    document.addEventListener("DOMContentLoaded", showTrainingDetailsIfRequired);
+
+    function showTrainingDetailsIfRequired() {
+        var editing = window.location.pathname.endsWith("edit-display");
+        if (editing && previousPageWasEitherOf("select-course", "select-delivery-model")) {
+            continueJourney();
+        }
+    }
+
+    function previousPageWasEitherOf() {
+        for (var i = 0; i < arguments.length; i++) {
+            if (document.referrer.indexOf(arguments[i]) > -1) return true;
+        }
+        return false;
     }
 </script>
