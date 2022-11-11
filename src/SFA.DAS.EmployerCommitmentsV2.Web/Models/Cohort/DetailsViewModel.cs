@@ -31,13 +31,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public bool IsAgreementSigned { get; set; }
         public string OptionsTitle => IsAgreementSigned && IsCompleteForEmployer && !HasEmailOverlaps ? "Approve these details?": "Choose an option";
         public bool ShowViewAgreementOption => !IsAgreementSigned;
-        public bool EmployerCanApprove => IsAgreementSigned && IsCompleteForEmployer && !HasOverlappingUln && !HasEmailOverlaps;
+        public bool EmployerCanApprove => IsAgreementSigned && IsCompleteForEmployer && !HasOverlappingUln && !HasEmailOverlaps && !ShowRofjaaRemovalBanner;
         public bool ShowApprovalOptionMessage => EmployerCanApprove && IsApprovedByProvider;
-        public bool ShowGotoHomePageOption => (!IsCompleteForEmployer && IsAgreementSigned) || HasEmailOverlaps;
+        public bool ShowGotoHomePageOption => (!IsCompleteForEmployer && IsAgreementSigned) || HasEmailOverlaps || ShowRofjaaRemovalBanner;
         public bool IsReadOnly => WithParty != Party.Employer;
         public bool IsCompleteForEmployer { get; set; }
         public bool HasEmailOverlaps { get; set; }
         public bool ShowAddAnotherApprenticeOption { get; set; }
+        public bool ShowRofjaaRemovalBanner { get; set; }
         public string SendBackToProviderOptionMessage
         {
             get
