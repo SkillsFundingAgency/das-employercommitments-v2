@@ -24,9 +24,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             return linkGenerator.AccountsLink($"accounts/{accountHashedId}/teams");
         }
 
-        public static string EmployerAccountsTransfers(this ILinkGenerator linkGenerator, string accountHashedId)
+        public static string EmployerFinanceTransfers(this ILinkGenerator linkGenerator, string accountHashedId)
         {
-            return linkGenerator.AccountsLink($"accounts/{accountHashedId}/transfers");
+            return linkGenerator.FinanceLink($"accounts/{accountHashedId}/transfers/connections");
         }
 
         public static string EmployerAccountsHome(this ILinkGenerator linkGenerator)

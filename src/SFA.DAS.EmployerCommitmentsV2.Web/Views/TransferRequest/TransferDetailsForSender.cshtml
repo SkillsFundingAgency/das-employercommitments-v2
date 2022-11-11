@@ -172,7 +172,7 @@
                     </fieldset>
                 </div>
                 <button class="govuk-button" type="submit" id="submit-approve-transfer">Continue</button>
-                <a class="govuk-body govuk-link" id="link-cancel-transfer" href="@LinkGenerator.EmployerAccountsTransfers(Model.TransferSenderHashedAccountId)" title="continue">Cancel</a>
+                <a class="govuk-body govuk-link" id="link-cancel-transfer" href="@LinkGenerator.EmployerFinanceTransfers(Model.TransferSenderHashedAccountId)" title="continue">Cancel</a>
             </form>
         }
     </div>
@@ -180,5 +180,5 @@
 
 @section Back
 {
-    <a id="back-link" class="govuk-back-link" href="@LinkGenerator.EmployerAccountsTransfers(Model.TransferSenderHashedAccountId)">Back to Transfers</a>
+    <a id="back-link" class="govuk-back-link" href="@LinkGenerator.EmployerFinanceTransfers(Model.TransferSenderHashedAccountId)">Back to Transfers</a>
 }
