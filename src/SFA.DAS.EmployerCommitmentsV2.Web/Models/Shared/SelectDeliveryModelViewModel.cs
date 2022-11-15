@@ -1,5 +1,4 @@
 ﻿using System;
-using SFA.DAS.Authorization.ModelBinding;
 using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
@@ -21,6 +20,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public DeliveryModel[] DeliveryModels { get; set; }
         public string TransferSenderId { get; set; }
         public string EncodedPledgeApplicationId { get; set; }
-
+        public bool ShowTrainingDetails { get; set; }
     }
 }

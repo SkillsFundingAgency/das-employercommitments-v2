@@ -194,6 +194,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 StoreEditDraftApprenticeshipState(model);
                 var req = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
+                req.ShowTrainingDetails = true;
+
                 return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), req.CloneBaseValues());
             }
 
@@ -223,6 +225,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
+            if (request != null) request.ShowTrainingDetails = true;
+
             return RedirectToAction(nameof(SelectDeliveryModelForEdit), request.CloneBaseValues());
         }
 

@@ -21,6 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 StartMonthYear = source.StartMonthYear,
                 TransferSenderId = source.TransferSenderId,
                 EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
+                ShowTrainingDetails = source.ShowTrainingDetails
             });
         }
     }

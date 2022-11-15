@@ -8,7 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
     public class ApprenticeRequest : BaseApprenticeRequest
     {
         public long AccountLegalEntityId { get; set; }
-        public long AccountId { get; set; }        
+        public long AccountId { get; set; }
     }
 
     public class BaseApprenticeRequest : IndexRequest
@@ -19,6 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public Origin Origin { get; set; }
         public bool AutoCreated { get; set; }
         public DeliveryModel? DeliveryModel { get; set; }
+        public bool ShowTrainingDetails { get; set; }
 
         [FromQuery]
         public string EncodedPledgeApplicationId { get; set; }
