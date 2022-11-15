@@ -225,7 +225,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
-            if (request != null) request.ShowTrainingDetails = true;
+            request.ShowTrainingDetails = true;
 
             return RedirectToAction(nameof(SelectDeliveryModelForEdit), request.CloneBaseValues());
         }
