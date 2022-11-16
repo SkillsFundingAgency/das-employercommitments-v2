@@ -269,30 +269,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         private string GetCohortStatus(GetCohortResponse cohort, IReadOnlyCollection<DraftApprenticeshipDto> draftApprenticeships)
         {
             if (cohort.TransferSenderId.HasValue &&
-                cohort.TransferApprovalStatus == CommitmentsV2.Types.TransferApprovalStatus.Pending)
+                cohort.TransferApprovalStatus == TransferApprovalStatus.Pending)
             {
-                if (cohort.WithParty == CommitmentsV2.Types.Party.TransferSender)
+                switch (cohort.WithParty)
                 {
-                    return "Pending - with funding employer";
-                }
-                else if (cohort.WithParty == CommitmentsV2.Types.Party.Employer)
-                {
-                    return GetEmployerOnlyStatus(cohort);
-                }
-                else if (cohort.WithParty == CommitmentsV2.Types.Party.Provider)
-                {
-                    return GetProviderOnlyStatus(cohort);
+                    case Party.TransferSender:
+                        return "Pending - with funding employer";
+
+                    case Party.Employer:
+                        return GetEmployerOnlyStatus(cohort);
+
+                    case Party.Provider:
+                        return GetProviderOnlyStatus(cohort);
                 }
             }
             else if (cohort.IsApprovedByEmployer && cohort.IsApprovedByProvider)
             {
                 return "Approved";
             }
-            else if (cohort.WithParty == CommitmentsV2.Types.Party.Provider)
+            else if (cohort.WithParty == Party.Provider)
             {
                 return GetProviderOnlyStatus(cohort);
             }
-            else if (cohort.WithParty == CommitmentsV2.Types.Party.Employer)
+            else if (cohort.WithParty == Party.Employer)
             {
                 return GetEmployerOnlyStatus(cohort);
             }
@@ -302,44 +301,39 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         private static string GetEmployerOnlyStatus(GetCohortResponse cohort)
         {
-            if (cohort.LastAction == CommitmentsV2.Types.LastAction.None)
+            switch (cohort.LastAction)
             {
-                return "New request";
-            }
-            else if (cohort.LastAction == CommitmentsV2.Types.LastAction.Amend)
-            {
-                return "Ready for review";
-            }
-            else if (cohort.LastAction == CommitmentsV2.Types.LastAction.Approve)
-            {
-                if (!cohort.IsApprovedByProvider && !cohort.IsApprovedByEmployer)
+                case LastAction.None:
+                    return "New request";
+
+                case LastAction.Amend:
+                case LastAction.AmendAfterRejected:
                     return "Ready for review";
 
-                return "Ready for approval";
-            }
-            else
-            {
-                return "New request";
+                case LastAction.Approve:
+                    return "Ready for approval";
+
+                default:
+                    return "New request";
             }
         }
 
         private static string GetProviderOnlyStatus(GetCohortResponse cohort)
         {
-            if (cohort.LastAction == CommitmentsV2.Types.LastAction.None)
+            switch (cohort.LastAction)
             {
-                return "New request";
-            }
-            else if (cohort.LastAction == CommitmentsV2.Types.LastAction.Amend)
-            {
-                return "Under review with provider";
-            }
-            else if (cohort.LastAction == CommitmentsV2.Types.LastAction.Approve)
-            {
-                return "With provider for approval";
-            }
-            else
-            {
-                return "Under review with provider";
+                case LastAction.None:
+                    return "New request";
+
+                case LastAction.Amend:
+                case LastAction.AmendAfterRejected:
+                    return "Under review with provider";
+
+                case LastAction.Approve:
+                    return "With provider for approval";
+
+                default:
+                    return "Under review with provider";
             }
         }
     }

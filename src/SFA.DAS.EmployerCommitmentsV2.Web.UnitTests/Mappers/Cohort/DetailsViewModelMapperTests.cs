@@ -728,6 +728,32 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await fixture.Map();
             Assert.AreEqual("Pending - with funding employer", result.Status);
         }
+
+        [Test]
+        public async Task StatusIsMappedCorrectly_When_WithEmployer_And_Provider_AmendRejected_Cohort()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateThisNumberOfApprenticeships(1)
+                .SetCohortWithParty(Party.Employer);
+
+            fixture.Cohort.LastAction = LastAction.AmendAfterRejected;
+
+            var result = await fixture.Map();
+            Assert.AreEqual("Ready for review", result.Status);
+        }
+
+        [Test]
+        public async Task StatusIsMappedCorrectly_When_WithProvider_And_Employer_AmendRejected_Cohort()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateThisNumberOfApprenticeships(1)
+                .SetCohortWithParty(Party.Employer);
+
+            fixture.Cohort.LastAction = LastAction.AmendAfterRejected;
+
+            var result = await fixture.Map();
+            Assert.AreEqual("Under review with provider", result.Status);
+        }
     }
 
     public class DetailsViewModelMapperTestsFixture
