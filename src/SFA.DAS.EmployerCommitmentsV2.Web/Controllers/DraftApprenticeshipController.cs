@@ -177,11 +177,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (localModel != null)
             {
-                if (localModel.DeliveryModel != model.DeliveryModel)
-                {
-                    localModel.HasChangedDeliveryModel = true;
-                }
-
                 localModel.CourseCode = model.CourseCode;
                 localModel.DeliveryModel = model.DeliveryModel;
                 return View("Edit", localModel);
@@ -261,6 +256,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (draft != null)
             {
+                draft.HasChangedDeliveryModel = draft.DeliveryModel != (CommitmentsV2.Types.DeliveryModel?)model.DeliveryModel;
                 draft.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?) model.DeliveryModel;
                 if (!string.IsNullOrWhiteSpace(model.CourseCode))
                 {
