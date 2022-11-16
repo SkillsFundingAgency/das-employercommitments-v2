@@ -34,6 +34,7 @@
     <PackageReference Include="SFA.DAS.Employer.Shared.UI" Version="2.0.23-prerelease-5" />
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.77" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />
+    <PackageReference Include="SFA.DAS.GovUK.Auth" Version="0.2.203" />
     <PackageReference Include="SFA.DAS.NLog.Targets.Redis" Version="1.2.1" />
     <PackageReference Include="SFA.DAS.Validation.Mvc" Version="6.0.7" />
     <PackageReference Include="StackExchange.Redis" Version="2.1.30" />
