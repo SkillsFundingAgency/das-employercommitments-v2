@@ -747,7 +747,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new DetailsViewModelMapperTestsFixture()
                 .CreateThisNumberOfApprenticeships(1)
-                .SetCohortWithParty(Party.Employer);
+                .SetCohortWithParty(Party.Provider);
 
             fixture.Cohort.LastAction = LastAction.AmendAfterRejected;
 
