@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.TransferRequest
             {
                 WhatNextUrl = source.SelectedOption == TransferConfirmationViewModel.Option.Homepage
                 ? _linkGenerator.EmployerHome(source.AccountHashedId)
-                : _linkGenerator.EmployerAccountsTransfers(source.AccountHashedId)
+                : _linkGenerator.EmployerFinanceTransfers(source.AccountHashedId)
         }); ;
         }
     }
