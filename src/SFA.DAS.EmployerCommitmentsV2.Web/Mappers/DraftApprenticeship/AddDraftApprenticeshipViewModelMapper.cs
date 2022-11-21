@@ -45,7 +45,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 TransferSenderHashedId = cohort.IsFundedByTransfer ? _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId) : string.Empty,
                 AutoCreatedReservation = source.AutoCreated,
                 DeliveryModel = source.DeliveryModel,
-                IsOnFlexiPaymentPilot = false
+                IsOnFlexiPaymentPilot = false,
+                ShowTrainingDetails = source.ShowTrainingDetails
             };
 
             return result;
