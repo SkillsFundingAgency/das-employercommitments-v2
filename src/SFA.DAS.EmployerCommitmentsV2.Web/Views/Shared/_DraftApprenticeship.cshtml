@@ -101,7 +101,7 @@
 
         <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Uln, "govuk-form-group--error")">
             <label asp-for="Uln" class="govuk-label govuk-!-font-weight-bold">Unique learner number</label>
-            <span id="dob-hint" class="govuk-hint">
+            <span id="uln-hint" class="govuk-hint">
                 <span id="uln">@(Model.Uln == null ? "This will be added by your training provider." : Model.Uln)</span>
                 @Html.HiddenFor(x => x.Uln)
             </span>
@@ -259,10 +259,17 @@
     else
     {
         <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ActualStartDate, "govuk-form-group--error")">
-            <label asp-for="ActualStartDate" class="govuk-label govuk-!-font-weight-bold">Actual Start Date</label>
+            <label asp-for="ActualStartDate" class="govuk-label govuk-!-font-weight-bold">Actual training start date</label>
             <span id="startdate-hint" class="govuk-hint">
-                <span id="actualStartDate">@Model.ActualStartDate?.ToGdsFormat()</span>
-                @Html.HiddenFor(x => x.ActualStartDate)
+                @if (@Model.ActualStartDate.HasValue)
+                {
+                    <span id="actualStartDate">@Model.ActualStartDate?.ToGdsFormat()</span>
+                    @Html.HiddenFor(x => x.ActualStartDate)
+                }
+                else
+                {
+                    <span>This will be added by your Training Provider</span>
+                }
             </span>
         </div>
     }
@@ -359,7 +366,7 @@
     </div>
 
     <div class="govuk-inset-text">
-        <h3 class="govuk-heading-s">End-point assessments</h3>
+        <h2 class="govuk-heading-s">End-point assessments</h2>
         <p>We'll ask you to confirm the <a class="govuk-link" href="https://www.gov.uk/government/publications/using-the-register-of-apprentice-assessment-organisations" target="_blank" title="Opens in a new window">apprentice assessment organisation</a> for this apprentice. We'll do this before the end of the apprenticeship.</p>
     </div>
 
@@ -460,7 +467,6 @@
         return indexed_array;
     }
 
-    
     function onFormSubmitted(e) {
         e.preventDefault();
         if ($("#draftApprenticeshipSection1").hasClass("das-hide") === false)
@@ -479,7 +485,22 @@
 
     document.addEventListener("DOMContentLoaded",
         function() {
+			showTrainingDetailsIfRequired();
             addOnFormSubmittedEvent();
         });
+
+    function showTrainingDetailsIfRequired() {
+        var editing = window.location.pathname.endsWith("edit-display");
+        if (editing && previousPageWasEitherOf("select-course", "select-delivery-model")) {
+            continueJourney();
+        }
+    }
+
+    function previousPageWasEitherOf() {
+        for (var i = 0; i < arguments.length; i++) {
+            if (document.referrer.indexOf(arguments[i]) > -1) return true;
+        }
+        return false;
+    }
 
 </script>

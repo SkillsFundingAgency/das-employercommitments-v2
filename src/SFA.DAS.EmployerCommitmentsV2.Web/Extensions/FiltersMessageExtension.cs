@@ -65,6 +65,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
                 filters.Add(model.SelectedAlert.Value.GetDescription());
             }
 
+            if (model.SelectedApprenticeConfirmation.HasValue)
+            {
+                filters.Add(WebUtility.HtmlEncode(model.SelectedApprenticeConfirmation.Value.GetDescription()));
+            }
+
             return filters;
         }
     }
