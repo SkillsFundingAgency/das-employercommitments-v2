@@ -92,14 +92,27 @@ function getFormData($form) {
     return indexed_array;
 }
 
-document.addEventListener("DOMContentLoaded", showTrainingDetailsIfRequired);
-
-function showTrainingDetailsIfRequired() {
-    var editing = document.referrer.indexOf("CourseCode=") > -1 || window.location.pathname.endsWith("edit-display");
-    if (editing && previousPageWasEitherOf("select-course", "select-delivery-model")) {
+function onFormSubmitted(e) {
+    e.preventDefault();
+    if ($("#draftApprenticeshipSection1").hasClass("das-hide") === false)
         continueJourney();
+    else return;
+}
+
+function addOnFormSubmittedEvent() {
+    var form = document.getElementById("addApprenticeship");
+    if (form.attachEvent) {
+        form.attachEvent("submit", onFormSubmitted);
+    } else {
+        form.addEventListener("submit", onFormSubmitted);
     }
 }
+
+document.addEventListener("DOMContentLoaded",
+    function () {
+        showTrainingDetailsIfRequired();
+        addOnFormSubmittedEvent();
+    });
 
 function showTrainingDetailsIfRequired() {
     var urlParams = new URLSearchParams(window.location.search);
