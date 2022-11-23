@@ -15,5 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public ConfirmationStatus? ConfirmationStatus { get; set; }
         public ApprenticeshipStatus Status { get; set; }
         public IEnumerable<string> Alerts { get; set; }
+        public DateTime? ActualStartDate { get; set; }
+        public bool? IsOnFlexiPaymentPilot { get; set; }
     }
 }
