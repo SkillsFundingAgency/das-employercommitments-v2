@@ -43,10 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                     o.ClientId = authenticationConfiguration.ClientId;
                     o.ClientSecret = authenticationConfiguration.ClientSecret;
                     o.MetadataAddress = authenticationConfiguration.MetadataAddress;
-                    o.ResponseType = "id_token";
-                    o.Scope.Add("openid");
-                    o.Scope.Add("profile");
-                    o.Scope.Add("employer");
+                    o.ResponseType = "code";
                     o.UsePkce = false;
     
                     o.ClaimActions.MapUniqueJsonKey("sub", "id");
