@@ -699,7 +699,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         [Route("{ApprenticeshipHashedId}/edit/select-delivery-model")]
         [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
-        public IActionResult SetDeliveryModelForEdit(SelectDeliveryModelViewModel model)
+        public IActionResult SetDeliveryModelForEdit(EditApprenticeshipDeliveryModelViewModel model)
         {
             if (model.DeliveryModel == null)
             {
@@ -708,7 +708,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
-            draft.DeliveryModel = model.DeliveryModel.Value;
+            draft.DeliveryModel = (DeliveryModel) model.DeliveryModel.Value;
             TempData.Put(ViewModelForEdit, draft);
             return RedirectToAction("EditApprenticeship");
         }
