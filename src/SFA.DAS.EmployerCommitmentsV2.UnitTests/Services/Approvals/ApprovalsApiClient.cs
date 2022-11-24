@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Services.Approvals
             email = $"{email}@email.com";
             var outerApiClient = new Mock<IOuterApiClient>();
             var expectedUrl = $"AccountUsers/{userId}/accounts?{HttpUtility.UrlEncode(email)}";
-            outerApiClient.Setup(x => x.Post<GetUserAccountsResponse>(expectedUrl, null)).ReturnsAsync(response);
+            outerApiClient.Setup(x => x.Get<GetUserAccountsResponse>(expectedUrl)).ReturnsAsync(response);
             var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
         
             var actual = await approvalsApiClient.GetEmployerUserAccounts(email, userId);
