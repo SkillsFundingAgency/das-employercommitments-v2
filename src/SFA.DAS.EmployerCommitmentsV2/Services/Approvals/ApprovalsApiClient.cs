@@ -36,6 +36,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
             return await _client.Get<GetEditApprenticeshipResponse>($"employer/{accountId}/apprentices/{apprenticeshipId}/edit");
         }
 
+        public async Task<GetEditApprenticeshipDeliveryModelResponse> GetEditApprenticeshipDeliveryModel(long accountId, long apprenticeshipId, CancellationToken cancellationToken = default)
+        {
+            return await _client.Get<GetEditApprenticeshipDeliveryModelResponse>($"employer/{accountId}/apprentices/{apprenticeshipId}/edit/delivery-model");
+        }
+
         public async Task<GetApprenticeshipDetailsResponse> GetApprenticeshipDetails(long providerId, long apprenticeshipId, CancellationToken cancellationToken = default)
         {
             return await _client.Get<GetApprenticeshipDetailsResponse>($"provider/{providerId}/apprentices/{apprenticeshipId}/details");
