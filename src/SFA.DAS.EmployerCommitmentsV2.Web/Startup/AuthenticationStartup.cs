@@ -11,6 +11,8 @@ using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.GovUK.Auth.AppStart;
+using SFA.DAS.GovUK.Auth.Configuration;
+using SFA.DAS.GovUK.Auth.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
 {
@@ -23,6 +25,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
             if (commitmentsConfiguration.UseGovUkSignIn)
             {
                 var govConfig = configuration.GetSection(ConfigurationKeys.GovUkSignInConfiguration);
+                services.Configure<GovUkOidcConfiguration>(configuration.GetSection("GovUkOidcConfiguration"));
+                services.AddTransient<ICustomClaims, EmployerUserAccountPostAuthenticationHandler>();
                 services.AddAndConfigureGovUkAuthentication(govConfig,
                     $"{typeof(AuthenticationStartup).Assembly.GetName().Name}.Auth",
                     typeof(EmployerUserAccountPostAuthenticationHandler));
