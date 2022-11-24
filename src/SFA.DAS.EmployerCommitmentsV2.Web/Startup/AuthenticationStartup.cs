@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         {
             var commitmentsConfiguration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
                 .Get<EmployerCommitmentsV2Configuration>();
-            if (commitmentsConfiguration.UseGovUkSignIn)
+            if (commitmentsConfiguration.UseGovSignIn)
             {
                 var govConfig = configuration.GetSection(ConfigurationKeys.GovUkSignInConfiguration);
                 services.Configure<GovUkOidcConfiguration>(configuration.GetSection("GovUkOidcConfiguration"));
