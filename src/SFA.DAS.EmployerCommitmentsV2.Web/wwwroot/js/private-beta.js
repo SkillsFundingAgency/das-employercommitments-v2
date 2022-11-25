@@ -93,10 +93,10 @@ function getFormData($form) {
 }
 
 function onFormSubmitted(e) {
-    e.preventDefault();
-    if ($("#draftApprenticeshipSection1").hasClass("das-hide") === false)
+    if ($("#draftApprenticeshipSection1").hasClass("das-hide") === false) {
+        e.preventDefault();
         continueJourney();
-    else return;
+    } else return;
 }
 
 function addOnFormSubmittedEvent() {
