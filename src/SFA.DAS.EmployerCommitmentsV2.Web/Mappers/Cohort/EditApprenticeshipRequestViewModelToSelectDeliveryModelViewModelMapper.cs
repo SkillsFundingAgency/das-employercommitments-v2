@@ -22,6 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
             return new EditApprenticeshipDeliveryModelViewModel
             {
+                LegalEntityName = response.LegalEntityName,
                 DeliveryModel = (DeliveryModel) source.DeliveryModel,
                 DeliveryModels = response.DeliveryModels
             };

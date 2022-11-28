@@ -1,7 +1,9 @@
 ﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit.EditApprenticeshipDeliveryModelViewModel;
 
 @{
-    ViewData["Title"] = "Apprenticeships";
+    ViewData["Title"] = "Select the apprenticeship delivery model";
+    ViewBag.GaData.Vpv = "/apprentices/apprentice/edit/delivery-model";
+    ViewBag.GaData.Org = Model.LegalEntityName;
 }
 
 <div class="govuk-grid-row">

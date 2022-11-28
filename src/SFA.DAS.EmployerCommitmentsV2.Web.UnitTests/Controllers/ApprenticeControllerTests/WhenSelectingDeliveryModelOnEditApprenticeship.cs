@@ -16,7 +16,6 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
@@ -71,8 +70,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 .WithTempViewModel()
                 .WithDeliveryModels(new List<DeliveryModel> { DeliveryModel.Regular, DeliveryModel.PortableFlexiJob });
 
-            fixture.ViewModel.DeliveryModel =
-                EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel.PortableFlexiJob;
+            fixture.ViewModel.DeliveryModel = DeliveryModel.PortableFlexiJob;
 
             var result = fixture.Sut.SetDeliveryModelForEdit(fixture.ViewModel) as RedirectToActionResult;
             result.ActionName.Should().Be("EditApprenticeship");
@@ -83,7 +81,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     {
         public ApprenticeController Sut { get; set; }
 
-        public string RedirectUrl;
         public Mock<IModelMapper> ModelMapperMock;
         public Mock<IAuthorizationService> AuthorizationServiceMock;
         public Mock<ITempDataDictionary> TempDataMock;
