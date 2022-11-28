@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
 
         public async Task<GetUserAccountsResponse> GetEmployerUserAccounts(string email, string userId)
         {
-            return await _client.Get<GetUserAccountsResponse>($"AccountUsers/{userId}/accounts?{HttpUtility.UrlEncode(email)}");
+            return await _client.Get<GetUserAccountsResponse>($"AccountUsers/{userId}/accounts?email={HttpUtility.UrlEncode(email)}");
         }
     }
 }
