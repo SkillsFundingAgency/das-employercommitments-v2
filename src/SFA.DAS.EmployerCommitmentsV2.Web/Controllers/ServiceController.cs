@@ -14,8 +14,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("signout", Name = RouteNames.SignOut)]
         public async Task SignOut()
         {
+            var idToken = await HttpContext.GetTokenAsync("id_token");
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme, new AuthenticationProperties { RedirectUri = "/" });
+            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme, new AuthenticationProperties { RedirectUri = "/", Parameters = { {"id_token",idToken}}});
         }
         
         [Route("signoutcleanup")]
