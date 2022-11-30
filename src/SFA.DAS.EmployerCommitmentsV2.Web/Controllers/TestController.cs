@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -9,9 +10,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     {
         [HttpGet]
         [Authorize]
-        public IActionResult Index([FromServices] IOuterApiClient outerApiClient)
+        public async Task<IActionResult> Index([FromServices] IOuterApiClient outerApiClient)
         {
-            var result = outerApiClient.Get<ResponseRole>("Test/Call/Commitment");
+            var result = await outerApiClient.Get<ResponseRole>("Test/Call/Commitment");
             return Ok(result);
         }
     }
