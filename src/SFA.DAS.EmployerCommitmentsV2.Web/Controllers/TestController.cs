@@ -13,7 +13,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> Index([FromServices] IOuterApiClient outerApiClient)
         {
             var result = await outerApiClient.Get<ResponseRole>("Test/Call/Commitment");
-            return Ok(result);
+            return View(result.Role);
         }
     }
     public class ResponseRole
