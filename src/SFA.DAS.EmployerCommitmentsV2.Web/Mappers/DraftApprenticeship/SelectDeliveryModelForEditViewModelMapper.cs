@@ -24,7 +24,8 @@ namespace SFA.DAS.ProviderCommitments.Web.Mappers.DraftApprenticeship
                 DeliveryModel = apiResponse.DeliveryModel,
                 DeliveryModels = apiResponse.DeliveryModels,
                 LegalEntityName = apiResponse.EmployerName,
-                CourseCode = source.CourseCode
+                CourseCode = source.CourseCode,
+                ShowTrainingDetails = source.ShowTrainingDetails
             };
         }
     }
