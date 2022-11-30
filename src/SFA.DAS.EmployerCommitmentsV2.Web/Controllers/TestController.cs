@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
@@ -7,6 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
     public class TestController : Controller
     {
         [HttpGet]
+        [Authorize]
         public IActionResult Index([FromServices] IOuterApiClient outerApiClient)
         {
             var result = outerApiClient.Get<ResponseRole>("Test/Call/Commitment");
