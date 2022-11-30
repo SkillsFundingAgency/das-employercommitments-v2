@@ -57,6 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
 
             _httpClient.DefaultRequestHeaders.Add(SubscriptionKeyRequestHeaderKey, _config.SubscriptionKey);
             _httpClient.DefaultRequestHeaders.Add(VersionRequestHeaderKey, "1");
+            _httpClient.DefaultRequestHeaders.Add("RoleClaim", "Employer");
         }
 
         public async Task<TResponse> Post<TResponse>(string url, object data)
