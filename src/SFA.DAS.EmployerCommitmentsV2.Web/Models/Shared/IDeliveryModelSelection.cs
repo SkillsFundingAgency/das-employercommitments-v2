@@ -7,5 +7,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
     {
         List<DeliveryModel> DeliveryModels { get; set; }
         DeliveryModel? DeliveryModel { get; set; }
+        bool ShowTrainingDetails { get; set; }
     }
 }

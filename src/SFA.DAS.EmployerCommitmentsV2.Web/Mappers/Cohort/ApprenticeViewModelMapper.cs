@@ -44,7 +44,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 Origin = source.Origin,
                 AutoCreatedReservation = source.AutoCreated,
                 DeliveryModel = source.DeliveryModel,
-                IsOnFlexiPaymentPilot = false
+                IsOnFlexiPaymentPilot = false,
+                ShowTrainingDetails = source.ShowTrainingDetails
             };
 
             return result;
