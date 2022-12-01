@@ -40,6 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 ReservationId = source.ReservationId,
                 StartMonthYear = source.StartMonthYear,
                 DeliveryModel = source.DeliveryModel,
+                ShowTrainingDetails = source.ShowTrainingDetails
             };
         }
     }

@@ -138,6 +138,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 StoreDraftApprenticeshipState(model);
                 var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
+                request.ShowTrainingDetails = true;
                 return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request.CloneBaseValues());
             }
 
@@ -195,6 +196,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 StoreEditDraftApprenticeshipState(model);
                 var req = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
+                req.ShowTrainingDetails = true;
+
                 return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), req.CloneBaseValues());
             }
 
@@ -224,6 +227,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
+            request.ShowTrainingDetails = true;
+
             return RedirectToAction(nameof(SelectDeliveryModelForEdit), request.CloneBaseValues());
         }
 
@@ -258,6 +263,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 draft.HasChangedDeliveryModel = draft.DeliveryModel != (CommitmentsV2.Types.DeliveryModel?)model.DeliveryModel;
                 draft.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?) model.DeliveryModel;
+                draft.ShowTrainingDetails = model.ShowTrainingDetails;
                 if (!string.IsNullOrWhiteSpace(model.CourseCode))
                 {
                     draft.CourseCode = model.CourseCode;

@@ -41,6 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _source = autoFixture.Build<ApprenticeRequest>()
                 .With(x=>x.StartMonthYear, "062020")
                 .With(x=>x.AccountId, 12345)
+                .With(x => x.ShowTrainingDetails, true)
                 .Without(x=>x.TransferSenderId).Create();
 
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
@@ -112,6 +113,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public void CoursesAreMappedCorrectly()
         {
             Assert.AreEqual(_allTrainingProgrammes, _result.Courses);
+        }
+
+        [Test]
+        public void ShowTrainingDetailsMappedCorrectly()
+        {
+            Assert.AreEqual(true, _result.ShowTrainingDetails);
         }
 
         [Test]
