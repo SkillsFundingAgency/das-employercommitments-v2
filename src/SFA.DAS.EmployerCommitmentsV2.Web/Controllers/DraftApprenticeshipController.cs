@@ -1,25 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Authorization.CommitmentPermissions.Options;
-using SFA.DAS.Authorization.EmployerUserRoles.Options;
-using SFA.DAS.Authorization.Services;
-using SFA.DAS.Authorization.Mvc.Attributes;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Api.Types.Validation;
-using SFA.DAS.EmployerCommitmentsV2.Features;
-using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
-using SFA.DAS.Http;
-using SFA.DAS.Encoding;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Authorization.CommitmentPermissions.Options;
+using SFA.DAS.Authorization.EmployerUserRoles.Options;
+using SFA.DAS.Authorization.Mvc.Attributes;
+using SFA.DAS.Authorization.Services;
+using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.CommitmentsV2.Api.Types.Validation;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+using SFA.DAS.Encoding;
+using SFA.DAS.Http;
+using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
