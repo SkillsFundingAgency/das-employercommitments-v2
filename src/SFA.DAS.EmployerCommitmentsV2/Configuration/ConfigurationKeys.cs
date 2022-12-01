@@ -16,5 +16,6 @@
         public static readonly string ZenDeskConfiguration = $"{EmployerCommitmentsV2}:ZenDesk";
         public static readonly string ConnectionStrings = $"{EmployerCommitmentsV2}:ConnectionStrings";
         public static readonly string ApprovalsApiClientConfiguration = $"{EmployerCommitmentsV2}:ApprovalsApiClientConfiguration";
+        public const string GovUkSignInConfiguration = "SFA.DAS.Employer.GovSignIn";
     }
 }
