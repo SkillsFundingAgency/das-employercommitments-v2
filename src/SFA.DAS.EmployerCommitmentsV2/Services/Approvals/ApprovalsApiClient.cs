@@ -2,6 +2,7 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
@@ -59,6 +60,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
         public async Task<GetCohortDetailsResponse> GetCohortDetails(long accountId, long cohortId, CancellationToken cancellationToken = default)
         {
             return await _client.Get<GetCohortDetailsResponse>($"employer/{accountId}/unapproved/{cohortId}");
+        }
+
+        public async Task<GetUserAccountsResponse> GetEmployerUserAccounts(string email, string userId)
+        {
+            return await _client.Get<GetUserAccountsResponse>($"AccountUsers/{userId}/accounts?email={HttpUtility.UrlEncode(email)}");
         }
     }
 }

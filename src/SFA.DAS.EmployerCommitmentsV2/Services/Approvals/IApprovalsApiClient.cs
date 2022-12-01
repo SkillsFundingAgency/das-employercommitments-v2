@@ -17,5 +17,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
         Task ValidateDraftApprenticeshipForOverlappingTrainingDateRequest(ValidateDraftApprenticeshipApimRequest data);
         Task<GetCohortDetailsResponse> GetCohortDetails(long accountId, long cohortId, CancellationToken cancellationToken = default);
 
+        Task<GetUserAccountsResponse> GetEmployerUserAccounts(string email, string userId);
     }
 }
