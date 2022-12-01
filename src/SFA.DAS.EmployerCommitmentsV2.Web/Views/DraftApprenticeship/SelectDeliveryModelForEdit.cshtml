@@ -1,7 +1,8 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared.SelectDeliveryModelForEditViewModel
+﻿@using SFA.DAS.CommitmentsV2.Types
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared.SelectDeliveryModelForEditViewModel
 
 @{
-    ViewBag.Title = "Select Delivery Model";
+    ViewBag.Title = Model.PageTitle;
     ViewBag.GaData.Vpv = "/unapproved/cohort/apprentices/edit/select-delivery-model";
     ViewBag.GaData.Org = @Model.LegalEntityName;
 }
@@ -9,12 +10,26 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
-        <h1 class="govuk-heading-xl">Select the apprenticeship delivery model</h1>
+        <h1 class="govuk-heading-xl">@Model.PageTitle</h1>
 
         <form id="selectDeliveryModel" novalidate method="post">
-            <input type="hidden" asp-for="CourseCode"/>
+            <input type="hidden" asp-for="CourseCode" />
 
-            <partial name="_SelectDeliveryModelPartial"/>
+            @if (Model.ShowFlexiJobAgencyDeliveryModelConfirmation)
+            {
+                <p>
+                    You have been removed from the Register of Flexi-Job Apprenticeship Agencies.
+                </p>
+                <p>
+                    This apprenticeship cannot continue on the Flexi-Job Agency delivery model and will be changed to a Regular delivery model.
+                </p>
+
+                <input type="hidden" asp-for="DeliveryModel" value="@DeliveryModel.Regular"/>
+            }
+            else
+            {
+                <partial name="_SelectDeliveryModelPartial"/>
+            }
 
             <button type="submit" class="govuk-button">Continue</button>
         </form>

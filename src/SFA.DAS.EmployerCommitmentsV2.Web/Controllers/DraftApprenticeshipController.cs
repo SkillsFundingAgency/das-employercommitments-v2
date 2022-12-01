@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -236,7 +237,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 model.DeliveryModel = (EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel?) request.DeliveryModel;
 
-                if (model.DeliveryModels.Count > 1)
+                if (model.DeliveryModels.Count > 1 || model.HasUnavailableFlexiJobAgencyDeliveryModel)
                 {
                     return View(model);
                 }
@@ -255,8 +256,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (draft != null)
             {
+                draft.HasChangedDeliveryModel = draft.DeliveryModel != (CommitmentsV2.Types.DeliveryModel?)model.DeliveryModel;
                 draft.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?) model.DeliveryModel;
-                draft.CourseCode = model.CourseCode;
+                if (!string.IsNullOrWhiteSpace(model.CourseCode))
+                {
+                    draft.CourseCode = model.CourseCode;
+                };
                 StoreEditDraftApprenticeshipState(draft);
 
                 return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), draft);
