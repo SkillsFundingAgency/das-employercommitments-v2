@@ -209,18 +209,22 @@
         </p>
     </div>
 
-    @if (multipleDeliveryModels)
+    @if (multipleDeliveryModels || Model.HasUnavailableFlexiJobDeliveryModel || Model.HasChangedDeliveryModel)
     {
         <div class="govuk-form-group">
             <p class="govuk-label govuk-!-font-weight-bold">Delivery model</p>
             <p class="govuk-body">
                 @Model.DeliveryModel.ToDescription()
-                <button id="change-delivery-model-link" type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
-                    Edit<span class="govuk-visually-hidden"> delivery model</span>
-                </button>
+                
+                @if (!Model.HasChangedDeliveryModel)
+                {
+                    <button id="change-delivery-model-link" type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
+                        Edit<span class="govuk-visually-hidden"> delivery model</span>
+                    </button>
+                }
             </p>
         </div>
-    }
+                }
 
     <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
     <input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
