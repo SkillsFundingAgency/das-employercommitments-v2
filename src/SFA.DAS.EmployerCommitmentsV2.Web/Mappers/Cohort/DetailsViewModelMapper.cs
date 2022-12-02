@@ -283,6 +283,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                         return GetProviderOnlyStatus(cohort);
                 }
             }
+            else if (cohort.TransferSenderId.HasValue &&
+                     cohort.TransferApprovalStatus == TransferApprovalStatus.Rejected)
+            {
+                return "Rejected by transfer sending employer";
+            }
             else if (cohort.IsApprovedByEmployer && cohort.IsApprovedByProvider)
             {
                 return "Approved";
