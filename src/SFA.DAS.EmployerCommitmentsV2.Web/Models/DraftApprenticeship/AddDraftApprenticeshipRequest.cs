@@ -26,6 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public int? Cost { get; set; }
         public int? EmploymentPrice { get; set; }
         public DateTime? EmploymentEndDate { get; set; }
+        public bool ShowTrainingDetails { get; set; }
 
         public BaseAddDraftApprenticeshipRequest CloneBaseValues() =>
             this.ExplicitClone();

@@ -27,6 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
                 Origin = source.Origin,
                 DeliveryModel = source.DeliveryModel,
+                ShowTrainingDetails = source.ShowTrainingDetails
             });
         }
     }

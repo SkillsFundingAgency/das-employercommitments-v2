@@ -22,6 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 ProviderId = source.ProviderId,
                 ReservationId = source.ReservationId.HasValue ? source.ReservationId.Value : System.Guid.Empty,
                 StartMonthYear = source.StartMonthYear,
+                ShowTrainingDetails = source.ShowTrainingDetails
             });
         }
     }

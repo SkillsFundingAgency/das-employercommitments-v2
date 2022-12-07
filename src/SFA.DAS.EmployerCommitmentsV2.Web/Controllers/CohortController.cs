@@ -337,6 +337,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 model.CourseCode = request.CourseCode;
                 model.DeliveryModel = request.DeliveryModel;
+                model.ShowTrainingDetails = request.ShowTrainingDetails;
             }
             return View("Apprentice", model);
         }
@@ -349,6 +350,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 StoreDraftApprenticeshipState(model);
                 var request = await _modelMapper.Map<ApprenticeRequest>(model);
+                request.ShowTrainingDetails = true;
+
                 return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request.CloneBaseValues());
             }
 
