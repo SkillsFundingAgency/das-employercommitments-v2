@@ -9,12 +9,9 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
@@ -85,7 +82,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public async Task GetViewDetails_Cohort_With_Employer_ShouldReturnViewPage()
         {
             var fixtures = new DetailsTestFixture()
-                .WithCohortWithEmployer();
+                .WithEmployerView();
 
             var result = await fixtures.Sut.ViewDetails(fixtures.DetailsRequest);
             var viewResult = result.VerifyReturnsViewModel();
@@ -97,6 +94,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
     {
         public DetailsTestFixture()
         {
+            var viewDraftApprenticeshipViewModel = new ViewDraftApprenticeshipViewModel();
             ViewModel = new Mock<IDraftApprenticeshipViewModel>();
             CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
 
@@ -121,8 +119,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             ApiErrors = new List<ErrorDetail> { new ErrorDetail("Field1", "Message1") };
 
             ModelMapperMock = new Mock<IModelMapper>();
-            ModelMapperMock.Setup(x => x.Map<IDraftApprenticeshipViewModel>(It.IsAny<DetailsRequest>()))
+            ModelMapperMock.Setup(x => x.Map<IDraftApprenticeshipViewModel>(It.Is<DetailsRequest>(dr => dr.DraftApprenticeshipId == DraftApprenticeshipId)))
                 .ReturnsAsync(ViewModel.Object);
+
+            ModelMapperMock.Setup(x => x.Map<ViewDraftApprenticeshipViewModel>(It.Is<DetailsRequest>(dr => dr.DraftApprenticeshipId == ViewDraftApprenticeshipId)))
+                .ReturnsAsync(viewDraftApprenticeshipViewModel);
 
             AuthorizationServiceMock = new Mock<IAuthorizationService>();
 
@@ -141,6 +142,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public long CohortId => 1;
         public string CohortReference => "CHREF";
         public long DraftApprenticeshipId => 99;
+        public long ViewDraftApprenticeshipId => 77;
         public string DraftApprenticeshipHashedId => "DAHID";
         public GetDraftApprenticeshipResponse EditDraftApprenticeshipDetails { get; private set; }
         public DraftApprenticeshipController Sut { get; private set; }
@@ -181,6 +183,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 .Setup(cs => cs.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(returnValue);
 
+            return this;
+        }
+
+        internal DetailsTestFixture WithEmployerView()
+        {
+            DetailsRequest.DraftApprenticeshipId = ViewDraftApprenticeshipId;
             return this;
         }
     }
