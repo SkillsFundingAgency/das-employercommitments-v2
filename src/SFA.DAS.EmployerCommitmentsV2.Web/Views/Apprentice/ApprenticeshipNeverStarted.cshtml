@@ -1,0 +1,36 @@
+﻿@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipNeverStartedViewModel
+
+@{
+    ViewData["Title"] = "Apprenticeship never started";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageId = "apprenticeship-never-started";
+    ViewBag.GaData.Vpv = "/accounts/apprentices/manage/apprenticeship-never-started";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
+
+        <p class="govuk-body">
+            To cancel this apprenticeship, we need to set the stop date to match the planned start date.
+        </p>
+
+        <h1 class="govuk-heading-l">Planned start date</h1>
+        <p class="govuk-body">@Model.PlannedStartDate.ToGdsFormatLongMonthNameWithoutDay()</p>
+       <br />
+
+        <form method="post">
+            <button id="save-button" type="submit" class="govuk-button">Confirm</button>
+        </form>
+    </div>
+</div>
+
+@section Back
+{
+    <div class="das-js-back-link"></div>
+}
