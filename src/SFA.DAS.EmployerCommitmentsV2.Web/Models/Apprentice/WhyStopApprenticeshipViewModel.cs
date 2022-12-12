@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public long ApprenticeshipId { get; set; }
         public StopStatusReason? SelectedStatusChange {get;set;}
 
-        public StopApprenticeStatus CurrentStatus { get; set; }
+        public StopStatusReason CurrentStatus { get; set; }
 
         public enum StopStatusReason
         {
