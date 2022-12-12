@@ -4,7 +4,7 @@ using System.Data;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
 {
-    public class WhyStopApprenticeshipViewModelValidator :AbstractValidator<WhyStopApprenticeshipViewModel>
+    public class WhyStopApprenticeshipViewModelValidator:AbstractValidator<WhyStopApprenticeshipViewModel>
     {
         public WhyStopApprenticeshipViewModelValidator()
         {
