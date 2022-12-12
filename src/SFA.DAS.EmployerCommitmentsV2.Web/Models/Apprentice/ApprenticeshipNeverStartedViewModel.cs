@@ -1,14 +1,13 @@
-﻿using SFA.DAS.CommitmentsV2.Types;
+﻿using System;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Authorization.ModelBinding;
-using System.ComponentModel;
-using System;
+using SFA.DAS.CommitmentsV2.Shared.Models;
+using SFA.DAS.EmployerCommitmentsV2.Web.Attributes;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
-    public class ApprenticeshipNeverStartedViewModel :IAuthorizationContextModel
+    public class ApprenticeshipNeverStartedViewModel:IAuthorizationContextModel
     {
-        public ApprenticeshipNeverStartedViewModel() { }
-
         public string AccountHashedId { get; set; }
 
         public string ApprenticeshipHashedId { get; set; }
@@ -16,6 +15,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         public DateTime PlannedStartDate { get; set; }
 
-        public int? StartYear { get; set;}
+        [SuppressArgumentException(nameof(StopDate), "The stop date must be a real date")]
+        public int? StopMonth { get => StopDate.Month; set => StopDate.Month = value; }
+
+        [SuppressArgumentException(nameof(StopDate), "The stop date must be a real date")]
+        public int? StopYear { get => StopDate.Year; set => StopDate.Year = value; }
+
+        public MonthYearModel StopDate { get; set; }
+
+        public bool IsCoPJourney { get; set; }
     }
 }

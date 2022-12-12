@@ -6,11 +6,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
     public class WhyStopApprenticeshipViewModel : IAuthorizationContextModel
     {
-        public WhyStopApprenticeshipViewModel()
-        {
-
-        }
-
         public string AccountHashedId { get; set; }
 
         public string ApprenticeshipHashedId { get; set; }
@@ -26,17 +21,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
             Withdrawn,
             NeverStarted
         }
-    }
-
-    public enum StopApprenticeStatus : short
-    {
-        [Description("LeftEmployment")]
-        LeftEmployment = 0,
-        [Description("ChangeProvider")]
-        ChangeProvider = 1,
-        [Description("Withdrawn")]
-        Withdrawn = 2,
-        [Description("NeverStarted")]
-        NeverStarted = 3
     }
 }

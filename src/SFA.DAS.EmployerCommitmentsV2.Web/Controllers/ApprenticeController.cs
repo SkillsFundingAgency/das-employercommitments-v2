@@ -129,7 +129,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     return RedirectToAction(nameof(PauseApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
                 case ChangeStatusType.Stop:
-                    //var redirectToActionName = viewModel.CurrentStatus == CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart ? nameof(HasTheApprenticeBeenMadeRedundant) : nameof(StopApprenticeship);
                     var redirectToActionName = viewModel.CurrentStatus == CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart ? nameof(HasTheApprenticeBeenMadeRedundant) : nameof(WhyStopApprenticeship);
                     return RedirectToAction(redirectToActionName, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
@@ -498,7 +497,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 default:
                     return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
             }
-            //return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
         }
 
         [Route("{apprenticeshipHashedId}/details/apprenticeshipneverstarted")]
@@ -513,7 +511,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public IActionResult ApprenticeshipNeverStarted(ApprenticeshipNeverStartedViewModel viewModel)
         {
-            return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
+            //return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
+            return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney, viewModel.StopMonth, viewModel.StopYear });
         }
 
         [Route("{apprenticeshipHashedId}/details/confirmStop")]

@@ -1,14 +1,14 @@
-﻿using Microsoft.Azure.Documents;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Azure.Documents;
 using NLog.LayoutRenderers;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using System;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class ApprenticeshipNeverStartedViewModelMapper :IMapper<ApprenticeshipNeverStartedRequest,ApprenticeshipNeverStartedViewModel>
+    public class ApprenticeshipNeverStartedViewModelMapper:IMapper<ApprenticeshipNeverStartedRequest,ApprenticeshipNeverStartedViewModel>
     {
         private readonly ICommitmentsApiClient _client;
 
@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 ApprenticeshipId = source.ApprenticeshipId,
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
                 AccountHashedId = source.AccountHashedId,
-                PlannedStartDate = (DateTime)apprenticeship.StartDate
+                PlannedStartDate = apprenticeship.StartDate.Value
             };
         }
     }
