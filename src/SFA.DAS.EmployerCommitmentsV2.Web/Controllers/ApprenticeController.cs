@@ -489,6 +489,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 case StopStatusReason.ChangeProvider:
                     return RedirectToAction(nameof(StopApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
+                case StopStatusReason.TrainingEnded:
+                    return RedirectToAction(nameof(ApprenticeshipNotEnded), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+
                 case StopStatusReason.Withdrawn:
                     return RedirectToAction(nameof(StopApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
@@ -514,6 +517,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public IActionResult ApprenticeshipNeverStarted(ApprenticeshipNeverStartedViewModel viewModel)
         {
             return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
+        }
+
+        [Route("{apprenticeshipHashedId}/details/apprenticeshipnotended")]
+        [HttpGet]
+        public async Task<IActionResult> ApprenticeshipNotEnded(ApprenticeshipNotEndedRequest request)
+        {
+            var viewModel = await _modelMapper.Map<ApprenticeshipNotEndedViewModel>(request);
+            return View(viewModel);
         }
 
         [Route("{apprenticeshipHashedId}/details/confirmStop")]

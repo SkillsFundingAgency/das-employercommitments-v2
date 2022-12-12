@@ -23,6 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         {
             LeftEmployment,
             ChangeProvider,
+            TrainingEnded,
             Withdrawn,
             NeverStarted
         }
@@ -34,9 +35,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         LeftEmployment = 0,
         [Description("ChangeProvider")]
         ChangeProvider = 1,
+        [Description("TrainingEnded")]
+        TrainingEnded=2,
         [Description("Withdrawn")]
-        Withdrawn = 2,
+        Withdrawn = 3,
         [Description("NeverStarted")]
-        NeverStarted = 3
+        NeverStarted = 4
     }
 }
