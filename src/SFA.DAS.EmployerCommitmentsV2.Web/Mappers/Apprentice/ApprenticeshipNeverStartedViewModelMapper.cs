@@ -8,7 +8,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class ApprenticeshipNeverStartedViewModelMapper:IMapper<ApprenticeshipNeverStartedRequest,ApprenticeshipNeverStartedViewModel>
+    public class ApprenticeshipNeverStartedViewModelMapper : IMapper<ApprenticeshipNeverStartedRequest, ApprenticeshipNeverStartedViewModel>
     {
         private readonly ICommitmentsApiClient _client;
 
@@ -17,9 +17,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             _client = client;
         }
 
-        
-        public async Task<ApprenticeshipNeverStartedViewModel>Map(ApprenticeshipNeverStartedRequest source) {
-            
+
+        public async Task<ApprenticeshipNeverStartedViewModel> Map(ApprenticeshipNeverStartedRequest source)
+        {
+
             var apprenticeship = await _client.GetApprenticeship(source.ApprenticeshipId);
 
             return new ApprenticeshipNeverStartedViewModel
@@ -27,7 +28,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 ApprenticeshipId = source.ApprenticeshipId,
                 ApprenticeshipHashedId = source.ApprenticeshipHashedId,
                 AccountHashedId = source.AccountHashedId,
-                PlannedStartDate = apprenticeship.StartDate.Value
+                PlannedStartDate = apprenticeship.StartDate.Value,
+                IsCoPJourney = false,
+                StopMonth = apprenticeship.StartDate.Value.Month,
+                StopYear = apprenticeship.StartDate.Value.Year
             };
         }
     }

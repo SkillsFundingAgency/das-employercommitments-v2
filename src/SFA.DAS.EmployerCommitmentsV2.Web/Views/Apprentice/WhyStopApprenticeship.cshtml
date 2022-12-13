@@ -23,6 +23,9 @@
             <input type="hidden" asp-for="CurrentStatus" />
             <div class="govuk-form-group  @(ViewData.ModelState.IsValid ? " " : " govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
+                    <legend class="govuk-visually-hidden">
+                            Select an option why you want to stop this apprenticeship
+                    </legend>
                     @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(nameof(WhyStopApprenticeshipViewModel.SelectedStatusChange)))
                     {
                         <span id="error-message-@nameof(WhyStopApprenticeshipViewModel.SelectedStatusChange)" class="govuk-error-message">

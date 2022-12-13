@@ -6,8 +6,12 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Attributes;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
-    public class ApprenticeshipNeverStartedViewModel:IAuthorizationContextModel
+    public class ApprenticeshipNeverStartedViewModel : IAuthorizationContextModel
     {
+        public ApprenticeshipNeverStartedViewModel()
+        {
+            StopDate = new MonthYearModel("");
+        }
         public string AccountHashedId { get; set; }
 
         public string ApprenticeshipHashedId { get; set; }
