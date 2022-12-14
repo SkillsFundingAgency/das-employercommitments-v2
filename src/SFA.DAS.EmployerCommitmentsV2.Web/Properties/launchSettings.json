@@ -13,7 +13,8 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "APPSETTING_EnvironmentName": "LOCAL"
+        "APPSETTING_EnvironmentName": "LOCAL",
+        "APPSETTING_ResourceEnvironmentName": "LOCAL"
       }
     },
     "SFA.DAS.EmployerCommitmentsV2.Web": {
@@ -22,7 +23,8 @@
       "launchUrl": "VN48RP/unapproved",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "APPSETTING_EnvironmentName": "LOCAL"
+        "APPSETTING_EnvironmentName": "LOCAL",
+        "APPSETTING_ResourceEnvironmentName": "LOCAL"
       },
       "applicationUrl": "https://localhost:44376;http://localhost:63543"
     }
