@@ -360,14 +360,6 @@
                     <td id="employer-reference" class="govuk-table__cell" colspan="2">@Model.EmployerReference</td>
                     <td class="govuk-table__cell"></td>
                 </tr>
-                @if (Model.TrainingType == ProgrammeType.Standard)
-                {
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header">End-point assessor</th>
-                        <td id="end-point-assessor" class="govuk-table__cell" colspan="2">@(Model.EndpointAssessorName ?? "The end-point assessor has not been declared")</td>
-                        <td class="govuk-table__cell"></td>
-                    </tr>
-                }
             </tbody>
         </table>
     </div>
