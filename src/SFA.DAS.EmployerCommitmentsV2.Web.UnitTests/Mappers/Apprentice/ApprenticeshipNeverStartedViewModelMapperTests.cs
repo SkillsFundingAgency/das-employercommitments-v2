@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         private readonly DateTime _referenceDate = DateTime.UtcNow;
 
-        private readonly long _apprenticeShipId;
+        private readonly long _apprenticeshipId;
 
         [SetUp]
         public void SetUp()
@@ -26,14 +26,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
             mockCommitmentsApiClient
-               .Setup(r => r.GetApprenticeship(_apprenticeShipId, CancellationToken.None))
+               .Setup(r => r.GetApprenticeship(_apprenticeshipId, CancellationToken.None))
                .ReturnsAsync(GetApprenticeshipResponse(_referenceDate));
         }
 
         [Test, MoqAutoData]
         public async Task ApprenticeshipHashedId_IsMapped(ApprenticeshipNeverStartedRequest request)
         {
-            request.ApprenticeshipId = _apprenticeShipId;
+            request.ApprenticeshipId = _apprenticeshipId;
             var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test, MoqAutoData]
         public async Task AccountHashedId_IsMapped(ApprenticeshipNeverStartedRequest request)
         {
-            request.ApprenticeshipId = _apprenticeShipId;
+            request.ApprenticeshipId = _apprenticeshipId;
             var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
@@ -53,17 +53,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test, MoqAutoData]
         public async Task ApprenticeshipId_IsMapped(ApprenticeshipNeverStartedRequest request)
         {
-            request.ApprenticeshipId = _apprenticeShipId;
+            request.ApprenticeshipId = _apprenticeshipId;
             var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(_apprenticeShipId, result.ApprenticeshipId);
+            Assert.AreEqual(_apprenticeshipId, result.ApprenticeshipId);
         }
 
         [Test, MoqAutoData]
         public async Task StartDate_IsMapped(ApprenticeshipNeverStartedRequest request)
         {
-            request.ApprenticeshipId = _apprenticeShipId;
+            request.ApprenticeshipId = _apprenticeshipId;
             var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
@@ -73,7 +73,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test, MoqAutoData]
         public async Task IsCopJourney_IsAlwaysFalse(ApprenticeshipNeverStartedRequest request)
         {
-            request.ApprenticeshipId = _apprenticeShipId;
+            request.ApprenticeshipId = _apprenticeshipId;
             var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
@@ -83,7 +83,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test, MoqAutoData]
         public async Task StopMonth_IsSameAsPlannedDtartDateMonth(ApprenticeshipNeverStartedRequest request)
         {
-            request.ApprenticeshipId = _apprenticeShipId;
+            request.ApprenticeshipId = _apprenticeshipId;
             var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
@@ -93,7 +93,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test, MoqAutoData]
         public async Task StopYear_IsSameAsPlannedDtartDateYear(ApprenticeshipNeverStartedRequest request)
         {
-            request.ApprenticeshipId = _apprenticeShipId;
+            request.ApprenticeshipId = _apprenticeshipId;
             var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
@@ -108,7 +108,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 Uln = "1234567890",
                 CourseName = "Test Apprenticeship",
                 StartDate = referenceDate,
-                Id = _apprenticeShipId
+                Id = _apprenticeshipId
             };
         }
     }

@@ -14,13 +14,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 {
     public class ChangeStopApprenticeStatusChangeTests : ApprenticeControllerTestBase
     {
-        [SetUp]
-        public void Arrange()
-        {
-            _mockModelMapper = new Mock<IModelMapper>();
-            _mockCookieStorageService = new Mock<ICookieStorageService<IndexRequest>>();
-            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-        }
 
         [Test, MoqAutoData]
         public void AndLeftEmploymentIsSelected_ThenRedirectToStopApprenticeshipAction([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
