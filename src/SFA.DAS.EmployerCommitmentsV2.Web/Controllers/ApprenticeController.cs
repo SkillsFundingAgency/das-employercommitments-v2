@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.CommitmentPermissions.Options;
+using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
-using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
-using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateRequest;
-using SFA.DAS.Authorization.EmployerUserRoles.Options;
-using SFA.DAS.CommitmentsV2.Types;
-using System.Linq;
-using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using static SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.WhyStopApprenticeshipViewModel;
+using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -476,7 +476,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewModel);
         }
 
-        [Route("{apprenticeshipHashedId}/details/whystopapprenticeship",Name = RouteNames.WhyStopApprenticeship)]
+        [Route("{apprenticeshipHashedId}/details/whystopapprenticeship", Name = RouteNames.WhyStopApprenticeship)]
         [HttpPost]
         public IActionResult WhyStopApprenticeship(WhyStopApprenticeshipViewModel viewModel)
         {
@@ -514,7 +514,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         public IActionResult ApprenticeshipNeverStarted(ApprenticeshipNeverStartedViewModel viewModel)
         {
-            //return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
             return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney, viewModel.StopMonth, viewModel.StopYear });
         }
 

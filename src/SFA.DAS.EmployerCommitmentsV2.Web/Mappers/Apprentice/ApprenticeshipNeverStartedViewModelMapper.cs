@@ -17,10 +17,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             _client = client;
         }
 
-
         public async Task<ApprenticeshipNeverStartedViewModel> Map(ApprenticeshipNeverStartedRequest source)
         {
-
             var apprenticeship = await _client.GetApprenticeship(source.ApprenticeshipId);
 
             return new ApprenticeshipNeverStartedViewModel
