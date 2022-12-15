@@ -85,7 +85,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 IsCompleteForEmployer = cohort.IsCompleteForEmployer,
                 HasEmailOverlaps = emailOverlaps.Any(),
                 ShowAddAnotherApprenticeOption = !cohort.IsLinkedToChangeOfPartyRequest,
-                ShowRofjaaRemovalBanner = cohortDetails.HasUnavailableFlexiJobAgencyDeliveryModel
+                ShowRofjaaRemovalBanner = cohortDetails.HasUnavailableFlexiJobAgencyDeliveryModel,
+                Status = GetCohortStatus(cohort, draftApprenticeships)
             };
         }
 
@@ -114,7 +115,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                             StartDate = a.StartDate,
                             ActualStartDate = a.ActualStartDate,
                             OriginalStartDate = a.OriginalStartDate,
-                            HasOverlappingEmail = emailOverlaps.Any(x=>x.Id == a.Id),
+                            HasOverlappingEmail = emailOverlaps.Any(x => x.Id == a.Id),
                             ULN = a.Uln,
                             IsComplete = IsDraftApprenticeshipComplete(a, cohortResponse),
                             EmploymentPrice = a.EmploymentPrice,
@@ -135,12 +136,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 
         private bool IsDraftApprenticeshipComplete(DraftApprenticeshipDto draftApprenticeship, GetCohortResponse cohortResponse) =>
                 !(
-                  string.IsNullOrWhiteSpace(draftApprenticeship.FirstName) || string.IsNullOrWhiteSpace(draftApprenticeship.LastName) 
-                  || draftApprenticeship.DateOfBirth == null ||  string.IsNullOrWhiteSpace(draftApprenticeship.CourseName) 
-                  || (draftApprenticeship.StartDate == null && draftApprenticeship.ActualStartDate == null) || draftApprenticeship.EndDate == null || draftApprenticeship.Cost == null 
+                  string.IsNullOrWhiteSpace(draftApprenticeship.FirstName) || string.IsNullOrWhiteSpace(draftApprenticeship.LastName)
+                  || draftApprenticeship.DateOfBirth == null || string.IsNullOrWhiteSpace(draftApprenticeship.CourseName)
+                  || (draftApprenticeship.StartDate == null && draftApprenticeship.ActualStartDate == null) || draftApprenticeship.EndDate == null || draftApprenticeship.Cost == null
                   || (cohortResponse.ApprenticeEmailIsRequired && string.IsNullOrWhiteSpace(draftApprenticeship.Email) && !cohortResponse.IsLinkedToChangeOfPartyRequest)
                  );
-        
 
         private Task CheckUlnOverlap(List<DetailsViewCourseGroupingModel> courseGroups)
         {
@@ -176,15 +176,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 {
                     courseGroup.EmailOverlaps = new EmailOverlapsModel(numberOfEmailOverlaps);
                 }
-
             }
         }
+
         private void PopulateFundingBandExcessModels(List<DetailsViewCourseGroupingModel> courseGroups)
         {
             var results = courseGroups.Select(courseGroup => SetFundingBandCap(courseGroup.CourseCode, courseGroup.DraftApprenticeships)).ToList();
 
             Task.WhenAll(results).Wait();
-            
+
             foreach (var courseGroup in courseGroups)
             {
                 var apprenticesExceedingFundingBand = courseGroup.DraftApprenticeships.Where(x => x.ExceedsFundingBandCap).ToList();
@@ -209,7 +209,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             {
                 try
                 {
-                    course =  await _commitmentsApiClient.GetTrainingProgramme(courseCode);
+                    course = await _commitmentsApiClient.GetTrainingProgramme(courseCode);
                 }
                 catch (RestHttpClientException e)
                 {
@@ -217,9 +217,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                     {
                         throw;
                     }
-                }    
+                }
             }
-            
+
             foreach (var draftApprenticeship in draftApprenticeships)
             {
                 draftApprenticeship.FundingBandCap = GetFundingBandCap(course, draftApprenticeship.OriginalStartDate ?? draftApprenticeship.StartDate);
@@ -264,6 +264,82 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             if (apprenticeshipsOverCap > 1)
                 return new string("The price for these apprenticeships is above the");
             return null;
+        }
+
+        private string GetCohortStatus(GetCohortResponse cohort, IReadOnlyCollection<DraftApprenticeshipDto> draftApprenticeships)
+        {
+            if (cohort.TransferSenderId.HasValue &&
+                cohort.TransferApprovalStatus == TransferApprovalStatus.Pending)
+            {
+                switch (cohort.WithParty)
+                {
+                    case Party.TransferSender:
+                        return "Pending - with funding employer";
+
+                    case Party.Employer:
+                        return GetEmployerOnlyStatus(cohort);
+
+                    case Party.Provider:
+                        return GetProviderOnlyStatus(cohort);
+                }
+            }
+            else if (cohort.TransferSenderId.HasValue &&
+                     cohort.TransferApprovalStatus == TransferApprovalStatus.Rejected)
+            {
+                return "Rejected by transfer sending employer";
+            }
+            else if (cohort.IsApprovedByEmployer && cohort.IsApprovedByProvider)
+            {
+                return "Approved";
+            }
+            else if (cohort.WithParty == Party.Provider)
+            {
+                return GetProviderOnlyStatus(cohort);
+            }
+            else if (cohort.WithParty == Party.Employer)
+            {
+                return GetEmployerOnlyStatus(cohort);
+            }
+
+            return "New request";
+        }
+
+        private static string GetEmployerOnlyStatus(GetCohortResponse cohort)
+        {
+            switch (cohort.LastAction)
+            {
+                case LastAction.None:
+                    return "New request";
+
+                case LastAction.Amend:
+                case LastAction.AmendAfterRejected:
+                    return "Ready for review";
+
+                case LastAction.Approve:
+                    return "Ready for approval";
+
+                default:
+                    return "New request";
+            }
+        }
+
+        private static string GetProviderOnlyStatus(GetCohortResponse cohort)
+        {
+            switch (cohort.LastAction)
+            {
+                case LastAction.None:
+                    return "New request";
+
+                case LastAction.Amend:
+                case LastAction.AmendAfterRejected:
+                    return "Under review with provider";
+
+                case LastAction.Approve:
+                    return "With provider for approval";
+
+                default:
+                    return "Under review with provider";
+            }
         }
     }
 }
