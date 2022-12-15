@@ -1,12 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
-    public class ApprenticeshipHasNotEndedRequestToViewModelMapper:IMapper<ApprenticeshipNotEndedRequest,ApprenticeshipNotEndedViewModel>
+    public class ApprenticeshipHasNotEndedRequestToViewModelMapper : IMapper<ApprenticeshipNotEndedRequest, ApprenticeshipNotEndedViewModel>
     {
         public Task<ApprenticeshipNotEndedViewModel> Map(ApprenticeshipNotEndedRequest source)
         {
