@@ -16,15 +16,9 @@
 
         <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
 
-        <p class="govuk-body">
-            You do not need to stop this apprenticeship;a completion payment still <br />
-            needs to be made to your training provider.Once this has been made the <br />
-            apprenticeship will complete automatically.<br />
-            <br />
-            For further information, contact your training provider.
-        </p>
-        <br />
-        <p class="govuk-body-s">
+        <p>You do not need to stop this apprenticeship; a completion payment still needs to be made to your training provider. Once this has been made the apprenticeship will complete automatically.</p>
+        <p>For further information, contact your training provider.</p>
+        <p>
             <a id="details-back-link" class="govuk-body govuk-link" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">Go back to apprentice details</a>
         </p>
     </div>
