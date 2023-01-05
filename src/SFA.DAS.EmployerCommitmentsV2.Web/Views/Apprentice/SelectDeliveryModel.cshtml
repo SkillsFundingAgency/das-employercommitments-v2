@@ -1,0 +1,19 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit.EditApprenticeshipDeliveryModelViewModel;
+
+@{
+    ViewData["Title"] = "Select the apprenticeship delivery model";
+    ViewBag.GaData.Vpv = "/apprentices/apprentice/edit/delivery-model";
+    ViewBag.GaData.Org = Model.LegalEntityName;
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+        <h1 class="govuk-heading-xl">Select the apprenticeship delivery model</h1>
+
+        <form id="selectDeliveryModel" novalidate method="post">
+            <partial name="_SelectDeliveryModelPartial"/>
+            <button type="submit" id="continue-button" class="govuk-button">Continue</button>
+        </form>
+    </div>
+</div>
