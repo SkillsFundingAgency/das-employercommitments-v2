@@ -16,10 +16,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private DetailsViewModelToAcknowledgementRequestMapper _mapper;
         private Mock<IApprovalsApiClient> _apiClient;
 
+        private PostCohortDetailsRequest _apiRequestBody;
+        private long _apiRequestAccountId;
+        private long _apiRequestCohortId;
+
         [SetUp]
         public void Setup()
         {
             _apiClient = new Mock<IApprovalsApiClient>();
+
+            _apiClient.Setup(x => x.PostCohortDetails(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<PostCohortDetailsRequest>(), It.IsAny<CancellationToken>()))
+                .Callback((long accountId, long cohortId, PostCohortDetailsRequest request, CancellationToken cancellationToken) =>
+                {
+                    _apiRequestAccountId = accountId;
+                    _apiRequestCohortId = cohortId;
+                    _apiRequestBody = request;
+
+                })
+                .Returns(() => Task.CompletedTask);
 
             _mapper = new DetailsViewModelToAcknowledgementRequestMapper(_apiClient.Object,
                 Mock.Of<IAuthenticationService>());
@@ -35,11 +49,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             await _mapper.Map(request);
 
-            _apiClient.Verify(x => x.PostCohortDetails(request.AccountId, request.CohortId, It.Is<PostCohortDetailsRequest>(r =>
-                    r.SubmissionType == PostCohortDetailsRequest.CohortSubmissionType.Approve
-                    && r.Message == request.ApproveMessage
-                    ), It.IsAny<CancellationToken>()),
-                Times.Once);
+            Assert.AreEqual(request.AccountId, _apiRequestAccountId);
+            Assert.AreEqual(request.CohortId, _apiRequestCohortId);
+            Assert.AreEqual(request.ApproveMessage, _apiRequestBody.Message);
+            Assert.AreEqual(PostCohortDetailsRequest.CohortSubmissionType.Approve, _apiRequestBody.SubmissionType);
         }
 
         [Test]
@@ -52,11 +65,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             await _mapper.Map(request);
 
-            _apiClient.Verify(x => x.PostCohortDetails(request.AccountId, request.CohortId, It.Is<PostCohortDetailsRequest>(r =>
-                    r.SubmissionType == PostCohortDetailsRequest.CohortSubmissionType.Send
-                    && r.Message == request.SendMessage
-                ), It.IsAny<CancellationToken>()),
-                Times.Once);
+            Assert.AreEqual(request.AccountId, _apiRequestAccountId);
+            Assert.AreEqual(request.CohortId, _apiRequestCohortId);
+            Assert.AreEqual(request.SendMessage, _apiRequestBody.Message);
+            Assert.AreEqual(PostCohortDetailsRequest.CohortSubmissionType.Send, _apiRequestBody.SubmissionType);
         }
     }
 }
