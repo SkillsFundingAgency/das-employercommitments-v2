@@ -1,6 +1,9 @@
 ﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+@using SFA.DAS.EmployerCommitmentsV2.Web.Services
+@using SFA.DAS.CommitmentsV2.Api.Client
 @inject ILinkGenerator LinkGenerator
+@inject ICommitmentsApiClient CommitmentsApiClient
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.AgreementNotSignedViewModel
 
 @{
@@ -22,7 +25,13 @@
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
             <div class="govuk-warning-text__text">
                 <span class="govuk-warning-text__assistive">Warning</span>
-                <p>@Model.LegalEntityName does not have an accepted agreement with the Department for Education (<abbr>DfE</abbr>). Without an accepted agreement you can add apprentice details, but will not be able to authorise payments to training providers.</p>
+                @if (Model.CanContinueAnyway)
+                {
+                    <p>@Model.LegalEntityName does not have an accepted agreement with the Department for Education (<abbr>DfE</abbr>). Without an accepted agreement you can add apprentice details, but will not be able to authorise payments to training providers.</p>
+                } else
+                {
+                    <p>@Model.LegalEntityName does not have an accepted agreement with the Department for Education (<abbr>DfE</abbr>). Without an accepted agreement you cannot proceed any further.</p>
+                }
                 <p>Only account owners can accept DfE agreements. If you are not sure who the owner is, you can <a href="@LinkGenerator.YourTeam(Model.AccountHashedId)" class="govuk-link">check your team details</a>.</p>
             </div>
         </div>      
