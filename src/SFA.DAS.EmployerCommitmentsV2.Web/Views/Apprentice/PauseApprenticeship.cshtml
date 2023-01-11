@@ -13,6 +13,8 @@
     pageId = "apprentice-paused";
     pageHeading = "Pause apprenticeship";
 
+    string financeDataLink = LinkGenerator.FinanceLink($"accounts/{Model.AccountHashedId}/finance/{DateTime.Now.Year}/{DateTime.Now.Month}");
+
     ViewBag.Title = pageTitle;
     ViewBag.PageId = pageId;
     ViewBag.Section = "apprentices";
@@ -34,7 +36,7 @@
             </p>
 
             <p class="govuk-body">
-                <a class="govuk-link" target="_blank" href="financeDataLink" id="view-transactions-link">View your transactions</a> to confirm all payments are up-to-date before pausing.
+                <a class="govuk-link" target="_blank" href="@financeDataLink" id="view-transactions-link">View your transactions</a> to confirm all payments are up-to-date before pausing.
             </p>
 
             <p class="govuk-body">You can return and resume the apprenticeship at any time.</p>
