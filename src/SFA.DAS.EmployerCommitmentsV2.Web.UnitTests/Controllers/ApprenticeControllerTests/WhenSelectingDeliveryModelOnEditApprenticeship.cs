@@ -12,11 +12,10 @@ using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Features;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
@@ -82,18 +81,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
     {
         public ApprenticeController Sut { get; set; }
 
-        public string RedirectUrl;
         public Mock<IModelMapper> ModelMapperMock;
         public Mock<IAuthorizationService> AuthorizationServiceMock;
         public Mock<ITempDataDictionary> TempDataMock;
-        public SelectDeliveryModelViewModel ViewModel;
+        public EditApprenticeshipDeliveryModelViewModel ViewModel;
         public EditApprenticeshipRequest Request;
         public EditApprenticeshipRequestViewModel Apprenticeship;
 
         public WhenSelectingDeliveryModelOnEditApprenticeshipFixture()
         {
             var fixture = new Fixture();
-            ViewModel = fixture.Create<SelectDeliveryModelViewModel>();
+            ViewModel = fixture.Create<EditApprenticeshipDeliveryModelViewModel>();
             Request = fixture.Create<EditApprenticeshipRequest>();
             Apprenticeship = fixture.Build<EditApprenticeshipRequestViewModel>().Without(x => x.BirthDay).Without(x => x.BirthMonth).Without(x => x.BirthYear)
                 .Without(x => x.StartMonth).Without(x => x.StartYear).Without(x => x.StartDate)
@@ -109,10 +107,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Sut.TempData = TempDataMock.Object;
         }
 
-        public WhenSelectingDeliveryModelOnEditApprenticeshipFixture WithDeliveryModels(List<DeliveryModel> list)
+        public WhenSelectingDeliveryModelOnEditApprenticeshipFixture WithDeliveryModels(List<EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel> list)
         {
-            ModelMapperMock.Setup(x => x.Map<SelectDeliveryModelViewModel>(It.IsAny<EditApprenticeshipRequestViewModel>()))
-                .ReturnsAsync(new SelectDeliveryModelViewModel { DeliveryModels = list.ToArray() });
+            ModelMapperMock.Setup(x => x.Map<EditApprenticeshipDeliveryModelViewModel>(It.IsAny<EditApprenticeshipRequestViewModel>()))
+                .ReturnsAsync(new EditApprenticeshipDeliveryModelViewModel { DeliveryModels = list });
             return this;
         }
 
