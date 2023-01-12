@@ -731,13 +731,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> SelectDeliveryModelForEdit(EditApprenticeshipRequest request)
         {
             var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
-            var model = await _modelMapper.Map<SelectDeliveryModelViewModel>(draft);
+            var model = await _modelMapper.Map<EditApprenticeshipDeliveryModelViewModel>(draft);
 
-            if (model.DeliveryModels.Length > 1)
+            if (model.DeliveryModels.Count > 1)
             {
                 return View("SelectDeliveryModel", model);
             }
-            draft.DeliveryModel = model.DeliveryModels.FirstOrDefault();
+            draft.DeliveryModel = (DeliveryModel) model.DeliveryModels.FirstOrDefault();
             TempData.Put(ViewModelForEdit, draft);
 
             return RedirectToAction("EditApprenticeship", new { request.AccountHashedId, request.ApprenticeshipHashedId });
@@ -746,7 +746,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpPost]
         [Route("{ApprenticeshipHashedId}/edit/select-delivery-model")]
         [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
-        public IActionResult SetDeliveryModelForEdit(SelectDeliveryModelViewModel model)
+        public IActionResult SetDeliveryModelForEdit(EditApprenticeshipDeliveryModelViewModel model)
         {
             if (model.DeliveryModel == null)
             {
@@ -755,7 +755,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
-            draft.DeliveryModel = model.DeliveryModel.Value;
+            draft.DeliveryModel = (DeliveryModel) model.DeliveryModel.Value;
             TempData.Put(ViewModelForEdit, draft);
             return RedirectToAction("EditApprenticeship");
         }
