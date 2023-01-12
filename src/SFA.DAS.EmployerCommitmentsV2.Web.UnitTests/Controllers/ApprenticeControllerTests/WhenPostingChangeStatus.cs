@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("StopApprenticeship", response.ActionName);           
+            Assert.AreEqual("WhyStopApprenticeship", response.ActionName);           
         }
 
         [Test, MoqAutoData]
