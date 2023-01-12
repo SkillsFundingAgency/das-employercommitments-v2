@@ -11,7 +11,7 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
 {
-    public class WhenRequestingHasTheApprenticeBeenMadeRedundantPage : ApprenticeControllerTestBase
+    public class WhenSelectedApprenticeNeverEnded:ApprenticeControllerTestBase
     {
         [SetUp]
         public void Arrange()
@@ -27,17 +27,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test, MoqAutoData]
-        public async Task WhenRequesting_HasTheAppretniceBeenMadeRedundant_ThenMadeRedundantViewModelIsPassedToTheView(MadeRedundantViewModel expectedViewModel)
+        public async Task WhenSelected_ApprenticeshipNotEnded_ThenApprenticeshipNotEndedViewModelIsPassedToTheView(ApprenticeshipNotEndedViewModel expectedViewModel)
         {
-            _mockModelMapper.Setup(m => m.Map<MadeRedundantViewModel>(It.IsAny<MadeRedundantRequest>()))
+            _mockModelMapper.Setup(m => m.Map<ApprenticeshipNotEndedViewModel>(It.IsAny<ApprenticeshipNotEndedRequest>()))
                 .ReturnsAsync(expectedViewModel);
 
-            var viewResult = await _controller.HasTheApprenticeBeenMadeRedundant(new MadeRedundantRequest()) as ViewResult;
+            var viewResult = await _controller.ApprenticeshipNotEnded(new ApprenticeshipNotEndedRequest()) as ViewResult;
             var viewModel = viewResult.Model;
 
-            var actualViewModel = (MadeRedundantViewModel)viewModel;
+            var actualViewModel = (ApprenticeshipNotEndedViewModel)viewModel;
 
-            Assert.IsInstanceOf<MadeRedundantViewModel>(viewModel);
+            Assert.IsInstanceOf<ApprenticeshipNotEndedViewModel>(viewModel);
             Assert.AreEqual(expectedViewModel, actualViewModel);
         }
     }
