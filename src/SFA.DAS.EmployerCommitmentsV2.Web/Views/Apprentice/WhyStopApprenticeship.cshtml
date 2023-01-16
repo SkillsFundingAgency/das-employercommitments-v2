@@ -10,6 +10,7 @@
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "why-stop-apprenticeship";
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/why-stop-apprenticeship";
+    ViewBag.ZenDeskLabel = "Status-stop-why";
 }
 
 <div class="govuk-grid-row">
@@ -43,6 +44,12 @@
                             <input class="govuk-radios__input" id="SelectedStatusChange-ChangeProvider" name="SelectedStatusChange" type="radio" value="@WhyStopApprenticeshipViewModel.StopStatusReason.ChangeProvider">
                             <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-ChangeProvider">
                                 Change to training provider
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="SelectedStatusChange-TrainingEnded" name="SelectedStatusChange" type="radio" value="@WhyStopApprenticeshipViewModel.StopStatusReason.TrainingEnded">
+                            <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-TrainingEnded">
+                                Apprenticeship training has ended
                             </label>
                         </div>
                         <div class="govuk-radios__item">

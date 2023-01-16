@@ -66,6 +66,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             //Assert
             Assert.AreEqual("ApprenticeshipNeverStarted", response.ActionName);
         }
-        
+
+        [Test, MoqAutoData]
+        public void AndNeverEndedIsSelected_ThenRedirectToTrainingEnded([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
+        {
+            //Arrange
+            viewModel.SelectedStatusChange = StopStatusReason.TrainingEnded;
+
+            //Act
+            var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
+
+            //Assert
+            Assert.AreEqual("ApprenticeshipNotEnded", response.ActionName);
+        }
     }
 }

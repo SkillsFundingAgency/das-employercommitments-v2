@@ -16,6 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         {
             LeftEmployment,
             ChangeProvider,
+            TrainingEnded,
             Withdrawn,
             NeverStarted
         }
