@@ -26,5 +26,8 @@
         public const string ChangeVersion = "change-version";
         public const string ChangeOption = "change-option";
         public const string EditApprenticeship = "edit-apprenticeship";
+        public const string WhyStopApprenticeship = "why-stop-apprenticeship";
+        public const string ApprenticeshipNeverStarted = "apprenticeship-never-started";
+        public const string ApprenticeshipHasNotEnded = "apprenticeship-not-ended";
     }
 }
