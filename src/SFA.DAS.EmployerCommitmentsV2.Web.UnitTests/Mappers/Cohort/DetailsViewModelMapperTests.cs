@@ -7,7 +7,6 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
-using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -21,6 +20,8 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -49,7 +50,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new DetailsViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Cohort.LegalEntityName, result.LegalEntityName);
+            Assert.AreEqual(fixture.CohortDetails.LegalEntityName, result.LegalEntityName);
         }
 
         [Test]
@@ -57,7 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new DetailsViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Cohort.ProviderName, result.ProviderName);
+            Assert.AreEqual(fixture.CohortDetails.ProviderName, result.ProviderName);
         }
 
         [Test]
@@ -459,7 +460,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(expectedShowApprovalOption, result.EmployerCanApprove);
         }
 
-
         [TestCase(true, true, false)]
         [TestCase(true, false, true)]
         [TestCase(false, true, false)]
@@ -590,14 +590,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [TestCase(nameof(DraftApprenticeshipDto.LastName))]
         [TestCase(nameof(DraftApprenticeshipDto.CourseName))]
         [TestCase(nameof(DraftApprenticeshipDto.DateOfBirth))]
-        [TestCase(nameof(DraftApprenticeshipDto.StartDate))]
         [TestCase(nameof(DraftApprenticeshipDto.EndDate))]
         [TestCase(nameof(DraftApprenticeshipDto.Cost))]
-        public async Task IsCompleteMappedCorrectlyWhenAManadatoryFieldIsNull(string propertyName)
+        public async Task IsCompleteMappedCorrectlyWhenAMandatoryFieldIsNull(string propertyName)
         {
             var fixture = new DetailsViewModelMapperTestsFixture()
                 .CreateDraftApprenticeship()
                 .SetValueOfDraftApprenticeshipProperty(propertyName, null);
+            var result = await fixture.Map();
+            Assert.IsFalse(result.Courses.First().DraftApprenticeships.First().IsComplete);
+        }
+
+        [Test]
+        public async Task IsCompleteIsFalseWhenStartDatesAreBothNull()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateDraftApprenticeship()
+                .SetValueOfDraftApprenticeshipProperty("StartDate", null)
+                .SetValueOfDraftApprenticeshipProperty("ActualStartDate", null);
             var result = await fixture.Map();
             Assert.IsFalse(result.Courses.First().DraftApprenticeships.First().IsComplete);
         }
@@ -615,7 +625,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new DetailsViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(2, result.Courses.Count(c=>c.CourseCode == "C4"));
+            Assert.AreEqual(2, result.Courses.Count(c => c.CourseCode == "C4"));
         }
 
         [TestCase(DeliveryModel.PortableFlexiJob)]
@@ -626,6 +636,138 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await fixture.Map();
             Assert.AreEqual(1, result.Courses.Count(c => c.CourseCode == "C4" && c.DeliveryModel == dm));
         }
+
+        [TestCase(true, true)]
+        [TestCase(false, false)]
+        public async Task ShowRofjaaRemovalBanner(bool hasUnavailableFlexiJobAgencyDeliveryModel, bool expectShowBanner)
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .UnavailableFlexiJobAgencyDeliveryModel(hasUnavailableFlexiJobAgencyDeliveryModel);
+
+            var result = await fixture.Map();
+
+            Assert.AreEqual(expectShowBanner, result.ShowRofjaaRemovalBanner);
+        }
+
+        [Test]
+        public async Task StatusIsMappedCorrectly_When_With_Employer_But_Without_Provider_Approval()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateThisNumberOfApprenticeships(1)
+                .SetCohortWithParty(Party.Employer);
+
+            fixture.Cohort.LastAction = LastAction.Amend;
+
+            var result = await fixture.Map();
+            Assert.AreEqual("Ready for review", result.Status);
+        }
+
+        [Test]
+        public async Task StatusIsMappedCorrectly_When_With_Employer_And_Provider_Approval()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateThisNumberOfApprenticeships(1)
+                .SetCohortWithParty(Party.Employer);
+
+            fixture.Cohort.LastAction = LastAction.Approve;
+
+            var result = await fixture.Map();
+            Assert.AreEqual("Ready for approval", result.Status);
+        }
+
+        [Test]
+        public async Task StatusIsMappedCorrectly_When_WithProvider_And_Cohort_Not_Approved_By_Employer()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateThisNumberOfApprenticeships(1)
+                .SetCohortWithParty(Party.Provider);
+
+            fixture.Cohort.LastAction = LastAction.Amend;
+
+            var result = await fixture.Map();
+            Assert.AreEqual("Under review with provider", result.Status);
+        }
+
+        [Test]
+        public async Task StatusIsMappedCorrectly_When_WithProvider_And_Cohort_Approved_By_Employer()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateThisNumberOfApprenticeships(1)
+                .SetCohortWithParty(Party.Provider);
+
+            fixture.Cohort.LastAction = LastAction.Approve;
+
+            var result = await fixture.Map();
+            Assert.AreEqual("With provider for approval", result.Status);
+        }
+
+        [Test]
+        public async Task StatusIsMappedCorrectly_When_WithEmployer_And_New_Cohort()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateThisNumberOfApprenticeships(1)
+                .SetCohortWithParty(Party.Employer);
+
+            fixture.Cohort.LastAction = LastAction.None;
+
+            var result = await fixture.Map();
+            Assert.AreEqual("New request", result.Status);
+        }
+
+        [Test]
+        public async Task StatusIsMappedCorrectly_When_PendingApproval_From_TransferSender()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateThisNumberOfApprenticeships(1)
+                .SetTransferSender()
+                .SetCohortWithParty(Party.TransferSender);
+
+            fixture.Cohort.IsApprovedByEmployer = fixture.Cohort.IsApprovedByProvider = true;
+            fixture.Cohort.TransferApprovalStatus = TransferApprovalStatus.Pending;
+
+            var result = await fixture.Map();
+            Assert.AreEqual("Pending - with funding employer", result.Status);
+        }
+
+        [Test]
+        public async Task StatusIsMappedCorrectly_When_rejected_From_TransferSender()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateThisNumberOfApprenticeships(1)
+                .SetTransferSender()
+                .SetCohortWithParty(Party.TransferSender)
+                .SetTransferApprovalStatus(TransferApprovalStatus.Rejected)
+                .SetCohortApprovedStatus(true);
+
+            var result = await fixture.Map();
+            Assert.AreEqual("Rejected by transfer sending employer", result.Status);
+        }
+
+        [Test]
+        public async Task StatusIsMappedCorrectly_When_WithEmployer_And_Provider_AmendRejected_Cohort()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateThisNumberOfApprenticeships(1)
+                .SetCohortWithParty(Party.Employer);
+
+            fixture.Cohort.LastAction = LastAction.AmendAfterRejected;
+
+            var result = await fixture.Map();
+            Assert.AreEqual("Ready for review", result.Status);
+        }
+
+        [Test]
+        public async Task StatusIsMappedCorrectly_When_WithProvider_And_Employer_AmendRejected_Cohort()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture()
+                .CreateThisNumberOfApprenticeships(1)
+                .SetCohortWithParty(Party.Provider);
+
+            fixture.Cohort.LastAction = LastAction.AmendAfterRejected;
+
+            var result = await fixture.Map();
+            Assert.AreEqual("Under review with provider", result.Status);
+        }
     }
 
     public class DetailsViewModelMapperTestsFixture
@@ -634,8 +776,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public DetailsRequest Source;
         public DetailsViewModel Result;
         public Mock<ICommitmentsApiClient> CommitmentsApiClient;
+        public Mock<IApprovalsApiClient> ApprovalsApiClient;
         public Mock<IEncodingService> EncodingService;
         public GetCohortResponse Cohort;
+        public GetCohortDetailsResponse CohortDetails;
         public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
         public DateTime DefaultStartDate = new DateTime(2019, 10, 1);
         public AccountLegalEntityResponse AccountLegalEntityResponse;
@@ -652,6 +796,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             _autoFixture = new Fixture();
 
+            CohortDetails = _autoFixture.Build<GetCohortDetailsResponse>()
+                .With(x => x.HasUnavailableFlexiJobAgencyDeliveryModel, false).Create();
             Cohort = _autoFixture.Build<GetCohortResponse>().Without(x => x.TransferSenderId).Without(x => x.ChangeOfPartyRequestId).Create();
             AccountLegalEntityResponse = _autoFixture.Create<AccountLegalEntityResponse>();
             LegalEntityViewModel = _autoFixture.Create<LegalEntityViewModel>();
@@ -660,6 +806,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var draftApprenticeships = CreateDraftApprenticeshipDtos(_autoFixture);
             _autoFixture.Register(() => draftApprenticeships);
             DraftApprenticeshipsResponse = _autoFixture.Create<GetDraftApprenticeshipsResponse>();
+
+            ApprovalsApiClient = new Mock<IApprovalsApiClient>();
+            ApprovalsApiClient.Setup(x =>
+                    x.GetCohortDetails(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(CohortDetails);
 
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             CommitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
@@ -678,18 +829,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             };
             _trainingProgramme = new TrainingProgramme { EffectiveFrom = DefaultStartDate, EffectiveTo = DefaultStartDate.AddYears(1), FundingPeriods = _fundingPeriods };
 
-            CommitmentsApiClient.Setup(x => x.GetTrainingProgramme(It.Is<string>(c=>!string.IsNullOrEmpty(c)), CancellationToken.None))
-                .ReturnsAsync(new GetTrainingProgrammeResponse{TrainingProgramme = _trainingProgramme});
+            CommitmentsApiClient.Setup(x => x.GetTrainingProgramme(It.Is<string>(c => !string.IsNullOrEmpty(c)), CancellationToken.None))
+                .ReturnsAsync(new GetTrainingProgrammeResponse { TrainingProgramme = _trainingProgramme });
             CommitmentsApiClient.Setup(x => x.GetTrainingProgramme("no-course", CancellationToken.None))
-                .ThrowsAsync(new RestHttpClientException(new HttpResponseMessage(HttpStatusCode.NotFound){RequestMessage = new HttpRequestMessage(),
-                    ReasonPhrase = "Url not found"}, "Course not found" ));
+                .ThrowsAsync(new RestHttpClientException(new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    RequestMessage = new HttpRequestMessage(),
+                    ReasonPhrase = "Url not found"
+                }, "Course not found"));
             CommitmentsApiClient.Setup(x => x.ValidateUlnOverlap(It.IsAny<ValidateUlnOverlapRequest>(), CancellationToken.None))
               .ReturnsAsync(new ValidateUlnOverlapResult { HasOverlappingEndDate = false, HasOverlappingStartDate = false });
 
             EncodingService = new Mock<IEncodingService>();
             SetEncodingOfApprenticeIds();
 
-            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object);
+            Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, ApprovalsApiClient.Object);
             Source = _autoFixture.Create<DetailsRequest>();
         }
 
@@ -731,13 +885,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var first = DraftApprenticeshipsResponse.DraftApprenticeships.First();
             var emailOverlap = _autoFixture.Build<ApprenticeshipEmailOverlap>().With(x => x.Id, first.Id).Create();
             EmailOverlapResponse.ApprenticeshipEmailOverlaps = new List<ApprenticeshipEmailOverlap> { emailOverlap };
-            
+
             return this;
         }
 
         public DetailsViewModelMapperTestsFixture SetValueOfDraftApprenticeshipProperty(string propertyName, object value)
         {
-           var draftApprenticeship = DraftApprenticeshipsResponse.DraftApprenticeships.First();
+            var draftApprenticeship = DraftApprenticeshipsResponse.DraftApprenticeships.First();
             if (!string.IsNullOrWhiteSpace(propertyName))
             {
                 PropertyInfo propertyInfo = draftApprenticeship.GetType().GetProperty(propertyName);
@@ -780,7 +934,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             return this;
         }
 
-    public Task<DetailsViewModel> Map()
+        public Task<DetailsViewModel> Map()
         {
             return Mapper.Map(TestHelper.Clone(Source));
         }
@@ -852,6 +1006,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             return this;
         }
 
+        public DetailsViewModelMapperTestsFixture SetTransferApprovalStatus(TransferApprovalStatus transferApprovalStatus)
+        {
+            Cohort.TransferApprovalStatus = transferApprovalStatus; ;
+            return this;
+        }
+
+        public DetailsViewModelMapperTestsFixture SetCohortApprovedStatus(bool isApproved)
+        {
+            Cohort.IsApprovedByEmployer = Cohort.IsApprovedByProvider = isApproved; ;
+            return this;
+        }
+       
         public DetailsViewModelMapperTestsFixture SetTransferSender()
         {
             Cohort.TransferSenderId = _autoFixture.Create<long>();
@@ -900,6 +1066,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             CommitmentsApiClient.Setup(x => x.ValidateUlnOverlap(It.IsAny<ValidateUlnOverlapRequest>(), CancellationToken.None))
              .ReturnsAsync(new ValidateUlnOverlapResult { HasOverlappingEndDate = hasOverlap, HasOverlappingStartDate = hasOverlap });
 
+            return this;
+        }
+
+        public DetailsViewModelMapperTestsFixture UnavailableFlexiJobAgencyDeliveryModel(bool hasUnavailableFlexiJobAgencyDeliveryModel)
+        {
+            CohortDetails.HasUnavailableFlexiJobAgencyDeliveryModel = hasUnavailableFlexiJobAgencyDeliveryModel;
             return this;
         }
     }

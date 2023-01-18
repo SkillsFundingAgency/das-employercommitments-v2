@@ -42,6 +42,7 @@
     </div>
 </div>
 
-@section back {
-    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">Back</a>
+@section Back
+{
+    <div class="das-js-back-link"></div>
 }

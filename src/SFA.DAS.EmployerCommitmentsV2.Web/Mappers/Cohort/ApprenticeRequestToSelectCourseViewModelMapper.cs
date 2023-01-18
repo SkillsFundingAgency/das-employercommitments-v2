@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes;
 
             return new SelectCourseViewModel
-            {                
+            {
                 AccountHashedId = source.AccountHashedId,
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 AccountLegalEntityId = source.AccountLegalEntityId,
@@ -35,6 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 StartMonthYear = source.StartMonthYear,
                 DeliveryModel = source.DeliveryModel,
                 TransferSenderId = source.TransferSenderId,
+                ShowTrainingDetails = source.ShowTrainingDetails
             };
         }
     }

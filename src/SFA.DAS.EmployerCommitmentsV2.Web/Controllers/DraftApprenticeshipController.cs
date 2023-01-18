@@ -1,25 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Authorization.CommitmentPermissions.Options;
-using SFA.DAS.Authorization.EmployerUserRoles.Options;
-using SFA.DAS.Authorization.Services;
-using SFA.DAS.Authorization.Mvc.Attributes;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Api.Types.Validation;
-using SFA.DAS.EmployerCommitmentsV2.Features;
-using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
-using SFA.DAS.Http;
-using SFA.DAS.Encoding;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Authorization.CommitmentPermissions.Options;
+using SFA.DAS.Authorization.EmployerUserRoles.Options;
+using SFA.DAS.Authorization.Mvc.Attributes;
+using SFA.DAS.Authorization.Services;
+using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.CommitmentsV2.Api.Types.Validation;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+using SFA.DAS.Encoding;
+using SFA.DAS.Http;
+using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -137,6 +135,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 StoreDraftApprenticeshipState(model);
                 var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
+                request.ShowTrainingDetails = true;
                 return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request.CloneBaseValues());
             }
 
@@ -194,6 +193,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 StoreEditDraftApprenticeshipState(model);
                 var req = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
+                req.ShowTrainingDetails = true;
+
                 return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), req.CloneBaseValues());
             }
 
@@ -223,6 +224,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
 
             var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
+            request.ShowTrainingDetails = true;
+
             return RedirectToAction(nameof(SelectDeliveryModelForEdit), request.CloneBaseValues());
         }
 
@@ -236,7 +239,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 model.DeliveryModel = (EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel?) request.DeliveryModel;
 
-                if (model.DeliveryModels.Count > 1)
+                if (model.DeliveryModels.Count > 1 || model.HasUnavailableFlexiJobAgencyDeliveryModel)
                 {
                     return View(model);
                 }
@@ -255,8 +258,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             if (draft != null)
             {
+                draft.HasChangedDeliveryModel = draft.DeliveryModel != (CommitmentsV2.Types.DeliveryModel?)model.DeliveryModel;
                 draft.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?) model.DeliveryModel;
-                draft.CourseCode = model.CourseCode;
+                draft.ShowTrainingDetails = model.ShowTrainingDetails;
+                if (!string.IsNullOrWhiteSpace(model.CourseCode))
+                {
+                    draft.CourseCode = model.CourseCode;
+                };
                 StoreEditDraftApprenticeshipState(draft);
 
                 return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), draft);

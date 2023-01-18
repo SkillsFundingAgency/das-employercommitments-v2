@@ -1,34 +1,30 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using SFA.DAS.Authorization.Services;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class EditApprenticeshipRequestViewModelToSelectDeliveryModelViewModelMapper : IMapper<EditApprenticeshipRequestViewModel, SelectDeliveryModelViewModel>
+    public class EditApprenticeshipRequestViewModelToEditApprenticeshipDeliveryModelViewModelMapper : IMapper<EditApprenticeshipRequestViewModel, EditApprenticeshipDeliveryModelViewModel>
     {
-        private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IApprovalsApiClient _approvalsApiClient;
 
-        public EditApprenticeshipRequestViewModelToSelectDeliveryModelViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient)
-            => (_commitmentsApiClient, _approvalsApiClient) = (commitmentsApiClient, approvalsApiClient);
-
-        public async Task<SelectDeliveryModelViewModel> Map(EditApprenticeshipRequestViewModel source)
+        public EditApprenticeshipRequestViewModelToEditApprenticeshipDeliveryModelViewModelMapper(IApprovalsApiClient approvalsApiClient)
         {
-            var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
-            var cohort = await _commitmentsApiClient.GetCohort(apprenticeship.CohortId);
+            _approvalsApiClient = approvalsApiClient;
+        }
 
-            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(cohort.ProviderId.HasValue ? cohort.ProviderId.Value : 0, source.CourseCode, cohort.AccountLegalEntityId);
+        public async Task<EditApprenticeshipDeliveryModelViewModel> Map(EditApprenticeshipRequestViewModel source)
+        {
+            var response = await _approvalsApiClient.GetEditApprenticeshipDeliveryModel(source.AccountId, source.ApprenticeshipId);
 
-            return new SelectDeliveryModelViewModel
+            return new EditApprenticeshipDeliveryModelViewModel
             {
-                DeliveryModel = source.DeliveryModel,
-                DeliveryModels = response.DeliveryModels.ToArray()
+                LegalEntityName = response.LegalEntityName,
+                DeliveryModel = (DeliveryModel) source.DeliveryModel,
+                DeliveryModels = response.DeliveryModels
             };
         }
     }

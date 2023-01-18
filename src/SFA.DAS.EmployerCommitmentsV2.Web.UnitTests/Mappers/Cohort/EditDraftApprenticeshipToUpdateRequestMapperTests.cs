@@ -159,5 +159,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(_getDraftApprenticeshipResponse.TrainingCourseOption, result.CourseOption);
         }
 
+        [Test]
+        public async Task ThenIsOnFlexiPaymentPilotIsMappedCorrectly()
+        {
+            var result = await _act();
+            Assert.AreEqual(_source.IsOnFlexiPaymentPilot, result.IsOnFlexiPaymentPilot);
+        }
+
+        [Test]
+        public async Task ThenActualStartDateIsMappedCorrectly()
+        {
+            var result = await _act();
+            Assert.AreEqual(_source.ActualStartDate, result.ActualStartDate);
+        }
     }
 }

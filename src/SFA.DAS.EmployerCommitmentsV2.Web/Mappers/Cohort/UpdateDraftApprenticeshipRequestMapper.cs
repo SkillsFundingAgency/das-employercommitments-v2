@@ -35,7 +35,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 StartDate = source.StartDate.Date,
                 EndDate = source.EndDate.Date,
                 EmploymentEndDate = source.EmploymentEndDate.Date,
-                Reference = source.Reference
+                Reference = source.Reference,
+                IsOnFlexiPaymentPilot = source.IsOnFlexiPaymentPilot,
+                ActualStartDate = source.ActualStartDate
             };
         }
     }

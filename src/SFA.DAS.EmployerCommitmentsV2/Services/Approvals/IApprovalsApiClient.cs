@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
 {
@@ -10,7 +11,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
         Task<ProviderCourseDeliveryModels> GetProviderCourseDeliveryModels(long providerId, string courseCode, long accountLegalEntityId = 0, CancellationToken cancellationToken = default);
         Task<GetEditDraftApprenticeshipResponse> GetEditDraftApprenticeship(long accountId, long cohortId, long draftApprenticeshipId, CancellationToken cancellationToken = default);
         Task<GetEditApprenticeshipResponse> GetEditApprenticeship(long accountId, long apprenticeshipId, CancellationToken cancellationToken = default);
+        Task<GetEditApprenticeshipDeliveryModelResponse> GetEditApprenticeshipDeliveryModel(long accountId, long apprenticeshipId, CancellationToken cancellationToken = default);
         Task<GetApprenticeshipDetailsResponse> GetApprenticeshipDetails(long providerId, long apprenticeshipId, CancellationToken cancellationToken = default);
         Task<GetEditDraftApprenticeshipSelectDeliveryModelResponse> GetEditDraftApprenticeshipSelectDeliveryModel(long providerId, long cohortId, long draftApprenticeshipId, string courseCode, CancellationToken cancellationToken = default);
+        Task ValidateDraftApprenticeshipForOverlappingTrainingDateRequest(ValidateDraftApprenticeshipApimRequest data);
+        Task<GetCohortDetailsResponse> GetCohortDetails(long accountId, long cohortId, CancellationToken cancellationToken = default);
+
+        Task<GetUserAccountsResponse> GetEmployerUserAccounts(string email, string userId);
     }
 }

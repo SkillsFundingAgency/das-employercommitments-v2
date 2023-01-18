@@ -36,9 +36,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
 
         public bool IsContinuation { get; set; }
         public bool HasMultipleDeliveryModelOptions { get; set; }
+        public bool HasUnavailableDeliveryModel { get; set; }
         public bool? RecognisePriorLearning { get; set; }
         public int? DurationReducedBy { get; set; }
         public int? PriceReducedBy { get; set; }
         public bool RecognisingPriorLearningStillNeedsToBeConsidered { get; set; }
+        public bool? IsOnFlexiPaymentPilot { get; set; }
+        public DateTime? ActualStartDate { get; set; }
     }
 }

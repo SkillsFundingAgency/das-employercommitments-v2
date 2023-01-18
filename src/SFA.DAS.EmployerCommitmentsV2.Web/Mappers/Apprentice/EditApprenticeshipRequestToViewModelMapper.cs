@@ -97,7 +97,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
         private bool IsLiveAndIsNotWithInFundingPeriod(GetApprenticeshipResponse apprenticeship)
         {
-            return IsLive(apprenticeship) && !IsWithInFundingPeriod(apprenticeship.StartDate);
+            return IsLive(apprenticeship) && !IsWithInFundingPeriod(apprenticeship.StartDate.Value);
         }
 
         private bool IsWaitingToStart(GetApprenticeshipResponse apprenticeship)

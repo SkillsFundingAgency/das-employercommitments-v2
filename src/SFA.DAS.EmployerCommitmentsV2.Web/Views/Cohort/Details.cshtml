@@ -15,7 +15,31 @@
 <div class="govuk-grid-row">
     <div>
 
-        @if (!Model.IsAgreementSigned || !Model.IsCompleteForEmployer || Model.HasOverlappingUln || Model.HasEmailOverlaps)
+        @if (Model.ShowRofjaaRemovalBanner)
+        {
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <div class="govuk-notification-banner">
+                        <div class="govuk-notification-banner__header">
+                            <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                                Important
+                            </h2>
+                        </div>
+                        <div class="govuk-notification-banner__content">
+                            <p class="govuk-notification-banner__heading">
+                                <strong>You are no longer on the Register of Flexi-Job Apprenticeship Agencies</strong>
+                            </p>
+                            <p>
+                                You need to edit the delivery model for each Flexi-Job Apprenticeship or delete them.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        }
+
+        @if ((!Model.IsAgreementSigned || !Model.IsCompleteForEmployer || Model.HasOverlappingUln || Model.HasEmailOverlaps) && !Model.ShowRofjaaRemovalBanner)
         {
             <div class="govuk-notification-banner">
                 <div class="govuk-notification-banner__header">
@@ -55,7 +79,9 @@
             <dt class="das-definition-list__title govuk-!-margin-bottom-4">Organisation</dt>
             <dd class="das-definition-list__definition govuk-!-margin-bottom-4">@Model.LegalEntityName</dd>
             <dt class="das-definition-list__title">Reference</dt>
-            <dd class="das-definition-list__definition">@Model.CohortReference</dd>
+            <dd class="das-definition-list__definition govuk-!-margin-bottom-4">@Model.CohortReference</dd>
+            <dt class="das-definition-list__title govuk-!-margin-bottom-4">Status</dt>
+            <dd id="cohortStatus" class="das-definition-list__definition">@Model.Status</dd>
         </dl>
 
         <h2 class="govuk-heading-s">Message from @Model.ProviderName:</h2>
@@ -303,7 +329,7 @@
                 <button type="submit" id="continue-button" class="govuk-button">Save and submit</button>
 
                 <p>
-                    <a href="@Url.RouteUrl("Review", new {Model.AccountHashedId })" class="govuk-link">Save and exit</a>
+                    <a href="@Url.RouteUrl("Review", new { Model.AccountHashedId })" class="govuk-link">Save and exit</a>
                 </p>
 
             </form>
@@ -313,6 +339,6 @@
 </div>
 
 @section Back
-{
+    {
     <div class="das-js-back-link"></div>
 }

@@ -155,5 +155,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _cohort.WithParty = Party.Provider;
             Assert.ThrowsAsync<CohortEmployerUpdateDeniedException>(() => _mapper.Map(_source));
         }
+
+        [Test]
+        public void IsOnFlexiPaymentPilotIsFalse()
+        {
+            Assert.IsFalse(_result.IsOnFlexiPaymentPilot);
+        }
+
+        [Test]
+        public void ShowTrainingDetailsIsMappedCorrectly()
+        {
+            Assert.AreEqual(_source.ShowTrainingDetails, _result.ShowTrainingDetails);
+        }
     }
 }
