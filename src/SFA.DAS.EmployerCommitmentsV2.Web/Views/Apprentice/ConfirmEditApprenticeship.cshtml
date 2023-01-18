@@ -120,21 +120,26 @@
                                     <td class="govuk-table__cell">@Model.DeliveryModel.ToDescription()</td>
                                 </tr>
                             }
-                            @if (Model.EmploymentEndDate.HasValue && Model.DeliveryModel.Equals(DeliveryModel.PortableFlexiJob))
+
+
+                            if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
                             {
-                                <tr>
-                                    <th scope="row" class="govuk-table__header">Planned end date of this employment</th>
-                                    <td class="govuk-table__cell">@(Model.OriginalApprenticeship.EmploymentEndDate.HasValue ? Model.OriginalApprenticeship.EmploymentEndDate.Value.ToGdsFormat() : "Not applicable")</td>
-                                    <td class="govuk-table__cell">@Model.EmploymentEndDate.Value.ToGdsFormat()</td>
-                                </tr>
-                            }
-                            @if (Model.EmploymentPrice.HasValue && Model.DeliveryModel.Equals(DeliveryModel.PortableFlexiJob))
-                            {
-                                <tr>
-                                    <th scope="row" class="govuk-table__header">Training price for this employment</th>
-                                    <td class="govuk-table__cell">@(Model.OriginalApprenticeship.EmploymentPrice.HasValue ? Model.OriginalApprenticeship.EmploymentPrice.FormatCost() : "Not applicable")</td>
-                                    <td class="govuk-table__cell">@Model.EmploymentPrice.FormatCost()</td>
-                                </tr>
+                                @if (Model.EmploymentEndDate.HasValue)
+                                {
+                                    <tr>
+                                        <th scope="row" class="govuk-table__header">Planned end date of this employment</th>
+                                        <td class="govuk-table__cell">@(Model.OriginalApprenticeship.EmploymentEndDate.HasValue ? Model.OriginalApprenticeship.EmploymentEndDate.Value.ToGdsFormat() : "Not applicable")</td>
+                                        <td class="govuk-table__cell">@Model.EmploymentEndDate.Value.ToGdsFormat()</td>
+                                    </tr>
+                                }
+                                @if (Model.EmploymentPrice.HasValue)
+                                {
+                                    <tr>
+                                        <th scope="row" class="govuk-table__header">Training price for this employment</th>
+                                        <td class="govuk-table__cell">@(Model.OriginalApprenticeship.EmploymentPrice.HasValue ? Model.OriginalApprenticeship.EmploymentPrice.FormatCost() : "Not applicable")</td>
+                                        <td class="govuk-table__cell">@Model.EmploymentPrice.FormatCost()</td>
+                                    </tr>
+                                }
                             }
 
                             @if (!string.IsNullOrWhiteSpace(Model.CourseCode))
