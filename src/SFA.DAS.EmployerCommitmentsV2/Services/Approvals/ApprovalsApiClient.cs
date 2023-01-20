@@ -66,5 +66,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
         {
             return await _client.Get<GetUserAccountsResponse>($"AccountUsers/{userId}/accounts?email={HttpUtility.UrlEncode(email)}");
         }
+
+        public async Task PostCohortDetails(long accountId, long cohortId, PostCohortDetailsRequest request, CancellationToken cancellationToken = default)
+        {
+            await _client.Post<PostCohortDetailsRequest>($"employer/{accountId}/unapproved/{cohortId}", request);
+        }
     }
 }

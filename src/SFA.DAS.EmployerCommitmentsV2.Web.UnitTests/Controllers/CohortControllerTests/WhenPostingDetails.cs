@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,7 +7,6 @@ using NUnit.Framework;
 using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -74,24 +72,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             private readonly CohortController _controller;
             private IActionResult _result;
-            private readonly Mock<ICommitmentsApiClient> _commitmentsApiClient;
 
             private readonly DetailsViewModel _viewModel;
             private readonly long _cohortId;
             private readonly string _accountHashedId;
             private readonly string _accountLegalEntityHashedId;
             private readonly string _linkGeneratorResult;
-            private readonly SendCohortRequest _sendCohortApiRequest;
-            private readonly ApproveCohortRequest _approveCohortApiRequest;
+            private readonly AcknowledgementRequest _acknowledgementRequest;
             private readonly ViewEmployerAgreementRequest _viewEmployerAgreementRequest;
-
+            private readonly Mock<IModelMapper> _modelMapper;
 
             public WhenPostingDetailsFixture()
             {
                 var autoFixture = new Fixture();
-
-                var modelMapper = new Mock<IModelMapper>();
-                _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
+                
                 var linkGenerator = new Mock<ILinkGenerator>();
 
                 _cohortId = autoFixture.Create<long>();
@@ -105,41 +99,31 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                     AccountLegalEntityHashedId = _accountLegalEntityHashedId
                 };
 
-                _sendCohortApiRequest = new SendCohortRequest();
-                _approveCohortApiRequest = new ApproveCohortRequest();
+                _acknowledgementRequest = new AcknowledgementRequest();
                 _viewEmployerAgreementRequest = new ViewEmployerAgreementRequest
                 {
                     AccountHashedId = autoFixture.Create<string>(),
                     AgreementHashedId = autoFixture.Create<string>()
                 };
 
-                modelMapper.Setup(x => x.Map<SendCohortRequest>(It.Is<DetailsViewModel>(vm => vm == _viewModel)))
-                    .ReturnsAsync(_sendCohortApiRequest);
+                _modelMapper = new Mock<IModelMapper>();
 
-                modelMapper.Setup(x => x.Map<ApproveCohortRequest>(It.Is<DetailsViewModel>(vm => vm == _viewModel)))
-                    .ReturnsAsync(_approveCohortApiRequest);
+                _modelMapper.Setup(x => x.Map<AcknowledgementRequest>(It.Is<DetailsViewModel>(vm => vm == _viewModel)))
+                    .ReturnsAsync(_acknowledgementRequest);
 
-                modelMapper.Setup(x =>
+                _modelMapper.Setup(x =>
                         x.Map<ViewEmployerAgreementRequest>(It.Is<DetailsViewModel>(vm => vm == _viewModel)))
                     .ReturnsAsync(_viewEmployerAgreementRequest);
-
-                _commitmentsApiClient.Setup(x => x.SendCohort(It.Is<long>(c => c == _cohortId),
-                        It.Is<SendCohortRequest>(r => r == _sendCohortApiRequest), It.IsAny<CancellationToken>()))
-                    .Returns(Task.CompletedTask);
-
-                _commitmentsApiClient.Setup(x => x.ApproveCohort(It.Is<long>(c => c == _cohortId),
-                        It.Is<ApproveCohortRequest>(r => r == _approveCohortApiRequest), It.IsAny<CancellationToken>()))
-                    .Returns(Task.CompletedTask);
 
                 _linkGeneratorResult = autoFixture.Create<string>();
 
                 linkGenerator.Setup(x => x.AccountsLink(It.IsAny<string>()))
                     .Returns(_linkGeneratorResult);
 
-                _controller = new CohortController(_commitmentsApiClient.Object,
+                _controller = new CohortController(Mock.Of<ICommitmentsApiClient>(),
                     Mock.Of<ILogger<CohortController>>(),
                     linkGenerator.Object,
-                    modelMapper.Object,
+                    _modelMapper.Object,
                     Mock.Of<IAuthorizationService>(),
                     Mock.Of<IEncodingService>(),
                     Mock.Of<IApprovalsApiClient>());
@@ -153,9 +137,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             public void VerifyCohortSentToProvider()
             {
-                _commitmentsApiClient.Verify(x => x.SendCohort(It.Is<long>(c => c == _cohortId),
-                        It.Is<SendCohortRequest>(r => r == _sendCohortApiRequest),
-                        It.IsAny<CancellationToken>()),
+                _modelMapper.Verify(x => x.Map<AcknowledgementRequest>(It.Is<DetailsViewModel>(vm => vm.Selection == CohortDetailsOptions.Send)),
                     Times.Once);
             }
 
@@ -168,9 +150,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             public void VerifyCohortApprovedByEmployer()
             {
-                _commitmentsApiClient.Verify(x => x.ApproveCohort(It.Is<long>(c => c == _cohortId),
-                        It.Is<ApproveCohortRequest>(r => r == _approveCohortApiRequest),
-                        It.IsAny<CancellationToken>()),
+                _modelMapper.Verify(x => x.Map<AcknowledgementRequest>(It.Is<DetailsViewModel>(vm => vm.Selection == CohortDetailsOptions.Approve)),
                     Times.Once);
             }
 
