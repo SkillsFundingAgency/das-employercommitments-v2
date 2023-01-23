@@ -11,7 +11,6 @@
     <PackageReference Include="SFA.DAS.Authorization.CommitmentPermissions" Version="6.0.97" />
     <PackageReference Include="SFA.DAS.Authorization.EmployerFeatures" Version="6.0.97" />
     <PackageReference Include="SFA.DAS.Authorization.EmployerUserRoles" Version="6.0.97" />
-    <PackageReference Include="SFA.DAS.Commitments.Api.Client" Version="99.99.100" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="9.0.2" />
     <PackageReference Include="SFA.DAS.EmployerAccounts.Api.Client" Version="1.6.3167" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />
