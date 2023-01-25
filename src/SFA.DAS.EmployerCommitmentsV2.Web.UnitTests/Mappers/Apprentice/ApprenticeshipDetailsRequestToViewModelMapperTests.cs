@@ -934,6 +934,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Assert
             Assert.AreEqual(expected, result.EnableEdit);
         }
+
+        [Test]
+        public async Task IsOnFlexiPaymentPilotIsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.AreEqual(_apprenticeshipResponse.IsOnFlexiPaymentPilot, result.IsOnFlexiPaymentPilot);
+        }
     }
 
     public static class MockCommitmentsApiExtensions
