@@ -80,9 +80,11 @@
 
         @if (Model.EmailAddressConfirmed == true)
         {
-            @Html.HiddenFor(x => x.Email)
-            <dt class="das-definition-list__title">Email Address</dt>
-            <dd class="das-definition-list__definition govuk-!-margin-bottom-4">@Model.Email</dd>
+            <dl class="das-definition-list">
+                @Html.HiddenFor(x => x.Email)
+                <dt class="das-definition-list__title">Email Address</dt>
+                <dd class="das-definition-list__definition govuk-!-margin-bottom-4">@Model.Email</dd>
+            </dl>
         }
         else if (!string.IsNullOrEmpty(Model.Email))
         {
