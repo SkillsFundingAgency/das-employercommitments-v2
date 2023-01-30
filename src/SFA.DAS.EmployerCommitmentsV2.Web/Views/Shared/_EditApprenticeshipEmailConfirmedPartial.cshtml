@@ -1,0 +1,27 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.CommitmentsV2.Api.Client
+@using SFA.DAS.EmployerCommitmentsV2.Web.Services
+
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditApprenticeshipRequestViewModel
+
+@if (!Model.EmailAddressConfirmedByApprentice)
+{
+    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
+        <label for="email" class="govuk-label govuk-!-font-weight-bold">Email address</label>
+        @Html.ValidationMessageFor(m => m.Email, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email) })
+        <input asp-for="Email" class="govuk-input govuk-!-width-two-thirds" id="email" />
+    </div>
+}
+else
+{
+    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+    <span id="email-readonly" class="govuk-hint">This email address matches the one the apprentice added to their account, so only they can update it.</span>
+    <dl class="das-definition-list">
+        <dt class="das-definition-list__title" asp-for="Email">Email address</dt>
+        <dd class="das-definition-list__definition" id="Email">@Model.Email</dd>
+        @Html.Hidden("Email", Model.Email)
+    </dl>
+}
