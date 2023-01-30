@@ -1,6 +1,7 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared.DraftApprenticeshipViewModel
 
 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
     <label asp-for="Email" class="govuk-label govuk-!-font-weight-bold">Email Address</label>
