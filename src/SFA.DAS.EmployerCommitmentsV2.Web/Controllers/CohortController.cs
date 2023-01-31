@@ -75,16 +75,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             switch (viewModel.Selection)
             {
                 case CohortDetailsOptions.Send:
-                    {
-                        var request = await _modelMapper.Map<SendCohortRequest>(viewModel);
-                        await _commitmentsApiClient.SendCohort(viewModel.CohortId, request);
-                        return RedirectToAction("Sent", new { viewModel.CohortReference, viewModel.AccountHashedId });
-                    }
                 case CohortDetailsOptions.Approve:
                     {
-                        var request = await _modelMapper.Map<ApproveCohortRequest>(viewModel);
-                        await _commitmentsApiClient.ApproveCohort(viewModel.CohortId, request);
-                        return RedirectToAction("Approved", new { viewModel.CohortReference, viewModel.AccountHashedId });
+                        var request = await _modelMapper.Map<AcknowledgementRequest>(viewModel);
+                        var acknowledgementAction = viewModel.Selection == CohortDetailsOptions.Approve ? "Approved" : "Sent";
+                        return RedirectToAction(acknowledgementAction, request);
                     }
                 case CohortDetailsOptions.ViewEmployerAgreement:
                     {
