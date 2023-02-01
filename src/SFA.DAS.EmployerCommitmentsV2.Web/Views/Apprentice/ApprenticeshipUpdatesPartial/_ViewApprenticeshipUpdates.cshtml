@@ -53,7 +53,11 @@
                     </tr>
                 }
 
-                @if (Model.ApprenticeshipUpdates.DeliveryModel == DeliveryModel.PortableFlexiJob || Model.OriginalApprenticeship.DeliveryModel == DeliveryModel.PortableFlexiJob)
+                @if (
+                    (!Model.ApprenticeshipUpdates.DeliveryModel.HasValue && Model.OriginalApprenticeship.DeliveryModel == DeliveryModel.PortableFlexiJob)
+                    ||
+                    (Model.ApprenticeshipUpdates.DeliveryModel.HasValue && Model.ApprenticeshipUpdates.DeliveryModel == DeliveryModel.PortableFlexiJob)
+                )
                 {
                     @if (Model.ApprenticeshipUpdates.EmploymentEndDate.HasValue)
                     {
