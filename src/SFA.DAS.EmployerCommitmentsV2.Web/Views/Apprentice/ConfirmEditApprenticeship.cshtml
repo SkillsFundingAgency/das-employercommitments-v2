@@ -121,8 +121,11 @@
                                 </tr>
                             }
 
-
-                            @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
+                            @if (
+                                (!Model.DeliveryModel.HasValue && Model.OriginalApprenticeship.DeliveryModel.Equals(DeliveryModel.PortableFlexiJob))
+                                ||
+                                (Model.DeliveryModel.HasValue && Model.DeliveryModel.Equals(DeliveryModel.PortableFlexiJob))
+                            )
                             {
                                 @if (Model.EmploymentEndDate.HasValue)
                                 {
