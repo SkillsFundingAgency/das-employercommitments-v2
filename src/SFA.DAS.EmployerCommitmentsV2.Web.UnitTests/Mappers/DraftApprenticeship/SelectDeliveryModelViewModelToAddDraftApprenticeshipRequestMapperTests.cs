@@ -111,11 +111,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         {
             Assert.AreEqual(_source.StartMonthYear, _result.StartMonthYear);
         }
-
-        [Test]
-        public void ShowTrainingDetailsIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.ShowTrainingDetails, _result.ShowTrainingDetails);
-        }
     }
 }
