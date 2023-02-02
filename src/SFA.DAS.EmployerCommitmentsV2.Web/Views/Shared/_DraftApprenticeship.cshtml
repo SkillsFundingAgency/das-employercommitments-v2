@@ -15,7 +15,7 @@
 @{
     var editCourseLabel = "Add";
     var startDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Planned training start date" : "Planned apprenticeship training start date";
-    var endDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Projected training finish date" : "Projected apprenticeship training finish date";
+    var endDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Planned training end date" : "Projected apprenticeship training finish date";
     var multipleDeliveryModels = await DeliveryModelService.HasMultipleDeliveryModels(Model.ProviderId, Model.CourseCode, Model.AccountLegalEntityHashedId);
 
     if (!string.IsNullOrWhiteSpace(Model.CourseCode))
@@ -28,27 +28,64 @@
 
 @if (Model is EditDraftApprenticeshipViewModel)
 {
-    <h1 class="govuk-heading-xl">Edit personal details</h1>
+    <h1 class="govuk-heading-xl">Edit apprentice details</h1>
 }
 else
 {
-    <h1 class="govuk-heading-xl">Add personal details</h1>
+    <h1 class="govuk-heading-xl">Add apprentice details</h1>
 }
 
 <div class="govuk-inset-text">
     <p class="govuk-body">You'll only be able to authorise payments for this apprentice once all the fields have been completed - either by yourself or your training provider.</p>
 </div>
 
+<div>
+    <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
+    <input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
 
-<div class="govuk-form-group">
-    <fieldset class="govuk-fieldset">
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-            Training provider
-        </legend>
-        <div>
-            <span class="govuk-label">@Model.ProviderName</span>
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+        <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+            <dt class="govuk-summary-list__key" id="employer-label">
+                Training provider
+            </dt>
+            <dd class="govuk-summary-list__value" id="employer-value">
+                @Model.ProviderName
+            </dd>
         </div>
-    </fieldset>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key" id="course-label">
+                Training course
+            </dt>
+            <dd class="govuk-summary-list__value" id="course-value">
+                @Model.CourseName
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <button id="change-course-link" type="submit" name="ChangeCourse" value="Edit" class="das-button--inline-link">
+                    @editCourseLabel<span class="govuk-visually-hidden"> apprenticeship training course</span>
+                </button>
+            </dd>
+        </div>
+        
+        @if (multipleDeliveryModels || Model.HasUnavailableFlexiJobDeliveryModel || Model.HasChangedDeliveryModel)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key" id="delivery-model-label">
+                    Delivery model
+                </dt>
+                <dd class="govuk-summary-list__value" id="delivery-model-value">
+                    @Model.DeliveryModel.ToDescription()
+                </dd>
+                @if (!Model.HasChangedDeliveryModel)
+                {
+                    <dd class="govuk-summary-list__actions">
+                        <button id="change-delivery-model-link" type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
+                            Edit<span class="govuk-visually-hidden"> delivery model</span>
+                        </button>
+                    </dd>
+                }
+            </div>
+        }
+    </dl>
 </div>
 
 @Html.HiddenFor(x => x.ProviderId)
@@ -95,7 +132,7 @@ else
 }
 else
 {
-    <h2 class="govuk-heading-m">Apprentice personal details</h2>
+    <h2 class="govuk-heading-l">Apprentice personal details</h2>
 
     <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Uln, "govuk-form-group--error")">
         <label asp-for="Uln" class="govuk-label govuk-!-font-weight-bold">Unique learner number</label>
@@ -108,17 +145,17 @@ else
     <div class="govuk-form-group">
         <fieldset class="govuk-fieldset">
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.FirstName, "govuk-form-group--error")">
-                <label asp-for="FirstName" class="govuk-label">First name</label>
+                <label asp-for="FirstName" class="govuk-label govuk-!-font-weight-bold">First name</label>
                 @Html.ValidationMessageFor(m => m.FirstName, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.FirstName)})
                 <input asp-for="FirstName" class="govuk-input" />
             </div>
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.LastName, "govuk-form-group--error")">
-                <label asp-for="LastName" class="govuk-label">Last name</label>
+                <label asp-for="LastName" class="govuk-label govuk-!-font-weight-bold">Last name</label>
                 @Html.ValidationMessageFor(m => m.LastName, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName)})
                 <input asp-for="LastName" class="govuk-input" />
             </div>
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
-                <label asp-for="Email" class="govuk-label">Email Address</label>
+                <label asp-for="Email" class="govuk-label govuk-!-font-weight-bold">Email Address</label>
                 @Html.ValidationMessageFor(m => m.Email, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email)})
                 <input asp-for="Email" class="govuk-input" />
                 <details class="govuk-details" data-module="govuk-details">
@@ -145,7 +182,7 @@ else
                 Date of birth
             </legend>
             <span id="dob-hint" class="govuk-hint">
-                For example, 31 3 1980
+                For example, 27 3 2001
             </span>
             @Html.ValidationMessageFor(m => m.DateOfBirth, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DateOfBirth)})
             <div class="govuk-date-input" id="DateOfBirth">
@@ -175,49 +212,7 @@ else
     </div>
 }
 
-@if (Model is EditDraftApprenticeshipViewModel)
-{
-    <h1 class="govuk-heading-xl">Edit training details</h1>
-}
-else
-{
-    <h1 class="govuk-heading-xl">Add training details</h1>
-}
-
-@if (!string.IsNullOrWhiteSpace(Model.CourseCode))
-{
-    Model.CourseName = (await CommitmentsApiClient.GetTrainingProgramme(Model.CourseCode)).TrainingProgramme.Name;
-}
-
-<div class="govuk-form-group">
-    <p class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</p>
-    <p class="govuk-body">
-        @Model.CourseName
-        <button id="change-course-link" type="submit" name="ChangeCourse" value="Edit" class="das-button--inline-link">
-            @editCourseLabel<span class="govuk-visually-hidden"> apprenticeship training course</span>
-        </button>
-    </p>
-</div>
-
-@if (multipleDeliveryModels || Model.HasUnavailableFlexiJobDeliveryModel || Model.HasChangedDeliveryModel)
-{
-    <div class="govuk-form-group">
-        <p class="govuk-label govuk-!-font-weight-bold">Delivery model</p>
-        <p class="govuk-body">
-            @Model.DeliveryModel.ToDescription()
-
-            @if (!Model.HasChangedDeliveryModel)
-            {
-                <button id="change-delivery-model-link" type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
-                    Edit<span class="govuk-visually-hidden"> delivery model</span>
-                </button>
-            }
-        </p>
-    </div>
-}
-
-<input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
-<input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
+<h1 class="govuk-heading-l  govuk-!-margin-top-9">Apprentice training details</h1>
 
 @if (!(Model.IsOnFlexiPaymentPilot ?? false))
 {
@@ -227,7 +222,7 @@ else
                 @startDateLabel
             </legend>
             <span id="start-date-hint" class="govuk-hint">
-                For example, 09 2021 <br />
+                For example, 09 2022 <br />
                 The standard version will be based on the planned training start date provided
             </span>
             @Html.ValidationMessageFor(m => m.StartDate, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.StartDate)})
@@ -273,7 +268,7 @@ else
             @endDateLabel
         </legend>
         <span id="finish-date-hint" class="govuk-hint">
-            For example, 09 2019
+            For example, 06 2024
         </span>
         @Html.ValidationMessageFor(m => m.EndDate, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.EndDate) })
         <div class="govuk-date-input" id="EndDate">
