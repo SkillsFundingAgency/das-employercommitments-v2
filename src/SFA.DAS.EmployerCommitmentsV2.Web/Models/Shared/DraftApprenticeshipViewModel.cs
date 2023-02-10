@@ -123,5 +123,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public bool ShowTrainingDetails { get; set; }
         public bool HasUnavailableFlexiJobDeliveryModel { get; set; }
         public bool HasChangedDeliveryModel { get; set; }
+        public bool? EmailAddressConfirmed { get; set; }
     }
 }
