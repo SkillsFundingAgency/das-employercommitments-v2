@@ -210,7 +210,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             //Arrange
             _fixture = new DataLockRequestChangesRequestToViewModelMapperTestsFixture()
-                .WithPriceDataLock();
+                .WithPriceDataLock(DateTime.Now);
 
             //Act
             await _fixture.Map();
@@ -231,6 +231,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             _fixture.VerifyPriceChangesIsEmpty();
+        }
+
+        [Test]
+        public async Task PriceDataLock_With_No_Matching_Price_Episode_Maps_First_Price_Episode()
+        {
+            //Arrange
+            _fixture = new DataLockRequestChangesRequestToViewModelMapperTestsFixture()
+                .WithPriceDataLock(DateTime.Now)
+                .WithPriceEpisode(DateTime.Now.AddDays(1), null, 1000);
+
+            //Act
+            await _fixture.Map();
+
+            //Assert
+            _fixture.VerifyCourseChangesIsEmpty();
         }
     }
 
@@ -456,10 +471,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             return this;
         }
 
-        public DataLockRequestChangesRequestToViewModelMapperTestsFixture WithPriceDataLock()
+        public DataLockRequestChangesRequestToViewModelMapperTestsFixture WithPriceDataLock(DateTime ilrEffectiveFromDate)
         {
             DataLocksWithOnlyPriceMismatch.Add(
-                new DataLock { IsResolved = false, DataLockStatus = Status.Fail, ErrorCode = DataLockErrorCode.Dlock07 });
+                new DataLock { IsResolved = false, DataLockStatus = Status.Fail, ErrorCode = DataLockErrorCode.Dlock07, IlrEffectiveFromDate = ilrEffectiveFromDate });
 
             _dataLockSummariesResponse = AutoFixture.Build<GetDataLockSummariesResponse>()
                 .With(x => x.DataLocksWithCourseMismatch, DataLocksWithCourseMismatch)
@@ -499,6 +514,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         public DataLockRequestChangesRequestToViewModelMapperTestsFixture WithPriceEpisode(DateTime fromDate, DateTime? toDate, decimal cost)
         {
+            PriceEpisodes.Clear();
             PriceEpisodes.Add(
                 new PriceEpisode { FromDate = fromDate, ToDate = toDate, Cost = cost });
 
