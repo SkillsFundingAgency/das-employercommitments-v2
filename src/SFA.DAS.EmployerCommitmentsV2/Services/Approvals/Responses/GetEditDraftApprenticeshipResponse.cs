@@ -43,5 +43,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
         public bool RecognisingPriorLearningStillNeedsToBeConsidered { get; set; }
         public bool? IsOnFlexiPaymentPilot { get; set; }
         public DateTime? ActualStartDate { get; set; }
+        public bool? EmailAddressConfirmed { get; set; }
     }
 }

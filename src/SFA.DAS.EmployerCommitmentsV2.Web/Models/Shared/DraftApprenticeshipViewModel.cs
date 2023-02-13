@@ -122,5 +122,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public DateTime? ActualStartDate { get; set; }
         public bool HasUnavailableFlexiJobDeliveryModel { get; set; }
         public bool HasChangedDeliveryModel { get; set; }
+        public bool? EmailAddressConfirmed { get; set; }
     }
 }

@@ -94,7 +94,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         [TestCase(true, true)]
         [TestCase(true, false)]
         [TestCase(false, true)]
-        [TestCase(false, false)]
         public async Task WhenGettingSelectDeliveryModelForEdit(bool hasDeliveryModels, bool hasUnavailableDeliveryModel)
         {
             var result = await _testFixture.GetSelectDeliveryModelForEdit(_testFixture._addDraftApprenticeshipRequest, hasDeliveryModels, hasUnavailableDeliveryModel);

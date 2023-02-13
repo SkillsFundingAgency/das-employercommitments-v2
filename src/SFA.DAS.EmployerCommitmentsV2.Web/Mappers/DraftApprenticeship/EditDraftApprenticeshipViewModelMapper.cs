@@ -8,7 +8,6 @@ using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 {
-
     public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprenticeshipRequest, IDraftApprenticeshipViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
@@ -49,7 +48,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 LastName = draftApprenticeship.LastName,
                 Email = draftApprenticeship.Email,
                 Uln = draftApprenticeship.Uln,
-                DeliveryModel = (DeliveryModel) draftApprenticeship.DeliveryModel,
+                DeliveryModel = (DeliveryModel)draftApprenticeship.DeliveryModel,
                 CourseCode = draftApprenticeship.CourseCode,
                 StandardUId = draftApprenticeship.StandardUId,
                 Cost = draftApprenticeship.Cost,
@@ -70,6 +69,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 IsOnFlexiPaymentPilot = draftApprenticeship.IsOnFlexiPaymentPilot ?? false,
                 ActualStartDate = draftApprenticeship.ActualStartDate,
                 CourseName = draftApprenticeship.CourseName,
+                EmailAddressConfirmed = draftApprenticeship.EmailAddressConfirmed
             };
         }
     }
