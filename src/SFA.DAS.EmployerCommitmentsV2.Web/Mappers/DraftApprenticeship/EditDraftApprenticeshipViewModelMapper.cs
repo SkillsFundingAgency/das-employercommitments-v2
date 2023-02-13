@@ -68,7 +68,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 HasMultipleDeliveryModelOptions = draftApprenticeship.HasMultipleDeliveryModelOptions,
                 HasUnavailableFlexiJobDeliveryModel = draftApprenticeship.HasUnavailableDeliveryModel && draftApprenticeship.DeliveryModel == EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel.FlexiJobAgency,
                 IsOnFlexiPaymentPilot = draftApprenticeship.IsOnFlexiPaymentPilot ?? false,
-                ActualStartDate = draftApprenticeship.ActualStartDate
+                ActualStartDate = draftApprenticeship.ActualStartDate,
+                EmailAddressConfirmed = draftApprenticeship.EmailAddressConfirmed
             };
         }
     }
