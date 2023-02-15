@@ -42,6 +42,12 @@ else
 <div>
     <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
     <input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
+    <input type="hidden" asp-for="ProviderName" class="govuk-radios__input" value="@Model.ProviderName">
+    
+    @if (!string.IsNullOrWhiteSpace(Model.CourseCode))
+    {
+        Model.CourseName = (await CommitmentsApiClient.GetTrainingProgramme(Model.CourseCode)).TrainingProgramme.Name;
+    }
 
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">
         <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
