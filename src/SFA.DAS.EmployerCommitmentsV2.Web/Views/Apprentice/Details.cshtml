@@ -22,6 +22,13 @@
 
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
 
+        @if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
+        {
+            <div class="govuk-inset-text">
+                This apprentice is part of the simplified payments pilot. To change these details, you must contact your training provider.
+            </div>
+        }
+
         @{ if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped && Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
             {
                 <p class="govuk-body">
@@ -60,7 +67,7 @@
                     </td>
 
                     <td id="editStatusLink" class="govuk-table__cell das-table-cell-width-15 govuk-table__cell--numeric">
-                        @if (Model.CanEditStatus)
+                        @if (Model.CanEditStatus && !Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
                         {
                             <a id="edit-status-link" href="@Url.Action("ChangeStatus", new ChangeStatusRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link">Edit status</a>
                         }
@@ -126,7 +133,7 @@
                 <tr>
                     <th scope="row" class="govuk-table__header">Training provider</th>
                     <td class="govuk-table__cell">@Model.ProviderName</td>
-                    @if (Model.ShowChangeTrainingProviderLink)
+                    @if (Model.ShowChangeTrainingProviderLink && !Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
                     {
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <a id="change-training-provider-link" class="govuk-link" href="@Url.Action("ChangeProviderInform", new  ChangeProviderInformRequest{ AccountHashedId = Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change<span class="govuk-visually-hidden"> training provider</span></a>
@@ -173,7 +180,7 @@
                 <h2 class="govuk-heading-m">Apprentice details</h2>
             </div>
             <div class="govuk-grid-column-one-third das-!-text-align-right--from-tablet">
-                @if (Model.EnableEdit)
+                @if (Model.EnableEdit && !Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
                 {
                     <a id="edit-apprentice-link" href="@Url.Action("EditApprenticeship", new { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link govuk-body">Edit<span class="govuk-visually-hidden"> apprentice details</span></a>
                 }
@@ -244,7 +251,7 @@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header"> Version </th>
                         <td id="version" class="govuk-table__cell" colspan="2">@Model.Version </td>
-                        @if (Model.EnableEdit && Model.HasNewerVersions)
+                        @if (Model.EnableEdit && Model.HasNewerVersions && !Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
                         {
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion)">Change</a>

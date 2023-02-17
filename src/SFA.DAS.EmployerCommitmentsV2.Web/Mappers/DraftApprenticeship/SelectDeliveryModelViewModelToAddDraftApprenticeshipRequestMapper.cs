@@ -31,8 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 DeliveryModel = source.DeliveryModel,
                 ProviderId = cohort.ProviderId.Value,
                 ReservationId = source.ReservationId.HasValue ? source.ReservationId.Value : System.Guid.Empty,
-                StartMonthYear = source.StartMonthYear,
-                ShowTrainingDetails = source.ShowTrainingDetails
+                StartMonthYear = source.StartMonthYear
             };
         }
     }

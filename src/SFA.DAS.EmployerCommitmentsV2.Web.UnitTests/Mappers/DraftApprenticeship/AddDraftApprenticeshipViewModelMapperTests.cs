@@ -161,11 +161,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         {
             Assert.IsFalse(_result.IsOnFlexiPaymentPilot);
         }
-
-        [Test]
-        public void ShowTrainingDetailsIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.ShowTrainingDetails, _result.ShowTrainingDetails);
-        }
     }
 }
