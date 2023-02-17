@@ -19,7 +19,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         public Origin Origin { get; set; }
         public bool AutoCreated { get; set; }
         public DeliveryModel? DeliveryModel { get; set; }
-        public bool ShowTrainingDetails { get; set; }
 
         [FromQuery]
         public string EncodedPledgeApplicationId { get; set; }
