@@ -26,6 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
             {
                 var govConfig = configuration.GetSection(ConfigurationKeys.GovUkSignInConfiguration);
                 services.Configure<GovUkOidcConfiguration>(configuration.GetSection("GovUkOidcConfiguration"));
+                govConfig["ResourceEnvironmentName"] = configuration["ResourceEnvironmentName"];
                 services.AddTransient<ICustomClaims, EmployerUserAccountPostAuthenticationHandler>();
                 services.AddAndConfigureGovUkAuthentication(govConfig,
                     $"{typeof(AuthenticationStartup).Assembly.GetName().Name}.Auth",
