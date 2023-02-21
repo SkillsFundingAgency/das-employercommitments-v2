@@ -313,6 +313,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(expectedIsLockedForUpdated, viewModel.IsLockedForUpdate);
         }
 
+        [TestCase(ApprenticeshipStatus.Paused, false)]
+        public async Task IsLockedForUpdate_IsWaitingToStart_Is_Mapped_With_ApprenticeshipStatus_And_IsNotWithInFundingPeriod_Condition(ApprenticeshipStatus status, bool expectedIsLockedForUpdated)
+        {
+            _fixture.NotTransferSender()
+                .IsWaitingToStartAndIsNotWithInFundingPeriod()
+                .SetApprenticeshipStatus(status)
+                .SetDataLockSuccess(false);
+
+            //Act
+            var viewModel = await _fixture.Map();
+
+            //Assert
+            Assert.AreEqual(expectedIsLockedForUpdated, viewModel.IsLockedForUpdate);
+        }
+
         [TestCase(ApprenticeshipStatus.WaitingToStart, true, true)]
         [TestCase(ApprenticeshipStatus.WaitingToStart, false, false)]
         public async Task IsLockedForUpdate_Is_Mapped_With_ApprenticeshipStatus_And_IsFundedByTransfer_And_HasDataLockSuccess_Condition(ApprenticeshipStatus status, bool hasHadDataLockSuccess, bool expectedIsLockedForUpdated)
@@ -577,6 +592,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             // Make the DateTime Now earlier than LastAcademicYearFundingPeriod
             _mockAcademicYearDateProvider.Setup(t => t.LastAcademicYearFundingPeriod).Returns(DateTime.Now.AddMonths(2));
+
+            return this;
+        }
+
+        internal EditApprenticeshipRequestToViewModelMapperTestsFixture IsWaitingToStartAndIsNotWithInFundingPeriod()
+        {
+            ApprenticeshipResponse.StartDate = DateTime.Now.AddMonths(+1);
+            ApprenticeshipResponse.EndDate = DateTime.Now.AddYears(1);
+
+            _mockCurrentDateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.Now);
+
+            // Make the start date later than CurrentAcademicYearStartDate
+            _mockAcademicYearDateProvider.Setup(t => t.CurrentAcademicYearStartDate).Returns(ApprenticeshipResponse.StartDate.Value.AddMonths(+1));
+
+            // Make the DateTime Now earlier than LastAcademicYearFundingPeriod
+            _mockAcademicYearDateProvider.Setup(t => t.LastAcademicYearFundingPeriod).Returns(DateTime.Now.AddMonths(-1));
 
             return this;
         }
