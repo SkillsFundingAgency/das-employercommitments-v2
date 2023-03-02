@@ -137,7 +137,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     DurationReducedBy = apprenticeship.DurationReducedBy,
                     PriceReducedBy = apprenticeship.PriceReducedBy,
                     HasPendingOverlappingTrainingDateRequest = hasPendingoverlappingTrainingDateRequest,
-                    HasMultipleDeliveryModelOptions = apprenticeshipDetails.HasMultipleDeliveryModelOptions
+                    HasMultipleDeliveryModelOptions = apprenticeshipDetails.HasMultipleDeliveryModelOptions,
+                    IsOnFlexiPaymentPilot = apprenticeship.IsOnFlexiPaymentPilot
                 };
 
                 return result;

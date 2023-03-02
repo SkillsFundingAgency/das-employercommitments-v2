@@ -41,6 +41,16 @@
 
             <button type="submit" id="defaultButton" aria-hidden="true" class="govuk-visually-hidden" tabindex="-1"></button>
 
+            @if (!string.IsNullOrEmpty(Model.Email))
+            {
+                <div class="govuk-inset-text">
+                    <p>Please note</p>
+                    <p>
+                        Apprentices will be alerted about any changes made to their details and will need to re-confirm their apprenticeship details on the My apprenticeship service.
+                    </p>
+                </div>
+            }
+
             @if (Model.IsContinuation)
             {
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
@@ -57,12 +67,10 @@
                     @Html.Hidden("LastName", Model.LastName)
                 </dl>
 
-                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
-                <dl class="das-definition-list">
-                    <dt class="das-definition-list__title" asp-for="LastName">Email address</dt>
-                    <dd class="das-definition-list__definition" id="lastName">@Model.Email</dd>
-                    @Html.Hidden("Email", Model.Email)
-                </dl>
+                @if (!string.IsNullOrEmpty(Model.Email))
+                {
+                    <partial name="_EditApprenticeshipEmailConfirmedPartial" />
+                }
 
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
                 <dl class="das-definition-list">
@@ -75,16 +83,6 @@
             }
             else
             {
-                @if (!string.IsNullOrEmpty(Model.Email))
-                {
-                    <div class="govuk-inset-text">
-                        <p>Please note</p>
-                        <p>
-                            Apprentices will be alerted about any changes made to their details and will need to re-confirm their apprenticeship details on the My apprenticeship service.
-                        </p>
-                    </div>
-                }
-
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.FirstName, "govuk-form-group--error")">
                     <label for="firstName" class="govuk-label govuk-!-font-weight-bold">First name</label>
                     @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.FirstName) })
@@ -97,24 +95,7 @@
                 </div>
                 @if (!string.IsNullOrEmpty(Model.Email) || Model.EmailShouldBePresent)
                 {
-                    @if (!Model.EmailAddressConfirmedByApprentice)
-                    {
-                        <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
-                            <label for="email" class="govuk-label govuk-!-font-weight-bold">Email address</label>
-                            @Html.ValidationMessageFor(m => m.Email, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email) })
-                            <input asp-for="Email" class="govuk-input govuk-!-width-two-thirds" id="email" />
-                        </div>
-                    }
-                    else
-                    {
-                        <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
-                        <span id="email-readonly" class="govuk-hint">This email address matches the one the apprentice added to their account, so only they can update it.</span>
-                        <dl class="das-definition-list">
-                            <dt class="das-definition-list__title" asp-for="Email">Email address</dt>
-                            <dd class="das-definition-list__definition" id="Email">@Model.Email</dd>
-                            @Html.Hidden("Email", Model.Email)
-                        </dl>
-                    }
+                    <partial name="_EditApprenticeshipEmailConfirmedPartial" />
                 }
 
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />

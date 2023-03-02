@@ -83,6 +83,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                         .OrderByDescending(m => m.FromDate)
                         .FirstOrDefault(m => m.FromDate <= dataLock.IlrEffectiveFromDate);
 
+                    if (previousPriceEpisode == null)
+                    {
+                        previousPriceEpisode = priceEpisodes
+                            .OrderByDescending(m => m.FromDate)
+                            .FirstOrDefault();
+                    }
+
                     return new DataLockPriceChange
                     {
                         CurrentStartDate = previousPriceEpisode?.FromDate ?? DateTime.MinValue,

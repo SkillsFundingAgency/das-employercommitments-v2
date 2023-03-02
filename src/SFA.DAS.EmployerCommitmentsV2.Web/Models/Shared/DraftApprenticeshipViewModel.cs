@@ -120,8 +120,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public bool? HasMultipleDeliveryModelOptions { get; set; }
         public bool? IsOnFlexiPaymentPilot { get; set; }
         public DateTime? ActualStartDate { get; set; }
-        public bool ShowTrainingDetails { get; set; }
         public bool HasUnavailableFlexiJobDeliveryModel { get; set; }
         public bool HasChangedDeliveryModel { get; set; }
+        public bool? EmailAddressConfirmed { get; set; }
     }
 }

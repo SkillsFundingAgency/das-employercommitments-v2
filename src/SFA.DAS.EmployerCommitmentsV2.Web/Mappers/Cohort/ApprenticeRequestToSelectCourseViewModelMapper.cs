@@ -34,8 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 ReservationId = source.ReservationId,
                 StartMonthYear = source.StartMonthYear,
                 DeliveryModel = source.DeliveryModel,
-                TransferSenderId = source.TransferSenderId,
-                ShowTrainingDetails = source.ShowTrainingDetails
+                TransferSenderId = source.TransferSenderId
             };
         }
     }

@@ -142,6 +142,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         }
 
         [Test]
+        public void EmailAddressConfirmedIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeshipResponse.EmailAddressConfirmed, _result.EmailAddressConfirmed);
+        }
+
+        [Test]
         public void DateOfBirthIsMappedCorrectly()
         {
             Assert.AreEqual(_draftApprenticeshipResponse.DateOfBirth, _result.DateOfBirth.Date);
