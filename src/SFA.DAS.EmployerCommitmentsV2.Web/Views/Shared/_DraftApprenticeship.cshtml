@@ -39,60 +39,64 @@ else
     <p class="govuk-body">You'll only be able to authorise payments for this apprentice once all the fields have been completed - either by yourself or your training provider.</p>
 </div>
 
-<div>
-    <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
-    <input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
-    <input type="hidden" asp-for="ProviderName" class="govuk-radios__input" value="@Model.ProviderName">
-    
-    @if (!string.IsNullOrWhiteSpace(Model.CourseCode))
-    {
-        Model.CourseName = (await CommitmentsApiClient.GetTrainingProgramme(Model.CourseCode)).TrainingProgramme.Name;
-    }
 
-    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-        <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
-            <dt class="govuk-summary-list__key" id="employer-label">
-                Training provider
-            </dt>
-            <dd class="govuk-summary-list__value" id="employer-value">
-                @Model.ProviderName
-            </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key" id="course-label">
-                Training course
-            </dt>
-            <dd class="govuk-summary-list__value" id="course-value">
-                @Model.CourseName
-            </dd>
-            <dd class="govuk-summary-list__actions">
-                <button id="change-course-link" type="submit" name="ChangeCourse" value="Edit" class="das-button--inline-link">
-                    @editCourseLabel<span class="govuk-visually-hidden"> apprenticeship training course</span>
-                </button>
-            </dd>
-        </div>
-        
-        @if (multipleDeliveryModels || Model.HasUnavailableFlexiJobDeliveryModel || Model.HasChangedDeliveryModel)
+@if (!(Model is EditDraftApprenticeshipViewModel && ((EditDraftApprenticeshipViewModel)Model).IsChangeOfProviderScenario.GetValueOrDefault()))
+{
+    <div>
+        <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
+        <input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
+        <input type="hidden" asp-for="ProviderName" class="govuk-radios__input" value="@Model.ProviderName">
+    
+        @if (!string.IsNullOrWhiteSpace(Model.CourseCode))
         {
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key" id="delivery-model-label">
-                    Delivery model
-                </dt>
-                <dd class="govuk-summary-list__value" id="delivery-model-value">
-                    @Model.DeliveryModel.ToDescription()
-                </dd>
-                @if (!Model.HasChangedDeliveryModel)
-                {
-                    <dd class="govuk-summary-list__actions">
-                        <button id="change-delivery-model-link" type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
-                            Edit<span class="govuk-visually-hidden"> delivery model</span>
-                        </button>
-                    </dd>
-                }
-            </div>
+            Model.CourseName = (await CommitmentsApiClient.GetTrainingProgramme(Model.CourseCode)).TrainingProgramme.Name;
         }
-    </dl>
-</div>
+
+        <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+            <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+                <dt class="govuk-summary-list__key" id="employer-label">
+                    Training provider
+                </dt>
+                <dd class="govuk-summary-list__value" id="employer-value">
+                    @Model.ProviderName
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key" id="course-label">
+                    Training course
+                </dt>
+                <dd class="govuk-summary-list__value" id="course-value">
+                    @Model.CourseName
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <button id="change-course-link" type="submit" name="ChangeCourse" value="Edit" class="das-button--inline-link">
+                        @editCourseLabel<span class="govuk-visually-hidden"> apprenticeship training course</span>
+                    </button>
+                </dd>
+            </div>
+        
+            @if (multipleDeliveryModels || Model.HasUnavailableFlexiJobDeliveryModel || Model.HasChangedDeliveryModel)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key" id="delivery-model-label">
+                        Delivery model
+                    </dt>
+                    <dd class="govuk-summary-list__value" id="delivery-model-value">
+                        @Model.DeliveryModel.ToDescription()
+                    </dd>
+                    @if (!Model.HasChangedDeliveryModel)
+                    {
+                        <dd class="govuk-summary-list__actions">
+                            <button id="change-delivery-model-link" type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
+                                Edit<span class="govuk-visually-hidden"> delivery model</span>
+                            </button>
+                        </dd>
+                    }
+                </div>
+            }
+        </dl>
+    </div>
+}
 
 @Html.HiddenFor(x => x.ProviderId)
 @Html.HiddenFor(x => x.AccountLegalEntityHashedId)

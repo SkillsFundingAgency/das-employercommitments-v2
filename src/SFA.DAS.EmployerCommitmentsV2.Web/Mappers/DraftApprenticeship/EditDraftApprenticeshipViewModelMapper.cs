@@ -69,7 +69,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 IsOnFlexiPaymentPilot = draftApprenticeship.IsOnFlexiPaymentPilot ?? false,
                 ActualStartDate = draftApprenticeship.ActualStartDate,
                 CourseName = draftApprenticeship.CourseName,
-                EmailAddressConfirmed = draftApprenticeship.EmailAddressConfirmed
+                EmailAddressConfirmed = draftApprenticeship.EmailAddressConfirmed,
+                IsChangeOfProviderScenario = draftApprenticeship.IsChangeOfProviderScenario
             };
         }
     }
