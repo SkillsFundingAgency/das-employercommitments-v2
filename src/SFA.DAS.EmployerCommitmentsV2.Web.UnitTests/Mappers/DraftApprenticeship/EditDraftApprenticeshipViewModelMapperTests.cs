@@ -60,14 +60,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _draftApprenticeshipResponse = autoFixture.Create<GetEditDraftApprenticeshipResponse>();
             _draftApprenticeshipResponse.IsContinuation = false;
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-
+            
             _commitmentsApiClient
                 .Setup(x => x.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse
                 {
                     TrainingProgrammes = _standardTrainingProgrammes
                 });
-
+            
             _commitmentsApiClient
                 .Setup(x => x.GetAllTrainingProgrammes(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new GetAllTrainingProgrammesResponse
@@ -306,12 +306,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public void ActualStartDateIsMappedCorrectly()
         {
             Assert.AreEqual(_draftApprenticeshipResponse.ActualStartDate, _result.ActualStartDate);
-        }
-
-        [Test]
-        public void ChangeOfProviderIsMappedCorrectly()
-        {
-            Assert.AreEqual(_draftApprenticeshipResponse.IsChangeOfProviderScenario, _result.IsChangeOfProviderScenario);
         }
     }
 }
