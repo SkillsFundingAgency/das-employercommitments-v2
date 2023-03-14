@@ -1,14 +1,10 @@
 using System;
-using System.Threading;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.Testing;
-using AddDraftApprenticeshipRequest = SFA.DAS.CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -71,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Mapper = new AddDraftApprenticeshipRequestMapper();
         }
 
-        public AddDraftApprenticeshipRequest Map()
+        public AddDraftApprenticeshipApimRequest Map()
         {
             return Mapper.Map(ViewModel).Result;
         }

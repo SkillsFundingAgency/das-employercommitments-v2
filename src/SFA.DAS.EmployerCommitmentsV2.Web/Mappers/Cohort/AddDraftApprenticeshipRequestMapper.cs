@@ -1,15 +1,15 @@
 using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using AddDraftApprenticeshipRequest = SFA.DAS.CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class AddDraftApprenticeshipRequestMapper : IMapper<AddDraftApprenticeshipViewModel, AddDraftApprenticeshipRequest>
+    public class AddDraftApprenticeshipRequestMapper : IMapper<AddDraftApprenticeshipViewModel, AddDraftApprenticeshipApimRequest>
     {
-       public Task<AddDraftApprenticeshipRequest> Map(AddDraftApprenticeshipViewModel source)
+       public Task<AddDraftApprenticeshipApimRequest> Map(AddDraftApprenticeshipViewModel source)
         {
-            return Task.FromResult(new AddDraftApprenticeshipRequest
+            return Task.FromResult(new AddDraftApprenticeshipApimRequest
             {
                 UserId = "X", // TODO: Remove this from the request as it's not required
                 ProviderId = 1, // TODO: Remove this from the request as it's not required

@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {
@@ -54,7 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             await TestAsync(
                 f => f.Post(),
-                f => f.CommitmentsApiClient.Verify(c => c.AddDraftApprenticeship(f.ViewModel.CohortId.Value, f.AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>())));
+                f => f.OuterApiClient.Verify(c => c.AddDraftApprenticeship(f.ViewModel.CohortId.Value, f.AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>())));
         }
 
         [Test]
@@ -72,7 +73,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public CohortDetails Cohort { get; set; }
         public AddDraftApprenticeshipRequest Request { get; set; }
         public AddDraftApprenticeshipViewModel ViewModel { get; set; }
-        public CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest AddDraftApprenticeshipRequest { get; set; }
+        public AddDraftApprenticeshipApimRequest AddDraftApprenticeshipRequest { get; set; }
         public IEnumerable<TrainingProgramme> StandardCourses { get; set; }
         public IEnumerable<TrainingProgramme> Courses { get; set; }
         public string CohortDetailsUrl { get; set; }
@@ -120,7 +121,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 CourseCode = Request.CourseCode
             };
 
-            AddDraftApprenticeshipRequest = new CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest();
+            AddDraftApprenticeshipRequest = new AddDraftApprenticeshipApimRequest();
             StandardCourses = new List<TrainingProgramme>();
             Courses = new List<TrainingProgramme>();
             CohortDetailsUrl = $"accounts/{Request.AccountHashedId}/apprentices/{Request.CohortReference}/details";
@@ -145,10 +146,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammes(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammesResponse{TrainingProgrammes = Courses});
             CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammeStandards(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse{TrainingProgrammes = StandardCourses});
-            CommitmentsApiClient.Setup(c => c.AddDraftApprenticeship(ViewModel.CohortId.Value, AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new AddDraftApprenticeshipResponse { DraftApprenticeshipId = 123456 });
+            OuterApiClient.Setup(c => c.AddDraftApprenticeship(ViewModel.CohortId.Value, AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new EmployerCommitmentsV2.Services.Approvals.Responses.AddDraftApprenticeshipResponse { DraftApprenticeshipId = 123456 });
 
-            ModelMapper.Setup(m => m.Map<CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest>(ViewModel)).Returns(Task.FromResult(AddDraftApprenticeshipRequest));
+            ModelMapper.Setup(m => m.Map<AddDraftApprenticeshipApimRequest>(ViewModel)).Returns(Task.FromResult(AddDraftApprenticeshipRequest));
 
             ModelMapper.Setup(m => m.Map<AddDraftApprenticeshipViewModel>(It.IsAny<AddDraftApprenticeshipRequest>())).ReturnsAsync(ViewModel);
         }
