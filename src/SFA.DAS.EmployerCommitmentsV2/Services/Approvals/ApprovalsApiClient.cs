@@ -76,5 +76,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
         {
             return await _client.Post<AddDraftApprenticeshipResponse>($"cohorts/{cohortId}/draft-apprenticeships", request);
         }
+
+        public async Task<CreateCohortResponse> CreateCohort(CreateCohortApimRequest request, CancellationToken cancellationToken = default)
+        {
+            return await _client.Post<CreateCohortResponse>($"cohorts", request);
+        }
     }
 }

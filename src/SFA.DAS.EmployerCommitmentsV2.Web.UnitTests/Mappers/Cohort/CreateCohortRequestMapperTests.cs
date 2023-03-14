@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using AutoFixture;
 using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
@@ -13,7 +13,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     {
         private CreateCohortRequestMapper _mapper;
         private ApprenticeViewModel _source;
-        private CreateCohortRequest _result;
+        private CreateCohortApimRequest _result;
 
         [SetUp]
         public async Task Arrange()

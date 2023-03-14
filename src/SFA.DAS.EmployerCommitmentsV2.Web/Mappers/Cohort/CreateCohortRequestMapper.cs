@@ -1,16 +1,16 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
     public class CreateCohortRequestMapper : 
-        IMapper<ApprenticeViewModel, CreateCohortRequest>
+        IMapper<ApprenticeViewModel, CreateCohortApimRequest>
     {
-        public Task<CreateCohortRequest> Map(ApprenticeViewModel source)
+        public Task<CreateCohortApimRequest> Map(ApprenticeViewModel source)
         {
-            return Task.FromResult(new CreateCohortRequest
+            return Task.FromResult(new CreateCohortApimRequest
             {
                 AccountId = source.AccountId,
                 AccountLegalEntityId = source.AccountLegalEntityId,
