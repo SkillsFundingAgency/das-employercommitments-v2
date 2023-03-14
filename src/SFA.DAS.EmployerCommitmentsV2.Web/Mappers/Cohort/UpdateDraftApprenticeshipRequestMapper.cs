@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class UpdateDraftApprenticeshipRequestMapper : IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipRequest>
+    public class UpdateDraftApprenticeshipRequestMapper : IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipApimRequest>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
 
@@ -15,11 +15,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             _commitmentsApiClient = commitmentsApiClient;
         }
 
-        public async Task<UpdateDraftApprenticeshipRequest> Map(EditDraftApprenticeshipViewModel source)
+        public async Task<UpdateDraftApprenticeshipApimRequest> Map(EditDraftApprenticeshipViewModel source)
         {
             var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(source.CohortId.Value, source.DraftApprenticeshipId);
 
-            return new UpdateDraftApprenticeshipRequest
+            return new UpdateDraftApprenticeshipApimRequest
             {
                 ReservationId = source.ReservationId,
                 FirstName = source.FirstName,

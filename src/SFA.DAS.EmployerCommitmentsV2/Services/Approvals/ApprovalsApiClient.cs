@@ -66,5 +66,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
         {
             await _client.Post<PostCohortDetailsRequest>($"employer/{accountId}/unapproved/{cohortId}", request);
         }
+
+        public async Task UpdateDraftApprenticeship(long cohortId, long apprenticeshipId, UpdateDraftApprenticeshipApimRequest request, CancellationToken cancellationToken = default)
+        {
+            await _client.Post<PostCohortDetailsRequest>($"cohorts/{cohortId}/draft-apprenticeships/{apprenticeshipId}", request);
+        }
     }
 }

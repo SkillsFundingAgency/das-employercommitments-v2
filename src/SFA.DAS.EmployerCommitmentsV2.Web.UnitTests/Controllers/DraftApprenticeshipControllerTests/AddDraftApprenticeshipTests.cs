@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {
@@ -77,6 +78,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public string CohortDetailsUrl { get; set; }
         public CommitmentsApiModelException CommitmentsApiModelException { get; set; }
         public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
+        public Mock<IApprovalsApiClient> OuterApiClient { get; set; }
         public Mock<IModelMapper> ModelMapper { get; set; }
         public Mock<IAuthorizationService> AuthorizationService { get; set; }
         public Mock<IEncodingService> EncodingService { get; set; }
@@ -124,7 +126,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             CohortDetailsUrl = $"accounts/{Request.AccountHashedId}/apprentices/{Request.CohortReference}/details";
             CommitmentsApiModelException = new CommitmentsApiModelException(new List<ErrorDetail> { new ErrorDetail("Foo", "Bar") });
             CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            AuthorizationService = new Mock<IAuthorizationService>();
+            OuterApiClient = new Mock<IApprovalsApiClient>();
             ModelMapper = new Mock<IModelMapper>();
             LinkGenerator = new Mock<ILinkGenerator>();
             EncodingService = new Mock<IEncodingService>();
@@ -136,8 +138,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             Controller = new DraftApprenticeshipController(
                 ModelMapper.Object,
                 CommitmentsApiClient.Object,
-                AuthorizationService.Object,
-                Mock.Of<IEncodingService>());
+                Mock.Of<IEncodingService>(),
+                OuterApiClient.Object);
 
             Controller.TempData = TempData.Object;
 
