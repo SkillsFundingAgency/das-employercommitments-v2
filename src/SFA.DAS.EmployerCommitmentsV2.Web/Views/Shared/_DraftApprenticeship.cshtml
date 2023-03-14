@@ -39,12 +39,12 @@ else
     <p class="govuk-body">You'll only be able to authorise payments for this apprentice once all the fields have been completed - either by yourself or your training provider.</p>
 </div>
 
+<input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
+<input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
+<input type="hidden" asp-for="ProviderName" class="govuk-radios__input" value="@Model.ProviderName">
+
 @if (!Model.IsContinuation){
     <div>
-        <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
-        <input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
-        <input type="hidden" asp-for="ProviderName" class="govuk-radios__input" value="@Model.ProviderName">
-    
         @if (!string.IsNullOrWhiteSpace(Model.CourseCode))
         {
             Model.CourseName = (await CommitmentsApiClient.GetTrainingProgramme(Model.CourseCode)).TrainingProgramme.Name;
