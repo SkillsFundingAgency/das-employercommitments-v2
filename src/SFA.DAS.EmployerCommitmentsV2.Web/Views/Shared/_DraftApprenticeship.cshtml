@@ -191,10 +191,6 @@ else
 
 @if (Model.IsContinuation)
 {
-    @Html.HiddenFor(x => x.DeliveryModel)
-    @Html.HiddenFor(x => x.CourseCode)
-    @Html.HiddenFor(x => x.IsOnFlexiPaymentPilot)
-
     <dl class="das-definition-list">
         <dt class="das-definition-list__title">Apprenticeship training course</dt>
         <dd class="das-definition-list__definition">@Model.Courses.Single(x => x.CourseCode == Model.CourseCode).Name</dd>
