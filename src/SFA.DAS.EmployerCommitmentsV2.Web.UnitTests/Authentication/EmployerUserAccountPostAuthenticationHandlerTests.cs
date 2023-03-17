@@ -20,12 +20,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authentication;
 public class EmployerUserAccountPostAuthenticationHandlerTests
 {
     [Test, MoqAutoData]
-    public async Task Then_The_Claims_Are_Passed_To_The_Api_And_Id_FirstName_LastName_Populated(
+    public async Task Then_The_Claims_Are_Passed_To_The_Api_And_Id_FirstName_LastName_Populated_And_Suspended_Flag_Not_Set(
         string userId, string email,
         GetUserAccountsResponse response,
         [Frozen] Mock<IApprovalsApiClient> approvalsApiClient,
         EmployerUserAccountPostAuthenticationHandler handler)
     {
+        response.IsSuspended = false;
         var tokenValidatedContext = ArrangeTokenValidatedContext(userId, email);
         approvalsApiClient.Setup(x => x.GetEmployerUserAccounts(email, userId)).ReturnsAsync(response);
             
@@ -34,6 +35,23 @@ public class EmployerUserAccountPostAuthenticationHandlerTests
         actual.First(c=>c.Type.Equals(EmployeeClaims.Id)).Value.Should().Be(response.EmployerUserId);
         actual.First(c=>c.Type.Equals(EmployeeClaims.Email)).Value.Should().Be(email);
         actual.First(c=>c.Type.Equals(EmployeeClaims.Name)).Value.Should().Be(response.FirstName + " " + response.LastName);
+        actual.FirstOrDefault(c=>c.Type.Equals(ClaimTypes.AuthorizationDecision))?.Value.Should().BeNullOrEmpty();
+    }
+    
+    [Test, MoqAutoData]
+    public async Task Then_The_Claims_Are_Passed_To_The_Api_And_Id_FirstName_LastName_Populated_And_Suspended_Flag_Set_If_Suspended(
+        string userId, string email,
+        GetUserAccountsResponse response,
+        [Frozen] Mock<IApprovalsApiClient> approvalsApiClient,
+        EmployerUserAccountPostAuthenticationHandler handler)
+    {
+        response.IsSuspended = true;
+        var tokenValidatedContext = ArrangeTokenValidatedContext(userId, email);
+        approvalsApiClient.Setup(x => x.GetEmployerUserAccounts(email, userId)).ReturnsAsync(response);
+            
+        var actual = (await handler.GetClaims(tokenValidatedContext)).ToList();
+
+        actual.FirstOrDefault(c=>c.Type.Equals(ClaimTypes.AuthorizationDecision))?.Value.Should().Be("IsSuspended");
     }
     
     private TokenValidatedContext ArrangeTokenValidatedContext(string nameIdentifier, string emailAddress)
