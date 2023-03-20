@@ -8,6 +8,7 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
@@ -36,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
-            _mapper = new UpdateDraftApprenticeshipRequestMapper(_mockCommitmentsApiClient.Object);
+            _mapper = new UpdateDraftApprenticeshipRequestMapper(_mockCommitmentsApiClient.Object, Mock.Of<IAuthenticationService>());
 
             _source = fixture.Build<EditDraftApprenticeshipViewModel>()
                 .With(x => x.DeliveryModel, DeliveryModel.PortableFlexiJob)
