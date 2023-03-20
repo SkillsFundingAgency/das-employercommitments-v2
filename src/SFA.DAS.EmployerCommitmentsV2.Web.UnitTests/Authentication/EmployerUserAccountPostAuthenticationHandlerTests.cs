@@ -35,7 +35,7 @@ public class EmployerUserAccountPostAuthenticationHandlerTests
         actual.First(c=>c.Type.Equals(EmployeeClaims.Id)).Value.Should().Be(response.EmployerUserId);
         actual.First(c=>c.Type.Equals(EmployeeClaims.Email)).Value.Should().Be(email);
         actual.First(c=>c.Type.Equals(EmployeeClaims.Name)).Value.Should().Be(response.FirstName + " " + response.LastName);
-        actual.FirstOrDefault(c=>c.Type.Equals(ClaimTypes.AuthorizationDecision))?.Value.Should().BeNullOrEmpty();
+        actual.FirstOrDefault(c=>c.Type.Equals(ClaimTypes.AuthorizationDecision)).Should().BeNull();
     }
     
     [Test, MoqAutoData]
@@ -51,7 +51,7 @@ public class EmployerUserAccountPostAuthenticationHandlerTests
             
         var actual = (await handler.GetClaims(tokenValidatedContext)).ToList();
 
-        actual.FirstOrDefault(c=>c.Type.Equals(ClaimTypes.AuthorizationDecision))?.Value.Should().Be("IsSuspended");
+        actual.First(c=>c.Type.Equals(ClaimTypes.AuthorizationDecision)).Value.Should().Be("Suspended");
     }
     
     private TokenValidatedContext ArrangeTokenValidatedContext(string nameIdentifier, string emailAddress)

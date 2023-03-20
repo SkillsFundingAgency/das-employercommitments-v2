@@ -33,6 +33,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authentication
                 new Claim(EmployeeClaims.Email, email),
                 new Claim(EmployeeClaims.Name, $"{result.FirstName} {result.LastName}")
             };
+
+            if (result.IsSuspended)
+            {
+                claims.Add(new Claim(ClaimTypes.AuthorizationDecision, "Suspended"));
+            }
             return claims;
         }
     }
