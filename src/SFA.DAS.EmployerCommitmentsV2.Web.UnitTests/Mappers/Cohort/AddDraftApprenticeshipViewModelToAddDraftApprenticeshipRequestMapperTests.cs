@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 f => f.Map(), 
                 (f, r) =>
                 {
-                    r.ProviderId.Should().Be(f.ViewModel.ProviderId);
+                    r.ProviderId.Should().Be(1);
                     r.FirstName.Should().Be(f.ViewModel.FirstName);
                     r.LastName.Should().Be(f.ViewModel.LastName);
                     r.Email.Should().Be(f.ViewModel.Email);

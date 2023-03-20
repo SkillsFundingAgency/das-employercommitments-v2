@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             return Task.FromResult(new AddDraftApprenticeshipApimRequest
             {
                 UserId = _authenticationService.UserId,
-                ProviderId = source.ProviderId,
+                ProviderId = 1, // TODO: Remove this from the request as it's not required
                 FirstName = source.FirstName,
                 LastName = source.LastName,
                 DateOfBirth = source.DateOfBirth.Date,
