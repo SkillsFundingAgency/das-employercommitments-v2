@@ -24,7 +24,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
         {
             _httpClient = httpClient;
             _config = config;
-            _httpClient.BaseAddress = new Uri(_config.ApiBaseUrl);
             _logger = logger;
         }
 
