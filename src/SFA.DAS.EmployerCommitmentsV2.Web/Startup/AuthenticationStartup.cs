@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,7 @@ using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.GovUK.Auth.AppStart;
+using SFA.DAS.GovUK.Auth.Authentication;
 using SFA.DAS.GovUK.Auth.Configuration;
 using SFA.DAS.GovUK.Auth.Services;
 
@@ -31,6 +33,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 services.AddAndConfigureGovUkAuthentication(govConfig,
                     $"{typeof(AuthenticationStartup).Assembly.GetName().Name}.Auth",
                     typeof(EmployerUserAccountPostAuthenticationHandler));
+
+                services.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
+                
+                services.AddAuthorization(options =>
+                {
+                    options.AddPolicy(
+                        "HasActiveAccount"
+                        , policy =>
+                        {
+                            policy.Requirements.Add(new AccountActiveRequirement());
+                        });
+                });
             }
             else
             {
