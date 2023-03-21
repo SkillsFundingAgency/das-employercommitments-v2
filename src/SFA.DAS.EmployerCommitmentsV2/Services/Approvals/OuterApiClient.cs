@@ -24,7 +24,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
         {
             _httpClient = httpClient;
             _config = config;
-            _httpClient.BaseAddress = new Uri(_config.ApiBaseUrl);
             _logger = logger;
         }
 
@@ -61,24 +60,37 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
 
         public async Task<TResponse> Post<TResponse>(string url, object data)
         {
-            AddHeaders();
-            var stringContent = data != null ? new StringContent(JsonConvert.SerializeObject(data), System.Text.Encoding.UTF8, "application/json") : null;
+            return await PutOrPost<TResponse>(url, data, HttpMethod.Post);
+        }
 
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
+        public async Task<TResponse> Put<TResponse>(string url, object data)
+        {
+            return await PutOrPost<TResponse>(url, data, HttpMethod.Put);
+        }
+
+        private async Task<TResponse> PutOrPost<TResponse>(string url, object data, HttpMethod method)
+        {
+            AddHeaders();
+            var stringContent = data != null
+                ? new StringContent(JsonConvert.SerializeObject(data), System.Text.Encoding.UTF8, "application/json")
+                : null;
+
+            var requestMessage = new HttpRequestMessage(method, url);
             requestMessage.Content = stringContent;
 
             var response = await _httpClient.SendAsync(requestMessage).ConfigureAwait(false);
 
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-           // var errorContent = "";
-            var responseBody = (TResponse)default;
+            // var errorContent = "";
+            var responseBody = (TResponse) default;
 
 
             if (IsNot200RangeResponseCode(response.StatusCode))
             {
                 //Plug this in when moving another Post endpoint which throws domain errors
-                if (response.StatusCode == HttpStatusCode.BadRequest && response.GetSubStatusCode() == HttpSubStatusCode.DomainException)
+                if (response.StatusCode == HttpStatusCode.BadRequest &&
+                    response.GetSubStatusCode() == HttpSubStatusCode.DomainException)
                 {
                     throw CreateApiModelException(response, json);
                 }
@@ -122,5 +134,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
     {
         Task<TResponse> Get<TResponse>(string url);
         Task<TResponse> Post<TResponse>(string url, object data);
+        Task<TResponse> Put<TResponse>(string url, object data);
     }
 }
