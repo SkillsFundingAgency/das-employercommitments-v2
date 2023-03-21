@@ -50,90 +50,57 @@
                     </p>
                 </div>
             }
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.FirstName, "govuk-form-group--error")">
+                <label for="firstName" class="govuk-label govuk-!-font-weight-bold">First name</label>
+                @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.FirstName) })
+                <input asp-for="FirstName" class="govuk-input govuk-!-width-two-thirds" id="firstName" />
+            </div>
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.LastName, "govuk-form-group--error")">
+                <label for="lastName" class="govuk-label govuk-!-font-weight-bold">Last name</label>
+                @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
+                <input asp-for="LastName" class="govuk-input govuk-!-width-two-thirds" id="lastName" />
+            </div>
 
-            @if (Model.IsContinuation)
+            @if (!string.IsNullOrEmpty(Model.Email) || Model.EmailShouldBePresent)
             {
-                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
-                <dl class="das-definition-list">
-                    <dt class="das-definition-list__title" asp-for="FirstName">First Name</dt>
-                    <dd class="das-definition-list__definition" id="firstName">@Model.FirstName</dd>
-                    @Html.Hidden("FirstName", Model.FirstName)
-                </dl>
-
-                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
-                <dl class="das-definition-list">
-                    <dt class="das-definition-list__title" asp-for="LastName">Last Name</dt>
-                    <dd class="das-definition-list__definition" id="lastName">@Model.LastName</dd>
-                    @Html.Hidden("LastName", Model.LastName)
-                </dl>
-
-                @if (!string.IsNullOrEmpty(Model.Email))
-                {
-                    <partial name="_EditApprenticeshipEmailConfirmedPartial" />
-                }
-
-                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
-                <dl class="das-definition-list">
-                    <dt class="das-definition-list__title" asp-for="DateOfBirth">Date of birth</dt>
-                    <dd class="das-definition-list__definition" id="dob">@Model.DateOfBirth.Date.Value.ToGdsFormat()</dd>
-                    @Html.HiddenFor(x => x.BirthDay)
-                    @Html.HiddenFor(x => x.BirthMonth)
-                    @Html.HiddenFor(x => x.BirthYear)
-                </dl>
+                <partial name="_EditApprenticeshipEmailConfirmedPartial" />
             }
-            else
-            {
-                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.FirstName, "govuk-form-group--error")">
-                    <label for="firstName" class="govuk-label govuk-!-font-weight-bold">First name</label>
-                    @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.FirstName) })
-                    <input asp-for="FirstName" class="govuk-input govuk-!-width-two-thirds" id="firstName" />
-                </div>
-                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.LastName, "govuk-form-group--error")">
-                    <label for="lastName" class="govuk-label govuk-!-font-weight-bold">Last name</label>
-                    @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
-                    <input asp-for="LastName" class="govuk-input govuk-!-width-two-thirds" id="lastName" />
-                </div>
-                @if (!string.IsNullOrEmpty(Model.Email) || Model.EmailShouldBePresent)
-                {
-                    <partial name="_EditApprenticeshipEmailConfirmedPartial" />
-                }
 
-                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
-                <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.DateOfBirth, "govuk-form-group--error")">
-                    <fieldset class="govuk-fieldset" aria-describedby="dob-hint" role="group">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                            Date of birth
-                        </legend>
-                        <span id="dob-hint" class="govuk-hint">
-                            For example, 31 3 1980
-                        </span>
-                        @Html.ValidationMessageFor(m => m.DateOfBirth, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DateOfBirth) })
-                        <div class="govuk-date-input">
-                            <div class="govuk-date-input__item">
-                                <div class="govuk-form-group">
-                                    <label for="dob-day" class="govuk-label govuk-date-input__label">Day</label>
-                                    <input asp-for="BirthDay" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="31"
-                                           class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" id="dob-day">
-                                </div>
-                            </div>
-                            <div class="govuk-date-input__item">
-                                <div class="govuk-form-group">
-                                    <label for="dob-month" class="govuk-label govuk-date-input__label">Month</label>
-                                    <input asp-for="BirthMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
-                                           class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" id="dob-month">
-                                </div>
-                            </div>
-                            <div class="govuk-date-input__item">
-                                <div class="govuk-form-group">
-                                    <label for="dob-year" class="govuk-label govuk-date-input__label">Year</label>
-                                    <input asp-for="BirthYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
-                                           class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" id="dob-year">
-                                </div>
+            <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
+            <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.DateOfBirth, "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset" aria-describedby="dob-hint" role="group">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        Date of birth
+                    </legend>
+                    <span id="dob-hint" class="govuk-hint">
+                        For example, 31 3 1980
+                    </span>
+                    @Html.ValidationMessageFor(m => m.DateOfBirth, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DateOfBirth) })
+                    <div class="govuk-date-input">
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label for="dob-day" class="govuk-label govuk-date-input__label">Day</label>
+                                <input asp-for="BirthDay" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="31"
+                                       class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" id="dob-day">
                             </div>
                         </div>
-                    </fieldset>
-                </div>
-            }
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label for="dob-month" class="govuk-label govuk-date-input__label">Month</label>
+                                <input asp-for="BirthMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
+                                       class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" id="dob-month">
+                            </div>
+                        </div>
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label for="dob-year" class="govuk-label govuk-date-input__label">Year</label>
+                                <input asp-for="BirthYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
+                                       class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" id="dob-year">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
 
             <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
             <dl class="das-definition-list">
