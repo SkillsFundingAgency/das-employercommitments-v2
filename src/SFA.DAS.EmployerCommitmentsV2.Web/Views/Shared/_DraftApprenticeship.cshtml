@@ -267,14 +267,41 @@ else
                     <div class="govuk-form-group">
                         <label asp-for="StartMonth" class="govuk-label govuk-date-input__label length-limit">Month</label>
                         <input asp-for="StartMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
-                           class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit">
+                               class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit">
                     </div>
                 </div>
                 <div class="govuk-date-input__item">
                     <div class="govuk-form-group">
                         <label asp-for="StartYear" class="govuk-label govuk-date-input__label">Year</label>
                         <input asp-for="StartYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
-                           class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" />
+                               class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" />
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.EndDate, "govuk-form-group--error")">
+        <fieldset class="govuk-fieldset" aria-describedby="finish-date-hint" role="group">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                @endDateLabel
+            </legend>
+            <span id="finish-date-hint" class="govuk-hint">
+                For example, 06 2024
+            </span>
+            @Html.ValidationMessageFor(m => m.EndDate, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.EndDate) })
+            <div class="govuk-date-input" id="EndDate">
+                <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                        <label asp-for="EndMonth" class="govuk-label govuk-date-input__label">Month</label>
+                        <input asp-for="EndMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
+                               class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" />
+                    </div>
+                </div>
+                <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                        <label asp-for="EndYear" class="govuk-label govuk-date-input__label">Year</label>
+                        <input asp-for="EndYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
+                               class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" />
                     </div>
                 </div>
             </div>
@@ -297,34 +324,21 @@ else
             }
         </span>
     </div>
-}
-<div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.EndDate, "govuk-form-group--error")">
-    <fieldset class="govuk-fieldset" aria-describedby="finish-date-hint" role="group">
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-            @endDateLabel
-        </legend>
-        <span id="finish-date-hint" class="govuk-hint">
-            For example, 06 2024
+    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EndDate, "govuk-form-group--error")">
+        <label asp-for="EndDate" class="govuk-label govuk-!-font-weight-bold">Planned training end date</label>
+        <span id="enddate-hint" class="govuk-hint">
+            @if (@Model.EndDate.HasValue)
+            {
+                <span id="endDate">@Model.EndDate?.Date?.ToGdsFormat()</span>
+                @Html.HiddenFor(x => x.EndDate)
+            }
+            else
+            {
+                <span>This will be added by your Training Provider</span>
+            }
         </span>
-        @Html.ValidationMessageFor(m => m.EndDate, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.EndDate) })
-        <div class="govuk-date-input" id="EndDate">
-            <div class="govuk-date-input__item">
-                <div class="govuk-form-group">
-                    <label asp-for="EndMonth" class="govuk-label govuk-date-input__label">Month</label>
-                    <input asp-for="EndMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
-                           class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit" />
-                </div>
-            </div>
-            <div class="govuk-date-input__item">
-                <div class="govuk-form-group">
-                    <label asp-for="EndYear" class="govuk-label govuk-date-input__label">Year</label>
-                    <input asp-for="EndYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
-                           class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" />
-                </div>
-            </div>
-        </div>
-    </fieldset>
-</div>
+    </div>
+}
 
 @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
 {
