@@ -100,11 +100,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         [Display(Name = "Year")]
         [SuppressArgumentException(nameof(EndDate), "The training end date is not valid")]
         public int? EndYear { get => EndDate.Year; set => EndDate.Year = value; }
-
-        [Display(Name = "Day")]
-        [SuppressArgumentException(nameof(EndDate), "The training end date is not valid")]
-        public int? EndDay { get => EndDate.Day; set => EndDate.Day = value; }
-
+        
         [Display(Name = "Total agreed apprenticeship price (excluding VAT)")]
         [SuppressArgumentException(nameof(Cost), "The apprenticeship price is not valid")]
         public int? Cost { get; set; }
