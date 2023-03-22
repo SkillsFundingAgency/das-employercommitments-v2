@@ -211,54 +211,37 @@ else
 
     <h1 class="govuk-heading-l  govuk-!-margin-top-9">Apprentice training details</h1>
 
-    @if (!(Model.IsOnFlexiPaymentPilot ?? false))
-    {
-        <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.StartDate, "govuk-form-group--error")">
-            <fieldset class="govuk-fieldset" aria-describedby="start-date-hint" role="group">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                    @startDateLabel
-                </legend>
-                <span id="start-date-hint" class="govuk-hint">
-                    For example, 09 2022 <br />
-                    The standard version will be based on the planned training start date provided
-                </span>
-                @Html.ValidationMessageFor(m => m.StartDate, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.StartDate)})
-                <div class="govuk-date-input" id="StartDate">
-                    <div class="govuk-date-input__item">
-                        <div class="govuk-form-group">
-                            <label asp-for="StartMonth" class="govuk-label govuk-date-input__label length-limit">Month</label>
-                            <input asp-for="StartMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
-                                   class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit">
-                        </div>
-                    </div>
-                    <div class="govuk-date-input__item">
-                        <div class="govuk-form-group">
-                            <label asp-for="StartYear" class="govuk-label govuk-date-input__label">Year</label>
-                            <input asp-for="StartYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
-                                   class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" />
-                        </div>
+
+@if (!(Model.IsOnFlexiPaymentPilot ?? false))
+{
+    <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.StartDate, "govuk-form-group--error")">
+        <fieldset class="govuk-fieldset" aria-describedby="start-date-hint" role="group">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                @startDateLabel
+            </legend>
+            <span id="start-date-hint" class="govuk-hint">
+                For example, 09 2022 <br />
+                The standard version will be based on the planned training start date provided
+            </span>
+            @Html.ValidationMessageFor(m => m.StartDate, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.StartDate)})
+            <div class="govuk-date-input" id="StartDate">
+                <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                        <label asp-for="StartMonth" class="govuk-label govuk-date-input__label length-limit">Month</label>
+                        <input asp-for="StartMonth" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="1" max="12"
+                               class="govuk-input govuk-date-input__input govuk-input--width-2 length-limit">
                     </div>
                 </div>
-            </fieldset>
-        </div>
-    }
-    else
-    {
-        <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ActualStartDate, "govuk-form-group--error")">
-            <label asp-for="ActualStartDate" class="govuk-label govuk-!-font-weight-bold">Actual training start date</label>
-            <span id="startdate-hint" class="govuk-hint">
-                @if (@Model.ActualStartDate.HasValue)
-                {
-                    <span id="actualStartDate">@Model.ActualStartDate?.ToGdsFormat()</span>
-                    @Html.HiddenFor(x => x.ActualStartDate)
-                }
-                else
-                {
-                    <span>This will be added by your Training Provider</span>
-                }
-            </span>
-        </div>
-    }
+                <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                        <label asp-for="StartYear" class="govuk-label govuk-date-input__label">Year</label>
+                        <input asp-for="StartYear" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" min="1900" max="9999"
+                               class="govuk-input govuk-date-input__input govuk-input--width-4 length-limit" />
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
     <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.EndDate, "govuk-form-group--error")">
         <fieldset class="govuk-fieldset" aria-describedby="finish-date-hint" role="group">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
@@ -286,6 +269,38 @@ else
             </div>
         </fieldset>
     </div>
+}
+else
+{
+    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ActualStartDate, "govuk-form-group--error")">
+        <label asp-for="ActualStartDate" class="govuk-label govuk-!-font-weight-bold">Actual training start date</label>
+        <span id="startdate-hint" class="govuk-hint">
+            @if (@Model.ActualStartDate.HasValue)
+            {
+                <span id="actualStartDate">@Model.ActualStartDate?.ToGdsFormat()</span>
+                @Html.HiddenFor(x => x.ActualStartDate)
+            }
+            else
+            {
+                <span>This will be added by your Training Provider</span>
+            }
+        </span>
+    </div>
+    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EndDate, "govuk-form-group--error")">
+        <label asp-for="EndDate" class="govuk-label govuk-!-font-weight-bold">Planned training end date</label>
+        <span id="enddate-hint" class="govuk-hint">
+            @if (@Model.EndDate.HasValue)
+            {
+                <span id="endDate">@Model.EndDate?.Date?.ToGdsFormat()</span>
+                @Html.HiddenFor(x => x.EndDate)
+            }
+            else
+            {
+                <span>This will be added by your Training Provider</span>
+            }
+        </span>
+    </div>
+}
 
     @if (Model.DeliveryModel == DeliveryModel.PortableFlexiJob)
     {

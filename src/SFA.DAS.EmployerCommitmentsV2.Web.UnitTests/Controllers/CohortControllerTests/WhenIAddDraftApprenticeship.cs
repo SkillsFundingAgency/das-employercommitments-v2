@@ -13,6 +13,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
@@ -88,7 +89,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             await fixtures.CheckPost();
             
-            fixtures.CommitmentsApiClientMock.Verify(cs => cs.CreateCohort(It.IsAny<CreateCohortRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+            fixtures.ApprovalsApiClientMock.Verify(cs => cs.CreateCohort(It.IsAny<CreateCohortApimRequest>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 
@@ -104,7 +105,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             AuthorizationServiceMock = new Mock<IAuthorizationService>();
             EncodingServiceMock = new Mock<IEncodingService>();
             TempData = new Mock<ITempDataDictionary>();
-    }
+            ApprovalsApiClientMock = new Mock<IApprovalsApiClient>();
+        }
 
         public Mock<ILinkGenerator> LinkGeneratorMock { get; }
         public ILinkGenerator LinkGenerator => LinkGeneratorMock.Object;
@@ -122,7 +124,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         public Mock<ITempDataDictionary> TempData;
 
         public Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }
+        public Mock<IApprovalsApiClient> ApprovalsApiClientMock { get; }
         public ICommitmentsApiClient CommitmentsApiClient => CommitmentsApiClientMock.Object;
+        public IApprovalsApiClient ApprovalsApiClient => ApprovalsApiClientMock.Object;
 
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures ForGetRequest()
         {
@@ -138,9 +142,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
         public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithCreatedCohort(string cohortReference, long  cohortId)
         {
-            CommitmentsApiClientMock
-                .Setup(cs => cs.CreateCohort(It.IsAny<CreateCohortRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new CreateCohortResponse {CohortReference = cohortReference, CohortId = cohortId});
+            ApprovalsApiClientMock
+                .Setup(cs => cs.CreateCohort(It.IsAny<CreateCohortApimRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new EmployerCommitmentsV2.Services.Approvals.Responses.CreateCohortResponse { CohortReference = cohortReference, CohortId = cohortId});
 
             return this;
         }
@@ -192,7 +196,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 ModelMapper,
                 AuthorizationService,
                 Mock.Of<IEncodingService>(),
-                Mock.Of<IApprovalsApiClient>()
+                ApprovalsApiClient
             );
             controller.TempData = TempData.Object;
             return controller;
