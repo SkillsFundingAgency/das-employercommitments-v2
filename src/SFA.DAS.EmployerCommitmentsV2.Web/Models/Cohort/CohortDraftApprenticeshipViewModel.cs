@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         private string ToGdsFormatDateRange()
         {
             if (ActualStartDate.HasValue && EndDate.HasValue)
-                return $"{ActualStartDate.Value.ToGdsFormat()} to {EndDate.Value.ToGdsFormatWithoutDay()}";
+                return $"{ActualStartDate.Value.ToGdsFormat()} to {EndDate.Value.ToGdsFormat()}";
             if (StartDate.HasValue && EndDate.HasValue)
                 return $"{StartDate.Value.ToGdsFormatWithoutDay()} to {EndDate.Value.ToGdsFormatWithoutDay()}";
 
