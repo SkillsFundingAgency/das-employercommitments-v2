@@ -13,8 +13,6 @@ using SFA.DAS.Encoding;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {
@@ -23,11 +21,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
     {
         private Mock<IModelMapper> _mockModelMapper;
         private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
-        private Mock<IApprovalsApiClient> _mockOuterApiClient;
 
         private SelectOptionRequest _request;
         private SelectOptionViewModel _viewModel;
-        private UpdateDraftApprenticeshipApimRequest _updateRequest;
+        private UpdateDraftApprenticeshipRequest _updateRequest;
 
         private DraftApprenticeshipController _controller;
 
@@ -53,15 +50,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 .Without(x => x.StartDate)
                 .Create();
 
-            _updateRequest = fixture.Create<UpdateDraftApprenticeshipApimRequest>();
+            _updateRequest = fixture.Create<UpdateDraftApprenticeshipRequest>();
 
             _mockModelMapper = new Mock<IModelMapper>();
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockOuterApiClient = new Mock<IApprovalsApiClient>();
 
-            _controller = new DraftApprenticeshipController(_mockModelMapper.Object, _mockCommitmentsApiClient.Object, Mock.Of<IEncodingService>(), _mockOuterApiClient.Object);
+            _controller = new DraftApprenticeshipController(_mockModelMapper.Object, _mockCommitmentsApiClient.Object, Mock.Of<IAuthorizationService>(), Mock.Of<IEncodingService>());
 
-            _mockModelMapper.Setup(m => m.Map<UpdateDraftApprenticeshipApimRequest>(_viewModel))
+            _mockModelMapper.Setup(m => m.Map<UpdateDraftApprenticeshipRequest>(_viewModel))
                 .ReturnsAsync(_updateRequest);
         }
 
@@ -96,7 +92,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             var result = await _controller.SelectOption(_viewModel);
 
-            _mockOuterApiClient.Verify(c => 
+            _mockCommitmentsApiClient.Verify(c => 
                 c.UpdateDraftApprenticeship(_viewModel.CohortId.Value, _viewModel.DraftApprenticeshipId, _updateRequest, It.IsAny<CancellationToken>()), 
                 Times.Once);
         }

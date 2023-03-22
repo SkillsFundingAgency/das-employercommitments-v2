@@ -1,12 +1,14 @@
 using System;
+using System.Threading;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
+using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.Testing;
+using AddDraftApprenticeshipRequest = SFA.DAS.CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -21,6 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 f => f.Map(), 
                 (f, r) =>
                 {
+                    r.UserId.Should().Be("X");
                     r.ProviderId.Should().Be(1);
                     r.FirstName.Should().Be(f.ViewModel.FirstName);
                     r.LastName.Should().Be(f.ViewModel.LastName);
@@ -65,10 +68,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 ReservationId = Guid.NewGuid()
             };
 
-            Mapper = new AddDraftApprenticeshipRequestMapper(Mock.Of<IAuthenticationService>());
+            Mapper = new AddDraftApprenticeshipRequestMapper();
         }
 
-        public AddDraftApprenticeshipApimRequest Map()
+        public AddDraftApprenticeshipRequest Map()
         {
             return Mapper.Map(ViewModel).Result;
         }

@@ -1,25 +1,17 @@
 using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using AddDraftApprenticeshipRequest = SFA.DAS.CommitmentsV2.Api.Types.Requests.AddDraftApprenticeshipRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class AddDraftApprenticeshipRequestMapper : IMapper<AddDraftApprenticeshipViewModel, AddDraftApprenticeshipApimRequest>
+    public class AddDraftApprenticeshipRequestMapper : IMapper<AddDraftApprenticeshipViewModel, AddDraftApprenticeshipRequest>
     {
-        private readonly IAuthenticationService _authenticationService;
-
-        public AddDraftApprenticeshipRequestMapper(IAuthenticationService authenticationService)
+       public Task<AddDraftApprenticeshipRequest> Map(AddDraftApprenticeshipViewModel source)
         {
-            _authenticationService = authenticationService;
-        }
-
-        public Task<AddDraftApprenticeshipApimRequest> Map(AddDraftApprenticeshipViewModel source)
-        {
-            return Task.FromResult(new AddDraftApprenticeshipApimRequest
+            return Task.FromResult(new AddDraftApprenticeshipRequest
             {
-                UserId = _authenticationService.UserId,
+                UserId = "X", // TODO: Remove this from the request as it's not required
                 ProviderId = 1, // TODO: Remove this from the request as it's not required
                 FirstName = source.FirstName,
                 LastName = source.LastName,
@@ -36,13 +28,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 OriginatorReference = source.Reference,
                 ReservationId = source.ReservationId,
                 ActualStartDate = source.ActualStartDate,
-                IsOnFlexiPaymentPilot = source.IsOnFlexiPaymentPilot,
-                UserInfo = new ApimUserInfo
-                {
-                    UserDisplayName = _authenticationService.UserName,
-                    UserEmail = _authenticationService.UserEmail,
-                    UserId = _authenticationService.UserId
-                }
+                IsOnFlexiPaymentPilot = source.IsOnFlexiPaymentPilot
             });
         }
     }

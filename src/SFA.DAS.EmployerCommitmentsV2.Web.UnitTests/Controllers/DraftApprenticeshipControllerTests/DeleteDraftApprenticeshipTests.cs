@@ -11,7 +11,6 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
@@ -143,7 +142,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public DeleteDraftApprenticeshipViewModel DeleteDraftApprenticeshipViewModel { get; set; }
         public DeleteApprenticeshipRequest DeleteDraftApprenticeshipRequest { get; set; }
         public Mock<IModelMapper> ModelMapperMock { get; }
-        public Mock<IApprovalsApiClient> OuterApiClientMock { get; set; }
+        public Mock<IAuthorizationService> AuthorizationServiceMock { get; set; }
         public DraftApprenticeshipController Sut { get; }
 
         public DeleteDraftApprenticeshipTestsFixture()
@@ -165,13 +164,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             ModelMapperMock.Setup(x => x.Map<DeleteDraftApprenticeshipViewModel>(It.IsAny<DeleteApprenticeshipRequest>()))
                 .ReturnsAsync(deleteDraftApprenticeshipViewModel);
 
-            OuterApiClientMock = new Mock<IApprovalsApiClient>();
+            AuthorizationServiceMock = new Mock<IAuthorizationService>();
 
             Sut = new DraftApprenticeshipController(
                 ModelMapperMock.Object,
                 CommitmentApiClient.Object,
-                Mock.Of<IEncodingService>(),
-                OuterApiClientMock.Object);
+                AuthorizationServiceMock.Object,
+                Mock.Of<IEncodingService>());          
             
             Sut.TempData = new Mock<ITempDataDictionary>().Object;
         }

@@ -66,20 +66,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
         {
             await _client.Post<PostCohortDetailsRequest>($"employer/{accountId}/unapproved/{cohortId}", request);
         }
-
-        public async Task UpdateDraftApprenticeship(long cohortId, long apprenticeshipId, UpdateDraftApprenticeshipApimRequest request, CancellationToken cancellationToken = default)
-        {
-            await _client.Put<object>($"cohorts/{cohortId}/draft-apprenticeships/{apprenticeshipId}", request);
-        }
-
-        public async Task<AddDraftApprenticeshipResponse> AddDraftApprenticeship(long cohortId, AddDraftApprenticeshipApimRequest request, CancellationToken cancellationToken = default)
-        {
-            return await _client.Post<AddDraftApprenticeshipResponse>($"cohorts/{cohortId}/draft-apprenticeships", request);
-        }
-
-        public async Task<CreateCohortResponse> CreateCohort(CreateCohortApimRequest request, CancellationToken cancellationToken = default)
-        {
-            return await _client.Post<CreateCohortResponse>($"cohorts", request);
-        }
     }
 }
