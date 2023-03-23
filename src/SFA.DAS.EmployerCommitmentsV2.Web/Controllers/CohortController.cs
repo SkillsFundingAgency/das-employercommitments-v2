@@ -353,8 +353,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         public async Task<IActionResult> SaveDraftApprenticeship(ApprenticeViewModel model)
         {
-            var request = await _modelMapper.Map<CreateCohortRequest>(model);
-            var newCohort = await _commitmentsApiClient.CreateCohort(request);
+            var request = await _modelMapper.Map<CreateCohortApimRequest>(model);
+            var newCohort = await _approvalsApiClient.CreateCohort(request);
 
             var draftApprenticeshipsResponse = await _commitmentsApiClient.GetDraftApprenticeships(newCohort.CohortId);
 

@@ -5,6 +5,7 @@ using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -61,10 +62,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
     public class AttachUserInfoToSaveRequestsTestsFixture
     {
-        public AttachUserInfoToSaveRequests<ApprenticeViewModel, CreateCohortRequest> SaveRequestMapper;
+        public AttachUserInfoToSaveRequests<MessageViewModel, CreateCohortWithOtherPartyRequest> SaveRequestMapper;
         public AttachUserInfoToSaveRequests<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel> NonSaveRequestMapper;
         public Mock<IAuthenticationService> AuthenticationServiceMock;
-        public ApprenticeViewModel InputViewModel;
+        public MessageViewModel InputViewModel;
         public EditDraftApprenticeshipDetails InputDetails;
         public UserInfo UserInfo;
 
@@ -74,11 +75,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var autoFixture = new Fixture();
 
             AuthenticationServiceMock = new Mock<IAuthenticationService>();
-            InputViewModel = new ApprenticeViewModel();
+            InputViewModel = new MessageViewModel();
             InputDetails = new EditDraftApprenticeshipDetails();
             UserInfo = new UserInfo();
 
-            SaveRequestMapper = new AttachUserInfoToSaveRequests<ApprenticeViewModel, CreateCohortRequest>(new CreateCohortRequestMapper(), AuthenticationServiceMock.Object);
+            SaveRequestMapper = new AttachUserInfoToSaveRequests<MessageViewModel, CreateCohortWithOtherPartyRequest>(new CreateCohortWithOtherPartyRequestMapper(), AuthenticationServiceMock.Object);
             NonSaveRequestMapper = new AttachUserInfoToSaveRequests<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel>(new EditDraftApprenticeshipViewModelMapper(), AuthenticationServiceMock.Object);
         }
 

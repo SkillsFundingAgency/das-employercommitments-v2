@@ -1,16 +1,24 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
     public class CreateCohortRequestMapper : 
-        IMapper<ApprenticeViewModel, CreateCohortRequest>
+        IMapper<ApprenticeViewModel, CreateCohortApimRequest>
     {
-        public Task<CreateCohortRequest> Map(ApprenticeViewModel source)
+        private readonly IAuthenticationService _authenticationService;
+
+        public CreateCohortRequestMapper(IAuthenticationService authenticationService)
         {
-            return Task.FromResult(new CreateCohortRequest
+            _authenticationService = authenticationService;
+        }
+
+        public Task<CreateCohortApimRequest> Map(ApprenticeViewModel source)
+        {
+            return Task.FromResult(new CreateCohortApimRequest
             {
                 AccountId = source.AccountId,
                 AccountLegalEntityId = source.AccountLegalEntityId,
@@ -31,7 +39,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 OriginatorReference = source.Reference,
                 TransferSenderId = source.DecodedTransferSenderId,
                 PledgeApplicationId = (int?)source.PledgeApplicationId,
-                IsOnFlexiPaymentPilot = source.IsOnFlexiPaymentPilot
+                IsOnFlexiPaymentPilot = source.IsOnFlexiPaymentPilot,
+                UserInfo = new ApimUserInfo
+                {
+                    UserDisplayName = _authenticationService.UserName,
+                    UserEmail = _authenticationService.UserEmail,
+                    UserId = _authenticationService.UserId
+                }
             });
         }
      }

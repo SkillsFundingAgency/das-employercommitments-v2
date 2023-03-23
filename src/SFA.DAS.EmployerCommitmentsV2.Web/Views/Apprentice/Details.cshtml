@@ -309,7 +309,14 @@
                     <td id="end-date" class="govuk-table__cell" colspan="2">
                         @if (Model.EndDate.HasValue)
                         {
-                            @Model.EndDate.Value.ToGdsFormatWithoutDay()
+                            if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
+                            {
+                                @Model.EndDate.Value.ToGdsFormat()
+                            }
+                            else
+                            {
+                                @Model.EndDate.Value.ToGdsFormatWithoutDay()
+                            }
                         }
                     </td>
                     @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)

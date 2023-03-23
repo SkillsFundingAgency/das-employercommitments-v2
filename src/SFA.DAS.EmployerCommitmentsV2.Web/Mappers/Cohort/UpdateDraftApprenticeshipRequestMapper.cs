@@ -1,25 +1,28 @@
 ﻿using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
-    public class UpdateDraftApprenticeshipRequestMapper : IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipRequest>
+    public class UpdateDraftApprenticeshipRequestMapper : IMapper<EditDraftApprenticeshipViewModel, UpdateDraftApprenticeshipApimRequest>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly IAuthenticationService _authenticationService;
 
-        public UpdateDraftApprenticeshipRequestMapper(ICommitmentsApiClient commitmentsApiClient)
+        public UpdateDraftApprenticeshipRequestMapper(ICommitmentsApiClient commitmentsApiClient, IAuthenticationService authenticationService)
         {
             _commitmentsApiClient = commitmentsApiClient;
+            _authenticationService = authenticationService;
         }
 
-        public async Task<UpdateDraftApprenticeshipRequest> Map(EditDraftApprenticeshipViewModel source)
+        public async Task<UpdateDraftApprenticeshipApimRequest> Map(EditDraftApprenticeshipViewModel source)
         {
             var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(source.CohortId.Value, source.DraftApprenticeshipId);
 
-            return new UpdateDraftApprenticeshipRequest
+            return new UpdateDraftApprenticeshipApimRequest
             {
                 ReservationId = source.ReservationId,
                 FirstName = source.FirstName,
@@ -37,7 +40,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 EmploymentEndDate = source.EmploymentEndDate.Date,
                 Reference = source.Reference,
                 IsOnFlexiPaymentPilot = source.IsOnFlexiPaymentPilot,
-                ActualStartDate = source.ActualStartDate
+                ActualStartDate = source.ActualStartDate,
+                UserInfo = new ApimUserInfo
+                {
+                    UserDisplayName = _authenticationService.UserName,
+                    UserEmail = _authenticationService.UserEmail,
+                    UserId = _authenticationService.UserId
+                }
             };
         }
     }
