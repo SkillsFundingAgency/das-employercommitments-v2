@@ -17,6 +17,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {
@@ -127,10 +129,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         private DraftApprenticeshipController _controller;
         private Mock<IModelMapper> _modelMapper;
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
-        private Mock<IAuthorizationService> _authorizationService;
+        private Mock<IApprovalsApiClient> _outerApiClient;
         private Mock<ITempDataDictionary> _tempData;
 
-        public UpdateDraftApprenticeshipRequest _updateDraftApprenticeshipRequest;
+        public UpdateDraftApprenticeshipApimRequest _updateDraftApprenticeshipRequest;
         public EditDraftApprenticeshipViewModel _editDraftApprenticeshipViewModel;
         public AddDraftApprenticeshipRequest _addDraftApprenticeshipRequest;
         public SelectDeliveryModelForEditViewModel _selectDeliveryModelViewModel_WithDeliveryModels;
@@ -143,7 +145,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             _modelMapper = new Mock<IModelMapper>();
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _authorizationService = new Mock<IAuthorizationService>();
+            _outerApiClient = new Mock<IApprovalsApiClient>();
             _tempData = new Mock<ITempDataDictionary>();
 
             var birthDate = _autoFixture.Create<DateTime?>();
@@ -166,7 +168,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 .Create();
 
 
-            _updateDraftApprenticeshipRequest = _autoFixture.Build<UpdateDraftApprenticeshipRequest>().Create();
+            _updateDraftApprenticeshipRequest = _autoFixture.Build<UpdateDraftApprenticeshipApimRequest>().Create();
             _addDraftApprenticeshipRequest = _autoFixture.Build<AddDraftApprenticeshipRequest>().Create();
             _selectCourseViewModel = _autoFixture.Build<SelectCourseViewModel>().Create();
 
@@ -190,7 +192,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                     .With(x => x.HasUnavailableFlexiJobAgencyDeliveryModel, false)
                     .With(x => x.DeliveryModels, noDms).Create();
 
-            _modelMapper.Setup(m => m.Map<UpdateDraftApprenticeshipRequest>(It.IsAny<EditDraftApprenticeshipViewModel>()))
+            _modelMapper.Setup(m => m.Map<UpdateDraftApprenticeshipApimRequest>(It.IsAny<EditDraftApprenticeshipViewModel>()))
                 .ReturnsAsync(_updateDraftApprenticeshipRequest);
             _modelMapper.Setup(m => m.Map<AddDraftApprenticeshipRequest>(It.IsAny<EditDraftApprenticeshipViewModel>()))
                 .ReturnsAsync(_addDraftApprenticeshipRequest);
@@ -206,8 +208,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             _controller = new DraftApprenticeshipController(
                 _modelMapper.Object,
                 _commitmentsApiClient.Object,
-                _authorizationService.Object,
-                Mock.Of<IEncodingService>());
+                Mock.Of<IEncodingService>(),
+                _outerApiClient.Object
+                );
 
             _controller.TempData = _tempData.Object;
 

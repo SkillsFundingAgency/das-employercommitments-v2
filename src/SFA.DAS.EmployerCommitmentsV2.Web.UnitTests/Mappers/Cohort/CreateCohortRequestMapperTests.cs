@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoFixture;
+using Moq;
 using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
@@ -13,7 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     {
         private CreateCohortRequestMapper _mapper;
         private ApprenticeViewModel _source;
-        private CreateCohortRequest _result;
+        private CreateCohortApimRequest _result;
 
         [SetUp]
         public async Task Arrange()
@@ -25,7 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var endDate = fixture.Create<DateTime?>();
             var employmentEndDate = fixture.Create<DateTime?>();
 
-            _mapper = new CreateCohortRequestMapper();
+            _mapper = new CreateCohortRequestMapper(Mock.Of<IAuthenticationService>());
 
             _source = fixture.Build<ApprenticeViewModel>()
                 .With(x => x.BirthDay, birthDate?.Day)

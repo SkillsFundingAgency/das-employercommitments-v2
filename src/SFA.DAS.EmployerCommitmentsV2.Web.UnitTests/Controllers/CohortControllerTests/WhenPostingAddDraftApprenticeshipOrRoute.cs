@@ -19,6 +19,7 @@ using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
@@ -26,24 +27,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
     {
         [Test, MoqAutoData]
         public async Task WithoutEditThenReturnsRedirect(
-            CreateCohortRequest request,
+            CreateCohortApimRequest request,
             [Frozen] Mock<IModelMapper> mockMapper,
-            [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient)
+            [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
+            [Frozen] Mock<IApprovalsApiClient> approvalsApiClient)
         {            
             var viewModel = new ApprenticeViewModel();
             var autoFixture = new Fixture();
 
-            var createCohortResponse = autoFixture.Create<CreateCohortResponse>();
+            var createCohortResponse = autoFixture.Create<EmployerCommitmentsV2.Services.Approvals.Responses.CreateCohortResponse>();
             var getDraftApprenticeshipsResponse = autoFixture.Build<GetDraftApprenticeshipsResponse>()
                 .With(x => x.DraftApprenticeships, new DraftApprenticeshipDto[1] { autoFixture.Create<DraftApprenticeshipDto>() })
                 .Create();
 
-            commitmentsApiClient.Setup(x => x.CreateCohort(It.IsAny<CreateCohortRequest>(), It.IsAny<CancellationToken>()))
+            approvalsApiClient.Setup(x => x.CreateCohort(It.IsAny<CreateCohortApimRequest>(), It.IsAny<CancellationToken>()))
                             .ReturnsAsync(createCohortResponse);
             commitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(getDraftApprenticeshipsResponse);
 
-            mockMapper.Setup(mapper => mapper.Map<CreateCohortRequest>(viewModel))
+            mockMapper.Setup(mapper => mapper.Map<CreateCohortApimRequest>(viewModel))
                 .ReturnsAsync(request);
 
             var controller = new CohortController(
@@ -53,7 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 mockMapper.Object,
                 Mock.Of<IAuthorizationService>(),
                 Mock.Of<IEncodingService>(),
-                Mock.Of<IApprovalsApiClient>());
+                approvalsApiClient.Object);
 
             var result = await controller.AddDraftApprenticeshipOrRoute("", "", viewModel) as RedirectToActionResult;
 
