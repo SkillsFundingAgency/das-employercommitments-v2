@@ -36,8 +36,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 govConfig["StubAuth"] = configuration["StubAuth"];
                 services.AddTransient<ICustomClaims, EmployerUserAccountPostAuthenticationHandler>();
                 services.AddAndConfigureGovUkAuthentication(govConfig,
-                    $"{typeof(AuthenticationStartup).Assembly.GetName().Name}.Auth",
-                    typeof(EmployerUserAccountPostAuthenticationHandler));
+                    typeof(EmployerUserAccountPostAuthenticationHandler),
+                    "",
+                    "/service/SignIn-Stub");
 
                 services.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
                 services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
