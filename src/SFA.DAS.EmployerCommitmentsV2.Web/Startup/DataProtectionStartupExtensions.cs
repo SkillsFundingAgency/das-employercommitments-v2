@@ -26,7 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                         .Connect($"{redisConnectionString},{dataProtectionKeysDatabase}");
 
                     services.AddDataProtection()
-                        .SetApplicationName("das-employercommitments-v2")
+                        .SetApplicationName("das-employer")
                         .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
                 }
             }
