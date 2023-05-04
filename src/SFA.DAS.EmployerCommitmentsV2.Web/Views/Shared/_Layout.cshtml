@@ -35,7 +35,7 @@
     <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/govuk-apple-touch-icon-167x167.png" />
     <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png" />
     <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png" />
-    
+
     <link href="/libs/select2/style.css" rel="stylesheet" />
 
     <!--[if !IE 8]><!-->
@@ -62,7 +62,7 @@
 
     <partial name="_CookieConsentBanner" />
 
-    <partial name="_Header" />    
+    <partial name="_Header" />
     @if (ViewBag.HideNav == null || !ViewBag.HideNav)
     {
         <partial name="_Menu" model="@accountHashedId" />
@@ -129,7 +129,7 @@
                     var that = $(this);
                     if (that.val().length === 0) {
                         var fieldId = that.attr('id'),
-                        selectField = $('#' + fieldId + '-select');
+                            selectField = $('#' + fieldId + '-select');
                         selectField[0].selectedIndex = 0;
                     }
                 });
@@ -137,7 +137,21 @@
         })
 
     </script>
-    
+
+    <script>
+        $(document).on('input', '.length-limit', function () {
+            var text = $(this).val();
+            var len = text.length;
+            var maxlength = $(this).attr('maxlength');
+
+            if (maxlength == null) return;
+
+            if (len > maxlength) {
+                $(this).val(text.substring(0, maxlength));
+            }
+        });
+    </script>
+
     @RenderSection("Scripts", required: false)
 
 </body>
