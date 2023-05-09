@@ -27,9 +27,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("signout", Name = RouteNames.SignOut)]
         public async Task SignOut()
         {
+            
             var idToken = await HttpContext.GetTokenAsync("id_token");
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme, new AuthenticationProperties { RedirectUri = "/", Parameters = { {"id_token",idToken}}});
+            _ = bool.TryParse(_config["StubAuth"], out var stubAuth);
+            if (!stubAuth)
+            {
+                await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme, new AuthenticationProperties { RedirectUri = "/", Parameters = { {"id_token",idToken}}});    
+            }
         }
         
         [Route("signoutcleanup")]
@@ -50,14 +55,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("SignIn-Stub")]
-        public IActionResult SigninStubPost()
+        public async Task<IActionResult> SigninStubPost()
         {
-            var model =  new StubAuthUserDetails
+            var claims = await _stubAuthenticationService.GetStubSignInClaims(new StubAuthUserDetails
             {
                 Email = _config["StubEmail"],
                 Id = _config["StubId"]
-            };
-            _stubAuthenticationService.AddStubEmployerAuth(Response.Cookies, model, true);
+            });
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claims,
+                new AuthenticationProperties());
 
             return RedirectToRoute("Signed-in-stub");
         }

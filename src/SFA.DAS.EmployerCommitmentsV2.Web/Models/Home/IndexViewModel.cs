@@ -4,5 +4,6 @@
     {
         public string AccountHashedId { get; set; }
         public bool ShowSetPaymentOrderLink { get; set; }
+        public string PublicSectorReportingLink { get; set; }
     }
 }
