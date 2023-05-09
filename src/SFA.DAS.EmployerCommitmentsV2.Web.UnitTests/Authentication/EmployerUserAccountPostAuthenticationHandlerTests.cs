@@ -39,7 +39,7 @@ public class EmployerUserAccountPostAuthenticationHandlerTests
     }
     
     [Test, MoqAutoData]
-    public async Task Then_The_Claims_Are_Passed_To_The_Api_And_Id_FirstName_LastName_Populated_And_Suspended_Flag_Set_If_Suspended(
+    public async Task Then_The_Suspended_Flag_Claim_Is_Set_When_User_Account_Suspended(
         string userId, string email,
         GetUserAccountsResponse response,
         [Frozen] Mock<IApprovalsApiClient> approvalsApiClient,
