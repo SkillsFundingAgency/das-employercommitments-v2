@@ -10,10 +10,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
     {
         public static IServiceCollection AddDasMaMenuConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            var authenticationConfiguration = configuration.GetSection(ConfigurationKeys.AuthenticationConfiguration).Get<AuthenticationConfiguration>();
+            var commitmentsConfiguration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
+                .Get<EmployerCommitmentsV2Configuration>();
+            if (commitmentsConfiguration.UseGovSignIn)
+            {
+                services.AddMaMenuConfiguration(RouteNames.SignOut, configuration["ResourceEnvironmentName"]);
+            }
+            else
+            {
+                var authenticationConfiguration = configuration.GetSection(ConfigurationKeys.AuthenticationConfiguration).Get<AuthenticationConfiguration>();
 
-            services.AddMaMenuConfiguration(RouteNames.SignOut, authenticationConfiguration.ClientId, configuration["ResourceEnvironmentName"]);
-
+                services.AddMaMenuConfiguration(RouteNames.SignOut, authenticationConfiguration.ClientId, configuration["ResourceEnvironmentName"]);    
+            }
+            
             return services;
         }
     }

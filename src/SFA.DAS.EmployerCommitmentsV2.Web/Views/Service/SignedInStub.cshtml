@@ -1,0 +1,21 @@
+@using SFA.DAS.EmployerCommitmentsV2.Web.Authentication
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            You've signed in
+        </h1>
+
+        <p>Id: @User.Claims.FirstOrDefault(c=>c.Type.Equals(EmployeeClaims.Id))?.Value</p>
+        <p>Email: @User.Claims.FirstOrDefault(c=>c.Type.Equals(EmployeeClaims.Email))?.Value</p>
+        <p>Name: @User.Claims.FirstOrDefault(c=>c.Type.Equals(EmployeeClaims.Name))?.Value</p>
+        
+    
+   
+    </div>
+</div>
