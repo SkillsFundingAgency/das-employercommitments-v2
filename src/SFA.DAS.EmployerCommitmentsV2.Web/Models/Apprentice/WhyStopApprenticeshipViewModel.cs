@@ -18,6 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
             ChangeProvider,
             TrainingEnded,
             Withdrawn,
+            ProviderCorrectsApprenticeRecord,
             NeverStarted
         }
     }
