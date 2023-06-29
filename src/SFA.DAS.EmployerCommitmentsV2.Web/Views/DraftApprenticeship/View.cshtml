@@ -13,7 +13,17 @@
 
         <h1 class="govuk-heading-xl">View apprentice details</h1>
 
+        <h2 class="govuk-heading-m">Personal details</h2>
+
         <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Unique learner number
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @DisplayOptionalField(Model.Uln)
+                </dd>
+            </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     First name
@@ -40,20 +50,15 @@
             </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    Unique learner number
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @DisplayOptionalField(Model.Uln)
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
                     Date of birth
                 </dt>
                 <dd class="govuk-summary-list__value">
                     @DisplayOptionalField(Model.DateOfBirth)
                 </dd>
             </div>
+        </dl>
+        <h2 class="govuk-heading-m">Training details</h2>
+        <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     Apprenticeship training course
@@ -133,17 +138,14 @@
                     </dd>
                 </div>
             }
-            @if (Model.RecognisePriorLearning == true)
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Duration reduction due to prior learning
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.DurationReducedBy&nbsp;weeks
-                    </dd>
-                </div>
-            }
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Total agreed apprenticeship price
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @DisplayCost(Model.Cost)
+                </dd>
+            </div>
             @if (Model.DeliveryModel != null)
             {
                 <div class="govuk-summary-list__row">
@@ -155,25 +157,6 @@
                     </dd>
                 </div>
             }
-            @if (Model.RecognisePriorLearning == true)
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Price reduction due to prior learning
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @DisplayCost(Model.PriceReducedBy)
-                    </dd>
-                </div>
-            }
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Total agreed apprenticeship price
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @DisplayCost(Model.Cost)
-                </dd>
-            </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     Reference
@@ -183,6 +166,67 @@
                 </dd>
             </div>
         </dl>
+        
+        @if (Model.RecognisePriorLearning.HasValue)
+        {
+            <h2 class="govuk-heading-m">Prior learning details</h2>
+            <dl class="govuk-summary-list">
+                @if (Model.RecognisePriorLearning == false)
+                {
+                    <dd class="govuk-summary-list__value">
+                        This apprentice has no recognised prior learning
+                    </dd>
+                }
+                else
+                {
+@*                    if (Model.TrainingTotalHours.HasValue)
+                    {
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Total off-the-job training time for this apprenticeship standard
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                @Model.TrainingTotalHours&nbsp;hours
+                            </dd>
+                        </div>
+                    }
+*@                    
+                    if (Model.DurationReducedByHours.HasValue)
+                    {
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Off-the-job training time reduction due to prior learning
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                @Model.DurationReducedByHours&nbsp;hours
+                            </dd>
+                        </div>
+                    }
+                    if (Model.DurationReducedBy.HasValue)
+                    {
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Duration reduction due to prior learning
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                @Model.DurationReducedBy&nbsp;weeks
+                            </dd>
+                        </div>
+                    }
+                    if (Model.PriceReducedBy.HasValue)
+                    {
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Price reduction due to prior learning
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                @DisplayCost(Model.PriceReducedBy)
+                            </dd>
+                        </div>
+                    }
+                }
+            </dl>
+        }
     </div>
 </div>
 
