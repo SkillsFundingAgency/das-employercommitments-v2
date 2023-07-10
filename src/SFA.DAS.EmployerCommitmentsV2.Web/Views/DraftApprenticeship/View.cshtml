@@ -61,7 +61,7 @@
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    Apprenticeship training course
+                    Training course
                 </dt>
                 <dd class="govuk-summary-list__value">
                     @DisplayOptionalField(Model.TrainingCourse)
@@ -71,7 +71,7 @@
             {
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
-                        Apprenticeship delivery model
+                        Delivery model
                     </dt>
                     <dd class="govuk-summary-list__value">
                         @Model.DeliveryModel
@@ -140,17 +140,17 @@
             }
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    Total agreed apprenticeship price
+                    Total agreed apprenticeship price (excluding VAT)
                 </dt>
                 <dd class="govuk-summary-list__value">
                     @DisplayCost(Model.Cost)
                 </dd>
             </div>
-            @if (Model.DeliveryModel != null)
+            @if (Model.DeliveryModel.Equals(DeliveryModel.PortableFlexiJob))
             {
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
-                        Training price for this employment
+                        Agreed training price for this period of employment (excluding VAT)
                     </dt>
                     <dd class="govuk-summary-list__value">
                         @DisplayCost(Model.EmploymentPrice)
