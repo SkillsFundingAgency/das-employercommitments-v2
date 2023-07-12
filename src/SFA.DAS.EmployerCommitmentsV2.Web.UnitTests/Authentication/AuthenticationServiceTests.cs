@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
+using SFA.DAS.Testing.Builders;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authentication
 {
@@ -90,6 +93,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authentication
             Assert.AreEqual("UserName", _fixture.Sut.UserInfo.UserDisplayName);
             Assert.AreEqual("UserEmail", _fixture.Sut.UserInfo.UserEmail);
         }
+
+        [Test]
+        public void WhenAuthenticatedButNoDasEmailClaim_ThenChecksClaimTypesEmail()
+        {
+            _fixture.SetNoDasEmailAuthenticatedUser();
+            
+            Assert.IsNotNull(_fixture.Sut.UserInfo);
+            Assert.AreEqual("UserId", _fixture.Sut.UserInfo.UserId);
+            Assert.AreEqual("UserName", _fixture.Sut.UserInfo.UserDisplayName);
+            Assert.AreEqual("UserEmail", _fixture.Sut.UserInfo.UserEmail);
+        }
+        
+        [Test]
+        public void WhenAuthenticatedButNoNameClaim_ThenGetNameFromApiClient()
+        {
+            _fixture.SetNoDasEmailAuthenticatedUserNoName();
+            
+            Assert.IsNotNull(_fixture.Sut.UserInfo);
+            Assert.AreEqual("UserId", _fixture.Sut.UserInfo.UserId);
+            Assert.AreEqual("Test Last", _fixture.Sut.UserInfo.UserDisplayName);
+            Assert.AreEqual("UserEmail", _fixture.Sut.UserInfo.UserEmail);
+        }
     }
 
     public class AuthenticationServiceTestsFixture
@@ -108,8 +133,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authentication
                    new Claim(EmployeeClaims.Name, "UserName"), 
                    new Claim(EmployeeClaims.Email, "UserEmail"), 
             }, "mock"));
- 
-            Sut = new AuthenticationService(HttpContextAccessor.Object);
+
+            var approvalsApiClient = new Mock<IApprovalsApiClient>();
+            approvalsApiClient.Setup(x => x.GetEmployerUserAccounts("UserEmail", "UserId")).ReturnsAsync(
+                new GetUserAccountsResponse
+                {
+                    FirstName = "Test",
+                    LastName = "Last"
+                });
+            
+            Sut = new AuthenticationService(HttpContextAccessor.Object, approvalsApiClient.Object);
         }
 
         public AuthenticationServiceTestsFixture NoAuthenticatedUser()
@@ -127,5 +160,32 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authentication
 
             return this;
         }
+
+        public AuthenticationServiceTestsFixture SetNoDasEmailAuthenticatedUser()
+        {
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(EmployeeClaims.Id, "UserId"), 
+                new Claim(EmployeeClaims.Name, "UserName"), 
+                new Claim(ClaimTypes.Email, "UserEmail"), 
+            }, "mock"));
+            HttpContext = new DefaultHttpContext { User = user };
+            HttpContextAccessor.Setup(o => o.HttpContext).Returns(HttpContext);
+
+            return this;
+        }
+        public AuthenticationServiceTestsFixture SetNoDasEmailAuthenticatedUserNoName()
+        {
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(EmployeeClaims.Id, "UserId"), 
+                new Claim(ClaimTypes.Email, "UserEmail"), 
+            }, "mock"));
+            HttpContext = new DefaultHttpContext { User = user };
+            HttpContextAccessor.Setup(o => o.HttpContext).Returns(HttpContext);
+
+            return this;
+        }
+        
     }
 }

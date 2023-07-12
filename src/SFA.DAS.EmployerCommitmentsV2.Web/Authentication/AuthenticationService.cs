@@ -1,21 +1,24 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Authentication
 {
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IApprovalsApiClient _approvalsApiClient;
 
-        public AuthenticationService(IHttpContextAccessor httpContextAccessor)
+        public AuthenticationService(IHttpContextAccessor httpContextAccessor, IApprovalsApiClient approvalsApiClient)
         {
             _httpContextAccessor = httpContextAccessor;
+            _approvalsApiClient = approvalsApiClient;
         }
 
         public string UserId => GetUserClaimAsString(EmployeeClaims.Id);
-        public string UserName => GetUserClaimAsString(EmployeeClaims.Name);
-        public string UserEmail => GetUserClaimAsString(EmployeeClaims.Email);
+        public string UserName => GetUserClaimAsString(EmployeeClaims.Name) ?? GetNameFromApiClient();
+        public string UserEmail => GetUserClaimAsString(EmployeeClaims.Email) ?? GetUserClaimAsString(ClaimTypes.Email);
 
         public bool IsUserAuthenticated()
         {
@@ -58,6 +61,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authentication
                 return value;
             }
             return null;
+        }
+        
+        private string GetNameFromApiClient()
+        {
+            if (!IsUserAuthenticated())
+            {
+                return null;
+            }
+            var email = GetUserClaimAsString(EmployeeClaims.Email) ?? GetUserClaimAsString(ClaimTypes.Email);
+            var userId = GetUserClaimAsString(EmployeeClaims.Id);
+
+            var userResponse = _approvalsApiClient.GetEmployerUserAccounts(email, userId).Result;
+
+            return $"{userResponse.FirstName} {userResponse.LastName}";
         }
     }
 }
