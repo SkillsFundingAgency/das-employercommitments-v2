@@ -26,7 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Filters
             GoogleAnalyticsFilter filter)
         {
             //Arrange
-            var claim = new Claim(EmployeeClaims.Id, userId.ToString());
+            var claim = new Claim(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, userId.ToString());
             context.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { claim }));
             context.RouteData.Values.Add("AccountHashedId", accountId);
 
@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Filters
             GoogleAnalyticsFilter filter)
         {
             //Arrange
-            var claim = new Claim(EmployeeClaims.Id, userId.ToString());
+            var claim = new Claim(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, userId.ToString());
             context.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { claim }));
             context.RouteData.Values.Add("employerAccountId", accountId);
 

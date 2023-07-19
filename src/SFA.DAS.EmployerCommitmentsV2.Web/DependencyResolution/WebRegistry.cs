@@ -31,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
             For(typeof(ICookieStorageService<>)).Use(typeof(CookieStorageService<>)).Singleton();
             For(typeof(HttpContext)).Use(c => c.GetInstance<IHttpContextAccessor>().HttpContext);
             For<IAcademicYearDateProvider>().Use<AcademicYearDateProvider>().Singleton();
-            For<ICustomClaims>().Use<EmployerUserAccountPostAuthenticationHandler>();
+            For<ICustomClaims>().Use<EmployerAccountPostAuthenticationClaimsHandler>();
             For<IAuthorizationHandler>().Use<AccountActiveAuthorizationHandler>();
             For<IStubAuthenticationService>().Use<StubAuthenticationService>();
         }

@@ -16,9 +16,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authentication
             _approvalsApiClient = approvalsApiClient;
         }
 
-        public string UserId => GetUserClaimAsString(EmployeeClaims.Id);
-        public string UserName => GetUserClaimAsString(EmployeeClaims.Name) ?? GetNameFromApiClient();
-        public string UserEmail => GetUserClaimAsString(EmployeeClaims.Email) ?? GetUserClaimAsString(ClaimTypes.Email);
+        public string UserId => GetUserClaimAsString(EmployeeClaims.IdamsUserIdClaimTypeIdentifier);
+        public string UserName => GetUserClaimAsString(EmployeeClaims.IdamsUserDisplayNameClaimTypeIdentifier) ?? GetNameFromApiClient();
+        public string UserEmail => GetUserClaimAsString(EmployeeClaims.IdamsUserEmailClaimTypeIdentifier) ?? GetUserClaimAsString(ClaimTypes.Email);
 
         public bool IsUserAuthenticated()
         {
@@ -69,8 +69,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authentication
             {
                 return null;
             }
-            var email = GetUserClaimAsString(EmployeeClaims.Email) ?? GetUserClaimAsString(ClaimTypes.Email);
-            var userId = GetUserClaimAsString(EmployeeClaims.Id);
+            var email = GetUserClaimAsString(EmployeeClaims.IdamsUserEmailClaimTypeIdentifier) ?? GetUserClaimAsString(ClaimTypes.Email);
+            var userId = GetUserClaimAsString(EmployeeClaims.IdamsUserIdClaimTypeIdentifier);
 
             var userResponse = _approvalsApiClient.GetEmployerUserAccounts(email, userId).Result;
 
