@@ -79,21 +79,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                     })
                     .AddOpenIdConnect(o =>
                     {
-                        //o.Authority = authenticationConfiguration.Authority;
-                        //o.ClientId = authenticationConfiguration.ClientId;
-                        //o.ClientSecret = authenticationConfiguration.ClientSecret;
-                        //o.MetadataAddress = authenticationConfiguration.MetadataAddress;
-                        //o.ResponseType = "code";
-                        //o.UsePkce = false;
-
                         o.Authority = authenticationConfiguration.Authority;
                         o.ClientId = authenticationConfiguration.ClientId;
                         o.ClientSecret = authenticationConfiguration.ClientSecret;
                         o.MetadataAddress = authenticationConfiguration.MetadataAddress;
-                        o.ResponseType = "id_token";
-                        o.Scope.Add("openid");
-                        o.Scope.Add("profile");
-                        o.Scope.Add("employer");
+                        o.ResponseType = "code";
                         o.UsePkce = false;
 
                         o.ClaimActions.MapUniqueJsonKey("sub", "id");
