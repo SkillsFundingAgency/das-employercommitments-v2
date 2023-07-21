@@ -129,9 +129,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authentication
             HttpContextAccessor = new Mock<IHttpContextAccessor>();
             User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
-                   new Claim(EmployeeClaims.Id, "UserId"), 
-                   new Claim(EmployeeClaims.Name, "UserName"), 
-                   new Claim(EmployeeClaims.Email, "UserEmail"), 
+                   new Claim(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, "UserId"), 
+                   new Claim(EmployeeClaims.IdamsUserDisplayNameClaimTypeIdentifier, "UserName"), 
+                   new Claim(EmployeeClaims.IdamsUserEmailClaimTypeIdentifier, "UserEmail"), 
             }, "mock"));
 
             var approvalsApiClient = new Mock<IApprovalsApiClient>();
@@ -165,8 +165,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authentication
         {
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
-                new Claim(EmployeeClaims.Id, "UserId"), 
-                new Claim(EmployeeClaims.Name, "UserName"), 
+                new Claim(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, "UserId"), 
+                new Claim(EmployeeClaims.IdamsUserDisplayNameClaimTypeIdentifier, "UserName"), 
                 new Claim(ClaimTypes.Email, "UserEmail"), 
             }, "mock"));
             HttpContext = new DefaultHttpContext { User = user };
@@ -178,7 +178,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authentication
         {
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
-                new Claim(EmployeeClaims.Id, "UserId"), 
+                new Claim(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, "UserId"), 
                 new Claim(ClaimTypes.Email, "UserEmail"), 
             }, "mock"));
             HttpContext = new DefaultHttpContext { User = user };

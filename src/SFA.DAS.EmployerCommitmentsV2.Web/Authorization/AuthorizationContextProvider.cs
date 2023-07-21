@@ -117,14 +117,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization
                 return null;
             }
 
-            if (!_authenticationService.TryGetUserClaimValue(EmployeeClaims.Id, out var idClaimValue))
+            if (!_authenticationService.TryGetUserClaimValue(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, out var idClaimValue))
             {
-                throw new UnauthorizedAccessException($"Failed to get value for claim '{EmployeeClaims.Id}'");
+                throw new UnauthorizedAccessException($"Failed to get value for claim '{EmployeeClaims.IdamsUserIdClaimTypeIdentifier}'");
             }
 
             if (!Guid.TryParse(idClaimValue, out var id))
             {
-                throw new UnauthorizedAccessException($"Failed to parse value '{idClaimValue}' for claim '{EmployeeClaims.Id}'");
+                throw new UnauthorizedAccessException($"Failed to parse value '{idClaimValue}' for claim '{EmployeeClaims.IdamsUserIdClaimTypeIdentifier}'");
             }
 
             return id;

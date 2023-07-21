@@ -7,6 +7,7 @@ using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Services.Stubs;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using SFA.DAS.GovUK.Auth.Authentication;
@@ -31,7 +32,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
             For(typeof(ICookieStorageService<>)).Use(typeof(CookieStorageService<>)).Singleton();
             For(typeof(HttpContext)).Use(c => c.GetInstance<IHttpContextAccessor>().HttpContext);
             For<IAcademicYearDateProvider>().Use<AcademicYearDateProvider>().Singleton();
-            For<ICustomClaims>().Use<EmployerUserAccountPostAuthenticationHandler>();
+            For<ICustomClaims>().Use<EmployerAccountPostAuthenticationClaimsHandler>();
+            For<IEmployerAccountAuthorisationHandler>().Use<EmployerAccountAuthorisationHandler>().Transient();
+            For<IAuthorizationHandler>().Use<UserIsInAccountAuthorizationHandler>();
             For<IAuthorizationHandler>().Use<AccountActiveAuthorizationHandler>();
             For<IStubAuthenticationService>().Use<StubAuthenticationService>();
         }

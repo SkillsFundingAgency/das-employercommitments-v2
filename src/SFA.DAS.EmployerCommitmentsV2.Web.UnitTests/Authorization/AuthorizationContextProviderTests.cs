@@ -316,7 +316,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
             var userIdClaimValue = UserRefClaimValue;
 
             UserService.Setup(a => a.IsUserAuthenticated()).Returns(true);
-            UserService.Setup(a => a.TryGetUserClaimValue(EmployeeClaims.Id, out userIdClaimValue)).Returns(true);
+            UserService.Setup(a => a.TryGetUserClaimValue(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, out userIdClaimValue)).Returns(true);
 
             return this;
         }
@@ -328,7 +328,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
             var userIdClaimValue = UserRefClaimValue;
 
             UserService.Setup(a => a.IsUserAuthenticated()).Returns(true);
-            UserService.Setup(a => a.TryGetUserClaimValue(EmployeeClaims.Id, out userIdClaimValue)).Returns(true);
+            UserService.Setup(a => a.TryGetUserClaimValue(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, out userIdClaimValue)).Returns(true);
 
             return this;
         }
