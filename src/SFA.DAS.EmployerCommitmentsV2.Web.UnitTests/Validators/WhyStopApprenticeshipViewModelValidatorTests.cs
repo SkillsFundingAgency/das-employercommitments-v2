@@ -12,6 +12,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         [TestCase(StopStatusReason.ChangeProvider)]
         [TestCase(StopStatusReason.NeverStarted)]
         [TestCase(StopStatusReason.Withdrawn)]
+        [TestCase(StopStatusReason.ProviderCorrectsApprenticeRecord)]
         [TestCase(StopStatusReason.LeftEmployment)]
         public void Validate_StopStatusReason_ShouldBeValidated(StopStatusReason status)
         {
