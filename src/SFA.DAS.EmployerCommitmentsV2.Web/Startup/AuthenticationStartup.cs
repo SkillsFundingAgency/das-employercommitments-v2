@@ -87,7 +87,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                         o.MetadataAddress = authenticationConfiguration.MetadataAddress;
                         o.ResponseType = "code";
                         o.UsePkce = false;
-        
+
                         o.ClaimActions.MapUniqueJsonKey("sub", "id");
                         
                         o.Events.OnRemoteFailure = c =>

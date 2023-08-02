@@ -307,5 +307,36 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         {
             Assert.AreEqual(_draftApprenticeshipResponse.ActualStartDate, _result.ActualStartDate);
         }
+
+        [Test]
+        public void RecognisePriorLearningIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeshipResponse.RecognisePriorLearning, _result.RecognisePriorLearning);
+        }
+
+        [Test]
+        public void TrainingTotalHoursIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeshipResponse.TrainingTotalHours, _result.TrainingTotalHours);
+        }
+
+        [Test]
+        public void DurationReducedByHoursIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeshipResponse.DurationReducedByHours, _result.DurationReducedByHours);
+        }
+
+        [Test]
+        public void DurationReducedByIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeshipResponse.DurationReducedBy, _result.DurationReducedBy);
+        }
+
+        [Test]
+        public void PriceReducedByIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeshipResponse.PriceReducedBy, _result.PriceReducedBy);
+        }
+
     }
 }
