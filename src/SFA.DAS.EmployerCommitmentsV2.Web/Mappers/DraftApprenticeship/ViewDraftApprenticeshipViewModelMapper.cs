@@ -6,6 +6,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
 using System;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
@@ -13,15 +14,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
     public class ViewDraftApprenticeshipViewModelMapper : IMapper<ViewDraftApprenticeshipRequest, IDraftApprenticeshipViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly IApprovalsApiClient _outerApiClient;
 
-        public ViewDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IAuthorizationService authorizationService)
+        public ViewDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient outerApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
+            _outerApiClient = outerApiClient;
         }
 
         public async Task<IDraftApprenticeshipViewModel> Map(ViewDraftApprenticeshipRequest source)
         {
-            var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(source.Request.CohortId, source.Request.DraftApprenticeshipId);
+            var draftApprenticeship = await _outerApiClient.GetViewDraftApprenticeship(source.Cohort.AccountId,
+                source.Cohort.CohortId, source.Request.DraftApprenticeshipId);
 
             var trainingCourse = string.IsNullOrWhiteSpace(draftApprenticeship.CourseCode) ? null
                 : await _commitmentsApiClient.GetTrainingProgramme(draftApprenticeship.CourseCode);
@@ -48,6 +52,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 Reference = draftApprenticeship.Reference,
                 LegalEntityName = source.Cohort.LegalEntityName,
                 RecognisePriorLearning = draftApprenticeship.RecognisePriorLearning,
+                TrainingTotalHours = draftApprenticeship.TrainingTotalHours,
+                DurationReducedByHours = draftApprenticeship.DurationReducedByHours,
                 DurationReducedBy = draftApprenticeship.DurationReducedBy,
                 PriceReducedBy = draftApprenticeship.PriceReducedBy,
                 ActualStartDate = draftApprenticeship.ActualStartDate,

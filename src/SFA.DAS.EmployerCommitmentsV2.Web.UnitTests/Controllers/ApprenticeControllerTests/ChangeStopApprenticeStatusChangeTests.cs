@@ -68,6 +68,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         }
 
         [Test, MoqAutoData]
+        public void AndProviderCorrectsApprenticeRecordIsSelected_ThenRedirectToStopApprenticeshipAction([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
+        {
+            //Arrange
+            viewModel.SelectedStatusChange = StopStatusReason.ProviderCorrectsApprenticeRecord;
+
+            //Act
+            var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
+
+            //Assert
+            Assert.AreEqual("StopApprenticeship", response.ActionName);
+        }
+
+        [Test, MoqAutoData]
         public void AndNeverEndedIsSelected_ThenRedirectToTrainingEnded([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
         {
             //Arrange

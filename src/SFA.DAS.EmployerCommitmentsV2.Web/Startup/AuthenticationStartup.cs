@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.GovUK.Auth.AppStart;
 using SFA.DAS.GovUK.Auth.Authentication;
@@ -34,9 +35,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 services.Configure<GovUkOidcConfiguration>(configuration.GetSection("GovUkOidcConfiguration"));
                 govConfig["ResourceEnvironmentName"] = configuration["ResourceEnvironmentName"];
                 govConfig["StubAuth"] = configuration["StubAuth"];
-                services.AddTransient<ICustomClaims, EmployerUserAccountPostAuthenticationHandler>();
+                services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
                 services.AddAndConfigureGovUkAuthentication(govConfig,
-                    typeof(EmployerUserAccountPostAuthenticationHandler),
+                    typeof(EmployerAccountPostAuthenticationClaimsHandler),
                     "",
                     "/service/SignIn-Stub");
 
@@ -50,6 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                         , policy =>
                         {
                             policy.Requirements.Add(new AccountActiveRequirement());
+                            policy.Requirements.Add(new UserIsInAccountRequirement());
                             policy.RequireAuthenticatedUser();
                         });
                 });
@@ -85,7 +87,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                         o.MetadataAddress = authenticationConfiguration.MetadataAddress;
                         o.ResponseType = "code";
                         o.UsePkce = false;
-        
+
                         o.ClaimActions.MapUniqueJsonKey("sub", "id");
                         
                         o.Events.OnRemoteFailure = c =>

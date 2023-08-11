@@ -3,12 +3,14 @@ using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using DeliveryModel = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
 {
@@ -17,10 +19,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
     {
         private ViewDraftApprenticeshipViewModelMapper _mapper;
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
-        private Mock<IAuthorizationService> _authorizationService;
+        private Mock<IApprovalsApiClient> _approvalsApiClient;
         private ViewDraftApprenticeshipRequest _request;
         private ViewDraftApprenticeshipViewModel _result;
-        private GetDraftApprenticeshipResponse _draftApprenticeship;
+        private GetViewDraftApprenticeshipResponse _draftApprenticeship;
         private TrainingProgramme _course;
 
         [SetUp]
@@ -29,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             var autoFixture = new Fixture();
             _request = autoFixture.Create<ViewDraftApprenticeshipRequest>();
 
-            _draftApprenticeship = autoFixture.Create<GetDraftApprenticeshipResponse>();
+            _draftApprenticeship = autoFixture.Create<GetViewDraftApprenticeshipResponse>();
             _course = autoFixture.Create<TrainingProgramme>();
             
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
@@ -40,13 +42,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                     TrainingProgramme = _course
                 });
 
-            _commitmentsApiClient.Setup(x =>
-                    x.GetDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            _approvalsApiClient = new Mock<IApprovalsApiClient>();
+
+            _approvalsApiClient.Setup(x =>
+                    x.GetViewDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_draftApprenticeship);
 
-            _authorizationService = new Mock<IAuthorizationService>();
-
-            _mapper = new ViewDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _authorizationService.Object);
+            _mapper = new ViewDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _approvalsApiClient.Object);
 
             _result = await _mapper.Map(_request) as ViewDraftApprenticeshipViewModel;
         }
@@ -216,6 +218,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public void Then_ActualStartDateByIsMappedCorrectly()
         {
             Assert.AreEqual(_draftApprenticeship.ActualStartDate, _result.ActualStartDate);
+        }
+
+        [Test]
+        public void Then_TrainingTotalHoursIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeship.TrainingTotalHours, _result.TrainingTotalHours);
+        }
+
+        [Test]
+        public void Then_DurationReducedByHoursIsMappedCorrectly()
+        {
+            Assert.AreEqual(_draftApprenticeship.DurationReducedByHours, _result.DurationReducedByHours);
         }
     }
 }

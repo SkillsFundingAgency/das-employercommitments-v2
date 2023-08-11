@@ -11,9 +11,9 @@
             You've signed in
         </h1>
 
-        <p>Id: @User.Claims.FirstOrDefault(c=>c.Type.Equals(EmployeeClaims.Id))?.Value</p>
-        <p>Email: @User.Claims.FirstOrDefault(c=>c.Type.Equals(EmployeeClaims.Email))?.Value</p>
-        <p>Name: @User.Claims.FirstOrDefault(c=>c.Type.Equals(EmployeeClaims.Name))?.Value</p>
+        <p>Id: @User.Claims.FirstOrDefault(c=>c.Type.Equals(EmployeeClaims.IdamsUserIdClaimTypeIdentifier))?.Value</p>
+        <p>Email: @User.Claims.FirstOrDefault(c=>c.Type.Equals(EmployeeClaims.IdamsUserEmailClaimTypeIdentifier))?.Value</p>
+        <p>Name: @User.Claims.FirstOrDefault(c=>c.Type.Equals(EmployeeClaims.IdamsUserDisplayNameClaimTypeIdentifier))?.Value</p>
         
     
    

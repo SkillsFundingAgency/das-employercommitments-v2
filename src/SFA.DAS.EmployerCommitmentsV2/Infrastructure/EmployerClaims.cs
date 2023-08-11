@@ -1,6 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Infrastructure
 {
-    public static class EmployeClaims
+    public static class EmployerClaims
     {
         public const string Subject = "sub"; // same value as Upn (i.e. user id)
         public const string IdentifyingParty = "idp";
