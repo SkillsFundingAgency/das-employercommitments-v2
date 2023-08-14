@@ -473,9 +473,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(expected, result.ShowGotoHomePageOption);
         }
 
-        [TestCase(true, true, true, true)]
+        [TestCase(true, true, true, false)]
         [TestCase(false, false, true, false)]
-        [TestCase(true, true, false, false)]
+        [TestCase(true, true, true, false)]
+        [TestCase(true, true, false, true)]
         [TestCase(false, false, false, false)]
         public async Task ShowApprovalOptionMessageIsMappedCorrectlyWithATransfer(bool isAgreementSigned, bool showApprovalOption,
             bool isApprovedByProvider, bool expectedShowApprovalOptionMessage)
@@ -487,9 +488,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             Assert.AreEqual(expectedShowApprovalOptionMessage, result.ShowApprovalOptionMessage);
         }
 
-        [TestCase(true, true, true, true)]
+        [TestCase(true, true, true, false)]
         [TestCase(false, false, true, false)]
-        [TestCase(true, true, false, false)]
+        [TestCase(true, true, true, false)]
+        [TestCase(true, true, false, true)]
         [TestCase(false, false, false, false)]
         public async Task ShowApprovalOptionMessageIsMappedCorrectlyWithoutATransfer(bool isAgreementSigned, bool showApprovalOption,
             bool isApprovedByProvider, bool expectedShowApprovalOptionMessage)
