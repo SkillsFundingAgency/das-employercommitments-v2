@@ -36,22 +36,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 
 
 
-        public static bool HasDataLockCourseTriaged(this IReadOnlyCollection<GetManageApprenticeshipDetailsResponse.DataLock> dataLocks)
+        public static bool HasDataLockCourseTriaged(this IReadOnlyCollection<GetManageApprenticeshipDetailsResponse.GetDataLockResponse.DataLock> dataLocks)
         {
             return dataLocks.Any(x => x.TriageStatus == TriageStatus.Restart && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
         }
 
-        public static bool HasDataLockCourseChangeTriaged(this IReadOnlyCollection<GetManageApprenticeshipDetailsResponse.DataLock> dataLocks)
+        public static bool HasDataLockCourseChangeTriaged(this IReadOnlyCollection<GetManageApprenticeshipDetailsResponse.GetDataLockResponse.DataLock> dataLocks)
         {
             return dataLocks.Any(x => x.TriageStatus == TriageStatus.Change && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
         }
 
-        public static bool HasDataLockPriceTriaged(this IReadOnlyCollection<GetManageApprenticeshipDetailsResponse.DataLock> dataLocks)
+        public static bool HasDataLockPriceTriaged(this IReadOnlyCollection<GetManageApprenticeshipDetailsResponse.GetDataLockResponse.DataLock> dataLocks)
         {
             return dataLocks.Any(x => x.TriageStatus == TriageStatus.Change && x.DataLockStatus == Status.Fail && !x.IsResolved && x.ErrorCode.HasFlag(DataLockErrorCode.Dlock07));
         }
 
-        public static bool WithCourseError(this GetManageApprenticeshipDetailsResponse.DataLock dataLockStatus)
+        public static bool WithCourseError(this GetManageApprenticeshipDetailsResponse.GetDataLockResponse.DataLock dataLockStatus)
         {
             return dataLockStatus.ErrorCode.HasFlag(DataLockErrorCode.Dlock03)
                    || dataLockStatus.ErrorCode.HasFlag(DataLockErrorCode.Dlock04)

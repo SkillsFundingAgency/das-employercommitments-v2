@@ -3,6 +3,7 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetPriceEpisodeResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 {
@@ -26,12 +27,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 
 
 
-        public static int GetPrice(this IEnumerable<GetManageApprenticeshipDetailsResponse.PriceEpisode> priceEpisodes)
+        public static int GetPrice(this IEnumerable<PriceEpisode> priceEpisodes)
         {
             return priceEpisodes.GetPrice(DateTime.UtcNow);
         }
 
-        public static int GetPrice(this IEnumerable<GetManageApprenticeshipDetailsResponse.PriceEpisode> priceEpisodes,
+        public static int GetPrice(this IEnumerable<PriceEpisode> priceEpisodes,
             DateTime effectiveDate)
         {
             var episodes = priceEpisodes.ToList();

@@ -3,7 +3,11 @@ using SFA.DAS.CommitmentsV2.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetPriceEpisodesResponse;
+using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse;
+using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetChangeOfPartyRequestResponse;
+using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetChangeOfProviderLinkResponse;
+using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetPriceEpisodeResponse;
+using DataLock = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetDataLockResponse.DataLock;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
 {
@@ -16,11 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
         public IReadOnlyCollection<ChangeOfPartyRequest> ChangeOfPartyRequests { get; set; }
         public IReadOnlyCollection<ChangeOfProviderLink> ChangeOfProviderChain { get; set; }
         public IReadOnlyCollection<ApprenticeshipOverlappingTrainingDateRequest> OverlappingTrainingDateRequest { get; set; }
-
         public bool HasMultipleDeliveryModelOptions { get; set; }
-
-
-
 
         public class GetApprenticeshipResponse
         {
@@ -79,89 +79,105 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
             public bool? IsOnFlexiPaymentPilot { get; set; }
         }
 
-        public class PriceEpisode
+
+        public class GetPriceEpisodeResponse
         {
-            public long Id { get; set; }
-            public long ApprenticeshipId { get; set; }
-            public decimal Cost { get; set; }
-            public DateTime FromDate { get; set; }
-            public DateTime? ToDate { get; set; }
+            public class PriceEpisode
+            {
+                public long Id { get; set; }
+                public long ApprenticeshipId { get; set; }
+                public decimal Cost { get; set; }
+                public DateTime FromDate { get; set; }
+                public DateTime? ToDate { get; set; }
+            }
 
             public IReadOnlyCollection<PriceEpisode> PriceEpisodes { get; set; }
         }
 
-
-        public class ApprenticeshipUpdate
+        public class GetApprenticeshipUpdateResponse
         {
-            public long Id { get; set; }
-            public long ApprenticeshipId { get; set; }
-            public Party OriginatingParty { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string Email { get; set; }
-            public DeliveryModel? DeliveryModel { get; set; }
-            public DateTime? EmploymentEndDate { get; set; }
-            public int? EmploymentPrice { get; set; }
-            public ProgrammeType? TrainingType { get; set; }
-            public string TrainingCode { get; set; }
-            public string Version { get; set; }
-            public string Option { get; set; }
-            public string TrainingName { get; set; }
-            public decimal? Cost { get; set; }
-            public DateTime? StartDate { get; set; }
-            public DateTime? EndDate { get; set; }
-            public DateTime? DateOfBirth { get; set; }
-
+            public class ApprenticeshipUpdate
+            {
+                public long Id { get; set; }
+                public long ApprenticeshipId { get; set; }
+                public Party OriginatingParty { get; set; }
+                public string FirstName { get; set; }
+                public string LastName { get; set; }
+                public string Email { get; set; }
+                public DeliveryModel? DeliveryModel { get; set; }
+                public DateTime? EmploymentEndDate { get; set; }
+                public int? EmploymentPrice { get; set; }
+                public ProgrammeType? TrainingType { get; set; }
+                public string TrainingCode { get; set; }
+                public string Version { get; set; }
+                public string Option { get; set; }
+                public string TrainingName { get; set; }
+                public decimal? Cost { get; set; }
+                public DateTime? StartDate { get; set; }
+                public DateTime? EndDate { get; set; }
+                public DateTime? DateOfBirth { get; set; }
+            }
             public IReadOnlyCollection<ApprenticeshipUpdate> ApprenticeshipUpdates { get; set; }
         }
 
-        public class DataLock
+
+        public class GetDataLockResponse
         {
-            public long Id { get; set; }
-            public DateTime DataLockEventDatetime { get; set; }
-            public string PriceEpisodeIdentifier { get; set; }
-            public long ApprenticeshipId { get; set; }
-            public string IlrTrainingCourseCode { get; set; }
-            public DateTime? IlrActualStartDate { get; set; }
-            public DateTime? IlrEffectiveFromDate { get; set; }
-            public DateTime? IlrPriceEffectiveToDate { get; set; }
-            public decimal? IlrTotalCost { get; set; }
-            public DataLockErrorCode ErrorCode { get; set; }
-            public Status DataLockStatus { get; set; }
-            public TriageStatus TriageStatus { get; set; }
-            public bool IsResolved { get; set; }
+            public class DataLock
+            {
+                public long Id { get; set; }
+                public DateTime DataLockEventDatetime { get; set; }
+                public string PriceEpisodeIdentifier { get; set; }
+                public long ApprenticeshipId { get; set; }
+                public string IlrTrainingCourseCode { get; set; }
+                public DateTime? IlrActualStartDate { get; set; }
+                public DateTime? IlrEffectiveFromDate { get; set; }
+                public DateTime? IlrPriceEffectiveToDate { get; set; }
+                public decimal? IlrTotalCost { get; set; }
+                public DataLockErrorCode ErrorCode { get; set; }
+                public Status DataLockStatus { get; set; }
+                public TriageStatus TriageStatus { get; set; }
+                public bool IsResolved { get; set; }
+            }
+            public IReadOnlyCollection<DataLock> DataLocks { get; set; }
         }
 
-        public class ChangeOfPartyRequest
-        {
-            public long Id { get; set; }
-            public ChangeOfPartyRequestType ChangeOfPartyType { get; set; }
-            public Party OriginatingParty { get; set; }
-            public ChangeOfPartyRequestStatus Status { get; set; }
-            public string EmployerName { get; set; }
-            public DateTime? StartDate { get; set; }
-            public DateTime? EndDate { get; set; }
-            public int? Price { get; set; }
-            public long? CohortId { get; set; }
-            public Party? WithParty { get; set; }
-            public long? NewApprenticeshipId { get; set; }
-            public long? ProviderId { get; set; }
 
-            public IReadOnlyCollection<ChangeOfPartyRequest> ChangeOfPartyRequests { get; set; }
+        public class GetChangeOfPartyRequestResponse
+        {
+            public class ChangeOfPartyRequest
+            {
+                public long Id { get; set; }
+                public ChangeOfPartyRequestType ChangeOfPartyType { get; set; }
+                public Party OriginatingParty { get; set; }
+                public ChangeOfPartyRequestStatus Status { get; set; }
+                public string EmployerName { get; set; }
+                public DateTime? StartDate { get; set; }
+                public DateTime? EndDate { get; set; }
+                public int? Price { get; set; }
+                public long? CohortId { get; set; }
+                public Party? WithParty { get; set; }
+                public long? NewApprenticeshipId { get; set; }
+                public long? ProviderId { get; set; }
+            }
+            public IReadOnlyCollection<ChangeOfPartyRequest> ChangeOfParty { get; set; }
         }
 
-        public class ChangeOfProviderLink
+
+        public class GetChangeOfProviderLinkResponse
         {
-            public long ApprenticeshipId { get; set; }
-            public string ProviderName { get; set; }
-            public DateTime? StartDate { get; set; }
-            public DateTime? EndDate { get; set; }
-            public DateTime? StopDate { get; set; }
-            public DateTime? CreatedOn { get; set; }
+            public class ChangeOfProviderLink
+            {
+                public long ApprenticeshipId { get; set; }
+                public string ProviderName { get; set; }
+                public DateTime? StartDate { get; set; }
+                public DateTime? EndDate { get; set; }
+                public DateTime? StopDate { get; set; }
+                public DateTime? CreatedOn { get; set; }
+            }
 
             public IReadOnlyCollection<ChangeOfProviderLink> ChangeOfProviderChain { get; set; }
         }
-
 
         public class ApprenticeshipOverlappingTrainingDateRequest
         {
@@ -172,8 +188,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
             public OverlappingTrainingDateRequestStatus Status { get; set; }
             public DateTime? ActionedOn { get; set; }
         }
-
-     
-
     }
 }

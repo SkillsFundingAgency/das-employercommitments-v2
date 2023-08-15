@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
@@ -158,7 +159,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                             && !hasPendingoverlappingTrainingDateRequest;
         }
 
-        private static PendingChanges GetPendingChanges(IEnumerable<GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdate> apprenticeshipUpdates)
+        private static PendingChanges GetPendingChanges(IEnumerable<ApprenticeshipUpdate> apprenticeshipUpdates)
         {
             var pendingChange = PendingChanges.None;
             if (apprenticeshipUpdates.Any(x => x.OriginatingParty == Party.Employer))
