@@ -6,6 +6,7 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
@@ -44,6 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private GetChangeOfProviderChainResponse _changeOfProviderChainReponse;
         private ApprenticeshipDetailsRequest _request;
         private ApprenticeshipDetailsRequestToViewModelMapper _mapper;
+        public GetManageApprenticeshipDetailsResponse GetManageApprenticeshipDetailsResponse;
 
         private const long ApprenticeshipIdFirst = 456;
         private const long ApprenticeshipIdMiddle = 356;
@@ -141,7 +143,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _apprenticeshipDetailsResponse = autoFixture.Create<GetApprenticeshipDetailsResponse>();
 
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
+
+
+            GetManageApprenticeshipDetailsResponse = autoFixture.Build<GetManageApprenticeshipDetailsResponse>()
+               .With(x => x.HasMultipleDeliveryModelOptions, false).Create();
+            _approvalsApiClient.Setup(x =>
+                    x.GetManageApprenticeshipDetails(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(GetManageApprenticeshipDetailsResponse);
             _approvalsApiClient.Setup(x => x.GetApprenticeshipDetails(_apprenticeshipResponse.ProviderId, _apprenticeshipResponse.Id, It.IsAny<CancellationToken>())).ReturnsAsync(_apprenticeshipDetailsResponse);
+
 
             _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
         }
@@ -243,7 +253,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.FirstName + " " + _apprenticeshipResponse.LastName, result.ApprenticeName);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.FirstName + " " + GetManageApprenticeshipDetailsResponse.Apprenticeship.LastName, result.ApprenticeName);
         }
 
         [Test]
@@ -253,7 +263,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.Uln, result.ULN);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.Uln, result.ULN);
         }
 
         [Test]
@@ -263,7 +273,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.DateOfBirth, result.DateOfBirth);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.DateOfBirth, result.DateOfBirth);
         }
 
         [Test]
@@ -273,7 +283,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.StartDate, result.StartDate);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.StartDate, result.StartDate);
         }
 
         [Test]
@@ -283,7 +293,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.EndDate, result.EndDate);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.EndDate, result.EndDate);
         }
 
         [Test]
@@ -293,14 +303,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.StopDate, result.StopDate);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.StopDate, result.StopDate);
         }
 
         [Test]
         public async Task CanResendInvitationLink_IsFalse_WhenStopped()
         {
             //Act
-            _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = ApprenticeshipStatus.Stopped;
             var result = await _mapper.Map(_request);
 
             //Assert
@@ -314,7 +324,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.PauseDate, result.PauseDate);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.PauseDate, result.PauseDate);
         }
 
         [Test]
@@ -324,7 +334,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.CompletionDate, result.CompletionDate);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.CompletionDate, result.CompletionDate);
         }
 
         [Test]
@@ -347,7 +357,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.Option, result.Option);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.Option, result.Option);
         }
 
         [Test]
@@ -357,14 +367,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_priceEpisodesResponse.PriceEpisodes.First().Cost, result.Cost);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PriceEpisodes.First().Cost, result.Cost);
         }
 
         [TestCase(DeliveryModel.PortableFlexiJob, DeliveryModel.PortableFlexiJob)]
         [TestCase(DeliveryModel.Regular, null)]
         public async Task DeliveryModel_IsMapped(DeliveryModel dm, DeliveryModel expected)
         {
-            _apprenticeshipResponse.DeliveryModel = dm;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.DeliveryModel = dm;
             //Act
             var result = await _mapper.Map(_request);
 
@@ -379,7 +389,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.EmploymentEndDate, result.EmploymentEndDate);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.EmploymentEndDate, result.EmploymentEndDate);
         }
 
         [Test]
@@ -389,7 +399,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.EmploymentPrice, result.EmploymentPrice);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.EmploymentPrice, result.EmploymentPrice);
         }
 
         [TestCase(ApprenticeshipStatus.Live, "Live")]
@@ -400,7 +410,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task StatusText_IsMapped(ApprenticeshipStatus status, string statusText)
         {
             //Arrange
-            _apprenticeshipResponse.Status = status;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = status;
 
             //Act
             var result = await _mapper.Map(_request);
@@ -416,7 +426,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.ProviderName, result.ProviderName);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.ProviderName, result.ProviderName);
         }
 
         [Test]
@@ -436,7 +446,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.EmployerReference, result.EmployerReference);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.EmployerReference, result.EmployerReference);
         }
 
         [Test]
@@ -445,7 +455,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Arrange
             var CohortReference = string.Empty;
             _mockEncodingService
-              .Setup(service => service.Encode(_apprenticeshipResponse.CohortId, EncodingType.CohortReference))
+              .Setup(service => service.Encode(GetManageApprenticeshipDetailsResponse.Apprenticeship.CohortId, EncodingType.CohortReference))
               .Returns(CohortReference);
 
             //Act
@@ -462,7 +472,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task EnableEdit_HasDataLockCourseChangeTriaged_IsMapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
-            _apprenticeshipUpdatesResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
+            GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
             {
                 new ApprenticeshipUpdate()
                 {
@@ -491,14 +501,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task EnableEdit_HasDataLockPriceTriaged_IsMapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
-            _apprenticeshipUpdatesResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
+            GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
             {
                 new ApprenticeshipUpdate()
                 {
                     OriginatingParty = Party.None
                 }
             };
-            _dataLocksResponse.DataLocks = new List<DataLock>
+            GetManageApprenticeshipDetailsResponse.DataLocks = new List<DataLock>
             { new DataLock
                 {
                     Id = 1,
@@ -524,7 +534,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task DataLock_TriageStatus_Mapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
-            _dataLocksResponse.DataLocks = new List<DataLock>
+            GetManageApprenticeshipDetailsResponse.DataLocks = new List<DataLock>
             { new DataLock
                 {
                     Id = 1,
@@ -550,7 +560,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task CanEditStaus_IsMapped(ApprenticeshipStatus status, bool expectedAllowEditApprentice)
         {
             //Arrange
-            _apprenticeshipResponse.Status = status;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = status;
 
             //Act
             var result = await _mapper.Map(_request);
@@ -566,7 +576,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.EndpointAssessorName, result.EndpointAssessorName);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.EndpointAssessorName, result.EndpointAssessorName);
         }
 
         [Test]
@@ -589,7 +599,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task HasPendingChangeOfProviderRequest_IsMapped(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool pendingChangeRequest)
         {
             //Arrange
-            _changeOfPartyRequestsResponse.ChangeOfPartyRequests = new List<GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest>()
+            GetManageApprenticeshipDetailsResponse.ChangeOfPartyRequests = new List<GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest>()
             {
                 new GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest
                 {
@@ -613,9 +623,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task ShowChangeTrainingProviderLink_IsMapped_When_HasContinuation(long? continuedBy, bool expected)
         {
             //Arrange
-            _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
-            _apprenticeshipResponse.ContinuedById = continuedBy;
-            _apprenticeshipResponse.DeliveryModel = DeliveryModel.Regular;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = ApprenticeshipStatus.Stopped;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.ContinuedById = continuedBy;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.DeliveryModel = DeliveryModel.Regular;
 
             //Act
             var result = await _mapper.Map(_request);
@@ -632,9 +642,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task ShowChangeProviderLink_IsMapped_For_ApprenticeshipStatus(ApprenticeshipStatus apprenticeshipStatus, bool expected)
         {
             //Arrange
-            _apprenticeshipResponse.Status = apprenticeshipStatus;
-            _apprenticeshipResponse.ContinuedById = null;
-            _apprenticeshipResponse.DeliveryModel = DeliveryModel.Regular;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = apprenticeshipStatus;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.ContinuedById = null;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.DeliveryModel = DeliveryModel.Regular;
 
             //Act
             var result = await _mapper.Map(_request);
@@ -648,9 +658,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task ShowChangeTrainingProviderLink_IsMapped_When_DeliveryModelIsSet(DeliveryModel dm, bool expected)
         {
             //Arrange
-            _apprenticeshipResponse.Status = ApprenticeshipStatus.Stopped;
-            _apprenticeshipResponse.ContinuedById = null;
-            _apprenticeshipResponse.DeliveryModel = dm;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = ApprenticeshipStatus.Stopped;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.ContinuedById = null;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.DeliveryModel = dm;
 
             //Act
             var result = await _mapper.Map(_request);
@@ -667,9 +677,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Arrange
             DateTime now = DateTime.Now;
             _request.ApprenticeshipHashedId = $"A{apprenticeshipId}";
-            _apprenticeshipResponse.Id = apprenticeshipId;
-            _apprenticeshipResponse.Status = ApprenticeshipStatus.WaitingToStart;
-            _changeOfProviderChainReponse.ChangeOfProviderChain = new List<ChangeOfProviderLink>
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Id = apprenticeshipId;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = ApprenticeshipStatus.WaitingToStart;
+            GetManageApprenticeshipDetailsResponse.ChangeOfProviderChain = new List<ChangeOfProviderLink>
             {
                 new ChangeOfProviderLink
                 {
@@ -728,7 +738,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task GetApprenticeshipConfirmationStatus_IsMappedCorrectly(ConfirmationStatus? confirmationStatus)
         {
             // Arrange
-            _apprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>()
+            GetManageApprenticeshipDetailsResponse.Apprenticeship = autoFixture.Build<GetApprenticeshipResponse>()
                 .With(x => x.Id, ApprenticeshipIdFirst)
                 .With(x => x.CourseCode, "ABC")
                 .With(x => x.Version, "1.0")
@@ -755,18 +765,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test]
         public async Task CheckEmailIsMappedCorrectly()
         {
-            _apprenticeshipResponse.Email = ApprenticeshipEmail;
-
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(ApprenticeshipEmail, result.Email);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.Email, result.Email);
         }
 
         [TestCase(true)]
         [TestCase(false)]
         public async Task CheckEmailShouldBePresentIsMappedCorrectly(bool expected)
         {
-            _apprenticeshipResponse.EmailShouldBePresent = expected;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.EmailShouldBePresent = expected;
 
             var result = await _mapper.Map(_request);
 
@@ -800,7 +808,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.RecognisePriorLearning, result.RecognisePriorLearning);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.RecognisePriorLearning, result.RecognisePriorLearning);
         }
 
         [Test]
@@ -810,7 +818,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.PriceReducedBy, result.PriceReducedBy);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.PriceReducedBy, result.PriceReducedBy);
         }
 
         [Test]
@@ -820,7 +828,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.DurationReducedBy, result.DurationReducedBy);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.DurationReducedBy, result.DurationReducedBy);
         }
 
         [Test]
@@ -942,7 +950,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.IsOnFlexiPaymentPilot, result.IsOnFlexiPaymentPilot);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.IsOnFlexiPaymentPilot, result.IsOnFlexiPaymentPilot);
         }
     }
 
