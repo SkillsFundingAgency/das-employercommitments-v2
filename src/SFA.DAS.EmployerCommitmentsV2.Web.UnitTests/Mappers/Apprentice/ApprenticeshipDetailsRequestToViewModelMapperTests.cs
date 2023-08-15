@@ -330,7 +330,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         [TestCase(ApprenticeshipStatus.Live, "Live")]
         [TestCase(ApprenticeshipStatus.Paused, "Paused")]
-        [TestCase(ApprenticeshipStatus.WaitingToStart, "Waiting to start")]
+        [TestCase(ApprenticeshipStatus.WaitingToStart, "WaitingToStart")]
         [TestCase(ApprenticeshipStatus.Stopped, "Stopped")]
         [TestCase(ApprenticeshipStatus.Completed, "Completed")]
         public async Task StatusText_IsMapped(ApprenticeshipStatus status, string statusText)
@@ -427,9 +427,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task EnableEdit_HasDataLockPriceTriaged_IsMapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
-            GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates = new List<GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse.ApprenticeshipUpdate>
+            GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
             {
-                new GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse.ApprenticeshipUpdate()
+                new ApprenticeshipUpdate()
                 {
                     OriginatingParty = Party.None
                 }
@@ -639,7 +639,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _apprenticeshipDetailsResponse = autoFixture.Create<GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse>();
 
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
-            //_approvalsApiClient.Setup(x => x.GetApprenticeshipDetails(_apprenticeshipResponse.ProviderId, _apprenticeshipResponse.Id, It.IsAny<CancellationToken>())).ReturnsAsync(_apprenticeshipDetailsResponse);
+           // _approvalsApiClient.Setup(x => x.GetApprenticeshipDetails(_apprenticeshipResponse.ProviderId, _apprenticeshipResponse.Id, It.IsAny<CancellationToken>())).ReturnsAsync(_apprenticeshipDetailsResponse);
 
             _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
 
