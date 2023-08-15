@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetPriceEpisodeResponse;
 
@@ -33,8 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse _apprenticeshipUpdatesResponse;
         private GetManageApprenticeshipDetailsResponse.GetDataLockResponse _dataLocksResponse;
         private GetManageApprenticeshipDetailsResponse.GetChangeOfPartyRequestResponse _changeOfPartyRequestsResponse;
-
-        private GetManageApprenticeshipDetailsResponse.ApprenticeshipOverlappingTrainingDateRequest _overlappingTrainingDateRequestResponce;
+        private GetManageApprenticeshipDetailsResponse.GetApprenticeshipOverlappingTrainingDateResponse _overlappingTrainingDateRequestResponce;
 
         private GetTrainingProgrammeResponse _getTrainingProgrammeByStandardUId;
         private GetNewerTrainingProgrammeVersionsResponse _newerTrainingProgrammeVersionsResponse;
@@ -71,7 +71,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     new PriceEpisode { Cost = 1000, ToDate = DateTime.Now.AddMonths(-1)}})
                 .Create();
 
-            _overlappingTrainingDateRequestResponce = autoFixture.Create<GetManageApprenticeshipDetailsResponse.ApprenticeshipOverlappingTrainingDateRequest>();
+            _overlappingTrainingDateRequestResponce = autoFixture.Create<GetManageApprenticeshipDetailsResponse.GetApprenticeshipOverlappingTrainingDateResponse>();
 
             _apprenticeshipUpdatesResponse = autoFixture.Build<GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse>()
                 .With(x => x.ApprenticeshipUpdates, new List<ApprenticeshipUpdate> {
@@ -136,8 +136,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     x.GetManageApprenticeshipDetails(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(GetManageApprenticeshipDetailsResponse);
 
-            //_approvalsApiClient.Setup(x => x.GetApprenticeshipDetails(_apprenticeshipResponse.ProviderId, _apprenticeshipResponse.Id, It.IsAny<CancellationToken>())).ReturnsAsync(_apprenticeshipDetailsResponse);
-
 
             _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
         }
@@ -149,7 +147,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            _mockCommitmentsApiClient.Verify(t => t.GetNewerTrainingProgrammeVersions(_apprenticeshipResponse.StandardUId, It.IsAny<CancellationToken>()), Times.Once());
+            _mockCommitmentsApiClient.Verify(t => t.GetNewerTrainingProgrammeVersions(GetManageApprenticeshipDetailsResponse.Apprenticeship.StandardUId, It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Test]
@@ -636,10 +634,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 }
             };
 
-            _apprenticeshipDetailsResponse = autoFixture.Create<GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse>();
-
-            _approvalsApiClient = new Mock<IApprovalsApiClient>();
-           // _approvalsApiClient.Setup(x => x.GetApprenticeshipDetails(_apprenticeshipResponse.ProviderId, _apprenticeshipResponse.Id, It.IsAny<CancellationToken>())).ReturnsAsync(_apprenticeshipDetailsResponse);
 
             _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
 
@@ -673,9 +667,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
 
             _apprenticeshipDetailsResponse = autoFixture.Create<GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse>();
-
-            _approvalsApiClient = new Mock<IApprovalsApiClient>();
-            //_approvalsApiClient.Setup(x => x.GetApprenticeshipDetails(_apprenticeshipResponse.ProviderId, _apprenticeshipResponse.Id, It.IsAny<CancellationToken>())).ReturnsAsync(_apprenticeshipDetailsResponse);
 
             _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
 
@@ -758,16 +749,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test]
         public async Task HasPendingOverlappingTrainingDateRequestIsMappedWhenStatusIsPending()
         {
-            ////Arrange
-            //_overlappingTrainingDateRequestResponce = autoFixture.Create<GetOverlappingTrainingDateRequestResponce>();
-            //_overlappingTrainingDateRequestResponce.OverlappingTrainingDateRequest.First().Status = OverlappingTrainingDateRequestStatus.Pending;
-
-            //_mockCommitmentsApiClient
-            //    .Setup(c => c.GetOverlappingTrainingDateRequest(It.IsAny<long>(), CancellationToken.None))
-            //    .ReturnsAsync(_overlappingTrainingDateRequestResponce);
-
-            _approvalsApiClient = new Mock<IApprovalsApiClient>();
-            //_approvalsApiClient.Setup(x => x.GetApprenticeshipDetails(_apprenticeshipResponse.ProviderId, _apprenticeshipResponse.Id, It.IsAny<CancellationToken>())).ReturnsAsync(_apprenticeshipDetailsResponse);
+            //Arrange
+            _overlappingTrainingDateRequestResponce = autoFixture.Create<GetManageApprenticeshipDetailsResponse.GetApprenticeshipOverlappingTrainingDateResponse>();
+            _overlappingTrainingDateRequestResponce.ApprenticeshipOverlappingTrainingDates.First().Status = OverlappingTrainingDateRequestStatus.Pending;
 
             _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
 
@@ -844,7 +828,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = ApprenticeshipStatus.Live;
 
-            GetManageApprenticeshipDetailsResponse.OverlappingTrainingDateRequest = (IReadOnlyCollection<GetManageApprenticeshipDetailsResponse.ApprenticeshipOverlappingTrainingDateRequest>)autoFixture.Create<GetManageApprenticeshipDetailsResponse.ApprenticeshipOverlappingTrainingDateRequest>();
+            GetManageApprenticeshipDetailsResponse.OverlappingTrainingDateRequest = autoFixture.Create<List<GetApprenticeshipOverlappingTrainingDateResponse.ApprenticeshipOverlappingTrainingDate>>();
 
             foreach (var request in GetManageApprenticeshipDetailsResponse.OverlappingTrainingDateRequest)
             {

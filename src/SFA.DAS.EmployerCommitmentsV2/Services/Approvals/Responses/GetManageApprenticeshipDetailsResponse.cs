@@ -12,7 +12,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
         public IReadOnlyCollection<GetDataLockResponse.DataLock> DataLocks { get; set; }
         public IReadOnlyCollection<GetChangeOfPartyRequestResponse.ChangeOfPartyRequest> ChangeOfPartyRequests { get; set; }
         public IReadOnlyCollection<GetChangeOfProviderLinkResponse.ChangeOfProviderLink> ChangeOfProviderChain { get; set; }
-        public IReadOnlyCollection<ApprenticeshipOverlappingTrainingDateRequest> OverlappingTrainingDateRequest { get; set; }
+        public IReadOnlyCollection<GetApprenticeshipOverlappingTrainingDateResponse.ApprenticeshipOverlappingTrainingDate> OverlappingTrainingDateRequest { get; set; }
         public bool HasMultipleDeliveryModelOptions { get; set; }
 
         public class GetApprenticeshipResponse
@@ -172,14 +172,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
             public IReadOnlyCollection<ChangeOfProviderLink> ChangeOfProviderChain { get; set; }
         }
 
-        public class ApprenticeshipOverlappingTrainingDateRequest
+        public class GetApprenticeshipOverlappingTrainingDateResponse
         {
-            public long Id { get; set; }
-            public long DraftApprenticeshipId { get; set; }
-            public long PreviousApprenticeshipId { get; set; }
-            public OverlappingTrainingDateRequestResolutionType? ResolutionType { get; set; }
-            public OverlappingTrainingDateRequestStatus Status { get; set; }
-            public DateTime? ActionedOn { get; set; }
+            public class ApprenticeshipOverlappingTrainingDate
+            {
+                public long Id { get; set; }
+                public long DraftApprenticeshipId { get; set; }
+                public long PreviousApprenticeshipId { get; set; }
+                public OverlappingTrainingDateRequestResolutionType? ResolutionType { get; set; }
+                public OverlappingTrainingDateRequestStatus Status { get; set; }
+                public DateTime? ActionedOn { get; set; }
+            }
+            public IReadOnlyCollection<ApprenticeshipOverlappingTrainingDate> ApprenticeshipOverlappingTrainingDates { get; set; }
         }
     }
 }
