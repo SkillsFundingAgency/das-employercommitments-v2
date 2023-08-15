@@ -147,7 +147,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             }
         }
 
-        private static bool EnableEdit(CommitmentsV2.Api.Types.Responses.GetApprenticeshipResponse apprenticeship, PendingChanges pendingChange,
+        private static bool EnableEdit(GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse apprenticeship, PendingChanges pendingChange,
             bool dataLockCourseTriaged, bool dataLockCourseChangedTraiged, bool dataLockPriceTriaged, bool hasPendingoverlappingTrainingDateRequest)
         {
             return pendingChange == PendingChanges.None
@@ -158,7 +158,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                             && !hasPendingoverlappingTrainingDateRequest;
         }
 
-        private static PendingChanges GetPendingChanges(IEnumerable<GetApprenticeshipUpdatesResponse.ApprenticeshipUpdate> apprenticeshipUpdates)
+        private static PendingChanges GetPendingChanges(IEnumerable<GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdate> apprenticeshipUpdates)
         {
             var pendingChange = PendingChanges.None;
             if (apprenticeshipUpdates.Any(x => x.OriginatingParty == Party.Employer))
@@ -182,5 +182,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
             return false;
         }
+
     }
 }

@@ -167,66 +167,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task GetApprenticeshipIsCalled()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            _mockCommitmentsApiClient.Verify(t => t.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
-        }
-
-        [Test]
-        public async Task GetPriceEpisodesIsCalled()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            _mockCommitmentsApiClient.Verify(t => t.GetPriceEpisodes(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
-        }
-
-        [Test]
-        public async Task GetApprenticeshipUpdatesIsCalled()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            _mockCommitmentsApiClient.Verify(t => t.GetApprenticeshipUpdates(It.IsAny<long>(), It.IsAny<GetApprenticeshipUpdatesRequest>(), It.IsAny<CancellationToken>()), Times.Once());
-        }
-
-        [Test]
-        public async Task GetApprenticeshipDatalocksStatusIsCalled()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            _mockCommitmentsApiClient.Verify(t => t.GetApprenticeshipDatalocksStatus(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
-        }
-
-        [Test]
-        public async Task GetChangeOfPartyRequestsIsCalled()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            _mockCommitmentsApiClient.Verify(t => t.GetChangeOfPartyRequests(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
-        }
-
-        [Test]
-        public async Task GetChangeOfProviderChainIsCalled()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            _mockCommitmentsApiClient.Verify(t => t.GetChangeOfProviderChain(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
-        }
-
-        [Test]
         public async Task HashedApprenticeshipId_IsMapped()
         {
             //Act
@@ -472,9 +412,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task EnableEdit_HasDataLockCourseChangeTriaged_IsMapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
-            GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
+            GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates = new List<GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdate>
             {
-                new ApprenticeshipUpdate()
+                new GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdate()
                 {
                     OriginatingParty = Party.None
                 }
@@ -501,15 +441,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task EnableEdit_HasDataLockPriceTriaged_IsMapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
-            GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
+            GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates = new List<GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdate>
             {
-                new ApprenticeshipUpdate()
+                new GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdate()
                 {
                     OriginatingParty = Party.None
                 }
             };
-            GetManageApprenticeshipDetailsResponse.DataLocks = new List<DataLock>
-            { new DataLock
+            GetManageApprenticeshipDetailsResponse.DataLocks = new List<GetManageApprenticeshipDetailsResponse.DataLock>
+            { new GetManageApprenticeshipDetailsResponse.DataLock
                 {
                     Id = 1,
                     TriageStatus = TriageStatus.Change,
@@ -534,8 +474,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task DataLock_TriageStatus_Mapped(DataLockErrorCode dataLockErrorCode, bool expectedTriageOption)
         {
             //Arrange
-            GetManageApprenticeshipDetailsResponse.DataLocks = new List<DataLock>
-            { new DataLock
+            GetManageApprenticeshipDetailsResponse.DataLocks = new List<GetManageApprenticeshipDetailsResponse.DataLock>
+            { new GetManageApprenticeshipDetailsResponse.DataLock
                 {
                     Id = 1,
                     TriageStatus = TriageStatus.Change,
@@ -599,9 +539,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task HasPendingChangeOfProviderRequest_IsMapped(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool pendingChangeRequest)
         {
             //Arrange
-            GetManageApprenticeshipDetailsResponse.ChangeOfPartyRequests = new List<GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest>()
+            GetManageApprenticeshipDetailsResponse.ChangeOfPartyRequests = new List<GetManageApprenticeshipDetailsResponse.ChangeOfPartyRequest>()
             {
-                new GetChangeOfPartyRequestsResponse.ChangeOfPartyRequest
+                new GetManageApprenticeshipDetailsResponse.ChangeOfPartyRequest
                 {
                     Id = 1,
                     ChangeOfPartyType = ChangeOfPartyRequestType.ChangeProvider,
@@ -679,9 +619,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _request.ApprenticeshipHashedId = $"A{apprenticeshipId}";
             GetManageApprenticeshipDetailsResponse.Apprenticeship.Id = apprenticeshipId;
             GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = ApprenticeshipStatus.WaitingToStart;
-            GetManageApprenticeshipDetailsResponse.ChangeOfProviderChain = new List<ChangeOfProviderLink>
+            GetManageApprenticeshipDetailsResponse.ChangeOfProviderChain = new List<GetManageApprenticeshipDetailsResponse.ChangeOfProviderLink>
             {
-                new ChangeOfProviderLink
+                new GetManageApprenticeshipDetailsResponse.ChangeOfProviderLink
                 {
                     ApprenticeshipId = ApprenticeshipIdFirst,
                     StartDate = now,
@@ -690,7 +630,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     ProviderName = "ProviderFirst",
                     CreatedOn = now.AddDays(-12)
                 },
-                new ChangeOfProviderLink
+                new GetManageApprenticeshipDetailsResponse.ChangeOfProviderLink
                 {
                     ApprenticeshipId = ApprenticeshipIdMiddle,
                     StartDate = now.AddDays(-10),
@@ -699,7 +639,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                     ProviderName = "ProviderMiddle",
                     CreatedOn = now.AddDays(-22)
                 },
-                new ChangeOfProviderLink
+                new GetManageApprenticeshipDetailsResponse.ChangeOfProviderLink
                 {
                     ApprenticeshipId = ApprenticeshipIdLast,
                     StartDate = now.AddDays(-20),
@@ -738,7 +678,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task GetApprenticeshipConfirmationStatus_IsMappedCorrectly(ConfirmationStatus? confirmationStatus)
         {
             // Arrange
-            GetManageApprenticeshipDetailsResponse.Apprenticeship = autoFixture.Build<GetApprenticeshipResponse>()
+            GetManageApprenticeshipDetailsResponse.Apprenticeship = autoFixture.Build<GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse>()
                 .With(x => x.Id, ApprenticeshipIdFirst)
                 .With(x => x.CourseCode, "ABC")
                 .With(x => x.Version, "1.0")
@@ -918,11 +858,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _dataLocksResponse.DataLocks = new List<DataLock>();
 
-            _apprenticeshipResponse.Status = ApprenticeshipStatus.Live;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = ApprenticeshipStatus.Live;
 
             _overlappingTrainingDateRequestResponce = autoFixture.Create<GetOverlappingTrainingDateRequestResponce>();
 
-            foreach (var request in _overlappingTrainingDateRequestResponce.OverlappingTrainingDateRequest)
+            foreach (var request in GetManageApprenticeshipDetailsResponse.OverlappingTrainingDateRequest)
             {
                 request.Status = status;
             }
