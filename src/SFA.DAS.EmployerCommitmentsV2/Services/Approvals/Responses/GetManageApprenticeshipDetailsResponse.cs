@@ -1,24 +1,17 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Types.Responses;
-using SFA.DAS.CommitmentsV2.Types;
+﻿using SFA.DAS.CommitmentsV2.Types;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse;
-using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetChangeOfPartyRequestResponse;
-using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetChangeOfProviderLinkResponse;
-using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetPriceEpisodeResponse;
-using DataLock = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetDataLockResponse.DataLock;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
 {
     public class GetManageApprenticeshipDetailsResponse
     {
         public GetApprenticeshipResponse Apprenticeship { get; set; }
-        public IEnumerable<PriceEpisode> PriceEpisodes { get; set; }
-        public IEnumerable<ApprenticeshipUpdate> ApprenticeshipUpdates { get; set; }
-        public IReadOnlyCollection<DataLock> DataLocks { get; set; }
-        public IReadOnlyCollection<ChangeOfPartyRequest> ChangeOfPartyRequests { get; set; }
-        public IReadOnlyCollection<ChangeOfProviderLink> ChangeOfProviderChain { get; set; }
+        public IEnumerable<GetPriceEpisodeResponse.PriceEpisode> PriceEpisodes { get; set; }
+        public IEnumerable<GetApprenticeshipUpdateResponse.ApprenticeshipUpdate> ApprenticeshipUpdates { get; set; }
+        public IReadOnlyCollection<GetDataLockResponse.DataLock> DataLocks { get; set; }
+        public IReadOnlyCollection<GetChangeOfPartyRequestResponse.ChangeOfPartyRequest> ChangeOfPartyRequests { get; set; }
+        public IReadOnlyCollection<GetChangeOfProviderLinkResponse.ChangeOfProviderLink> ChangeOfProviderChain { get; set; }
         public IReadOnlyCollection<ApprenticeshipOverlappingTrainingDateRequest> OverlappingTrainingDateRequest { get; set; }
         public bool HasMultipleDeliveryModelOptions { get; set; }
 

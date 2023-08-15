@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.CommitmentsV2.Types;
@@ -18,7 +17,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetPriceEpisodeResponse;
 
@@ -112,14 +110,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _changeOfProviderChainReponse = autoFixture.Build<GetChangeOfProviderChainResponse>().Create();
 
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            //_mockCommitmentsApiClient.Setup(c => c.GetPriceEpisodes(It.IsAny<long>(), CancellationToken.None))
-            //    .ReturnsAsync(_priceEpisodesResponse);
-            //_mockCommitmentsApiClient.Setup(c => c.GetApprenticeshipUpdates(It.IsAny<long>(), It.IsAny<GetApprenticeshipUpdatesRequest>(), CancellationToken.None))
-            //    .ReturnsAsync(_apprenticeshipUpdatesResponse);
-            //_mockCommitmentsApiClient.Setup(c => c.GetApprenticeshipDatalocksStatus(It.IsAny<long>(), CancellationToken.None))
-            //    .ReturnsAsync(_dataLocksResponse);
-            //_mockCommitmentsApiClient.Setup(c => c.GetChangeOfPartyRequests(It.IsAny<long>(), CancellationToken.None))
-                //.ReturnsAsync(_changeOfPartyRequestsResponse);
             _mockCommitmentsApiClient.Setup(t => t.GetNewerTrainingProgrammeVersions(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(_newerTrainingProgrammeVersionsResponse);
             _mockCommitmentsApiClient.Setup(t => t.GetChangeOfProviderChain(It.IsAny<long>(), CancellationToken.None))
@@ -128,8 +118,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .ReturnsAsync(_getTrainingProgrammeByStandardUId);
             _mockCommitmentsApiClient.Setup(c => c.GetTrainingProgramme(It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(_getTrainingProgrammeResponse);
-            //_mockCommitmentsApiClient.Setup(c => c.GetOverlappingTrainingDateRequest(It.IsAny<long>(), CancellationToken.None))
-            //   .ReturnsAsync(_overlappingTrainingDateRequestResponce);
 
             _mockEncodingService = new Mock<IEncodingService>();
             _mockEncodingService.Setup(t => t.Encode(It.IsAny<long>(), It.IsAny<EncodingType>()))
