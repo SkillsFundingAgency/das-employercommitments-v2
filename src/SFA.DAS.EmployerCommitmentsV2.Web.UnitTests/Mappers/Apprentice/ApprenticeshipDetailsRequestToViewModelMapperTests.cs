@@ -289,7 +289,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PriceEpisodes.First().Cost, result.Cost);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PriceEpisodes.FirstOrDefault().Cost, result.Cost);
         }
 
         [TestCase(DeliveryModel.PortableFlexiJob, DeliveryModel.PortableFlexiJob)]
