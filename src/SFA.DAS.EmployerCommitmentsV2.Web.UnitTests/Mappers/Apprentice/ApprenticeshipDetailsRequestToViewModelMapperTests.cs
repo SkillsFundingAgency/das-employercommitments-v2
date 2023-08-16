@@ -30,12 +30,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private Mock<IApprovalsApiClient> _approvalsApiClient;
         private Mock<IEncodingService> _mockEncodingService;
         private GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse _apprenticeshipResponse;
-        private GetManageApprenticeshipDetailsResponse.GetPriceEpisodeResponse _priceEpisodesResponse;
-        private GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse _apprenticeshipUpdatesResponse;
-        private GetManageApprenticeshipDetailsResponse.GetDataLockResponse _dataLocksResponse;
-        private GetManageApprenticeshipDetailsResponse.GetChangeOfPartyRequestResponse _changeOfPartyRequestsResponse;
-        private GetManageApprenticeshipDetailsResponse.GetApprenticeshipOverlappingTrainingDateResponse _overlappingTrainingDateRequestResponce;
-
+        private GetPriceEpisodeResponse _priceEpisodesResponse;
+        private GetApprenticeshipUpdateResponse _apprenticeshipUpdatesResponse;
+        private GetDataLockResponse _dataLocksResponse;
+        private GetChangeOfPartyRequestResponse _changeOfPartyRequestsResponse;
+        private GetApprenticeshipOverlappingTrainingDateResponse _overlappingTrainingDateRequestResponce;
+            
         private GetTrainingProgrammeResponse _getTrainingProgrammeByStandardUId;
         private GetNewerTrainingProgrammeVersionsResponse _newerTrainingProgrammeVersionsResponse;
         private GetTrainingProgrammeResponse _getTrainingProgrammeResponse;
@@ -59,6 +59,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .With(x => x.AccountHashedId, $"A123")
                 .With(x => x.ApprenticeshipHashedId, $"A{ApprenticeshipIdFirst}")
                 .Create();
+
             _apprenticeshipResponse = autoFixture.Build<GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse>()
                 .With(x => x.Id, ApprenticeshipIdFirst)
                 .With(x => x.CourseCode, "123")
@@ -66,19 +67,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .With(x => x.Version, "1.0")
                 .With(x => x.DateOfBirth, autoFixture.Create<DateTime>())
                 .Create();
-            _priceEpisodesResponse = autoFixture.Build<GetManageApprenticeshipDetailsResponse.GetPriceEpisodeResponse>()
+            _priceEpisodesResponse = autoFixture.Build<GetPriceEpisodeResponse>()
                  .With(x => x.PriceEpisodes, new List<PriceEpisode> {
                     new PriceEpisode { Cost = 1000, ToDate = DateTime.Now.AddMonths(-1)}})
                 .Create();
 
-            _overlappingTrainingDateRequestResponce = autoFixture.Create<GetManageApprenticeshipDetailsResponse.GetApprenticeshipOverlappingTrainingDateResponse>();
+            _overlappingTrainingDateRequestResponce = autoFixture.Create<GetApprenticeshipOverlappingTrainingDateResponse>();
 
-            _apprenticeshipUpdatesResponse = autoFixture.Build<GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse>()
+            _apprenticeshipUpdatesResponse = autoFixture.Build<GetApprenticeshipUpdateResponse>()
                 .With(x => x.ApprenticeshipUpdates, new List<ApprenticeshipUpdate> {
                     new ApprenticeshipUpdate { OriginatingParty = Party.Employer } })
                 .Create();
-            _dataLocksResponse = autoFixture.Build<GetManageApprenticeshipDetailsResponse.GetDataLockResponse>().Create();
-            _changeOfPartyRequestsResponse = autoFixture.Build<GetManageApprenticeshipDetailsResponse.GetChangeOfPartyRequestResponse>().Create();
+            _dataLocksResponse = autoFixture.Build<GetDataLockResponse>().Create();
+            _changeOfPartyRequestsResponse = autoFixture.Build<GetChangeOfPartyRequestResponse>().Create();
 
             var trainingProgrammeByStandardUId = autoFixture.Build<TrainingProgramme>()
                 .With(x => x.CourseCode, _apprenticeshipResponse.CourseCode)
@@ -131,7 +132,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
 
             GetManageApprenticeshipDetailsResponse = autoFixture.Build<GetManageApprenticeshipDetailsResponse>()
-               .With(x => x.HasMultipleDeliveryModelOptions, false).Create();
+               .With(x => x.HasMultipleDeliveryModelOptions, false)
+               .With(x => x.ApprenticeshipUpdates)
+               .With(x => x.ChangeOfPartyRequests)
+               .With(x => x.ChangeOfProviderChain)
+               .With(x => x.DataLocks)
+               .With(x => x.OverlappingTrainingDateRequest)
+               .Create();
+
             _approvalsApiClient.Setup(x =>
                     x.GetManageApprenticeshipDetails(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(GetManageApprenticeshipDetailsResponse);

@@ -376,17 +376,17 @@
 
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table__header  das-table-cell-width-45">Off-the-job training time reduction due to prior learning</th>
-                            <td id="apprenticeship-rpl-training-time-reduction" class="govuk-table__cell das-table-cell-width-55">@Model.RecognisePriorLearning</td>
+                            <td id="apprenticeship-rpl-training-time-reduction" class="govuk-table__cell das-table-cell-width-55">@Model.TrainingTotalHours.GetValueOrDefault().ToString("N0") hours</td>
                         </tr>
 
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table__header">Duration reduction due to prior learning</th>
-                            <td id="apprenticeship-rpl-duration-reduction" class="govuk-table__cell">@Model>@Model.DurationReducedBy</td>
+                            <td id="apprenticeship-rpl-duration-reduction" class="govuk-table__cell">@Model>@Model.DurationReducedByHours.GetValueOrDefault().ToString("N0") hours</td>
                         </tr>
 
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table__header">Price reduction due to prior learning</th>
-                            <td id="apprenticeship-rpl-price-reduction" class="govuk-table__cell">@Model.PriceReducedBy.FormatCost()</td>
+                            <td id="apprenticeship-rpl-price-reduction" class="govuk-table__cell">£@Model.PriceReducedBy.GetValueOrDefault().ToString("N0")</td>
                         </tr>
 
                     </tbody>

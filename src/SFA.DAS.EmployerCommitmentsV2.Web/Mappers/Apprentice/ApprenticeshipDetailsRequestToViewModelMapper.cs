@@ -116,6 +116,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     RecognisePriorLearning = response.Apprenticeship.RecognisePriorLearning,
                     DurationReducedBy = response.Apprenticeship.DurationReducedBy,
                     PriceReducedBy = response.Apprenticeship.PriceReducedBy,
+                    TrainingTotalHours = response.Apprenticeship.TrainingTotalHours,
+                    DurationReducedByHours = response.Apprenticeship.DurationReducedByHours,
+                    IsDurationReducedByRpl = response.Apprenticeship.IsDurationReducedByRpl,
                     HasPendingOverlappingTrainingDateRequest = hasPendingoverlappingTrainingDateRequest,
                     HasMultipleDeliveryModelOptions = response.HasMultipleDeliveryModelOptions,
                     IsOnFlexiPaymentPilot = response.Apprenticeship.IsOnFlexiPaymentPilot

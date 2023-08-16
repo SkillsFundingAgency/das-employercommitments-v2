@@ -83,7 +83,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
                 public DateTime FromDate { get; set; }
                 public DateTime? ToDate { get; set; }
             }
-
             public IReadOnlyCollection<PriceEpisode> PriceEpisodes { get; set; }
         }
 
@@ -113,7 +112,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
             public IReadOnlyCollection<ApprenticeshipUpdate> ApprenticeshipUpdates { get; set; }
         }
 
-
         public class GetDataLockResponse
         {
             public class DataLock
@@ -135,7 +133,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
             public IReadOnlyCollection<DataLock> DataLocks { get; set; }
         }
 
-
         public class GetChangeOfPartyRequestResponse
         {
             public class ChangeOfPartyRequest
@@ -156,7 +153,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
             public IReadOnlyCollection<ChangeOfPartyRequest> ChangeOfParty { get; set; }
         }
 
-
         public class GetChangeOfProviderLinkResponse
         {
             public class ChangeOfProviderLink
@@ -168,7 +164,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
                 public DateTime? StopDate { get; set; }
                 public DateTime? CreatedOn { get; set; }
             }
-
             public IReadOnlyCollection<ChangeOfProviderLink> ChangeOfProviderChain { get; set; }
         }
 
