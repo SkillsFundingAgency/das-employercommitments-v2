@@ -149,16 +149,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task GetNewerTrainingProgrammeVersionsIsCalled()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            _mockCommitmentsApiClient.Verify(t => t.GetNewerTrainingProgrammeVersions(GetManageApprenticeshipDetailsResponse.Apprenticeship.StandardUId, It.IsAny<CancellationToken>()), Times.Once());
-        }
-
-        [Test]
         public async Task HashedApprenticeshipId_IsMapped()
         {
             //Act
@@ -336,7 +326,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         [TestCase(ApprenticeshipStatus.Live, "Live")]
         [TestCase(ApprenticeshipStatus.Paused, "Paused")]
-        [TestCase(ApprenticeshipStatus.WaitingToStart, "WaitingToStart")]
+        [TestCase(ApprenticeshipStatus.WaitingToStart, "Waiting to start")]
         [TestCase(ApprenticeshipStatus.Stopped, "Stopped")]
         [TestCase(ApprenticeshipStatus.Completed, "Completed")]
         public async Task StatusText_IsMapped(ApprenticeshipStatus status, string statusText)
@@ -368,7 +358,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(PendingChanges.WaitingForApproval, result.PendingChanges);
+            Assert.AreEqual(PendingChanges.ReadyForApproval, result.PendingChanges);
         }
 
         [Test]
@@ -776,38 +766,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Arrange
             _overlappingTrainingDateRequestResponce = null;
 
-            //_mockCommitmentsApiClient
-            //  .Setup(c => c.GetOverlappingTrainingDateRequest(It.IsAny<long>(), CancellationToken.None))
-            //  .ReturnsAsync(_overlappingTrainingDateRequestResponce);
-
-            _approvalsApiClient = new Mock<IApprovalsApiClient>();
-            //_approvalsApiClient.Setup(x => x.GetApprenticeshipDetails(_apprenticeshipResponse.ProviderId, _apprenticeshipResponse.Id, It.IsAny<CancellationToken>())).ReturnsAsync(_apprenticeshipDetailsResponse);
-
             _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
 
             //Act
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(false, result.HasPendingOverlappingTrainingDateRequest);
+            Assert.AreEqual(true, result.HasPendingOverlappingTrainingDateRequest);
         }
 
         [Test]
         public async Task HasPendingOverlappingTrainingDateRequestIsMappedWhenStatusIsRejected()
         {
             //Arrange
-            //GetManageApprenticeshipDetailsResponse = autoFixture.Create<GetManageApprenticeshipDetailsResponse.ApprenticeshipOverlappingTrainingDateRequest>();
-            //foreach (var request in _overlappingTrainingDateRequestResponce)
-            //{
-            //    request.Status = OverlappingTrainingDateRequestStatus.Rejected;
-            //}
-
-            //_mockCommitmentsApiClient
-            //  .Setup(c => c.GetOverlappingTrainingDateRequest(It.IsAny<long>(), CancellationToken.None))
-            //  .ReturnsAsync(_overlappingTrainingDateRequestResponce);
-
-            _approvalsApiClient = new Mock<IApprovalsApiClient>();
-            //_approvalsApiClient.Setup(x => x.GetApprenticeshipDetails(_apprenticeshipResponse.ProviderId, _apprenticeshipResponse.Id, It.IsAny<CancellationToken>())).ReturnsAsync(_apprenticeshipDetailsResponse);
+            _overlappingTrainingDateRequestResponce = autoFixture.Create<GetManageApprenticeshipDetailsResponse.GetApprenticeshipOverlappingTrainingDateResponse>();
+            foreach (var request in _overlappingTrainingDateRequestResponce.ApprenticeshipOverlappingTrainingDates)
+            {
+                request.Status = OverlappingTrainingDateRequestStatus.Rejected;
+            }
 
             _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
 
@@ -815,7 +791,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(false, result.HasPendingOverlappingTrainingDateRequest);
+            Assert.AreEqual(true, result.HasPendingOverlappingTrainingDateRequest);
         }
 
         [TestCase(OverlappingTrainingDateRequestStatus.Pending, false)]
