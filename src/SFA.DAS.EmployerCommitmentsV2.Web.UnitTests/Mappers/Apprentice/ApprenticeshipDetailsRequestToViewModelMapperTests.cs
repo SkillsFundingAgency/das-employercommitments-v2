@@ -135,6 +135,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                .With(x => x.HasMultipleDeliveryModelOptions, false)
                .With(x => x.ApprenticeshipUpdates)
                .With(x => x.ChangeOfPartyRequests)
+               .With(x => x.PriceEpisodes, new List<PriceEpisode> { new PriceEpisode { Cost = 1000, ToDate = DateTime.Now.AddMonths(-1)}})
                .With(x => x.ChangeOfProviderChain)
                .With(x => x.DataLocks)
                .With(x => x.OverlappingTrainingDateRequest)
