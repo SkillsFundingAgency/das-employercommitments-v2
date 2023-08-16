@@ -31,11 +31,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
                    || dataLockStatus.ErrorCode.HasFlag(DataLockErrorCode.Dlock06);
         }
 
-
-
-
-
-
         public static bool HasDataLockCourseTriaged(this IReadOnlyCollection<GetManageApprenticeshipDetailsResponse.GetDataLockResponse.DataLock> dataLocks)
         {
             return dataLocks.Any(x => x.TriageStatus == TriageStatus.Restart && x.DataLockStatus == Status.Fail && !x.IsResolved && x.WithCourseError());
@@ -58,7 +53,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
                    || dataLockStatus.ErrorCode.HasFlag(DataLockErrorCode.Dlock05)
                    || dataLockStatus.ErrorCode.HasFlag(DataLockErrorCode.Dlock06);
         }
-
-
     }
 }

@@ -24,8 +24,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
             return (int)(episode?.Cost ?? episodes.First().Cost);
         }
 
-
-
         public static int GetPrice(this IEnumerable<PriceEpisode> priceEpisodes)
         {
             return priceEpisodes.GetPrice(DateTime.UtcNow);
@@ -36,13 +34,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
         {
             var episodes = priceEpisodes.ToList();
 
-            var episode = episodes.SingleOrDefault(x =>
+            var episode = episodes.FirstOrDefault(x =>
                 x.FromDate <= effectiveDate && (x.ToDate == null || x.ToDate >= effectiveDate));
 
             return (int)(episode?.Cost ?? episodes.First().Cost);
         }
-
-
 
     }
 }
