@@ -1,23 +1,45 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
     public class ErrorController : Controller
     {
-        [Route("error")]
-        public IActionResult Error(int? statusCode)
-        {            
+        [Route("badrequest")]
+        public IActionResult BadRequest()
+        {
             ViewBag.HideNav = true;
+            Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-            switch (statusCode)
-            {
-                case 400:
-                case 403:
-                case 404:
-                    return View(statusCode.ToString());
-                default:
-                    return View();
-            }
+            return View();
+        }
+        
+        [Route("accessdenied")]
+        public IActionResult AccessDenied()
+        {
+            ViewBag.HideNav = true;
+            Response.StatusCode = (int)HttpStatusCode.Forbidden;
+
+            return View();
+        }
+
+        [Route("error")]
+        public IActionResult Error()
+        {
+            ViewBag.HideNav = true;
+            
+            Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            return View();
+        }
+
+        [Route("notfound")]
+        public IActionResult NotFound()
+        {
+            ViewBag.HideNav = true;
+            Response.StatusCode = (int)HttpStatusCode.NotFound;
+
+            return View();
         }
     }
 }
