@@ -1,8 +1,10 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
+    [AllowAnonymous]
     public class ErrorController : Controller
     {
         [Route("badrequest")]
