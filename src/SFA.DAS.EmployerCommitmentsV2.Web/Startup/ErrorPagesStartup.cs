@@ -8,7 +8,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
     {
         public static IApplicationBuilder UseDasErrorPages(this IApplicationBuilder app, IWebHostEnvironment environment)
         {
-
             if (environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -17,6 +16,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
             {
                 app.UseExceptionHandler("/error");
             }
+
+            app.UseStatusCodePagesWithReExecute("/error", "?statuscode={0}");
 
             return app;
         }

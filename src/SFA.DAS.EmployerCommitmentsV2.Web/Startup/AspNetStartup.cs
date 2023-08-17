@@ -44,6 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         public void Configure(IApplicationBuilder app)
         {
             app.UseDasErrorPages(_environment)
+                .UseUnauthorizedAccessExceptionHandler()
                 .UseHttpsRedirection()
                 .UseDasHsts()
                 .UseStaticFiles()
