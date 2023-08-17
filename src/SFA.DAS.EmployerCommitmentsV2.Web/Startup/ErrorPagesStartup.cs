@@ -16,7 +16,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
             else
             {
                 app.UseExceptionHandler("/error");
-                app.UseStatusCodePagesWithRedirects("~/error/?statuscode={0}");
             }
 
             return app;
