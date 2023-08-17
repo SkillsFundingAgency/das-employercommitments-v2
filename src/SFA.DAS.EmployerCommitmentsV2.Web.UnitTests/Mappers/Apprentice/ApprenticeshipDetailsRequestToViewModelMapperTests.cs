@@ -820,15 +820,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 request.Status = status;
             }
 
-            //_mockCommitmentsApiClient.Setup(r => r.GetApprenticeship(It.IsAny<long>(), CancellationToken.None))
-           //  .ReturnsAsync(_apprenticeshipResponse);
-            //_mockCommitmentsApiClient.Setup(c => c.GetApprenticeshipUpdates(It.IsAny<long>(), It.IsAny<GetApprenticeshipUpdatesRequest>(), CancellationToken.None))
-            //    .ReturnsAsync(_apprenticeshipUpdatesResponse);
-            //_mockCommitmentsApiClient.Setup(c => c.GetApprenticeshipDatalocksStatus(It.IsAny<long>(), CancellationToken.None))
-            //    .ReturnsAsync(_dataLocksResponse);
-            //_mockCommitmentsApiClient.Setup(c => c.GetOverlappingTrainingDateRequest(It.IsAny<long>(), CancellationToken.None))
-            //   .ReturnsAsync(_overlappingTrainingDateRequestResponce);
-
             //Act
             var result = await _mapper.Map(_request);
 
@@ -846,16 +837,4 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.IsOnFlexiPaymentPilot, result.IsOnFlexiPaymentPilot);
         }
     }
-
-    //public static class MockCommitmentsApiExtensions
-    //{
-    //    public static Mock<ICommitmentsApiClient> WithEditableState(this Mock<ICommitmentsApiClient> client)
-    //    {
-    //        client.Setup(c => c.GetApprenticeshipUpdates(It.IsAny<long>(), It.IsAny<GetApprenticeshipUpdatesRequest>(), CancellationToken.None))
-    //            .ReturnsAsync(new GetApprenticeshipUpdatesResponse { ApprenticeshipUpdates = new ApprenticeshipUpdate[] { } });
-    //        client.Setup(c => c.GetApprenticeshipDatalocksStatus(It.IsAny<long>(), CancellationToken.None))
-    //            .ReturnsAsync(new GetDataLocksResponse { DataLocks = new DataLock[] { } });
-    //        return client;
-    //    }
-    //}
 }
