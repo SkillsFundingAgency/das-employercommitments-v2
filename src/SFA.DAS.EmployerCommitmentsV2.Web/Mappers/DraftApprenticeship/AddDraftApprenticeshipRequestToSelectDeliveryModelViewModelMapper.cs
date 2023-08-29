@@ -10,6 +10,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 {
@@ -17,22 +18,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IApprovalsApiClient _approvalsApiClient;
+        private readonly IEncodingService _encodingService;
 
-        public AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient)
-            => (_commitmentsApiClient, _approvalsApiClient) = (commitmentsApiClient, approvalsApiClient);
+        public AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient, IEncodingService encodingService)
+        {
+            _commitmentsApiClient = commitmentsApiClient;
+            _approvalsApiClient = approvalsApiClient;
+            _encodingService = encodingService;
+        }
 
         public async Task<SelectDeliveryModelViewModel> Map(AddDraftApprenticeshipRequest source)
         {
-            var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
+            var cohortId = _encodingService.Decode(source.CohortReference, EncodingType.CohortReference);
+            var accountLegalEntityId = _encodingService.Decode(source.AccountLegalEntityHashedId, EncodingType.AccountLegalEntityId);
+            var cohort = await _commitmentsApiClient.GetCohort(cohortId);
 
-            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(cohort.ProviderId.HasValue ? cohort.ProviderId.Value : 0, source.CourseCode, source.AccountLegalEntityId);
+            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(cohort.ProviderId.HasValue ? cohort.ProviderId.Value : 0, source.CourseCode, accountLegalEntityId);
 
             return new SelectDeliveryModelViewModel
             {
                 AccountHashedId = source.AccountHashedId,
-                AccountLegalEntityId = source.AccountLegalEntityId,
+                AccountLegalEntityId = accountLegalEntityId,
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
-                CohortId = source.CohortId,
+                CohortId = cohortId,
                 CohortReference = source.CohortReference,
                 CourseCode = source.CourseCode,
                 DeliveryModel = source.DeliveryModel,

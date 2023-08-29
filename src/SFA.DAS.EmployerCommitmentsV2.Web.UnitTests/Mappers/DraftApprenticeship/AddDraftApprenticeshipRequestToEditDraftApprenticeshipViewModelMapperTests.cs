@@ -1,8 +1,11 @@
 ﻿using AutoFixture;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using System.Threading.Tasks;
+using SFA.DAS.Encoding;
+
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
 {
@@ -12,15 +15,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private AddDraftApprenticeshipRequestToEditDraftApprenticeshipViewModelMapper _mapper;
         private EditDraftApprenticeshipViewModel _result;
         private AddDraftApprenticeshipRequest _source;
+        private Mock<IEncodingService> _encodingService;
 
         [SetUp]
         public async Task Arrange()
         {
             var autoFixture = new Fixture();
 
+            _encodingService.Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<EncodingType>()))
+                .Returns(123);
+
             _source = autoFixture.Build<AddDraftApprenticeshipRequest>().Create();
 
-            _mapper = new AddDraftApprenticeshipRequestToEditDraftApprenticeshipViewModelMapper();
+            _mapper = new AddDraftApprenticeshipRequestToEditDraftApprenticeshipViewModelMapper(_encodingService.Object);
 
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }
@@ -29,12 +36,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public void AccountHashedIdIsMappedCorrectly()
         {
             Assert.AreEqual(_source.AccountHashedId, _result.AccountHashedId);
-        }
-
-        [Test]
-        public void CohortIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.CohortId, _result.CohortId);
         }
 
         [Test]

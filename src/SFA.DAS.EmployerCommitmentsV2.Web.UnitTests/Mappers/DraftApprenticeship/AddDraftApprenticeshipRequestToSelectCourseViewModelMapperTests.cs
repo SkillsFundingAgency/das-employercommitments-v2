@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Encoding;
+
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
 {
@@ -24,11 +26,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private List<TrainingProgramme> _standardTrainingProgrammes;
         private List<TrainingProgramme> _allTrainingProgrammes;
         private SelectCourseViewModel _result;
+        private Mock<IEncodingService> _encodingService;
 
         [SetUp]
         public async Task Arrange()
         {
             var autoFixture = new Fixture();
+
+            _encodingService.Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<EncodingType>()))
+                .Returns(123);
 
             _standardTrainingProgrammes = autoFixture.CreateMany<TrainingProgramme>().ToList();
             _allTrainingProgrammes = autoFixture.CreateMany<TrainingProgramme>().ToList();
@@ -46,7 +52,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                 .Create();
 
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _commitmentsApiClient.Setup(x => x.GetCohort(_source.CohortId, It.IsAny<CancellationToken>()))
+            _commitmentsApiClient.Setup(x => x.GetCohort(123, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_getCohortResponse);
             _commitmentsApiClient
                 .Setup(x => x.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()))
@@ -61,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                     TrainingProgrammes = _allTrainingProgrammes
                 });
 
-            _mapper = new AddDraftApprenticeshipRequestToSelectCourseViewModelMapper(_commitmentsApiClient.Object);
+            _mapper = new AddDraftApprenticeshipRequestToSelectCourseViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object);
 
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }
@@ -76,18 +82,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         public void AccountLegalEntityHashedIdIsMappedCorrectly()
         {
             Assert.AreEqual(_source.AccountLegalEntityHashedId, _result.AccountLegalEntityHashedId);
-        }
-
-        [Test]
-        public void AccountLegalEntityIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.AccountLegalEntityId, _result.AccountLegalEntityId);
-        }
-
-        [Test]
-        public void CohortIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.CohortId, _result.CohortId);
         }
 
         [Test]

@@ -2,14 +2,13 @@ using System;
 using SFA.DAS.Authorization.ModelBinding;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 {
     public class AddDraftApprenticeshipRequest : BaseAddDraftApprenticeshipRequest, IAuthorizationContextModel
     {
-        public string AccountHashedId { get; set; }        
-        public long CohortId { get; set; }        
-        public long AccountLegalEntityId { get; set; }
+        public string AccountHashedId { get; set; }
     }
 
     public class BaseAddDraftApprenticeshipRequest

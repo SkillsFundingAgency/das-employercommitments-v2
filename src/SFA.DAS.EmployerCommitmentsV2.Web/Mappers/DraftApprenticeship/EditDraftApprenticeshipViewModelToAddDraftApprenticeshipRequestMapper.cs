@@ -21,9 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
             return new AddDraftApprenticeshipRequest
             {
                 AccountHashedId = source.AccountHashedId,
-                AccountLegalEntityId = cohort.AccountLegalEntityId,
                 AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
-                CohortId = source.CohortId.HasValue ? source.CohortId.Value : 0,
                 CohortReference = source.CohortReference,
                 DraftApprenticeshipHashedId = source.DraftApprenticeshipHashedId,
                 ReservationId = source.ReservationId.HasValue ? source.ReservationId.Value : System.Guid.Empty,

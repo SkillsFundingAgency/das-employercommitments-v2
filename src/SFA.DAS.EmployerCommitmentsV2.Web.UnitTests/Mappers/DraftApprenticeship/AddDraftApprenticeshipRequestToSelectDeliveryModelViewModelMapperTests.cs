@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using SFA.DAS.Authorization.Services;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
 {
@@ -31,6 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private long _cohortId;
         private long _accountLegalEntityId;
         private SelectDeliveryModelViewModel _result;
+        private Mock<IEncodingService> _encodingService;
 
         [SetUp]
         public async Task Arrange()
@@ -42,13 +44,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _cohortId = autoFixture.Create<long>();
             _accountLegalEntityId = autoFixture.Create<long>();
 
+            _encodingService = new Mock<IEncodingService>();
+            _encodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.AccountLegalEntityId))
+                .Returns(_accountLegalEntityId);
+            _encodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.CohortReference))
+                .Returns(_cohortId);
+
             _source = autoFixture.Build<AddDraftApprenticeshipRequest>()
                 .With(x => x.StartMonthYear, "062020")
                 .With(x => x.CourseCode, "Course1")
                 .With(x => x.ProviderId, _providerId)
                 .With(x => x.CourseCode, _courseCode)
-                .With(x => x.AccountLegalEntityId, _accountLegalEntityId)
-                .With(x => x.CohortId, _cohortId)
                 .With(x => x.DeliveryModel, DeliveryModel.PortableFlexiJob)
                 .Create();
 
@@ -60,7 +66,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                 .Create();
 
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _commitmentsApiClient.Setup(x => x.GetCohort(_source.CohortId, It.IsAny<CancellationToken>()))
+            _commitmentsApiClient.Setup(x => x.GetCohort(_cohortId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_getCohortResponse);
 
             _providerCourseDeliveryModels = autoFixture.Create<ProviderCourseDeliveryModels>();
@@ -68,7 +74,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
             _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, _accountLegalEntityId, It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
-            _mapper = new AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(_commitmentsApiClient.Object, _approvalsApiClient.Object);
+            _mapper = new AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(_commitmentsApiClient.Object, _approvalsApiClient.Object, _encodingService.Object);
 
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }
@@ -80,21 +86,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         }
 
         [Test]
-        public void AccountLegalEntityIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.AccountLegalEntityId, _result.AccountLegalEntityId);
-        }
-
-        [Test]
         public void AccountLegalEntityHashedIdIsMappedCorrectly()
         {
             Assert.AreEqual(_source.AccountLegalEntityHashedId, _result.AccountLegalEntityHashedId);
-        }
-
-        [Test]
-        public void CohortIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.CohortId, _result.CohortId);
         }
 
         [Test]

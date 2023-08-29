@@ -27,15 +27,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
             AssertValidationResult(request => request.CohortReference, model, isValid);
         }
         
-        [TestCase(-1, false)]
-        [TestCase(0, false)]
-        [TestCase(1, true)]
-        public void Validate_WhenValidatingCohortId_ThenShouldBeValidated(long cohortId, bool isValid)
-        {
-            var model = new AddDraftApprenticeshipRequest { CohortId = cohortId };
-            AssertValidationResult(request => request.CohortId, model, isValid);
-        }
-        
         [TestCase(null, false)]
         [TestCase("", false)]
         [TestCase("AAA111", true)]
@@ -43,15 +34,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
         {
             var model = new AddDraftApprenticeshipRequest { AccountLegalEntityHashedId = accountLegalEntityHashedId };
             AssertValidationResult(request => request.AccountLegalEntityHashedId, model, isValid);
-        }
-        
-        [TestCase(-1, false)]
-        [TestCase(0, false)]
-        [TestCase(1, true)]
-        public void Validate_WhenValidatingAccountLegalEntityId_ThenShouldBeValidated(long accountLegalEntityId, bool isValid)
-        {
-            var model = new AddDraftApprenticeshipRequest { AccountLegalEntityId = accountLegalEntityId };
-            AssertValidationResult(request => request.AccountLegalEntityId, model, isValid);
         }
         
         [TestCase(false, false)]

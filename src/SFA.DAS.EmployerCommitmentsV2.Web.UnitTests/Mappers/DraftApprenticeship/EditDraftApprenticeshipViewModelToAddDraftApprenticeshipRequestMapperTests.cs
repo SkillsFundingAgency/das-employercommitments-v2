@@ -72,18 +72,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         }
 
         [Test]
-        public void AccountLegalEntityIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_getCohortResponse.AccountLegalEntityId, _result.AccountLegalEntityId);
-        }
-
-        [Test]
-        public void CohortIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.CohortId, _result.CohortId);
-        }
-
-        [Test]
         public void CohortReferenceIsMappedCorrectly()
         {
             Assert.AreEqual(_source.CohortReference, _result.CohortReference);

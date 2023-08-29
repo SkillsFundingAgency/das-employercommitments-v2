@@ -6,19 +6,26 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 {
     public class AddDraftApprenticeshipRequestToSelectCourseViewModelMapper : IMapper<AddDraftApprenticeshipRequest, SelectCourseViewModel>
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly IEncodingService _encodingService;
 
-        public AddDraftApprenticeshipRequestToSelectCourseViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
-            => _commitmentsApiClient = commitmentsApiClient;
+        public AddDraftApprenticeshipRequestToSelectCourseViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
+        {
+            _commitmentsApiClient = commitmentsApiClient;
+            _encodingService = encodingService;
+        }
 
         public async Task<SelectCourseViewModel> Map(AddDraftApprenticeshipRequest source)
         {
-            var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
+            var cohortId = _encodingService.Decode(source.CohortReference, EncodingType.CohortReference);
+            var accountLegalEntityId = _encodingService.Decode(source.AccountLegalEntityHashedId, EncodingType.AccountLegalEntityId);
+            var cohort = await _commitmentsApiClient.GetCohort(cohortId);
 
             if (cohort.WithParty != Party.Employer)
                 throw new CohortEmployerUpdateDeniedException($"Cohort {cohort} is not with the Employer");
@@ -31,8 +38,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
             {
                 AccountHashedId = source.AccountHashedId,
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
-                AccountLegalEntityId = source.AccountLegalEntityId,
-                CohortId = source.CohortId,
+                AccountLegalEntityId = accountLegalEntityId,
+                CohortId = cohortId,
                 CohortReference = source.CohortReference,
                 CourseCode = source.CourseCode,
                 Courses = courses.ToArray(),

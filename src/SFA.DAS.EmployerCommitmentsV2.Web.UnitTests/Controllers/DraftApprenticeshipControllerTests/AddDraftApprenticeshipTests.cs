@@ -100,21 +100,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             {
                 AccountHashedId = "AAA000",
                 CohortReference = "BBB111",
-                CohortId = Cohort.CohortId,
                 AccountLegalEntityHashedId = "CCC222",
-                AccountLegalEntityId = 2,
                 ReservationId = Guid.NewGuid(),
                 StartMonthYear = "092019",
                 CourseCode = "DDD333"
             };
 
+
+
             ViewModel = new AddDraftApprenticeshipViewModel
             {
                 AccountHashedId = Request.AccountHashedId,
                 CohortReference = Request.CohortReference,
-                CohortId = Request.CohortId,
                 AccountLegalEntityHashedId = Request.AccountLegalEntityHashedId,
-                AccountLegalEntityId = Request.AccountLegalEntityId,
                 ReservationId = Request.ReservationId,
                 StartDate = new MonthYearModel(Request.StartMonthYear),
                 DeliveryModel = DeliveryModel.Regular,
@@ -136,10 +134,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.ApprenticeshipId))
                 .Returns("APP123");
 
+            EncodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.CohortReference))
+                .Returns(Cohort.CohortId);
+
+            EncodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.AccountLegalEntityId))
+                .Returns(123);
+
             Controller = new DraftApprenticeshipController(
                 ModelMapper.Object,
                 CommitmentsApiClient.Object,
-                Mock.Of<IEncodingService>(),
+                EncodingService.Object,
                 OuterApiClient.Object);
 
             Controller.TempData = TempData.Object;
