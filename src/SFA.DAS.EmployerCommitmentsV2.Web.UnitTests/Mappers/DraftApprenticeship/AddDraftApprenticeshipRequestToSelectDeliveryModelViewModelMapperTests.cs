@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _accountLegalEntityId = autoFixture.Create<long>();
 
             _encodingService = new Mock<IEncodingService>();
-            _encodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.AccountLegalEntityId))
+            _encodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.PublicAccountLegalEntityId))
                 .Returns(_accountLegalEntityId);
             _encodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.CohortReference))
                 .Returns(_cohortId);

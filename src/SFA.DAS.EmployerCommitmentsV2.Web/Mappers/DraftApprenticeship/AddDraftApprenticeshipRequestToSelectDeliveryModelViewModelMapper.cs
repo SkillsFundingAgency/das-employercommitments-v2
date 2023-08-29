@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
         public async Task<SelectDeliveryModelViewModel> Map(AddDraftApprenticeshipRequest source)
         {
             var cohortId = _encodingService.Decode(source.CohortReference, EncodingType.CohortReference);
-            var accountLegalEntityId = _encodingService.Decode(source.AccountLegalEntityHashedId, EncodingType.AccountLegalEntityId);
+            var accountLegalEntityId = _encodingService.Decode(source.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId);
             var cohort = await _commitmentsApiClient.GetCohort(cohortId);
 
             var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(cohort.ProviderId.HasValue ? cohort.ProviderId.Value : 0, source.CourseCode, accountLegalEntityId);

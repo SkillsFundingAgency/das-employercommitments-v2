@@ -137,7 +137,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             EncodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.CohortReference))
                 .Returns(Cohort.CohortId);
 
-            EncodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.AccountLegalEntityId))
+            EncodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.PublicAccountLegalEntityId))
                 .Returns(123);
 
             Controller = new DraftApprenticeshipController(
