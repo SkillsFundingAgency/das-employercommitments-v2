@@ -25,9 +25,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
         public async Task<IDraftApprenticeshipViewModel> Map(EditDraftApprenticeshipRequest source)
         {
             var cohort = source.Cohort;
-
-            var draftApprenticeship = await _apiClient.GetEditDraftApprenticeship(source.Request.AccountId, source.Request.CohortId,
-                source.Request.DraftApprenticeshipId);
+            var accountId = _encodingService.Decode(source.Request.AccountHashedId, EncodingType.AccountId);
+            var cohortId = _encodingService.Decode(source.Request.CohortReference, EncodingType.CohortReference);
+            var draftApprenticeshipId = _encodingService.Decode(source.Request.DraftApprenticeshipHashedId, EncodingType.ApprenticeshipId);
+            var draftApprenticeship = await _apiClient.GetEditDraftApprenticeship(accountId, cohortId, draftApprenticeshipId);
 
             //all data should come from a single call to the outer api (above)
             //however, this list appears to be populated only to select .Single() in the view itself
@@ -39,10 +40,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 
             return new EditDraftApprenticeshipViewModel(draftApprenticeship.DateOfBirth, draftApprenticeship.StartDate, draftApprenticeship.EndDate)
             {
-                DraftApprenticeshipId = source.Request.DraftApprenticeshipId,
-                DraftApprenticeshipHashedId = _encodingService.Encode(source.Request.DraftApprenticeshipId, EncodingType.ApprenticeshipId),
-                CohortId = source.Request.CohortId,
-                CohortReference = _encodingService.Encode(source.Request.CohortId, EncodingType.CohortReference),
+                DraftApprenticeshipHashedId = source.Request.DraftApprenticeshipHashedId,
+                CohortId = cohortId,
+                CohortReference = source.Request.CohortReference,
                 ReservationId = draftApprenticeship.ReservationId,
                 FirstName = draftApprenticeship.FirstName,
                 LastName = draftApprenticeship.LastName,

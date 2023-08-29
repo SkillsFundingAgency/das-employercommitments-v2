@@ -10,6 +10,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
 {
@@ -21,6 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private Mock<IModelMapper> _modelMapper;
         private GetCohortResponse _cohort;
         private DetailsRequest _request;
+        private Mock<IEncodingService> _encodingService;
 
         [SetUp]
         public void Arrange()
@@ -39,7 +41,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _modelMapper.Setup(x => x.Map<IDraftApprenticeshipViewModel>(It.IsAny<ViewDraftApprenticeshipRequest>()))
                 .ReturnsAsync(new ViewDraftApprenticeshipViewModel());
 
-            _mapper = new ViewDraftApprenticeshipViewModelFromDetailsRequestMapper(_apiClient.Object, _modelMapper.Object);
+            _encodingService = new Mock<IEncodingService>(); ;
+            _encodingService.Setup(t => t.Decode(It.IsAny<string>(), It.IsAny<EncodingType>())).Returns(123);
+
+            _mapper = new ViewDraftApprenticeshipViewModelFromDetailsRequestMapper(_apiClient.Object, _modelMapper.Object, _encodingService.Object);
         }
 
         [TestCase(Party.Employer, typeof(ViewDraftApprenticeshipRequest))]

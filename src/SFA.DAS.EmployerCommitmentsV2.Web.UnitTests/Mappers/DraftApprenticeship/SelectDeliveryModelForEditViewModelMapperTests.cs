@@ -8,6 +8,7 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
 {
@@ -18,6 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private Mock<IApprovalsApiClient> _approvalsApiClient;
         private GetEditDraftApprenticeshipSelectDeliveryModelResponse _response;
         private EditDraftApprenticeshipViewModel _source;
+        private Mock<IEncodingService> _encodingService;
 
         [SetUp]
         public void Setup()
@@ -40,7 +42,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                     It.IsAny<long>(), It.IsAny<long>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_response);
 
-            _mapper = new SelectDeliveryModelForEditViewModelMapper(_approvalsApiClient.Object);
+            _encodingService = new Mock<IEncodingService>(); ;
+            _encodingService.Setup(t => t.Decode(It.IsAny<string>(), It.IsAny<EncodingType>())).Returns(123);
+
+            _mapper = new SelectDeliveryModelForEditViewModelMapper(_approvalsApiClient.Object, _encodingService.Object);
         }
 
 

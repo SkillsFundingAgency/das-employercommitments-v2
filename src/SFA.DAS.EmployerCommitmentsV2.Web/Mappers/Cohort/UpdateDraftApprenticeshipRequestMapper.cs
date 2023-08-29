@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -11,16 +12,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IEncodingService _encodingService;
 
-        public UpdateDraftApprenticeshipRequestMapper(ICommitmentsApiClient commitmentsApiClient, IAuthenticationService authenticationService)
+        public UpdateDraftApprenticeshipRequestMapper(ICommitmentsApiClient commitmentsApiClient, IAuthenticationService authenticationService, IEncodingService encodingService)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _authenticationService = authenticationService;
+            _encodingService = encodingService;
         }
 
         public async Task<UpdateDraftApprenticeshipApimRequest> Map(EditDraftApprenticeshipViewModel source)
         {
-            var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(source.CohortId.Value, source.DraftApprenticeshipId);
+            var draftApprenticeshipId = _encodingService.Decode(source.DraftApprenticeshipHashedId, EncodingType.ApprenticeshipId);
+            var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(source.CohortId.Value, draftApprenticeshipId);
 
             return new UpdateDraftApprenticeshipApimRequest
             {

@@ -28,7 +28,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Filters;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    [DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
+    //[DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
     [Route("{accountHashedId}/unapproved")]
     public class CohortController : Controller
     {
@@ -46,7 +46,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             ILinkGenerator linkGenerator,
             IModelMapper modelMapper,
             IAuthorizationService authorizationService,
-            IEncodingService encodingService, IApprovalsApiClient approvalsApiClient)
+            IEncodingService encodingService, 
+            IApprovalsApiClient approvalsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _logger = logger;

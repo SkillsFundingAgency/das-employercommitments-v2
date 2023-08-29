@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoFixture;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -14,6 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private EditDraftApprenticeshipViewModelMapper _mapper;
         private EditDraftApprenticeshipDetails _source;
         private Func<Task<EditDraftApprenticeshipViewModel>> _act;
+        private Mock<IEncodingService> _encodingService;
 
         [SetUp]
         public void Arrange()
@@ -24,13 +27,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _source = fixture.Build<EditDraftApprenticeshipDetails>().Create();
 
             _act = async () => await _mapper.Map(TestHelper.Clone(_source));
-        }
-
-        [Test]
-        public async Task ThenDraftApprenticeshipIdIsMappedCorrectly()
-        {
-            var result = await _act();
-            Assert.AreEqual(_source.DraftApprenticeshipId, result.DraftApprenticeshipId);
         }
 
         [Test]

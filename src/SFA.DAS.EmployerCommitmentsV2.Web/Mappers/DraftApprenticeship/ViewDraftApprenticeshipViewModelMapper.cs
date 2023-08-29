@@ -8,6 +8,7 @@ using System;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 {
@@ -15,17 +16,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
     {
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IApprovalsApiClient _outerApiClient;
+        private readonly IEncodingService _encodingService;
 
-        public ViewDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient outerApiClient)
+        public ViewDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient outerApiClient, IEncodingService encodingService)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _outerApiClient = outerApiClient;
+            _encodingService = encodingService;
         }
 
         public async Task<IDraftApprenticeshipViewModel> Map(ViewDraftApprenticeshipRequest source)
         {
+            var draftApprenticeshipId = _encodingService.Decode(source.Request.DraftApprenticeshipHashedId, EncodingType.ApprenticeshipId);
             var draftApprenticeship = await _outerApiClient.GetViewDraftApprenticeship(source.Cohort.AccountId,
-                source.Cohort.CohortId, source.Request.DraftApprenticeshipId);
+                source.Cohort.CohortId, draftApprenticeshipId);
 
             var trainingCourse = string.IsNullOrWhiteSpace(draftApprenticeship.CourseCode) ? null
                 : await _commitmentsApiClient.GetTrainingProgramme(draftApprenticeship.CourseCode);

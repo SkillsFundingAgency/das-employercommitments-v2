@@ -11,6 +11,7 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 {
@@ -23,6 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private UpdateDraftApprenticeshipRequestMapper _mapper;
         private EditDraftApprenticeshipViewModel _source;
         private Func<Task<UpdateDraftApprenticeshipApimRequest>> _act;
+        private Mock<IEncodingService> _encodingService;
 
         [SetUp]
         public void Arrange()
@@ -37,7 +39,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
-            _mapper = new UpdateDraftApprenticeshipRequestMapper(_mockCommitmentsApiClient.Object, Mock.Of<IAuthenticationService>());
+            _encodingService = new Mock<IEncodingService>(); ;
+            _encodingService.Setup(t => t.Decode(It.IsAny<string>(), It.IsAny<EncodingType>())).Returns(123);
+
+            _mapper = new UpdateDraftApprenticeshipRequestMapper(_mockCommitmentsApiClient.Object, Mock.Of<IAuthenticationService>(), _encodingService.Object);
 
             _source = fixture.Build<EditDraftApprenticeshipViewModel>()
                 .With(x => x.DeliveryModel, DeliveryModel.PortableFlexiJob)

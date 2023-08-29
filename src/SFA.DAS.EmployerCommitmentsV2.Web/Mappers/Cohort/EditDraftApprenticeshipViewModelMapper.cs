@@ -2,6 +2,8 @@
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.Encoding;
+using StructureMap.Query;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
 {
@@ -10,7 +12,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         public Task<EditDraftApprenticeshipViewModel> Map(EditDraftApprenticeshipDetails source) =>
             Task.FromResult(new EditDraftApprenticeshipViewModel(source.DateOfBirth, source.StartDate, source.EndDate)
             {
-                DraftApprenticeshipId = source.DraftApprenticeshipId,
                 DraftApprenticeshipHashedId = source.DraftApprenticeshipHashedId,
                 CohortId = source.CohortId,
                 CohortReference = source.CohortReference,

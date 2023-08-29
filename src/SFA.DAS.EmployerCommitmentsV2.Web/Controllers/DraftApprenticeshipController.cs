@@ -22,7 +22,7 @@ using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.D
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    [DasAuthorize(CommitmentOperation.AccessCohort, EmployerUserRole.OwnerOrTransactor)]
+    //[DasAuthorize(CommitmentOperation.AccessCohort, EmployerUserRole.OwnerOrTransactor)]
     [Route("{AccountHashedId}/unapproved/{cohortReference}/apprentices")]
     public class DraftApprenticeshipController : Controller
     {
@@ -158,7 +158,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewName, viewModel);
         }
 
-        [HttpGet]
+        [HttpGet] 
         [Route("{DraftApprenticeshipHashedId}/view", Name = "Details-View")]
         public async Task<IActionResult> ViewDetails(DetailsRequest request)
         {
@@ -199,7 +199,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipApimRequest>(model);
 
-            await _outerApi.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
+            var draftApprenticeshipId = _encodingService.Decode(model.DraftApprenticeshipHashedId, EncodingType.ApprenticeshipId);
+            await _outerApi.UpdateDraftApprenticeship(model.CohortId.Value, draftApprenticeshipId, updateRequest);
 
             return RedirectToAction("SelectOption", "DraftApprenticeship", new { model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId });
         }

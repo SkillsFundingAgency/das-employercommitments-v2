@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
@@ -10,6 +11,7 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.Encoding;
 using DeliveryModel = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
@@ -24,6 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         private ViewDraftApprenticeshipViewModel _result;
         private GetViewDraftApprenticeshipResponse _draftApprenticeship;
         private TrainingProgramme _course;
+        private Mock<IEncodingService> _encodingService; 
 
         [SetUp]
         public async Task Arrange()
@@ -48,7 +51,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                     x.GetViewDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_draftApprenticeship);
 
-            _mapper = new ViewDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _approvalsApiClient.Object);
+            _encodingService = new Mock<IEncodingService>(); ;
+            _encodingService.Setup(t => t.Decode(It.IsAny<string>(), It.IsAny<EncodingType>())).Returns(123);
+
+            _mapper = new ViewDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _approvalsApiClient.Object, _encodingService.Object);
 
             _result = await _mapper.Map(_request) as ViewDraftApprenticeshipViewModel;
         }

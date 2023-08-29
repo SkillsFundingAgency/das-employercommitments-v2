@@ -3,6 +3,7 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+using SFA.DAS.Encoding;
 using DeliveryModel = SFA.DAS.CommitmentsV2.Types.DeliveryModel;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
@@ -10,15 +11,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
     public class SelectDeliveryModelForEditViewModelMapper : IMapper<EditDraftApprenticeshipViewModel, SelectDeliveryModelForEditViewModel>
     {
         private readonly IApprovalsApiClient _apiClient;
+        private readonly IEncodingService _encodingService;
 
-        public SelectDeliveryModelForEditViewModelMapper(IApprovalsApiClient apiClient)
+        public SelectDeliveryModelForEditViewModelMapper(IApprovalsApiClient apiClient, IEncodingService encodingService)
         {
              _apiClient = apiClient;
+            _encodingService = encodingService;
         }
 
         public async Task<SelectDeliveryModelForEditViewModel> Map(EditDraftApprenticeshipViewModel source)
         {
-            var apiResponse = await _apiClient.GetEditDraftApprenticeshipSelectDeliveryModel(source.ProviderId, (long)source.CohortId, source.DraftApprenticeshipId, source.CourseCode);
+            var draftApprenticeshipId = _encodingService.Decode(source.DraftApprenticeshipHashedId, EncodingType.ApprenticeshipId);
+            var apiResponse = await _apiClient.GetEditDraftApprenticeshipSelectDeliveryModel(source.ProviderId, (long)source.CohortId, draftApprenticeshipId, source.CourseCode);
 
             return new SelectDeliveryModelForEditViewModel
             {
