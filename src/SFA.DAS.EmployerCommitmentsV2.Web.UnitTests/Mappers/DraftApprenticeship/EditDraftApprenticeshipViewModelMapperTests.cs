@@ -94,21 +94,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         }
 
         [Test]
-        public void DraftApprenticeshipIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.Request.DraftApprenticeshipId, _result.DraftApprenticeshipId);
-        }
-
-        [Test]
         public void DraftApprenticeshipHashedIdIsMappedCorrectly()
         {
             Assert.AreEqual(_encodedApprenticeshipId, _result.DraftApprenticeshipHashedId);
-        }
-
-        [Test]
-        public void CohortIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.Request.CohortId, _result.CohortId);
         }
 
         [Test]

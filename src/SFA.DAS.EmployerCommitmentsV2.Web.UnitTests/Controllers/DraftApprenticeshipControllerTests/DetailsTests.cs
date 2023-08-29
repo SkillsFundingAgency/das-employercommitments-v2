@@ -61,7 +61,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
                 .WithCohortWithEmployer()
                 .WithCohort();
 
-            var result = await fixtures.Sut.EditDraftApprenticeship(string.Empty, string.Empty, new EditDraftApprenticeshipViewModel { AccountHashedId = fixtures.AccountHashedId, CohortId = fixtures.CohortId, CohortReference = fixtures.CohortReference, DraftApprenticeshipId = fixtures.DraftApprenticeshipId });
+            var result = await fixtures.Sut.EditDraftApprenticeship(string.Empty, string.Empty, new EditDraftApprenticeshipViewModel { AccountHashedId = fixtures.AccountHashedId, CohortId = fixtures.CohortId, CohortReference = fixtures.CohortReference });
 
             fixtures.OuterApiClientMock.Verify(cs => cs.UpdateDraftApprenticeship(fixtures.CohortId, fixtures.DraftApprenticeshipId, It.IsAny<UpdateDraftApprenticeshipApimRequest>(), It.IsAny<CancellationToken>()), Times.Once);
             var redirect = result.VerifyReturnsRedirect();
@@ -73,7 +73,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             var fixtures = new DetailsTestFixture()
                 .WithCohort();
 
-            var result = await fixtures.Sut.EditDraftApprenticeship(string.Empty, string.Empty, new EditDraftApprenticeshipViewModel { AccountHashedId = fixtures.AccountHashedId, CohortId = fixtures.CohortId, CohortReference = fixtures.CohortReference, DraftApprenticeshipId = fixtures.DraftApprenticeshipId });
+            var result = await fixtures.Sut.EditDraftApprenticeship(string.Empty, string.Empty, new EditDraftApprenticeshipViewModel { AccountHashedId = fixtures.AccountHashedId, CohortId = fixtures.CohortId, CohortReference = fixtures.CohortReference });
 
             fixtures.OuterApiClientMock.Verify(cs => cs.UpdateDraftApprenticeship(fixtures.CohortId, fixtures.DraftApprenticeshipId, It.IsAny<UpdateDraftApprenticeshipApimRequest>(), It.IsAny<CancellationToken>()), Times.Once);
             var redirect = result.VerifyReturnsRedirectToActionResult();
@@ -100,13 +100,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             ViewModel = new Mock<IDraftApprenticeshipViewModel>();
             CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
             OuterApiClientMock = new Mock<IApprovalsApiClient>();
+            ReturnedDraftApprenticeshipId = DraftApprenticeshipId;
 
             DetailsRequest = new DetailsRequest
             {
                 AccountHashedId = AccountHashedId,
-                CohortId = CohortId,
                 CohortReference = CohortReference,
-                DraftApprenticeshipId = DraftApprenticeshipId,
                 DraftApprenticeshipHashedId = DraftApprenticeshipHashedId
             };
             CohortDetails = new GetCohortResponse
@@ -122,18 +121,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             ApiErrors = new List<ErrorDetail> { new ErrorDetail("Field1", "Message1") };
 
             ModelMapperMock = new Mock<IModelMapper>();
-            ModelMapperMock.Setup(x => x.Map<IDraftApprenticeshipViewModel>(It.Is<DetailsRequest>(dr => dr.DraftApprenticeshipId == DraftApprenticeshipId)))
+            ModelMapperMock.Setup(x => x.Map<IDraftApprenticeshipViewModel>(It.Is<DetailsRequest>(dr => dr.DraftApprenticeshipHashedId == DraftApprenticeshipHashedId)))
                 .ReturnsAsync(ViewModel.Object);
 
-            ModelMapperMock.Setup(x => x.Map<ViewDraftApprenticeshipViewModel>(It.Is<DetailsRequest>(dr => dr.DraftApprenticeshipId == ViewDraftApprenticeshipId)))
+            ModelMapperMock.Setup(x => x.Map<ViewDraftApprenticeshipViewModel>(It.Is<DetailsRequest>(dr => dr.DraftApprenticeshipHashedId == DraftApprenticeshipHashedId)))
                 .ReturnsAsync(viewDraftApprenticeshipViewModel);
 
             AuthorizationServiceMock = new Mock<IAuthorizationService>();
 
+            EncodigService = new Mock<IEncodingService>();
+
+            EncodigService.Setup(v => v.Decode(It.IsAny<string>(), It.IsAny<EncodingType>()))
+                .Returns(ReturnedDraftApprenticeshipId);
+
             Sut = new DraftApprenticeshipController(
                 ModelMapperMock.Object,
                 CommitmentsApiClientMock.Object,
-                Mock.Of<IEncodingService>(),
+                EncodigService.Object,
                 OuterApiClientMock.Object);
         }
 
@@ -147,12 +151,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public string CohortReference => "CHREF";
         public long DraftApprenticeshipId => 99;
         public long ViewDraftApprenticeshipId => 77;
+        public long ReturnedDraftApprenticeshipId { get; set; }
         public string DraftApprenticeshipHashedId => "DAHID";
         public GetDraftApprenticeshipResponse EditDraftApprenticeshipDetails { get; private set; }
         public DraftApprenticeshipController Sut { get; private set; }
         public List<ErrorDetail> ApiErrors { get; private set; }
         public DetailsRequest DetailsRequest;
         public Mock<IDraftApprenticeshipViewModel> ViewModel;
+        public Mock<IEncodingService> EncodigService { get; set; }
 
         public DetailsTestFixture WithCohortWithOtherParty()
         {
@@ -192,7 +198,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
         internal DetailsTestFixture WithEmployerView()
         {
-            DetailsRequest.DraftApprenticeshipId = ViewDraftApprenticeshipId;
+            ReturnedDraftApprenticeshipId = ViewDraftApprenticeshipId;
             return this;
         }
     }

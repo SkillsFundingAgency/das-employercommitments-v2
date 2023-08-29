@@ -58,7 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 .Without(x => x.Courses)
                 .Create();
 
-            _mockCommitmentsApiClient.Setup(x => x.GetDraftApprenticeship(_source.CohortId.Value, _source.DraftApprenticeshipId, It.IsAny<CancellationToken>()))
+            _mockCommitmentsApiClient.Setup(x => x.GetDraftApprenticeship(_source.CohortId.Value, _encodingService.Object.Decode("foo", EncodingType.ApprenticeshipId), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_getDraftApprenticeshipResponse);
 
             _act = async () => await _mapper.Map(TestHelper.Clone(_source));
