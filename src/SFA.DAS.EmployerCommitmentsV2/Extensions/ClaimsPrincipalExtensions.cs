@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+﻿using System.Security.Claims;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Extensions
 {

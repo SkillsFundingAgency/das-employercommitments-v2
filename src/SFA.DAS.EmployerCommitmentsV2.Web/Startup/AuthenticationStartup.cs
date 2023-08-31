@@ -1,17 +1,24 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.GovUK.Auth.AppStart;
+using SFA.DAS.GovUK.Auth.Authentication;
 using SFA.DAS.GovUK.Auth.Configuration;
+using SFA.DAS.GovUK.Auth.Extensions;
 using SFA.DAS.GovUK.Auth.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
@@ -27,10 +34,27 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 var govConfig = configuration.GetSection(ConfigurationKeys.GovUkSignInConfiguration);
                 services.Configure<GovUkOidcConfiguration>(configuration.GetSection("GovUkOidcConfiguration"));
                 govConfig["ResourceEnvironmentName"] = configuration["ResourceEnvironmentName"];
-                services.AddTransient<ICustomClaims, EmployerUserAccountPostAuthenticationHandler>();
+                govConfig["StubAuth"] = configuration["StubAuth"];
+                services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
                 services.AddAndConfigureGovUkAuthentication(govConfig,
-                    $"{typeof(AuthenticationStartup).Assembly.GetName().Name}.Auth",
-                    typeof(EmployerUserAccountPostAuthenticationHandler));
+                    typeof(EmployerAccountPostAuthenticationClaimsHandler),
+                    "",
+                    "/service/SignIn-Stub");
+
+                services.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
+                services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
+                
+                services.AddAuthorization(options =>
+                {
+                    options.AddPolicy(
+                        "HasActiveAccount"
+                        , policy =>
+                        {
+                            policy.Requirements.Add(new AccountActiveRequirement());
+                            policy.Requirements.Add(new UserIsInAccountRequirement());
+                            policy.RequireAuthenticatedUser();
+                        });
+                });
             }
             else
             {
@@ -63,7 +87,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                         o.MetadataAddress = authenticationConfiguration.MetadataAddress;
                         o.ResponseType = "code";
                         o.UsePkce = false;
-        
+
                         o.ClaimActions.MapUniqueJsonKey("sub", "id");
                         
                         o.Events.OnRemoteFailure = c =>
@@ -82,6 +106,31 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
             
             
             return services;
+        }
+    }
+    //TODO once upgraded to .net6 - this filter can be deleted
+    public class AccountActiveFilter : IActionFilter
+    {
+        private readonly IConfiguration _configuration;
+
+        public AccountActiveFilter(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
+        }
+
+        public void OnActionExecuting(ActionExecutingContext context)
+        {
+            if (context != null)
+            {
+                var isAccountSuspended = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.AuthorizationDecision))?.Value;
+                if (isAccountSuspended != null && isAccountSuspended.Equals("Suspended", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    context.HttpContext.Response.Redirect(RedirectExtension.GetAccountSuspendedRedirectUrl(_configuration["ResourceEnvironmentName"]));
+                }
+            }
         }
     }
 }

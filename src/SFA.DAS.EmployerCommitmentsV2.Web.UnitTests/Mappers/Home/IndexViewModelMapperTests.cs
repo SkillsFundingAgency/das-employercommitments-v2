@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -42,6 +43,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Home
             _fixture.VerifySetPaymentOrderLinkVisibility(expectShowLink);
         }
 
+        [TestCase("prd")]
+        [TestCase("pp")]
+        [TestCase("TEST")]
+        public async Task ThenThePublicSectorReportingUrlIsCorrectlySet(string environment)
+        {
+            _fixture.SetupProviders(2);
+            _fixture.SetResourceEnvironment(environment);
+            await _fixture.Map();
+            _fixture.VerifyPublicSectorReportingLink(environment);
+        }
+
         private class IndexViewModelMapperTestsFixture
         {
             private IndexViewModelMapper _mapper;
@@ -50,6 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Home
             private GetProviderPaymentsPriorityResponse _apiProvidersResponse;
             private IndexRequest _request;
             private IndexViewModel _result;
+            private readonly Mock<IConfiguration> _configuration;
 
             public IndexViewModelMapperTestsFixture()
             {
@@ -57,11 +70,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Home
 
                 _apiClient = new Mock<ICommitmentsApiClient>();
                 _logger = new Mock<ILogger<IndexViewModelMapper>>();
-
-                _mapper = new IndexViewModelMapper(_apiClient.Object, _logger.Object);
+                _configuration = new Mock<IConfiguration>();
+                _configuration.Setup(x => x["ResourceEnvironmentName"]).Returns("test");
+                
+                _mapper = new IndexViewModelMapper(_apiClient.Object, _logger.Object, _configuration.Object);
                 _request = autoFixture.Create<IndexRequest>();
             }
 
+            public IndexViewModelMapperTestsFixture SetResourceEnvironment(string environment)
+            {
+                _configuration.Setup(x => x["ResourceEnvironmentName"]).Returns(environment);
+                return this;
+            }
+            
             public IndexViewModelMapperTestsFixture SetupProviders(int numberOfProviders)
             {
                 var providerPaymentPriorities = new List<GetProviderPaymentsPriorityResponse.ProviderPaymentPriorityItem>();
@@ -101,6 +122,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Home
             public void VerifyAccountHashedIdIsMappedCorrectly()
             {
                 Assert.AreEqual(_request.AccountHashedId, _result.AccountHashedId);
+            }
+
+            public void VerifyPublicSectorReportingLink(string environment)
+            {
+                if(environment.ToLower() == "prd")
+                {
+                    Assert.AreEqual($"https://reporting.manage-apprenticeships.service.gov.uk/accounts/{_result.AccountHashedId}/home", _result.PublicSectorReportingLink);   
+                }
+                else
+                {
+                    Assert.AreEqual($"https://reporting.{environment.ToLower()}-eas.apprenticeships.education.gov.uk/accounts/{_result.AccountHashedId}/home", _result.PublicSectorReportingLink);
+                }
             }
         }
     }

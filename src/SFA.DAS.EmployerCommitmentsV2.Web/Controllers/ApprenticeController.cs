@@ -494,6 +494,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 case StopStatusReason.Withdrawn:
                     return RedirectToAction(nameof(StopApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
+                case StopStatusReason.ProviderCorrectsApprenticeRecord:
+                    return RedirectToAction(nameof(StopApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+
                 case StopStatusReason.NeverStarted:
                     return RedirectToAction(nameof(ApprenticeshipNeverStarted), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 

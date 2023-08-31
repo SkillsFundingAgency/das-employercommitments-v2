@@ -1,9 +1,8 @@
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
-using SFA.DAS.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
 {
@@ -30,6 +29,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
             long draftApprenticeshipId, CancellationToken cancellationToken = default)
         {
             return await _client.Get<GetEditDraftApprenticeshipResponse>($"employer/{accountId}/unapproved/{cohortId}/apprentices/{draftApprenticeshipId}/edit");
+        }
+
+        public async Task<GetViewDraftApprenticeshipResponse> GetViewDraftApprenticeship(long accountId, long cohortId, long draftApprenticeshipId, CancellationToken cancellationToken = default)
+        {
+            return await _client.Get<GetViewDraftApprenticeshipResponse>($"employer/{accountId}/unapproved/{cohortId}/apprentices/{draftApprenticeshipId}/view");
         }
 
         public async Task<GetEditApprenticeshipResponse> GetEditApprenticeship(long accountId, long apprenticeshipId, CancellationToken cancellationToken = default)
@@ -65,6 +69,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals
         public async Task PostCohortDetails(long accountId, long cohortId, PostCohortDetailsRequest request, CancellationToken cancellationToken = default)
         {
             await _client.Post<PostCohortDetailsRequest>($"employer/{accountId}/unapproved/{cohortId}", request);
+        }
+
+        public async Task UpdateDraftApprenticeship(long cohortId, long draftApprenticeshipId, UpdateDraftApprenticeshipApimRequest request, CancellationToken cancellationToken = default)
+        {
+            await _client.Put<object>($"cohorts/{cohortId}/draft-apprenticeships/{draftApprenticeshipId}", request);
+        }
+
+        public async Task<AddDraftApprenticeshipResponse> AddDraftApprenticeship(long cohortId, AddDraftApprenticeshipApimRequest request, CancellationToken cancellationToken = default)
+        {
+            return await _client.Post<AddDraftApprenticeshipResponse>($"cohorts/{cohortId}/draft-apprenticeships", request);
+        }
+
+        public async Task<CreateCohortResponse> CreateCohort(CreateCohortApimRequest request, CancellationToken cancellationToken = default)
+        {
+            return await _client.Post<CreateCohortResponse>($"cohorts", request);
         }
     }
 }

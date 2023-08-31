@@ -1,5 +1,5 @@
 ﻿using System;
-using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 {
@@ -29,5 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public int? PriceReducedBy { get; set; }
         public bool? IsOnFlexiPaymentPilot { get; set; }
         public DateTime? ActualStartDate { get; set; }
+        public int? DurationReducedByHours { get; set; }
+        public int? TrainingTotalHours { get; set; }
     }
 }

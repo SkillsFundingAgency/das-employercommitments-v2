@@ -303,7 +303,7 @@ else
                         }
                     </td>
                     <td class="govuk-table__cell" data-label="Planned end date">
-                        @apprenticeship.PlannedEndDate.ToGdsFormatWithoutDay()
+                        @(apprenticeship.IsOnFlexiPaymentPilot.GetValueOrDefault() ? apprenticeship.PlannedEndDate.ToGdsFormat() : apprenticeship.PlannedEndDate.ToGdsFormatWithoutDay())
                     </td>
                     <td class="govuk-table__cell" data-label="Training provider">
                         @apprenticeship.ProviderName

@@ -216,12 +216,7 @@
                                     @(Model.IsReadOnly ? "View" : "Edit")
                                     <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
                                 </a>
-                                <br />
-                                @if (!Model.IsReadOnly)
-                                {
-                                    <a class="govuk-link view-apprentice" href="@Url.RouteUrl("Details-View", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">View</a>
-                                }
-                                <br />
+                                <br/><br/>
                                 @if (!Model.IsReadOnly)
                                 {
                                     <a class="govuk-link delete-apprentice" href="@Url.RouteUrl("DeleteDraftApprenticeship", new { draftApprenticeship.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = DeleteDraftApprenticeshipOrigin.CohortDetails })">
@@ -286,7 +281,7 @@
                                     </label>
                                 </div>
                             }
-                            @if (!Model.ShowApprovalOptionMessage)
+                            @if (Model.ShowApprovalOptionMessage)
                             {
                                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-approve">
                                     <div class="govuk-form-group">

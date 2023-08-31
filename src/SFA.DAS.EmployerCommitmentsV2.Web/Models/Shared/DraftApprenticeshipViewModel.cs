@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         {
             DateOfBirth = dateOfBirth == null ? new DateModel() : new DateModel(dateOfBirth.Value);
             StartDate = startDate == null ? new MonthYearModel("") : new MonthYearModel($"{startDate.Value.Month}{startDate.Value.Year}");
-            EndDate = endDate == null ? new MonthYearModel("") : new MonthYearModel($"{endDate.Value.Month}{endDate.Value.Year}");
+            EndDate = endDate == null ? new DateModel() : new DateModel(endDate.GetValueOrDefault());
             EmploymentEndDate = employmentEndDate == null ? new MonthYearModel("") : new MonthYearModel($"{employmentEndDate.Value.Month}{employmentEndDate.Value.Year}");
         }
 
@@ -91,7 +91,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public int? StartYear { get => StartDate.Year; set => StartDate.Year = value; }
 
         [Display(Name = "Projected finish date")]
-        public MonthYearModel EndDate { get; }
+        public DateModel EndDate { get; }
 
         [Display(Name = "Month")]
         [SuppressArgumentException(nameof(EndDate), "The training end date is not valid")]
@@ -100,7 +100,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         [Display(Name = "Year")]
         [SuppressArgumentException(nameof(EndDate), "The training end date is not valid")]
         public int? EndYear { get => EndDate.Year; set => EndDate.Year = value; }
-
+        
         [Display(Name = "Total agreed apprenticeship price (excluding VAT)")]
         [SuppressArgumentException(nameof(Cost), "The apprenticeship price is not valid")]
         public int? Cost { get; set; }
@@ -123,5 +123,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public bool HasUnavailableFlexiJobDeliveryModel { get; set; }
         public bool HasChangedDeliveryModel { get; set; }
         public bool? EmailAddressConfirmed { get; set; }
+        public bool? RecognisePriorLearning { get; set; }
+        public int? TrainingTotalHours { get; set; }
+        public int? DurationReducedByHours { get; set; }
+        public int? DurationReducedBy { get; set; }
+        public int? PriceReducedBy { get; set; }
+
     }
 }
