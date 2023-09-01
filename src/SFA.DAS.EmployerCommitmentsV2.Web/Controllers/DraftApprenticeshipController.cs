@@ -246,6 +246,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 request.DeliveryModel = (SFA.DAS.CommitmentsV2.Types.DeliveryModel) model.DeliveryModels.FirstOrDefault();
             }
 
+            request.CohortId = null;
+            request.AccountLegalEntityId = 0;
             return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), request);
         }
 
