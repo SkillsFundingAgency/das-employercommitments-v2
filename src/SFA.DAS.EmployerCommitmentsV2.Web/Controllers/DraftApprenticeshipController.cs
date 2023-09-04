@@ -22,7 +22,7 @@ using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.D
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
-    //[DasAuthorize(CommitmentOperation.AccessCohort, EmployerUserRole.OwnerOrTransactor)]
+    [DasAuthorize(CommitmentOperation.AccessCohort, EmployerUserRole.OwnerOrTransactor)]
     [Route("{AccountHashedId}/unapproved/{cohortReference}/apprentices")]
     public class DraftApprenticeshipController : Controller
     {
