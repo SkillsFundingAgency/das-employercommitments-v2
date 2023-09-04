@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             await TestAsync(
                 f => f.Post(),
-                f => f.OuterApiClient.Verify(c => c.AddDraftApprenticeship(f.ViewModel.CohortId.Value, f.AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>())));
+                f => f.OuterApiClient.Verify(c => c.AddDraftApprenticeship(f.Cohort.CohortId, f.AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>())));
         }
 
         [Test]
@@ -150,7 +150,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammes(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammesResponse{TrainingProgrammes = Courses});
             CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammeStandards(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse{TrainingProgrammes = StandardCourses});
-            OuterApiClient.Setup(c => c.AddDraftApprenticeship(ViewModel.CohortId.Value, AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>()))
+            OuterApiClient.Setup(c => c.AddDraftApprenticeship(Cohort.CohortId, AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new EmployerCommitmentsV2.Services.Approvals.Responses.AddDraftApprenticeshipResponse { DraftApprenticeshipId = 123456 });
 
             ModelMapper.Setup(m => m.Map<AddDraftApprenticeshipApimRequest>(ViewModel)).Returns(Task.FromResult(AddDraftApprenticeshipRequest));
