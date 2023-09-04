@@ -28,7 +28,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                     o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                     o.Filters.Add(new GoogleAnalyticsFilter());
                     o.ModelBinderProviders.Insert(0, new SuppressArgumentExceptionModelBinderProvider());
-                    o.Filters.Add(new AccountActiveFilter(configuration));
+                    o.AddStringModelBinderProvider();
+					o.Filters.Add(new AccountActiveFilter(configuration));
                     if (commitmentsConfiguration.UseGovSignIn)
                     {
                         o.Filters.Add(new AuthorizeFilter("HasActiveAccount"));    
