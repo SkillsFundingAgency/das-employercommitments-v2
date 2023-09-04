@@ -88,6 +88,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             _source = autoFixture.Create<EditDraftApprenticeshipRequest>();
             _source.Cohort = _cohort;
+            _source.Request.CohortReference = _cohortReference;
+            _source.Request.DraftApprenticeshipHashedId = _encodedApprenticeshipId;
             _mapper = new EditDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object, _apiClient.Object);
 
             _result = await _mapper.Map(TestHelper.Clone(_source)) as EditDraftApprenticeshipViewModel;

@@ -22,6 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         {
             var autoFixture = new Fixture();
 
+            _encodingService = new Mock<IEncodingService>();
             _encodingService.Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<EncodingType>()))
                 .Returns(123);
 

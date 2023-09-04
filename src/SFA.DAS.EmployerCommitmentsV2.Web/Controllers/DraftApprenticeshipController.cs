@@ -141,7 +141,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
             var addDraftApprenticeshipRequest = await _modelMapper.Map<AddDraftApprenticeshipApimRequest>(model);
 
-            var response = await _outerApi.AddDraftApprenticeship(model.CohortId.Value, addDraftApprenticeshipRequest);
+            long cohortId = model.CohortId.GetValueOrDefault(_encodingService.Decode(model.CohortReference, EncodingType.CohortReference));
+
+            var response = await _outerApi.AddDraftApprenticeship(cohortId, addDraftApprenticeshipRequest);
 
             var draftApprenticeshipHashedId = _encodingService.Encode(response.DraftApprenticeshipId, EncodingType.ApprenticeshipId);
             
