@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore;
+﻿using System;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using NLog.Web;
 using SFA.DAS.EmployerCommitmentsV2.Web.Startup;
 using StructureMap.AspNetCore;
-using System;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web
 {
@@ -18,10 +18,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web
             CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureDasAppConfiguration()
-                .UseApplicationInsights()
                 .UseNLog()
                 .UseStructureMap()
                 .UseStartup<AspNetStartup>();

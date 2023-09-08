@@ -13,12 +13,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
     public class AspNetStartup
     {
         private readonly IConfiguration _configuration;
-        public IWebHostEnvironment Environment { get; }
+        private readonly IWebHostEnvironment _environment;
 
         public AspNetStartup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _configuration = configuration;
-            Environment = environment;
+            _environment = environment;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -32,7 +32,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
                 .AddUrlHelper()
                 .AddEmployerUrlHelper()
                 .AddMemoryCache()
-                .AddDataProtection(_configuration, Environment);
+                .AddApplicationInsightsTelemetry()
+                .AddDataProtection(_configuration, _environment);
         }
 
         public void ConfigureContainer(Registry registry)
@@ -42,7 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseDasErrorPages(Environment)
+            app.UseDasErrorPages(_environment)
                 .UseUnauthorizedAccessExceptionHandler()
                 .UseHttpsRedirection()
                 .UseDasHsts()

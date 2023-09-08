@@ -16,7 +16,6 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
