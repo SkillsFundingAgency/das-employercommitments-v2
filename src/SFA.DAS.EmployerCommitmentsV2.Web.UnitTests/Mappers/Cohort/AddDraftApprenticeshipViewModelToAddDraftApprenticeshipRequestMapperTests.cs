@@ -36,6 +36,33 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                     r.ReservationId.Should().Be(f.ViewModel.ReservationId);
                 });
         }
+
+        [Test]
+        public void Map_WhenMapping_ThenShouldSetPropertiesForPilotScenario()
+        {
+            Test(
+                f =>
+                {
+                    f.ViewModel.IsOnFlexiPaymentPilot = true;
+                    return f.Map();
+                },
+                (f, r) =>
+                {
+                    r.ProviderId.Should().Be(1);
+                    r.FirstName.Should().Be(f.ViewModel.FirstName);
+                    r.LastName.Should().Be(f.ViewModel.LastName);
+                    r.Email.Should().Be(f.ViewModel.Email);
+                    r.DateOfBirth.Should().Be(f.ViewModel.DateOfBirth.Date);
+                    r.Uln.Should().Be(f.ViewModel.Uln);
+                    r.CourseCode.Should().Be(f.ViewModel.CourseCode);
+                    r.DeliveryModel.Should().Be(f.ViewModel.DeliveryModel);
+                    r.Cost.Should().Be(f.ViewModel.Cost);
+                    r.StartDate.Should().Be(f.ViewModel.StartDate.Date);
+                    r.EndDate.Should().Be(f.ViewModel.FullEndDate);
+                    r.OriginatorReference.Should().Be(f.ViewModel.Reference);
+                    r.ReservationId.Should().Be(f.ViewModel.ReservationId);
+                });
+        }
     }
 
     public class AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapperTestsFixture
