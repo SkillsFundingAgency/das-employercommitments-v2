@@ -292,6 +292,13 @@ else
             {
                 <span id="endDate">@Model.EndDate?.Date?.ToGdsFormat()</span>
                 @Html.HiddenFor(x => x.EndDate)
+                @Html.HiddenFor(x => x.EndDate.Date)
+                @Html.HiddenFor(x => x.EndDate.Day)
+                @Html.HiddenFor(x => x.EndDate.Month)
+                @Html.HiddenFor(x => x.EndDate.Year)
+                @Html.HiddenFor(x => x.EndMonth)
+                @Html.HiddenFor(x => x.EndYear)
+                @Html.HiddenFor(x => x.EndDay)
             }
             else
             {

@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         {
             DateOfBirth = new DateModel();
             StartDate = new MonthYearModel("");
-            EndDate = new MonthYearModel("");
+            EndDate = new DateModel();
             EmploymentEndDate = new MonthYearModel("");
         }
 
@@ -91,16 +91,44 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public int? StartYear { get => StartDate.Year; set => StartDate.Year = value; }
 
         [Display(Name = "Projected finish date")]
-        public DateModel EndDate { get; }
+        public DateModel EndDate { get; set; }
 
         [Display(Name = "Month")]
         [SuppressArgumentException(nameof(EndDate), "The training end date is not valid")]
-        public int? EndMonth { get => EndDate.Month; set => EndDate.Month = value; }
+        public int? EndMonth
+        {
+            get => EndDate.Month;
+            set
+            {
+                EndDate ??= new DateModel();
+                EndDate.Month = value;
+            }
+        }
 
         [Display(Name = "Year")]
         [SuppressArgumentException(nameof(EndDate), "The training end date is not valid")]
-        public int? EndYear { get => EndDate.Year; set => EndDate.Year = value; }
-        
+        public int? EndYear
+        {
+            get => EndDate.Year;
+            set
+            {
+                EndDate ??= new DateModel();
+                EndDate.Year = value;
+            }
+        }
+
+        [Display(Name = "Day")]
+        [SuppressArgumentException(nameof(EndDate), "The training end date is not valid")]
+        public int? EndDay
+        {
+            get => EndDate.Day;
+            set
+            {
+                EndDate ??= new DateModel();
+                EndDate.Day = value;
+            }
+        }
+
         [Display(Name = "Total agreed apprenticeship price (excluding VAT)")]
         [SuppressArgumentException(nameof(Cost), "The apprenticeship price is not valid")]
         public int? Cost { get; set; }
