@@ -31,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IEncodingService _encodingService;
         private readonly IApprovalsApiClient _outerApi;
 
-        public const string ApprenticeDeletedMessage = "Apprentice record deleted";
+        private const string ApprenticeDeletedMessage = "Apprentice record deleted";
 
         public DraftApprenticeshipController(
             IModelMapper modelMapper,
