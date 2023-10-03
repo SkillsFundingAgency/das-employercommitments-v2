@@ -31,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private readonly IEncodingService _encodingService;
         private readonly IApprovalsApiClient _outerApi;
 
-        public const string ApprenticeDeletedMessage = "Apprentice record deleted";
+        private const string ApprenticeDeletedMessage = "Apprentice record deleted";
 
         public DraftApprenticeshipController(
             IModelMapper modelMapper,
@@ -192,9 +192,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
             {
                 StoreEditDraftApprenticeshipState(model);
-                var req = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
+                var addDraftApprenticeshipRequest = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
 
-                return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), req.CloneBaseValues());
+                return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), addDraftApprenticeshipRequest.CloneBaseValues());
             }
 
             var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipApimRequest>(model);
@@ -242,7 +242,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     return View(model);
                 }
 
-                request.DeliveryModel = (SFA.DAS.CommitmentsV2.Types.DeliveryModel) model.DeliveryModels.FirstOrDefault();
+                request.DeliveryModel = (CommitmentsV2.Types.DeliveryModel) model.DeliveryModels.FirstOrDefault();
             }
 
             return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), request);
@@ -250,7 +250,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpPost]
         [Route("{DraftApprenticeshipHashedId}/edit/select-delivery-model")]
-        public async Task<IActionResult> SetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
+        public IActionResult SetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
         {
             var draft = GetStoredEditDraftApprenticeshipState();
 
