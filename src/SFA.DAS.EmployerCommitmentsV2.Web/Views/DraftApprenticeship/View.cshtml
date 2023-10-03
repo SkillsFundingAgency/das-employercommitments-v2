@@ -226,22 +226,22 @@
 
 @functions
 {
-    private string DisplayOptionalField(string value)
+    private static string DisplayOptionalField(string value)
     {
         return !string.IsNullOrWhiteSpace(value) ? value : "--";
     }
 
-    private string DisplayOptionalField(DateTime? value)
+    private static string DisplayOptionalField(DateTime? value)
     {
         return value.HasValue ? value.Value.ToGdsFormat() : "--";
     }
 
-    private string DisplayOptionalEstimatedDate(DateTime? value)
+    private static string DisplayOptionalEstimatedDate(DateTime? value)
     {
         return value.HasValue ? $"{value:MMMM yyyy}" : "--";
     }
 
-    private string DisplayCost(int? value)
+    private static string DisplayCost(int? value)
     {
         return value.HasValue ? value.Value.ToGdsCostFormat() : "--";
     }
