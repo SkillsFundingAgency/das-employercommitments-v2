@@ -1,7 +1,5 @@
 ﻿@using  SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.EditDraftApprenticeshipViewModel
-@*@inject ILinkGenerator LinkGenerator
-@inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService*@
 
 @{
     ViewData["Title"] = "Edit apprentice details";
@@ -29,26 +27,10 @@
     </div>
 </div>
 
-
-
 @Html.ActionLink("Return to group of apprentices", "Details", "Cohort", new { @Model.AccountHashedId, @Model.CohortReference }, new { @class = "govuk-link", id = "return-link" })
-
 
 @section Back
 {
     <div class="das-js-back-link"></div>
 }
 
-
-
-@*
-    @section  Scripts
-    {
-        <script src="/libs/accessible-autocomplete/accessible-autocomplete.min.js"></script>
-        <script>
-            accessibleAutocomplete.enhanceSelectElement({
-                selectElement: document.querySelector('#CourseCode')
-            })
-        </script>
-    }
-*@
