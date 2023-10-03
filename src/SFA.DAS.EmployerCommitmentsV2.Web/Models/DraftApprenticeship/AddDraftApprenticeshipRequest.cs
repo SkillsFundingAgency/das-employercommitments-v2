@@ -24,7 +24,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public string StartMonthYear { get; set; }
         public string CourseCode { get; set; }
         public bool AutoCreated { get; set; }
-        [JsonIgnore]
         public long ProviderId { get; set; }
         public DeliveryModel? DeliveryModel { get; set; }
         public int? Cost { get; set; }
