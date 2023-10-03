@@ -160,7 +160,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return View(viewName, viewModel);
         }
 
-        [HttpGet] 
+        [HttpGet]
         [Route("{DraftApprenticeshipHashedId}/view", Name = "Details-View")]
         public async Task<IActionResult> ViewDetails(DetailsRequest request)
         {
@@ -245,17 +245,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                     return View(model);
                 }
 
-                request.DeliveryModel = (SFA.DAS.CommitmentsV2.Types.DeliveryModel) model.DeliveryModels.FirstOrDefault();
+                request.DeliveryModel = (CommitmentsV2.Types.DeliveryModel) model.DeliveryModels.FirstOrDefault();
             }
 
-            request.CohortId = null;
-            request.AccountLegalEntityId = 0;
-            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), request);
+            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), request.CloneBaseValues());
         }
 
         [HttpPost]
         [Route("{DraftApprenticeshipHashedId}/edit/select-delivery-model")]
-        public async Task<IActionResult> SetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
+        public IActionResult SetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
         {
             var draft = GetStoredEditDraftApprenticeshipState();
 

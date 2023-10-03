@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 using SFA.DAS.Authorization.ModelBinding;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Attributes;
@@ -30,6 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public string ProviderName { get; set; }
 
         public string CohortReference { get; set; }
+        [JsonIgnore]
         public long? CohortId { get; set; }
 
         public Guid? ReservationId { get; set; }
@@ -115,6 +117,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public IEnumerable<TrainingProgramme> Courses { get; set; }
 
         public bool IsContinuation { get; set; }
+        [JsonIgnore]
         public long AccountLegalEntityId { get; set; }
         public string AccountLegalEntityHashedId { get; set; }
         public bool? HasMultipleDeliveryModelOptions { get; set; }

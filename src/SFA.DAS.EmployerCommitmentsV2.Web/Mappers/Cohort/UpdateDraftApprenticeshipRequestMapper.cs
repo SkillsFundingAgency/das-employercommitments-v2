@@ -24,7 +24,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
         public async Task<UpdateDraftApprenticeshipApimRequest> Map(EditDraftApprenticeshipViewModel source)
         {
             var draftApprenticeshipId = _encodingService.Decode(source.DraftApprenticeshipHashedId, EncodingType.ApprenticeshipId);
-            var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(source.CohortId.Value, draftApprenticeshipId);
+            var cohortId = _encodingService.Decode(source.CohortReference, EncodingType.CohortReference);
+            var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(cohortId, draftApprenticeshipId);
 
             return new UpdateDraftApprenticeshipApimRequest
             {

@@ -34,16 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var birthDate = fixture.Create<DateTime?>();
             var startDate = fixture.Create<DateTime?>();
             var endDate = fixture.Create<DateTime?>();
-
-            _getDraftApprenticeshipResponse = fixture.Create<GetDraftApprenticeshipResponse>();
-
-            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-
-            _encodingService = new Mock<IEncodingService>(); ;
-            _encodingService.Setup(t => t.Decode(It.IsAny<string>(), It.IsAny<EncodingType>())).Returns(123);
-
-            _mapper = new UpdateDraftApprenticeshipRequestMapper(_mockCommitmentsApiClient.Object, Mock.Of<IAuthenticationService>(), _encodingService.Object);
-
+            
             _source = fixture.Build<EditDraftApprenticeshipViewModel>()
                 .With(x => x.DeliveryModel, DeliveryModel.PortableFlexiJob)
                 .With(x => x.CourseCode, fixture.Create<int>().ToString())
@@ -54,12 +45,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 .With(x => x.EndYear, endDate?.Year)
                 .With(x => x.StartMonth, startDate?.Month)
                 .With(x => x.StartYear, startDate?.Year)
+                .With(x => x.CohortReference, fixture.Create<string>())
                 .Without(x => x.StartDate)
                 .Without(x => x.Courses)
                 .Create();
 
+            _getDraftApprenticeshipResponse = fixture.Create<GetDraftApprenticeshipResponse>();
+            
+            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+            
+            _encodingService = new Mock<IEncodingService>();
+            _encodingService.Setup(t => t.Decode(It.IsAny<string>(), It.IsAny<EncodingType>())).Returns(123);
+            
+            _mapper = new UpdateDraftApprenticeshipRequestMapper(_mockCommitmentsApiClient.Object, Mock.Of<IAuthenticationService>(), _encodingService.Object);
+            
             _mockCommitmentsApiClient.Setup(x => x.GetDraftApprenticeship(_source.CohortId.Value, _encodingService.Object.Decode("foo", EncodingType.ApprenticeshipId), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_getDraftApprenticeshipResponse);
+            
+            _encodingService.Setup(x => x.Decode(It.Is<string>(c => c == _source.CohortReference), It.Is<EncodingType>(y => y == EncodingType.CohortReference)))
+                .Returns(_source.CohortId.Value);
 
             _act = async () => await _mapper.Map(TestHelper.Clone(_source));
         }

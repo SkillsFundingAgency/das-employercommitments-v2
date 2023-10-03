@@ -60,6 +60,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                 .ReturnsAsync(_getCohortResponse);
 
             _encodingService = new Mock<IEncodingService>();
+            _encodingService.Setup(x => x.Decode(It.Is<string>(c => c == _source.CohortReference), It.Is<EncodingType>(y => y == EncodingType.CohortReference)))
+                .Returns(_source.CohortId.Value);
+            
             _mapper = new EditDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapper(_commitmentsApiClient.Object, _encodingService.Object);
 
             _result = await _mapper.Map(TestHelper.Clone(_source));

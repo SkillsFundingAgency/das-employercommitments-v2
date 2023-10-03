@@ -1,5 +1,6 @@
 ﻿using System;
 using SFA.DAS.Authorization.ModelBinding;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
@@ -17,5 +18,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
         public string AccountHashedId { get; set; }
         public string DraftApprenticeshipHashedId { get; set; }
         public string LegalEntityName { get; set; }
+        
+        public EditDraftApprenticeshipViewModel CloneBaseValues() => this.ExplicitClone();
     }
 }
