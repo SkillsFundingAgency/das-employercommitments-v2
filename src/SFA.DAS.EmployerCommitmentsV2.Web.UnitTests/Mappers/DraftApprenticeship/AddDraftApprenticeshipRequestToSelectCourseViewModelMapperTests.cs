@@ -63,7 +63,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             _mapper = new AddDraftApprenticeshipRequestToSelectCourseViewModelMapper(_commitmentsApiClient.Object);
 
-            _result = await _mapper.Map(TestHelper.Clone(_source));
+            _result = await _mapper.Map(_source);
         }
 
         [Test]

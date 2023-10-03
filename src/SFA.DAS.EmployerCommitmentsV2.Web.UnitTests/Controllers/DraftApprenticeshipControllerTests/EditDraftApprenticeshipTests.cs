@@ -112,9 +112,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
 
         [Test]
-        public async Task WhenPostingSetDeliveryModelForEdit()
+        public void WhenPostingSetDeliveryModelForEdit()
         {
-            var result = await _testFixture.PostSetDeliveryModelForEdit(_testFixture._selectDeliveryModelViewModel_WithDeliveryModels);
+            var result = _testFixture.PostSetDeliveryModelForEdit(_testFixture._selectDeliveryModelViewModel_WithDeliveryModels);
 
             Assert.NotNull(result);
             Assert.IsInstanceOf(typeof(RedirectToActionResult), result);
@@ -263,9 +263,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             return await _controller.SelectDeliveryModelForEdit(_editDraftApprenticeshipViewModel);
         }
 
-        public async Task<IActionResult> PostSetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
+        public IActionResult PostSetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
         {
-            return await _controller.SetDeliveryModelForEdit(model);
+            return _controller.SetDeliveryModelForEdit(model);
         }
     }
 }

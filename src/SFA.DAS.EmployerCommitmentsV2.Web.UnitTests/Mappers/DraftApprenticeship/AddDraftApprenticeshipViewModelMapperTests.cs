@@ -73,7 +73,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
             _source = autoFixture.Create<AddDraftApprenticeshipRequest>();
             _source.StartMonthYear = "092020";
 
-            _result = await _mapper.Map(TestHelper.Clone(_source));
+            _result = await _mapper.Map(_source);
         }
 
         [Test]
