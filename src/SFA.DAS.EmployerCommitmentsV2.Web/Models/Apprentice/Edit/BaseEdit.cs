@@ -9,13 +9,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit
     public class BaseEdit : IAuthorizationContextModel
     {
         [JsonIgnore]
-        public string Name
-        {
-            get
-            {
-                return FirstName + " " + LastName;
-            }
-        }
+        public string Name => FirstName + " " + LastName;
+
         [FromRoute]
         public string AccountHashedId { get; set; }
         [JsonIgnore]
