@@ -50,21 +50,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         }
 
         [Test]
-        public void AccountLegalEntityIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.AccountLegalEntityId, _result.AccountLegalEntityId);
-        }
-
-        [Test]
         public void AccountLegalEntityHashedIdIsMappedCorrectly()
         {
             Assert.AreEqual(_source.AccountLegalEntityHashedId, _result.AccountLegalEntityHashedId);
-        }
-
-        [Test]
-        public void CohortIdIsMappedCorrectly()
-        {
-            Assert.AreEqual(_source.CohortId, _result.CohortId);
         }
 
         [Test]
