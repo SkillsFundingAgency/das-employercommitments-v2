@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             await TestAsync(
                 f => f.Post(),
-                f => f.OuterApiClient.Verify(c => c.AddDraftApprenticeship(f.Cohort.CohortId, f.AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>())));
+                f => f.OuterApiClient.Verify(c => c.AddDraftApprenticeship(f.ViewModel.CohortId.Value, f.AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>())));
         }
 
         [Test]
@@ -100,19 +100,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             {
                 AccountHashedId = "AAA000",
                 CohortReference = "BBB111",
+                CohortId = Cohort.CohortId,
                 AccountLegalEntityHashedId = "CCC222",
+                AccountLegalEntityId = 2,
                 ReservationId = Guid.NewGuid(),
                 StartMonthYear = "092019",
                 CourseCode = "DDD333"
             };
 
-
-
             ViewModel = new AddDraftApprenticeshipViewModel
             {
                 AccountHashedId = Request.AccountHashedId,
                 CohortReference = Request.CohortReference,
+                CohortId = Request.CohortId,
                 AccountLegalEntityHashedId = Request.AccountLegalEntityHashedId,
+                AccountLegalEntityId = Request.AccountLegalEntityId,
                 ReservationId = Request.ReservationId,
                 StartDate = new MonthYearModel(Request.StartMonthYear),
                 DeliveryModel = DeliveryModel.Regular,
@@ -134,23 +136,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.ApprenticeshipId))
                 .Returns("APP123");
 
-            EncodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.CohortReference))
-                .Returns(Cohort.CohortId);
-
-            EncodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.PublicAccountLegalEntityId))
-                .Returns(123);
-
             Controller = new DraftApprenticeshipController(
                 ModelMapper.Object,
                 CommitmentsApiClient.Object,
-                EncodingService.Object,
+                Mock.Of<IEncodingService>(),
                 OuterApiClient.Object);
 
             Controller.TempData = TempData.Object;
 
             CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammes(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammesResponse{TrainingProgrammes = Courses});
             CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammeStandards(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse{TrainingProgrammes = StandardCourses});
-            OuterApiClient.Setup(c => c.AddDraftApprenticeship(Cohort.CohortId, AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>()))
+            OuterApiClient.Setup(c => c.AddDraftApprenticeship(ViewModel.CohortId.Value, AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new EmployerCommitmentsV2.Services.Approvals.Responses.AddDraftApprenticeshipResponse { DraftApprenticeshipId = 123456 });
 
             ModelMapper.Setup(m => m.Map<AddDraftApprenticeshipApimRequest>(ViewModel)).Returns(Task.FromResult(AddDraftApprenticeshipRequest));

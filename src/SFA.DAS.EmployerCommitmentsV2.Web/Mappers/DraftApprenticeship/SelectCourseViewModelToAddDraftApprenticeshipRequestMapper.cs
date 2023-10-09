@@ -11,8 +11,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
         {
             return Task.FromResult(new AddDraftApprenticeshipRequest
             {
+                AccountLegalEntityId = source.AccountLegalEntityId,
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
                 AccountHashedId = source.AccountHashedId,
+                CohortId = source.CohortId,
                 CohortReference = source.CohortReference,
                 CourseCode = source.CourseCode,
                 DeliveryModel = source.DeliveryModel,

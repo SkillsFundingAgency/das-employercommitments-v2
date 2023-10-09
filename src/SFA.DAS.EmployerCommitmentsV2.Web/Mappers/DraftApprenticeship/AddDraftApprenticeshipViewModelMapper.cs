@@ -23,9 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
 
         public async Task<AddDraftApprenticeshipViewModel> Map(AddDraftApprenticeshipRequest source)
         {
-            var cohortId = _encodingService.Decode(source.CohortReference, EncodingType.CohortReference);
-            var accountLegalEntityId = _encodingService.Decode(source.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId);
-            var cohort = await _commitmentsApiClient.GetCohort(cohortId);
+            var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
 
             if (cohort.WithParty != Party.Employer)
                 throw new CohortEmployerUpdateDeniedException($"Cohort {cohort} is not with the Employer");
@@ -34,9 +32,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
             {
                 AccountHashedId = source.AccountHashedId,
                 CohortReference = source.CohortReference,
-                CohortId = cohortId,
+                CohortId = source.CohortId,
                 AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
-                AccountLegalEntityId = accountLegalEntityId,
+                AccountLegalEntityId = source.AccountLegalEntityId,
                 LegalEntityName = cohort.LegalEntityName,
                 ReservationId = source.ReservationId,
                 StartDate = new MonthYearModel(source.StartMonthYear),
