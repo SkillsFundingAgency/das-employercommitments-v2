@@ -31,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 Cost = source.Cost,
                 EmploymentPrice = source.EmploymentPrice,
                 StartDate = source.StartDate.Date,
-                EndDate = source.EndDate.Date,
+                EndDate = (source.IsOnFlexiPaymentPilot ?? false) ? source.ActualEndDate : source.EndDate.Date,
                 EmploymentEndDate = source.EmploymentEndDate.Date,
                 OriginatorReference = source.Reference,
                 ReservationId = source.ReservationId,

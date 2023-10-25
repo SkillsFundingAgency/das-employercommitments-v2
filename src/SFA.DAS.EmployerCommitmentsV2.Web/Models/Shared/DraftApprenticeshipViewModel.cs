@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         {
             DateOfBirth = dateOfBirth == null ? new DateModel() : new DateModel(dateOfBirth.Value);
             StartDate = startDate == null ? new MonthYearModel("") : new MonthYearModel($"{startDate.Value.Month}{startDate.Value.Year}");
-            EndDate = endDate == null ? new DateModel() : new DateModel(endDate.GetValueOrDefault());
+            EndDate = endDate == null ? new MonthYearModel("") : new MonthYearModel($"{endDate.Value.Month}{endDate.Value.Year}");
             EmploymentEndDate = employmentEndDate == null ? new MonthYearModel("") : new MonthYearModel($"{employmentEndDate.Value.Month}{employmentEndDate.Value.Year}");
         }
 
@@ -91,7 +91,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public int? StartYear { get => StartDate.Year; set => StartDate.Year = value; }
 
         [Display(Name = "Projected finish date")]
-        public DateModel EndDate { get; }
+        public MonthYearModel EndDate { get; }
 
         [Display(Name = "Month")]
         [SuppressArgumentException(nameof(EndDate), "The training end date is not valid")]
@@ -120,6 +120,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public bool? HasMultipleDeliveryModelOptions { get; set; }
         public bool? IsOnFlexiPaymentPilot { get; set; }
         public DateTime? ActualStartDate { get; set; }
+        public DateTime? ActualEndDate { get; set; }
         public bool HasUnavailableFlexiJobDeliveryModel { get; set; }
         public bool HasChangedDeliveryModel { get; set; }
         public bool? EmailAddressConfirmed { get; set; }
