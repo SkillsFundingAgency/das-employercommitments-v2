@@ -309,6 +309,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         }
 
         [Test]
+        public void ActualEndDateIsMappedCorrectly()
+        {
+            Assert.AreEqual(null, _result.ActualEndDate);
+        }
+
+        [Test]
         public void RecognisePriorLearningIsMappedCorrectly()
         {
             Assert.AreEqual(_draftApprenticeshipResponse.RecognisePriorLearning, _result.RecognisePriorLearning);

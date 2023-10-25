@@ -49,6 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 .With(x => x.EndYear, endDate?.Year)
                 .With(x => x.StartMonth, startDate?.Month)
                 .With(x => x.StartYear, startDate?.Year)
+                .With(x => x.IsOnFlexiPaymentPilot, false)
                 .Without(x => x.StartDate)
                 .Without(x => x.Courses)
                 .Create();
