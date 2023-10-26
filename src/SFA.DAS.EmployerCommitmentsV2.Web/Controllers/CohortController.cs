@@ -100,6 +100,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ViewAgreement(ViewEmployerAgreementModel employerAgreementModel)
+        {
+            var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel
+            {
+                AccountHashedId = employerAgreementModel.AccountHashedId,
+            });
+
+            if (request.AgreementHashedId == null)
+            {
+                return Redirect(_linkGenerator.AccountsLink($"accounts/{request.AccountHashedId}/agreements/"));
+            }
+            return Redirect(_linkGenerator.AccountsLink(
+            $"accounts/{request.AccountHashedId}/agreements/{request.AgreementHashedId}/about-your-agreement"));
+        }
+
         [Route("{cohortReference}/delete")]
         [DasAuthorize(CommitmentOperation.AccessCohort)]
         public async Task<IActionResult> ConfirmDelete(DetailsRequest request)
