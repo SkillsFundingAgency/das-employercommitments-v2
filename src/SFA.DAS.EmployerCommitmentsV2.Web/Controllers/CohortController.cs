@@ -84,12 +84,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 case CohortDetailsOptions.ViewEmployerAgreement:
                     {
                         var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
-                        if (request.AgreementHashedId == null)
-                        {
-                            return Redirect(_linkGenerator.AccountsLink($"accounts/{request.AccountHashedId}/agreements/"));
-                        }
-                        return Redirect(_linkGenerator.AccountsLink(
-                        $"accounts/{request.AccountHashedId}/agreements/{request.AgreementHashedId}/about-your-agreement"));
+                        return ViewEmployeeAgreementRedirect(request);                      
                     }
                 case CohortDetailsOptions.Homepage:
                     {
@@ -107,7 +102,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             {
                 AccountHashedId = employerAgreementModel.AccountHashedId,
             });
+            return ViewEmployeeAgreementRedirect(request);          
+        }
 
+        private IActionResult ViewEmployeeAgreementRedirect(ViewEmployerAgreementRequest request)
+        {
             if (request.AgreementHashedId == null)
             {
                 return Redirect(_linkGenerator.AccountsLink($"accounts/{request.AccountHashedId}/agreements/"));
