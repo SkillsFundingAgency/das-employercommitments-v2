@@ -77,6 +77,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool? RecognisePriorLearning { get; set; }
         public int? DurationReducedBy { get; set; }
         public int? PriceReducedBy { get; set; }
+        public int? TrainingTotalHours { get; set; }
+        public int? DurationReducedByHours { get; set; }
+        public bool? IsDurationReducedByRpl { get; set; }
 
         public bool HasPendingOverlappingTrainingDateRequest { get; set; }
 
