@@ -96,8 +96,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         }
 
         [HttpGet]
+        [Route("viewAgreement", Name = "ViewAgreement")]
         public async Task<IActionResult> ViewAgreement(ViewEmployerAgreementModel employerAgreementModel)
         {
+            _logger.LogInformation($"Hitting ViewAgreement with HashedID = {employerAgreementModel.AccountHashedId}");
             var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel
             {
                 AccountHashedId = employerAgreementModel.AccountHashedId,
