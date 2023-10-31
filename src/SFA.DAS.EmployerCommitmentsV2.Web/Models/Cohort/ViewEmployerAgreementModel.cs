@@ -10,7 +10,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
         [FromRoute]
         public string AccountHashedId { get; set; }
 
-        [FromRoute]
         public long CohortId { get; set; }
     }
 }

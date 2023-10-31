@@ -69,6 +69,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
             {
                 AccountHashedId = source.AccountHashedId,
                 CohortReference = source.CohortReference,
+                CohortId = source.CohortId,
                 WithParty = cohort.WithParty,
                 AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
                 LegalEntityName = cohortDetails.LegalEntityName,
