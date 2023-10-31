@@ -65,7 +65,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> Details(DetailsRequest request)
         {
             var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
-            StoreViewEmployerAgreementModelState(new ViewEmployerAgreementModel { AccountHashedId = viewModel.AccountHashedId, CohortId = viewModel.CohortId });
+            StoreViewEmployerAgreementModelState(
+                new ViewEmployerAgreementModel {
+                AccountHashedId = viewModel.AccountHashedId, 
+                CohortId = viewModel.CohortId });
             return View(viewModel);
         }
 
@@ -100,14 +103,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 
         [HttpGet]
         [Route("viewAgreement", Name = "ViewAgreement")]
-        public async Task<IActionResult> ViewAgreement(ViewEmployerAgreementModel employerAgreementModel)
+        public async Task<IActionResult> ViewAgreement(string hashedAccountId)
         {
-            var tempData = GetViewEmployerAgreementModelState();
-            var test = tempData == null ? "is empty" : "has value";
-            _logger.LogInformation($"GetViewEmployerAgreementModelState = {test}");
+            var tempData = GetViewEmployerAgreementModelState();          
 
             var request = tempData == null
-             ? new ViewEmployerAgreementRequest { AccountHashedId = employerAgreementModel.AccountHashedId }
+             ? new ViewEmployerAgreementRequest { AccountHashedId = hashedAccountId }
              : await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel {
                  AccountHashedId = tempData.AccountHashedId, CohortId = tempData.CohortId
              });

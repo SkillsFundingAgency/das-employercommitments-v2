@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
               .Returns(expectedUrl);
 
             //Act
-            var result = await _controller.ViewAgreement(_viewEmployerAgreementModel) as RedirectResult;
+            var result = await _controller.ViewAgreement(_viewEmployerAgreementModel.AccountHashedId) as RedirectResult;
 
             // Assert
             Assert.IsNotNull(result);
