@@ -25,6 +25,8 @@ using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Filters;
+using Azure.Core;
+using Microsoft.Azure.Cosmos.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -63,6 +65,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> Details(DetailsRequest request)
         {
             var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
+            StoreDetailsViewModelState(viewModel);
             return View(viewModel);
         }
 
@@ -99,13 +102,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("viewAgreement", Name = "ViewAgreement")]
         public async Task<IActionResult> ViewAgreement(ViewEmployerAgreementModel employerAgreementModel)
         {
-            _logger.LogInformation($"Hitting ViewAgreement with HashedID = {employerAgreementModel.AccountHashedId} and CohortId = {employerAgreementModel.CohortId}");
-            var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel
-            {
-                AccountHashedId = employerAgreementModel.AccountHashedId,
-                CohortId = employerAgreementModel.CohortId
-            });
-            return ViewEmployeeAgreementRedirect(request);          
+            var details = GetDetailsViewModelState();
+            var test = details.IsNull() ? "is empty" : "has value";
+            _logger.LogInformation($"GetDetailsViewModelState = {test}");
+
+            var request = details == null
+             ? new ViewEmployerAgreementRequest { AccountHashedId = employerAgreementModel.AccountHashedId }
+             : await _modelMapper.Map<ViewEmployerAgreementRequest>(details);
+
+            return ViewEmployeeAgreementRedirect(request);
         }
 
         private IActionResult ViewEmployeeAgreementRedirect(ViewEmployerAgreementRequest request)
@@ -577,6 +582,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private ApprenticeViewModel GetStoredDraftApprenticeshipState()
         {
             return TempData.Get<ApprenticeViewModel>(nameof(ApprenticeViewModel));
+        }
+
+        private void StoreDetailsViewModelState(DetailsViewModel model)
+        {
+            TempData.Put(nameof(DetailsViewModel), model);
+        }
+
+        private DetailsViewModel GetDetailsViewModelState()
+        {
+            return TempData.Get<DetailsViewModel>(nameof(DetailsViewModel));
         }
     }
 }
