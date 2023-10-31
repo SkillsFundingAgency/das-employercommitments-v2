@@ -65,7 +65,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> Details(DetailsRequest request)
         {
             var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
-            StoreDetailsViewModelState(viewModel);
+            StoreViewEmployerAgreementModelState(new ViewEmployerAgreementModel { AccountHashedId = viewModel.AccountHashedId, CohortId = viewModel.CohortId });
             return View(viewModel);
         }
 
@@ -102,13 +102,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("viewAgreement", Name = "ViewAgreement")]
         public async Task<IActionResult> ViewAgreement(ViewEmployerAgreementModel employerAgreementModel)
         {
-            var details = GetDetailsViewModelState();
-            var test = details == null ? "is empty" : "has value";
-            _logger.LogInformation($"GetDetailsViewModelState = {test}");
+            var tempData = GetViewEmployerAgreementModelState();
+            var test = tempData == null ? "is empty" : "has value";
+            _logger.LogInformation($"GetViewEmployerAgreementModelState = {test}");
 
-            var request = details == null
+            var request = tempData == null
              ? new ViewEmployerAgreementRequest { AccountHashedId = employerAgreementModel.AccountHashedId }
-             : await _modelMapper.Map<ViewEmployerAgreementRequest>(details);
+             : await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel {
+                 AccountHashedId = tempData.AccountHashedId, CohortId = tempData.CohortId
+             });
 
             return ViewEmployeeAgreementRedirect(request);
         }
@@ -584,14 +586,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
             return TempData.Get<ApprenticeViewModel>(nameof(ApprenticeViewModel));
         }
 
-        private void StoreDetailsViewModelState(DetailsViewModel model)
+        private void StoreViewEmployerAgreementModelState(ViewEmployerAgreementModel model)
         {
-            TempData.Put(nameof(DetailsViewModel), model);
+            TempData.Put(nameof(ViewEmployerAgreementModel), model);
         }
 
-        private DetailsViewModel GetDetailsViewModelState()
+        private ViewEmployerAgreementModel GetViewEmployerAgreementModelState()
         {
-            return TempData.Get<DetailsViewModel>(nameof(DetailsViewModel));
+            return TempData.Get<ViewEmployerAgreementModel>(nameof(ViewEmployerAgreementModel));
         }
     }
 }
