@@ -99,10 +99,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [Route("viewAgreement", Name = "ViewAgreement")]
         public async Task<IActionResult> ViewAgreement(ViewEmployerAgreementModel employerAgreementModel)
         {
-            _logger.LogInformation($"Hitting ViewAgreement with HashedID = {employerAgreementModel.AccountHashedId}");
+            _logger.LogInformation($"Hitting ViewAgreement with HashedID = {employerAgreementModel.AccountHashedId} and CohortId = {employerAgreementModel.CohortId}");
             var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel
             {
                 AccountHashedId = employerAgreementModel.AccountHashedId,
+                CohortId = employerAgreementModel.CohortId
             });
             return ViewEmployeeAgreementRedirect(request);          
         }
