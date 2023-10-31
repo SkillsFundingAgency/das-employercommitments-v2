@@ -103,7 +103,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> ViewAgreement(ViewEmployerAgreementModel employerAgreementModel)
         {
             var details = GetDetailsViewModelState();
-            var test = details.IsNull() ? "is empty" : "has value";
+            var test = details == null ? "is empty" : "has value";
             _logger.LogInformation($"GetDetailsViewModelState = {test}");
 
             var request = details == null
