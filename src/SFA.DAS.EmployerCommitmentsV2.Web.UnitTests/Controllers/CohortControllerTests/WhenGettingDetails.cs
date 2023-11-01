@@ -36,6 +36,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             _fixture.VerifyViewModelIsMappedFromRequest();
         }
 
+        [Test]
+        public async Task ThenViewModelShouldBeStoredInTempData()
+        {
+            await _fixture.GetDetails();
+            _fixture.VerifyViewEmployerAgreementModelIsStoredInTempData();
+        }
+
         [TestCase(Party.Provider)]
         [TestCase(Party.TransferSender)]
         public async Task ThenViewModelIsReadOnlyIfCohortIsNotWithEmployer(Party withParty)
@@ -100,6 +107,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 var expectedTotalCost = _viewModel.Courses?.Sum(g => g.DraftApprenticeships.Sum(a => a.Cost ?? 0)) ?? 0;
                 Assert.AreEqual(expectedTotalCost, _viewModel.TotalCost, "The total cost stored in the model is incorrect");
             }
+
+            public void VerifyViewEmployerAgreementModelIsStoredInTempData()
+            {
+                Assert.IsTrue(CohortController.TempData.ContainsKey(nameof(ViewEmployerAgreementModel)));
+            }
+
 
             public bool IsViewModelReadOnly()
             {

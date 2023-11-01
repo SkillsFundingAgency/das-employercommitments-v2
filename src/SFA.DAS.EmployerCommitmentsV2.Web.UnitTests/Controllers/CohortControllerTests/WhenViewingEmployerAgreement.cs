@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Http;
 using StructureMap.Query;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using Azure.Core;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
@@ -27,6 +28,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         private ViewEmployerAgreementModel _viewEmployerAgreementModel;
         private Mock<IModelMapper> _modelMapper;
         private Mock<ILinkGenerator> _linkGenerator;
+        private string OrganisationAgreementsUrl;
+        private string AgreementUrl;
 
         [SetUp]
         public void Arrange()
@@ -40,6 +43,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             _modelMapper.Setup(x => x.Map<ViewEmployerAgreementRequest>(It.IsAny<DetailsViewModel>()))
                .ReturnsAsync(_viewEmployerAgreementRequest);
 
+            OrganisationAgreementsUrl = $"accounts/{_viewEmployerAgreementRequest.AccountHashedId}/agreements/";
+            AgreementUrl = $"accounts/{_viewEmployerAgreementRequest.AccountHashedId}/agreements/{_viewEmployerAgreementRequest.AgreementHashedId}/about-your-agreement";
 
             _controller = new CohortController(Mock.Of<ICommitmentsApiClient>(),
               Mock.Of<ILogger<CohortController>>(),
@@ -53,21 +58,36 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         }
 
         [Test]
-        public async Task Then_User_Is_Redirected_To_View_Organisations_Agreements_If_AgreementId_Is_Null()
+        public async Task Then_User_Is_Redirected_To_View_Organisations_Agreements_When_NoTempData()
         {
             // Arrange
-            var expectedUrl = $"accounts/{_viewEmployerAgreementRequest.AccountHashedId}/agreements/";
+            _linkGenerator.Setup(linkGen => linkGen.AccountsLink(OrganisationAgreementsUrl))
+              .Returns(OrganisationAgreementsUrl);
 
-            _linkGenerator.Setup(linkGen => linkGen.AccountsLink(It.IsAny<string>()))
-              .Returns(expectedUrl);
+            //Act
+            var result = await _controller.ViewAgreement(_viewEmployerAgreementRequest.AccountHashedId) as RedirectResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(OrganisationAgreementsUrl, result.Url);
+        }
+
+        [Test]
+        public async Task Then_User_Is_Redirected_To_View_Agreement_If_AgreementID_In_TempData()
+        {
+            // Arrange         
+            _controller.TempData.Put(nameof(ViewEmployerAgreementModel), _viewEmployerAgreementModel);
+
+            _linkGenerator.Setup(linkGen => 
+                linkGen.AccountsLink(AgreementUrl))
+              .Returns(AgreementUrl);
 
             //Act
             var result = await _controller.ViewAgreement(_viewEmployerAgreementModel.AccountHashedId) as RedirectResult;
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(expectedUrl, result.Url);
+            Assert.AreEqual(AgreementUrl, result.Url);
         }
-       
     }
 }
