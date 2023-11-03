@@ -25,6 +25,8 @@ using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Filters;
+using Azure.Core;
+using Microsoft.Azure.Cosmos.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 {
@@ -63,6 +65,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         public async Task<IActionResult> Details(DetailsRequest request)
         {
             var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
+            StoreViewEmployerAgreementModelState(
+                new ViewEmployerAgreementModel {
+                AccountHashedId = viewModel.AccountHashedId, 
+                CohortId = viewModel.CohortId });
             return View(viewModel);
         }
 
@@ -84,12 +90,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 case CohortDetailsOptions.ViewEmployerAgreement:
                     {
                         var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
-                        if (request.AgreementHashedId == null)
-                        {
-                            return Redirect(_linkGenerator.AccountsLink($"accounts/{request.AccountHashedId}/agreements/"));
-                        }
-                        return Redirect(_linkGenerator.AccountsLink(
-                        $"accounts/{request.AccountHashedId}/agreements/{request.AgreementHashedId}/about-your-agreement"));
+                        return ViewEmployeeAgreementRedirect(request);                      
                     }
                 case CohortDetailsOptions.Homepage:
                     {
@@ -98,6 +99,31 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 default:
                     throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
             }
+        }
+
+        [HttpGet]
+        [Route("viewAgreement", Name = "ViewAgreement")]
+        public async Task<IActionResult> ViewAgreement(string hashedAccountId)
+        {
+            var tempData = GetViewEmployerAgreementModelState();          
+
+            var request = tempData == null
+             ? new ViewEmployerAgreementRequest { AccountHashedId = hashedAccountId }
+             : await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel {
+                 AccountHashedId = tempData.AccountHashedId, CohortId = tempData.CohortId
+             });
+
+            return ViewEmployeeAgreementRedirect(request);
+        }
+
+        private IActionResult ViewEmployeeAgreementRedirect(ViewEmployerAgreementRequest request)
+        {
+            if (request.AgreementHashedId == null)
+            {
+                return Redirect(_linkGenerator.AccountsLink($"accounts/{request.AccountHashedId}/agreements/"));
+            }
+            return Redirect(_linkGenerator.AccountsLink(
+            $"accounts/{request.AccountHashedId}/agreements/{request.AgreementHashedId}/about-your-agreement"));
         }
 
         [Route("{cohortReference}/delete")]
@@ -559,6 +585,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         private ApprenticeViewModel GetStoredDraftApprenticeshipState()
         {
             return TempData.Get<ApprenticeViewModel>(nameof(ApprenticeViewModel));
+        }
+
+        private void StoreViewEmployerAgreementModelState(ViewEmployerAgreementModel model)
+        {
+            TempData.Put(nameof(ViewEmployerAgreementModel), model);
+        }
+
+        private ViewEmployerAgreementModel GetViewEmployerAgreementModelState()
+        {
+            return TempData.Get<ViewEmployerAgreementModel>(nameof(ViewEmployerAgreementModel));
         }
     }
 }

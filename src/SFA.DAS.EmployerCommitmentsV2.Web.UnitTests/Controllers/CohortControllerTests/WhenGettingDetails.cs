@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -32,6 +34,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             await _fixture.GetDetails();
             _fixture.VerifyViewModelIsMappedFromRequest();
+        }
+
+        [Test]
+        public async Task ThenViewModelShouldBeStoredInTempData()
+        {
+            await _fixture.GetDetails();
+            _fixture.VerifyViewEmployerAgreementModelIsStoredInTempData();
         }
 
         [TestCase(Party.Provider)]
@@ -68,6 +77,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                     Mock.Of<IAuthorizationService>(),
                     Mock.Of<IEncodingService>(),
                     Mock.Of<IApprovalsApiClient>());
+                CohortController.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
+
             }
 
             public CohortController CohortController { get; set; }
@@ -96,6 +107,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 var expectedTotalCost = _viewModel.Courses?.Sum(g => g.DraftApprenticeships.Sum(a => a.Cost ?? 0)) ?? 0;
                 Assert.AreEqual(expectedTotalCost, _viewModel.TotalCost, "The total cost stored in the model is incorrect");
             }
+
+            public void VerifyViewEmployerAgreementModelIsStoredInTempData()
+            {
+                Assert.IsTrue(CohortController.TempData.ContainsKey(nameof(ViewEmployerAgreementModel)));
+            }
+
 
             public bool IsViewModelReadOnly()
             {
