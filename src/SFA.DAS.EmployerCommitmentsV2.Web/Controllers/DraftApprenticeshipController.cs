@@ -245,7 +245,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
                 request.DeliveryModel = (SFA.DAS.CommitmentsV2.Types.DeliveryModel) model.DeliveryModels.FirstOrDefault();
             }
 
-            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), request);
+            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), request.CloneBaseValues());
         }
 
         [HttpPost]

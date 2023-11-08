@@ -5,12 +5,37 @@ using SFA.DAS.Authorization.ModelBinding;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Web.Attributes;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
 {
-    public class DraftApprenticeshipViewModel : IAuthorizationContextModel
+    public class DraftApprenticeshipViewModel : BaseDraftApprenticeshipViewModel, IAuthorizationContextModel
     {
-        public DraftApprenticeshipViewModel(DateTime? dateOfBirth, DateTime? startDate, DateTime? endDate, DateTime? employmentEndDate = null) : base()
+        public DraftApprenticeshipViewModel(DateTime? dateOfBirth, DateTime? startDate, DateTime? endDate, DateTime? employmentEndDate = null) 
+            : base(dateOfBirth, startDate, endDate, employmentEndDate)
+        {           
+        }
+
+        public DraftApprenticeshipViewModel()
+        {
+          
+        }
+        
+        public long? CohortId { get; set; }
+        
+        public long AccountLegalEntityId { get; set; }
+       
+    }
+    public class BaseDraftApprenticeshipViewModel
+    {
+        public BaseDraftApprenticeshipViewModel()
+        {
+            DateOfBirth = new DateModel();
+            StartDate = new MonthYearModel("");
+            EndDate = new MonthYearModel("");
+            EmploymentEndDate = new MonthYearModel("");
+        }
+        public BaseDraftApprenticeshipViewModel(DateTime? dateOfBirth, DateTime? startDate, DateTime? endDate, DateTime? employmentEndDate)
         {
             DateOfBirth = dateOfBirth == null ? new DateModel() : new DateModel(dateOfBirth.Value);
             StartDate = startDate == null ? new MonthYearModel("") : new MonthYearModel($"{startDate.Value.Month}{startDate.Value.Year}");
@@ -18,19 +43,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
             EmploymentEndDate = employmentEndDate == null ? new MonthYearModel("") : new MonthYearModel($"{employmentEndDate.Value.Month}{employmentEndDate.Value.Year}");
         }
 
-        public DraftApprenticeshipViewModel()
-        {
-            DateOfBirth = new DateModel();
-            StartDate = new MonthYearModel("");
-            EndDate = new MonthYearModel("");
-            EmploymentEndDate = new MonthYearModel("");
-        }
-
         public long ProviderId { get; set; }
-        public string ProviderName { get; set; }
 
+        public string ProviderName { get; set; }
         public string CohortReference { get; set; }
-        public long? CohortId { get; set; }
 
         public Guid? ReservationId { get; set; }
 
@@ -100,7 +116,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         [Display(Name = "Year")]
         [SuppressArgumentException(nameof(EndDate), "The training end date is not valid")]
         public int? EndYear { get => EndDate.Year; set => EndDate.Year = value; }
-        
+
         [Display(Name = "Total agreed apprenticeship price (excluding VAT)")]
         [SuppressArgumentException(nameof(Cost), "The apprenticeship price is not valid")]
         public int? Cost { get; set; }
@@ -114,8 +130,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
 
         public IEnumerable<TrainingProgramme> Courses { get; set; }
 
-        public bool IsContinuation { get; set; }
-        public long AccountLegalEntityId { get; set; }
+        public bool IsContinuation { get; set; }     
         public string AccountLegalEntityHashedId { get; set; }
         public bool? HasMultipleDeliveryModelOptions { get; set; }
         public bool? IsOnFlexiPaymentPilot { get; set; }
@@ -130,5 +145,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
         public int? DurationReducedBy { get; set; }
         public int? PriceReducedBy { get; set; }
 
+        public BaseDraftApprenticeshipViewModel CloneBaseValues() => this.ExplicitClone();
     }
 }
