@@ -340,27 +340,11 @@
                     </tr>
                 }
 
-                @if (Model.RecognisePriorLearning == true)
-                {
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header">Duration reduction due to prior learning</th>
-                        <td id="apprentice-end-date" class="govuk-table__cell">@Model.DurationReducedBy &nbsp;weeks</td>
-                        <td class="govuk-table__cell"></td>
-                    </tr>
-                }
                 @if (Model.DeliveryModel.Equals(DeliveryModel.PortableFlexiJob))
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Training price for this employment</th>
                         <td id="apprentice-end-date" class="govuk-table__cell">@Model.EmploymentPriceDisplay</td>
-                        <td class="govuk-table__cell"></td>
-                    </tr>
-                }
-                @if (Model.RecognisePriorLearning == true)
-                {
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header">Price reduction due to prior learning</th>
-                        <td id="apprentice-end-date" class="govuk-table__cell">@Model.PriceReducedBy.FormatCost()</td>
                         <td class="govuk-table__cell"></td>
                     </tr>
                 }
@@ -376,6 +360,53 @@
                 </tr>
             </tbody>
         </table>
+
+        @if (Model.RecognisePriorLearning != null)
+        {
+            <div class="govuk-grid-row govuk-!-margin-bottom-2">
+                <div class="govuk-grid-column-two-thirds">
+                    <h2 class="govuk-heading-m">Prior learning details</h2>
+                </div>
+            </div>
+
+            @if (Model.RecognisePriorLearning == true)
+            {
+                <table class="govuk-table govuk-!-margin-bottom-8" aria-describedby="prior-learning-details">
+                    <tbody class="govuk-table__body">
+
+                        @if (Model.DurationReducedByHours != null)
+                        {
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Duration reduction due to prior learning</th>
+                                <td id="apprenticeship-rpl-duration-reduction" class="govuk-table__cell">@Model.DurationReducedByHours.GetValueOrDefault().ToString("N0") hours</td>
+                            </tr>
+                        }
+
+                        @if (Model.DurationReducedBy != null)
+                        {
+                                <tr class="govuk-table__row">
+                                    <th scope="row" class="govuk-table__header">Duration reduction due to prior learning</th>
+                                    <td id="apprenticeship-rpl-duration-reduction" class="govuk-table__cell">@Model.DurationReducedBy.GetValueOrDefault().ToString("N0") weeks</td>
+                                </tr>
+                        }
+
+                        @if (Model.PriceReducedBy != null)
+                        {
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Price reduction due to prior learning</th>
+                                <td id="apprenticeship-rpl-price-reduction" class="govuk-table__cell">£@Model.PriceReducedBy.GetValueOrDefault().ToString("N0")</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="govuk-body">This apprentice has no recognised prior learning.</p>
+            }
+        }
+
     </div>
 </div>
 

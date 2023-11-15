@@ -285,13 +285,13 @@ else
             }
         </span>
     </div>
-    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EndDate, "govuk-form-group--error")">
-        <label asp-for="EndDate" class="govuk-label govuk-!-font-weight-bold">Planned training end date</label>
+    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ActualEndDate, "govuk-form-group--error")">
+            <label asp-for="ActualEndDate" class="govuk-label govuk-!-font-weight-bold">Actual training end date</label>
         <span id="enddate-hint" class="govuk-hint">
-            @if (@Model.EndDate.HasValue)
+            @if (@Model.ActualEndDate.HasValue)
             {
-                <span id="endDate">@Model.EndDate?.Date?.ToGdsFormat()</span>
-                @Html.HiddenFor(x => x.EndDate)
+                <span id="endDate">@Model.ActualEndDate?.ToGdsFormat()</span>
+                @Html.HiddenFor(x => x.ActualEndDate)
             }
             else
             {

@@ -68,6 +68,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
                 HasUnavailableFlexiJobDeliveryModel = draftApprenticeship.HasUnavailableDeliveryModel && draftApprenticeship.DeliveryModel == EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel.FlexiJobAgency,
                 IsOnFlexiPaymentPilot = draftApprenticeship.IsOnFlexiPaymentPilot ?? false,
                 ActualStartDate = draftApprenticeship.ActualStartDate,
+                ActualEndDate = (draftApprenticeship.IsOnFlexiPaymentPilot ?? false) ? draftApprenticeship.EndDate : null,
                 CourseName = draftApprenticeship.CourseName,
                 EmailAddressConfirmed = draftApprenticeship.EmailAddressConfirmed,
                 RecognisePriorLearning = draftApprenticeship.RecognisePriorLearning,

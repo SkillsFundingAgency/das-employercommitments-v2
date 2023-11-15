@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
@@ -9,9 +8,11 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 {
@@ -39,106 +40,88 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             try
             {
                 var apprenticeshipId = _encodingService.Decode(source.ApprenticeshipHashedId, EncodingType.ApprenticeshipId);
+                var accountId = _encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
 
-                var apprenticeshipTask = _commitmentsApiClient.GetApprenticeship(apprenticeshipId, CancellationToken.None);
-                var priceEpisodesTask = _commitmentsApiClient.GetPriceEpisodes(apprenticeshipId, CancellationToken.None);
-                var apprenticeshipUpdatesTask = _commitmentsApiClient.GetApprenticeshipUpdates(apprenticeshipId, new GetApprenticeshipUpdatesRequest() { Status = ApprenticeshipUpdateStatus.Pending }, CancellationToken.None);
-                var apprenticeshipDataLocksStatusTask = _commitmentsApiClient.GetApprenticeshipDatalocksStatus(apprenticeshipId, CancellationToken.None);
-                var changeofPartyRequestsTask = _commitmentsApiClient.GetChangeOfPartyRequests(apprenticeshipId, CancellationToken.None);
-                var changeOfProviderChainTask = _commitmentsApiClient.GetChangeOfProviderChain(apprenticeshipId, CancellationToken.None);
-                var overlappingTrainingDateRequestTask = _commitmentsApiClient.GetOverlappingTrainingDateRequest(apprenticeshipId, CancellationToken.None);
+                var response = await _approvalsApiClient.GetManageApprenticeshipDetails(accountId, apprenticeshipId, cancellationToken: CancellationToken.None);
 
-                await Task.WhenAll(apprenticeshipTask,
-                    priceEpisodesTask,
-                    apprenticeshipUpdatesTask,
-                    apprenticeshipDataLocksStatusTask,
-                    changeofPartyRequestsTask,
-                    changeOfProviderChainTask,
-                    overlappingTrainingDateRequestTask);
+                var currentTrainingProgramme = await GetTrainingProgramme(response.Apprenticeship.CourseCode, response.Apprenticeship.StandardUId);
 
-                var apprenticeship = apprenticeshipTask.Result;
-                var priceEpisodes = priceEpisodesTask.Result;
-                var apprenticeshipUpdates = apprenticeshipUpdatesTask.Result;
-                var apprenticeshipDataLocksStatus = apprenticeshipDataLocksStatusTask.Result;
-                var changeofPartyRequests = changeofPartyRequestsTask.Result;
-                var changeOfProviderChain = changeOfProviderChainTask.Result;
-                var overlappingTrainingDateRequestResponse = overlappingTrainingDateRequestTask.Result;
+                PendingChanges pendingChange = GetPendingChanges(response.ApprenticeshipUpdates);
 
-                var currentTrainingProgramme = await GetTrainingProgramme(apprenticeship.CourseCode, apprenticeship.StandardUId);
+                bool dataLockCourseTriaged = response.DataLocks.HasDataLockCourseTriaged();
+                bool dataLockCourseChangedTraiged = response.DataLocks.HasDataLockCourseChangeTriaged();
+                bool dataLockPriceTriaged = response.DataLocks.HasDataLockPriceTriaged();
 
-                PendingChanges pendingChange = GetPendingChanges(apprenticeshipUpdates);
-
-                bool dataLockCourseTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseTriaged();
-                bool dataLockCourseChangedTraiged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockCourseChangeTriaged();
-                bool dataLockPriceTriaged = apprenticeshipDataLocksStatus.DataLocks.HasDataLockPriceTriaged();
-
-                var pendingChangeOfProviderRequest = changeofPartyRequests.ChangeOfPartyRequests?
+                var pendingChangeOfProviderRequest = response.ChangeOfPartyRequests?
                     .Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
 
-                var hasPendingoverlappingTrainingDateRequest = overlappingTrainingDateRequestResponse != null &&
-                    overlappingTrainingDateRequestResponse?.OverlappingTrainingDateRequest?.Any(x => x.Status == OverlappingTrainingDateRequestStatus.Pending) == true;
+                var hasPendingoverlappingTrainingDateRequest = response.OverlappingTrainingDateRequest != null &&
+                    response?.OverlappingTrainingDateRequest?.Any(x => x.Status == OverlappingTrainingDateRequestStatus.Pending) == true;
 
-                bool enableEdit = EnableEdit(apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged, hasPendingoverlappingTrainingDateRequest);
+                bool enableEdit = EnableEdit(response.Apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged, hasPendingoverlappingTrainingDateRequest);
 
-                var apprenticeshipDetails = await _approvalsApiClient.GetApprenticeshipDetails(apprenticeship.ProviderId, apprenticeshipId, CancellationToken.None);
+                var apprenticeshipDetails = await _approvalsApiClient.GetApprenticeshipDetails(response.Apprenticeship.ProviderId, apprenticeshipId, CancellationToken.None);
 
                 var result = new ApprenticeshipDetailsRequestViewModel
                 {
                     HashedApprenticeshipId = source.ApprenticeshipHashedId,
                     AccountHashedId = source.AccountHashedId,
-                    ApprenticeName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
-                    ULN = apprenticeship.Uln,
-                    DateOfBirth = apprenticeship.DateOfBirth,
-                    StartDate = apprenticeship.StartDate,
-                    ActualStartDate = apprenticeship.ActualStartDate,
-                    EndDate = apprenticeship.EndDate,
-                    StopDate = apprenticeship.StopDate,
-                    PauseDate = apprenticeship.PauseDate,
-                    CompletionDate = apprenticeship.CompletionDate,
+                    ApprenticeName = $"{response.Apprenticeship.FirstName} {response.Apprenticeship.LastName}",
+                    ULN = response.Apprenticeship.Uln,
+                    DateOfBirth = response.Apprenticeship.DateOfBirth,
+                    StartDate = response.Apprenticeship.StartDate,
+                    ActualStartDate = response.Apprenticeship.ActualStartDate,
+                    EndDate = response.Apprenticeship.EndDate,
+                    StopDate = response.Apprenticeship.StopDate,
+                    PauseDate = response.Apprenticeship.PauseDate,
+                    CompletionDate = response.Apprenticeship.CompletionDate,
                     TrainingName = currentTrainingProgramme.Name,
-                    DeliveryModel = apprenticeship.DeliveryModel,
-                    Version = apprenticeship.Version,
+                    DeliveryModel = response.Apprenticeship.DeliveryModel,
+                    Version = response.Apprenticeship.Version,
                     TrainingType = currentTrainingProgramme.ProgrammeType,
-                    Cost = priceEpisodes.PriceEpisodes.GetPrice(),
-                    ApprenticeshipStatus = apprenticeship.Status,
-                    ProviderName = apprenticeship.ProviderName,
+                    Cost = response.PriceEpisodes.GetPrice(),
+                    ApprenticeshipStatus = response.Apprenticeship.Status,
+                    ProviderName = response.Apprenticeship.ProviderName,
                     PendingChanges = pendingChange,
-                    EmployerReference = apprenticeship.EmployerReference,
-                    CohortReference = _encodingService.Encode(apprenticeship.CohortId, EncodingType.CohortReference),
+                    EmployerReference = response.Apprenticeship.EmployerReference,
+                    CohortReference = _encodingService.Encode(response.Apprenticeship.CohortId, EncodingType.CohortReference),
                     EnableEdit = enableEdit,
-                    EndpointAssessorName = apprenticeship.EndpointAssessorName,
-                    MadeRedundant = apprenticeship.MadeRedundant,
+                    EndpointAssessorName = response.Apprenticeship.EndpointAssessorName,
+                    MadeRedundant = response.Apprenticeship.MadeRedundant,
                     HasPendingChangeOfProviderRequest = pendingChangeOfProviderRequest != null,
                     PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty,
-                    HasContinuation = apprenticeship.HasContinuation,
-                    TrainingProviderHistory = changeOfProviderChain?.ChangeOfProviderChain
+                    HasContinuation = response.Apprenticeship.HasContinuation,
+                    TrainingProviderHistory = response.ChangeOfProviderChain
                         .Select(copc => new TrainingProviderHistory
                         {
                             ProviderName = copc.ProviderName,
                             FromDate = copc.StartDate.Value,
                             ToDate = copc.StopDate.HasValue ? copc.StopDate.Value : copc.EndDate.Value,
                             HashedApprenticeshipId = _encodingService.Encode(copc.ApprenticeshipId, EncodingType.ApprenticeshipId),
-                            ShowLink = apprenticeship.Id != copc.ApprenticeshipId
+                            ShowLink = response.Apprenticeship.Id != copc.ApprenticeshipId
                         })
                         .ToList(),
 
                     PendingDataLockChange = dataLockPriceTriaged || dataLockCourseChangedTraiged,
                     PendingDataLockRestart = dataLockCourseTriaged,
-                    ConfirmationStatus = apprenticeship.ConfirmationStatus,
-                    Email = apprenticeship.Email,
-                    EmailShouldBePresent = apprenticeship.EmailShouldBePresent,
+                    ConfirmationStatus = response.Apprenticeship.ConfirmationStatus,
+                    Email = response.Apprenticeship.Email,
+                    EmailShouldBePresent = response.Apprenticeship.EmailShouldBePresent,
                     HasNewerVersions = await HasNewerVersions(currentTrainingProgramme),
-                    Option = apprenticeship.Option,
+                    Option = response.Apprenticeship.Option,
                     VersionOptions = currentTrainingProgramme.Options,
-                    EmailAddressConfirmedByApprentice = apprenticeship.EmailAddressConfirmedByApprentice,
-                    EmploymentEndDate = apprenticeship.EmploymentEndDate,
-                    EmploymentPrice = apprenticeship.EmploymentPrice,
-                    RecognisePriorLearning = apprenticeship.RecognisePriorLearning,
-                    DurationReducedBy = apprenticeship.DurationReducedBy,
-                    PriceReducedBy = apprenticeship.PriceReducedBy,
+                    EmailAddressConfirmedByApprentice = response.Apprenticeship.EmailAddressConfirmedByApprentice,
+                    EmploymentEndDate = response.Apprenticeship.EmploymentEndDate,
+                    EmploymentPrice = response.Apprenticeship.EmploymentPrice,
+                    RecognisePriorLearning = response.Apprenticeship.RecognisePriorLearning,
+                    DurationReducedBy = response.Apprenticeship.DurationReducedBy,
+                    PriceReducedBy = response.Apprenticeship.PriceReducedBy,
+                    TrainingTotalHours = response.Apprenticeship.TrainingTotalHours,
+                    DurationReducedByHours = response.Apprenticeship.DurationReducedByHours,
+                    IsDurationReducedByRpl = response.Apprenticeship.IsDurationReducedByRpl,
                     HasPendingOverlappingTrainingDateRequest = hasPendingoverlappingTrainingDateRequest,
-                    HasMultipleDeliveryModelOptions = apprenticeshipDetails.HasMultipleDeliveryModelOptions,
-                    IsOnFlexiPaymentPilot = apprenticeship.IsOnFlexiPaymentPilot
+                    HasMultipleDeliveryModelOptions = response.HasMultipleDeliveryModelOptions,
+                    IsOnFlexiPaymentPilot = response.Apprenticeship.IsOnFlexiPaymentPilot
                 };
 
                 return result;
@@ -166,7 +149,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             }
         }
 
-        private static bool EnableEdit(CommitmentsV2.Api.Types.Responses.GetApprenticeshipResponse apprenticeship, PendingChanges pendingChange,
+        private static bool EnableEdit(GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse apprenticeship, PendingChanges pendingChange,
             bool dataLockCourseTriaged, bool dataLockCourseChangedTraiged, bool dataLockPriceTriaged, bool hasPendingoverlappingTrainingDateRequest)
         {
             return pendingChange == PendingChanges.None
@@ -177,12 +160,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                             && !hasPendingoverlappingTrainingDateRequest;
         }
 
-        private static PendingChanges GetPendingChanges(CommitmentsV2.Api.Types.Responses.GetApprenticeshipUpdatesResponse apprenticeshipUpdates)
+        private static PendingChanges GetPendingChanges(IEnumerable<ApprenticeshipUpdate> apprenticeshipUpdates)
         {
             var pendingChange = PendingChanges.None;
-            if (apprenticeshipUpdates.ApprenticeshipUpdates.Any(x => x.OriginatingParty == Party.Employer))
+            if (apprenticeshipUpdates.Any(x => x.OriginatingParty == Party.Employer))
                 pendingChange = PendingChanges.WaitingForApproval;
-            if (apprenticeshipUpdates.ApprenticeshipUpdates.Any(x => x.OriginatingParty == Party.Provider))
+            if (apprenticeshipUpdates.Any(x => x.OriginatingParty == Party.Provider))
                 pendingChange = PendingChanges.ReadyForApproval;
             return pendingChange;
         }
@@ -201,5 +184,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
 
             return false;
         }
+
     }
 }
