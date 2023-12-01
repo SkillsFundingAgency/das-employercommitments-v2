@@ -20,9 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private PostCohortDetailsRequest _apiRequestBody;
         private long _apiRequestAccountId;
         private long _apiRequestCohortId;
-        private Fixture _autoFixture = new();
-
-
+        private readonly Fixture _autoFixture = new();
 
         [SetUp]
         public void Setup()
