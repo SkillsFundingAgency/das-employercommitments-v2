@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmHasValidEndDateRequestToViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
+            Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(request.ApprenticeshipHashedId));
         }
 
         [Test, MoqAutoData]
@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmHasValidEndDateRequestToViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
         }
 
         [Test, MoqAutoData]
@@ -58,7 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmHasValidEndDateRequestToViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(ExpectedFullName, result.ApprenticeName);
+            Assert.That(result.ApprenticeName, Is.EqualTo(ExpectedFullName));
         }
 
         [Test, MoqAutoData]
@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmHasValidEndDateRequestToViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(ExpectedCourseName, result.Course);
+            Assert.That(result.Course, Is.EqualTo(ExpectedCourseName));
         }
 
         [Test, MoqAutoData]
@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmHasValidEndDateRequestToViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(ExpectedUln, result.ULN);
+            Assert.That(result.ULN, Is.EqualTo(ExpectedUln));
         }
 
         [Test, MoqAutoData]
@@ -85,7 +85,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmHasValidEndDateRequestToViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(ExpectedEndDate, result.EndDate);
+            Assert.That(result.EndDate, Is.EqualTo(ExpectedEndDate));
         }
 
         private GetApprenticeshipResponse GetApprenticeshipResponse()

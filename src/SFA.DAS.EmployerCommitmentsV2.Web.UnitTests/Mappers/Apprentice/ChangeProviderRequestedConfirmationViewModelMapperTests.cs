@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(request);
 
-            Assert.AreEqual(request.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
+            Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(request.ApprenticeshipHashedId));
         }
 
         [Test, MoqAutoData]
@@ -61,7 +61,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(request);
 
-            Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
         }
 
         [Test, MoqAutoData]
@@ -77,7 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(request);
 
-            Assert.AreEqual($"{_apprenticeshipResponse.FirstName} {_apprenticeshipResponse.LastName}", result.ApprenticeName);
+            Assert.That(result.ApprenticeName, Is.EqualTo($"{_apprenticeshipResponse.FirstName} {_apprenticeshipResponse.LastName}"));
         }
 
         [Test, MoqAutoData]
@@ -85,7 +85,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(request);
 
-            Assert.AreEqual(_providerResponse.Name, result.ProviderName);
+            Assert.That(result.ProviderName, Is.EqualTo(_providerResponse.Name));
         }
 
         [Test, MoqAutoData]
@@ -93,7 +93,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(request);
 
-            Assert.AreEqual(request.ProviderAddDetails, result.ProviderAddDetails);
+            Assert.That(result.ProviderAddDetails, Is.EqualTo(request.ProviderAddDetails));
         }
 
         [Test, MoqAutoData]
@@ -101,7 +101,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(request);
 
-            Assert.AreEqual(request.StoppedDuringCoP, result.StoppedDuringCoP);
+            Assert.That(result.StoppedDuringCoP, Is.EqualTo(request.StoppedDuringCoP));
         }
 
     }

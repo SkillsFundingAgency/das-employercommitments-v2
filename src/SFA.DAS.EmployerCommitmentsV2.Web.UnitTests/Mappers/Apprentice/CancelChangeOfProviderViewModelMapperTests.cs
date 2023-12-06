@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
+            Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(_request.ApprenticeshipHashedId));
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(_request.AccountHashedId));
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.ProviderId, result.ProviderId);
+            Assert.That(result.ProviderId, Is.EqualTo(_request.ProviderId));
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.ProviderName, result.ProviderName);
+            Assert.That(result.ProviderName, Is.EqualTo(_request.ProviderName));
         }
 
         [Test]
@@ -75,8 +75,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.NewStartMonth, result.NewStartMonth);
-            Assert.AreEqual(_request.NewStartYear, result.NewStartYear);
+            Assert.That(result.NewStartMonth, Is.EqualTo(_request.NewStartMonth));
+            Assert.That(result.NewStartYear, Is.EqualTo(_request.NewStartYear));
         }
 
         [Test]
@@ -84,8 +84,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.NewEndMonth, result.NewEndMonth);
-            Assert.AreEqual(_request.NewEndYear, result.NewEndYear);
+            Assert.That(result.NewEndMonth, Is.EqualTo(_request.NewEndMonth));
+            Assert.That(result.NewEndYear, Is.EqualTo(_request.NewEndYear));
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.NewPrice, result.NewPrice);
+            Assert.That(result.NewPrice, Is.EqualTo(_request.NewPrice));
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.EmployerWillAdd, result.EmployerWillAdd);
+            Assert.That(result.EmployerWillAdd, Is.EqualTo(_request.EmployerWillAdd));
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual($"{_apprenticeshipResponse.FirstName} {_apprenticeshipResponse.LastName}", result.ApprenticeName);
+            Assert.That(result.ApprenticeName, Is.EqualTo($"{_apprenticeshipResponse.FirstName} {_apprenticeshipResponse.LastName}"));
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_apprenticeshipResponse.ProviderName, result.OldProviderName);
+            Assert.That(result.OldProviderName, Is.EqualTo(_apprenticeshipResponse.ProviderName));
         }
 
         [Test]

@@ -48,8 +48,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var viewModel = viewResult.Model as DataLockRequestRestartViewModel;
 
-            Assert.IsInstanceOf<DataLockRequestRestartViewModel>(viewModel);
-            Assert.AreEqual(_viewModel, viewModel);
+            Assert.That(viewModel, Is.InstanceOf<DataLockRequestRestartViewModel>());
+            Assert.That(viewModel, Is.EqualTo(_viewModel));
         }
     }
 }

@@ -46,6 +46,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
               Mock.Of<IApprovalsApiClient>());
         }
       
+        [TearDown]
+        public void TearDown() => _controller?.Dispose();
 
         [Test]
         public async Task Then_User_Is_Redirected_To_SelectLegalEntity_Page()
@@ -58,7 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             //Assert
             var redirectToActionResult = result as RedirectToActionResult;
-            Assert.AreEqual("SelectLegalEntity", redirectToActionResult.ActionName);
+            Assert.That(redirectToActionResult.ActionName, Is.EqualTo("SelectLegalEntity"));
         }
 
         [Test]
@@ -70,8 +72,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             //Assert
             var viewResult = result as ViewResult;
             var viewModel = viewResult.Model;
-            Assert.IsInstanceOf<SelectTransferConnectionViewModel>(viewModel);
-            Assert.AreEqual(_informViewModel, (SelectTransferConnectionViewModel)viewModel);
+            Assert.That(viewModel, Is.InstanceOf<SelectTransferConnectionViewModel>());
+            Assert.That((SelectTransferConnectionViewModel)viewModel, Is.EqualTo(_informViewModel));
         }
 
         [Test]
@@ -82,7 +84,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             //Assert
             var redirectToActionResult = result as RedirectToActionResult;
-            Assert.AreEqual("SelectLegalEntity", redirectToActionResult.ActionName);
+            Assert.That(redirectToActionResult.ActionName, Is.EqualTo("SelectLegalEntity"));
         }
     }
 }

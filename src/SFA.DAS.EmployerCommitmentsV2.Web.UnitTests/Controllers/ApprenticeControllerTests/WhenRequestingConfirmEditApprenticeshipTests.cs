@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         internal void VerifyViewResultIsReturned(IActionResult result)
         {
-            Assert.IsInstanceOf<ViewResult>(result);
+            Assert.That(result, Is.InstanceOf<ViewResult>());
         }
     }
 }

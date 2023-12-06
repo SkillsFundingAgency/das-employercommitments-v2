@@ -118,7 +118,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_newPrice, result.CurrentPrice);
+            Assert.That(result.CurrentPrice, Is.EqualTo(_newPrice));
         }
 
         [Test]
@@ -135,7 +135,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual("NewProvider", result.NewProviderName);
+            Assert.That(result.NewProviderName, Is.EqualTo("NewProvider"));
         }
 
         [Test]
@@ -143,7 +143,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
+            Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(_request.ApprenticeshipHashedId));
         }
 
         [Test]
@@ -151,7 +151,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(_request.AccountHashedId));
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual($"{_apprenticeshipResponse.FirstName} {_apprenticeshipResponse.LastName}", result.ApprenticeName);
+            Assert.That(result.ApprenticeName, Is.EqualTo($"{_apprenticeshipResponse.FirstName} {_apprenticeshipResponse.LastName}"));
         }
 
         [Test]
@@ -167,7 +167,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_apprenticeshipResponse.ProviderName, result.CurrentProviderName);
+            Assert.That(result.CurrentProviderName, Is.EqualTo(_apprenticeshipResponse.ProviderName));
         }
 
         [Test]
@@ -175,7 +175,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_apprenticeshipResponse.StartDate, result.CurrentStartDate);
+            Assert.That(result.CurrentStartDate, Is.EqualTo(_apprenticeshipResponse.StartDate));
         }
 
         [Test]
@@ -183,7 +183,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_apprenticeshipResponse.EndDate, result.CurrentEndDate);
+            Assert.That(result.CurrentEndDate, Is.EqualTo(_apprenticeshipResponse.EndDate));
         }
 
         [Test]
@@ -191,7 +191,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_providerResponse.Name, result.NewProviderName);
+            Assert.That(result.NewProviderName, Is.EqualTo(_providerResponse.Name));
         }
 
         [Test]
@@ -199,7 +199,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_newFromDate, result.NewStartDate);
+            Assert.That(result.NewStartDate, Is.EqualTo(_newFromDate));
         }
 
         [Test]
@@ -207,7 +207,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_newToDate, result.NewEndDate);
+            Assert.That(result.NewEndDate, Is.EqualTo(_newToDate));
         }
 
         [Test]
@@ -215,7 +215,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_newPrice, result.NewPrice);
+            Assert.That(result.NewPrice, Is.EqualTo(_newPrice));
         }
 
         private List<ChangeOfPartyRequest> GetChangeOfPartyRequestsMock()

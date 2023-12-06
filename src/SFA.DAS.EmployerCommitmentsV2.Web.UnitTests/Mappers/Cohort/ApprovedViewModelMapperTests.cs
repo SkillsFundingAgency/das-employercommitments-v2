@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new ApprovedViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Source.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(fixture.Source.AccountHashedId));
         }
 
         [Test]
@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new ApprovedViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Cohort.WithParty, result.WithParty);
+            Assert.That(result.WithParty, Is.EqualTo(fixture.Cohort.WithParty));
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new ApprovedViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Cohort.LegalEntityName, result.LegalEntityName);
+            Assert.That(result.LegalEntityName, Is.EqualTo(fixture.Cohort.LegalEntityName));
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new ApprovedViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Cohort.ProviderName, result.ProviderName);
+            Assert.That(result.ProviderName, Is.EqualTo(fixture.Cohort.ProviderName));
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new ApprovedViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Cohort.LatestMessageCreatedByEmployer, result.Message);
+            Assert.That(result.Message, Is.EqualTo(fixture.Cohort.LatestMessageCreatedByEmployer));
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new ApprovedViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Source.CohortReference, result.CohortReference);
+            Assert.That(result.CohortReference, Is.EqualTo(fixture.Source.CohortReference));
         }
     }
 

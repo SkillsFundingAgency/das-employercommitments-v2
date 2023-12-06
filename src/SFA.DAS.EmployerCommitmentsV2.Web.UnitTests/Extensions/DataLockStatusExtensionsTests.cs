@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
             var actualResult = _dataLock.WithCourseError();
 
             //Assert
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         [TestCase(DataLockErrorCode.Dlock03, true)]
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
             var actualResult = _dataLocks.HasDataLockCourseTriaged();
 
             //Assert
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
 
@@ -96,7 +96,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
             var actualResult = _dataLocks.HasDataLockCourseChangeTriaged();
 
             //Assert
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         [TestCase(DataLockErrorCode.Dlock03, false)]
@@ -129,7 +129,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
             var actualResult = _dataLocks.HasDataLockPriceTriaged();
 
             //Assert
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
     }
 }

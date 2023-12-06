@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             var result = await _controller.ConfirmHasValidEndDateChanges(request) as RedirectToActionResult;
 
-            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
+            Assert.That(result.ActionName, Is.EqualTo("ApprenticeshipDetails"));
 
         }
 
@@ -50,7 +50,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             var result = await _controller.ConfirmHasValidEndDateChanges(request) as RedirectToActionResult;
 
-            Assert.AreEqual("EditEndDate", result.ActionName);
+            Assert.That(result.ActionName, Is.EqualTo("EditEndDate"));
         }
     }
 }

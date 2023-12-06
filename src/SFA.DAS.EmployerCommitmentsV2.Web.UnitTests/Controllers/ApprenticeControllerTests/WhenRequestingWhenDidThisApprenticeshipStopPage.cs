@@ -37,8 +37,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             var stopRequestViewModel = (StopRequestViewModel)viewModel;
 
-            Assert.IsInstanceOf<StopRequestViewModel>(viewModel);
-            Assert.AreEqual(_viewModel, stopRequestViewModel);
+            Assert.That(viewModel, Is.InstanceOf<StopRequestViewModel>());
+            Assert.That(stopRequestViewModel, Is.EqualTo(_viewModel));
         }
     }
 }

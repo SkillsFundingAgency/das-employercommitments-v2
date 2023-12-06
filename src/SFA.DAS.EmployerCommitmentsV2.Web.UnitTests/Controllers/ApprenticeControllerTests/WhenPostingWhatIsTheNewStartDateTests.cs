@@ -68,36 +68,36 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var redirectResult = (RedirectToRouteResult)result;
 
-            Assert.AreEqual(RouteNames.WhatIsTheNewEndDate, redirectResult.RouteName);
+            Assert.That(redirectResult.RouteName, Is.EqualTo(RouteNames.WhatIsTheNewEndDate));
 
             var routeValues = redirectResult.RouteValues;
 
-            Assert.AreEqual(_request.ProviderId, routeValues["ProviderId"]);
-            Assert.AreEqual(_request.ApprenticeshipHashedId, routeValues["ApprenticeshipHashedId"]);
-            Assert.AreEqual(_request.AccountHashedId, routeValues["AccountHashedId"]);
-            Assert.AreEqual(_request.NewStartMonth, routeValues["NewStartMonth"]);
-            Assert.AreEqual(_request.NewStartYear, routeValues["NewStartYear"]);
-            Assert.AreEqual(null, routeValues["NewEndMonth"]);
-            Assert.AreEqual(null, routeValues["NewEndYear"]);
-            Assert.AreEqual(null, routeValues["NewPrice"]);
+            Assert.That(routeValues["ProviderId"], Is.EqualTo(_request.ProviderId));
+            Assert.That(routeValues["ApprenticeshipHashedId"], Is.EqualTo(_request.ApprenticeshipHashedId));
+            Assert.That(routeValues["AccountHashedId"], Is.EqualTo(_request.AccountHashedId));
+            Assert.That(routeValues["NewStartMonth"], Is.EqualTo(_request.NewStartMonth));
+            Assert.That(routeValues["NewStartYear"], Is.EqualTo(_request.NewStartYear));
+            Assert.That(routeValues["NewEndMonth"], Is.EqualTo(null));
+            Assert.That(routeValues["NewEndYear"], Is.EqualTo(null));
+            Assert.That(routeValues["NewPrice"], Is.EqualTo(null));
         }
 
         public void VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(IActionResult result)
         {
             var redirectResult = (RedirectToRouteResult)result;
-            
-            Assert.AreEqual(RouteNames.ConfirmDetailsAndSendRequest, redirectResult.RouteName);
+
+            Assert.That(redirectResult.RouteName, Is.EqualTo(RouteNames.ConfirmDetailsAndSendRequest));
 
             var routeValues = redirectResult.RouteValues;
 
-            Assert.AreEqual(_request.ProviderId, routeValues["ProviderId"]);
-            Assert.AreEqual(_request.ApprenticeshipHashedId, routeValues["ApprenticeshipHashedId"]);
-            Assert.AreEqual(_request.AccountHashedId, routeValues["AccountHashedId"]);
-            Assert.AreEqual(_request.NewStartMonth, routeValues["NewStartMonth"]);
-            Assert.AreEqual(_request.NewStartYear, routeValues["NewStartYear"]);
-            Assert.AreEqual(_request.NewEndMonth, routeValues["NewEndMonth"]);
-            Assert.AreEqual(_request.NewEndYear, routeValues["NewEndYear"]);
-            Assert.AreEqual(_request.NewPrice, routeValues["NewPrice"]);
+            Assert.That(routeValues["ProviderId"], Is.EqualTo(_request.ProviderId));
+            Assert.That(routeValues["ApprenticeshipHashedId"], Is.EqualTo(_request.ApprenticeshipHashedId));
+            Assert.That(routeValues["AccountHashedId"], Is.EqualTo(_request.AccountHashedId));
+            Assert.That(routeValues["NewStartMonth"], Is.EqualTo(_request.NewStartMonth));
+            Assert.That(routeValues["NewStartYear"], Is.EqualTo(_request.NewStartYear));
+            Assert.That(routeValues["NewEndMonth"], Is.EqualTo(_request.NewEndMonth));
+            Assert.That(routeValues["NewEndYear"], Is.EqualTo(_request.NewEndYear));
+            Assert.That(routeValues["NewPrice"], Is.EqualTo(_request.NewPrice));
         }
 
         public WhenPostingWhatIsTheNewStartDateTestFixture SetupAdvanceToStopDate()

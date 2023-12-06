@@ -97,7 +97,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = controller.Assign(viewModel) as RedirectToActionResult;
 
-            Assert.True(controller.TempData.Contains(new KeyValuePair<string, object>(nameof(viewModel.LegalEntityName), viewModel.LegalEntityName)));
+            Assert.That(controller.TempData.Contains(new KeyValuePair<string, object>(nameof(viewModel.LegalEntityName), viewModel.LegalEntityName)), Is.True);
         }
 
         [Test, MoqAutoData]

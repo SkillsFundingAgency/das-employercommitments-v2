@@ -114,41 +114,41 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
         public void Verify_OnlyTheDraftCohorts_WithEmployer_Are_Mapped()
         {
-            Assert.AreEqual(2, DraftViewModel.Cohorts.Count());
+            Assert.That(DraftViewModel.Cohorts.Count(), Is.EqualTo(2));
 
-            Assert.IsNotNull(GetDraftCohortWithId(2));
-            Assert.IsNotNull(GetDraftCohortWithId(3));
+            Assert.That(GetDraftCohortWithId(2), Is.Not.Null);
+            Assert.That(GetDraftCohortWithId(3), Is.Not.Null);
         }
 
         public void Verify_CohortRefrence_Is_Mapped()
         {
             EncodingService.Verify(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference), Times.Exactly(2));
 
-            Assert.AreEqual("2_Encoded", GetDraftCohortWithId(2).CohortReference);
-            Assert.AreEqual("3_Encoded", GetDraftCohortWithId(3).CohortReference);
+            Assert.That(GetDraftCohortWithId(2).CohortReference, Is.EqualTo("2_Encoded"));
+            Assert.That(GetDraftCohortWithId(3).CohortReference, Is.EqualTo("3_Encoded"));
         }
 
         public void Verify_ProviderName_Is_Mapped()
         {
-            Assert.AreEqual("Provider2", GetDraftCohortWithId(2).ProviderName);
-            Assert.AreEqual("Provider3", GetDraftCohortWithId(3).ProviderName);
+            Assert.That(GetDraftCohortWithId(2).ProviderName, Is.EqualTo("Provider2"));
+            Assert.That(GetDraftCohortWithId(3).ProviderName, Is.EqualTo("Provider3"));
         }
 
         public void Verify_NumberOfApprentices_Are_Mapped()
         {
-            Assert.AreEqual(200, GetDraftCohortWithId(2).NumberOfApprentices);
-            Assert.AreEqual(300, GetDraftCohortWithId(3).NumberOfApprentices);
+            Assert.That(GetDraftCohortWithId(2).NumberOfApprentices, Is.EqualTo(200));
+            Assert.That(GetDraftCohortWithId(3).NumberOfApprentices, Is.EqualTo(300));
         }
 
         public void Verify_Ordered_By_DateCreated()
         {
-            Assert.AreEqual("3_Encoded", DraftViewModel.Cohorts.First().CohortReference);
-            Assert.AreEqual("2_Encoded", DraftViewModel.Cohorts.Last().CohortReference);
+            Assert.That(DraftViewModel.Cohorts.First().CohortReference, Is.EqualTo("3_Encoded"));
+            Assert.That(DraftViewModel.Cohorts.Last().CohortReference, Is.EqualTo("2_Encoded"));
         }
 
         public void Verify_AccountHashedId_IsMapped()
         {
-            Assert.AreEqual(AccountHashedId, DraftViewModel.AccountHashedId);
+            Assert.That(DraftViewModel.AccountHashedId, Is.EqualTo(AccountHashedId));
         }
 
         private GetCohortsResponse CreateGetCohortsResponse()

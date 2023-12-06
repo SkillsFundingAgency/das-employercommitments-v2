@@ -143,9 +143,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             public void VerifyRedirectedToSendConfirmation()
             {
-                Assert.IsInstanceOf<RedirectToActionResult>(_result);
+                Assert.That(_result, Is.InstanceOf<RedirectToActionResult>());
                 var redirect = (RedirectToActionResult) _result;
-                Assert.AreEqual("Sent", redirect.ActionName);
+                Assert.That(redirect.ActionName, Is.EqualTo("Sent"));
             }
 
             public void VerifyCohortApprovedByEmployer()
@@ -156,23 +156,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             public void VerifyRedirectedToApprovalConfirmation()
             {
-                Assert.IsInstanceOf<RedirectToActionResult>(_result);
+                Assert.That(_result, Is.InstanceOf<RedirectToActionResult>());
                 var redirect = (RedirectToActionResult)_result;
-                Assert.AreEqual("Approved", redirect.ActionName);
+                Assert.That(redirect.ActionName, Is.EqualTo("Approved"));
             }
 
             public void VerifyRedirectedToViewEmployerAgreement()
             {
-                Assert.IsInstanceOf<RedirectResult>(_result);
+                Assert.That(_result, Is.InstanceOf<RedirectResult>());
                 var redirect = (RedirectResult) _result;
-                Assert.AreEqual(_linkGeneratorResult, redirect.Url);
+                Assert.That(redirect.Url, Is.EqualTo(_linkGeneratorResult));
             }
 
             public void VerifyRedirectedToHomepage()
             {
-                Assert.IsInstanceOf<RedirectResult>(_result);
+                Assert.That(_result, Is.InstanceOf<RedirectResult>());
                 var redirect = (RedirectResult)_result;
-                Assert.AreEqual(_linkGeneratorResult, redirect.Url);
+                Assert.That(redirect.Url, Is.EqualTo(_linkGeneratorResult));
             }
         }
     }

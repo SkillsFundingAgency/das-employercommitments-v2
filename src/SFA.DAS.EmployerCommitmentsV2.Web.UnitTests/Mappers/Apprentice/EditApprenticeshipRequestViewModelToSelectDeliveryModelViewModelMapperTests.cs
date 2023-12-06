@@ -51,13 +51,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test]
         public void DeliveryModelMappedCorrectly()
         {
-            Assert.AreEqual((EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel) _source.DeliveryModel, _result.DeliveryModel);
+            Assert.That(_result.DeliveryModel, Is.EqualTo((EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel) _source.DeliveryModel));
         }
 
         [Test]
         public void DeliveryModelsAreCorrectlyMapped()
         {
-            Assert.AreEqual(_apiResponse.DeliveryModels.ToArray(), _result.DeliveryModels);
+            Assert.That(_result.DeliveryModels, Is.EqualTo(_apiResponse.DeliveryModels.ToArray()));
         }
     }
 }

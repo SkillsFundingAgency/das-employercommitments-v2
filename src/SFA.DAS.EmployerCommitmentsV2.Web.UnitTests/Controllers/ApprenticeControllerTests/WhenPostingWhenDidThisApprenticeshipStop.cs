@@ -27,12 +27,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = _controller.StopApprenticeship(viewModel);
 
             var redirect = result.VerifyReturnsRedirectToActionResult();
-            Assert.AreEqual(redirect.ActionName, "HasTheApprenticeBeenMadeRedundant");
-            Assert.AreEqual(redirect.RouteValues["AccountHashedId"], viewModel.AccountHashedId);
-            Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], viewModel.ApprenticeshipHashedId);
-            Assert.AreEqual(redirect.RouteValues["StopMonth"], viewModel.StopMonth);
-            Assert.AreEqual(redirect.RouteValues["StopYear"], viewModel.StopYear);
-            Assert.AreEqual(redirect.RouteValues["IsCoPJourney"], viewModel.IsCoPJourney);
+            Assert.That("HasTheApprenticeBeenMadeRedundant", Is.EqualTo(redirect.ActionName));
+            Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
+            Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
+            Assert.That(viewModel.StopMonth, Is.EqualTo(redirect.RouteValues["StopMonth"]));
+            Assert.That(viewModel.StopYear, Is.EqualTo(redirect.RouteValues["StopYear"]));
+            Assert.That(viewModel.IsCoPJourney, Is.EqualTo(redirect.RouteValues["IsCoPJourney"]));
         }
 
         private static StopRequestViewModel GetStopRequestViewModel()

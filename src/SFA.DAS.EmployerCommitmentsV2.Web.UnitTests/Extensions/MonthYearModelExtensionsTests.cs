@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             var actualResult = _monthYear.IsEqualToOrAfterMonthYearOfDateTime(dateTime);
 
-            Assert.AreEqual(true, actualResult);
+            Assert.That(actualResult, Is.EqualTo(true));
         }
 
         [TestCase(2020, 3, 1)]
@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             var actualResult = _monthYear.IsEqualToOrAfterMonthYearOfDateTime(dateTime);
 
-            Assert.AreEqual(true, actualResult);
+            Assert.That(actualResult, Is.EqualTo(true));
         }
 
         [TestCase(2020, 4, 1)]
@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             var actualResult = _monthYear.IsEqualToOrAfterMonthYearOfDateTime(dateTime);
 
-            Assert.AreEqual(false, actualResult);
+            Assert.That(actualResult, Is.EqualTo(false));
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             var actualResult = _monthYear.IsBeforeMonthYearOfDateTime(dateTime);
 
-            Assert.True(actualResult);
+            Assert.That(actualResult, Is.True);
         }
 
         [TestCase(2020, 3, 1)]
@@ -70,7 +70,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             var actualResult = _monthYear.IsBeforeMonthYearOfDateTime(dateTime);
 
-            Assert.False(actualResult);
+            Assert.That(actualResult, Is.False);
         }
 
         [TestCase(2020, 6, 1)]
@@ -81,7 +81,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             var actualResult = _monthYear.IsEqualToOrBeforeMonthYearOfDateTime(dateTime);
 
-            Assert.True(actualResult);
+            Assert.That(actualResult, Is.True);
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             var actualResult = _monthYear.IsEqualToOrBeforeMonthYearOfDateTime(dateTime);
 
-            Assert.False(actualResult);
+            Assert.That(actualResult, Is.False);
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             var actualResult = monthYear.IsNotInFutureMonthYear(nowDate);
 
-            Assert.AreEqual(isValid, actualResult);
+            Assert.That(actualResult, Is.EqualTo(isValid));
         }
     }
 }

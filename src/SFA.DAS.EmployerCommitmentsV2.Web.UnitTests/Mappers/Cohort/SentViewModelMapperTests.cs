@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new SentViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Source.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(fixture.Source.AccountHashedId));
         }
 
         [Test]
@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new SentViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Cohort.LegalEntityName, result.LegalEntityName);
+            Assert.That(result.LegalEntityName, Is.EqualTo(fixture.Cohort.LegalEntityName));
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new SentViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Cohort.ProviderName, result.ProviderName);
+            Assert.That(result.ProviderName, Is.EqualTo(fixture.Cohort.ProviderName));
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new SentViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Source.CohortReference, result.CohortReference);
+            Assert.That(result.CohortReference, Is.EqualTo(fixture.Source.CohortReference));
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new SentViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Source.CohortId, result.CohortId);
+            Assert.That(result.CohortId, Is.EqualTo(fixture.Source.CohortId));
         }
     }
 

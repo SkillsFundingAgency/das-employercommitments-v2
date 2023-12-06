@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(request);
 
-            Assert.AreEqual(request.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
+            Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(request.ApprenticeshipHashedId));
         }
 
         [Test, MoqAutoData]
@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(request);
 
-            Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
         }
 
         [Test, MoqAutoData]
@@ -64,7 +64,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(request);
 
-            Assert.AreEqual(ApprenticeshipStatus.Stopped, result.ApprenticeshipStatus);
+            Assert.That(result.ApprenticeshipStatus, Is.EqualTo(ApprenticeshipStatus.Stopped));
         }
 
         [Test, MoqAutoData]

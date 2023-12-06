@@ -80,23 +80,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public void VerifyRedirectsToSentAction(IActionResult result)
         {
             var redirect = (RedirectToRouteResult)result;
-            
-            Assert.AreEqual(RouteNames.ChangeProviderRequestedConfirmation, redirect.RouteName);
+
+            Assert.That(redirect.RouteName, Is.EqualTo(RouteNames.ChangeProviderRequestedConfirmation));
 
             var routeValues = redirect.RouteValues;
 
-            Assert.AreEqual(_viewModel.ProviderId, routeValues["ProviderId"]);
-            Assert.AreEqual(_viewModel.ApprenticeshipHashedId, routeValues["ApprenticeshipHashedId"]);
-            Assert.AreEqual(_viewModel.AccountHashedId, routeValues["AccountHashedId"]);
-            Assert.AreEqual(_viewModel.StoppedDuringCoP, routeValues["StoppedDuringCoP"]);
+            Assert.That(routeValues["ProviderId"], Is.EqualTo(_viewModel.ProviderId));
+            Assert.That(routeValues["ApprenticeshipHashedId"], Is.EqualTo(_viewModel.ApprenticeshipHashedId));
+            Assert.That(routeValues["AccountHashedId"], Is.EqualTo(_viewModel.AccountHashedId));
+            Assert.That(routeValues["StoppedDuringCoP"], Is.EqualTo(_viewModel.StoppedDuringCoP));
         }
 
         public void VerifyRedirectToError(IActionResult actionResult)
         {
             var redirectResult = actionResult as RedirectToActionResult;
 
-            Assert.AreEqual("Error", redirectResult.ControllerName);
-            Assert.AreEqual("Error", redirectResult.ActionName);
+            Assert.That(redirectResult.ControllerName, Is.EqualTo("Error"));
+            Assert.That(redirectResult.ActionName, Is.EqualTo("Error"));
         }
     }
 }

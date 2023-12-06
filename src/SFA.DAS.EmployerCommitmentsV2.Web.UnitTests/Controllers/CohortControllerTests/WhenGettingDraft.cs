@@ -37,8 +37,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = await controller.Draft(request) as ViewResult;
 
-            Assert.NotNull(result);
-            Assert.AreEqual(result.Model, viewModel);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(viewModel, Is.EqualTo(result.Model));
         }
     }
 }

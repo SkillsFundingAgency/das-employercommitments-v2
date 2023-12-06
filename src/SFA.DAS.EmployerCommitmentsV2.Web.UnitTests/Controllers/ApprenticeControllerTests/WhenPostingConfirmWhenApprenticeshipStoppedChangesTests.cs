@@ -46,9 +46,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             var redirect = result.VerifyReturnsRedirectToActionResult();
 
-            Assert.AreEqual(redirect.ActionName, "EditStopDate");
-            Assert.AreEqual(redirect.RouteValues["AccountHashedId"], viewModel.AccountHashedId);
-            Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], viewModel.ApprenticeshipHashedId);
+            Assert.That("EditStopDate", Is.EqualTo(redirect.ActionName));
+            Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
+            Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
 
             _mockCommitmentsApiClient.Verify(x => x.ResolveOverlappingTrainingDateRequest(It.IsAny<ResolveApprenticeshipOverlappingTrainingDateRequest>(), CancellationToken.None), Times.Never);
         }
@@ -66,11 +66,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             //Assert
             var redirect = result.VerifyReturnsRedirectToActionResult();
 
-            Assert.IsTrue(_controller.TempData.Values.Contains("Current stop date confirmed"));
-            Assert.IsTrue(_controller.TempData.Values.Contains("January 2022"));
-            Assert.AreEqual(redirect.ActionName, "ApprenticeshipDetails");
-            Assert.AreEqual(redirect.RouteValues["AccountHashedId"], viewModel.AccountHashedId);
-            Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], viewModel.ApprenticeshipHashedId);
+            Assert.That(_controller.TempData.Values.Contains("Current stop date confirmed"), Is.True);
+            Assert.That(_controller.TempData.Values.Contains("January 2022"), Is.True);
+            Assert.That("ApprenticeshipDetails", Is.EqualTo(redirect.ActionName));
+            Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
+            Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
 
             _mockCommitmentsApiClient
                 .Verify(x => x.ResolveOverlappingTrainingDateRequest(It.Is<ResolveApprenticeshipOverlappingTrainingDateRequest>(x => x.ResolutionType == OverlappingTrainingDateRequestResolutionType.ApprenticeshipStopDateIsCorrect), CancellationToken.None), Times.Once);

@@ -55,8 +55,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             var result = await fixture.DeleteDraftApprenticeshipGet();
             var redirect = result.VerifyReturnsRedirectToActionResult();
-            Assert.AreEqual("Details", redirect.ActionName);
-            Assert.AreEqual("Cohort", redirect.ControllerName);
+            Assert.That(redirect.ActionName, Is.EqualTo("Details"));
+            Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
         }
 
         [Test]
@@ -69,8 +69,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             var result = await fixture.DeleteDraftApprenticeshipGet();
 
             var redirect = result.VerifyReturnsRedirectToActionResult();
-            Assert.AreEqual("Details", redirect.ActionName);
-            Assert.AreEqual("Cohort", redirect.ControllerName);
+            Assert.That(redirect.ActionName, Is.EqualTo("Details"));
+            Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
         }
 
         [Test]
@@ -83,8 +83,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             var result = await fixture.DeleteDraftApprenticeshipGet();
 
             var redirect = result.VerifyReturnsRedirectToActionResult();
-            Assert.AreEqual("Details", redirect.ActionName);
-            Assert.AreEqual("Cohort", redirect.ControllerName);
+            Assert.That(redirect.ActionName, Is.EqualTo("Details"));
+            Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
         }
 
         [Test]
@@ -97,8 +97,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             fixture.Verify_CommitmentApiClient_DeleteApprenticeShip_IsCalled_OnlyOnce();
             var redirect = result.VerifyReturnsRedirectToActionResult();
-            Assert.AreEqual("Details", redirect.ActionName);
-            Assert.AreEqual("Cohort", redirect.ControllerName);
+            Assert.That(redirect.ActionName, Is.EqualTo("Details"));
+            Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
         }
 
         [Test]
@@ -112,8 +112,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             fixture.Verify_CommitmentApiClient_DeleteApprenticeShip_IsCalled_OnlyOnce();
             var redirect = result.VerifyReturnsRedirectToActionResult();
-            Assert.AreEqual("Review", redirect.ActionName);
-            Assert.AreEqual("Cohort", redirect.ControllerName);
+            Assert.That(redirect.ActionName, Is.EqualTo("Review"));
+            Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
         }
  
         [Test]
@@ -126,8 +126,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             fixture.Verify_CommitmentApiClient_DeleteApprenticeShip_Is_NeverCalled();
             var redirect = result.VerifyReturnsRedirectToActionResult();
-            Assert.AreEqual("Details", redirect.ActionName);
-            Assert.AreEqual(null, redirect.ControllerName);
+            Assert.That(redirect.ActionName, Is.EqualTo("Details"));
+            Assert.That(redirect.ControllerName, Is.EqualTo(null));
         }
     }
 

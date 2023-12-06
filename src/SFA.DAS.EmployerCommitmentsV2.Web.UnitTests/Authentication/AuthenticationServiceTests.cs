@@ -25,95 +25,95 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authentication
         public void WhenNotAuthenticated_ThenIsUserAuthenticatedShouldReturnFalse()
         {
             _fixture.NoAuthenticatedUser();
-            Assert.IsFalse(_fixture.Sut.IsUserAuthenticated());
+            Assert.That(_fixture.Sut.IsUserAuthenticated(), Is.False);
         }
 
         [Test]
         public void WhenNotAuthenticated_ThenUserIdShouldReturnNull()
         {
             _fixture.NoAuthenticatedUser();
-            Assert.IsNull(_fixture.Sut.UserId);
+            Assert.That(_fixture.Sut.UserId, Is.Null);
         }
 
         [Test]
         public void WhenNotAuthenticated_ThenUserNameShouldReturnNull()
         {
             _fixture.NoAuthenticatedUser();
-            Assert.IsNull(_fixture.Sut.UserName);
+            Assert.That(_fixture.Sut.UserName, Is.Null);
         }
 
         [Test]
         public void WhenNotAuthenticated_ThenUserEmailShouldReturnNull()
         {
             _fixture.NoAuthenticatedUser();
-            Assert.IsNull(_fixture.Sut.UserEmail);
+            Assert.That(_fixture.Sut.UserEmail, Is.Null);
         }
 
         [Test]
         public void WhenNotAuthenticated_ThenUserInfoShouldReturnNull()
         {
             _fixture.NoAuthenticatedUser();
-            Assert.IsNull(_fixture.Sut.UserInfo);
+            Assert.That(_fixture.Sut.UserInfo, Is.Null);
         }
 
         [Test]
         public void WhenAuthenticated_ThenIsUserAuthenticatedShouldReturnTrue()
         {
             _fixture.SetAuthenticatedUser();
-            Assert.IsTrue(_fixture.Sut.IsUserAuthenticated());
+            Assert.That(_fixture.Sut.IsUserAuthenticated(), Is.True);
         }
 
         [Test]
         public void WhenAuthenticated_ThenUserIdShouldReturnTheUserId()
         {
             _fixture.SetAuthenticatedUser();
-            Assert.AreEqual("UserId", _fixture.Sut.UserId);
+            Assert.That(_fixture.Sut.UserId, Is.EqualTo("UserId"));
         }
 
         [Test]
         public void WhenAuthenticated_ThenUserNameShouldReturnTheUserName()
         {
             _fixture.SetAuthenticatedUser();
-            Assert.AreEqual("UserName", _fixture.Sut.UserName);
+            Assert.That(_fixture.Sut.UserName, Is.EqualTo("UserName"));
         }
 
         [Test]
         public void WhenAuthenticated_ThenUserEmailShouldReturnTheUserEmail()
         {
             _fixture.SetAuthenticatedUser();
-            Assert.AreEqual("UserEmail", _fixture.Sut.UserEmail);
+            Assert.That(_fixture.Sut.UserEmail, Is.EqualTo("UserEmail"));
         }
 
         [Test]
         public void WhenAuthenticated_ThenUserInfoShouldReturnAllValues()
         {
             _fixture.SetAuthenticatedUser();
-            Assert.IsNotNull(_fixture.Sut.UserInfo);
-            Assert.AreEqual("UserId", _fixture.Sut.UserInfo.UserId);
-            Assert.AreEqual("UserName", _fixture.Sut.UserInfo.UserDisplayName);
-            Assert.AreEqual("UserEmail", _fixture.Sut.UserInfo.UserEmail);
+            Assert.That(_fixture.Sut.UserInfo, Is.Not.Null);
+            Assert.That(_fixture.Sut.UserInfo.UserId, Is.EqualTo("UserId"));
+            Assert.That(_fixture.Sut.UserInfo.UserDisplayName, Is.EqualTo("UserName"));
+            Assert.That(_fixture.Sut.UserInfo.UserEmail, Is.EqualTo("UserEmail"));
         }
 
         [Test]
         public void WhenAuthenticatedButNoDasEmailClaim_ThenChecksClaimTypesEmail()
         {
             _fixture.SetNoDasEmailAuthenticatedUser();
-            
-            Assert.IsNotNull(_fixture.Sut.UserInfo);
-            Assert.AreEqual("UserId", _fixture.Sut.UserInfo.UserId);
-            Assert.AreEqual("UserName", _fixture.Sut.UserInfo.UserDisplayName);
-            Assert.AreEqual("UserEmail", _fixture.Sut.UserInfo.UserEmail);
+
+            Assert.That(_fixture.Sut.UserInfo, Is.Not.Null);
+            Assert.That(_fixture.Sut.UserInfo.UserId, Is.EqualTo("UserId"));
+            Assert.That(_fixture.Sut.UserInfo.UserDisplayName, Is.EqualTo("UserName"));
+            Assert.That(_fixture.Sut.UserInfo.UserEmail, Is.EqualTo("UserEmail"));
         }
         
         [Test]
         public void WhenAuthenticatedButNoNameClaim_ThenGetNameFromApiClient()
         {
             _fixture.SetNoDasEmailAuthenticatedUserNoName();
-            
-            Assert.IsNotNull(_fixture.Sut.UserInfo);
-            Assert.AreEqual("UserId", _fixture.Sut.UserInfo.UserId);
-            Assert.AreEqual("Test Last", _fixture.Sut.UserInfo.UserDisplayName);
-            Assert.AreEqual("UserEmail", _fixture.Sut.UserInfo.UserEmail);
+
+            Assert.That(_fixture.Sut.UserInfo, Is.Not.Null);
+            Assert.That(_fixture.Sut.UserInfo.UserId, Is.EqualTo("UserId"));
+            Assert.That(_fixture.Sut.UserInfo.UserDisplayName, Is.EqualTo("Test Last"));
+            Assert.That(_fixture.Sut.UserInfo.UserEmail, Is.EqualTo("UserEmail"));
         }
     }
 

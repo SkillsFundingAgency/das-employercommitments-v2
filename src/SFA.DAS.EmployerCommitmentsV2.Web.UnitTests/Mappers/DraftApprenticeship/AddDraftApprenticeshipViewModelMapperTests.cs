@@ -79,74 +79,74 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         [Test]
         public void CourseCodeIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CourseCode, _result.CourseCode);
+            Assert.That(_result.CourseCode, Is.EqualTo(_source.CourseCode));
         }
 
         [Test]
         public void StartDateIsMappedCorrectly()
         {
-            Assert.AreEqual(new MonthYearModel(_source.StartMonthYear).Date, _result.StartDate.Date);
+            Assert.That(_result.StartDate.Date, Is.EqualTo(new MonthYearModel(_source.StartMonthYear).Date));
         }
 
         [Test]
         public void AccountHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountHashedId, _result.AccountHashedId);
+            Assert.That(_result.AccountHashedId, Is.EqualTo(_source.AccountHashedId));
         }
 
         [Test]
         public void AccountLegalEntityHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountLegalEntityHashedId, _result.AccountLegalEntityHashedId);
+            Assert.That(_result.AccountLegalEntityHashedId, Is.EqualTo(_source.AccountLegalEntityHashedId));
         }
 
         [Test]
         public void AccountLegalEntityIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountLegalEntityId, _result.AccountLegalEntityId);
+            Assert.That(_result.AccountLegalEntityId, Is.EqualTo(_source.AccountLegalEntityId));
         }
 
         [Test]
         public void CohortIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CohortId, _result.CohortId);
+            Assert.That(_result.CohortId, Is.EqualTo(_source.CohortId));
         }
 
         [Test]
         public void CohortReferenceIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CohortReference, _result.CohortReference);
+            Assert.That(_result.CohortReference, Is.EqualTo(_source.CohortReference));
         }
 
         [Test]
         public void ReservationIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.ReservationId, _result.ReservationId);
+            Assert.That(_result.ReservationId, Is.EqualTo(_source.ReservationId));
         }
 
         [Test]
         public void AutoCreatedReservationIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AutoCreated, _result.AutoCreatedReservation);
+            Assert.That(_result.AutoCreatedReservation, Is.EqualTo(_source.AutoCreated));
         }
 
         [Test]
         public void TransferSenderHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_encodedTransferSenderId, _result.TransferSenderHashedId);
+            Assert.That(_result.TransferSenderHashedId, Is.EqualTo(_encodedTransferSenderId));
         }
        
 
         [Test]
         public void ProviderNameIsMappedCorrectly()
         {
-            Assert.AreEqual(_cohort.ProviderName, _result.ProviderName);
+            Assert.That(_result.ProviderName, Is.EqualTo(_cohort.ProviderName));
         }
 
         [Test]
         public void LegalEntityNameIsMappedCorrectly()
         {
-            Assert.AreEqual(_cohort.LegalEntityName, _result.LegalEntityName);
+            Assert.That(_result.LegalEntityName, Is.EqualTo(_cohort.LegalEntityName));
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         [Test]
         public void IsOnFlexiPaymentPilotIsFalse()
         {
-            Assert.IsFalse(_result.IsOnFlexiPaymentPilot);
+            Assert.That(_result.IsOnFlexiPaymentPilot, Is.False);
         }
     }
 }

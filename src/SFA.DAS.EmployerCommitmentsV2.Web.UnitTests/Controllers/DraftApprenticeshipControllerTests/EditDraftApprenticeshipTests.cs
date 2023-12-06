@@ -37,10 +37,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             var result = await _testFixture.GetEditDraftApprenticeshipDisplay(_testFixture._editDraftApprenticeshipViewModel);
 
-            Assert.NotNull(result);
-            Assert.IsInstanceOf(typeof(ViewResult), result);
-            Assert.AreEqual("Edit", (result as ViewResult).ViewName);
-            Assert.IsInstanceOf(typeof(EditDraftApprenticeshipViewModel), (result as ViewResult).Model);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.InstanceOf(typeof(ViewResult)));
+            Assert.That((result as ViewResult).ViewName, Is.EqualTo("Edit"));
+            Assert.That((result as ViewResult).Model, Is.InstanceOf(typeof(EditDraftApprenticeshipViewModel)));
         }
 
         [Test]
@@ -51,23 +51,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             var result = await _testFixture.PostEditDraftApprenticeship(changeCourse, changeDeliveryModel, _testFixture._editDraftApprenticeshipViewModel);
 
-            Assert.NotNull(result);
-            Assert.IsInstanceOf(typeof(RedirectToActionResult), result);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.InstanceOf(typeof(RedirectToActionResult)));
 
             if (string.IsNullOrEmpty(changeCourse) && string.IsNullOrEmpty(changeDeliveryModel))
-            {                
-                Assert.AreEqual("SelectOption", (result as RedirectToActionResult).ActionName);
-                Assert.AreEqual("DraftApprenticeship", (result as RedirectToActionResult).ControllerName);
+            {
+                Assert.That((result as RedirectToActionResult).ActionName, Is.EqualTo("SelectOption"));
+                Assert.That((result as RedirectToActionResult).ControllerName, Is.EqualTo("DraftApprenticeship"));
             }
 
             else if (!string.IsNullOrEmpty(changeCourse) && string.IsNullOrEmpty(changeDeliveryModel))
             {
-                Assert.AreEqual("SelectCourseForEdit", (result as RedirectToActionResult).ActionName);
+                Assert.That((result as RedirectToActionResult).ActionName, Is.EqualTo("SelectCourseForEdit"));
             }
 
             else if (string.IsNullOrEmpty(changeCourse) && !string.IsNullOrEmpty(changeDeliveryModel))
             {
-                Assert.AreEqual("SelectDeliveryModelForEdit", (result as RedirectToActionResult).ActionName);
+                Assert.That((result as RedirectToActionResult).ActionName, Is.EqualTo("SelectDeliveryModelForEdit"));
             }
         }
 
@@ -76,10 +76,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             var result = await _testFixture.GetSelectCourseForEdit(_testFixture._addDraftApprenticeshipRequest);
 
-            Assert.NotNull(result);
-            Assert.IsInstanceOf(typeof(ViewResult), result);
-            Assert.AreEqual("SelectCourse", (result as ViewResult).ViewName);
-            Assert.IsInstanceOf(typeof(SelectCourseViewModel), (result as ViewResult).Model);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.InstanceOf(typeof(ViewResult)));
+            Assert.That((result as ViewResult).ViewName, Is.EqualTo("SelectCourse"));
+            Assert.That((result as ViewResult).Model, Is.InstanceOf(typeof(SelectCourseViewModel)));
         }
 
         [Test]
@@ -87,9 +87,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             var result = await _testFixture.PostSetCourseForEdit(_testFixture._selectCourseViewModel);
 
-            Assert.NotNull(result);
-            Assert.IsInstanceOf(typeof(RedirectToActionResult), result);
-            Assert.AreEqual("SelectDeliveryModelForEdit", (result as RedirectToActionResult).ActionName);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.InstanceOf(typeof(RedirectToActionResult)));
+            Assert.That((result as RedirectToActionResult).ActionName, Is.EqualTo("SelectDeliveryModelForEdit"));
         }
 
         [TestCase(true, true)]
@@ -101,13 +101,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             if (hasDeliveryModels || hasUnavailableDeliveryModel)
             {
-                Assert.NotNull(result);
-                Assert.IsInstanceOf(typeof(ViewResult), result);
-                Assert.IsInstanceOf(typeof(SelectDeliveryModelForEditViewModel), (result as ViewResult).Model);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.InstanceOf(typeof(ViewResult)));
+                Assert.That((result as ViewResult).Model, Is.InstanceOf(typeof(SelectDeliveryModelForEditViewModel)));
             }
             else
             {
-                Assert.IsInstanceOf(typeof(Microsoft.AspNetCore.Mvc.RedirectToActionResult), result);
+                Assert.That(result, Is.InstanceOf(typeof(Microsoft.AspNetCore.Mvc.RedirectToActionResult)));
             }
         }
 
@@ -116,9 +116,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         {
             var result = await _testFixture.PostSetDeliveryModelForEdit(_testFixture._selectDeliveryModelViewModel_WithDeliveryModels);
 
-            Assert.NotNull(result);
-            Assert.IsInstanceOf(typeof(RedirectToActionResult), result);
-            Assert.AreEqual("EditDraftApprenticeshipDisplay", (result as RedirectToActionResult).ActionName);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.InstanceOf(typeof(RedirectToActionResult)));
+            Assert.That((result as RedirectToActionResult).ActionName, Is.EqualTo("EditDraftApprenticeshipDisplay"));
         }
     }
 

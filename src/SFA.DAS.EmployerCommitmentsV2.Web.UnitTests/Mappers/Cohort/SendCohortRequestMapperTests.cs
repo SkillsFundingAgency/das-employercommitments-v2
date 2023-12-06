@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void MessageIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.SendMessage, _result.Message);
+            Assert.That(_result.Message, Is.EqualTo(_source.SendMessage));
         }
     }
 }

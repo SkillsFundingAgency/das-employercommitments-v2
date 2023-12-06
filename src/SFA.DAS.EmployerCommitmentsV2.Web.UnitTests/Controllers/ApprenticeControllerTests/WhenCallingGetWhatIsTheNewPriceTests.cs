@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [TestCase(true)]
         [TestCase(false)]
         [TestCase(null)]
-        public async Task BackNavigationSetCorrectlyInViewData(bool isEdit)
+        public async Task BackNavigationSetCorrectlyInViewData(bool? isEdit)
         {
             _fixture.ArrangeRequestEditFlag(isEdit);
 
@@ -93,15 +93,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         internal void VerifyBackNavigation(string expectedBackNavigationUrl) => _mockUrlHelper.Verify(mock => mock.Link(expectedBackNavigationUrl, It.IsAny<object>()), Times.Once);
 
 
-        internal void VerifyViewDataSet(ViewResult viewResult) => Assert.AreEqual(ExpectedBackLinkSet, viewResult.ViewData["BackUrl"]);
+        internal void VerifyViewDataSet(ViewResult viewResult) => Assert.That(viewResult.ViewData["BackUrl"], Is.EqualTo(ExpectedBackLinkSet));
 
 
         internal void VerifyViewModel(ViewResult viewResult)
         {
             var viewModel = viewResult.Model as WhatIsTheNewPriceViewModel;
 
-            Assert.IsInstanceOf<WhatIsTheNewPriceViewModel>(viewModel);
-            Assert.AreEqual(_viewModel, viewModel);
+            Assert.That(viewModel, Is.InstanceOf<WhatIsTheNewPriceViewModel>());
+            Assert.That(viewModel, Is.EqualTo(_viewModel));
         }
     }
 }

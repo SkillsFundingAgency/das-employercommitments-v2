@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_viewModel);
 
             //Assert
-            Assert.AreEqual(_viewModel.AccountId, result.AccountId);
+            Assert.That(result.AccountId, Is.EqualTo(_viewModel.AccountId));
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_viewModel);
 
             //Assert
-            Assert.AreEqual(new DateTime(_viewModel.NewStopDate.Year.Value, _viewModel.NewStopDate.Month.Value, _viewModel.NewStopDate.Day.Value), result.NewStopDate);
+            Assert.That(result.NewStopDate, Is.EqualTo(new DateTime(_viewModel.NewStopDate.Year.Value, _viewModel.NewStopDate.Month.Value, _viewModel.NewStopDate.Day.Value)));
         }
    
     }

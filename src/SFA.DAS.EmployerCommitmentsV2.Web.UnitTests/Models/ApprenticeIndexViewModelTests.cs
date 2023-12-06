@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
             model.SortedByHeader();
 
             //Assert
-            Assert.AreEqual(expected, model.SortedByHeaderClassName);
+            Assert.That(model.SortedByHeaderClassName, Is.EqualTo(expected));
         }
     }
 }

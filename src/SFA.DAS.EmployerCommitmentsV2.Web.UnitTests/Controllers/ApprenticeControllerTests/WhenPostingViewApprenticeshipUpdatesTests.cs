@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             _fixture.ViewModel.UndoChanges = false;
             var response = await _fixture.ViewApprenticeshipUpdates() as RedirectToActionResult;
-            Assert.AreEqual("ApprenticeshipDetails", response.ActionName);  
+            Assert.That(response.ActionName, Is.EqualTo("ApprenticeshipDetails"));  
         }
     }
 

@@ -41,7 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var viewResult = (ViewResult)result;
             var viewModel = viewResult.Model;
             Assert.That(viewModel, Is.TypeOf<ResumeRequestViewModel>());
-            Assert.IsInstanceOf<ViewResult>(result);
+            Assert.That(result, Is.InstanceOf<ViewResult>());
         }
     }
 }

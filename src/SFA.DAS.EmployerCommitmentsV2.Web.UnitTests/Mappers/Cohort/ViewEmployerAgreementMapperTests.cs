@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var f = new ViewEmployerAgreementMapperTestFixture();
             var result = await f.Map();
-            Assert.AreEqual(f.Source.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(f.Source.AccountHashedId));
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var f = new ViewEmployerAgreementMapperTestFixture().NoAgreements();
             var result = await f.Map();
-            Assert.IsNull(result.AgreementHashedId);
+            Assert.That(result.AgreementHashedId, Is.Null);
         }
     }
 
@@ -89,7 +89,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             CommitmentsApiClient.Verify(x=>x.GetCohort(Source.CohortId, It.IsAny<CancellationToken>()));
             CommitmentsApiClient.Verify(x=>x.GetLatestAgreementId(Cohort.AccountLegalEntityId, It.IsAny<CancellationToken>()));
-            Assert.AreEqual("XYZ", agreementHashedId);
+            Assert.That(agreementHashedId, Is.EqualTo("XYZ"));
         }
     }
 }

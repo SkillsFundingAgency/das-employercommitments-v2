@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new EditEndDateRequestMapper(authenticationService);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.ApprenticeshipId, result.ApprenticeshipId);
+            Assert.That(result.ApprenticeshipId, Is.EqualTo(request.ApprenticeshipId));
         }
 
         [Test, MoqAutoData]
@@ -28,7 +28,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new EditEndDateRequestMapper(authenticationService);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.EndDate.Date, result.EndDate);
+            Assert.That(result.EndDate, Is.EqualTo(request.EndDate.Date));
         }
 
         [Test, MoqAutoData]
@@ -39,9 +39,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new EditEndDateRequestMapper(authenticationService);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(authenticationService.UserInfo.UserEmail, result.UserInfo.UserEmail);
-            Assert.AreEqual(authenticationService.UserInfo.UserId, result.UserInfo.UserId);
-            Assert.AreEqual(authenticationService.UserInfo.UserDisplayName, result.UserInfo.UserDisplayName);
+            Assert.That(result.UserInfo.UserEmail, Is.EqualTo(authenticationService.UserInfo.UserEmail));
+            Assert.That(result.UserInfo.UserId, Is.EqualTo(authenticationService.UserInfo.UserId));
+            Assert.That(result.UserInfo.UserDisplayName, Is.EqualTo(authenticationService.UserInfo.UserDisplayName));
         }
     }
 }

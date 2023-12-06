@@ -293,7 +293,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
              var viewModel = await _fixture.Map();
 
             //Assert
-            Assert.AreEqual(expectedIsLockedForUpdated, viewModel.IsLockedForUpdate);
+            Assert.That(viewModel.IsLockedForUpdate, Is.EqualTo(expectedIsLockedForUpdated));
         }
 
         [TestCase(ApprenticeshipStatus.Live, true)]
@@ -310,7 +310,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var viewModel = await _fixture.Map();
 
             //Assert
-            Assert.AreEqual(expectedIsLockedForUpdated, viewModel.IsLockedForUpdate);
+            Assert.That(viewModel.IsLockedForUpdate, Is.EqualTo(expectedIsLockedForUpdated));
         }
 
         [TestCase(ApprenticeshipStatus.Paused, false)]
@@ -325,7 +325,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var viewModel = await _fixture.Map();
 
             //Assert
-            Assert.AreEqual(expectedIsLockedForUpdated, viewModel.IsLockedForUpdate);
+            Assert.That(viewModel.IsLockedForUpdate, Is.EqualTo(expectedIsLockedForUpdated));
         }
 
         [TestCase(ApprenticeshipStatus.WaitingToStart, true, true)]
@@ -341,7 +341,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var viewModel = await _fixture.Map();
 
             //Assert
-            Assert.AreEqual(expectedIsLockedForUpdated, viewModel.IsLockedForUpdate);
+            Assert.That(viewModel.IsLockedForUpdate, Is.EqualTo(expectedIsLockedForUpdated));
         }
 
         [TestCase(true, false, true)]
@@ -357,7 +357,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var viewModel = await _fixture.Map();
 
             //Assert
-            Assert.AreEqual(expectedIsUpdateLockedForStartDateAndCourse, viewModel.IsUpdateLockedForStartDateAndCourse);
+            Assert.That(viewModel.IsUpdateLockedForStartDateAndCourse, Is.EqualTo(expectedIsUpdateLockedForStartDateAndCourse));
         }
 
         [TestCase(ApprenticeshipStatus.WaitingToStart, true, true)]
@@ -375,7 +375,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var viewModel = await _fixture.Map();
 
             //Assert
-            Assert.AreEqual(expectedIsEndDateLockedForUpdate, viewModel.IsEndDateLockedForUpdate);
+            Assert.That(viewModel.IsEndDateLockedForUpdate, Is.EqualTo(expectedIsEndDateLockedForUpdate));
         }
 
         [Test]
@@ -512,62 +512,62 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         internal void VerifyHashedApprenticeshipIdIsMapped()
         {
-            Assert.AreEqual(_request.ApprenticeshipHashedId, _viewModel.HashedApprenticeshipId);
+            Assert.That(_viewModel.HashedApprenticeshipId, Is.EqualTo(_request.ApprenticeshipHashedId));
         }
 
         internal void VerifyLastNameIsMapped()
         {
-            Assert.AreEqual(ApprenticeshipResponse.LastName, _viewModel.LastName);
+            Assert.That(_viewModel.LastName, Is.EqualTo(ApprenticeshipResponse.LastName));
         }
 
         internal void VerifyEmailIsMapped()
         {
-            Assert.AreEqual(ApprenticeshipResponse.Email, _viewModel.Email);
+            Assert.That(_viewModel.Email, Is.EqualTo(ApprenticeshipResponse.Email));
         }
 
         internal void VerifyEmailAddressConfirmedByApprentice()
         {
-            Assert.AreEqual(ApprenticeshipResponse.EmailAddressConfirmedByApprentice, _viewModel.EmailAddressConfirmedByApprentice);
+            Assert.That(_viewModel.EmailAddressConfirmedByApprentice, Is.EqualTo(ApprenticeshipResponse.EmailAddressConfirmedByApprentice));
         }
 
         internal void VerifyEmailShouldBePresent()
         {
-            Assert.AreEqual(ApprenticeshipResponse.EmailShouldBePresent, _viewModel.EmailShouldBePresent);
+            Assert.That(_viewModel.EmailShouldBePresent, Is.EqualTo(ApprenticeshipResponse.EmailShouldBePresent));
         }
 
         internal void VerifyULNIsMapped()
         {
-            Assert.AreEqual(ApprenticeshipResponse.Uln, _viewModel.ULN);
+            Assert.That(_viewModel.ULN, Is.EqualTo(ApprenticeshipResponse.Uln));
         }
 
         internal void VerifyCourseCodeIsMapped()
         {
-            Assert.AreEqual(ApprenticeshipResponse.CourseCode, _viewModel.CourseCode);
+            Assert.That(_viewModel.CourseCode, Is.EqualTo(ApprenticeshipResponse.CourseCode));
         }
 
         internal void VerifyEmploymentPriceIsMapped()
         {
-            Assert.AreEqual(ApprenticeshipResponse.EmploymentPrice, _viewModel.EmploymentPrice);
+            Assert.That(_viewModel.EmploymentPrice, Is.EqualTo(ApprenticeshipResponse.EmploymentPrice));
         }
 
         internal void VerifyEmploymentEndDateIsMapped()
         {
-            Assert.AreEqual(ApprenticeshipResponse.EmploymentEndDate, _viewModel.EmploymentEndDate.Date);
+            Assert.That(_viewModel.EmploymentEndDate.Date, Is.EqualTo(ApprenticeshipResponse.EmploymentEndDate));
         }
 
         internal void VerifyDeliveryModelIsMapped()
         {
-            Assert.AreEqual(ApprenticeshipResponse.DeliveryModel, _viewModel.DeliveryModel);
+            Assert.That(_viewModel.DeliveryModel, Is.EqualTo(ApprenticeshipResponse.DeliveryModel));
         }
 
         internal void VerifyVersionIsMapped()
         {
-            Assert.AreEqual(ApprenticeshipResponse.Version, _viewModel.Version);
+            Assert.That(_viewModel.Version, Is.EqualTo(ApprenticeshipResponse.Version));
         }
 
         internal void VerifyCoursesAreMapped()
         {
-            Assert.AreEqual(_courses, _viewModel.Courses);
+            Assert.That(_viewModel.Courses, Is.EqualTo(_courses));
         }
 
         internal void VerifyIsLockedForUpdateIsMapped()
@@ -577,7 +577,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         internal void VerifyFirstNameIsMapped()
         {
-            Assert.AreEqual(ApprenticeshipResponse.FirstName, _viewModel.FirstName);
+            Assert.That(_viewModel.FirstName, Is.EqualTo(ApprenticeshipResponse.FirstName));
         }
 
         internal EditApprenticeshipRequestToViewModelMapperTestsFixture IsWithInFundingPeriod()
@@ -702,17 +702,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         internal void VerifyProviderIdIsMapped()
         {
-            Assert.AreEqual(ApprenticeshipResponse.ProviderId, _viewModel.ProviderId);
+            Assert.That(_viewModel.ProviderId, Is.EqualTo(ApprenticeshipResponse.ProviderId));
         }
 
         internal void VerifyAccountLegalEntityIdIsMapped()
         {
-            Assert.AreEqual("ALEID", _viewModel.AccountLegalEntityHashedId);
+            Assert.That(_viewModel.AccountLegalEntityHashedId, Is.EqualTo("ALEID"));
         }
 
         internal void VerifyHasMultipleDeliveryModelsIsMapped()
         {
-            Assert.AreEqual(_getEditApprenticeshipResponse.HasMultipleDeliveryModelOptions, _viewModel.HasMultipleDeliveryModelOptions);
+            Assert.That(_viewModel.HasMultipleDeliveryModelOptions, Is.EqualTo(_getEditApprenticeshipResponse.HasMultipleDeliveryModelOptions));
         }
     }
 }

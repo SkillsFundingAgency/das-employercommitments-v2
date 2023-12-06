@@ -69,9 +69,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
 
             var redirect = result.VerifyReturnsRedirectToActionResult();
-            Assert.AreEqual(redirect.ActionName, "Finished");
-            Assert.AreEqual(redirect.RouteValues["AccountHashedId"], model.AccountHashedId);
-            Assert.AreEqual(redirect.RouteValues["CohortReference"], createCohortResponse.CohortReference);
+            Assert.That("Finished", Is.EqualTo(redirect.ActionName));
+            Assert.That(model.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
+            Assert.That(createCohortResponse.CohortReference, Is.EqualTo(redirect.RouteValues["CohortReference"]));
         }
 
         [Test, AutoData]
@@ -81,11 +81,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var response = await _fixture.Sut.Finished(request);
             var model = response.VerifyReturnsViewModel().WithModel<FinishedViewModel>();
-            
-            Assert.AreEqual(model.CohortReference, request.CohortReference);
-            Assert.AreEqual(model.LegalEntityName, getCohortResponse.LegalEntityName);
-            Assert.AreEqual(model.ProviderName, getCohortResponse.ProviderName);
-            Assert.AreEqual(model.Message, getCohortResponse.LatestMessageCreatedByEmployer);
+
+            Assert.That(request.CohortReference, Is.EqualTo(model.CohortReference));
+            Assert.That(getCohortResponse.LegalEntityName, Is.EqualTo(model.LegalEntityName));
+            Assert.That(getCohortResponse.ProviderName, Is.EqualTo(model.ProviderName));
+            Assert.That(getCohortResponse.LatestMessageCreatedByEmployer, Is.EqualTo(model.Message));
         }
 
         public class CreateCohortWithOtherPartyControllerTestFixture
@@ -180,19 +180,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             public CreateCohortWithOtherPartyControllerTestFixture VerifyViewModelIsMappedCorrectly(MessageViewModel model)
             {
-                Assert.AreEqual(MessageViewModel.AccountHashedId, model.AccountHashedId);
-                Assert.AreEqual(MessageViewModel.CourseCode, model.CourseCode);
-                Assert.AreEqual(MessageViewModel.StartMonthYear, model.StartMonthYear);
-                Assert.AreEqual(MessageViewModel.ProviderId, model.ProviderId);
-                Assert.AreEqual(MessageViewModel.AccountLegalEntityHashedId, model.AccountLegalEntityHashedId);
-                Assert.AreEqual(MessageViewModel.ReservationId, model.ReservationId);
+                Assert.That(model.AccountHashedId, Is.EqualTo(MessageViewModel.AccountHashedId));
+                Assert.That(model.CourseCode, Is.EqualTo(MessageViewModel.CourseCode));
+                Assert.That(model.StartMonthYear, Is.EqualTo(MessageViewModel.StartMonthYear));
+                Assert.That(model.ProviderId, Is.EqualTo(MessageViewModel.ProviderId));
+                Assert.That(model.AccountLegalEntityHashedId, Is.EqualTo(MessageViewModel.AccountLegalEntityHashedId));
+                Assert.That(model.ReservationId, Is.EqualTo(MessageViewModel.ReservationId));
 
                 return this;
             }
 
             public CreateCohortWithOtherPartyControllerTestFixture VerifyLegalEntityNamePopulatedFromTempData(MessageViewModel model)
             {
-                Assert.AreEqual(MessageViewModel.LegalEntityName, model.LegalEntityName);
+                Assert.That(model.LegalEntityName, Is.EqualTo(MessageViewModel.LegalEntityName));
                 return this;
             }
         }

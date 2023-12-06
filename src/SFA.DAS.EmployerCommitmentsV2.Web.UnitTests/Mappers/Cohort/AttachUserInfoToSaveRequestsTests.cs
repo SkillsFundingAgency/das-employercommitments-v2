@@ -30,8 +30,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _fixture.SaveRequestMapper.Map(_fixture.InputViewModel);
 
-            Assert.IsNotNull(result);
-            Assert.IsNull(result.UserInfo);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.UserInfo, Is.Null);
         }
 
         [Test]
@@ -39,8 +39,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _fixture.SetupAuthenticatedUser().SaveRequestMapper.Map(_fixture.InputViewModel);
 
-            Assert.IsNotNull(result.UserInfo);
-            Assert.AreEqual(_fixture.UserInfo, result.UserInfo);
+            Assert.That(result.UserInfo, Is.Not.Null);
+            Assert.That(result.UserInfo, Is.EqualTo(_fixture.UserInfo));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _fixture.NonSaveRequestMapper.Map(_fixture.InputDetails);
 
-            Assert.IsNotNull(result);
+            Assert.That(result, Is.Not.Null);
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _fixture.SetupAuthenticatedUser().NonSaveRequestMapper.Map(_fixture.InputDetails);
 
-            Assert.IsNotNull(result);
+            Assert.That(result, Is.Not.Null);
         }
     }
 

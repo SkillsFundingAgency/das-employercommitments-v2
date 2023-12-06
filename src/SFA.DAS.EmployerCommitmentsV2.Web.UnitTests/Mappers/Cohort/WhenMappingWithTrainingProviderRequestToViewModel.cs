@@ -138,57 +138,57 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
         public void Verify_Only_TheCohorts_WithTrainingProvider_Are_Mapped()
         {
-            Assert.AreEqual(2, WithTrainingProviderViewModel.Cohorts.Count());
+            Assert.That(WithTrainingProviderViewModel.Cohorts.Count(), Is.EqualTo(2));
 
-            Assert.IsNotNull(GetCohortInTrainingProviderViewModel(1));
-            Assert.IsNotNull(GetCohortInTrainingProviderViewModel(2));
+            Assert.That(GetCohortInTrainingProviderViewModel(1), Is.Not.Null);
+            Assert.That(GetCohortInTrainingProviderViewModel(2), Is.Not.Null);
         }
 
         public void Verify_CohortRefrence_Is_Mapped()
         {
             EncodingService.Verify(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference), Times.Exactly(2));
 
-            Assert.AreEqual("1_Encoded", GetCohortInTrainingProviderViewModel(1).CohortReference);
-            Assert.AreEqual("2_Encoded", GetCohortInTrainingProviderViewModel(2).CohortReference);
+            Assert.That(GetCohortInTrainingProviderViewModel(1).CohortReference, Is.EqualTo("1_Encoded"));
+            Assert.That(GetCohortInTrainingProviderViewModel(2).CohortReference, Is.EqualTo("2_Encoded"));
         }
 
         public void Verify_ProviderName_Is_Mapped()
         {
-            Assert.AreEqual("Provider1", GetCohortInTrainingProviderViewModel(1).ProviderName);
-            Assert.AreEqual("Provider2", GetCohortInTrainingProviderViewModel(2).ProviderName);
+            Assert.That(GetCohortInTrainingProviderViewModel(1).ProviderName, Is.EqualTo("Provider1"));
+            Assert.That(GetCohortInTrainingProviderViewModel(2).ProviderName, Is.EqualTo("Provider2"));
         }
 
         public void Verify_NumberOfApprentices_Are_Mapped()
         {
-            Assert.AreEqual(100, GetCohortInTrainingProviderViewModel(1).NumberOfApprentices);
-            Assert.AreEqual(200, GetCohortInTrainingProviderViewModel(2).NumberOfApprentices);
+            Assert.That(GetCohortInTrainingProviderViewModel(1).NumberOfApprentices, Is.EqualTo(100));
+            Assert.That(GetCohortInTrainingProviderViewModel(2).NumberOfApprentices, Is.EqualTo(200));
         }
 
         public void Verify_LastMessage_Is_MappedCorrectly()
         {
-            Assert.AreEqual("this is the last message from Employer", GetCohortInTrainingProviderViewModel(1).LastMessage);
-            Assert.AreEqual("No message added", GetCohortInTrainingProviderViewModel(2).LastMessage);
+            Assert.That(GetCohortInTrainingProviderViewModel(1).LastMessage, Is.EqualTo("this is the last message from Employer"));
+            Assert.That(GetCohortInTrainingProviderViewModel(2).LastMessage, Is.EqualTo("No message added"));
         }
 
         public void Verify_Ordered_By_DateCreated()
         {
-            Assert.AreEqual("1_Encoded", WithTrainingProviderViewModel.Cohorts.First().CohortReference);
-            Assert.AreEqual("2_Encoded", WithTrainingProviderViewModel.Cohorts.Last().CohortReference);
+            Assert.That(WithTrainingProviderViewModel.Cohorts.First().CohortReference, Is.EqualTo("1_Encoded"));
+            Assert.That(WithTrainingProviderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("2_Encoded"));
         }
 
         public void Verify_AccountHashedId_IsMapped()
         {
-            Assert.AreEqual(AccountHashedId, WithTrainingProviderViewModel.AccountHashedId);
+            Assert.That(WithTrainingProviderViewModel.AccountHashedId, Is.EqualTo(AccountHashedId));
         }
 
         public void Verify_When_More_Than_One_Training_Provider_Title_IsMapped()
         {
-            Assert.AreEqual("Apprentice details with training providers", WithTrainingProviderViewModel.Title);
+            Assert.That(WithTrainingProviderViewModel.Title, Is.EqualTo("Apprentice details with training providers"));
         }
 
         public void Verify_When_One_Training_Provider_Title_IsMapped()
         {
-            Assert.AreEqual("Apprentice details with training provider", WithTrainingProviderViewModel.Title);
+            Assert.That(WithTrainingProviderViewModel.Title, Is.EqualTo("Apprentice details with training provider"));
         }
 
         public void SetOnlyOneTrainingProvider()

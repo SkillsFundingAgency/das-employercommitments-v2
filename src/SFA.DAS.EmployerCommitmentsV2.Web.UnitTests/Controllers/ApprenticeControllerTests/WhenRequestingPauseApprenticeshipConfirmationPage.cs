@@ -34,7 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             var result = await _controller.PauseApprenticeship(new PauseRequest());
 
-            Assert.IsInstanceOf<ViewResult>(result);
+            Assert.That(result, Is.InstanceOf<ViewResult>());
         }
 
         [Test, MoqAutoData]
@@ -48,8 +48,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             var pauseRequestViewModel = (PauseRequestViewModel)viewModel;
 
-            Assert.IsInstanceOf<PauseRequestViewModel>(viewModel);
-            Assert.AreEqual(_viewModel, pauseRequestViewModel);
+            Assert.That(viewModel, Is.InstanceOf<PauseRequestViewModel>());
+            Assert.That(pauseRequestViewModel, Is.EqualTo(_viewModel));
         }
     }
 }

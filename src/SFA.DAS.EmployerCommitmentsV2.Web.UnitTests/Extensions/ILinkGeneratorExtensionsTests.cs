@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         {
             var url = _fixture.Sut.YourOrganisationsAndAgreements(accountHashedId);
 
-            Assert.AreEqual($"{_fixture.AccountsLink}accounts/{accountHashedId}/agreements", url);
+            Assert.That(url, Is.EqualTo($"{_fixture.AccountsLink}accounts/{accountHashedId}/agreements"));
         }
 
         [Test, AutoData]
@@ -30,14 +30,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         {
             var url = _fixture.Sut.PayeSchemes(accountHashedId);
 
-            Assert.AreEqual($"{_fixture.AccountsLink}accounts/{accountHashedId}/schemes", url);
+            Assert.That(url, Is.EqualTo($"{_fixture.AccountsLink}accounts/{accountHashedId}/schemes"));
         }
 
         [Test, AutoData]
         public void EmployerHome_BuildsPathCorrectly(string accountHashedId)
         {
             var url = _fixture.Sut.EmployerHome(accountHashedId);
-            Assert.AreEqual($"{_fixture.AccountsLink}accounts/{accountHashedId}/teams", url);
+            Assert.That(url, Is.EqualTo($"{_fixture.AccountsLink}accounts/{accountHashedId}/teams"));
         }
 
         public class ILinkGeneratorExtensionsTestsFixture

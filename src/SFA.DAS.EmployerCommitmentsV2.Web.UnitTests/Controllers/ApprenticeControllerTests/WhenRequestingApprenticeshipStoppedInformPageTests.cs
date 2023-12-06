@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var viewResult = actionResult as ViewResult;
 
-            Assert.IsNotNull(viewResult);
+            Assert.That(viewResult, Is.Not.Null);
         }
     }
 }

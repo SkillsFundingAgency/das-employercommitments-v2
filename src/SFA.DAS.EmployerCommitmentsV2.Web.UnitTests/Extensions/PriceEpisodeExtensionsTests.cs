@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
         [TestCase("2020-06-01", 3, Description = "Within an episode without an end date")]
         public void PriceIsDeterminedCorrectly(DateTime effectiveDate, decimal expectedCost)
         {
-            Assert.AreEqual(expectedCost, _priceEpisodes.GetPrice(effectiveDate));
+            Assert.That(_priceEpisodes.GetPrice(effectiveDate), Is.EqualTo(expectedCost));
         }
 
         private GetPriceEpisodesResponse.PriceEpisode CreatePriceEpisode(decimal cost, DateTime from, DateTime? to)

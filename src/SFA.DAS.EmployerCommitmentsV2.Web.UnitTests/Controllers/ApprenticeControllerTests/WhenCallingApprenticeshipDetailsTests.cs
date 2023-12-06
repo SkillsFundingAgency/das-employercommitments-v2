@@ -73,19 +73,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var viewModel = viewResult.Model as ApprenticeshipDetailsRequestViewModel;
 
-            Assert.IsInstanceOf<ApprenticeshipDetailsRequestViewModel>(viewModel);
-            Assert.AreEqual(_viewModel, viewModel);
+            Assert.That(viewModel, Is.InstanceOf<ApprenticeshipDetailsRequestViewModel>());
+            Assert.That(viewModel, Is.EqualTo(_viewModel));
         }
 
         public void VerifyNoFlashMessage(ViewResult viewResult)
         {
             var viewModel = viewResult.Model as ApprenticeshipDetailsRequestViewModel;
-         
-            Assert.IsInstanceOf<ApprenticeshipDetailsRequestViewModel>(viewModel);
-            Assert.AreEqual(_viewModel, viewModel);
-            Assert.IsFalse(_controller.TempData.Values.Contains(ApprenticeStoppedMessage));
-            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessage));
-            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessageLevel));
+
+            Assert.That(viewModel, Is.InstanceOf<ApprenticeshipDetailsRequestViewModel>());
+            Assert.That(viewModel, Is.EqualTo(_viewModel));
+            Assert.That(_controller.TempData.Values.Contains(ApprenticeStoppedMessage), Is.False);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessage), Is.False);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageLevel), Is.False);
         }
     }
 }

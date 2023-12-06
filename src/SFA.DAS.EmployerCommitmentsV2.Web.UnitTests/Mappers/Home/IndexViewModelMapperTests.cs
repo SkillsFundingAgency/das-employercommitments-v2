@@ -111,7 +111,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Home
 
             public void VerifySetPaymentOrderLinkVisibility(bool expectVisible)
             {
-                Assert.AreEqual(expectVisible, _result.ShowSetPaymentOrderLink);
+                Assert.That(_result.ShowSetPaymentOrderLink, Is.EqualTo(expectVisible));
             }
 
             public async Task Map()
@@ -121,18 +121,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Home
 
             public void VerifyAccountHashedIdIsMappedCorrectly()
             {
-                Assert.AreEqual(_request.AccountHashedId, _result.AccountHashedId);
+                Assert.That(_result.AccountHashedId, Is.EqualTo(_request.AccountHashedId));
             }
 
             public void VerifyPublicSectorReportingLink(string environment)
             {
                 if(environment.ToLower() == "prd")
                 {
-                    Assert.AreEqual($"https://reporting.manage-apprenticeships.service.gov.uk/accounts/{_result.AccountHashedId}/home", _result.PublicSectorReportingLink);   
+                    Assert.That(_result.PublicSectorReportingLink, Is.EqualTo($"https://reporting.manage-apprenticeships.service.gov.uk/accounts/{_result.AccountHashedId}/home"));   
                 }
                 else
                 {
-                    Assert.AreEqual($"https://reporting.{environment.ToLower()}-eas.apprenticeships.education.gov.uk/accounts/{_result.AccountHashedId}/home", _result.PublicSectorReportingLink);
+                    Assert.That(_result.PublicSectorReportingLink, Is.EqualTo($"https://reporting.{environment.ToLower()}-eas.apprenticeships.education.gov.uk/accounts/{_result.AccountHashedId}/home"));
                 }
             }
         }

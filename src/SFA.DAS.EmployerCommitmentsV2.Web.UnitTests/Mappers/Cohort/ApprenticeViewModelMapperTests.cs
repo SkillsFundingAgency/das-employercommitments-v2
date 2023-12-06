@@ -73,73 +73,73 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void AccountLegalEntityIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountLegalEntityId, _result.AccountLegalEntityId);
+            Assert.That(_result.AccountLegalEntityId, Is.EqualTo(_source.AccountLegalEntityId));
         }
 
         [Test]
         public void AccountLegalEntityHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountLegalEntityHashedId, _result.AccountLegalEntityHashedId);
+            Assert.That(_result.AccountLegalEntityHashedId, Is.EqualTo(_source.AccountLegalEntityHashedId));
         }
 
         [Test]
         public void AccountLegalEntityNameIsMappedCorrectly()
         {
-            Assert.AreEqual(_accountLegalEntityResponse.LegalEntityName, _result.LegalEntityName);
+            Assert.That(_result.LegalEntityName, Is.EqualTo(_accountLegalEntityResponse.LegalEntityName));
         }
 
         [Test]
         public void StartDateIsMappedCorrectly()
         {
-            Assert.AreEqual(new MonthYearModel(_source.StartMonthYear).Date, _result.StartDate.Date);
+            Assert.That(_result.StartDate.Date, Is.EqualTo(new MonthYearModel(_source.StartMonthYear).Date));
         }
 
         [Test]
         public void ReservationIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.ReservationId, _result.ReservationId);
+            Assert.That(_result.ReservationId, Is.EqualTo(_source.ReservationId));
         }
 
         [Test]
         public void CourseCodeIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CourseCode, _result.CourseCode);
+            Assert.That(_result.CourseCode, Is.EqualTo(_source.CourseCode));
         }
 
         [Test]
         public void ProviderIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.ProviderId, _result.ProviderId);
+            Assert.That(_result.ProviderId, Is.EqualTo(_source.ProviderId));
         }
 
         [Test]
         public void ProviderNameIsMappedCorrectly()
         {
-            Assert.AreEqual(_providerResponse.Name, _result.ProviderName);
+            Assert.That(_result.ProviderName, Is.EqualTo(_providerResponse.Name));
         }
 
         [Test]
         public void TransferSenderIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.TransferSenderId, _result.TransferSenderId);
+            Assert.That(_result.TransferSenderId, Is.EqualTo(_source.TransferSenderId));
         }
 
         [Test]
         public void EncodedPledgeApplicationIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.EncodedPledgeApplicationId, _result.EncodedPledgeApplicationId);
+            Assert.That(_result.EncodedPledgeApplicationId, Is.EqualTo(_source.EncodedPledgeApplicationId));
         }
 
         [Test]
         public void OriginIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.Origin, _result.Origin);
+            Assert.That(_result.Origin, Is.EqualTo(_source.Origin));
         }
 
         [Test]
         public void AutoCreatedReservationIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AutoCreated, _result.AutoCreatedReservation);
+            Assert.That(_result.AutoCreatedReservation, Is.EqualTo(_source.AutoCreated));
         }
     }
 }

@@ -31,7 +31,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new MadeRedundantRequestToViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
+            Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(request.ApprenticeshipHashedId));
         }
 
         [Test, MoqAutoData]
@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new MadeRedundantRequestToViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
         }
 
         [Test, MoqAutoData]
@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new MadeRedundantRequestToViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(ExpectedFullName, result.ApprenticeName);
+            Assert.That(result.ApprenticeName, Is.EqualTo(ExpectedFullName));
         }
 
         [Test, MoqAutoData]
@@ -58,7 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new MadeRedundantRequestToViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.StopMonth, result.StopMonth);
+            Assert.That(result.StopMonth, Is.EqualTo(request.StopMonth));
         }
 
         [Test, MoqAutoData]
@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new MadeRedundantRequestToViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.StopYear, result.StopYear);
+            Assert.That(result.StopYear, Is.EqualTo(request.StopYear));
         }
 
         private GetApprenticeshipResponse GetApprenticeshipResponse()

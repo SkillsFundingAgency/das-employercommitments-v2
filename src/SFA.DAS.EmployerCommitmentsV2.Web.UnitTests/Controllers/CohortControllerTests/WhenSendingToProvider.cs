@@ -72,10 +72,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                     var viewResult = (ViewResult)_result;
                     var viewModel = viewResult.Model;
 
-                    Assert.IsInstanceOf<SentViewModel>(viewModel);
+                Assert.That(viewModel, Is.InstanceOf<SentViewModel>());
                     var detailsViewModel = (SentViewModel)viewModel;
 
-                    Assert.AreEqual(_viewModel, detailsViewModel);
+                Assert.That(detailsViewModel, Is.EqualTo(_viewModel));
                 }
             }
         }

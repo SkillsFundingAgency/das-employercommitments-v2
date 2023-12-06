@@ -37,9 +37,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var actualFileResult = actual as FileResult;
 
             //Assert
-            Assert.IsNotNull(actualFileResult);
-            Assert.AreEqual(expectedCsvContent.Name, actualFileResult.FileDownloadName);
-            Assert.AreEqual(expectedCsvContent.ContentType, actualFileResult.ContentType);
+            Assert.That(actualFileResult, Is.Not.Null);
+            Assert.That(actualFileResult.FileDownloadName, Is.EqualTo(expectedCsvContent.Name));
+            Assert.That(actualFileResult.ContentType, Is.EqualTo(expectedCsvContent.ContentType));
         }
     }
 }

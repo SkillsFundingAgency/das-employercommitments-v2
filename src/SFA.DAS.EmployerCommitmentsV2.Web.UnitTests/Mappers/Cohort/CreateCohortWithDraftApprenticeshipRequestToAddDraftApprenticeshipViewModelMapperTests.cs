@@ -69,49 +69,49 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void AccountLegalEntityIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountLegalEntityId, _result.AccountLegalEntityId);
+            Assert.That(_result.AccountLegalEntityId, Is.EqualTo(_source.AccountLegalEntityId));
         }
 
         [Test]
         public void AccountLegalEntityHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountLegalEntityHashedId, _result.AccountLegalEntityHashedId);
+            Assert.That(_result.AccountLegalEntityHashedId, Is.EqualTo(_source.AccountLegalEntityHashedId));
         }
 
         [Test]
         public void StartDateIsMappedCorrectly()
         {
-            Assert.AreEqual(new MonthYearModel(_source.StartMonthYear).Date, _result.StartDate.Date);
+            Assert.That(_result.StartDate.Date, Is.EqualTo(new MonthYearModel(_source.StartMonthYear).Date));
         }
 
         [Test]
         public void ReservationIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.ReservationId, _result.ReservationId);
+            Assert.That(_result.ReservationId, Is.EqualTo(_source.ReservationId));
         }
 
         [Test]
         public void CourseCodeIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CourseCode, _result.CourseCode);
+            Assert.That(_result.CourseCode, Is.EqualTo(_source.CourseCode));
         }
 
         [Test]
         public void ProviderIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.ProviderId, _result.ProviderId);
+            Assert.That(_result.ProviderId, Is.EqualTo(_source.ProviderId));
         }
 
         [Test]
         public void ProviderNameIsMappedCorrectly()
         {
-            Assert.AreEqual(_providerResponse.Name, _result.ProviderName);
+            Assert.That(_result.ProviderName, Is.EqualTo(_providerResponse.Name));
         }
 
         [Test]
         public void CoursesAreMappedCorrectly()
         {
-            Assert.AreEqual(_allTrainingProgrammes, _result.Courses);
+            Assert.That(_result.Courses, Is.EqualTo(_allTrainingProgrammes));
         }
 
         [Test]

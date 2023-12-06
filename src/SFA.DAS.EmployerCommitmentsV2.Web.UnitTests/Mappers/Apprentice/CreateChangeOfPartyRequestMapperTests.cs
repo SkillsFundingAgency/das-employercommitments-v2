@@ -44,14 +44,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public void ChangeOfPartyRequestTypeIsMappedCorrectly()
         {
             //Assert
-            Assert.AreEqual(ChangeOfPartyRequestType.ChangeProvider, _result.ChangeOfPartyRequestType);
+            Assert.That(_result.ChangeOfPartyRequestType, Is.EqualTo(ChangeOfPartyRequestType.ChangeProvider));
         }
 
         [Test]
         public void NewPartyIdIsMappedCorrectly()
         {
             //Assert
-            Assert.AreEqual(_source.ProviderId, _result.NewPartyId);
+            Assert.That(_result.NewPartyId, Is.EqualTo(_source.ProviderId));
         }
     }
 }

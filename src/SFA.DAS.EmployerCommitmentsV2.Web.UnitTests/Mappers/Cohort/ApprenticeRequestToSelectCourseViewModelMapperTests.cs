@@ -65,61 +65,61 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public void AccountHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountHashedId, _result.AccountHashedId);
+            Assert.That(_result.AccountHashedId, Is.EqualTo(_source.AccountHashedId));
         }
 
         [Test]
         public void AccountLegalEntityHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountLegalEntityHashedId, _result.AccountLegalEntityHashedId);
+            Assert.That(_result.AccountLegalEntityHashedId, Is.EqualTo(_source.AccountLegalEntityHashedId));
         }
 
         [Test]
         public void AccountLegalEntityIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountLegalEntityId, _result.AccountLegalEntityId);
+            Assert.That(_result.AccountLegalEntityId, Is.EqualTo(_source.AccountLegalEntityId));
         }
 
         [Test]
         public void CourseCodeIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CourseCode, _result.CourseCode);
+            Assert.That(_result.CourseCode, Is.EqualTo(_source.CourseCode));
         }
 
         [Test]
         public void CoursesAreMappedCorrectly()
         {
-            Assert.AreEqual(_allTrainingProgrammes, _result.Courses);
+            Assert.That(_result.Courses, Is.EqualTo(_allTrainingProgrammes));
         }
 
         [Test]
         public void ProviderIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.ProviderId, _result.ProviderId);
+            Assert.That(_result.ProviderId, Is.EqualTo(_source.ProviderId));
         }
 
         [Test]
         public void ReservationIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.ReservationId, _result.ReservationId);
+            Assert.That(_result.ReservationId, Is.EqualTo(_source.ReservationId));
         }
 
         [Test]
         public void StartDateIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.StartMonthYear, _result.StartMonthYear);
+            Assert.That(_result.StartMonthYear, Is.EqualTo(_source.StartMonthYear));
         }
 
         [Test]
         public void DeliveryIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.DeliveryModel, _result.DeliveryModel);
+            Assert.That(_result.DeliveryModel, Is.EqualTo(_source.DeliveryModel));
         }
 
         [Test]
         public void TransferSenderIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.TransferSenderId, _result.TransferSenderId);
+            Assert.That(_result.TransferSenderId, Is.EqualTo(_source.TransferSenderId));
         }
     }
 }

@@ -26,9 +26,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = await controller.SelectCourse(request) as ViewResult;
 
-            Assert.IsNotNull(result);
-            Assert.AreSame("SelectCourse", result.ViewName);
-            Assert.AreSame(viewModel, result.Model);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ViewName, Is.SameAs("SelectCourse"));
+            Assert.That(result.Model, Is.SameAs(viewModel));
         }
     }
 }

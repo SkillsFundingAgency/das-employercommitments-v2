@@ -47,13 +47,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = await _controller.ConfirmEditApprenticeship(viewModel);
 
             var redirect = result.VerifyReturnsRedirectToActionResult();
-            Assert.AreEqual(redirect.ActionName, "ApprenticeshipDetails");
-            Assert.AreEqual(redirect.RouteValues["AccountHashedId"], viewModel.AccountHashedId);
-            Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], viewModel.ApprenticeshipHashedId);
+            Assert.That("ApprenticeshipDetails", Is.EqualTo(redirect.ActionName));
+            Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
+            Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
 
-            Assert.IsTrue(_controller.TempData.Values.Contains($"Your suggested changes have been sent to {viewModel.ProviderName} for approval."));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageBody));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
+            Assert.That(_controller.TempData.Values.Contains($"Your suggested changes have been sent to {viewModel.ProviderName} for approval."), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageBody), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageLevel), Is.True);
         }
 
         [Test, MoqAutoData]
@@ -63,13 +63,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = await _controller.ConfirmEditApprenticeship(viewModel);
 
             var redirect = result.VerifyReturnsRedirectToActionResult();
-            Assert.AreEqual(redirect.ActionName, "ApprenticeshipDetails");
-            Assert.AreEqual(redirect.RouteValues["AccountHashedId"], viewModel.AccountHashedId);
-            Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], viewModel.ApprenticeshipHashedId);
+            Assert.That("ApprenticeshipDetails", Is.EqualTo(redirect.ActionName));
+            Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
+            Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
 
-            Assert.IsTrue(_controller.TempData.Values.Contains(EditApprenticeUpdated));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageBody));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
+            Assert.That(_controller.TempData.Values.Contains(EditApprenticeUpdated), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageBody), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageLevel), Is.True);
         }
 
         [Test, MoqAutoData]
@@ -135,7 +135,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = await _controller.ConfirmEditApprenticeship(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
+            Assert.That(result.ActionName, Is.EqualTo("ApprenticeshipDetails"));
         }
     }
 }

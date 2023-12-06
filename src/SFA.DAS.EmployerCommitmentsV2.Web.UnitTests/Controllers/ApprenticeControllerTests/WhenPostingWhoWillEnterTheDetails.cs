@@ -66,14 +66,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var redirectResult = (RedirectToRouteResult)result;
 
-            Assert.AreEqual(RouteNames.WhatIsTheNewStartDate, redirectResult.RouteName);
+            Assert.That(redirectResult.RouteName, Is.EqualTo(RouteNames.WhatIsTheNewStartDate));
         }
 
         public void VerifyRedirectsToSendRequestNewTrainingProviderRoute(IActionResult result)
         {
             var redirectResult = (RedirectToRouteResult)result;
 
-            Assert.AreEqual(RouteNames.SendRequestNewTrainingProvider, redirectResult.RouteName);
+            Assert.That(redirectResult.RouteName, Is.EqualTo(RouteNames.SendRequestNewTrainingProvider));
         }
     }
 }

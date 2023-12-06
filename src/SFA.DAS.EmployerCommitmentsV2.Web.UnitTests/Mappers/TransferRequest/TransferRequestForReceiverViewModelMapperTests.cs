@@ -98,7 +98,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual($"A{_getTransferRequestResponse.ReceivingEmployerAccountId}", result.TransferReceiverHashedAccountId);
+            Assert.That(result.TransferReceiverHashedAccountId, Is.EqualTo($"A{_getTransferRequestResponse.ReceivingEmployerAccountId}"));
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual($"P{_getTransferRequestResponse.SendingEmployerAccountId}", result.TransferSenderPublicHashedAccountId);
+            Assert.That(result.TransferSenderPublicHashedAccountId, Is.EqualTo($"P{_getTransferRequestResponse.SendingEmployerAccountId}"));
         }
 
         [Test]
@@ -118,7 +118,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_getTransferRequestResponse.TransferSenderName, result.TransferSenderName);
+            Assert.That(result.TransferSenderName, Is.EqualTo(_getTransferRequestResponse.TransferSenderName));
         }
 
         [Test]
@@ -128,7 +128,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual($"C{_getTransferRequestResponse.CommitmentId}", result.HashedCohortReference);
+            Assert.That(result.HashedCohortReference, Is.EqualTo($"C{_getTransferRequestResponse.CommitmentId}"));
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_getTransferRequestResponse.Status.ToString(), result.TransferApprovalStatusDesc);
+            Assert.That(result.TransferApprovalStatusDesc, Is.EqualTo(_getTransferRequestResponse.Status.ToString()));
         }
 
         [Test]
@@ -148,7 +148,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_getTransferRequestResponse.ApprovedOrRejectedByUserName, result.TransferApprovalSetBy);
+            Assert.That(result.TransferApprovalSetBy, Is.EqualTo(_getTransferRequestResponse.ApprovedOrRejectedByUserName));
         }
 
         [Test]
@@ -158,7 +158,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_getTransferRequestResponse.ApprovedOrRejectedOn, result.TransferApprovalSetOn);
+            Assert.That(result.TransferApprovalSetOn, Is.EqualTo(_getTransferRequestResponse.ApprovedOrRejectedOn));
         }
 
         [Test]
@@ -168,7 +168,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_getTransferRequestResponse.TransferCost, result.TotalCost);
+            Assert.That(result.TotalCost, Is.EqualTo(_getTransferRequestResponse.TransferCost));
         }
 
         [Test]
@@ -178,7 +178,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_getTransferRequestResponse.FundingCap, result.FundingCap);
+            Assert.That(result.FundingCap, Is.EqualTo(_getTransferRequestResponse.FundingCap));
         }
 
         [Test]
@@ -188,7 +188,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_getTransferRequestResponse.AutoApproval, result.AutoApprovalEnabled);
+            Assert.That(result.AutoApprovalEnabled, Is.EqualTo(_getTransferRequestResponse.AutoApproval));
         }
 
         [Test]
@@ -198,7 +198,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual($"PA{_getTransferRequestResponse.PledgeApplicationId}", result.HashedPledgeApplicationId);
+            Assert.That(result.HashedPledgeApplicationId, Is.EqualTo($"PA{_getTransferRequestResponse.PledgeApplicationId}"));
         }
 
         [Test]
@@ -208,7 +208,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual($"PL{_getPledgeApplicationResponse.PledgeId}", result.HashedPledgeId);
+            Assert.That(result.HashedPledgeId, Is.EqualTo($"PL{_getPledgeApplicationResponse.PledgeId}"));
         }
 
         [TestCase(TransferApprovalStatus.Pending, 1500.0, 12000, true)]
@@ -231,7 +231,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(showFundingCapWarning, result.ShowFundingCapWarning);
+            Assert.That(result.ShowFundingCapWarning, Is.EqualTo(showFundingCapWarning));
         }
 
         [Test]
@@ -252,8 +252,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.TransferRequest
 
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(string.Empty, result.HashedPledgeApplicationId);
-            Assert.AreEqual(string.Empty, result.HashedPledgeId);
+            Assert.That(result.HashedPledgeApplicationId, Is.EqualTo(string.Empty));
+            Assert.That(result.HashedPledgeId, Is.EqualTo(string.Empty));
         }
     }
 }

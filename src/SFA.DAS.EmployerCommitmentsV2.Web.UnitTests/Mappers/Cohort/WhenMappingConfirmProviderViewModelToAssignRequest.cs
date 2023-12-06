@@ -16,7 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.ReservationId, result.ReservationId);
+            Assert.That(result.ReservationId, Is.EqualTo(request.ReservationId));
         }
 
         [Test, MoqAutoData]
@@ -26,7 +26,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
         }
 
         [Test, MoqAutoData]
@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.CourseCode, result.CourseCode);
+            Assert.That(result.CourseCode, Is.EqualTo(request.CourseCode));
         }
 
         [Test, MoqAutoData]
@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.StartMonthYear, result.StartMonthYear);
+            Assert.That(result.StartMonthYear, Is.EqualTo(request.StartMonthYear));
         }
 
         [Test, MoqAutoData]
@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.AccountLegalEntityHashedId, result.AccountLegalEntityHashedId);
+            Assert.That(result.AccountLegalEntityHashedId, Is.EqualTo(request.AccountLegalEntityHashedId));
         }
 
         [Test, MoqAutoData]
@@ -66,7 +66,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.ProviderId, result.ProviderId);
+            Assert.That(result.ProviderId, Is.EqualTo(request.ProviderId));
         }
 
         [Test, MoqAutoData]
@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.TransferSenderId, result.TransferSenderId);
+            Assert.That(result.TransferSenderId, Is.EqualTo(request.TransferSenderId));
         }
     }
 }

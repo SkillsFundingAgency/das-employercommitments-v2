@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_request.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
+            Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(_request.ApprenticeshipHashedId));
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_request.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(_request.AccountHashedId));
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_request.ApprenticeshipId, result.ApprenticeshipId);
+            Assert.That(result.ApprenticeshipId, Is.EqualTo(_request.ApprenticeshipId));
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.Uln, result.ApprenticeshipULN);
+            Assert.That(result.ApprenticeshipULN, Is.EqualTo(_apprenticeshipResponse.Uln));
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.StartDate, result.ApprenticeshipStartDate);
+            Assert.That(result.ApprenticeshipStartDate, Is.EqualTo(_apprenticeshipResponse.StartDate));
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.AreEqual(_apprenticeshipResponse.StopDate.Value, result.CurrentStopDate);
+            Assert.That(result.CurrentStopDate, Is.EqualTo(_apprenticeshipResponse.StopDate.Value));
         }
     }
 }

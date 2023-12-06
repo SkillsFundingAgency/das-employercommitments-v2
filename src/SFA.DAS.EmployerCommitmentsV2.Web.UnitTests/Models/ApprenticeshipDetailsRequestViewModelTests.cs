@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
             var actionBanners = viewModel.GetActionRequiredBanners();
 
             //Assert
-            Assert.IsTrue(actionBanners.HasFlag(expected));
+            Assert.That(actionBanners.HasFlag(expected), Is.True);
         }
 
         private static object[] ActionRequiredBannerCases =
@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
             var changeToApprenticeshipBanners = viewModel.GetChangeToApprenticeshipBanners();
 
             //Assert
-            Assert.IsTrue(changeToApprenticeshipBanners.HasFlag(expected));
+            Assert.That(changeToApprenticeshipBanners.HasFlag(expected), Is.True);
         }
 
         private static object[] ChangeToApprenticeshipBannerCases =

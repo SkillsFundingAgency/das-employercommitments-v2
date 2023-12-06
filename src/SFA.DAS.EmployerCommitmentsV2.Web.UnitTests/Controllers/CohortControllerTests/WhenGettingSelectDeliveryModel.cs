@@ -31,9 +31,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = await controller.SelectDeliveryModel(request) as ViewResult;
 
-            Assert.IsNotNull(result);
-            Assert.AreSame("SelectDeliveryModel", result.ViewName);
-            Assert.AreSame(viewModel, result.Model);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ViewName, Is.SameAs("SelectDeliveryModel"));
+            Assert.That(result.Model, Is.SameAs(viewModel));
         }
 
         [Test, MoqAutoData]
@@ -51,8 +51,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = await controller.SelectDeliveryModel(request) as RedirectToActionResult;
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual("AddDraftApprenticeship", result.ActionName);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ActionName, Is.EqualTo("AddDraftApprenticeship"));
         }
     }
 }

@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmWhenApprenticeshipStoppedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
+            Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(request.ApprenticeshipHashedId));
         }
 
         [Test, MoqAutoData]
@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmWhenApprenticeshipStoppedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
         }
 
         [Test, MoqAutoData]
@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmWhenApprenticeshipStoppedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual($"{ApprenticeshipDetails.FirstName} {ApprenticeshipDetails.LastName}", result.ApprenticeName);
+            Assert.That(result.ApprenticeName, Is.EqualTo($"{ApprenticeshipDetails.FirstName} {ApprenticeshipDetails.LastName}"));
         }
 
         [Test, MoqAutoData]
@@ -63,7 +63,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmWhenApprenticeshipStoppedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(ApprenticeshipDetails.CourseName, result.Course);
+            Assert.That(result.Course, Is.EqualTo(ApprenticeshipDetails.CourseName));
         }
 
         [Test, MoqAutoData]
@@ -72,7 +72,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmWhenApprenticeshipStoppedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(ApprenticeshipDetails.Uln, result.ULN);
+            Assert.That(result.ULN, Is.EqualTo(ApprenticeshipDetails.Uln));
         }
 
         [Test, MoqAutoData]
@@ -81,7 +81,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmWhenApprenticeshipStoppedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(ApprenticeshipDetails.StopDate, result.StopDate);
+            Assert.That(result.StopDate, Is.EqualTo(ApprenticeshipDetails.StopDate));
         }
     }
 }

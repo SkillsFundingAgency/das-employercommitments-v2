@@ -28,48 +28,48 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         [Test]
         public void AccountHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountHashedId, _result.AccountHashedId);
+            Assert.That(_result.AccountHashedId, Is.EqualTo(_source.AccountHashedId));
         }
 
         [Test]
         public void CohortIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CohortId, _result.CohortId);
+            Assert.That(_result.CohortId, Is.EqualTo(_source.CohortId));
         }
 
         [Test]
         public void CohortReferenceIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CohortReference, _result.CohortReference);
+            Assert.That(_result.CohortReference, Is.EqualTo(_source.CohortReference));
         }
 
         [Test]
         public void CourseCodeIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CourseCode, _result.CourseCode);
+            Assert.That(_result.CourseCode, Is.EqualTo(_source.CourseCode));
         }
 
         [Test]
         public void DeliveryModelIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.DeliveryModel, _result.DeliveryModel);
+            Assert.That(_result.DeliveryModel, Is.EqualTo(_source.DeliveryModel));
         }
 
         public void DraftApprenticeshipHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.DraftApprenticeshipHashedId, _result.DraftApprenticeshipHashedId);
+            Assert.That(_result.DraftApprenticeshipHashedId, Is.EqualTo(_source.DraftApprenticeshipHashedId));
         }
 
         [Test]
         public void ProviderIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.ProviderId, _result.ProviderId);
+            Assert.That(_result.ProviderId, Is.EqualTo(_source.ProviderId));
         }
 
         [Test]
         public void ReservationIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.ReservationId, _result.ReservationId);
+            Assert.That(_result.ReservationId, Is.EqualTo(_source.ReservationId));
         }
     }
 }

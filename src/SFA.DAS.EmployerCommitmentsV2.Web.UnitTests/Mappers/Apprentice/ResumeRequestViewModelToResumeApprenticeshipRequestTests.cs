@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public void ApprenticeshipIdIsMappedCorrectly()
         {
             //Assert
-            Assert.AreEqual(_source.ApprenticeshipId, _result.ApprenticeshipId);
+            Assert.That(_result.ApprenticeshipId, Is.EqualTo(_source.ApprenticeshipId));
         }
     }
 }

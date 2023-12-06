@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             var result = await fixtures.Sut.Details(fixtures.DetailsRequest);
             var viewResult = result.VerifyReturnsViewModel();
-            Assert.AreEqual(fixtures.ViewModel.Object, viewResult.Model);
+            Assert.That(viewResult.Model, Is.EqualTo(fixtures.ViewModel.Object));
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             var result = await fixtures.Sut.Details(fixtures.DetailsRequest);
             var viewResult = result.VerifyReturnsViewModel();
-            Assert.AreEqual("Edit", viewResult.ViewName);
+            Assert.That(viewResult.ViewName, Is.EqualTo("Edit"));
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             var result = await fixtures.Sut.Details(fixtures.DetailsRequest);
             var viewResult = result.VerifyReturnsViewModel();
-            Assert.AreEqual("View", viewResult.ViewName);
+            Assert.That(viewResult.ViewName, Is.EqualTo("View"));
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             fixtures.OuterApiClientMock.Verify(cs => cs.UpdateDraftApprenticeship(fixtures.CohortId, fixtures.DraftApprenticeshipId, It.IsAny<UpdateDraftApprenticeshipApimRequest>(), It.IsAny<CancellationToken>()), Times.Once);
             var redirect = result.VerifyReturnsRedirectToActionResult();
-            Assert.AreEqual("SelectOption", redirect.ActionName);
+            Assert.That(redirect.ActionName, Is.EqualTo("SelectOption"));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
             var result = await fixtures.Sut.ViewDetails(fixtures.DetailsRequest);
             var viewResult = result.VerifyReturnsViewModel();
-            Assert.AreEqual("View", viewResult.ViewName);
+            Assert.That(viewResult.ViewName, Is.EqualTo("View"));
         }
     }
 

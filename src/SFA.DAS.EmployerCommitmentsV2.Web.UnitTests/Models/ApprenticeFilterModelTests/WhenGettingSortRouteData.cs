@@ -15,7 +15,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
             var actual = model.BuildSortRouteData(sortField);
 
             //Assert
-            Assert.AreEqual(sortField, actual[nameof(model.SortField)]);
+            Assert.That(actual[nameof(model.SortField)], Is.EqualTo(sortField));
         }
 
         [Test, AutoData]
@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
             var actual = model.BuildSortRouteData(sortField);
 
             //Assert
-            Assert.AreEqual(sortField, actual[nameof(model.SortField)]);
+            Assert.That(actual[nameof(model.SortField)], Is.EqualTo(sortField));
         }
 
         [Test, AutoData]
@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
             var actual = model.BuildSortRouteData(sortField);
 
             //Assert
-            Assert.AreEqual(expected.ToString(), actual[nameof(model.ReverseSort)]);
+            Assert.That(actual[nameof(model.ReverseSort)], Is.EqualTo(expected.ToString()));
         }
 
         [Test, AutoData]
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
             var actual = model.BuildSortRouteData(sortField);
 
             //Assert
-            Assert.AreEqual(expected.ToString(), actual[nameof(model.ReverseSort)]);
+            Assert.That(actual[nameof(model.ReverseSort)], Is.EqualTo(expected.ToString()));
         }
     }
 }

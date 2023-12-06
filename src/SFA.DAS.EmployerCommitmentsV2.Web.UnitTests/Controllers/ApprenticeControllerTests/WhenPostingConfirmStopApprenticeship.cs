@@ -48,9 +48,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = await _controller.ConfirmStop(viewModel);
 
             var redirect =  result.VerifyReturnsRedirectToActionResult();
-            Assert.AreEqual(redirect.ActionName, "ApprenticeshipStoppedInform");
-            Assert.AreEqual(redirect.RouteValues["AccountHashedId"], viewModel.AccountHashedId);
-            Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], viewModel.ApprenticeshipHashedId);
+            Assert.That("ApprenticeshipStoppedInform", Is.EqualTo(redirect.ActionName));
+            Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
+            Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
         }
 
         [Test, MoqAutoData]
@@ -115,7 +115,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = await _controller.ConfirmStop(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
+            Assert.That(result.ActionName, Is.EqualTo("ApprenticeshipDetails"));
         }
 
         [Test, MoqAutoData]
@@ -128,7 +128,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = await _controller.ConfirmStop(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
+            Assert.That(result.ActionName, Is.EqualTo("ApprenticeshipDetails"));
         }
 
         [Test, MoqAutoData]
@@ -142,11 +142,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = await _controller.ConfirmStop(request) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
-            Assert.IsTrue(_controller.TempData.Values.Contains(ApprenticeStoppedMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageBody));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageTitle));
+            Assert.That(result.ActionName, Is.EqualTo("ApprenticeshipDetails"));
+            Assert.That(_controller.TempData.Values.Contains(ApprenticeStoppedMessage), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageBody), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageLevel), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageTitle), Is.True);
         }
 
         [Test, MoqAutoData]
@@ -159,11 +159,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var redirectResult = (RedirectToActionResult)result;
             var routeValues = redirectResult.RouteValues;
 
-            Assert.AreEqual(true, routeValues["StoppedDuringCoP"]);
-            Assert.IsFalse(_controller.TempData.Values.Contains(ApprenticeStoppedMessage));
-            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessageBody));
-            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessageLevel));
-            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessageTitle));
+            Assert.That(routeValues["StoppedDuringCoP"], Is.EqualTo(true));
+            Assert.That(_controller.TempData.Values.Contains(ApprenticeStoppedMessage), Is.False);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageBody), Is.False);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageLevel), Is.False);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageTitle), Is.False);
         }
 
 

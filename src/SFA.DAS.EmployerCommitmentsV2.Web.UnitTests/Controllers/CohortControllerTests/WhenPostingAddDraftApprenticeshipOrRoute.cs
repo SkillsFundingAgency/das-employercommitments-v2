@@ -59,9 +59,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = await controller.AddDraftApprenticeshipOrRoute("", "", viewModel) as RedirectToActionResult;
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual("SelectOption", result.ActionName);
-            Assert.AreEqual("DraftApprenticeship", result.ControllerName);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ActionName, Is.EqualTo("SelectOption"));
+            Assert.That(result.ControllerName, Is.EqualTo("DraftApprenticeship"));
         }
 
         [Test, MoqAutoData]
@@ -79,8 +79,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = await controller.AddDraftApprenticeshipOrRoute("Edit", "", viewModel) as RedirectToActionResult;
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual("SelectCourse", result.ActionName);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ActionName, Is.EqualTo("SelectCourse"));
         }
 
         [Test, MoqAutoData]
@@ -98,8 +98,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = await controller.AddDraftApprenticeshipOrRoute("", "Edit", viewModel) as RedirectToActionResult;
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual("SelectDeliveryModel", result.ActionName);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ActionName, Is.EqualTo("SelectDeliveryModel"));
         }
     }
 }

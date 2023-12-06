@@ -64,6 +64,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             _mockModelMapper.Setup(m => m.Map<UpdateDraftApprenticeshipApimRequest>(_viewModel))
                 .ReturnsAsync(_updateRequest);
         }
+        
+        [TearDown]
+        public void TearDown() => _controller?.Dispose();
 
         [Test]
         public async Task WhenGettingSelectOption_And_StandardHasOptions_Then_ReturnViewModel()

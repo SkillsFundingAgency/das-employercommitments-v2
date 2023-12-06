@@ -31,8 +31,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = await controller.SetDeliveryModel(viewModel) as RedirectToActionResult;
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual("AddDraftApprenticeship", result.ActionName);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ActionName, Is.EqualTo("AddDraftApprenticeship"));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmStopRequestVMToStopApprenticeshpRequestMapper();
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.AccountId, result.AccountId);
+            Assert.That(result.AccountId, Is.EqualTo(request.AccountId));
         }
 
         [Test, MoqAutoData]
@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmStopRequestVMToStopApprenticeshpRequestMapper();
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.MadeRedundant, result.MadeRedundant);
+            Assert.That(result.MadeRedundant, Is.EqualTo(request.MadeRedundant));
         }
 
         [Test, MoqAutoData]
@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ConfirmStopRequestVMToStopApprenticeshpRequestMapper();
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.StopDate, result.StopDate);
+            Assert.That(result.StopDate, Is.EqualTo(request.StopDate));
         }
     }
 }

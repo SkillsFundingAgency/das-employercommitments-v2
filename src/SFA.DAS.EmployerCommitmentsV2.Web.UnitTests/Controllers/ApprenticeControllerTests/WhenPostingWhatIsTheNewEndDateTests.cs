@@ -55,14 +55,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var redirectResult = (RedirectToRouteResult)result;
 
-            Assert.AreEqual(RouteNames.WhatIsTheNewPrice, redirectResult.RouteName);
+            Assert.That(redirectResult.RouteName, Is.EqualTo(RouteNames.WhatIsTheNewPrice));
         }
 
         public void VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(IActionResult result)
         {
             var redirectResult = (RedirectToRouteResult)result;
 
-            Assert.AreEqual(RouteNames.ConfirmDetailsAndSendRequest, redirectResult.RouteName);
+            Assert.That(redirectResult.RouteName, Is.EqualTo(RouteNames.ConfirmDetailsAndSendRequest));
         }
     }
 }

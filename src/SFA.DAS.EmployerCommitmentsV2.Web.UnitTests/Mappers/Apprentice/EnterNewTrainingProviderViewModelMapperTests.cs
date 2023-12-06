@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(request);
 
-            Assert.AreEqual(request.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
+            Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(request.ApprenticeshipHashedId));
         }
 
         [Test, MoqAutoData]
@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(request);
 
-            Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
         }
 
         [Test, MoqAutoData]
@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(request);
 
-            Assert.AreEqual(request.ProviderId, result.ProviderId);
+            Assert.That(result.ProviderId, Is.EqualTo(request.ProviderId));
         }
 
         [Test, MoqAutoData]
@@ -75,7 +75,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(request);
 
-            Assert.AreEqual(3, result.Providers.Count);
+            Assert.That(result.Providers.Count, Is.EqualTo(3));
         }
 
         [Test, MoqAutoData]
@@ -84,7 +84,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(request);
 
             _mockCommitmentsApiClient.Verify(c => c.GetApprenticeship(It.Is<long>(id => id == request.ApprenticeshipId), It.IsAny<CancellationToken>()), Times.Once);
-            Assert.AreEqual(_apprenticeshipResponse.ProviderId, result.CurrentProviderId);
+            Assert.That(result.CurrentProviderId, Is.EqualTo(_apprenticeshipResponse.ProviderId));
         }
         private GetAllProvidersResponse MockGetAllProvidersResponse()
         {

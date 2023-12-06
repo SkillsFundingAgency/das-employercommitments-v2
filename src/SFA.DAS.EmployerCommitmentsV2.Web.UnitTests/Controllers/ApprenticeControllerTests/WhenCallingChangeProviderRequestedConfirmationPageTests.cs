@@ -66,11 +66,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = actionResult as ViewResult;
             var viewModel = result.Model;
 
-            Assert.IsInstanceOf<ChangeProviderRequestedConfirmationViewModel>(viewModel);
+            Assert.That(viewModel, Is.InstanceOf<ChangeProviderRequestedConfirmationViewModel>());
 
             var changeProviderRequestedViewModel = viewModel as ChangeProviderRequestedConfirmationViewModel;
 
-            Assert.AreEqual(_viewModel, changeProviderRequestedViewModel);
+            Assert.That(changeProviderRequestedViewModel, Is.EqualTo(_viewModel));
         }
     }
 }

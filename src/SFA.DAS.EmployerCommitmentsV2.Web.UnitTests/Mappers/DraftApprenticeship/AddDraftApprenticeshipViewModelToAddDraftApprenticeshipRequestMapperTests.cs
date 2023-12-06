@@ -46,73 +46,73 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         [Test]
         public void AccountHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountHashedId, _result.AccountHashedId);
+            Assert.That(_result.AccountHashedId, Is.EqualTo(_source.AccountHashedId));
         }
 
         [Test]
         public void AccountLegalEntityIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountLegalEntityId, _result.AccountLegalEntityId);
+            Assert.That(_result.AccountLegalEntityId, Is.EqualTo(_source.AccountLegalEntityId));
         }
 
         [Test]
         public void AccountLegalEntityHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.AccountLegalEntityHashedId, _result.AccountLegalEntityHashedId);
+            Assert.That(_result.AccountLegalEntityHashedId, Is.EqualTo(_source.AccountLegalEntityHashedId));
         }
 
         [Test]
         public void CohortIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CohortId, _result.CohortId);
+            Assert.That(_result.CohortId, Is.EqualTo(_source.CohortId));
         }
 
         [Test]
         public void CohortReferenceIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CohortReference, _result.CohortReference);
+            Assert.That(_result.CohortReference, Is.EqualTo(_source.CohortReference));
         }
 
         [Test]
         public void CostIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.Cost, _result.Cost);
+            Assert.That(_result.Cost, Is.EqualTo(_source.Cost));
         }
 
         [Test]
         public void CourseCodeIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CourseCode, _result.CourseCode);
+            Assert.That(_result.CourseCode, Is.EqualTo(_source.CourseCode));
         }
 
         [Test]
         public void DeliveryModelIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.DeliveryModel, _result.DeliveryModel);
+            Assert.That(_result.DeliveryModel, Is.EqualTo(_source.DeliveryModel));
         }
 
         [Test]
         public void EmploymentPriceIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.EmploymentPrice, _result.EmploymentPrice);
+            Assert.That(_result.EmploymentPrice, Is.EqualTo(_source.EmploymentPrice));
         }
 
         [Test]
         public void EmploymentEndDateIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.EmploymentEndDate.Date, _result.EmploymentEndDate.Value);
+            Assert.That(_result.EmploymentEndDate.Value, Is.EqualTo(_source.EmploymentEndDate.Date));
         }
 
         [Test]
         public void ProviderIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.ProviderId, _result.ProviderId);
+            Assert.That(_result.ProviderId, Is.EqualTo(_source.ProviderId));
         }
 
         [Test]
         public void ReservationIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.ReservationId, _result.ReservationId);
+            Assert.That(_result.ReservationId, Is.EqualTo(_source.ReservationId));
         }
     }
 }

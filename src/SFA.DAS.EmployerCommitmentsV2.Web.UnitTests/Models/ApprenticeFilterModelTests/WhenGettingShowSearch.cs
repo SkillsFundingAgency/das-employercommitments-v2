@@ -17,9 +17,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterMod
             {
                 TotalNumberOfApprenticeships = numberOfApprentices
             };
-            
+
             //Assert
-            Assert.AreEqual(expectedBool, filterModel.ShowSearch);
+            Assert.That(filterModel.ShowSearch, Is.EqualTo(expectedBool));
         }
     }
 }

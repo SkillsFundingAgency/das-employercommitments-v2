@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = await _controller.EditEndDate(request) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
+            Assert.That(result.ActionName, Is.EqualTo("ApprenticeshipDetails"));
         }
 
         [Test, MoqAutoData]
@@ -64,11 +64,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = await _controller.EditEndDate(request) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("ApprenticeshipDetails", result.ActionName);
-            Assert.IsTrue(_controller.TempData.Values.Contains(ApprenticeEndDateUpdatedOnCompletedRecord));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageBody));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevel));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageTitle));
+            Assert.That(result.ActionName, Is.EqualTo("ApprenticeshipDetails"));
+            Assert.That(_controller.TempData.Values.Contains(ApprenticeEndDateUpdatedOnCompletedRecord), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageBody), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageLevel), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageTitle), Is.True);
         }
     }
 }

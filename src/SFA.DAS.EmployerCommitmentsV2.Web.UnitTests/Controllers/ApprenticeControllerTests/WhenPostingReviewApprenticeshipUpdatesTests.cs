@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             _fixture.ViewModel.ApproveChanges = false;
             var response = await _fixture.ReviewApprenticeshipUpdates() as RedirectToActionResult;
-            Assert.AreEqual("ApprenticeshipDetails", response.ActionName);  
+            Assert.That(response.ActionName, Is.EqualTo("ApprenticeshipDetails"));  
         }
     }
 
@@ -81,20 +81,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             _mockCommitmentsApiClient
                 .Verify(x => x.AcceptApprenticeshipUpdates(ViewModel.ApprenticeshipId, It.Is<AcceptApprenticeshipUpdatesRequest>(o => o.UserInfo != null), It.IsAny<CancellationToken>()), Times.Once());
-           
-            Assert.IsTrue(_controller.TempData.Values.Contains(ChangesApprovedMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageBodyTempDataKey));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevelTempDataKey));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageTitleTempDataKey));
+
+            Assert.That(_controller.TempData.Values.Contains(ChangesApprovedMessage), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageBodyTempDataKey), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageLevelTempDataKey), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageTitleTempDataKey), Is.True);
         }
 
         internal void VerifyRejectApprenticeshipUpdatesApiIsCalled()
         {
             _mockCommitmentsApiClient.Verify(x => x.RejectApprenticeshipUpdates(ViewModel.ApprenticeshipId, It.Is<RejectApprenticeshipUpdatesRequest>(o => o.UserInfo != null), It.IsAny<CancellationToken>()), Times.Once());
-            Assert.IsTrue(_controller.TempData.Values.Contains(ChangesRejectedMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageBodyTempDataKey));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevelTempDataKey));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageTitleTempDataKey));
+            Assert.That(_controller.TempData.Values.Contains(ChangesRejectedMessage), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageBodyTempDataKey), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageLevelTempDataKey), Is.True);
+            Assert.That(_controller.TempData.ContainsKey(FlashMessageTitleTempDataKey), Is.True);
         }
     }
 }

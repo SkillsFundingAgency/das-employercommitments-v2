@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
         public void ThenDisplayNameIsCorrect(string firstName, string lastName, string expectedDisplayName)
         {
             _viewModel = new CohortDraftApprenticeshipViewModel {FirstName = firstName, LastName = lastName};
-            Assert.AreEqual(expectedDisplayName, _viewModel.DisplayName);
+            Assert.That(_viewModel.DisplayName, Is.EqualTo(expectedDisplayName));
         }
 
         [TestCase(null, "-")]
@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
         public void ThenDisplayCostIsCorrect(int? cost, string expectedDisplayCost)
         {
             _viewModel = new CohortDraftApprenticeshipViewModel { Cost = cost };
-            Assert.AreEqual(expectedDisplayCost, _viewModel.DisplayCost);
+            Assert.That(_viewModel.DisplayCost, Is.EqualTo(expectedDisplayCost));
         }
 
         [TestCase(null, null, "-")]
@@ -34,7 +34,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
             string expectedDisplayTrainingDates)
         {
             _viewModel = new CohortDraftApprenticeshipViewModel {StartDate = startDate, ActualStartDate = null, EndDate = endDate};
-            Assert.AreEqual(expectedDisplayTrainingDates, _viewModel.DisplayTrainingDates);
+            Assert.That(_viewModel.DisplayTrainingDates, Is.EqualTo(expectedDisplayTrainingDates));
         }
 
         [TestCase(null, null, "-")]
@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
             string expectedDisplayTrainingDates)
         {
             _viewModel = new CohortDraftApprenticeshipViewModel {StartDate = null, ActualStartDate = startDate, EndDate = endDate};
-            Assert.AreEqual(expectedDisplayTrainingDates, _viewModel.DisplayTrainingDates);
+            Assert.That(_viewModel.DisplayTrainingDates, Is.EqualTo(expectedDisplayTrainingDates));
         }
 
         [TestCase("2017-09-01", "1 Sep 2017")]
@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
         public void ThenDisplayDateOfBirth(DateTime? dateOfBirth, string expectedDisplayDateOfBirth)
         {
             _viewModel = new CohortDraftApprenticeshipViewModel {DateOfBirth = dateOfBirth};
-            Assert.AreEqual(expectedDisplayDateOfBirth, _viewModel.DisplayDateOfBirth);
+            Assert.That(_viewModel.DisplayDateOfBirth, Is.EqualTo(expectedDisplayDateOfBirth));
         }
     }
 }

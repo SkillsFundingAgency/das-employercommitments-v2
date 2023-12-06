@@ -43,6 +43,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
               Mock.Of<IApprovalsApiClient>());
         }
 
+        [TearDown]
+        public void TearDown() => _controller?.Dispose();
+
         [Test]
         public async Task Then_The_Correct_ViewModel_Is_Returned()
         {
@@ -50,7 +53,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             var result = await _controller.Inform(_request) as ViewResult;
 
             //Assert
-            Assert.IsInstanceOf<InformViewModel>(result.Model);
+            Assert.That(result.Model, Is.InstanceOf<InformViewModel>());
         }
     }
 }

@@ -82,42 +82,42 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             public void VerifyCohortsInDraftIsCorrect(ApprenticeshipRequestsHeaderViewModel result)
             {
-                Assert.IsNotNull(result.CohortsInDraft);
-                Assert.AreEqual(5, result.CohortsInDraft.Count);
-                Assert.AreEqual("Drafts", result.CohortsInDraft.Description);
+                Assert.That(result.CohortsInDraft, Is.Not.Null);
+                Assert.That(result.CohortsInDraft.Count, Is.EqualTo(5));
+                Assert.That(result.CohortsInDraft.Description, Is.EqualTo("Drafts"));
                 UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "Draft")));
             }
 
             public void VerifyCohortsInReviewIsCorrect(ApprenticeshipRequestsHeaderViewModel result)
             {
-                Assert.IsNotNull(result.CohortsInReview);
-                Assert.AreEqual(4, result.CohortsInReview.Count);
-                Assert.AreEqual("Ready to review", result.CohortsInReview.Description);
+                Assert.That(result.CohortsInReview, Is.Not.Null);
+                Assert.That(result.CohortsInReview.Count, Is.EqualTo(4));
+                Assert.That(result.CohortsInReview.Description, Is.EqualTo("Ready to review"));
                 UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "Review")));
             }
 
             public void VerifyCohortsWithProviderIsCorrect(ApprenticeshipRequestsHeaderViewModel result)
             {
-                Assert.IsNotNull(result.CohortsWithTrainingProvider);
-                Assert.AreEqual(3, result.CohortsWithTrainingProvider.Count);
-                Assert.AreEqual("With training providers", result.CohortsWithTrainingProvider.Description);
+                Assert.That(result.CohortsWithTrainingProvider, Is.Not.Null);
+                Assert.That(result.CohortsWithTrainingProvider.Count, Is.EqualTo(3));
+                Assert.That(result.CohortsWithTrainingProvider.Description, Is.EqualTo("With training providers"));
                 UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "WithTrainingProvider")));
             }
 
             public void VerifyCohortsWithTransferSenderIsCorrect(ApprenticeshipRequestsHeaderViewModel result)
             {
-                Assert.IsNotNull(result.CohortsWithTransferSender);
-                Assert.AreEqual(2, result.CohortsWithTransferSender.Count);
-                Assert.AreEqual("With transfer sending employers", result.CohortsWithTransferSender.Description);
+                Assert.That(result.CohortsWithTransferSender, Is.Not.Null);
+                Assert.That(result.CohortsWithTransferSender.Count, Is.EqualTo(2));
+                Assert.That(result.CohortsWithTransferSender.Description, Is.EqualTo("With transfer sending employers"));
                 UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "WithTransferSender")));
             }
 
             public void VerifySelectedCohortStatusIsCorrect(ApprenticeshipRequestsHeaderViewModel result, CohortStatus expectedCohortStatus)
             {
-                Assert.AreEqual(expectedCohortStatus == CohortStatus.WithTransferSender, result.CohortsWithTransferSender.IsSelected);
-                Assert.AreEqual(expectedCohortStatus == CohortStatus.Draft, result.CohortsInDraft.IsSelected);
-                Assert.AreEqual(expectedCohortStatus == CohortStatus.Review, result.CohortsInReview.IsSelected);
-                Assert.AreEqual(expectedCohortStatus == CohortStatus.WithProvider, result.CohortsWithTrainingProvider.IsSelected);
+                Assert.That(result.CohortsWithTransferSender.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.WithTransferSender));
+                Assert.That(result.CohortsInDraft.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.Draft));
+                Assert.That(result.CohortsInReview.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.Review));
+                Assert.That(result.CohortsWithTrainingProvider.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.WithProvider));
             }
 
             public ApprenticeshipRequestsHeaderViewModel GetCohortCardLinkViewModel(CohortStatus selectedCohortStatus = CohortStatus.Draft)

@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
+            Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(request.ApprenticeshipHashedId));
         }
 
         [Test, MoqAutoData]
@@ -47,7 +47,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
         }
 
         [Test, MoqAutoData]
@@ -57,7 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(_apprenticeshipId, result.ApprenticeshipId);
+            Assert.That(result.ApprenticeshipId, Is.EqualTo(_apprenticeshipId));
         }
 
         [Test, MoqAutoData]
@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(result.PlannedStartDate, _referenceDate);
+            Assert.That(_referenceDate, Is.EqualTo(result.PlannedStartDate));
         }
 
         [Test, MoqAutoData]
@@ -77,7 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(result.IsCoPJourney, false);
+            Assert.That(false, Is.EqualTo(result.IsCoPJourney));
         }
 
         [Test, MoqAutoData]
@@ -87,7 +87,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(result.StopMonth, _referenceDate.Month);
+            Assert.That(_referenceDate.Month, Is.EqualTo(result.StopMonth));
         }
 
         [Test, MoqAutoData]
@@ -97,7 +97,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(result.StopYear, _referenceDate.Year);
+            Assert.That(_referenceDate.Year, Is.EqualTo(result.StopYear));
         }
         private GetApprenticeshipResponse GetApprenticeshipResponse(DateTime referenceDate)
         {

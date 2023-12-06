@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_legalEntitySignedAgreementViewModel);
 
             //Assert           
-            Assert.AreEqual(canContinue, result.CanContinueAnyway);
+            Assert.That(result.CanContinueAnyway, Is.EqualTo(canContinue));
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_legalEntitySignedAgreementViewModel);
 
             //Assert           
-            Assert.AreEqual(_legalEntitySignedAgreementViewModel.AccountLegalEntityHashedId, result.AccountLegalEntityHashedId);
+            Assert.That(result.AccountLegalEntityHashedId, Is.EqualTo(_legalEntitySignedAgreementViewModel.AccountLegalEntityHashedId));
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_legalEntitySignedAgreementViewModel);
 
             //Assert           
-            Assert.AreEqual(_legalEntitySignedAgreementViewModel.LegalEntityName, result.LegalEntityName);
+            Assert.That(result.LegalEntityName, Is.EqualTo(_legalEntitySignedAgreementViewModel.LegalEntityName));
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_legalEntitySignedAgreementViewModel);
 
             //Assert           
-            Assert.AreEqual(_legalEntitySignedAgreementViewModel.AccountLegalEntityId, result.AccountLegalEntityId);
+            Assert.That(result.AccountLegalEntityId, Is.EqualTo(_legalEntitySignedAgreementViewModel.AccountLegalEntityId));
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_legalEntitySignedAgreementViewModel);
 
             //Assert           
-            Assert.AreEqual(_legalEntitySignedAgreementViewModel.TransferConnectionCode, result.TransferConnectionCode);
+            Assert.That(result.TransferConnectionCode, Is.EqualTo(_legalEntitySignedAgreementViewModel.TransferConnectionCode));
         }
     }
 }

@@ -56,8 +56,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = await controller.SelectProvider(viewModel) as RedirectToActionResult;
 
-            Assert.AreEqual(nameof(CohortController.SelectProvider), result.ActionName);
-            Assert.False(controller.ModelState.IsValid);
+            Assert.That(result.ActionName, Is.EqualTo(nameof(CohortController.SelectProvider)));
+            Assert.That(controller.ModelState.IsValid, Is.False);
         }
 
         [Test, MoqAutoData]
@@ -77,9 +77,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = await controller.SelectProvider(viewModel) as RedirectToActionResult;
 
-            Assert.NotNull(result);
-            Assert.AreEqual("Error",result.ActionName);
-            Assert.AreEqual("Error",result.ControllerName);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ActionName, Is.EqualTo("Error"));
+            Assert.That(result.ControllerName, Is.EqualTo("Error"));
         }
 
 
@@ -133,8 +133,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = await controller.SelectProvider(viewModel) as RedirectToActionResult;
 
-            Assert.NotNull(result);
-            Assert.AreEqual(actionName,result.ActionName);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ActionName, Is.EqualTo(actionName));
         }
     }
 }

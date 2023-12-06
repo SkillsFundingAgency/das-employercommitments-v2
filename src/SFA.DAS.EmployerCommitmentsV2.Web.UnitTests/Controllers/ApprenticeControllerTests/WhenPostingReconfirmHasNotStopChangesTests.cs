@@ -45,10 +45,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             var redirect = result.VerifyReturnsRedirectToActionResult();
 
-            Assert.IsTrue(_controller.TempData.Values.Contains($"Apprenticeship confirmed"));
-            Assert.AreEqual(redirect.ActionName, "ApprenticeshipDetails");
-            Assert.AreEqual(redirect.RouteValues["AccountHashedId"], viewModel.AccountHashedId);
-            Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], viewModel.ApprenticeshipHashedId);
+            Assert.That(_controller.TempData.Values.Contains($"Apprenticeship confirmed"), Is.True);
+            Assert.That("ApprenticeshipDetails", Is.EqualTo(redirect.ActionName));
+            Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
+            Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
         }
 
         [Test, MoqAutoData]

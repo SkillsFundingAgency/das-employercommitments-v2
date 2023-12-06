@@ -49,10 +49,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             await _mapper.Map(request);
 
-            Assert.AreEqual(request.AccountId, _apiRequestAccountId);
-            Assert.AreEqual(request.CohortId, _apiRequestCohortId);
-            Assert.AreEqual(request.ApproveMessage, _apiRequestBody.Message);
-            Assert.AreEqual(PostCohortDetailsRequest.CohortSubmissionType.Approve, _apiRequestBody.SubmissionType);
+            Assert.That(_apiRequestAccountId, Is.EqualTo(request.AccountId));
+            Assert.That(_apiRequestCohortId, Is.EqualTo(request.CohortId));
+            Assert.That(_apiRequestBody.Message, Is.EqualTo(request.ApproveMessage));
+            Assert.That(_apiRequestBody.SubmissionType, Is.EqualTo(PostCohortDetailsRequest.CohortSubmissionType.Approve));
         }
 
         [Test]
@@ -65,10 +65,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             await _mapper.Map(request);
 
-            Assert.AreEqual(request.AccountId, _apiRequestAccountId);
-            Assert.AreEqual(request.CohortId, _apiRequestCohortId);
-            Assert.AreEqual(request.SendMessage, _apiRequestBody.Message);
-            Assert.AreEqual(PostCohortDetailsRequest.CohortSubmissionType.Send, _apiRequestBody.SubmissionType);
+            Assert.That(_apiRequestAccountId, Is.EqualTo(request.AccountId));
+            Assert.That(_apiRequestCohortId, Is.EqualTo(request.CohortId));
+            Assert.That(_apiRequestBody.Message, Is.EqualTo(request.SendMessage));
+            Assert.That(_apiRequestBody.SubmissionType, Is.EqualTo(PostCohortDetailsRequest.CohortSubmissionType.Send));
         }
     }
 }

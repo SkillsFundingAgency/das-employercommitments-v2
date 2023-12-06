@@ -29,7 +29,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators
 
         [TestCase(0, false)]
         [TestCase(123456, true)]
-        [TestCase(null, false)]
         public void ThenApprenticeshipIdIsValidated(long apprenticeshipId, bool expectedValid)
         {
             var request = new ViewChangesRequest { ApprenticeshipId = apprenticeshipId };

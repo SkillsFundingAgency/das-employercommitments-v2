@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new ConfirmDeleteViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Source.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(fixture.Source.AccountHashedId));
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new ConfirmDeleteViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Source.CohortReference, result.CohortReference);
+            Assert.That(result.CohortReference, Is.EqualTo(fixture.Source.CohortReference));
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new ConfirmDeleteViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Cohort.ProviderName, result.ProviderName);
+            Assert.That(result.ProviderName, Is.EqualTo(fixture.Cohort.ProviderName));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new ConfirmDeleteViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.Cohort.LegalEntityName, result.LegalEntityName);
+            Assert.That(result.LegalEntityName, Is.EqualTo(fixture.Cohort.LegalEntityName));
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var fixture = new ConfirmDeleteViewModelMapperTestsFixture();
             var result = await fixture.Map();
-            Assert.AreEqual(fixture.DraftApprenticeshipsResponse.DraftApprenticeships.Count, result.DraftApprenticeshipsCount);
+            Assert.That(result.DraftApprenticeshipsCount, Is.EqualTo(fixture.DraftApprenticeshipsResponse.DraftApprenticeships.Count));
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                 var expectedCount = fixture.DraftApprenticeshipsResponse.DraftApprenticeships
                     .Count(a => a.CourseName == course.CourseName);
 
-                Assert.AreEqual(expectedCount, course.NumberOfDraftApprenticeships);
+                Assert.That(course.NumberOfDraftApprenticeships, Is.EqualTo(expectedCount));
             }
         }
 
@@ -140,23 +140,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
         public void AssertEquality(DraftApprenticeshipDto source, CohortDraftApprenticeshipViewModel result)
         {
-            Assert.AreEqual(source.Id, result.Id);
-            Assert.AreEqual(source.FirstName, result.FirstName);
-            Assert.AreEqual(source.LastName, result.LastName);
-            Assert.AreEqual(source.DateOfBirth, result.DateOfBirth);
-            Assert.AreEqual(source.Cost, result.Cost);
-            Assert.AreEqual(source.StartDate, result.StartDate);
-            Assert.AreEqual(source.EndDate, result.EndDate);
-            Assert.AreEqual($"X{source.Id}X", result.DraftApprenticeshipHashedId);
+            Assert.That(result.Id, Is.EqualTo(source.Id));
+            Assert.That(result.FirstName, Is.EqualTo(source.FirstName));
+            Assert.That(result.LastName, Is.EqualTo(source.LastName));
+            Assert.That(result.DateOfBirth, Is.EqualTo(source.DateOfBirth));
+            Assert.That(result.Cost, Is.EqualTo(source.Cost));
+            Assert.That(result.StartDate, Is.EqualTo(source.StartDate));
+            Assert.That(result.EndDate, Is.EqualTo(source.EndDate));
+            Assert.That(result.DraftApprenticeshipHashedId, Is.EqualTo($"X{source.Id}X"));
         }
 
         public void AssertSequenceOrder<T>(List<T> expected, List<T> actual, Func<T, T, bool> evaluator)
         {
-            Assert.AreEqual(expected.Count, actual.Count, "Expected and actual sequences are different lengths");
+            Assert.That(actual.Count, Is.EqualTo(expected.Count), "Expected and actual sequences are different lengths");
 
             for (int i = 0; i < actual.Count; i++)
             {
-                Assert.IsTrue(evaluator(expected[i], actual[i]), "Actual sequence are not in same order as expected");
+                Assert.That(evaluator(expected[i], actual[i]), Is.True, "Actual sequence are not in same order as expected");
             }
         }
 

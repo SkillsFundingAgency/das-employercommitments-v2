@@ -72,7 +72,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var viewModel = viewResult.Model as ChangeVersionViewModel;
 
-            Assert.AreEqual(_viewModel, viewModel);
+            Assert.That(viewModel, Is.EqualTo(_viewModel));
         }
 
         public void VerifySelectedVersion(ViewResult viewResult, string version)

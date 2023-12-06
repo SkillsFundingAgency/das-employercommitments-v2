@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_selectLegalEntityViewModel);
 
             //Assert           
-            Assert.AreEqual(_selectLegalEntityViewModel.TransferConnectionCode, result.TransferConnectionCode);
+            Assert.That(result.TransferConnectionCode, Is.EqualTo(_selectLegalEntityViewModel.TransferConnectionCode));
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_selectLegalEntityViewModel);
 
             //Assert           
-            Assert.AreEqual(_selectLegalEntityViewModel.LegalEntityId, result.AccountLegalEntityId);
+            Assert.That(result.AccountLegalEntityId, Is.EqualTo(_selectLegalEntityViewModel.LegalEntityId));
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_selectLegalEntityViewModel);
 
             //Assert           
-            Assert.AreEqual(_selectLegalEntityViewModel.CohortRef, result.CohortRef);
+            Assert.That(result.CohortRef, Is.EqualTo(_selectLegalEntityViewModel.CohortRef));
         }
 
 

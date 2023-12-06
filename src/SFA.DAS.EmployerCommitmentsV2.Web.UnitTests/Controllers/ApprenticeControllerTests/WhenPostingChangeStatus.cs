@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("PauseApprenticeship", response.ActionName);           
+            Assert.That(response.ActionName, Is.EqualTo("PauseApprenticeship"));           
         }
 
         [Test, MoqAutoData]
@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("ApprenticeshipDetails", response.ActionName);
+            Assert.That(response.ActionName, Is.EqualTo("ApprenticeshipDetails"));
         }
 
         [Test, MoqAutoData]
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("WhyStopApprenticeship", response.ActionName);           
+            Assert.That(response.ActionName, Is.EqualTo("WhyStopApprenticeship"));           
         }
 
         [Test, MoqAutoData]
@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("HasTheApprenticeBeenMadeRedundant", response.ActionName);
+            Assert.That(response.ActionName, Is.EqualTo("HasTheApprenticeBeenMadeRedundant"));
         }
 
         [Test, MoqAutoData]
@@ -89,7 +89,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var response = _controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("ResumeApprenticeship", response.ActionName);         
+            Assert.That(response.ActionName, Is.EqualTo("ResumeApprenticeship"));         
         }
     }
 }

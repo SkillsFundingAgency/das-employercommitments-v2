@@ -34,8 +34,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
 
             var authorizationContext = _fixture.GetAuthorizationContext();
 
-            Assert.IsNotNull(authorizationContext);
-            Assert.AreEqual(_fixture.AccountId, authorizationContext.Get<long?>("AccountId"));
+            Assert.That(authorizationContext, Is.Not.Null);
+            Assert.That(authorizationContext.Get<long?>("AccountId"), Is.EqualTo(_fixture.AccountId));
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
 
             var authorizationContext = _fixture.GetAuthorizationContext();
 
-            Assert.IsNotNull(authorizationContext);
+            Assert.That(authorizationContext, Is.Not.Null);
             Assert.Throws<KeyNotFoundException>(() => authorizationContext.Get<long?>("AccountId"));
         }
 
@@ -64,10 +64,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
 
             var authorizationContext = _fixture.GetAuthorizationContext();
 
-            Assert.IsNotNull(authorizationContext);
-            Assert.AreEqual(_fixture.CohortId, authorizationContext.Get<long?>("CohortId"));
-            Assert.AreEqual(Party.Employer, authorizationContext.Get<Party?>("Party"));
-            Assert.AreEqual(_fixture.AccountId, authorizationContext.Get<long?>("PartyId"));
+            Assert.That(authorizationContext, Is.Not.Null);
+            Assert.That(authorizationContext.Get<long?>("CohortId"), Is.EqualTo(_fixture.CohortId));
+            Assert.That(authorizationContext.Get<Party?>("Party"), Is.EqualTo(Party.Employer));
+            Assert.That(authorizationContext.Get<long?>("PartyId"), Is.EqualTo(_fixture.AccountId));
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
         {
             var authorizationContext = _fixture.GetAuthorizationContext();
 
-            Assert.IsNotNull(authorizationContext);
+            Assert.That(authorizationContext, Is.Not.Null);
             Assert.Throws<KeyNotFoundException>(() => authorizationContext.Get<long?>("CohortId"));
         }
 
@@ -94,8 +94,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
 
             var authorizationContext = _fixture.GetAuthorizationContext();
 
-            Assert.IsNotNull(authorizationContext);
-            Assert.AreEqual(_fixture.UserRef, authorizationContext.Get<Guid?>("UserRef"));
+            Assert.That(authorizationContext, Is.Not.Null);
+            Assert.That(authorizationContext.Get<Guid?>("UserRef"), Is.EqualTo(_fixture.UserRef));
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
         {
             var authorizationContext = _fixture.GetAuthorizationContext();
 
-            Assert.IsNotNull(authorizationContext);
+            Assert.That(authorizationContext, Is.Not.Null);
             Assert.Throws<KeyNotFoundException>(() => authorizationContext.Get<Guid?>("UserRef"));
         }
 
@@ -138,8 +138,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
 
             var authorizationContext = _fixture.GetAuthorizationContext();
 
-            Assert.IsNotNull(authorizationContext);
-            Assert.AreEqual(_fixture.DraftApprenticeshipId, authorizationContext.Get<long?>("DraftApprenticeshipId"));
+            Assert.That(authorizationContext, Is.Not.Null);
+            Assert.That(authorizationContext.Get<long?>("DraftApprenticeshipId"), Is.EqualTo(_fixture.DraftApprenticeshipId));
         }
 
         [Test]
@@ -152,8 +152,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
 
             var authorizationContext = _fixture.GetAuthorizationContext();
 
-            Assert.IsNotNull(authorizationContext);
-            Assert.AreEqual(Party.Employer, authorizationContext.Get<Party>("Party"));
+            Assert.That(authorizationContext, Is.Not.Null);
+            Assert.That(authorizationContext.Get<Party>("Party"), Is.EqualTo(Party.Employer));
         }
 
         [Test]
@@ -166,8 +166,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
 
             var authorizationContext = _fixture.GetAuthorizationContext();
 
-            Assert.IsNotNull(authorizationContext);
-            Assert.AreEqual(Party.Employer, authorizationContext.Get<Party>("Party"));
+            Assert.That(authorizationContext, Is.Not.Null);
+            Assert.That(authorizationContext.Get<Party>("Party"), Is.EqualTo(Party.Employer));
         }
     }
 

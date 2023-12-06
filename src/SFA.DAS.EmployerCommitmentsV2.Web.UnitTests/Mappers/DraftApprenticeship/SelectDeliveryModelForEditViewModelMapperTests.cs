@@ -60,7 +60,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             var result = await _mapper.Map(_source);
 
-            Assert.AreEqual(expectShowConfirmation, result.ShowFlexiJobAgencyDeliveryModelConfirmation);
+            Assert.That(result.ShowFlexiJobAgencyDeliveryModelConfirmation, Is.EqualTo(expectShowConfirmation));
         }
     }
 }

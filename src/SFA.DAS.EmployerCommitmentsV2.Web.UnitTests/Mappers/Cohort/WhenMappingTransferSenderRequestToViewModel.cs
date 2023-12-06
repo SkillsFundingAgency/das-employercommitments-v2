@@ -158,81 +158,81 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
         public void Verify_Only_TheCohorts_WithTransferSender_Are_Mapped()
         {
-            Assert.AreEqual(2, WithTransferSenderViewModel.Cohorts.Count());
+            Assert.That(WithTransferSenderViewModel.Cohorts.Count(), Is.EqualTo(2));
 
-            Assert.IsNotNull(GetCohortInTransferSenderViewModel(1));
-            Assert.IsNotNull(GetCohortInTransferSenderViewModel(2));
+            Assert.That(GetCohortInTransferSenderViewModel(1), Is.Not.Null);
+            Assert.That(GetCohortInTransferSenderViewModel(2), Is.Not.Null);
         }
 
         public void Verify_CohortReference_Is_Mapped()
         {
             EncodingService.Verify(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference), Times.Exactly(2));
 
-            Assert.AreEqual("1_Encoded", GetCohortInTransferSenderViewModel(1).CohortReference);
-            Assert.AreEqual("2_Encoded", GetCohortInTransferSenderViewModel(2).CohortReference);
+            Assert.That(GetCohortInTransferSenderViewModel(1).CohortReference, Is.EqualTo("1_Encoded"));
+            Assert.That(GetCohortInTransferSenderViewModel(2).CohortReference, Is.EqualTo("2_Encoded"));
         }
 
         public void Verify_ProviderName_Is_Mapped()
         {
-            Assert.AreEqual("Provider1", GetCohortInTransferSenderViewModel(1).ProviderName);
-            Assert.AreEqual("Provider2", GetCohortInTransferSenderViewModel(2).ProviderName);
+            Assert.That(GetCohortInTransferSenderViewModel(1).ProviderName, Is.EqualTo("Provider1"));
+            Assert.That(GetCohortInTransferSenderViewModel(2).ProviderName, Is.EqualTo("Provider2"));
         }
 
         public void Verify_TransferSenderName_Is_Mapped()
         {
-            Assert.AreEqual("TransferSender1", GetCohortInTransferSenderViewModel(1).TransferSenderName);
-            Assert.AreEqual("TransferSender2", GetCohortInTransferSenderViewModel(2).TransferSenderName);
+            Assert.That(GetCohortInTransferSenderViewModel(1).TransferSenderName, Is.EqualTo("TransferSender1"));
+            Assert.That(GetCohortInTransferSenderViewModel(2).TransferSenderName, Is.EqualTo("TransferSender2"));
         }
 
         public void Verify_TransferSenderId_Is_Mapped()
         {
-            Assert.AreEqual(1, GetCohortInTransferSenderViewModel(1).TransferSenderId);
-            Assert.AreEqual(2, GetCohortInTransferSenderViewModel(2).TransferSenderId);
+            Assert.That(GetCohortInTransferSenderViewModel(1).TransferSenderId, Is.EqualTo(1));
+            Assert.That(GetCohortInTransferSenderViewModel(2).TransferSenderId, Is.EqualTo(2));
         }
 
         public void Verify_NumberOfApprentices_Are_Mapped()
         {
-            Assert.AreEqual(100, GetCohortInTransferSenderViewModel(1).NumberOfApprentices);
-            Assert.AreEqual(200, GetCohortInTransferSenderViewModel(2).NumberOfApprentices);
+            Assert.That(GetCohortInTransferSenderViewModel(1).NumberOfApprentices, Is.EqualTo(100));
+            Assert.That(GetCohortInTransferSenderViewModel(2).NumberOfApprentices, Is.EqualTo(200));
         }
 
         public void Verify_Ordered_By_OnDateTransfered()
         {
-            Assert.AreEqual("1_Encoded", WithTransferSenderViewModel.Cohorts.First().CohortReference);
-            Assert.AreEqual("2_Encoded", WithTransferSenderViewModel.Cohorts.Last().CohortReference);
+            Assert.That(WithTransferSenderViewModel.Cohorts.First().CohortReference, Is.EqualTo("1_Encoded"));
+            Assert.That(WithTransferSenderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("2_Encoded"));
         }
 
         public void Verify_Ordered_By_OnDateCreated()
         {
-            Assert.AreEqual("2_Encoded", WithTransferSenderViewModel.Cohorts.First().CohortReference);
-            Assert.AreEqual("1_Encoded", WithTransferSenderViewModel.Cohorts.Last().CohortReference);
+            Assert.That(WithTransferSenderViewModel.Cohorts.First().CohortReference, Is.EqualTo("2_Encoded"));
+            Assert.That(WithTransferSenderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("1_Encoded"));
         }
 
         public void Verify_Ordered_By_LatestMessageByEmployer()
         {
-            Assert.AreEqual("2_Encoded", WithTransferSenderViewModel.Cohorts.First().CohortReference);
-            Assert.AreEqual("1_Encoded", WithTransferSenderViewModel.Cohorts.Last().CohortReference);
+            Assert.That(WithTransferSenderViewModel.Cohorts.First().CohortReference, Is.EqualTo("2_Encoded"));
+            Assert.That(WithTransferSenderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("1_Encoded"));
         }
 
         public void Verify_Ordered_By_LatestMessageByProvider()
         {
-            Assert.AreEqual("2_Encoded", WithTransferSenderViewModel.Cohorts.First().CohortReference);
-            Assert.AreEqual("1_Encoded", WithTransferSenderViewModel.Cohorts.Last().CohortReference);
+            Assert.That(WithTransferSenderViewModel.Cohorts.First().CohortReference, Is.EqualTo("2_Encoded"));
+            Assert.That(WithTransferSenderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("1_Encoded"));
         }
 
         public void Verify_AccountHashedId_IsMapped()
         {
-            Assert.AreEqual(AccountHashedId, WithTransferSenderViewModel.AccountHashedId);
+            Assert.That(WithTransferSenderViewModel.AccountHashedId, Is.EqualTo(AccountHashedId));
         }
 
         public void Verify_When_More_Than_One_TransferSender_Title_Is_Mapped()
         {
-            Assert.AreEqual(WithTransferSenderRequestViewModelMapper.Title + "s", WithTransferSenderViewModel.Title);
+            Assert.That(WithTransferSenderViewModel.Title, Is.EqualTo(WithTransferSenderRequestViewModelMapper.Title + "s"));
         }
 
         public void Verify_When_One_TransferSender_Title_Is_Mapped()
         {
-            Assert.AreEqual(WithTransferSenderRequestViewModelMapper.Title, WithTransferSenderViewModel.Title);
+            Assert.That(WithTransferSenderViewModel.Title, Is.EqualTo(WithTransferSenderRequestViewModelMapper.Title));
         }
 
         public void SetOnlyOneTransferSender()

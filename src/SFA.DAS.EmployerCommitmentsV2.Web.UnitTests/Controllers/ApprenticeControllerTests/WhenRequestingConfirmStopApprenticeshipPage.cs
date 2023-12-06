@@ -37,8 +37,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             var actualViewModel = (ConfirmStopRequestViewModel)viewModel;
 
-            Assert.IsInstanceOf<ConfirmStopRequestViewModel>(viewModel);
-            Assert.AreEqual(expectedViewModel, actualViewModel);
+            Assert.That(viewModel, Is.InstanceOf<ConfirmStopRequestViewModel>());
+            Assert.That(actualViewModel, Is.EqualTo(expectedViewModel));
         }
     }
 }

@@ -82,8 +82,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             var actionResult = (RedirectToRouteResult)await _fixture.SendRequestNewTrainingProvider();
 
-            Assert.AreEqual(actionResult.RouteName, RouteNames.ChangeProviderRequestedConfirmation);
-            Assert.AreEqual(actionResult.RouteValues[nameof(ChangeProviderRequestedConfirmationRequest.ProviderAddDetails)], true);
+            Assert.That(RouteNames.ChangeProviderRequestedConfirmation, Is.EqualTo(actionResult.RouteName));
+            Assert.That(true, Is.EqualTo(actionResult.RouteValues[nameof(ChangeProviderRequestedConfirmationRequest.ProviderAddDetails)]));
         }
     }
 
@@ -128,13 +128,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public void VerifyRedirectsToApprenticeDetailsPage(IActionResult result)
         {
             var redirect = (RedirectToActionResult)result;
-            Assert.AreEqual("ApprenticeshipDetails", redirect.ActionName);
+            Assert.That(redirect.ActionName, Is.EqualTo("ApprenticeshipDetails"));
         }
 
         public void VerifyRedirectsToSentAction(IActionResult result)
         {
             var redirect = (RedirectToRouteResult)result;
-            Assert.AreEqual(RouteNames.ChangeProviderRequestedConfirmation, redirect.RouteName);
+            Assert.That(redirect.RouteName, Is.EqualTo(RouteNames.ChangeProviderRequestedConfirmation));
         }
 
         public void VerifyCommitmentsApiCreateChangeOfPartyRequestCalled()
@@ -146,8 +146,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var redirectResult = actionResult as RedirectToActionResult;
 
-            Assert.AreEqual("Error", redirectResult.ControllerName);
-            Assert.AreEqual("Error", redirectResult.ActionName);
+            Assert.That(redirectResult.ControllerName, Is.EqualTo("Error"));
+            Assert.That(redirectResult.ActionName, Is.EqualTo("Error"));
         }
         
     }

@@ -35,11 +35,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Filters
 
             //Assert
             var actualController = context.Controller as Controller;
-            Assert.IsNotNull(actualController);
+            Assert.That(actualController, Is.Not.Null);
             var viewBagData = actualController.ViewBag.GaData as GaData;
-            Assert.IsNotNull(viewBagData);
-            Assert.AreEqual(accountId.ToString(), viewBagData.Acc);
-            Assert.AreEqual(userId.ToString(), viewBagData.UserId);
+            Assert.That(viewBagData, Is.Not.Null);
+            Assert.That(viewBagData.Acc, Is.EqualTo(accountId.ToString()));
+            Assert.That(viewBagData.UserId, Is.EqualTo(userId.ToString()));
         }
 
         [Test, DomainAutoData]

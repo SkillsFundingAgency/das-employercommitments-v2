@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [TestCase(true, RouteNames.ConfirmDetailsAndSendRequest, Description = "Should return to confirm changes")]
         [TestCase(false, RouteNames.WhatIsTheNewStartDate, Description = "Should return to previous question")]
         [TestCase(null, RouteNames.WhatIsTheNewStartDate, Description = "Should return to previous question")]
-        public async Task BackNavigationSetCorrectly(bool isEdit, string expectedBackNavigationUrl)
+        public async Task BackNavigationSetCorrectly(bool? isEdit, string expectedBackNavigationUrl)
         {
             _fixture.ArrangeRequestEditFlag(isEdit);
 
@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [TestCase(true)]
         [TestCase(false)]
         [TestCase(null)]
-        public async Task BackNavigationSetCorrectlyInViewData(bool isEdit)
+        public async Task BackNavigationSetCorrectlyInViewData(bool? isEdit)
         {
             _fixture.ArrangeRequestEditFlag(isEdit);
 
@@ -82,7 +82,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                .Callback(() => ExpectedBackLinkSet = PreviousQuestionLink);
         }
 
-        internal void ArrangeRequestEditFlag(bool isEdit) => _request.Edit = isEdit;
+        internal void ArrangeRequestEditFlag(bool? isEdit) => _request.Edit = isEdit;
 
         internal async Task<IActionResult> WhatIsTheNewEndDate()
         {
@@ -93,8 +93,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var viewModel = viewResult.Model as WhatIsTheNewEndDateViewModel;
 
-            Assert.IsInstanceOf<WhatIsTheNewEndDateViewModel>(viewModel);
-            Assert.AreEqual(_viewModel, viewModel);
+            Assert.That(viewModel, Is.InstanceOf<WhatIsTheNewEndDateViewModel>());
+            Assert.That(viewModel, Is.EqualTo(_viewModel));
         }
 
         internal void VerifyBackNavigation(string expectedBackNavigationUrl)
@@ -104,7 +104,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         internal void VerifyViewDataSet(ViewResult viewResult)
         {
-            Assert.AreEqual(ExpectedBackLinkSet, viewResult.ViewData["BackUrl"]);
+            Assert.That(viewResult.ViewData["BackUrl"], Is.EqualTo(ExpectedBackLinkSet));
         }
     }
 }

@@ -29,9 +29,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             var result = await controller.AddDraftApprenticeship(request) as ViewResult;
 
-            Assert.IsNotNull(result);
-            Assert.AreSame("Apprentice", result.ViewName);
-            Assert.AreSame(viewModel, result.Model);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.ViewName, Is.SameAs("Apprentice"));
+                Assert.That(result.Model, Is.SameAs(viewModel));
+            });
         }
     }
 }

@@ -53,8 +53,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var viewModel = viewResult.Model as EditStopDateViewModel;
 
-            Assert.IsInstanceOf<EditStopDateViewModel>(viewModel);
-            Assert.AreEqual(_viewModel, viewModel);
+            Assert.That(viewModel, Is.InstanceOf<EditStopDateViewModel>());
+            Assert.That(viewModel, Is.EqualTo(_viewModel));
         }
 
     }

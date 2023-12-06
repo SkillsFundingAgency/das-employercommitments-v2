@@ -307,99 +307,99 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         internal void VerifyApprenticeshipHashedIdIsMapped()
         {
-            Assert.AreEqual(_request.ApprenticeshipHashedId, _viewModel.ApprenticeshipHashedId);
+            Assert.That(_viewModel.ApprenticeshipHashedId, Is.EqualTo(_request.ApprenticeshipHashedId));
         }
         
         internal void VerifyAccountHashedIdIsMapped()
         {
-            Assert.AreEqual(_request.AccountHashedId, _viewModel.AccountHashedId);
+            Assert.That(_viewModel.AccountHashedId, Is.EqualTo(_request.AccountHashedId));
         }
 
         internal void VerifyAccountIdIsMapped()
         {
-            Assert.AreEqual(_request.AccountId, _viewModel.AccountId);
+            Assert.That(_viewModel.AccountId, Is.EqualTo(_request.AccountId));
         }
 
         internal void VerifyApprenticeshipIdIsMapped()
         {
-            Assert.AreEqual(_request.ApprenticeshipId, _viewModel.ApprenticeshipId);
+            Assert.That(_viewModel.ApprenticeshipId, Is.EqualTo(_request.ApprenticeshipId));
         }
 
         internal void VerifyProviderNameIsMapped()
         {
-            Assert.AreEqual(_apprenticeshipResponse.ProviderName, _viewModel.ProviderName);
+            Assert.That(_viewModel.ProviderName, Is.EqualTo(_apprenticeshipResponse.ProviderName));
         }
 
         internal void VerifyFirstNameIsMapped()
         {
-            Assert.AreEqual(_apprenticeshipResponse.FirstName, _viewModel.OriginalApprenticeship.FirstName);
+            Assert.That(_viewModel.OriginalApprenticeship.FirstName, Is.EqualTo(_apprenticeshipResponse.FirstName));
         }
 
         internal void VerifyLastNameIsMapped()
         {
-            Assert.AreEqual(_apprenticeshipResponse.LastName, _viewModel.OriginalApprenticeship.LastName);
+            Assert.That(_viewModel.OriginalApprenticeship.LastName, Is.EqualTo(_apprenticeshipResponse.LastName));
         }
 
         internal void VerifyDateOfBirthIsMapped()
         {
-            Assert.AreEqual(_apprenticeshipResponse.DateOfBirth.Date, _viewModel.OriginalApprenticeship.DateOfBirth);
+            Assert.That(_viewModel.OriginalApprenticeship.DateOfBirth, Is.EqualTo(_apprenticeshipResponse.DateOfBirth.Date));
         }
 
         internal void VerifyULNIsMapped()
         {
-            Assert.AreEqual(_apprenticeshipResponse.Uln, _viewModel.OriginalApprenticeship.ULN);
+            Assert.That(_viewModel.OriginalApprenticeship.ULN, Is.EqualTo(_apprenticeshipResponse.Uln));
         }
 
         internal void VerifyStartDateIsMapped()
         {
             var startDate = new DateTime(_apprenticeshipResponse.StartDate.Value.Year, _apprenticeshipResponse.StartDate.Value.Month, 1);
-            Assert.AreEqual(startDate, _viewModel.OriginalApprenticeship.StartDate);
+            Assert.That(_viewModel.OriginalApprenticeship.StartDate, Is.EqualTo(startDate));
         }
 
         internal void VerifyEndDateIsMapped()
         {
             var endDate = new DateTime(_apprenticeshipResponse.EndDate.Year, _apprenticeshipResponse.EndDate.Month, 1);
-            Assert.AreEqual(endDate, _viewModel.OriginalApprenticeship.EndDate);
+            Assert.That(_viewModel.OriginalApprenticeship.EndDate, Is.EqualTo(endDate));
         }
 
         internal void VerifyCourseCodeIsMapped()
         {
-            Assert.AreEqual(_apprenticeshipResponse.CourseCode, _viewModel.OriginalApprenticeship.CourseCode);
+            Assert.That(_viewModel.OriginalApprenticeship.CourseCode, Is.EqualTo(_apprenticeshipResponse.CourseCode));
         }
 
         internal void VerifyCourseNameIsMapped()
         {
-            Assert.AreEqual(_apprenticeshipResponse.CourseName, _viewModel.OriginalApprenticeship.CourseName);
+            Assert.That(_viewModel.OriginalApprenticeship.CourseName, Is.EqualTo(_apprenticeshipResponse.CourseName));
         }
 
         internal void VerifyCourseChangesIsMapped()
         {
-            Assert.AreEqual(DateTime.Now.Date, _viewModel.CourseChanges[0].CurrentStartDate);
-            Assert.AreEqual(DateTime.Now.Date.AddDays(100), _viewModel.CourseChanges[0].CurrentEndDate);
-            Assert.AreEqual("Training 111", _viewModel.CourseChanges[0].CurrentTrainingProgram);
-            Assert.AreEqual(CourseAndPriceChangeFromDate, _viewModel.CourseChanges[0].IlrStartDate);
-            Assert.AreEqual(null, _viewModel.CourseChanges[0].IlrEndDate);
-            Assert.AreEqual(CourseAndPriceChangeCourseName, _viewModel.CourseChanges[0].IlrTrainingProgram);
+            Assert.That(_viewModel.CourseChanges[0].CurrentStartDate, Is.EqualTo(DateTime.Now.Date));
+            Assert.That(_viewModel.CourseChanges[0].CurrentEndDate, Is.EqualTo(DateTime.Now.Date.AddDays(100)));
+            Assert.That(_viewModel.CourseChanges[0].CurrentTrainingProgram, Is.EqualTo("Training 111"));
+            Assert.That(_viewModel.CourseChanges[0].IlrStartDate, Is.EqualTo(CourseAndPriceChangeFromDate));
+            Assert.That(_viewModel.CourseChanges[0].IlrEndDate, Is.EqualTo(null));
+            Assert.That(_viewModel.CourseChanges[0].IlrTrainingProgram, Is.EqualTo(CourseAndPriceChangeCourseName));
         }
 
         internal void VerifyPriceChangesIsMapped()
         {
-            Assert.AreEqual(DateTime.Now.Date, _viewModel.PriceChanges[0].CurrentStartDate);
-            Assert.AreEqual(null, _viewModel.PriceChanges[0].CurrentEndDate);
-            Assert.AreEqual(1000.0M, _viewModel.PriceChanges[0].CurrentCost);
-            Assert.AreEqual(CourseAndPriceChangeFromDate, _viewModel.PriceChanges[0].IlrStartDate);
-            Assert.AreEqual(null, _viewModel.PriceChanges[0].IlrEndDate);
-            Assert.AreEqual(CourseAndPriceChangeCost, _viewModel.PriceChanges[0].IlrCost);
+            Assert.That(_viewModel.PriceChanges[0].CurrentStartDate, Is.EqualTo(DateTime.Now.Date));
+            Assert.That(_viewModel.PriceChanges[0].CurrentEndDate, Is.EqualTo(null));
+            Assert.That(_viewModel.PriceChanges[0].CurrentCost, Is.EqualTo(1000.0M));
+            Assert.That(_viewModel.PriceChanges[0].IlrStartDate, Is.EqualTo(CourseAndPriceChangeFromDate));
+            Assert.That(_viewModel.PriceChanges[0].IlrEndDate, Is.EqualTo(null));
+            Assert.That(_viewModel.PriceChanges[0].IlrCost, Is.EqualTo(CourseAndPriceChangeCost));
         }
 
         internal void VerifyCourseChangesIsEmpty()
         {
-            Assert.AreEqual(0, _viewModel.CourseChanges.Count);
+            Assert.That(_viewModel.CourseChanges.Count, Is.EqualTo(0));
         }
 
         internal void VerifyPriceChangesIsEmpty()
         {
-            Assert.AreEqual(0, _viewModel.PriceChanges.Count);
+            Assert.That(_viewModel.PriceChanges.Count, Is.EqualTo(0));
         }
 
         public DataLockRequestChangesRequestToViewModelMapperTestsFixture()

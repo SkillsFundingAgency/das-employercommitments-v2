@@ -62,9 +62,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             result.VerifyReturnsRedirectToActionResult().WithActionName("ApprenticeshipDetails");
 
             var redirect = result as RedirectToActionResult;
-            
-            Assert.AreEqual(redirect.RouteValues["AccountHashedId"], _request.AccountHashedId);
-            Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], _request.ApprenticeshipHashedId);
+
+            Assert.That(_request.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
+            Assert.That(_request.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
         }
     }
 }

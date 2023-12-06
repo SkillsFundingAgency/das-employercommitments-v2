@@ -58,10 +58,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.HomeController
                 var viewResult = (ViewResult)Result;
                 var viewModel = viewResult.Model;
 
-                Assert.IsInstanceOf<IndexViewModel>(viewModel);
+                Assert.That(viewModel, Is.InstanceOf<IndexViewModel>());
                 var indexViewModel = (IndexViewModel)viewModel;
 
-                Assert.AreEqual(ViewModel, indexViewModel);
+                Assert.That(indexViewModel, Is.EqualTo(ViewModel));
             }
         }
     }

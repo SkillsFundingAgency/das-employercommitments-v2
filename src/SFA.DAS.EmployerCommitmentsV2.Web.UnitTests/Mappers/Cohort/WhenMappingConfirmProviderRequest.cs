@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             var result = await mapper.Map(viewModel);
 
-            Assert.AreEqual(viewModel.ReservationId,result.ReservationId);
+            Assert.That(result.ReservationId, Is.EqualTo(viewModel.ReservationId));
         }
 
         [Test, MoqAutoData]
@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             var result = await mapper.Map(viewModel);
 
-            Assert.AreEqual(viewModel.CourseCode, result.CourseCode);
+            Assert.That(result.CourseCode, Is.EqualTo(viewModel.CourseCode));
         }
 
         [Test, MoqAutoData]
@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             var result = await mapper.Map(viewModel);
 
-            Assert.AreEqual(viewModel.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(viewModel.AccountHashedId));
         }
 
         [Test, MoqAutoData]
@@ -58,7 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             var result = await mapper.Map(viewModel);
 
-            Assert.AreEqual(viewModel.AccountLegalEntityHashedId, result.AccountLegalEntityHashedId);
+            Assert.That(result.AccountLegalEntityHashedId, Is.EqualTo(viewModel.AccountLegalEntityHashedId));
         }
 
         [Test, MoqAutoData]
@@ -71,7 +71,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             var result = await mapper.Map(viewModel);
 
-            Assert.AreEqual(viewModel.LegalEntityName, result.LegalEntityName);
+            Assert.That(result.LegalEntityName, Is.EqualTo(viewModel.LegalEntityName));
         }
 
         [Test, MoqAutoData]
@@ -84,7 +84,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             var result = await mapper.Map(viewModel);
 
-            Assert.AreEqual(viewModel.StartMonthYear, result.StartMonthYear);
+            Assert.That(result.StartMonthYear, Is.EqualTo(viewModel.StartMonthYear));
         }
 
         [Test, MoqAutoData]
@@ -97,7 +97,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             var result = await mapper.Map(viewModel);
 
-            Assert.AreEqual(providerId, result.ProviderId);
+            Assert.That(result.ProviderId, Is.EqualTo(providerId));
         }
 
         [Test, MoqAutoData]
@@ -110,7 +110,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
 
             var result = await mapper.Map(viewModel);
 
-            Assert.AreEqual(viewModel.TransferSenderId, result.TransferSenderId);
+            Assert.That(result.TransferSenderId, Is.EqualTo(viewModel.TransferSenderId));
         }
     }
 }

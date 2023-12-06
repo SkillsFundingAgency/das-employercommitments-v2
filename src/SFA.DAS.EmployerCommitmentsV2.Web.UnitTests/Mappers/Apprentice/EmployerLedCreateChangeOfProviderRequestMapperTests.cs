@@ -32,31 +32,31 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test]
         public void NewProviderId_IsMapped()
         {
-            Assert.AreEqual(_viewModel.ProviderId, _result.NewPartyId);
+            Assert.That(_result.NewPartyId, Is.EqualTo(_viewModel.ProviderId));
         }
 
         [Test]
         public void NewStartDate_IsMapped()
         {
-            Assert.AreEqual(_viewModel.NewStartDate, _result.NewStartDate);
+            Assert.That(_result.NewStartDate, Is.EqualTo(_viewModel.NewStartDate));
         }
 
         [Test]
         public void NewEndDate_IsMapped()
         {
-            Assert.AreEqual(_viewModel.NewEndDate, _result.NewEndDate);
+            Assert.That(_result.NewEndDate, Is.EqualTo(_viewModel.NewEndDate));
         }
 
         [Test]
         public void NewPrice_IsMapped()
         {
-            Assert.AreEqual(_viewModel.NewPrice, _result.NewPrice);
+            Assert.That(_result.NewPrice, Is.EqualTo(_viewModel.NewPrice));
         }
 
         [Test]
         public void ChangeOfPartyRequestType_IsMapped()
         {
-            Assert.AreEqual(ChangeOfPartyRequestType.ChangeProvider, _result.ChangeOfPartyRequestType);
+            Assert.That(_result.ChangeOfPartyRequestType, Is.EqualTo(ChangeOfPartyRequestType.ChangeProvider));
         }
     }
 }

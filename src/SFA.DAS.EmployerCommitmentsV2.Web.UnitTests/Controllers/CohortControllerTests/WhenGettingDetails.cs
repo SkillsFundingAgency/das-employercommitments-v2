@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 {
     public class WhenGettingDetails
     {
-        private WhenGettingDetailsTestFixture _fixture;
+        private WhenGettingDetails.WhenGettingDetailsTestFixture _fixture;
 
         [SetUp]
         public void Arrange()
@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             _fixture.WithParty(withParty);
             await _fixture.GetDetails();
-            Assert.IsTrue(_fixture.IsViewModelReadOnly());
+            Assert.That(_fixture.IsViewModelReadOnly(), Is.True);
         }
 
         public class WhenGettingDetailsTestFixture
@@ -99,18 +99,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 var viewResult = (ViewResult)_result;
                 var viewModel = viewResult.Model;
 
-                Assert.IsInstanceOf<DetailsViewModel>(viewModel);
+                Assert.That(viewModel, Is.InstanceOf<DetailsViewModel>());
                 var detailsViewModel = (DetailsViewModel) viewModel;
 
-                Assert.AreEqual(_viewModel, detailsViewModel);
+                Assert.That(detailsViewModel, Is.EqualTo(_viewModel));
 
                 var expectedTotalCost = _viewModel.Courses?.Sum(g => g.DraftApprenticeships.Sum(a => a.Cost ?? 0)) ?? 0;
-                Assert.AreEqual(expectedTotalCost, _viewModel.TotalCost, "The total cost stored in the model is incorrect");
+                Assert.That(_viewModel.TotalCost, Is.EqualTo(expectedTotalCost), "The total cost stored in the model is incorrect");
             }
 
             public void VerifyViewEmployerAgreementModelIsStoredInTempData()
             {
-                Assert.IsTrue(CohortController.TempData.ContainsKey(nameof(ViewEmployerAgreementModel)));
+                Assert.That(CohortController.TempData.ContainsKey(nameof(ViewEmployerAgreementModel)), Is.True);
             }
 
 

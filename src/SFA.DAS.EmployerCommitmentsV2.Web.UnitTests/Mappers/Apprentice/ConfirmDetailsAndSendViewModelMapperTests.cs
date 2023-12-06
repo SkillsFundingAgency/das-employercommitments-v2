@@ -92,7 +92,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(2000, result.CurrentPrice);
+            Assert.That(result.CurrentPrice, Is.EqualTo(2000));
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(1000, result.MaxFunding);
+            Assert.That(result.MaxFunding, Is.EqualTo(1000));
         }
 
         [TestCase(2000, true)]
@@ -119,7 +119,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(expectsExceedsMaxFunding, result.ExceedsMaxFunding);
+            Assert.That(result.ExceedsMaxFunding, Is.EqualTo(expectsExceedsMaxFunding));
         }
 
         public List<TrainingProgrammeFundingPeriod> SetPriceBand(int fundingCap)

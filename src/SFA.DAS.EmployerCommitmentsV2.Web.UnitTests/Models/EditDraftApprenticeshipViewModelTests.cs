@@ -40,9 +40,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models
             var clonedViewModel = _editDraftApprenticeshipViewModel.CloneBaseValues();
 
             // Assert
-            Assert.IsNotNull(clonedViewModel);
-            Assert.AreEqual(_editDraftApprenticeshipViewModel.ProviderId, clonedViewModel.ProviderId);
-            Assert.AreEqual(_editDraftApprenticeshipViewModel.ProviderName, clonedViewModel.ProviderName);
+            Assert.That(clonedViewModel, Is.Not.Null);
+            Assert.That(clonedViewModel.ProviderId, Is.EqualTo(_editDraftApprenticeshipViewModel.ProviderId));
+            Assert.That(clonedViewModel.ProviderName, Is.EqualTo(_editDraftApprenticeshipViewModel.ProviderName));
             Assert.That(clonedViewModel, Does.Not.Property("AccountLegalEntityId"));
             Assert.That(clonedViewModel, Does.Not.Property("CohortId"));
         }   

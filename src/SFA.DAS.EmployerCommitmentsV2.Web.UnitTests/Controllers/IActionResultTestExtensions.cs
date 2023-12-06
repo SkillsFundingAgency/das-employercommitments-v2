@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests
 
         public static RedirectToActionResult WithActionName(this RedirectToActionResult result, string expectedName)
         {
-            Assert.AreEqual(expectedName, result.ActionName);
+            Assert.That(result.ActionName, Is.EqualTo(expectedName));
             return result;
         }
 
@@ -52,26 +52,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests
             var objectResult = result
                 .VerifyResponseObjectType<ObjectResult>();
 
-            Assert.AreEqual((int?)expectedStatusCode, objectResult.StatusCode);
+            Assert.That(objectResult.StatusCode, Is.EqualTo((int?)expectedStatusCode));
 
             return objectResult;
         }
 
         public static TExpectedResponseType VerifyResponseObjectType<TExpectedResponseType>(this IActionResult result) where TExpectedResponseType : IActionResult
         {
-            Assert.IsTrue(result is TExpectedResponseType, $"Expected response type {typeof(TExpectedResponseType)} but got {result.GetType()}");
+            Assert.That(result is TExpectedResponseType, Is.True, $"Expected response type {typeof(TExpectedResponseType)} but got {result.GetType()}");
             return (TExpectedResponseType) result;
         }
 
         public static RedirectResult WithUrl(this RedirectResult result, string expectedUrl)
         {
-            Assert.AreEqual(expectedUrl, result.Url);
+            Assert.That(result.Url, Is.EqualTo(expectedUrl));
             return result;
         }
 
         public static TExpectedModel WithModel<TExpectedModel>(this ViewResult result) where TExpectedModel : class
         {
-            Assert.IsInstanceOf<TExpectedModel>(result.Model);
+            Assert.That(result.Model, Is.InstanceOf<TExpectedModel>());
             return result.Model as TExpectedModel;
         }
     }

@@ -83,13 +83,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [Test]
         public void CourseCodeIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.CourseCode, _result.CourseCode);
+            Assert.That(_result.CourseCode, Is.EqualTo(_source.CourseCode));
         }
 
         [Test]
         public void CoursesAreMappedCorrectlyToAllTrainingCourses()
         {
-            Assert.AreEqual(_allTrainingProgrammes, _result.Courses);
+            Assert.That(_result.Courses, Is.EqualTo(_allTrainingProgrammes));
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _result = await _mapper.Map(TestHelper.Clone(_source));
 
-            Assert.AreEqual(_standardTrainingProgrammes, _result.Courses);
+            Assert.That(_result.Courses, Is.EqualTo(_standardTrainingProgrammes));
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _result = await _mapper.Map(TestHelper.Clone(_source));
 
-            Assert.AreEqual(_standardTrainingProgrammes, _result.Courses);
+            Assert.That(_result.Courses, Is.EqualTo(_standardTrainingProgrammes));
         }
     }
 }

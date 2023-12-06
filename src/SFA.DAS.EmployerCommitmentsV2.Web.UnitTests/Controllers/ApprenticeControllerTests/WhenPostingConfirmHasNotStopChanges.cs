@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = _controller.ConfirmHasNotStopChanges(request) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("StopApprenticeship", result.ActionName);
+            Assert.That(result.ActionName, Is.EqualTo("StopApprenticeship"));
         }
 
         [Test, MoqAutoData]
@@ -57,7 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = _controller.ConfirmHasNotStopChanges(request) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("ReconfirmHasNotStop", result.ActionName);
+            Assert.That(result.ActionName, Is.EqualTo("ReconfirmHasNotStop"));
         }
     }
 }

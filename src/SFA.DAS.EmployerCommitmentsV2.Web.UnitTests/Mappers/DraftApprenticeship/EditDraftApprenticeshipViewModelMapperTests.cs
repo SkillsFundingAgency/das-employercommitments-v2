@@ -96,139 +96,139 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         [Test]
         public void DraftApprenticeshipIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.Request.DraftApprenticeshipId, _result.DraftApprenticeshipId);
+            Assert.That(_result.DraftApprenticeshipId, Is.EqualTo(_source.Request.DraftApprenticeshipId));
         }
 
         [Test]
         public void DraftApprenticeshipHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_encodedApprenticeshipId, _result.DraftApprenticeshipHashedId);
+            Assert.That(_result.DraftApprenticeshipHashedId, Is.EqualTo(_encodedApprenticeshipId));
         }
 
         [Test]
         public void CohortIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.Request.CohortId, _result.CohortId);
+            Assert.That(_result.CohortId, Is.EqualTo(_source.Request.CohortId));
         }
 
         [Test]
         public void CohortReferenceIsMappedCorrectly()
         {
-            Assert.AreEqual(_cohortReference, _result.CohortReference);
+            Assert.That(_result.CohortReference, Is.EqualTo(_cohortReference));
         }
 
         [Test]
         public void ReservationIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.ReservationId, _result.ReservationId);
+            Assert.That(_result.ReservationId, Is.EqualTo(_draftApprenticeshipResponse.ReservationId));
         }
 
         [Test]
         public void FirstNameIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.FirstName, _result.FirstName);
+            Assert.That(_result.FirstName, Is.EqualTo(_draftApprenticeshipResponse.FirstName));
         }
 
         [Test]
         public void LastNameIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.LastName, _result.LastName);
+            Assert.That(_result.LastName, Is.EqualTo(_draftApprenticeshipResponse.LastName));
         }
 
         [Test]
         public void EmailIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.Email, _result.Email);
+            Assert.That(_result.Email, Is.EqualTo(_draftApprenticeshipResponse.Email));
         }
 
         [Test]
         public void EmailAddressConfirmedIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.EmailAddressConfirmed, _result.EmailAddressConfirmed);
+            Assert.That(_result.EmailAddressConfirmed, Is.EqualTo(_draftApprenticeshipResponse.EmailAddressConfirmed));
         }
 
         [Test]
         public void DateOfBirthIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.DateOfBirth, _result.DateOfBirth.Date);
+            Assert.That(_result.DateOfBirth.Date, Is.EqualTo(_draftApprenticeshipResponse.DateOfBirth));
         }
 
         [Test]
         public void UniqueLearnerNumberIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.Uln, _result.Uln);
+            Assert.That(_result.Uln, Is.EqualTo(_draftApprenticeshipResponse.Uln));
         }
 
         [Test]
         public void DeliveryModelIsMappedCorrectly()
         {
-            Assert.AreEqual((DeliveryModel)_draftApprenticeshipResponse.DeliveryModel, _result.DeliveryModel);
+            Assert.That(_result.DeliveryModel, Is.EqualTo((DeliveryModel)_draftApprenticeshipResponse.DeliveryModel));
         }
 
         [Test]
         public void CourseCodeIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.CourseCode, _result.CourseCode);
+            Assert.That(_result.CourseCode, Is.EqualTo(_draftApprenticeshipResponse.CourseCode));
         }
 
         [Test]
         public void CostIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.Cost, _result.Cost);
+            Assert.That(_result.Cost, Is.EqualTo(_draftApprenticeshipResponse.Cost));
         }
 
         [Test]
         public void EmploymentPriceIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.EmploymentPrice, _result.EmploymentPrice);
+            Assert.That(_result.EmploymentPrice, Is.EqualTo(_draftApprenticeshipResponse.EmploymentPrice));
         }
 
         [Test]
         public void StartDateIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.StartDate.ToMonthYearString(), _result.StartDate.Date.ToMonthYearString());
+            Assert.That(_result.StartDate.Date.ToMonthYearString(), Is.EqualTo(_draftApprenticeshipResponse.StartDate.ToMonthYearString()));
         }
 
         [Test]
         public void EndDateIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.EndDate.ToMonthYearString(), _result.EndDate.Date.ToMonthYearString());
+            Assert.That(_result.EndDate.Date.ToMonthYearString(), Is.EqualTo(_draftApprenticeshipResponse.EndDate.ToMonthYearString()));
         }
 
         [Test]
         public void EmploymentEndDateIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.EmploymentEndDate.ToMonthYearString(), _result.EmploymentEndDate.Date.ToMonthYearString());
+            Assert.That(_result.EmploymentEndDate.Date.ToMonthYearString(), Is.EqualTo(_draftApprenticeshipResponse.EmploymentEndDate.ToMonthYearString()));
         }
 
         [Test]
         public void ReferenceIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.EmployerReference, _result.Reference);
+            Assert.That(_result.Reference, Is.EqualTo(_draftApprenticeshipResponse.EmployerReference));
         }
 
         [Test]
         public void AccountHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.Request.AccountHashedId, _result.AccountHashedId);
+            Assert.That(_result.AccountHashedId, Is.EqualTo(_source.Request.AccountHashedId));
         }
 
         [Test]
         public void ProviderNameIsMappedCorrectly()
         {
-            Assert.AreEqual(_cohort.ProviderName, _result.ProviderName);
+            Assert.That(_result.ProviderName, Is.EqualTo(_cohort.ProviderName));
         }
 
         [Test]
         public void ProviderIdsMappedCorrectly()
         {
-            Assert.AreEqual(_cohort.ProviderId, _result.ProviderId);
+            Assert.That(_result.ProviderId, Is.EqualTo(_cohort.ProviderId));
         }
 
         [Test]
         public void LegalEntityNameIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.Cohort.LegalEntityName, _result.LegalEntityName);
+            Assert.That(_result.LegalEntityName, Is.EqualTo(_source.Cohort.LegalEntityName));
         }
 
         [TestCase(123, true)]
@@ -240,10 +240,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
 
-            Assert.AreEqual(fundedByTransfer
+            Assert.That(_result.Courses, Is.EqualTo(fundedByTransfer
                     ? _standardTrainingProgrammes
-                    : _allTrainingProgrammes,
-                _result.Courses);
+                    : _allTrainingProgrammes));
         }
 
         [TestCase(123)]
@@ -255,7 +254,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
 
-            Assert.AreEqual(_standardTrainingProgrammes, _result.Courses);
+            Assert.That(_result.Courses, Is.EqualTo(_standardTrainingProgrammes));
         }
 
         [Test]
@@ -266,7 +265,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
 
-            Assert.AreEqual(_allTrainingProgrammes, _result.Courses);
+            Assert.That(_result.Courses, Is.EqualTo(_allTrainingProgrammes));
         }
 
         [TestCase(true)]
@@ -275,73 +274,73 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
         {
             _draftApprenticeshipResponse.IsContinuation = isContinuation;
             _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
-            Assert.AreEqual(_draftApprenticeshipResponse.IsContinuation, _result.IsContinuation);
+            Assert.That(_result.IsContinuation, Is.EqualTo(_draftApprenticeshipResponse.IsContinuation));
         }
 
         [Test]
         public void AccountLegalEntityIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_source.Cohort.AccountLegalEntityId, _result.AccountLegalEntityId);
+            Assert.That(_result.AccountLegalEntityId, Is.EqualTo(_source.Cohort.AccountLegalEntityId));
         }
 
         [Test]
         public void AccountLegalEntityHashedIdIsMappedCorrectly()
         {
-            Assert.AreEqual(_aleHashedId, _result.AccountLegalEntityHashedId);
+            Assert.That(_result.AccountLegalEntityHashedId, Is.EqualTo(_aleHashedId));
         }
 
         [Test]
         public void HasMultipleDeliveryModelOptionsIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.HasMultipleDeliveryModelOptions, _result.HasMultipleDeliveryModelOptions);
+            Assert.That(_result.HasMultipleDeliveryModelOptions, Is.EqualTo(_draftApprenticeshipResponse.HasMultipleDeliveryModelOptions));
         }
 
         [Test]
         public void IsOnFlexiPaymentsPilotIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.IsOnFlexiPaymentPilot, _result.IsOnFlexiPaymentPilot);
+            Assert.That(_result.IsOnFlexiPaymentPilot, Is.EqualTo(_draftApprenticeshipResponse.IsOnFlexiPaymentPilot));
         }
 
         [Test]
         public void ActualStartDateIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.ActualStartDate, _result.ActualStartDate);
+            Assert.That(_result.ActualStartDate, Is.EqualTo(_draftApprenticeshipResponse.ActualStartDate));
         }
 
         [Test]
         public void ActualEndDateIsMappedCorrectly()
         {
-            Assert.AreEqual(null, _result.ActualEndDate);
+            Assert.That(_result.ActualEndDate, Is.EqualTo(null));
         }
 
         [Test]
         public void RecognisePriorLearningIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.RecognisePriorLearning, _result.RecognisePriorLearning);
+            Assert.That(_result.RecognisePriorLearning, Is.EqualTo(_draftApprenticeshipResponse.RecognisePriorLearning));
         }
 
         [Test]
         public void TrainingTotalHoursIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.TrainingTotalHours, _result.TrainingTotalHours);
+            Assert.That(_result.TrainingTotalHours, Is.EqualTo(_draftApprenticeshipResponse.TrainingTotalHours));
         }
 
         [Test]
         public void DurationReducedByHoursIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.DurationReducedByHours, _result.DurationReducedByHours);
+            Assert.That(_result.DurationReducedByHours, Is.EqualTo(_draftApprenticeshipResponse.DurationReducedByHours));
         }
 
         [Test]
         public void DurationReducedByIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.DurationReducedBy, _result.DurationReducedBy);
+            Assert.That(_result.DurationReducedBy, Is.EqualTo(_draftApprenticeshipResponse.DurationReducedBy));
         }
 
         [Test]
         public void PriceReducedByIsMappedCorrectly()
         {
-            Assert.AreEqual(_draftApprenticeshipResponse.PriceReducedBy, _result.PriceReducedBy);
+            Assert.That(_result.PriceReducedBy, Is.EqualTo(_draftApprenticeshipResponse.PriceReducedBy));
         }
 
     }

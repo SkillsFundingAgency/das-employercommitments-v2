@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("StopApprenticeship", response.ActionName);
+            Assert.That(response.ActionName, Is.EqualTo("StopApprenticeship"));
         }
 
         [Test, MoqAutoData]
@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("StopApprenticeship", response.ActionName);
+            Assert.That(response.ActionName, Is.EqualTo("StopApprenticeship"));
         }
 
         [Test, MoqAutoData]
@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("StopApprenticeship", response.ActionName);
+            Assert.That(response.ActionName, Is.EqualTo("StopApprenticeship"));
         }
 
         [Test, MoqAutoData]
@@ -64,7 +64,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("ApprenticeshipNeverStarted", response.ActionName);
+            Assert.That(response.ActionName, Is.EqualTo("ApprenticeshipNeverStarted"));
         }
 
         [Test, MoqAutoData]
@@ -77,7 +77,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("StopApprenticeship", response.ActionName);
+            Assert.That(response.ActionName, Is.EqualTo("StopApprenticeship"));
         }
 
         [Test, MoqAutoData]
@@ -90,7 +90,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
 
             //Assert
-            Assert.AreEqual("ApprenticeshipNotEnded", response.ActionName);
+            Assert.That(response.ActionName, Is.EqualTo("ApprenticeshipNotEnded"));
         }
     }
 }

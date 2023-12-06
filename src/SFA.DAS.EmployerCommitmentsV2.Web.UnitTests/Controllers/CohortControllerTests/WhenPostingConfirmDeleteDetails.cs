@@ -86,15 +86,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             public void VerifyRedirectsToReviewPage(IActionResult result)
             {
                 var redirect = (RedirectToActionResult)result;
-                Assert.AreEqual($"Review", redirect.ActionName);
-                Assert.AreEqual(ConfirmDeleteViewModel.AccountHashedId, redirect.RouteValues["AccountHashedId"]);
+                Assert.That(redirect.ActionName, Is.EqualTo($"Review"));
+                Assert.That(redirect.RouteValues["AccountHashedId"], Is.EqualTo(ConfirmDeleteViewModel.AccountHashedId));
             }
             public void VerifyRedirectsToCohortDetailsPage(IActionResult result)
             {
                 var redirect = (RedirectToActionResult)result;
-                Assert.AreEqual("details", redirect.ActionName?.ToLower());
-                Assert.AreEqual(ConfirmDeleteViewModel.CohortReference, redirect.RouteValues["CohortReference"]);
-                Assert.AreEqual(ConfirmDeleteViewModel.AccountHashedId, redirect.RouteValues["AccountHashedId"]);
+                Assert.That(redirect.ActionName?.ToLower(), Is.EqualTo("details"));
+                Assert.That(redirect.RouteValues["CohortReference"], Is.EqualTo(ConfirmDeleteViewModel.CohortReference));
+                Assert.That(redirect.RouteValues["AccountHashedId"], Is.EqualTo(ConfirmDeleteViewModel.AccountHashedId));
             }
         }
     }

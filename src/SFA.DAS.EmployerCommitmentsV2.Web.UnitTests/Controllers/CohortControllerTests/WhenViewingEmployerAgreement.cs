@@ -56,6 +56,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
             _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
         }
+        
+        [TearDown]
+        public void TearDown() => _controller?.Dispose();
 
         [Test]
         public async Task Then_User_Is_Redirected_To_View_Organisations_Agreements_When_NoTempData()
@@ -68,8 +71,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             var result = await _controller.ViewAgreement(_viewEmployerAgreementRequest.AccountHashedId) as RedirectResult;
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(OrganisationAgreementsUrl, result.Url);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Url, Is.EqualTo(OrganisationAgreementsUrl));
         }
 
         [Test]
@@ -86,8 +89,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             var result = await _controller.ViewAgreement(_viewEmployerAgreementModel.AccountHashedId) as RedirectResult;
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(AgreementUrl, result.Url);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Url, Is.EqualTo(AgreementUrl));
         }
     }
 }

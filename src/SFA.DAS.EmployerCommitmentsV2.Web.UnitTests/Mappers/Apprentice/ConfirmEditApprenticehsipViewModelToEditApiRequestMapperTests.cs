@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task ApprenticeshipId_IsMapped()
         {
             var result = await mapper.Map(request);
-            Assert.AreEqual(request.ApprenticeshipId, result.ApprenticeshipId);
+            Assert.That(result.ApprenticeshipId, Is.EqualTo(request.ApprenticeshipId));
         }
 
         [Test, MoqAutoData]
@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.FirstName, result.FirstName);
+            Assert.That(result.FirstName, Is.EqualTo(request.FirstName));
         }
 
         [Test, MoqAutoData]
@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.LastName, result.LastName);
+            Assert.That(result.LastName, Is.EqualTo(request.LastName));
         }
 
         [Test, MoqAutoData]
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.DateOfBirth, result.DateOfBirth);
+            Assert.That(result.DateOfBirth, Is.EqualTo(request.DateOfBirth));
         }
 
         [Test, MoqAutoData]
@@ -70,7 +70,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.StartDate, result.StartDate);
+            Assert.That(result.StartDate, Is.EqualTo(request.StartDate));
         }
 
 
@@ -79,7 +79,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.EndDate, result.EndDate);
+            Assert.That(result.EndDate, Is.EqualTo(request.EndDate));
         }
 
         [Test, MoqAutoData]
@@ -87,7 +87,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.DeliveryModel, result.DeliveryModel);
+            Assert.That(result.DeliveryModel, Is.EqualTo(request.DeliveryModel));
         }
 
         [Test, MoqAutoData]
@@ -95,7 +95,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.EmploymentEndDate, result.EmploymentEndDate);
+            Assert.That(result.EmploymentEndDate, Is.EqualTo(request.EmploymentEndDate));
         }
 
         [Test, MoqAutoData]
@@ -103,7 +103,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.EmploymentPrice, result.EmploymentPrice);
+            Assert.That(result.EmploymentPrice, Is.EqualTo(request.EmploymentPrice));
         }
 
         [Test, MoqAutoData]
@@ -111,7 +111,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.CourseCode, result.CourseCode);
+            Assert.That(result.CourseCode, Is.EqualTo(request.CourseCode));
         }
 
         [Test, MoqAutoData]
@@ -119,7 +119,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.Version, result.Version);
+            Assert.That(result.Version, Is.EqualTo(request.Version));
         }
 
         [Test, MoqAutoData]
@@ -127,7 +127,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.Option, result.Option);
+            Assert.That(result.Option, Is.EqualTo(request.Option));
         }
 
         [Test, MoqAutoData]
@@ -135,7 +135,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         {
             var result = await mapper.Map(request);
 
-            Assert.AreEqual(request.Cost, result.Cost);
+            Assert.That(result.Cost, Is.EqualTo(request.Cost));
         }
     }
 }

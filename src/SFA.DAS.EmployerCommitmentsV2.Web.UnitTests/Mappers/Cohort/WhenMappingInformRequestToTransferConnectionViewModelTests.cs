@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_informRequest);
 
             //Assert           
-            Assert.AreEqual(_informRequest.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(_informRequest.AccountHashedId));
         }
 
 
@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_informRequest);
 
             //Assert           
-            Assert.AreEqual(2, result.TransferConnections.Count);
+            Assert.That(result.TransferConnections.Count, Is.EqualTo(2));
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_informRequest);
 
             //Assert           
-            Assert.AreEqual(0, result.TransferConnections.Count);
+            Assert.That(result.TransferConnections.Count, Is.EqualTo(0));
         }
 
         [Test]

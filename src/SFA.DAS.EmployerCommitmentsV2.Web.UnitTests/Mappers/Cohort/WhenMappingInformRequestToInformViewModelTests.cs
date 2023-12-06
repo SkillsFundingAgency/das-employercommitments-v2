@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             var result = await _mapper.Map(_informRequest);
 
             //Assert           
-            Assert.AreEqual(_informRequest.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(_informRequest.AccountHashedId));
         }
     }
 }

@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [TestCase(true)]
         [TestCase(false)]
         [TestCase(null)]
-        public async Task BackNavigationSetCorrectlyInViewData(bool isEdit)
+        public async Task BackNavigationSetCorrectlyInViewData(bool? isEdit)
         {
             _fixture.ArrangeRequestEditFlag(isEdit);
 
@@ -87,7 +87,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         internal void VerifyBackNavigation(string expectedBackNavigationUrl) => _mockUrlHelper.Verify(mock => mock.Link(expectedBackNavigationUrl, It.IsAny<object>()), Times.Once);
 
 
-        internal void VerifyViewDataSet(ViewResult viewResult) => Assert.AreEqual(ExpectedBackLinkSet, viewResult.ViewData["BackUrl"]);
+        internal void VerifyViewDataSet(ViewResult viewResult) => Assert.That(viewResult.ViewData["BackUrl"], Is.EqualTo(ExpectedBackLinkSet));
 
         public async Task<IActionResult> EnterNewTrainingProvider()
         {
@@ -99,11 +99,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var result = actionResult as ViewResult;
             var viewModel = result.Model;
 
-            Assert.IsInstanceOf<EnterNewTrainingProviderViewModel>(viewModel);
+            Assert.That(viewModel, Is.InstanceOf<EnterNewTrainingProviderViewModel>());
 
             var enterNewTrainingProviderViewModel = (EnterNewTrainingProviderViewModel)viewModel;
 
-            Assert.AreEqual(_viewModel, enterNewTrainingProviderViewModel);
+            Assert.That(enterNewTrainingProviderViewModel, Is.EqualTo(_viewModel));
         }
     }
 }

@@ -47,7 +47,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             var result = await f.Sut.Map(f.DeleteApprenticeshipRequest);
 
-            Assert.IsFalse(result.IsLastApprenticeshipInCohort);
+            Assert.That(result.IsLastApprenticeshipInCohort, Is.False);
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             var result = await f.Sut.Map(f.DeleteApprenticeshipRequest);
 
-            Assert.IsTrue(result.IsLastApprenticeshipInCohort);
+            Assert.That(result.IsLastApprenticeshipInCohort, Is.True);
         }
 
         [Test]
@@ -83,16 +83,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
             var result = await f.Sut.Map(f.DeleteApprenticeshipRequest);
 
-            Assert.AreEqual(f.SingleApprenticeship.FirstName, result.FirstName);
-            Assert.AreEqual(f.SingleApprenticeship.LastName, result.LastName);
-            Assert.AreEqual(f.SingleApprenticeship.FirstName + " " + f.SingleApprenticeship.LastName, result.FullName );
-            Assert.AreEqual(f.DeleteApprenticeshipRequest.AccountHashedId, result.AccountHashedId);
-            Assert.AreEqual(f.DeleteApprenticeshipRequest.DraftApprenticeshipHashedId, result.DraftApprenticeshipHashedId);
-            Assert.AreEqual(f.DeleteApprenticeshipRequest.AccountHashedId, result.AccountHashedId);
-            Assert.AreEqual(f.DeleteApprenticeshipRequest.Origin, result.Origin);
-            Assert.AreEqual(f.DeleteApprenticeshipRequest.CohortReference, result.CohortReference);
-            Assert.AreEqual(f.GetCohortResponse.LegalEntityName, result.LegalEntityName);
-            Assert.IsTrue(result.IsLastApprenticeshipInCohort);
+            Assert.That(result.FirstName, Is.EqualTo(f.SingleApprenticeship.FirstName));
+            Assert.That(result.LastName, Is.EqualTo(f.SingleApprenticeship.LastName));
+            Assert.That(result.FullName, Is.EqualTo(f.SingleApprenticeship.FirstName + " " + f.SingleApprenticeship.LastName));
+            Assert.That(result.AccountHashedId, Is.EqualTo(f.DeleteApprenticeshipRequest.AccountHashedId));
+            Assert.That(result.DraftApprenticeshipHashedId, Is.EqualTo(f.DeleteApprenticeshipRequest.DraftApprenticeshipHashedId));
+            Assert.That(result.AccountHashedId, Is.EqualTo(f.DeleteApprenticeshipRequest.AccountHashedId));
+            Assert.That(result.Origin, Is.EqualTo(f.DeleteApprenticeshipRequest.Origin));
+            Assert.That(result.CohortReference, Is.EqualTo(f.DeleteApprenticeshipRequest.CohortReference));
+            Assert.That(result.LegalEntityName, Is.EqualTo(f.GetCohortResponse.LegalEntityName));
+            Assert.That(result.IsLastApprenticeshipInCohort, Is.True);
         }
 
         public class DeleteDraftApprenticeshipViewModelMapperTestsFixture

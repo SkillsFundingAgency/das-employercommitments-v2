@@ -52,8 +52,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Service
             var actual = await _employerAccountsService.GetLegalEntitiesForAccount(ExpectedAccountId);
 
             //Assert
-            Assert.IsNotNull(actual);
-            Assert.AreEqual(0, actual.Count);
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.Count, Is.EqualTo(0));
         }
 
         [Test]
@@ -74,8 +74,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Service
 
             //Assert
             _accountApiClient.Verify(x => x.GetLegalEntity(ExpectedAccountId, It.IsAny<long>()), Times.Exactly(2));
-            Assert.IsNotNull(actual);
-            Assert.AreEqual(2, actual.Count);
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.Count, Is.EqualTo(2));
         }
     }
 }

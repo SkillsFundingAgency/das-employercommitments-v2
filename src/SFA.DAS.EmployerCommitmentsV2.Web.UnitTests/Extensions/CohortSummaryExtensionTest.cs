@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             var status =  cohortSummary.GetStatus();
 
-            Assert.AreEqual(CohortStatus.Review, status);
+            Assert.That(status, Is.EqualTo(CohortStatus.Review));
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             var status = cohortSummary.GetStatus();
 
-            Assert.AreEqual(CohortStatus.Draft, status);
+            Assert.That(status, Is.EqualTo(CohortStatus.Draft));
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             var status = cohortSummary.GetStatus();
 
-            Assert.AreEqual(CohortStatus.WithProvider, status);
+            Assert.That(status, Is.EqualTo(CohortStatus.WithProvider));
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
             var status = cohortSummary.GetStatus();
 
-            Assert.AreEqual(CohortStatus.Unknown, status);
+            Assert.That(status, Is.EqualTo(CohortStatus.Unknown));
         }
     }
 }

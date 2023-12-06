@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.ReservationId, result.ReservationId);
+            Assert.That(result.ReservationId, Is.EqualTo(_request.ReservationId));
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.AccountHashedId, result.AccountHashedId);
+            Assert.That(result.AccountHashedId, Is.EqualTo(_request.AccountHashedId));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_commitmentsApiClientResponse.LegalEntityName, result.LegalEntityName);
+            Assert.That(result.LegalEntityName, Is.EqualTo(_commitmentsApiClientResponse.LegalEntityName));
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.CourseCode, result.CourseCode);
+            Assert.That(result.CourseCode, Is.EqualTo(_request.CourseCode));
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.StartMonthYear, result.StartMonthYear);
+            Assert.That(result.StartMonthYear, Is.EqualTo(_request.StartMonthYear));
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.AccountLegalEntityHashedId, result.AccountLegalEntityHashedId);
+            Assert.That(result.AccountLegalEntityHashedId, Is.EqualTo(_request.AccountLegalEntityHashedId));
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.TransferSenderId, result.TransferSenderId);
+            Assert.That(result.TransferSenderId, Is.EqualTo(_request.TransferSenderId));
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             var result = await _mapper.Map(_request);
 
-            Assert.AreEqual(_request.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices, result.Origin);
+            Assert.That(result.Origin, Is.EqualTo(_request.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices));
         }
     }
 }

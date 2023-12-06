@@ -87,13 +87,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
 
         public void ExpectedSuggestionJavaScriptSnippet(string suggestion, string snippet)
         {
-            Assert.AreEqual($"<script type=\"text/javascript\">zE('webWidget', 'helpCenter:setSuggestions', {{ search: '{suggestion}' }});</script>", snippet);
+            Assert.That(snippet, Is.EqualTo($"<script type=\"text/javascript\">zE('webWidget', 'helpCenter:setSuggestions', {{ search: '{suggestion}' }});</script>"));
         }
 
         public void ExpectedLabelJavaScriptSnippet(string labels, string snippet)
         {
             var expected = StartLabelSnipet + labels + EndLabelSnipet;
-            Assert.AreEqual(expected, snippet);
+            Assert.That(snippet, Is.EqualTo(expected));
         }
     }
 }

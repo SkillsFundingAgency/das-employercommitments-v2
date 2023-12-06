@@ -51,6 +51,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
               Mock.Of<IEncodingService>(),
               Mock.Of<IApprovalsApiClient>());
         }
+        
+        [TearDown]
+        public void TearDown() => _controller?.Dispose();
 
         [TestCase(true)]
         [TestCase(false)]
@@ -65,8 +68,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             //Assert            
             var viewResult = result as ViewResult;
             var viewModel = viewResult.Model;
-            Assert.IsInstanceOf<SelectLegalEntityViewModel>(viewModel);            
-            Assert.AreEqual(_selectLegalEntityViewModel, (SelectLegalEntityViewModel)viewModel);
+            Assert.That(viewModel, Is.InstanceOf<SelectLegalEntityViewModel>());
+            Assert.That((SelectLegalEntityViewModel)viewModel, Is.EqualTo(_selectLegalEntityViewModel));
         }
 
         [TestCase(true)]
@@ -134,10 +137,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             switch (expectedAction)
             {
                 case ExpectedAction.AgreementNotSigned:
-                    Assert.AreEqual(expectedAction.ToString(), redirectToActionResult.ActionName);
+                    Assert.That(redirectToActionResult.ActionName, Is.EqualTo(expectedAction.ToString()));
                     break;
                 case ExpectedAction.SelectProvider:
-                    Assert.AreEqual(expectedAction.ToString(), redirectToActionResult.ActionName);
+                    Assert.That(redirectToActionResult.ActionName, Is.EqualTo(expectedAction.ToString()));
                     break;
                 default:
                     throw new NotImplementedException();
