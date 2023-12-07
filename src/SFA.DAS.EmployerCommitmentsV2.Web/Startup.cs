@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
@@ -24,6 +26,17 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddSingleton(_configuration);
+        services.AddLogging(builder =>
+        {
+            builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
+            builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Information);
+        });
+        
+        services.AddHttpContextAccessor();
+        services.AddConfigurationOptions(_configuration);
+        services.AddEncodingServices(_configuration);
+        
         services
             .AddApplicationServices()
             .AddCommitmentsApiClient(_configuration)
