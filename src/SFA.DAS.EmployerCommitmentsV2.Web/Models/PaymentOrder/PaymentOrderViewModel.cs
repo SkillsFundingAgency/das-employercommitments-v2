@@ -3,44 +3,43 @@ using SFA.DAS.Authorization.ModelBinding;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
+
+public class PaymentOrderViewModel : IAuthorizationContextModel
 {
-    public class PaymentOrderViewModel : IAuthorizationContextModel
+    public string AccountHashedId { get; set; }
+    public long AccountId { get; set; }
+    public IEnumerable<PaymentOrderItem> PaymentOrderItems { get; set; }
+    public string[] ProviderPaymentOrder { get; set; } = default;
+
+    public PaymentOrderViewModel()
     {
-        public string AccountHashedId { get; set; }
-        public long AccountId { get; set; }
-        public IEnumerable<PaymentOrderItem> PaymentOrderItems { get; set; }
-        public string[] ProviderPaymentOrder { get; set; } = default;
+    }
 
-        public PaymentOrderViewModel()
-        {
-        }
-
-        public PaymentOrderViewModel(IEnumerable<PaymentOrderItem> items)
-        {
-            PaymentOrderItems = items;
+    public PaymentOrderViewModel(IEnumerable<PaymentOrderItem> items)
+    {
+        PaymentOrderItems = items;
             
-            ProviderPaymentOrder = PaymentOrderItems?
-                .OrderBy(o => o.Priority)
-                .Select(p => p.ProviderId.ToString())
-                .ToArray() ?? default;
-        }
-
-        public List<SelectListItem> ProviderSelectListItems()
-        {
-            return PaymentOrderItems?
-                .OrderBy(o => o.Priority)
-                .Select(p => new SelectListItem { Value = p.ProviderId.ToString(), Text = p.ProviderName })
-                .ToList();
-        }
+        ProviderPaymentOrder = PaymentOrderItems?
+            .OrderBy(o => o.Priority)
+            .Select(p => p.ProviderId.ToString())
+            .ToArray() ?? default;
     }
 
-    public class PaymentOrderItem
+    public List<SelectListItem> ProviderSelectListItems()
     {
-        public string ProviderName { get; set; }
-
-        public long ProviderId { get; set; }
-
-        public int Priority { get; set; }
+        return PaymentOrderItems?
+            .OrderBy(o => o.Priority)
+            .Select(p => new SelectListItem { Value = p.ProviderId.ToString(), Text = p.ProviderName })
+            .ToList();
     }
+}
+
+public class PaymentOrderItem
+{
+    public string ProviderName { get; set; }
+
+    public long ProviderId { get; set; }
+
+    public int Priority { get; set; }
 }

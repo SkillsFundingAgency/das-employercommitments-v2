@@ -5,13 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
+
+public class CancelChangeOfProviderRequestViewModelValidator : AbstractValidator<CancelChangeOfProviderRequestViewModel>
 {
-    public class CancelChangeOfProviderRequestViewModelValidator : AbstractValidator<CancelChangeOfProviderRequestViewModel>
+    public CancelChangeOfProviderRequestViewModelValidator()
     {
-        public CancelChangeOfProviderRequestViewModelValidator()
-        {
-            RuleFor(r => r.CancelRequest).NotNull().WithMessage("Select if you want to cancel this request");
-        }
+        RuleFor(r => r.CancelRequest).NotNull().WithMessage("Select if you want to cancel this request");
     }
 }

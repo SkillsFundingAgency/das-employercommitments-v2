@@ -2,16 +2,15 @@
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
+
+public class InformRequestToInformViewModelMapper : IMapper<InformRequest, InformViewModel>
 {
-    public class InformRequestToInformViewModelMapper : IMapper<InformRequest, InformViewModel>
+    public Task<InformViewModel> Map(InformRequest source)
     {
-        public Task<InformViewModel> Map(InformRequest source)
+        return Task.FromResult(new InformViewModel
         {
-            return Task.FromResult(new InformViewModel
-            {
-                AccountHashedId = source.AccountHashedId
-            });
-        }
+            AccountHashedId = source.AccountHashedId
+        });
     }
 }

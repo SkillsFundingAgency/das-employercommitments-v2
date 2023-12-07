@@ -7,27 +7,26 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+
+public class EditEndDateViewModel : IAuthorizationContextModel
 {
-    public class EditEndDateViewModel : IAuthorizationContextModel
+    public EditEndDateViewModel()
     {
-        public EditEndDateViewModel()
-        {
-            EndDate = new MonthYearModel("");
-        }
-
-        public string AccountHashedId { get; set; }
-
-        public string ApprenticeshipHashedId { get; set; }
-
-        public long ApprenticeshipId { get; set; }
-
-        public MonthYearModel EndDate { get; }
-
-        [Display(Name = "Month")]
-        public int? EndMonth { get => EndDate.Month; set => EndDate.Month = value; }
-
-        [Display(Name = "Year")]
-        public int? EndYear { get => EndDate.Year; set => EndDate.Year = value; }
+        EndDate = new MonthYearModel("");
     }
+
+    public string AccountHashedId { get; set; }
+
+    public string ApprenticeshipHashedId { get; set; }
+
+    public long ApprenticeshipId { get; set; }
+
+    public MonthYearModel EndDate { get; }
+
+    [Display(Name = "Month")]
+    public int? EndMonth { get => EndDate.Month; set => EndDate.Month = value; }
+
+    [Display(Name = "Year")]
+    public int? EndYear { get => EndDate.Year; set => EndDate.Year = value; }
 }

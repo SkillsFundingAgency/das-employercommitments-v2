@@ -4,25 +4,24 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
 using SFA.DAS.EmployerUrlHelper;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.TransferRequest
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.TransferRequest;
+
+public class TransferConfirmationWhatNextRequestMapper : IMapper<TransferConfirmationViewModel, TransferConfirmationWhatNextRequest>
 {
-    public class TransferConfirmationWhatNextRequestMapper : IMapper<TransferConfirmationViewModel, TransferConfirmationWhatNextRequest>
+    private readonly ILinkGenerator _linkGenerator;
+
+    public TransferConfirmationWhatNextRequestMapper(ILinkGenerator linkGenerator)
     {
-        private readonly ILinkGenerator _linkGenerator;
+        _linkGenerator = linkGenerator;
+    }
 
-        public TransferConfirmationWhatNextRequestMapper(ILinkGenerator linkGenerator)
+    public async Task<TransferConfirmationWhatNextRequest> Map(TransferConfirmationViewModel source)
+    {
+        return await Task.FromResult(new TransferConfirmationWhatNextRequest
         {
-            _linkGenerator = linkGenerator;
-        }
-
-        public async Task<TransferConfirmationWhatNextRequest> Map(TransferConfirmationViewModel source)
-        {
-            return await Task.FromResult(new TransferConfirmationWhatNextRequest
-            {
-                WhatNextUrl = source.SelectedOption == TransferConfirmationViewModel.Option.Homepage
+            WhatNextUrl = source.SelectedOption == TransferConfirmationViewModel.Option.Homepage
                 ? _linkGenerator.EmployerHome(source.AccountHashedId)
                 : _linkGenerator.EmployerFinanceTransfers(source.AccountHashedId)
         }); ;
-        }
     }
 }

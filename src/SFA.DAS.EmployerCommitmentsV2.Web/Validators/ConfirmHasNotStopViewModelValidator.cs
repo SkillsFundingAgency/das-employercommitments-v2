@@ -1,13 +1,12 @@
 ﻿using FluentValidation;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
+
+public class ConfirmHasNotStopViewModelValidator : AbstractValidator<ConfirmHasNotStopViewModel>
 {
-    public class ConfirmHasNotStopViewModelValidator : AbstractValidator<ConfirmHasNotStopViewModel>
+    public ConfirmHasNotStopViewModelValidator()
     {
-        public ConfirmHasNotStopViewModelValidator()
-        {
-            RuleFor(r => r.StopConfirmed).NotNull().WithMessage("You need to confirm if the apprenticeship has stopped");
-        }
+        RuleFor(r => r.StopConfirmed).NotNull().WithMessage("You need to confirm if the apprenticeship has stopped");
     }
 }

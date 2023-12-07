@@ -4,17 +4,16 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
+
+public class CreateChangeOfPartyRequestMapper : IMapper<SendNewTrainingProviderViewModel, CreateChangeOfPartyRequestRequest>
 {
-    public class CreateChangeOfPartyRequestMapper : IMapper<SendNewTrainingProviderViewModel, CreateChangeOfPartyRequestRequest>
+    public Task<CreateChangeOfPartyRequestRequest> Map(SendNewTrainingProviderViewModel source)
     {
-        public Task<CreateChangeOfPartyRequestRequest> Map(SendNewTrainingProviderViewModel source)
-        {
-            return Task.FromResult(new CreateChangeOfPartyRequestRequest
-            {                
-                ChangeOfPartyRequestType = ChangeOfPartyRequestType.ChangeProvider,
-                NewPartyId = source.ProviderId                
-            });
-        }
+        return Task.FromResult(new CreateChangeOfPartyRequestRequest
+        {                
+            ChangeOfPartyRequestType = ChangeOfPartyRequestType.ChangeProvider,
+            NewPartyId = source.ProviderId                
+        });
     }
 }

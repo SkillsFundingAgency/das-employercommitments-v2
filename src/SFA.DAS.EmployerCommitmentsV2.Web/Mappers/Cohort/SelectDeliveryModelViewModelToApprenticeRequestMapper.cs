@@ -3,25 +3,24 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
+
+public class SelectDeliveryModelViewModelToApprenticeRequestMapper : IMapper<SelectDeliveryModelViewModel, ApprenticeRequest>
 {
-    public class SelectDeliveryModelViewModelToApprenticeRequestMapper : IMapper<SelectDeliveryModelViewModel, ApprenticeRequest>
+    public Task<ApprenticeRequest> Map(SelectDeliveryModelViewModel source)
     {
-        public Task<ApprenticeRequest> Map(SelectDeliveryModelViewModel source)
+        return Task.FromResult(new ApprenticeRequest
         {
-            return Task.FromResult(new ApprenticeRequest
-            {
-                AccountHashedId = source.AccountHashedId,
-                AccountLegalEntityId = source.AccountLegalEntityId,
-                AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
-                CourseCode = source.CourseCode,
-                DeliveryModel = source.DeliveryModel,
-                ProviderId = source.ProviderId,
-                ReservationId = source.ReservationId,
-                StartMonthYear = source.StartMonthYear,
-                TransferSenderId = source.TransferSenderId,
-                EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
-            });
-        }
+            AccountHashedId = source.AccountHashedId,
+            AccountLegalEntityId = source.AccountLegalEntityId,
+            AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
+            CourseCode = source.CourseCode,
+            DeliveryModel = source.DeliveryModel,
+            ProviderId = source.ProviderId,
+            ReservationId = source.ReservationId,
+            StartMonthYear = source.StartMonthYear,
+            TransferSenderId = source.TransferSenderId,
+            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
+        });
     }
 }

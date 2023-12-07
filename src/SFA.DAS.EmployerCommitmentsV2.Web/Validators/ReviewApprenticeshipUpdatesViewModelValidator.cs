@@ -1,14 +1,13 @@
 ﻿using FluentValidation;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
+
+public class ReviewApprenticeshipUpdatesViewModelValidator : AbstractValidator<ReviewApprenticeshipUpdatesViewModel>
 {
-    public class ReviewApprenticeshipUpdatesViewModelValidator : AbstractValidator<ReviewApprenticeshipUpdatesViewModel>
+    public ReviewApprenticeshipUpdatesViewModelValidator()
     {
-        public ReviewApprenticeshipUpdatesViewModelValidator()
-        {
-            RuleFor(r => r.ApproveChanges).NotNull()
-                .WithMessage("Confirm if you are happy to approve these changes");
-        }
+        RuleFor(r => r.ApproveChanges).NotNull()
+            .WithMessage("Confirm if you are happy to approve these changes");
     }
 }

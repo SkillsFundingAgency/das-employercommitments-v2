@@ -1,7 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+
+public class WhoWillEnterTheDetailsViewModel : ChangeOfProviderBaseViewModel
 {
-    public class WhoWillEnterTheDetailsViewModel : ChangeOfProviderBaseViewModel
-    {
        
-    }
 }

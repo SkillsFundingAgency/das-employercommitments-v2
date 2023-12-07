@@ -3,49 +3,48 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
+
+public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, SelectProviderViewModel>
 {
-    public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, SelectProviderViewModel>
+    private readonly ICommitmentsApiClient _commitmentsApiClient;
+
+    public SelectProviderViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
     {
-        private readonly ICommitmentsApiClient _commitmentsApiClient;
+        _commitmentsApiClient = commitmentsApiClient;
+    }
 
-        public SelectProviderViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
+    public async Task<SelectProviderViewModel> Map(SelectProviderRequest source)
+    {
+        var accountLegalEntity = await _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
+
+        return new SelectProviderViewModel
         {
-            _commitmentsApiClient = commitmentsApiClient;
+            AccountHashedId = source.AccountHashedId,
+            CourseCode = source.CourseCode,
+            AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
+            LegalEntityName = accountLegalEntity.LegalEntityName,
+            StartMonthYear = source.StartMonthYear,
+            ReservationId = source.ReservationId,
+            TransferSenderId = source.TransferSenderId,
+            Origin = DetermineOrigin(source),
+            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
+        };
+
+    }
+
+    private Origin DetermineOrigin(SelectProviderRequest source)
+    {
+        if (source.ReservationId.HasValue)
+        {
+            return Origin.Reservations;
         }
 
-        public async Task<SelectProviderViewModel> Map(SelectProviderRequest source)
+        if(!string.IsNullOrWhiteSpace(source.EncodedPledgeApplicationId))
         {
-            var accountLegalEntity = await _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
-
-            return new SelectProviderViewModel
-            {
-                AccountHashedId = source.AccountHashedId,
-                CourseCode = source.CourseCode,
-                AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
-                LegalEntityName = accountLegalEntity.LegalEntityName,
-                StartMonthYear = source.StartMonthYear,
-                ReservationId = source.ReservationId,
-                TransferSenderId = source.TransferSenderId,
-                Origin = DetermineOrigin(source),
-                EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
-            };
-
+            return Origin.LevyTransferMatching;
         }
 
-        private Origin DetermineOrigin(SelectProviderRequest source)
-        {
-            if (source.ReservationId.HasValue)
-            {
-                return Origin.Reservations;
-            }
-
-            if(!string.IsNullOrWhiteSpace(source.EncodedPledgeApplicationId))
-            {
-                return Origin.LevyTransferMatching;
-            }
-
-            return Origin.Apprentices;
-        }
+        return Origin.Apprentices;
     }
 }

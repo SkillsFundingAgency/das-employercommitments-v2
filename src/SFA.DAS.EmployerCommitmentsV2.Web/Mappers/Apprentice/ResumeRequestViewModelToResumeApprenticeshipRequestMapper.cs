@@ -3,16 +3,15 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
+
+public class ResumeRequestViewModelToResumeApprenticeshipRequestMapper : IMapper<ResumeRequestViewModel, ResumeApprenticeshipRequest>
 {
-    public class ResumeRequestViewModelToResumeApprenticeshipRequestMapper : IMapper<ResumeRequestViewModel, ResumeApprenticeshipRequest>
+    public Task<ResumeApprenticeshipRequest> Map(ResumeRequestViewModel source)
     {
-        public Task<ResumeApprenticeshipRequest> Map(ResumeRequestViewModel source)
+        return Task.FromResult(new ResumeApprenticeshipRequest
         {
-            return Task.FromResult(new ResumeApprenticeshipRequest
-            {
-                ApprenticeshipId = source.ApprenticeshipId
-            });
-        }
+            ApprenticeshipId = source.ApprenticeshipId
+        });
     }
 }

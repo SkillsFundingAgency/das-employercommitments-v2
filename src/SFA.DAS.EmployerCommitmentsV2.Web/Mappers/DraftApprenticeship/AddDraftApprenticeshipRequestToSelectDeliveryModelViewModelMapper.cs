@@ -11,36 +11,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
+
+public class AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper : IMapper<AddDraftApprenticeshipRequest, SelectDeliveryModelViewModel>
 {
-    public class AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper : IMapper<AddDraftApprenticeshipRequest, SelectDeliveryModelViewModel>
+    private readonly ICommitmentsApiClient _commitmentsApiClient;
+    private readonly IApprovalsApiClient _approvalsApiClient;
+
+    public AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient)
+        => (_commitmentsApiClient, _approvalsApiClient) = (commitmentsApiClient, approvalsApiClient);
+
+    public async Task<SelectDeliveryModelViewModel> Map(AddDraftApprenticeshipRequest source)
     {
-        private readonly ICommitmentsApiClient _commitmentsApiClient;
-        private readonly IApprovalsApiClient _approvalsApiClient;
+        var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
 
-        public AddDraftApprenticeshipRequestToSelectDeliveryModelViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IApprovalsApiClient approvalsApiClient)
-            => (_commitmentsApiClient, _approvalsApiClient) = (commitmentsApiClient, approvalsApiClient);
+        var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(cohort.ProviderId.HasValue ? cohort.ProviderId.Value : 0, source.CourseCode, source.AccountLegalEntityId);
 
-        public async Task<SelectDeliveryModelViewModel> Map(AddDraftApprenticeshipRequest source)
+        return new SelectDeliveryModelViewModel
         {
-            var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
-
-            var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(cohort.ProviderId.HasValue ? cohort.ProviderId.Value : 0, source.CourseCode, source.AccountLegalEntityId);
-
-            return new SelectDeliveryModelViewModel
-            {
-                AccountHashedId = source.AccountHashedId,
-                AccountLegalEntityId = source.AccountLegalEntityId,
-                AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
-                CohortId = source.CohortId,
-                CohortReference = source.CohortReference,
-                CourseCode = source.CourseCode,
-                DeliveryModel = source.DeliveryModel,
-                DeliveryModels = response.DeliveryModels.ToArray(),
-                ProviderId = source.ProviderId,
-                ReservationId = source.ReservationId,
-                StartMonthYear = source.StartMonthYear,
-            };
-        }
+            AccountHashedId = source.AccountHashedId,
+            AccountLegalEntityId = source.AccountLegalEntityId,
+            AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
+            CohortId = source.CohortId,
+            CohortReference = source.CohortReference,
+            CourseCode = source.CourseCode,
+            DeliveryModel = source.DeliveryModel,
+            DeliveryModels = response.DeliveryModels.ToArray(),
+            ProviderId = source.ProviderId,
+            ReservationId = source.ReservationId,
+            StartMonthYear = source.StartMonthYear,
+        };
     }
 }

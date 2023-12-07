@@ -1,9 +1,8 @@
 ﻿using SFA.DAS.Authorization.ModelBinding;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+
+public class InformViewModel : IAuthorizationContextModel
 {
-    public class InformViewModel : IAuthorizationContextModel
-    {
-        public string AccountHashedId { get; set; }
-    }
+    public string AccountHashedId { get; set; }
 }

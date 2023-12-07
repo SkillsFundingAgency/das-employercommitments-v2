@@ -4,19 +4,18 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+
+public static class HttpResponseExtensions
 {
-    public static class HttpResponseExtensions
+    public static Task WriteJsonAsync(this HttpResponse httpResponse, object body)
     {
-        public static Task WriteJsonAsync(this HttpResponse httpResponse, object body)
-        {
-            httpResponse.ContentType = "application/json";
+        httpResponse.ContentType = "application/json";
             
-            return httpResponse.WriteAsync(JsonConvert.SerializeObject(body, new JsonSerializerSettings
-            {
-                Converters = new List<JsonConverter> { new StringEnumConverter() },
-                Formatting = Formatting.Indented
-            }));
-        }
+        return httpResponse.WriteAsync(JsonConvert.SerializeObject(body, new JsonSerializerSettings
+        {
+            Converters = new List<JsonConverter> { new StringEnumConverter() },
+            Formatting = Formatting.Indented
+        }));
     }
 }

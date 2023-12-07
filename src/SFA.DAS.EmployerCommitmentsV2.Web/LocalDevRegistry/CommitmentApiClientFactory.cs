@@ -6,61 +6,60 @@ using SFA.DAS.CommitmentsV2.Api.Client.Http;
 using SFA.DAS.Http;
 using System;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web
+namespace SFA.DAS.EmployerCommitmentsV2.Web;
+
+public class LocalDevApiClientFactory : ICommitmentsApiClientFactory, ICommitmentPermissionsApiClientFactory
 {
-    public class LocalDevApiClientFactory : ICommitmentsApiClientFactory, ICommitmentPermissionsApiClientFactory
+    private readonly CommitmentsClientApiConfiguration _configuration;
+    private readonly ILoggerFactory _loggerFactory;
+
+    public LocalDevApiClientFactory(CommitmentsClientApiConfiguration configuration, ILoggerFactory loggerFactory)
     {
-        private readonly CommitmentsClientApiConfiguration _configuration;
-        private readonly ILoggerFactory _loggerFactory;
+        _configuration = configuration;
+        _loggerFactory = loggerFactory;
+    }
 
-        public LocalDevApiClientFactory(CommitmentsClientApiConfiguration configuration, ILoggerFactory loggerFactory)
+    public ICommitmentsApiClient CreateClient()
+    {
+        var value = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        if (value == "Development")
         {
-            _configuration = configuration;
-            _loggerFactory = loggerFactory;
+            var httpClientBuilder = new HttpClientBuilder();
+            var httpClient = httpClientBuilder
+                .WithDefaultHeaders()
+                .Build();
+
+            httpClient.BaseAddress = new Uri(_configuration.ApiBaseUrl);
+            var byteArray = System.Text.Encoding.ASCII.GetBytes($"employer:password1234");
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+
+            var restHttpClient = new CommitmentsRestHttpClient(httpClient, _loggerFactory);
+            return new CommitmentsApiClient(restHttpClient);
         }
-
-        public ICommitmentsApiClient CreateClient()
+        else
         {
-            var value = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            if (value == "Development")
-            {
-                var httpClientBuilder = new HttpClientBuilder();
-                var httpClient = httpClientBuilder
-               .WithDefaultHeaders()
-               .Build();
-
-                httpClient.BaseAddress = new Uri(_configuration.ApiBaseUrl);
-                var byteArray = System.Text.Encoding.ASCII.GetBytes($"employer:password1234");
-                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-
-                var restHttpClient = new CommitmentsRestHttpClient(httpClient, _loggerFactory);
-                return new CommitmentsApiClient(restHttpClient);
-            }
-            else
-            {
-                throw new UnauthorizedAccessException("Not accessible");
-            }
+            throw new UnauthorizedAccessException("Not accessible");
         }
+    }
 
-        ICommitmentPermissionsApiClient ICommitmentPermissionsApiClientFactory.CreateClient()
+    ICommitmentPermissionsApiClient ICommitmentPermissionsApiClientFactory.CreateClient()
+    {
+        var value = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        if (value == "Development")
         {
-            var value = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            if (value == "Development")
-            {
-                var httpClientBuilder = new HttpClientBuilder();
-                var httpClient = httpClientBuilder
-               .WithDefaultHeaders()
-               .Build();
+            var httpClientBuilder = new HttpClientBuilder();
+            var httpClient = httpClientBuilder
+                .WithDefaultHeaders()
+                .Build();
 
-                httpClient.BaseAddress = new Uri(_configuration.ApiBaseUrl);
+            httpClient.BaseAddress = new Uri(_configuration.ApiBaseUrl);
 
-                var restHttpClient = new CommitmentsRestHttpClient(httpClient, _loggerFactory);
-                return new CommitmentPermissionsApiClient(restHttpClient);
-            }
-            else
-            {
-                throw new UnauthorizedAccessException("Not accessible");
-            }
+            var restHttpClient = new CommitmentsRestHttpClient(httpClient, _loggerFactory);
+            return new CommitmentPermissionsApiClient(restHttpClient);
+        }
+        else
+        {
+            throw new UnauthorizedAccessException("Not accessible");
         }
     }
 }

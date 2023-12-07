@@ -1,14 +1,13 @@
 ﻿using FluentValidation;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
+
+public class ConfirmEditApprenticeshipViewModelValidator : AbstractValidator<ConfirmEditApprenticeshipViewModel>
 {
-    public class ConfirmEditApprenticeshipViewModelValidator : AbstractValidator<ConfirmEditApprenticeshipViewModel>
+    public ConfirmEditApprenticeshipViewModelValidator()
     {
-        public ConfirmEditApprenticeshipViewModelValidator()
-        {
-            RuleFor(r => r.ConfirmChanges).NotNull()
-                .WithMessage("Select an option");
-        }
+        RuleFor(r => r.ConfirmChanges).NotNull()
+            .WithMessage("Select an option");
     }
 }

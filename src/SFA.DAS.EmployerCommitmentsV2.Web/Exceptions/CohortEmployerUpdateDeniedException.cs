@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Exceptions
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
+
+public class CohortEmployerUpdateDeniedException : UnauthorizedAccessException
 {
-    public class CohortEmployerUpdateDeniedException : UnauthorizedAccessException
-    {
-        public CohortEmployerUpdateDeniedException(string message) :base(message)
-        {}
-    }
+    public CohortEmployerUpdateDeniedException(string message) :base(message)
+    {}
 }

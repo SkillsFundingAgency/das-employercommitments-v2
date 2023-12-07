@@ -6,27 +6,26 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
+
+public class EditStopDateViewModelToApprenticeshipStopDateRequestMapper : IMapper<EditStopDateViewModel, ApprenticeshipStopDateRequest>
 {
-    public class EditStopDateViewModelToApprenticeshipStopDateRequestMapper : IMapper<EditStopDateViewModel, ApprenticeshipStopDateRequest>
+    private readonly IAuthenticationService _authenticationService;        
+
+    public EditStopDateViewModelToApprenticeshipStopDateRequestMapper(IAuthenticationService authenticationService)
     {
-        private readonly IAuthenticationService _authenticationService;        
+        _authenticationService = authenticationService;            
+    }
 
-        public EditStopDateViewModelToApprenticeshipStopDateRequestMapper(IAuthenticationService authenticationService)
+    public Task<ApprenticeshipStopDateRequest> Map(EditStopDateViewModel source)
+    {
+        var result = new ApprenticeshipStopDateRequest()
         {
-            _authenticationService = authenticationService;            
-        }
+            AccountId = source.AccountId,
+            NewStopDate = new DateTime(source.NewStopDate.Year.Value, source.NewStopDate.Month.Value, source.NewStopDate.Day.Value),
+            UserInfo = _authenticationService.UserInfo
+        };
 
-        public Task<ApprenticeshipStopDateRequest> Map(EditStopDateViewModel source)
-        {
-            var result = new ApprenticeshipStopDateRequest()
-            {
-                AccountId = source.AccountId,
-                NewStopDate = new DateTime(source.NewStopDate.Year.Value, source.NewStopDate.Month.Value, source.NewStopDate.Day.Value),
-                UserInfo = _authenticationService.UserInfo
-            };
-
-            return Task.FromResult(result);
-        }
+        return Task.FromResult(result);
     }
 }

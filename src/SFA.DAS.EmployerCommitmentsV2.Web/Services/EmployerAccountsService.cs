@@ -10,67 +10,66 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dasync.Collections;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Services
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Services;
+
+public class EmployerAccountsService : IEmployerAccountsService
 {
-    public class EmployerAccountsService : IEmployerAccountsService
+    private readonly IAccountApiClient _accountsApiClient;
+
+    // Set at 50 to limit the number of concurrent api calls
+    private const int MaxConcurrentThreads = 50;
+
+    public EmployerAccountsService(IAccountApiClient accountApiClient)
     {
-        private readonly IAccountApiClient _accountsApiClient;
+        _accountsApiClient = accountApiClient;
+    }
 
-        // Set at 50 to limit the number of concurrent api calls
-        private const int MaxConcurrentThreads = 50;
-
-        public EmployerAccountsService(IAccountApiClient accountApiClient)
+    public async Task<Account> GetAccount(long accountId)
+    {
+        var account = await _accountsApiClient.GetAccount(accountId);
+        var response = new Account
         {
-            _accountsApiClient = accountApiClient;
-        }
+            Id = account.AccountId,
+            ApprenticeshipEmployerType = account.ApprenticeshipEmployerType.ToEnum<ApprenticeshipEmployerType>()
+        };
 
-        public async Task<Account> GetAccount(long accountId)
-        {
-            var account = await _accountsApiClient.GetAccount(accountId);
-            var response = new Account
+        return response;
+    }
+
+    public async Task<List<LegalEntity>> GetLegalEntitiesForAccount(string accountId)
+    {
+        var listOfEntities = await _accountsApiClient.GetLegalEntitiesConnectedToAccount(accountId);
+        if (listOfEntities.Count == 0) return new List<LegalEntity>();
+
+        var bag = new ConcurrentBag<LegalEntity>();
+
+        await listOfEntities.ParallelForEachAsync(async entity =>
             {
-                Id = account.AccountId,
-                ApprenticeshipEmployerType = account.ApprenticeshipEmployerType.ToEnum<ApprenticeshipEmployerType>()
-            };
+                var legalEntityViewModel =
+                    await _accountsApiClient.GetLegalEntity(accountId, Convert.ToInt64(entity.Id));
 
-            return response;
-        }
-
-        public async Task<List<LegalEntity>> GetLegalEntitiesForAccount(string accountId)
-        {
-            var listOfEntities = await _accountsApiClient.GetLegalEntitiesConnectedToAccount(accountId);
-            if (listOfEntities.Count == 0) return new List<LegalEntity>();
-
-            var bag = new ConcurrentBag<LegalEntity>();
-
-            await listOfEntities.ParallelForEachAsync(async entity =>
+                bag.Add(new LegalEntity
                 {
-                    var legalEntityViewModel =
-                        await _accountsApiClient.GetLegalEntity(accountId, Convert.ToInt64(entity.Id));
+                    Name = legalEntityViewModel.Name,
+                    RegisteredAddress = legalEntityViewModel.Address,
+                    Source = legalEntityViewModel.SourceNumeric,
+                    Agreements =
+                        legalEntityViewModel.Agreements.Select(agreementSource => new Agreement
+                        {
+                            Id = agreementSource.Id,
+                            SignedDate = agreementSource.SignedDate,
+                            SignedByName = agreementSource.SignedByName,
+                            Status = (EmployerAgreementStatus) agreementSource.Status,
+                            TemplateVersionNumber = agreementSource.TemplateVersionNumber
+                        }).ToList(),
+                    Code = legalEntityViewModel.Code,
+                    Id = legalEntityViewModel.LegalEntityId,
+                    AccountLegalEntityPublicHashedId = legalEntityViewModel.AccountLegalEntityPublicHashedId
+                });
+            },
+            MaxConcurrentThreads
+        );
 
-                    bag.Add(new LegalEntity
-                    {
-                        Name = legalEntityViewModel.Name,
-                        RegisteredAddress = legalEntityViewModel.Address,
-                        Source = legalEntityViewModel.SourceNumeric,
-                        Agreements =
-                            legalEntityViewModel.Agreements.Select(agreementSource => new Agreement
-                            {
-                                Id = agreementSource.Id,
-                                SignedDate = agreementSource.SignedDate,
-                                SignedByName = agreementSource.SignedByName,
-                                Status = (EmployerAgreementStatus) agreementSource.Status,
-                                TemplateVersionNumber = agreementSource.TemplateVersionNumber
-                            }).ToList(),
-                        Code = legalEntityViewModel.Code,
-                        Id = legalEntityViewModel.LegalEntityId,
-                        AccountLegalEntityPublicHashedId = legalEntityViewModel.AccountLegalEntityPublicHashedId
-                    });
-                },
-                MaxConcurrentThreads
-            );
-
-            return bag.OrderBy(le => le.Id).ToList();
-        }
+        return bag.OrderBy(le => le.Id).ToList();
     }
 }

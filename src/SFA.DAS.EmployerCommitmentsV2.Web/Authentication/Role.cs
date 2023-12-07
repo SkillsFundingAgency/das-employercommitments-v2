@@ -1,8 +1,7 @@
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Authentication
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
+
+public static class Role
 {
-    public static class Role
-    {
-        public const string Employer = nameof(Employer);
-        public const string Provider = nameof(Provider);
-    }
+    public const string Employer = nameof(Employer);
+    public const string Provider = nameof(Provider);
 }

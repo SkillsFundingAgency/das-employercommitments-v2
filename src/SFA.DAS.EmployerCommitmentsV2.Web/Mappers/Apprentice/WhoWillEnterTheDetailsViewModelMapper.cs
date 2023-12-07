@@ -3,29 +3,28 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
+
+public class WhoWillEnterTheDetailsViewModelMapper : IMapper<ChangeOfProviderRequest, WhoWillEnterTheDetailsViewModel>
 {
-    public class WhoWillEnterTheDetailsViewModelMapper : IMapper<ChangeOfProviderRequest, WhoWillEnterTheDetailsViewModel>
+    private readonly ICommitmentsApiClient _client;
+
+    public WhoWillEnterTheDetailsViewModelMapper(ICommitmentsApiClient client)
     {
-        private readonly ICommitmentsApiClient _client;
+        _client = client;
+    }
 
-        public WhoWillEnterTheDetailsViewModelMapper(ICommitmentsApiClient client)
+    public async Task<WhoWillEnterTheDetailsViewModel> Map(ChangeOfProviderRequest source)
+    {
+        var provider = await _client.GetProvider(source.ProviderId.Value);
+
+        return new WhoWillEnterTheDetailsViewModel
         {
-            _client = client;
-        }
-
-        public async Task<WhoWillEnterTheDetailsViewModel> Map(ChangeOfProviderRequest source)
-        {
-            var provider = await _client.GetProvider(source.ProviderId.Value);
-
-            return new WhoWillEnterTheDetailsViewModel
-            {
-                AccountHashedId = source.AccountHashedId,
-                ApprenticeshipHashedId = source.ApprenticeshipHashedId,
-                ProviderName = provider.Name,
-                ProviderId = source.ProviderId.Value,
-                StoppedDuringCoP = source.StoppedDuringCoP
-            };
-        }
+            AccountHashedId = source.AccountHashedId,
+            ApprenticeshipHashedId = source.ApprenticeshipHashedId,
+            ProviderName = provider.Name,
+            ProviderId = source.ProviderId.Value,
+            StoppedDuringCoP = source.StoppedDuringCoP
+        };
     }
 }

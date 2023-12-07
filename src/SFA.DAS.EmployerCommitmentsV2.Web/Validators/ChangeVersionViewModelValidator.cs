@@ -1,13 +1,12 @@
 ﻿using FluentValidation;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
+
+public class ChangeVersionViewModelValidator : AbstractValidator<ChangeVersionViewModel>
 {
-    public class ChangeVersionViewModelValidator : AbstractValidator<ChangeVersionViewModel>
+    public ChangeVersionViewModelValidator()
     {
-        public ChangeVersionViewModelValidator()
-        {
-            RuleFor(r => r.SelectedVersion).NotNull().WithMessage("Select a version");
-        }
+        RuleFor(r => r.SelectedVersion).NotNull().WithMessage("Select a version");
     }
 }

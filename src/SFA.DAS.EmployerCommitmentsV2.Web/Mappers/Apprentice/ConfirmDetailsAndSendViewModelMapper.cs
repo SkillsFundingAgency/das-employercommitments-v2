@@ -7,63 +7,62 @@ using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Types;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
+
+public class ConfirmDetailsAndSendViewModelMapper : IMapper<ChangeOfProviderRequest, ConfirmDetailsAndSendViewModel>
 {
-    public class ConfirmDetailsAndSendViewModelMapper : IMapper<ChangeOfProviderRequest, ConfirmDetailsAndSendViewModel>
+    private readonly ICommitmentsApiClient _commitmentsApiClient;
+
+    public ConfirmDetailsAndSendViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
     {
-        private readonly ICommitmentsApiClient _commitmentsApiClient;
+        _commitmentsApiClient = commitmentsApiClient;
+    }
 
-        public ConfirmDetailsAndSendViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
+    public async Task<ConfirmDetailsAndSendViewModel> Map(ChangeOfProviderRequest source)
+    {
+        var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId.Value, CancellationToken.None);
+        var priceHistory = await _commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId.Value, CancellationToken.None);
+
+        var course = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
+        var newStartDate = new DateTime(source.NewStartYear.Value, source.NewStartMonth.Value, 1);
+
+        var result = new ConfirmDetailsAndSendViewModel
         {
-            _commitmentsApiClient = commitmentsApiClient;
-        }
+            AccountHashedId = source.AccountHashedId,
+            ApprenticeshipHashedId = source.ApprenticeshipHashedId,
+            ProviderId = source.ProviderId.Value,
+            ProviderName = source.ProviderName,
+            NewStartDate = newStartDate,
+            NewEndDate = new DateTime(source.NewEndYear.Value, source.NewEndMonth.Value, 1),
+            NewPrice = source.NewPrice,
+            ApprenticeFullName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
+            ApprenticeshipStopDate = apprenticeship.StopDate,
+            CurrentProviderName = apprenticeship.ProviderName,
+            CurrentStartDate = apprenticeship.StartDate.Value,
+            CurrentEndDate = apprenticeship.EndDate,
+            CurrentPrice = decimal.ToInt32(priceHistory.PriceEpisodes.GetPrice()),
+            EmployerWillAdd = source.EmployerWillAdd,
+            MaxFunding = GetFundingBandCap(course.TrainingProgramme, apprenticeship.StartDate),
+            StoppedDuringCoP = source.StoppedDuringCoP
+        };
 
-        public async Task<ConfirmDetailsAndSendViewModel> Map(ChangeOfProviderRequest source)
+        return result;
+    }
+
+    private int? GetFundingBandCap(TrainingProgramme course, DateTime? startDate)
+    {
+        if (course == null)
         {
-            var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId.Value, CancellationToken.None);
-            var priceHistory = await _commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId.Value, CancellationToken.None);
-
-            var course = await _commitmentsApiClient.GetTrainingProgramme(apprenticeship.CourseCode);
-            var newStartDate = new DateTime(source.NewStartYear.Value, source.NewStartMonth.Value, 1);
-
-            var result = new ConfirmDetailsAndSendViewModel
-            {
-                AccountHashedId = source.AccountHashedId,
-                ApprenticeshipHashedId = source.ApprenticeshipHashedId,
-                ProviderId = source.ProviderId.Value,
-                ProviderName = source.ProviderName,
-                NewStartDate = newStartDate,
-                NewEndDate = new DateTime(source.NewEndYear.Value, source.NewEndMonth.Value, 1),
-                NewPrice = source.NewPrice,
-                ApprenticeFullName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
-                ApprenticeshipStopDate = apprenticeship.StopDate,
-                CurrentProviderName = apprenticeship.ProviderName,
-                CurrentStartDate = apprenticeship.StartDate.Value,
-                CurrentEndDate = apprenticeship.EndDate,
-                CurrentPrice = decimal.ToInt32(priceHistory.PriceEpisodes.GetPrice()),
-                EmployerWillAdd = source.EmployerWillAdd,
-                MaxFunding = GetFundingBandCap(course.TrainingProgramme, apprenticeship.StartDate),
-                StoppedDuringCoP = source.StoppedDuringCoP
-            };
-
-            return result;
-        }
-
-        private int? GetFundingBandCap(TrainingProgramme course, DateTime? startDate)
-        {
-            if (course == null)
-            {
-                return null;
-            }
-
-            var cap = course.FundingCapOn(startDate.Value);
-
-            if (cap > 0)
-            {
-                return cap;
-            }
-
             return null;
         }
+
+        var cap = course.FundingCapOn(startDate.Value);
+
+        if (cap > 0)
+        {
+            return cap;
+        }
+
+        return null;
     }
 }

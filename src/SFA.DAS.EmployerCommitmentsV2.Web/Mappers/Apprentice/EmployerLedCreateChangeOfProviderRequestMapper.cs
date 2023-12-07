@@ -5,12 +5,12 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
+
+public class EmployerLedCreateChangeOfProviderRequestMapper : IMapper<ConfirmDetailsAndSendViewModel, CreateChangeOfPartyRequestRequest>
 {
-    public class EmployerLedCreateChangeOfProviderRequestMapper : IMapper<ConfirmDetailsAndSendViewModel, CreateChangeOfPartyRequestRequest>
+    public Task<CreateChangeOfPartyRequestRequest> Map(ConfirmDetailsAndSendViewModel source)
     {
-        public Task<CreateChangeOfPartyRequestRequest> Map(ConfirmDetailsAndSendViewModel source)
-        {
             return Task.FromResult(new CreateChangeOfPartyRequestRequest
             {
                 ChangeOfPartyRequestType = ChangeOfPartyRequestType.ChangeProvider,
@@ -20,5 +20,4 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 NewPrice = source.NewPrice
             });
         }
-    }
 }

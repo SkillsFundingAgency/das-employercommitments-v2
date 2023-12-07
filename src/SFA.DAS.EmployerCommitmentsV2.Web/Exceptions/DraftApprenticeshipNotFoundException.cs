@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Exceptions
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
+
+public class DraftApprenticeshipNotFoundException : Exception
 {
-    public class DraftApprenticeshipNotFoundException : Exception
-    {
-        public DraftApprenticeshipNotFoundException(string message = default) :base(message)
-        {}
-    }
+    public DraftApprenticeshipNotFoundException(string message = default) :base(message)
+    {}
 }

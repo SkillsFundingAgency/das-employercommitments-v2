@@ -5,23 +5,22 @@ using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Home;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
+
+[DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
+[Route("{accountHashedId}")]
+public class HomeController : Controller
 {
-    [DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
-    [Route("{accountHashedId}")]
-    public class HomeController : Controller
+    private readonly IModelMapper _modelMapper;
+
+    public HomeController(IModelMapper modelMapper)
     {
-        private readonly IModelMapper _modelMapper;
+        _modelMapper = modelMapper;
+    }
 
-        public HomeController(IModelMapper modelMapper)
-        {
-            _modelMapper = modelMapper;
-        }
-
-        public async Task<IActionResult> Index(IndexRequest request)
-        {
-            var model = await _modelMapper.Map<IndexViewModel>(request);
-            return View(model);
-        }
+    public async Task<IActionResult> Index(IndexRequest request)
+    {
+        var model = await _modelMapper.Map<IndexViewModel>(request);
+        return View(model);
     }
 }

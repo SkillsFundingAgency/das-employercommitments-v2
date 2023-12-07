@@ -5,42 +5,41 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
+
+public class DetailsViewModelToAcknowledgementRequestMapper : IMapper<DetailsViewModel, AcknowledgementRequest>
 {
-    public class DetailsViewModelToAcknowledgementRequestMapper : IMapper<DetailsViewModel, AcknowledgementRequest>
+    private readonly IApprovalsApiClient _apiClient;
+    private readonly IAuthenticationService _authenticationService;
+
+    public DetailsViewModelToAcknowledgementRequestMapper(IApprovalsApiClient apiClient, IAuthenticationService authenticationService)
     {
-        private readonly IApprovalsApiClient _apiClient;
-        private readonly IAuthenticationService _authenticationService;
+        _apiClient = apiClient;
+        _authenticationService = authenticationService;
+    }
 
-        public DetailsViewModelToAcknowledgementRequestMapper(IApprovalsApiClient apiClient, IAuthenticationService authenticationService)
+    public async Task<AcknowledgementRequest> Map(DetailsViewModel source)
+    {
+        var apiRequest = new PostCohortDetailsRequest
         {
-            _apiClient = apiClient;
-            _authenticationService = authenticationService;
-        }
+            SubmissionType = source.Selection == CohortDetailsOptions.Approve
+                ? PostCohortDetailsRequest.CohortSubmissionType.Approve
+                : PostCohortDetailsRequest.CohortSubmissionType.Send,
+            Message = source.SendMessage,
+            UserInfo = new ApimUserInfo
+            {
+                UserDisplayName = _authenticationService.UserName,
+                UserEmail = _authenticationService.UserEmail,
+                UserId = _authenticationService.UserId
+            }
+        };
 
-        public async Task<AcknowledgementRequest> Map(DetailsViewModel source)
+        await _apiClient.PostCohortDetails(source.AccountId, source.CohortId, apiRequest);
+
+        return new AcknowledgementRequest
         {
-            var apiRequest = new PostCohortDetailsRequest
-            {
-                SubmissionType = source.Selection == CohortDetailsOptions.Approve
-                    ? PostCohortDetailsRequest.CohortSubmissionType.Approve
-                    : PostCohortDetailsRequest.CohortSubmissionType.Send,
-                Message = source.SendMessage,
-                UserInfo = new ApimUserInfo
-                {
-                    UserDisplayName = _authenticationService.UserName,
-                    UserEmail = _authenticationService.UserEmail,
-                    UserId = _authenticationService.UserId
-                }
-            };
-
-            await _apiClient.PostCohortDetails(source.AccountId, source.CohortId, apiRequest);
-
-            return new AcknowledgementRequest
-            {
-                CohortReference = source.CohortReference,
-                AccountHashedId = source.AccountHashedId
-            };
-        }
+            CohortReference = source.CohortReference,
+            AccountHashedId = source.AccountHashedId
+        };
     }
 }

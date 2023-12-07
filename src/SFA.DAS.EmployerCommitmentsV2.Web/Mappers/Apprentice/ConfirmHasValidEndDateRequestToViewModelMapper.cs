@@ -3,30 +3,29 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
+
+public class ConfirmHasValidEndDateRequestToViewModelMapper : IMapper<ConfirmHasValidEndDateRequest, ConfirmHasValidEndDateViewModel>
 {
-    public class ConfirmHasValidEndDateRequestToViewModelMapper : IMapper<ConfirmHasValidEndDateRequest, ConfirmHasValidEndDateViewModel>
+    private readonly ICommitmentsApiClient _client;
+
+    public ConfirmHasValidEndDateRequestToViewModelMapper(ICommitmentsApiClient client)
     {
-        private readonly ICommitmentsApiClient _client;
+        _client = client;
+    }
 
-        public ConfirmHasValidEndDateRequestToViewModelMapper(ICommitmentsApiClient client)
+    public async Task<ConfirmHasValidEndDateViewModel> Map(ConfirmHasValidEndDateRequest source)
+    {
+        var apprenticeship = await _client.GetApprenticeship(source.ApprenticeshipId);
+
+        return new ConfirmHasValidEndDateViewModel
         {
-            _client = client;
-        }
-
-        public async Task<ConfirmHasValidEndDateViewModel> Map(ConfirmHasValidEndDateRequest source)
-        {
-            var apprenticeship = await _client.GetApprenticeship(source.ApprenticeshipId);
-
-            return new ConfirmHasValidEndDateViewModel
-            {
-                AccountHashedId = source.AccountHashedId,
-                ApprenticeshipHashedId = source.ApprenticeshipHashedId,
-                ApprenticeName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
-                ULN = apprenticeship.Uln,
-                Course = apprenticeship.CourseName,
-                EndDate = apprenticeship.EndDate
-            };
-        }
+            AccountHashedId = source.AccountHashedId,
+            ApprenticeshipHashedId = source.ApprenticeshipHashedId,
+            ApprenticeName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
+            ULN = apprenticeship.Uln,
+            Course = apprenticeship.CourseName,
+            EndDate = apprenticeship.EndDate
+        };
     }
 }
