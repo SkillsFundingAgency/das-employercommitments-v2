@@ -21,7 +21,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution
             registry.IncludeRegistry<EmployerUserRolesAuthorizationRegistry>();
             registry.IncludeRegistry<WebRegistry>();
             registry.IncludeRegistry<ApprovalsApiClientRegistry>();
-            registry.IncludeRegistry(new GovUkStructureMap($"SFA.DAS.Employer.GovSignIn:{nameof(GovUkOidcConfiguration)}"));
+            
+            // TODO What about this?  ...
+            //registry.IncludeRegistry(new GovUkStructureMap($"SFA.DAS.Employer.GovSignIn:{nameof(GovUkOidcConfiguration)}"));
             
             // Enable in appsettings if you want to bypass MI when developing locally
             // if (config["UseLocalDevRegistry"] != null && bool.Parse(config["UseLocalDevRegistry"]))
