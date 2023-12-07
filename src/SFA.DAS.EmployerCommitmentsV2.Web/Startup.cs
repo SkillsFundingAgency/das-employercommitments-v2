@@ -5,9 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
-using SFA.DAS.EmployerCommitmentsV2.Web.DependencyResolution;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 using SFA.DAS.EmployerUrlHelper.DependencyResolution;
-using StructureMap;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web;
 
@@ -25,6 +25,8 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services
+            .AddApplicationServices()
+            .AddCommitmentsApiClient(_configuration)
             .AddDasAuthorization()
             .AddDasEmployerAuthentication(_configuration)
             .AddDasHealthChecks()
@@ -35,11 +37,6 @@ public class Startup
             .AddMemoryCache()
             .AddApplicationInsightsTelemetry()
             .AddDataProtection(_configuration, _environment);
-    }
-
-    public void ConfigureContainer(Registry registry)
-    {
-        IoC.Initialize(registry, _configuration);
     }
 
     public void Configure(IApplicationBuilder app)

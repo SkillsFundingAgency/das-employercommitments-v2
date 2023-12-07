@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
 public static class ConfigurationExtensions
 {
@@ -38,4 +38,11 @@ public static class ConfigurationExtensions
     }
     
     public static bool IsDev(this IConfiguration configuration) => configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase);
+    
+    public static bool UseLocalRegistry(this IConfiguration configuration)
+    {
+        var isLocalRegistry = configuration.GetValue<bool?>("UseLocalDevRegistry");
+
+        return isLocalRegistry != null && isLocalRegistry.Value;
+    }
 }

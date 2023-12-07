@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -9,7 +8,7 @@ public static class HstsStartup
 {
     public static IApplicationBuilder UseDasHsts(this IApplicationBuilder app)
     {
-        var hostingEnvironment = app.ApplicationServices.GetService<IWebHostEnvironment>();
+        var hostingEnvironment = app.ApplicationServices.GetService<IHostEnvironment>();
 
         if (!hostingEnvironment.IsDevelopment())
         {

@@ -1,10 +1,8 @@
 ﻿using System;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NLog;
 using NLog.Web;
-using StructureMap.AspNetCore;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web;
 
