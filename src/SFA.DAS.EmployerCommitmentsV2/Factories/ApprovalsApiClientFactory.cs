@@ -2,7 +2,7 @@
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.Http;
 
-namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution;
+namespace SFA.DAS.EmployerCommitmentsV2.Factories;
 
 public interface IApprovalsApiClientFactory
 {
