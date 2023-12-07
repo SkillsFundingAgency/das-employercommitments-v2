@@ -238,7 +238,7 @@ public class DraftApprenticeshipController : Controller
                 return View(model);
             }
 
-            request.DeliveryModel = (SFA.DAS.CommitmentsV2.Types.DeliveryModel) model.DeliveryModels.FirstOrDefault();
+            request.DeliveryModel = (CommitmentsV2.Types.DeliveryModel) model.DeliveryModels.FirstOrDefault();
         }
 
         return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), request.CloneBaseValues());
@@ -246,7 +246,7 @@ public class DraftApprenticeshipController : Controller
 
     [HttpPost]
     [Route("{DraftApprenticeshipHashedId}/edit/select-delivery-model")]
-    public async Task<IActionResult> SetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
+    public IActionResult SetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
     {
         var draft = GetStoredEditDraftApprenticeshipState();
 
