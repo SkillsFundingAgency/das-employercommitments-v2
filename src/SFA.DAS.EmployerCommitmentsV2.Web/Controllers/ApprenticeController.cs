@@ -32,6 +32,7 @@ public class ApprenticeController : Controller
     private readonly ICookieStorageService<IndexRequest> _cookieStorage;
     private readonly ICommitmentsApiClient _commitmentsApiClient;
     private readonly ILogger<ApprenticeController> _logger;
+    
     private const string ApprenticePausedMessage = "Apprenticeship paused";
     private const string ApprenticeResumeMessage = "Apprenticeship resumed";
     private const string ApprenticeStoppedMessage = "Apprenticeship stopped";

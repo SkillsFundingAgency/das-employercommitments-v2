@@ -61,10 +61,12 @@ public class CohortController : Controller
     public async Task<IActionResult> Details(DetailsRequest request)
     {
         var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
+        
         StoreViewEmployerAgreementModelState(
             new ViewEmployerAgreementModel {
                 AccountHashedId = viewModel.AccountHashedId, 
                 CohortId = viewModel.CohortId });
+        
         return View(viewModel);
     }
 
