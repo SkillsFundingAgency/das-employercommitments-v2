@@ -1,7 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+
+public class ApimSaveDataRequest
 {
-    public class ApimSaveDataRequest
-    {
-        public ApimUserInfo UserInfo { get; set; }
-    }
+    public ApimUserInfo UserInfo { get; set; }
 }
