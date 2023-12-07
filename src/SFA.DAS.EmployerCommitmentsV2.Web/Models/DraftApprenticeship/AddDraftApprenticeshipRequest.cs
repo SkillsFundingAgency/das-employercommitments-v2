@@ -1,4 +1,3 @@
-using System;
 using SFA.DAS.Authorization.ModelBinding;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.CommitmentsV2.Types;

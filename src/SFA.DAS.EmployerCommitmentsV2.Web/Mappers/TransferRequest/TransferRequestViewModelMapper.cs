@@ -5,8 +5,6 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
 using SFA.DAS.Encoding;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.TransferRequest;
 

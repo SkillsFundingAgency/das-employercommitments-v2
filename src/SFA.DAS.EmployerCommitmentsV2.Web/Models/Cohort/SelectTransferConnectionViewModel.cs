@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 public class SelectTransferConnectionViewModel
 {

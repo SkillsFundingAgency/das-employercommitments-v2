@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SFA.DAS.Authorization.ModelBinding;
-using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 

@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.EAS.Account.Api.Types;
-using System;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 

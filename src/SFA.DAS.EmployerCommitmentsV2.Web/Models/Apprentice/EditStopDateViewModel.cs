@@ -1,6 +1,5 @@
 ﻿using SFA.DAS.Authorization.ModelBinding;
 using SFA.DAS.CommitmentsV2.Shared.Models;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;

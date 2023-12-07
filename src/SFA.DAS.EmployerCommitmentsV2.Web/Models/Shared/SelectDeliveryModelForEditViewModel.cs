@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 public class SelectDeliveryModelForEditViewModel : IDeliveryModelSelection
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using SFA.DAS.CommitmentsV2.Shared.Extensions;
+﻿using SFA.DAS.CommitmentsV2.Shared.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 

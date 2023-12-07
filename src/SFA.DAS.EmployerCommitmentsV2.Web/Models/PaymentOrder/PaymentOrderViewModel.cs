@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using SFA.DAS.Authorization.ModelBinding;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
 

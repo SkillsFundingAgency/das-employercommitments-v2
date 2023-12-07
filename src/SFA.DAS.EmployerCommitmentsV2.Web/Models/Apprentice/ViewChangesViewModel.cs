@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.CommitmentsV2.Types;
-using System;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 

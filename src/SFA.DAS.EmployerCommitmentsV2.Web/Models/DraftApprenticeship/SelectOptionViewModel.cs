@@ -1,7 +1,5 @@
 ﻿using SFA.DAS.Authorization.ModelBinding;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
-using System;
-using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 

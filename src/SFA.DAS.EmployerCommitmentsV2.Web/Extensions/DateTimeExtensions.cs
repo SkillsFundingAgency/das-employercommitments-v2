@@ -1,5 +1,3 @@
-using System;
-
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
 public static class DateTimeExtensions

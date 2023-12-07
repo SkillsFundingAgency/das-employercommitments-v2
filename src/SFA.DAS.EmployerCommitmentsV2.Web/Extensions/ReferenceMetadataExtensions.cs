@@ -1,5 +1,4 @@
-﻿using System;
-using SFA.DAS.EmployerCommitmentsV2.Attributes;
+﻿using SFA.DAS.EmployerCommitmentsV2.Attributes;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 

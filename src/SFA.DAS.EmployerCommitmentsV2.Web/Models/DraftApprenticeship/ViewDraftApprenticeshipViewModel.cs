@@ -1,5 +1,4 @@
-﻿using System;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
+﻿using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 

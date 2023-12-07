@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 public class WhatIsTheNewPriceViewModel : ChangeOfProviderBaseViewModel
 {        

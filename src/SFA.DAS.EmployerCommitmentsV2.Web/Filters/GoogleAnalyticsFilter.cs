@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
-using System.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Filters;
 

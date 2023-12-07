@@ -1,7 +1,5 @@
 ﻿using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
-using System.Collections.Generic;
-using System.Linq;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetDataLocksResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions;

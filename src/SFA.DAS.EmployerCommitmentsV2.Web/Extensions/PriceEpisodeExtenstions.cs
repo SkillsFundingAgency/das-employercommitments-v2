@@ -1,7 +1,4 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Types.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetPriceEpisodeResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions;

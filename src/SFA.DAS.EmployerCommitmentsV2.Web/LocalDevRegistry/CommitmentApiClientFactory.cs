@@ -4,7 +4,6 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.CommitmentsV2.Api.Client.Http;
 using SFA.DAS.Http;
-using System;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web;
 

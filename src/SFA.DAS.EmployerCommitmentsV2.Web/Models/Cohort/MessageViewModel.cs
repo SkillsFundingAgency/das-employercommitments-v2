@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.Authorization.ModelBinding;
-using System;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.IO;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;

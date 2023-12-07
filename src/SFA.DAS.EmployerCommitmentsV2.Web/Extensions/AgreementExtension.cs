@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using SFA.DAS.EAS.Account.Api.Types;
+﻿using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions;

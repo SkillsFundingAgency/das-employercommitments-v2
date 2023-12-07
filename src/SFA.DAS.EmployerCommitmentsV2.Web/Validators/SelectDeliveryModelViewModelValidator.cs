@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using FluentValidation;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;

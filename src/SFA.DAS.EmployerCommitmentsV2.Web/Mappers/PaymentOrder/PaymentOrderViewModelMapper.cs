@@ -1,9 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetProviderPaymentsPriorityResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.PaymentOrder;
