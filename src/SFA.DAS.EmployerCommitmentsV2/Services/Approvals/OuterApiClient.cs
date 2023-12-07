@@ -59,14 +59,14 @@ public class OuterApiClient : IOuterApiClient
         request.Headers.Add(VersionRequestHeaderKey, "1");
     }
 
-    public async Task<TResponse> Post<TResponse>(string url, object data)
+    public Task<TResponse> Post<TResponse>(string url, object data)
     {
-        return await PutOrPost<TResponse>(url, data, HttpMethod.Post);
+        return PutOrPost<TResponse>(url, data, HttpMethod.Post);
     }
 
-    public async Task<TResponse> Put<TResponse>(string url, object data)
+    public Task<TResponse> Put<TResponse>(string url, object data)
     {
-        return await PutOrPost<TResponse>(url, data, HttpMethod.Put);
+        return PutOrPost<TResponse>(url, data, HttpMethod.Put);
     }
 
     private async Task<TResponse> PutOrPost<TResponse>(string url, object data, HttpMethod method)
