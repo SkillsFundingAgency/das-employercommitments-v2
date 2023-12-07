@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using SFA.DAS.Authorization.Mvc.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
@@ -36,11 +37,16 @@ public class Startup
         services.AddHttpContextAccessor();
         services.AddConfigurationOptions(_configuration);
         services.AddEncodingServices(_configuration);
+        services.AddModelMappings();
+        services.AddApprovalsApiClient();
+            
+        var employerCommitmentsV2Configuration = _configuration.Get<EmployerCommitmentsV2Configuration>();
         
         services
-            .AddApplicationServices()
+            .AddApplicationServices(employerCommitmentsV2Configuration)
             .AddCommitmentsApiClient(_configuration)
-            .AddDasAuthorization()
+            .AddAccountsApiClient(employerCommitmentsV2Configuration)
+            .AddAuthorizationServices()
             .AddDasEmployerAuthentication(_configuration)
             .AddDasHealthChecks()
             .AddDasMaMenuConfiguration(_configuration)

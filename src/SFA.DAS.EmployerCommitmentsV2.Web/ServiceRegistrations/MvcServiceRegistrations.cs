@@ -21,7 +21,7 @@ public static class MvcServiceRegistrations
     {
         var commitmentsConfiguration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
             .Get<EmployerCommitmentsV2Configuration>();
-            
+
         services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = false;
@@ -32,17 +32,17 @@ public static class MvcServiceRegistrations
                 options.ModelBinderProviders.Insert(0, new SuppressArgumentExceptionModelBinderProvider());
                 options.AddStringModelBinderProvider();
                 options.Filters.Add(new AccountActiveFilter(configuration));
-                
+
                 if (commitmentsConfiguration.UseGovSignIn)
                 {
-                    options.Filters.Add(new AuthorizeFilter("HasActiveAccount"));    
+                    options.Filters.Add(new AuthorizeFilter("HasActiveAccount"));
                 }
             })
             .AddControllersAsServices()
             .SetDefaultNavigationSection(NavigationSection.ApprenticesHome);
 
         services.AddFluentValidationAutoValidation()
-                .AddValidatorsFromAssemblyContaining<AddDraftApprenticeshipViewModelValidator>();
+            .AddValidatorsFromAssemblyContaining<AddDraftApprenticeshipViewModelValidator>();
 
         return services;
     }
