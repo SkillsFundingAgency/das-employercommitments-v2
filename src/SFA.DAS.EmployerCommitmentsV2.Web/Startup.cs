@@ -46,7 +46,6 @@ public class Startup
             .AddApplicationServices(employerCommitmentsV2Configuration)
             .AddCommitmentsApiClient(_configuration)
             .AddAccountsApiClient(employerCommitmentsV2Configuration)
-            .AddAuthorizationServices()
             .AddDasEmployerAuthentication(_configuration)
             .AddDasHealthChecks()
             .AddDasMaMenuConfiguration(_configuration)
@@ -67,6 +66,11 @@ public class Startup
             .UseStaticFiles()
             .UseDasHealthChecks()
             .UseAuthentication()
-            .UseMvc();
+            .UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
     }
 }

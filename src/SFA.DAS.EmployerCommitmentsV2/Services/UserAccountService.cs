@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using SFA.DAS.EmployerCommitmentsV2.Models.UserAccounts;
+﻿using SFA.DAS.EmployerCommitmentsV2.Models.UserAccounts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services;

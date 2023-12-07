@@ -1,6 +1,4 @@
 ﻿using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
-using System.Threading;
-using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals

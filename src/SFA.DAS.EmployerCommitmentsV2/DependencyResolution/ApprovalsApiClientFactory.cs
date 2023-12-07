@@ -1,37 +1,37 @@
-﻿using Microsoft.Extensions.Logging;
-using SFA.DAS.EmployerCommitmentsV2.Configuration;
+﻿using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.Http;
-using System;
 
-namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution
+namespace SFA.DAS.EmployerCommitmentsV2.DependencyResolution;
+
+public interface IApprovalsApiClientFactory
 {
-    public class ApprovalsApiClientFactory : IApprovalsApiClientFactory
+    IApprovalsApiClient CreateClient();
+}
+    
+public class ApprovalsApiClientFactory : IApprovalsApiClientFactory
+{
+    private readonly ApprovalsApiClientConfiguration _configuration;
+    private readonly ILoggerFactory _loggerFactory;
+
+    public ApprovalsApiClientFactory(ApprovalsApiClientConfiguration configuration, ILoggerFactory loggerFactory)
     {
-        private readonly ApprovalsApiClientConfiguration _configuration;
-        private readonly ILoggerFactory _loggerFactory;
+        _configuration = configuration;
+        _loggerFactory = loggerFactory;
+    }
 
-        public ApprovalsApiClientFactory(ApprovalsApiClientConfiguration configuration, ILoggerFactory loggerFactory)
-        {
-            _configuration = configuration;
-            _loggerFactory = loggerFactory;
-        }
+    public IApprovalsApiClient CreateClient()
+    {
+        var httpClient = new HttpClientBuilder()
+            .WithDefaultHeaders()
+            .WithApimAuthorisationHeader(_configuration)
+            .WithLogging(_loggerFactory)
+            .Build();
 
-        public IApprovalsApiClient CreateClient()
-        {
-            var httpClient = new HttpClientBuilder()
-                                    .WithDefaultHeaders()
-                                    .WithApimAuthorisationHeader(_configuration)
-                                    .WithLogging(_loggerFactory)
-                                    .Build();
+        httpClient.BaseAddress = !_configuration.ApiBaseUrl.EndsWith("/") 
+            ? new Uri(_configuration.ApiBaseUrl + "/") 
+            : new Uri(_configuration.ApiBaseUrl);
 
-            if (!_configuration.ApiBaseUrl.EndsWith("/"))
-                httpClient.BaseAddress = new Uri(_configuration.ApiBaseUrl + "/");
-            else
-                httpClient.BaseAddress = new Uri(_configuration.ApiBaseUrl);
-
-            var apiClient = new ApprovalsApiClient(new OuterApiClient(httpClient, _configuration, _loggerFactory.CreateLogger<OuterApiClient>()));
-            return apiClient;
-        }
+        return new ApprovalsApiClient(new OuterApiClient(httpClient, _configuration, _loggerFactory.CreateLogger<OuterApiClient>()));
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Attributes
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Attributes
 {
     public class ReferenceMetadataAttribute : Attribute
     {
