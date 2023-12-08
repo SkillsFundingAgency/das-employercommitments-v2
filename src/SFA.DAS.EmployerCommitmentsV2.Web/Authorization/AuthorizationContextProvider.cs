@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using SFA.DAS.Authorization.CommitmentPermissions.Context;
-using SFA.DAS.Authorization.Context;
-using SFA.DAS.Authorization.EmployerUserRoles.Context;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
@@ -40,28 +37,30 @@ public class AuthorizationContextProvider : IAuthorizationContextProvider
         CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, apprenticeshipId, AuthorizationContextKeys.ApprenticeshipId);
         CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetPledgeApplicationId(), AuthorizationContextKeys.PledgeApplicationId);
 
-        if (accountId.HasValue)
-        { 
-            if(userRef.HasValue)
-            {
-                authorizationContext.AddEmployerUserRoleValues(accountId.Value, userRef.Value);
-            } 
+        if (!accountId.HasValue)
+        {
+            return authorizationContext;
+        }
+        
+        if(userRef.HasValue)
+        {
+            authorizationContext.AddEmployerUserRoleValues(accountId.Value, userRef.Value);
+        } 
                 
-            if (cohortId.HasValue)
-            {
-                authorizationContext.AddCommitmentPermissionValues(cohortId.Value, Party.Employer, accountId.Value);
-            }
+        if (cohortId.HasValue)
+        {
+            authorizationContext.AddCommitmentPermissionValues(cohortId.Value, Party.Employer, accountId.Value);
+        }
 
-            if (apprenticeshipId.HasValue)
-            {
-                authorizationContext.AddApprenticeshipPermissionValues(apprenticeshipId.Value, Party.Employer, accountId.Value);
-            }
+        if (apprenticeshipId.HasValue)
+        {
+            authorizationContext.AddApprenticeshipPermissionValues(apprenticeshipId.Value, Party.Employer, accountId.Value);
         }
 
         return authorizationContext;
     }
 
-    private void CopyRouteValueToAuthorizationContextIfAvailable<T>(IAuthorizationContext ctx, T? value, string name) where T : struct
+    private static void CopyRouteValueToAuthorizationContextIfAvailable<T>(IAuthorizationContext ctx, T? value, string name) where T : struct
     {
         if (value.HasValue)
         {

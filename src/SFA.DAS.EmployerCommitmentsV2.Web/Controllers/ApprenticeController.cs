@@ -1,9 +1,7 @@
 ﻿using System.Threading;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Authorization.CommitmentPermissions.Options;
-using SFA.DAS.Authorization.EmployerUserRoles.Options;
-using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
@@ -12,6 +10,7 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -25,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
 [Route("{accountHashedId}/apprentices")]
 [SetNavigationSection(NavigationSection.ApprenticesHome)]
-[DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
+[Authorize(Policy = nameof(PolicyNames.HasEmployerViewerTransactorOwnerAccount))]
 public class ApprenticeController : Controller
 {
     private readonly IModelMapper _modelMapper;
@@ -89,7 +88,7 @@ public class ApprenticeController : Controller
     }
 
     [Route("{apprenticeshipHashedId}/details/editenddate", Name = RouteNames.ApprenticeEditEndDate)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> EditEndDate(EditEndDateRequest request)
     {
         var viewModel = await _modelMapper.Map<EditEndDateViewModel>(request);
@@ -126,7 +125,7 @@ public class ApprenticeController : Controller
                 return RedirectToAction(nameof(PauseApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
             case ChangeStatusType.Stop:
-                var redirectToActionName = viewModel.CurrentStatus == CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart ? nameof(HasTheApprenticeBeenMadeRedundant) : nameof(WhyStopApprenticeship);
+                var redirectToActionName = viewModel.CurrentStatus == ApprenticeshipStatus.WaitingToStart ? nameof(HasTheApprenticeBeenMadeRedundant) : nameof(WhyStopApprenticeship);
                 return RedirectToAction(redirectToActionName, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
             case ChangeStatusType.Resume:
@@ -138,7 +137,7 @@ public class ApprenticeController : Controller
     }
 
     [Route("{apprenticeshipHashedId}/change-provider", Name = RouteNames.ChangeProviderInform)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> ChangeProviderInform(ChangeProviderInformRequest request)
     {
         var viewModel = await _modelMapper.Map<ChangeProviderInformViewModel>(request);
@@ -147,7 +146,7 @@ public class ApprenticeController : Controller
     }
 
     [Route("{apprenticeshipHashedId}/change-provider/stopped-error", Name = RouteNames.ApprenticeNotStoppedError)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public IActionResult ApprenticeNotStoppedError()
     {
         return View();
@@ -155,7 +154,7 @@ public class ApprenticeController : Controller
 
     [HttpGet]
     [Route("{apprenticeshipHashedId}/change-provider/select-provider", Name = RouteNames.EnterNewTrainingProvider)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> EnterNewTrainingProvider(ChangeOfProviderRequest request)
     {
         var viewModel = await _modelMapper.Map<EnterNewTrainingProviderViewModel>(request);
@@ -187,7 +186,7 @@ public class ApprenticeController : Controller
     }
 
     [Route("{apprenticeshipHashedId}/change-provider/who-enter-details", Name = RouteNames.WhoWillEnterTheDetails)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> WhoWillEnterTheDetails(ChangeOfProviderRequest request)
     {
         var viewModel = await _modelMapper.Map<WhoWillEnterTheDetailsViewModel>(request);
@@ -212,7 +211,7 @@ public class ApprenticeController : Controller
 
     [HttpGet]
     [Route("{apprenticeshipHashedId}/change-provider/start-date", Name = RouteNames.WhatIsTheNewStartDate)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> WhatIsTheNewStartDate(ChangeOfProviderRequest request)
     {
         var viewModel = await _modelMapper.Map<WhatIsTheNewStartDateViewModel>(request);
@@ -251,7 +250,7 @@ public class ApprenticeController : Controller
 
     [HttpGet]
     [Route("{apprenticeshipHashedId}/change-provider/end-date", Name = RouteNames.WhatIsTheNewEndDate)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> WhatIsTheNewEndDate(ChangeOfProviderRequest request)
     {
         var viewModel = await _modelMapper.Map<WhatIsTheNewEndDateViewModel>(request);
@@ -292,7 +291,7 @@ public class ApprenticeController : Controller
 
     [HttpGet]
     [Route("{apprenticeshipHashedId}/change-provider/price", Name = RouteNames.WhatIsTheNewPrice)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> WhatIsTheNewPrice(ChangeOfProviderRequest request)
     {
         var viewModel = await _modelMapper.Map<WhatIsTheNewPriceViewModel>(request);
@@ -329,7 +328,7 @@ public class ApprenticeController : Controller
 
     [HttpGet]
     [Route("{apprenticeshipHashedId}/change-provider/confirm-details", Name = RouteNames.ConfirmDetailsAndSendRequest)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> ConfirmDetailsAndSendRequestPage(ChangeOfProviderRequest request)
     {
         var viewModel = await _modelMapper.Map<ConfirmDetailsAndSendViewModel>(request);
@@ -362,7 +361,7 @@ public class ApprenticeController : Controller
 
     [HttpGet]
     [Route("{apprenticeshipHashedId}/change-provider/cancel", Name = RouteNames.CancelChangeOfProviderRequest)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> CancelChangeOfProviderRequest(ChangeOfProviderRequest request)
     {
         var viewModel = await _modelMapper.Map<CancelChangeOfProviderRequestViewModel>(request);
@@ -385,7 +384,7 @@ public class ApprenticeController : Controller
     }
 
     [Route("{apprenticeshipHashedId}/change-provider/send-request", Name = RouteNames.SendRequestNewTrainingProvider)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> SendRequestNewTrainingProvider(SendNewTrainingProviderRequest request)
     {
         var viewModel = await _modelMapper.Map<SendNewTrainingProviderViewModel>(request);
@@ -416,7 +415,7 @@ public class ApprenticeController : Controller
 
     [HttpGet]
     [Route("{apprenticeshipHashedId}/change-provider/change-provider-requested/{providerId}", Name = RouteNames.ChangeProviderRequestedConfirmation)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> ChangeProviderRequested(ChangeProviderRequestedConfirmationRequest request)
     {
         var viewModel = await _modelMapper.Map<ChangeProviderRequestedConfirmationViewModel>(request);
@@ -425,7 +424,7 @@ public class ApprenticeController : Controller
     }
 
     [Route("{apprenticeshipHashedId}/view-changes", Name = RouteNames.ViewChanges)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> ViewChanges(ViewChangesRequest request)
     {
         var viewModel = await _modelMapper.Map<ViewChangesViewModel>(request);
@@ -434,7 +433,7 @@ public class ApprenticeController : Controller
     }
 
     [Route("{apprenticeshipHashedId}/details/stop", Name = RouteNames.WhenToApplyStopApprentice)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [HttpGet]
     public async Task<IActionResult> StopApprenticeship(StopRequest request)
     {
@@ -450,7 +449,7 @@ public class ApprenticeController : Controller
     }
 
     [Route("{apprenticeshipHashedId}/details/madeRedundant", Name = RouteNames.HasTheApprenticeBeenMadeRedundant)]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [HttpGet]
     public async Task<IActionResult> HasTheApprenticeBeenMadeRedundant(MadeRedundantRequest request)
     {
@@ -526,7 +525,7 @@ public class ApprenticeController : Controller
     }
 
     [Route("{apprenticeshipHashedId}/details/confirmStop")]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [HttpGet]
     public async Task<IActionResult> ConfirmStop(ConfirmStopRequest request)
     {
@@ -560,7 +559,7 @@ public class ApprenticeController : Controller
     }
 
     [Route("{apprenticeshipHashedId}/change-provider/apprenticeshipStopped")]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [HttpGet]
     public IActionResult ApprenticeshipStoppedInform()
     {
@@ -616,7 +615,7 @@ public class ApprenticeController : Controller
     }
 
     [HttpGet]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
     public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request)
     {
@@ -625,7 +624,7 @@ public class ApprenticeController : Controller
     }
 
     [HttpGet]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/details/editstopdate", Name = "EditStopDateOption")]
     public async Task<ActionResult> EditStopDate(EditStopDateRequest request)
     {
@@ -647,7 +646,7 @@ public class ApprenticeController : Controller
     }
 
     [HttpGet]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/edit")]
     public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequest request)
     {
@@ -709,7 +708,7 @@ public class ApprenticeController : Controller
 
     [HttpGet]
     [Route("{apprenticeshipHashedId}/edit/select-course")]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> SelectCourseForEdit(EditApprenticeshipRequest request)
     {
         var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
@@ -719,7 +718,7 @@ public class ApprenticeController : Controller
 
     [HttpPost]
     [Route("{apprenticeshipHashedId}/edit/select-course")]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public IActionResult SetCourseForEdit(SelectCourseViewModel model)
     {
         if (string.IsNullOrEmpty(model.CourseCode))
@@ -738,7 +737,7 @@ public class ApprenticeController : Controller
 
     [HttpGet]
     [Route("{apprenticeshipHashedId}/edit/select-delivery-model")]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> SelectDeliveryModelForEdit(EditApprenticeshipRequest request)
     {
         var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
@@ -756,7 +755,7 @@ public class ApprenticeController : Controller
 
     [HttpPost]
     [Route("{ApprenticeshipHashedId}/edit/select-delivery-model")]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public IActionResult SetDeliveryModelForEdit(EditApprenticeshipDeliveryModelViewModel model)
     {
         if (model.DeliveryModel == null)
@@ -834,7 +833,7 @@ public class ApprenticeController : Controller
     }
 
     [HttpGet]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/edit/confirm")]
     public async Task<IActionResult> ConfirmEditApprenticeship()
     {
@@ -870,7 +869,7 @@ public class ApprenticeController : Controller
     }
 
     [HttpGet]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/changes/review")]
     public async Task<IActionResult> ReviewApprenticeshipUpdates(ReviewApprenticeshipUpdatesRequest request)
     {
@@ -912,7 +911,7 @@ public class ApprenticeController : Controller
     }
 
     [HttpGet]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/changes/view")]
     public async Task<IActionResult> ViewApprenticeshipUpdates(ViewApprenticeshipUpdatesRequest request)
     {
@@ -943,7 +942,7 @@ public class ApprenticeController : Controller
     }
 
     [HttpGet]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/changes/request")]
     public async Task<IActionResult> DataLockRequestChanges(DataLockRequestChangesRequest request)
     {
@@ -974,7 +973,7 @@ public class ApprenticeController : Controller
     }
 
     [HttpGet]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/changes/restart")]
     public async Task<IActionResult> DataLockRequestRestart(DataLockRequestRestartRequest request)
     {
@@ -1117,13 +1116,11 @@ public class ApprenticeController : Controller
                 ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
             });
         }
-        else
+
+        return RedirectToAction(nameof(EditStopDate), new
         {
-            return RedirectToAction(nameof(EditStopDate), new
-            {
-                AccountHashedId = viewModel.AccountHashedId,
-                ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
-            });
-        }
+            AccountHashedId = viewModel.AccountHashedId,
+            ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+        });
     }
 }

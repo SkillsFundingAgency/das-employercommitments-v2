@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Authorization.CommitmentPermissions.Options;
-using SFA.DAS.Authorization.EmployerUserRoles.Options;
-using SFA.DAS.Authorization.Mvc.Attributes;
+﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
@@ -18,7 +19,8 @@ using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.D
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
-[DasAuthorize(CommitmentOperation.AccessCohort, EmployerUserRole.OwnerOrTransactor)]
+[Authorize(Policy = nameof(PolicyNames.HasEmployerViewerTransactorOwnerAccount))]
+[Authorize(Policy = nameof(PolicyNames.AccessCohort))]
 [Route("{AccountHashedId}/unapproved/{cohortReference}/apprentices")]
 public class DraftApprenticeshipController : Controller
 {
@@ -27,7 +29,7 @@ public class DraftApprenticeshipController : Controller
     private readonly IEncodingService _encodingService;
     private readonly IApprovalsApiClient _outerApi;
 
-    public const string ApprenticeDeletedMessage = "Apprentice record deleted";
+    private const string ApprenticeDeletedMessage = "Apprentice record deleted";
 
     public DraftApprenticeshipController(
         IModelMapper modelMapper,
@@ -231,7 +233,7 @@ public class DraftApprenticeshipController : Controller
 
         if (model != null)
         {
-            model.DeliveryModel = (EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel?) request.DeliveryModel;
+            model.DeliveryModel = (DeliveryModel?) request.DeliveryModel;
 
             if (model.DeliveryModels.Count > 1 || model.HasUnavailableFlexiJobAgencyDeliveryModel)
             {
@@ -345,7 +347,7 @@ public class DraftApprenticeshipController : Controller
         }
         catch(RestHttpClientException ex)
         {
-            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            if (ex.StatusCode == HttpStatusCode.NotFound)
             {
                 return false;
             }

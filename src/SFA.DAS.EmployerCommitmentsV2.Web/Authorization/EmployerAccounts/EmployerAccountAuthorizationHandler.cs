@@ -10,7 +10,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using JsonClaimValueTypes = Microsoft.IdentityModel.JsonWebTokens.JsonClaimValueTypes;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
 
 public interface IEmployerAccountAuthorisationHandler
 {

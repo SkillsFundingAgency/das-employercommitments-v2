@@ -26,7 +26,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
 
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
         private Mock<IEncodingService> _encodingService;
-        private Mock<IAuthorizationService> _authorizationService;
         private string _encodedTransferSenderId;
         private GetCohortResponse _cohort;
         private List<TrainingProgramme> _allTrainingProgrammes;
@@ -66,9 +65,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                 .Setup(x => x.Encode(It.IsAny<long>(), It.Is<EncodingType>(e => e == EncodingType.PublicAccountId)))
                 .Returns(_encodedTransferSenderId);
 
-            _authorizationService = new Mock<IAuthorizationService>();
-
-            _mapper = new AddDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object, _authorizationService.Object);
+            _mapper = new AddDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object);
 
             _source = autoFixture.Create<AddDraftApprenticeshipRequest>();
             _source.StartMonthYear = "092020";

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Web.LocalDevRegistry;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 

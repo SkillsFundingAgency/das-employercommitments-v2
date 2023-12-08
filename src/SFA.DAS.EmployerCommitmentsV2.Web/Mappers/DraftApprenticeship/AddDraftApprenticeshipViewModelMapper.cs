@@ -1,5 +1,4 @@
-﻿using SFA.DAS.Authorization.Services;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
@@ -13,11 +12,13 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<AddDraftApprentices
 {
     private readonly ICommitmentsApiClient _commitmentsApiClient;
     private readonly IEncodingService _encodingService;
-    private readonly IAuthorizationService _authorizationService;
 
-    public AddDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, IAuthorizationService authorizationService)
-        => (_commitmentsApiClient, _encodingService, _authorizationService) = (commitmentsApiClient, encodingService, authorizationService);        
-
+    public AddDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
+    {
+        _commitmentsApiClient = commitmentsApiClient;
+        _encodingService = encodingService;
+    }
+        
     public async Task<AddDraftApprenticeshipViewModel> Map(AddDraftApprenticeshipRequest source)
     {
         var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);

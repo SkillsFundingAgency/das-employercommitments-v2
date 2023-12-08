@@ -6,12 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.Authorization.CommitmentPermissions.DependencyResolution.Microsoft;
-using SFA.DAS.Authorization.DependencyResolution.Microsoft;
-using SFA.DAS.Authorization.EmployerFeatures.DependencyResolution.Microsoft;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
+using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.GovUK.Auth.AppStart;
 using SFA.DAS.GovUK.Auth.Authentication;
@@ -21,20 +20,10 @@ using SFA.DAS.GovUK.Auth.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 
-public static class AuthenticationServiceRegistrations
+public static class EmployerAuthenticationServiceRegistrations
 {
     public static IServiceCollection AddDasEmployerAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthorization<AuthorizationContextProvider>()
-            .AddCommitmentPermissionsAuthorization()
-            .AddEmployerFeaturesAuthorization();
-        
-        // Do we need these three registering?
-        
-        // services.AddSingleton<IAuthenticationService, AuthenticationService>();
-        // services.AddTransient<IEmployerAccountAuthorisationHandler, EmployerAccountAuthorisationHandler>();
-        // services.AddTransient<IAuthorizationHandler, UserIsInAccountAuthorizationHandler>();
-        
         var commitmentsConfiguration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
             .Get<EmployerCommitmentsV2Configuration>();
         
@@ -67,12 +56,19 @@ public static class AuthenticationServiceRegistrations
                 
         services.AddAuthorization(options =>
         {
-            options.AddPolicy(
-                "HasActiveAccount"
-                , policy =>
+            options.AddPolicy(PolicyNames.HasActiveAccount, policy =>
                 {
                     policy.Requirements.Add(new AccountActiveRequirement());
-                    policy.Requirements.Add(new UserIsInAccountRequirement());
+                    policy.Requirements.Add(new EmployerAccountAllRolesRequirement());
+                    policy.RequireAuthenticatedUser();
+                });
+            
+            options.AddPolicy(
+                PolicyNames.HasEmployerViewerTransactorOwnerAccount, policy =>
+                {
+                    policy.RequireClaim(EmployerClaims.AccountsClaimsTypeIdentifier);
+                    policy.Requirements.Add(new AccountActiveRequirement());
+                    policy.Requirements.Add(new EmployerAccountAllRolesRequirement());
                     policy.RequireAuthenticatedUser();
                 });
         });

@@ -1,28 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using System.Threading;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Authorization.CommitmentPermissions.Options;
-using SFA.DAS.Authorization.EmployerUserRoles.Options;
-using SFA.DAS.Authorization.Mvc.Attributes;
-using SFA.DAS.Authorization.Services;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
 using SFA.DAS.Http;
-using System.Net;
-using System.Threading;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using IAuthorizationService = SFA.DAS.Authorization.Services.IAuthorizationService;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
-[DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
+[Authorize(Policy = nameof(PolicyNames.HasEmployerViewerTransactorOwnerAccount))]
 [Route("{accountHashedId}/unapproved")]
 public class CohortController : Controller
 {
@@ -53,7 +52,7 @@ public class CohortController : Controller
 
     [Route("{cohortReference}")]
     [Route("{cohortReference}/details")]
-    [DasAuthorize(CommitmentOperation.AccessCohort)]
+    [Authorize(Policy = nameof(PolicyNames.AccessCohort))]
     public async Task<IActionResult> Details(DetailsRequest request)
     {
         var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
@@ -68,7 +67,7 @@ public class CohortController : Controller
 
     [Route("{cohortReference}")]
     [Route("{cohortReference}/details")]
-    [DasAuthorize(CommitmentOperation.AccessCohort)]
+    [Authorize(Policy = nameof(PolicyNames.AccessCohort))]
     [HttpPost]
     public async Task<IActionResult> Details(DetailsViewModel viewModel)
     {
@@ -121,7 +120,7 @@ public class CohortController : Controller
     }
 
     [Route("{cohortReference}/delete")]
-    [DasAuthorize(CommitmentOperation.AccessCohort)]
+    [Authorize(Policy = nameof(PolicyNames.AccessCohort))]
     public async Task<IActionResult> ConfirmDelete(DetailsRequest request)
     {
         var viewModel = await _modelMapper.Map<ConfirmDeleteViewModel>(request);
@@ -129,7 +128,7 @@ public class CohortController : Controller
     }
 
     [Route("{cohortReference}/delete")]
-    [DasAuthorize(CommitmentOperation.AccessCohort)]
+    [Authorize(Policy = nameof(PolicyNames.AccessCohort))]
     [HttpPost]
     public async Task<IActionResult> Delete([FromServices] IAuthenticationService authenticationService, ConfirmDeleteViewModel viewModel)
     {
@@ -143,7 +142,7 @@ public class CohortController : Controller
 
     [HttpGet]
     [Route("{cohortReference}/sent")]
-    [DasAuthorize(CommitmentOperation.AccessCohort)]
+    [Authorize(Policy = nameof(PolicyNames.AccessCohort))]
     public async Task<IActionResult> Sent(SentRequest request)
     {
         var viewModel = await _modelMapper.Map<SentViewModel>(request);
@@ -152,7 +151,7 @@ public class CohortController : Controller
 
     [HttpGet]
     [Route("{cohortReference}/approved")]
-    [DasAuthorize(CommitmentOperation.AccessCohort)]
+    [Authorize(Policy = nameof(PolicyNames.AccessCohort))]
     public async Task<IActionResult> Approved(ApprovedRequest request)
     {
         var viewModel = await _modelMapper.Map<ApprovedViewModel>(request);
@@ -270,7 +269,7 @@ public class CohortController : Controller
         }
     }
 
-    private Origin DetermineOrigin(AssignViewModel source)
+    private static Origin DetermineOrigin(AssignViewModel source)
     {
         if (source.ReservationId.HasValue)
         {
@@ -407,7 +406,7 @@ public class CohortController : Controller
         return RedirectToAction("Finished", new { model.AccountHashedId, response.CohortReference });
     }
 
-    [DasAuthorize(CommitmentOperation.AccessCohort)]
+    [Authorize(Policy = nameof(PolicyNames.AccessCohort))]
     [HttpGet]
     [Route("add/finished")]
     public async Task<IActionResult> Finished(FinishedRequest request)

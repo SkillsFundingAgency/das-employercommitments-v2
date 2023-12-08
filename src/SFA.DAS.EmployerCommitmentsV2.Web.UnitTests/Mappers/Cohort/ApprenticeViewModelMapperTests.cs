@@ -20,7 +20,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
     {
         private ApprenticeViewModelMapper _mapper;
         private Mock<ICommitmentsApiClient> _commitmentsApiClient;
-        private Mock<IAuthorizationService> _mockAuthorizationService;
         private GetProviderResponse _providerResponse;
         private AccountLegalEntityResponse _accountLegalEntityResponse;
         private ApprenticeRequest _source;
@@ -44,7 +43,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             _source.TransferSenderId = string.Empty;
             _source.AccountId = 12345;
 
-            _mockAuthorizationService = new Mock<IAuthorizationService>();
             _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
             _commitmentsApiClient.Setup(x => x.GetProvider(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_providerResponse);
@@ -65,7 +63,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
                     TrainingProgrammes = _allTrainingProgrammes
                 });
 
-            _mapper = new ApprenticeViewModelMapper(_commitmentsApiClient.Object, _mockAuthorizationService.Object);
+            _mapper = new ApprenticeViewModelMapper(_commitmentsApiClient.Object);
 
             _result = await _mapper.Map(TestHelper.Clone(_source));
         }

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
@@ -24,11 +23,11 @@ public static class MvcServiceRegistrations
         services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = false;
-                options.AddAuthorization();
                 options.AddValidation();
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 options.Filters.Add(new GoogleAnalyticsFilter());
-                options.ModelBinderProviders.Insert(0, new SuppressArgumentExceptionModelBinderProvider());
+                options.ModelBinderProviders.Insert(0, new AuthorizationModelBinderProvider());
+                options.ModelBinderProviders.Insert(1, new SuppressArgumentExceptionModelBinderProvider());
                 options.AddStringModelBinderProvider();
                 options.Filters.Add(new AccountActiveFilter(configuration));
 

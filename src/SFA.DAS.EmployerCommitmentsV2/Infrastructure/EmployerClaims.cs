@@ -10,4 +10,5 @@ public static class EmployerClaims
     public const string FamilyName = "http://das/employer/identity/claims/family_name";
     public const string DisplayName = "http://das/employer/identity/claims/display_name";
     public const string RequiresVerification = "http://das/employer/identity/claims/requires_verification";
+    public static string AccountsClaimsTypeIdentifier => "http://das/employer/identity/claims/associatedAccounts";
 }

@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Authorization.EmployerUserRoles.Options;
-using SFA.DAS.Authorization.Mvc.Attributes;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Home;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
-[DasAuthorize(EmployerUserRole.OwnerOrTransactor)]
+[Authorize(Policy = nameof(PolicyNames.HasEmployerViewerTransactorOwnerAccount))]
 [Route("{accountHashedId}")]
 public class HomeController : Controller
 {
