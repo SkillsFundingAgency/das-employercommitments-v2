@@ -1,23 +1,21 @@
-﻿using AutoFixture;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
-using SFA.DAS.Encoding;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+using SFA.DAS.Encoding;
+using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests
 {
@@ -107,7 +105,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             }
             else
             {
-                Assert.That(result, Is.InstanceOf(typeof(Microsoft.AspNetCore.Mvc.RedirectToActionResult)));
+                Assert.That(result, Is.InstanceOf(typeof(RedirectToActionResult)));
             }
         }
 

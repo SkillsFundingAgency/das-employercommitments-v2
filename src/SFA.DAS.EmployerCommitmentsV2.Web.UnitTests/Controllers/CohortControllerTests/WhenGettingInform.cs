@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -38,7 +37,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
               Mock.Of<ILogger<CohortController>>(),
               Mock.Of<ILinkGenerator>(),
               _modelMapper.Object,
-              Mock.Of<IAuthorizationService>(),
               Mock.Of<IEncodingService>(),
               Mock.Of<IApprovalsApiClient>());
         }

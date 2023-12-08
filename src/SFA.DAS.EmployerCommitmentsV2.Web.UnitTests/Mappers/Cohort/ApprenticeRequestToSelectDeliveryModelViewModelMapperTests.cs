@@ -1,14 +1,12 @@
 ﻿using AutoFixture;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
-using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,7 +18,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private ApprenticeRequestToSelectDeliveryModelViewModelMapper _mapper;
         private ApprenticeRequest _source;
         private Mock<IApprovalsApiClient> _approvalsApiClient;
-        private Mock<IAuthorizationService> _authService;
         private ProviderCourseDeliveryModels _providerCourseDeliveryModels;
         private long _providerId;
         private string _courseCode;

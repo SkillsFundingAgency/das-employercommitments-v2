@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>latestmajor</LangVersion>
     <TargetFramework>net6.0</TargetFramework>
     <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
   </PropertyGroup>
@@ -29,12 +29,12 @@
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="2.2.5" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.0.3" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24" />
+    <PackageReference Include="Scrutor" Version="4.2.2" />
     <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.76" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
     <PackageReference Include="NLog.Schema" Version="5.2.7" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.7" />
-    <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="6.0.97" />
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84" />
     <PackageReference Include="SFA.DAS.Employer.Shared.UI" Version="17.1.75" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />

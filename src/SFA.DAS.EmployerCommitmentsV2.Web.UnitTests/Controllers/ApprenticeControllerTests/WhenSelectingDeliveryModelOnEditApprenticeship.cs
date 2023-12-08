@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
@@ -82,7 +81,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         public ApprenticeController Sut { get; set; }
 
         public Mock<IModelMapper> ModelMapperMock;
-        public Mock<IAuthorizationService> AuthorizationServiceMock;
         public Mock<ITempDataDictionary> TempDataMock;
         public EditApprenticeshipDeliveryModelViewModel ViewModel;
         public EditApprenticeshipRequest Request;
@@ -101,7 +99,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             ModelMapperMock = new Mock<IModelMapper>();
             TempDataMock = new Mock<ITempDataDictionary>();
-            AuthorizationServiceMock = new Mock<IAuthorizationService>();
 
             Sut = new ApprenticeController(ModelMapperMock.Object, Mock.Of<ICookieStorageService<IndexRequest>>(), Mock.Of<ICommitmentsApiClient>(), Mock.Of<ILogger<ApprenticeController>>());
             Sut.TempData = TempDataMock.Object;

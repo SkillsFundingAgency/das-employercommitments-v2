@@ -17,7 +17,6 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
 using SFA.DAS.Http;
-using IAuthorizationService = SFA.DAS.Authorization.Services.IAuthorizationService;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
@@ -29,7 +28,6 @@ public class CohortController : Controller
     private readonly ILogger<CohortController> _logger;
     private readonly ILinkGenerator _linkGenerator;
     private readonly IModelMapper _modelMapper;
-    private readonly IAuthorizationService _authorizationService;
     private readonly IEncodingService _encodingService;
     private readonly IApprovalsApiClient _approvalsApiClient;
 
@@ -38,14 +36,12 @@ public class CohortController : Controller
         ILogger<CohortController> logger,
         ILinkGenerator linkGenerator,
         IModelMapper modelMapper,
-        IAuthorizationService authorizationService,
         IEncodingService encodingService, IApprovalsApiClient approvalsApiClient)
     {
         _commitmentsApiClient = commitmentsApiClient;
         _logger = logger;
         _linkGenerator = linkGenerator;
         _modelMapper = modelMapper;
-        _authorizationService = authorizationService;
         _encodingService = encodingService;
         _approvalsApiClient = approvalsApiClient;
     }

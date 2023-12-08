@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
@@ -81,7 +80,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
         public Mock<IApprovalsApiClient> OuterApiClient { get; set; }
         public Mock<IModelMapper> ModelMapper { get; set; }
-        public Mock<IAuthorizationService> AuthorizationService { get; set; }
         public Mock<IEncodingService> EncodingService { get; set; }
         public DraftApprenticeshipController Controller { get; set; }
         public Mock<ILinkGenerator> LinkGenerator { get; set; }

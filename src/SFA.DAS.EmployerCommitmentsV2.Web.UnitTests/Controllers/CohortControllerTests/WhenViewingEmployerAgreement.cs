@@ -1,22 +1,19 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
-using SFA.DAS.Authorization.Services;
-using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.Encoding;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Http;
-using StructureMap.Query;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
-using Azure.Core;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
@@ -50,7 +47,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
               Mock.Of<ILogger<CohortController>>(),
               _linkGenerator.Object,
               _modelMapper.Object,
-              Mock.Of<IAuthorizationService>(),
               Mock.Of<IEncodingService>(),
               Mock.Of<IApprovalsApiClient>());
 

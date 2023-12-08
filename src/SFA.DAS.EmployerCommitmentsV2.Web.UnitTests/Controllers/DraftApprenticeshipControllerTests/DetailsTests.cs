@@ -3,9 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
@@ -128,7 +126,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
             ModelMapperMock.Setup(x => x.Map<ViewDraftApprenticeshipViewModel>(It.Is<DetailsRequest>(dr => dr.DraftApprenticeshipId == ViewDraftApprenticeshipId)))
                 .ReturnsAsync(viewDraftApprenticeshipViewModel);
 
-            AuthorizationServiceMock = new Mock<IAuthorizationService>();
 
             Sut = new DraftApprenticeshipController(
                 ModelMapperMock.Object,
@@ -138,7 +135,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
         }
 
         public Mock<IModelMapper> ModelMapperMock { get; }
-        public Mock<IAuthorizationService> AuthorizationServiceMock { get; }
         public Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }
         public Mock<IApprovalsApiClient> OuterApiClientMock { get; }
         public GetCohortResponse CohortDetails { get; private set; }

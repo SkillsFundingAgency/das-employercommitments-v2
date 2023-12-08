@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -17,7 +16,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         protected readonly Mock<IModelMapper> _mockMapper;
         protected readonly Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
-        protected readonly Mock<IAuthorizationService> _mockAuthorizationService;
         protected readonly Mock<IUrlHelper> _mockUrlHelper;
         protected readonly Mock<ITempDataDictionary> _tempDataDictionary;
         
@@ -29,7 +27,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
             _mockMapper = new Mock<IModelMapper>();
             _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockAuthorizationService = new Mock<IAuthorizationService>();
             _mockUrlHelper = new Mock<IUrlHelper>();
             _tempDataDictionary = new Mock<ITempDataDictionary>();
 

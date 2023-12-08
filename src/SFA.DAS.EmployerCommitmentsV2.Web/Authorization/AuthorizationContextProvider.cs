@@ -28,14 +28,14 @@ public class AuthorizationContextProvider : IAuthorizationContextProvider
         var userRef = GetUserRef();
         var apprenticeshipId = GetApprenticeshipId();
 
-        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, accountId, AuthorizationContextKeys.AccountId);
-        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, cohortId, AuthorizationContextKeys.CohortId);
-        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetAccountLegalEntityHashedId(), AuthorizationContextKeys.AccountLegalEntityId);
-        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetDraftApprenticeshipId(), AuthorizationContextKeys.DraftApprenticeshipId);
-        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetTransferSenderId(), AuthorizationContextKeys.DecodedTransferSenderId);
-        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetTransferRequestId(), AuthorizationContextKeys.TransferRequestId);
-        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, apprenticeshipId, AuthorizationContextKeys.ApprenticeshipId);
-        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetPledgeApplicationId(), AuthorizationContextKeys.PledgeApplicationId);
+        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, accountId, AuthorizationContextKey.AccountId);
+        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, cohortId, AuthorizationContextKey.CohortId);
+        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetAccountLegalEntityHashedId(), AuthorizationContextKey.AccountLegalEntityId);
+        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetDraftApprenticeshipId(), AuthorizationContextKey.DraftApprenticeshipId);
+        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetTransferSenderId(), AuthorizationContextKey.DecodedTransferSenderId);
+        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetTransferRequestId(), AuthorizationContextKey.TransferRequestId);
+        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, apprenticeshipId, AuthorizationContextKey.ApprenticeshipId);
+        CopyRouteValueToAuthorizationContextIfAvailable(authorizationContext, GetPledgeApplicationId(), AuthorizationContextKey.PledgeApplicationId);
 
         if (!accountId.HasValue)
         {

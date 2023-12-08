@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
@@ -73,7 +72,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public ApprovedViewModel Result;
         public Mock<ICommitmentsApiClient> CommitmentsApiClient;
         public Mock<IEncodingService> EncodingService;
-        public Mock<IAuthorizationService> AuthorizationService;
         public GetCohortResponse Cohort;
         public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
         private Fixture _autoFixture;

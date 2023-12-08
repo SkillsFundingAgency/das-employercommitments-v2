@@ -1,18 +1,17 @@
-﻿using AutoFixture;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
@@ -41,7 +40,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
               Mock.Of<ILogger<CohortController>>(),
               _linkGenerator.Object,
               _modelMapper.Object,
-              Mock.Of<IAuthorizationService>(),
               Mock.Of<IEncodingService>(),
               Mock.Of<IApprovalsApiClient>());
         }

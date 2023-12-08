@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
@@ -16,9 +14,9 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
+using CreateCohortResponse = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.CreateCohortResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
 {
@@ -102,7 +100,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
             ModelMapperMock = new Mock<IModelMapper>();
             ModelMapperMock.Setup(x => x.Map<ApprenticeViewModel>(It.IsAny<ApprenticeRequest>()))
                 .ReturnsAsync(new ApprenticeViewModel());
-            AuthorizationServiceMock = new Mock<IAuthorizationService>();
             EncodingServiceMock = new Mock<IEncodingService>();
             TempData = new Mock<ITempDataDictionary>();
             ApprovalsApiClientMock = new Mock<IApprovalsApiClient>();
@@ -113,9 +110,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 
         public Mock<IModelMapper> ModelMapperMock { get; set; }
         public IModelMapper ModelMapper => ModelMapperMock.Object;
-
-        public Mock<IAuthorizationService> AuthorizationServiceMock { get; set; }
-        public IAuthorizationService AuthorizationService => AuthorizationServiceMock.Object;
         public Mock<IEncodingService> EncodingServiceMock { get; set; }
         public IEncodingService EncodingService => EncodingServiceMock.Object;
         public ApprenticeRequest GetRequest { get; private set; }
@@ -144,7 +138,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
         {
             ApprovalsApiClientMock
                 .Setup(cs => cs.CreateCohort(It.IsAny<CreateCohortApimRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new EmployerCommitmentsV2.Services.Approvals.Responses.CreateCohortResponse { CohortReference = cohortReference, CohortId = cohortId});
+                .ReturnsAsync(new CreateCohortResponse { CohortReference = cohortReference, CohortId = cohortId});
 
             return this;
         }
@@ -194,7 +188,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
                 Mock.Of<ILogger<CohortController>>(),
                 LinkGenerator,
                 ModelMapper,
-                AuthorizationService,
                 Mock.Of<IEncodingService>(),
                 ApprovalsApiClient
             );
