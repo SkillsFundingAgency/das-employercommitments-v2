@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
-using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
@@ -60,7 +59,6 @@ public class Startup
     public void Configure(IApplicationBuilder app)
     {
         app.UseDasErrorPages(_environment)
-            .UseUnauthorizedAccessExceptionHandler()
             .UseHttpsRedirection()
             .UseDasHsts()
             .UseStaticFiles()

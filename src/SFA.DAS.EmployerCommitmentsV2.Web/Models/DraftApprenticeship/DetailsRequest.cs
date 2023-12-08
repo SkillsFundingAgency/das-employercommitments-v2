@@ -1,6 +1,4 @@
-﻿using SFA.DAS.Authorization.ModelBinding;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
 public class DetailsRequest : IAuthorizationContextModel
 {

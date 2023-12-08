@@ -1,6 +1,4 @@
-﻿using SFA.DAS.CommitmentsV2.Types;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
 
 public sealed class TransferRequestForSenderViewModel : TransferRequestViewModel
 {

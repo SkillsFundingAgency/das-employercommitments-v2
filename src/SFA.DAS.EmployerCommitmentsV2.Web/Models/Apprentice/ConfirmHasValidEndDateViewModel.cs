@@ -1,7 +1,4 @@
-﻿using SFA.DAS.Authorization.ModelBinding;
-using SFA.DAS.CommitmentsV2.Shared.Models;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 public class ConfirmHasValidEndDateViewModel : IAuthorizationContextModel
 {

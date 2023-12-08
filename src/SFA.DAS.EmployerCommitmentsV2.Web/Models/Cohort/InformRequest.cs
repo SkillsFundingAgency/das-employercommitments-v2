@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Authorization.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 

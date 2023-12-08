@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using NLog.LayoutRenderers;
-using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 

@@ -8,7 +8,6 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
-using SFA.DAS.EmployerCommitmentsV2.Features;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
@@ -20,9 +19,6 @@ using System.Net;
 using System.Threading;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Web.Filters;
-using Azure.Core;
-using Microsoft.Azure.Cosmos.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
