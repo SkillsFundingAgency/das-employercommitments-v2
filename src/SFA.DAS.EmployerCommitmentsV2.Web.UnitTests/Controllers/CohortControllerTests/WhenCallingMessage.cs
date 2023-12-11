@@ -1,13 +1,5 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using AutoFixture.NUnit3;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
@@ -66,11 +58,13 @@ public class CreateCohortWithOtherPartyControllerTests
 
         _fixture.VerifyAddCohortIsCalledWithCorrectMappedValues(model);
 
-
         var redirect = result.VerifyReturnsRedirectToActionResult();
-        Assert.That("Finished", Is.EqualTo(redirect.ActionName));
-        Assert.That(model.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
-        Assert.That(createCohortResponse.CohortReference, Is.EqualTo(redirect.RouteValues["CohortReference"]));
+        Assert.Multiple(() =>
+        {
+            Assert.That("Finished", Is.EqualTo(redirect.ActionName));
+            Assert.That(model.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
+            Assert.That(createCohortResponse.CohortReference, Is.EqualTo(redirect.RouteValues["CohortReference"]));
+        });
     }
 
     [Test, AutoData]
@@ -81,10 +75,13 @@ public class CreateCohortWithOtherPartyControllerTests
         var response = await _fixture.Sut.Finished(request);
         var model = response.VerifyReturnsViewModel().WithModel<FinishedViewModel>();
 
-        Assert.That(request.CohortReference, Is.EqualTo(model.CohortReference));
-        Assert.That(getCohortResponse.LegalEntityName, Is.EqualTo(model.LegalEntityName));
-        Assert.That(getCohortResponse.ProviderName, Is.EqualTo(model.ProviderName));
-        Assert.That(getCohortResponse.LatestMessageCreatedByEmployer, Is.EqualTo(model.Message));
+        Assert.Multiple(() =>
+        {
+            Assert.That(request.CohortReference, Is.EqualTo(model.CohortReference));
+            Assert.That(getCohortResponse.LegalEntityName, Is.EqualTo(model.LegalEntityName));
+            Assert.That(getCohortResponse.ProviderName, Is.EqualTo(model.ProviderName));
+            Assert.That(getCohortResponse.LatestMessageCreatedByEmployer, Is.EqualTo(model.Message));
+        });
     }
 
     public class CreateCohortWithOtherPartyControllerTestFixture
@@ -122,12 +119,6 @@ public class CreateCohortWithOtherPartyControllerTests
         public CohortController Sut { get; }
         public ErrorDetail ErrorDetail { get; }
 
-        public CreateCohortWithOtherPartyControllerTestFixture WithInvalidModel()
-        {
-            Sut.ModelState.AddModelError("AKey", "Some Error");
-            return this;
-        }
-
         public CreateCohortWithOtherPartyControllerTestFixture WithLegalEntityNameStoredInTempData()
         {
             var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
@@ -162,16 +153,6 @@ public class CreateCohortWithOtherPartyControllerTests
                 x => x.CreateCohort(
                     It.Is<CreateCohortWithOtherPartyRequest>(p => p == MapperResult),
                     It.IsAny<CancellationToken>()));
-
-            return this;
-        }
-
-        public CreateCohortWithOtherPartyControllerTestFixture WithCreateCohortApiError()
-        {
-            CommitmentsApiClientMock.Setup(
-                    x => x.CreateCohort(It.IsAny<CreateCohortWithOtherPartyRequest>(),
-                        It.IsAny<CancellationToken>()))
-                .ThrowsAsync(new CommitmentsApiModelException(new List<ErrorDetail> {ErrorDetail}));
 
             return this;
         }

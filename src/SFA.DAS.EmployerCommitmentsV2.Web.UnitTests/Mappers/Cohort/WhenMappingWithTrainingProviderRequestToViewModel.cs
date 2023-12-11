@@ -1,18 +1,11 @@
 ﻿using System.Linq;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
-using System;
 using SFA.DAS.CommitmentsV2.Types;
-using System.Collections.Generic;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using System.Threading;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;

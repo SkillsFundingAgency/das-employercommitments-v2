@@ -1,12 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
@@ -55,8 +49,12 @@ public class DeleteDraftApprenticeshipTests
 
         var result = await fixture.DeleteDraftApprenticeshipGet();
         var redirect = result.VerifyReturnsRedirectToActionResult();
-        Assert.That(redirect.ActionName, Is.EqualTo("Details"));
-        Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(redirect.ActionName, Is.EqualTo("Details"));
+            Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
+        });
     }
 
     [Test]
@@ -69,8 +67,11 @@ public class DeleteDraftApprenticeshipTests
         var result = await fixture.DeleteDraftApprenticeshipGet();
 
         var redirect = result.VerifyReturnsRedirectToActionResult();
-        Assert.That(redirect.ActionName, Is.EqualTo("Details"));
-        Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(redirect.ActionName, Is.EqualTo("Details"));
+            Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
+        });
     }
 
     [Test]
@@ -83,8 +84,11 @@ public class DeleteDraftApprenticeshipTests
         var result = await fixture.DeleteDraftApprenticeshipGet();
 
         var redirect = result.VerifyReturnsRedirectToActionResult();
-        Assert.That(redirect.ActionName, Is.EqualTo("Details"));
-        Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(redirect.ActionName, Is.EqualTo("Details"));
+            Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
+        });
     }
 
     [Test]
@@ -97,8 +101,11 @@ public class DeleteDraftApprenticeshipTests
 
         fixture.Verify_CommitmentApiClient_DeleteApprenticeShip_IsCalled_OnlyOnce();
         var redirect = result.VerifyReturnsRedirectToActionResult();
-        Assert.That(redirect.ActionName, Is.EqualTo("Details"));
-        Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(redirect.ActionName, Is.EqualTo("Details"));
+            Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
+        });
     }
 
     [Test]
@@ -112,8 +119,11 @@ public class DeleteDraftApprenticeshipTests
 
         fixture.Verify_CommitmentApiClient_DeleteApprenticeShip_IsCalled_OnlyOnce();
         var redirect = result.VerifyReturnsRedirectToActionResult();
-        Assert.That(redirect.ActionName, Is.EqualTo("Review"));
-        Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(redirect.ActionName, Is.EqualTo("Review"));
+            Assert.That(redirect.ControllerName, Is.EqualTo("Cohort"));
+        });
     }
  
     [Test]
@@ -126,8 +136,11 @@ public class DeleteDraftApprenticeshipTests
 
         fixture.Verify_CommitmentApiClient_DeleteApprenticeShip_Is_NeverCalled();
         var redirect = result.VerifyReturnsRedirectToActionResult();
-        Assert.That(redirect.ActionName, Is.EqualTo("Details"));
-        Assert.That(redirect.ControllerName, Is.EqualTo(null));
+        Assert.Multiple(() =>
+        {
+            Assert.That(redirect.ActionName, Is.EqualTo("Details"));
+            Assert.That(redirect.ControllerName, Is.EqualTo(null));
+        });
     }
 }
 

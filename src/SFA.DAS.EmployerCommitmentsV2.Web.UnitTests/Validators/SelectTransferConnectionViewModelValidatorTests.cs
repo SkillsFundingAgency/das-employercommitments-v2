@@ -1,6 +1,4 @@
-﻿using AutoFixture.NUnit3;
-using NUnit.Framework;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators;

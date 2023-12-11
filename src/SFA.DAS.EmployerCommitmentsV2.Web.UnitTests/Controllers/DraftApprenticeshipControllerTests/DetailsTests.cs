@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
@@ -62,7 +57,7 @@ public class DetailsTests
         var result = await fixtures.Sut.EditDraftApprenticeship(string.Empty, string.Empty, new EditDraftApprenticeshipViewModel { AccountHashedId = fixtures.AccountHashedId, CohortId = fixtures.CohortId, CohortReference = fixtures.CohortReference, DraftApprenticeshipId = fixtures.DraftApprenticeshipId });
 
         fixtures.OuterApiClientMock.Verify(cs => cs.UpdateDraftApprenticeship(fixtures.CohortId, fixtures.DraftApprenticeshipId, It.IsAny<UpdateDraftApprenticeshipApimRequest>(), It.IsAny<CancellationToken>()), Times.Once);
-        var redirect = result.VerifyReturnsRedirect();
+        result.VerifyReturnsRedirect();
     }
 
     [Test]
@@ -117,7 +112,7 @@ public class DetailsTestFixture
         {
             Id = DraftApprenticeshipId
         };
-        ApiErrors = new List<ErrorDetail> { new ErrorDetail("Field1", "Message1") };
+        ApiErrors = [new("Field1", "Message1")];
 
         ModelMapperMock = new Mock<IModelMapper>();
         ModelMapperMock.Setup(x => x.Map<IDraftApprenticeshipViewModel>(It.Is<DetailsRequest>(dr => dr.DraftApprenticeshipId == DraftApprenticeshipId)))
@@ -163,18 +158,7 @@ public class DetailsTestFixture
             .ReturnsAsync(new EditDraftApprenticeshipViewModel());
         return this;
     }
-
-    public DetailsTestFixture WithDraftApprenticeship(GetDraftApprenticeshipResponse details = null)
-    {
-        var returnValue = details ?? EditDraftApprenticeshipDetails;
-
-        CommitmentsApiClientMock
-            .Setup(cs => cs.GetDraftApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(returnValue);
-
-        return this;
-    }
-
+    
     public DetailsTestFixture WithCohort(GetCohortResponse cohortDetails = null)
     {
         var returnValue = cohortDetails ?? CohortDetails;

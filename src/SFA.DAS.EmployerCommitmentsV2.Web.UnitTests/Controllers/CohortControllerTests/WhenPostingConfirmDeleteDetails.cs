@@ -1,11 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
@@ -22,25 +15,25 @@ public class WhenPostingConfirmDeleteDetails
     [Test]
     public async Task ThenShouldCallCohortDeleteWithCorrectParams()
     {
-        var f = new WhenPostingConfirmDeleteDetailsTestFixture().SetConfirmDelete(true);
-        await f.CohortController.Delete(f.AuthenticationService.Object, f.ConfirmDeleteViewModel);
-        f.VerifyDeleteCohortWasCalledCorrectly();
+        var fixture = new WhenPostingConfirmDeleteDetailsTestFixture().SetConfirmDelete(true);
+        await fixture.CohortController.Delete(fixture.AuthenticationService.Object, fixture.ConfirmDeleteViewModel);
+        fixture.VerifyDeleteCohortWasCalledCorrectly();
     }
 
     [Test]
     public async Task ThenShouldCallCohortDeleteAndDirectToBingoPage()
     {
-        var f = new WhenPostingConfirmDeleteDetailsTestFixture().SetConfirmDelete(true);
-        var result = await f.CohortController.Delete(f.AuthenticationService.Object, f.ConfirmDeleteViewModel);
-        f.VerifyRedirectsToReviewPage(result);
+        var fixture = new WhenPostingConfirmDeleteDetailsTestFixture().SetConfirmDelete(true);
+        var result = await fixture.CohortController.Delete(fixture.AuthenticationService.Object, fixture.ConfirmDeleteViewModel);
+        fixture.VerifyRedirectsToReviewPage(result);
     }
 
     [Test]
     public async Task ThenShouldRedirectToCohortDetails()
     {
-        var f = new WhenPostingConfirmDeleteDetailsTestFixture().SetConfirmDelete(false);
-        var result = await f.CohortController.Delete(f.AuthenticationService.Object, f.ConfirmDeleteViewModel);
-        f.VerifyRedirectsToCohortDetailsPage(result);
+        var fixture = new WhenPostingConfirmDeleteDetailsTestFixture().SetConfirmDelete(false);
+        var result = await fixture.CohortController.Delete(fixture.AuthenticationService.Object, fixture.ConfirmDeleteViewModel);
+        fixture.VerifyRedirectsToCohortDetailsPage(result);
     }
 
     public class WhenPostingConfirmDeleteDetailsTestFixture
@@ -84,15 +77,21 @@ public class WhenPostingConfirmDeleteDetails
         public void VerifyRedirectsToReviewPage(IActionResult result)
         {
             var redirect = (RedirectToActionResult)result;
-            Assert.That(redirect.ActionName, Is.EqualTo($"Review"));
-            Assert.That(redirect.RouteValues["AccountHashedId"], Is.EqualTo(ConfirmDeleteViewModel.AccountHashedId));
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirect.ActionName, Is.EqualTo($"Review"));
+                Assert.That(redirect.RouteValues["AccountHashedId"], Is.EqualTo(ConfirmDeleteViewModel.AccountHashedId));
+            });
         }
         public void VerifyRedirectsToCohortDetailsPage(IActionResult result)
         {
             var redirect = (RedirectToActionResult)result;
-            Assert.That(redirect.ActionName?.ToLower(), Is.EqualTo("details"));
-            Assert.That(redirect.RouteValues["CohortReference"], Is.EqualTo(ConfirmDeleteViewModel.CohortReference));
-            Assert.That(redirect.RouteValues["AccountHashedId"], Is.EqualTo(ConfirmDeleteViewModel.AccountHashedId));
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirect.ActionName?.ToLower(), Is.EqualTo("details"));
+                Assert.That(redirect.RouteValues["CohortReference"], Is.EqualTo(ConfirmDeleteViewModel.CohortReference));
+                Assert.That(redirect.RouteValues["AccountHashedId"], Is.EqualTo(ConfirmDeleteViewModel.AccountHashedId));
+            });
         }
     }
 }

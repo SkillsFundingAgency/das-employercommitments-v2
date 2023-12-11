@@ -1,16 +1,10 @@
-﻿using AutoFixture.NUnit3;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Moq;
-using NUnit.Framework;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Filters;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Customisations;
 using SFA.DAS.Testing.AutoFixture;
-using System;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Filters;
 

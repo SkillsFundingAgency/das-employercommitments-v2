@@ -1,11 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoFixture;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
@@ -36,9 +30,12 @@ public class EditDraftApprenticeshipTests
         var result = await _testFixture.GetEditDraftApprenticeshipDisplay(_testFixture._editDraftApprenticeshipViewModel);
 
         Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.InstanceOf(typeof(ViewResult)));
-        Assert.That((result as ViewResult).ViewName, Is.EqualTo("Edit"));
-        Assert.That((result as ViewResult).Model, Is.InstanceOf(typeof(EditDraftApprenticeshipViewModel)));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.InstanceOf(typeof(ViewResult)));
+            Assert.That((result as ViewResult).ViewName, Is.EqualTo("Edit"));
+            Assert.That((result as ViewResult).Model, Is.InstanceOf(typeof(EditDraftApprenticeshipViewModel)));
+        });
     }
 
     [Test]
@@ -54,8 +51,11 @@ public class EditDraftApprenticeshipTests
 
         if (string.IsNullOrEmpty(changeCourse) && string.IsNullOrEmpty(changeDeliveryModel))
         {
-            Assert.That((result as RedirectToActionResult).ActionName, Is.EqualTo("SelectOption"));
-            Assert.That((result as RedirectToActionResult).ControllerName, Is.EqualTo("DraftApprenticeship"));
+            Assert.Multiple(() =>
+            {
+                Assert.That((result as RedirectToActionResult).ActionName, Is.EqualTo("SelectOption"));
+                Assert.That((result as RedirectToActionResult).ControllerName, Is.EqualTo("DraftApprenticeship"));
+            });
         }
 
         else if (!string.IsNullOrEmpty(changeCourse) && string.IsNullOrEmpty(changeDeliveryModel))
@@ -75,9 +75,12 @@ public class EditDraftApprenticeshipTests
         var result = await _testFixture.GetSelectCourseForEdit(_testFixture._addDraftApprenticeshipRequest);
 
         Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.InstanceOf(typeof(ViewResult)));
-        Assert.That((result as ViewResult).ViewName, Is.EqualTo("SelectCourse"));
-        Assert.That((result as ViewResult).Model, Is.InstanceOf(typeof(SelectCourseViewModel)));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.InstanceOf(typeof(ViewResult)));
+            Assert.That((result as ViewResult).ViewName, Is.EqualTo("SelectCourse"));
+            Assert.That((result as ViewResult).Model, Is.InstanceOf(typeof(SelectCourseViewModel)));
+        });
     }
 
     [Test]
@@ -86,8 +89,11 @@ public class EditDraftApprenticeshipTests
         var result = await _testFixture.PostSetCourseForEdit(_testFixture._selectCourseViewModel);
 
         Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.InstanceOf(typeof(RedirectToActionResult)));
-        Assert.That((result as RedirectToActionResult).ActionName, Is.EqualTo("SelectDeliveryModelForEdit"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.InstanceOf(typeof(RedirectToActionResult)));
+            Assert.That((result as RedirectToActionResult).ActionName, Is.EqualTo("SelectDeliveryModelForEdit"));
+        });
     }
 
     [TestCase(true, true)]
@@ -100,8 +106,11 @@ public class EditDraftApprenticeshipTests
         if (hasDeliveryModels || hasUnavailableDeliveryModel)
         {
             Assert.That(result, Is.Not.Null);
-            Assert.That(result, Is.InstanceOf(typeof(ViewResult)));
-            Assert.That((result as ViewResult).Model, Is.InstanceOf(typeof(SelectDeliveryModelForEditViewModel)));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.InstanceOf(typeof(ViewResult)));
+                Assert.That((result as ViewResult).Model, Is.InstanceOf(typeof(SelectDeliveryModelForEditViewModel)));
+            });
         }
         else
         {
@@ -115,19 +124,22 @@ public class EditDraftApprenticeshipTests
         var result = _testFixture.PostSetDeliveryModelForEdit(_testFixture._selectDeliveryModelViewModel_WithDeliveryModels);
 
         Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.InstanceOf(typeof(RedirectToActionResult)));
-        Assert.That((result as RedirectToActionResult).ActionName, Is.EqualTo("EditDraftApprenticeshipDisplay"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.InstanceOf(typeof(RedirectToActionResult)));
+            Assert.That((result as RedirectToActionResult).ActionName, Is.EqualTo("EditDraftApprenticeshipDisplay"));
+        });
     }
 }
 
 public class EditDraftApprenticeshipTestsFixture
 {
-    private Fixture _autoFixture;
-    private DraftApprenticeshipController _controller;
-    private Mock<IModelMapper> _modelMapper;
-    private Mock<ICommitmentsApiClient> _commitmentsApiClient;
-    private Mock<IApprovalsApiClient> _outerApiClient;
-    private Mock<ITempDataDictionary> _tempData;
+    private readonly Fixture _autoFixture;
+    private readonly DraftApprenticeshipController _controller;
+    private readonly Mock<IModelMapper> _modelMapper;
+    private readonly Mock<ICommitmentsApiClient> _commitmentsApiClient;
+    private readonly Mock<IApprovalsApiClient> _outerApiClient;
+    private readonly Mock<ITempDataDictionary> _tempData;
 
     public UpdateDraftApprenticeshipApimRequest _updateDraftApprenticeshipRequest;
     public EditDraftApprenticeshipViewModel _editDraftApprenticeshipViewModel;
@@ -210,7 +222,6 @@ public class EditDraftApprenticeshipTestsFixture
         );
 
         _controller.TempData = _tempData.Object;
-
     }
 
     public async Task<IActionResult> GetEditDraftApprenticeshipDisplay(EditDraftApprenticeshipViewModel model)

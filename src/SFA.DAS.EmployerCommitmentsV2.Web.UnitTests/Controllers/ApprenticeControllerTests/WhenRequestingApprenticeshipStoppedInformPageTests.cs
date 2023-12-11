@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using NUnit.Framework;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
 
 public class WhenRequestingApprenticeshipStoppedInformPageTests
 {

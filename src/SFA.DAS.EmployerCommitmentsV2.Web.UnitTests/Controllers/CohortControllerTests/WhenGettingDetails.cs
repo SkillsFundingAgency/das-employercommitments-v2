@@ -1,12 +1,6 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
-using AutoFixture;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
@@ -111,11 +105,9 @@ public class WhenGettingDetails
             Assert.That(CohortController.TempData.ContainsKey(nameof(ViewEmployerAgreementModel)), Is.True);
         }
 
-
         public bool IsViewModelReadOnly()
         {
             return _viewModel.IsReadOnly;
         }
-
     }
 }

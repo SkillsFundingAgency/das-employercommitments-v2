@@ -1,7 +1,4 @@
-﻿using AutoFixture;
-using NUnit.Framework;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using System;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models;
 

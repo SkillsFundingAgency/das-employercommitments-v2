@@ -1,8 +1,4 @@
-﻿using System;
-using AutoFixture;
-using AutoFixture.NUnit3;
-using FluentAssertions;
-using NUnit.Framework;
+﻿using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.CommitmentsV2.Types;

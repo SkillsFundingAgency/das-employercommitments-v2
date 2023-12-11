@@ -1,9 +1,6 @@
-﻿using AutoFixture;
-using NUnit.Framework;
-using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship;
 

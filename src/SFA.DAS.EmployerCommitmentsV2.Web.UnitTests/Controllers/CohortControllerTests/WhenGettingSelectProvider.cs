@@ -1,9 +1,4 @@
-﻿using System.Threading.Tasks;
-using AutoFixture.NUnit3;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -39,7 +34,10 @@ public class WhenGettingSelectProvider
 
         var result = await controller.SelectProvider(request) as ViewResult;
 
-        Assert.Null(result.ViewName);
-        Assert.That(result.Model, Is.SameAs(viewModel));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ViewName, Is.Null);
+            Assert.That(result.Model, Is.SameAs(viewModel));
+        });
     }
 }

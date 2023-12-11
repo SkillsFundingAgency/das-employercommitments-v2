@@ -1,10 +1,5 @@
-﻿using AutoFixture;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
+﻿using FluentAssertions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
 

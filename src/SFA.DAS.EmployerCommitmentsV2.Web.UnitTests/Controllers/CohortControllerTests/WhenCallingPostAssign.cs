@@ -1,13 +1,8 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.Design;
-using AutoFixture.NUnit3;
+﻿using System.ComponentModel.Design;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
@@ -95,7 +90,7 @@ public class WhenCallingPostAssign
         });
         viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Provider;
 
-        var result = controller.Assign(viewModel) as RedirectToActionResult;
+        controller.Assign(viewModel);
 
         Assert.That(controller.TempData.Contains(new KeyValuePair<string, object>(nameof(viewModel.LegalEntityName), viewModel.LegalEntityName)), Is.True);
     }

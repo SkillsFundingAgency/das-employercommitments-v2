@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using AutoFixture.NUnit3;
-using NUnit.Framework;
-using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Testing.AutoFixture;
 

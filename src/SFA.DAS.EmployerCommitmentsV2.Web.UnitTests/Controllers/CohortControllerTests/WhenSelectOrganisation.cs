@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoFixture;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
+﻿using System.Linq;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EAS.Account.Api.Types;
@@ -66,8 +58,12 @@ public class WhenSelectOrganisation
         //Assert            
         var viewResult = result as ViewResult;
         var viewModel = viewResult.Model;
-        Assert.That(viewModel, Is.InstanceOf<SelectLegalEntityViewModel>());
-        Assert.That((SelectLegalEntityViewModel)viewModel, Is.EqualTo(_selectLegalEntityViewModel));
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel, Is.InstanceOf<SelectLegalEntityViewModel>());
+            Assert.That((SelectLegalEntityViewModel)viewModel, Is.EqualTo(_selectLegalEntityViewModel));
+        });
     }
 
     [TestCase(true)]
@@ -150,5 +146,4 @@ public class WhenSelectOrganisation
         AgreementNotSigned,
         SelectProvider
     }
-
 }

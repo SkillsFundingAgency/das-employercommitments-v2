@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;
 
 public static class DateTimeExtensions
 {

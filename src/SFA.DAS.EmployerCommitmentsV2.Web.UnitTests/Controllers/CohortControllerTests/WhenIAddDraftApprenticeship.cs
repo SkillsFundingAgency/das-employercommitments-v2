@@ -1,11 +1,4 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
@@ -170,7 +163,7 @@ public class CreateCohortWithDraftApprenticeshipControllerTestFixtures
             {
                 DraftApprenticeships = new List<DraftApprenticeshipDto>
                 {
-                    new DraftApprenticeshipDto
+                    new()
                     {
                         Id = 123456,
                         CourseCode = withCourseSelected ? "ST0001" : null

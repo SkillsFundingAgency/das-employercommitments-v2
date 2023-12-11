@@ -1,13 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoFixture;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.Extensions.Logging;
-using Moq;
 using Newtonsoft.Json;
-using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;

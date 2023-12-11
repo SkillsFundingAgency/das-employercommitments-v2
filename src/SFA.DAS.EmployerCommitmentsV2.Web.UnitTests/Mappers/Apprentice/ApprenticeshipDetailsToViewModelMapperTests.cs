@@ -1,9 +1,5 @@
-﻿using AutoFixture.NUnit3;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using FluentAssertions;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;

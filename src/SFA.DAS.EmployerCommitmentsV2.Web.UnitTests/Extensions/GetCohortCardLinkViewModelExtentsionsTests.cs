@@ -1,12 +1,7 @@
-﻿using AutoFixture;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Moq;
-using NUnit.Framework;
+﻿using Microsoft.AspNetCore.Mvc.Routing;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;

@@ -1,15 +1,11 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers;
 
 public class WhenSelectedApprenticeNeverEnded:ApprenticeControllerTestBase
 {
@@ -37,7 +33,10 @@ public class WhenSelectedApprenticeNeverEnded:ApprenticeControllerTestBase
 
         var actualViewModel = (ApprenticeshipNotEndedViewModel)viewModel;
 
-        Assert.That(viewModel, Is.InstanceOf<ApprenticeshipNotEndedViewModel>());
-        Assert.That(actualViewModel, Is.EqualTo(expectedViewModel));
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel, Is.InstanceOf<ApprenticeshipNotEndedViewModel>());
+            Assert.That(actualViewModel, Is.EqualTo(expectedViewModel));
+        });
     }
 }

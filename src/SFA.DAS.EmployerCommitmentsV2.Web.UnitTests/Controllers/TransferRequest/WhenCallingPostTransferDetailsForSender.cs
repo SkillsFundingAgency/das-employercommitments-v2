@@ -1,21 +1,12 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
+﻿using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
 using SFA.DAS.Testing.AutoFixture;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.TransferRequestControllerTests;
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.TransferRequest;
 
 public class WhenCallingPostTransferDetailsForSender
 {
@@ -58,7 +49,7 @@ public class WhenCallingPostTransferDetailsForSender
                 It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        TransferRequestController controller = new TransferRequestController(mockCommitmentsApiClient.Object,
+        var controller = new TransferRequestController(mockCommitmentsApiClient.Object,
             mockLogger.Object, mockMapper.Object);
 
         var result = (await controller.TransferDetailsForSender(viewModel)) as RedirectToActionResult;

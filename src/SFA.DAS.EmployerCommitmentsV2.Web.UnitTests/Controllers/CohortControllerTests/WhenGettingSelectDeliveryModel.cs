@@ -1,16 +1,10 @@
-﻿using AutoFixture;
-using AutoFixture.NUnit3;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.Testing.AutoFixture;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests;
 
@@ -31,9 +25,12 @@ public class WhenGettingSelectDeliveryModel
 
         var result = await controller.SelectDeliveryModel(request) as ViewResult;
 
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.ViewName, Is.SameAs("SelectDeliveryModel"));
-        Assert.That(result.Model, Is.SameAs(viewModel));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ViewName, Is.SameAs("SelectDeliveryModel"));
+            Assert.That(result.Model, Is.SameAs(viewModel));
+        });
     }
 
     [Test, MoqAutoData]
@@ -43,7 +40,7 @@ public class WhenGettingSelectDeliveryModel
         [Frozen] Mock<IModelMapper> mockMapper,
         [Greedy] CohortController controller)
     {
-        viewModel.DeliveryModels = new DeliveryModel[0];
+        viewModel.DeliveryModels = Array.Empty<DeliveryModel>();
 
         mockMapper
             .Setup(mapper => mapper.Map<SelectDeliveryModelViewModel>(request))

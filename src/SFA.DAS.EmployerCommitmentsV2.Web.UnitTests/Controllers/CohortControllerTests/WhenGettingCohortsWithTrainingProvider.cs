@@ -1,10 +1,4 @@
-﻿using System.Threading.Tasks;
-using AutoFixture;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -58,7 +52,6 @@ public class WhenGettingCohortsWithTrainingProviderFixture
     }
 
     public CohortController CohortController { get; set; }
-
 
     public async Task GetCohortsWithTrainingProvider()
     {

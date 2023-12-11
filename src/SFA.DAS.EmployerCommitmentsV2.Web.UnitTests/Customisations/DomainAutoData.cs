@@ -1,8 +1,4 @@
-﻿using AutoFixture;
-using AutoFixture.NUnit3;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Text;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Customisations;

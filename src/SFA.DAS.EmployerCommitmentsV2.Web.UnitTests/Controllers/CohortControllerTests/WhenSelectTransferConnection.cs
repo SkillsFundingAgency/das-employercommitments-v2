@@ -1,11 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoFixture;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -70,8 +63,12 @@ public class WhenSelectTransferConnection
         //Assert
         var viewResult = result as ViewResult;
         var viewModel = viewResult.Model;
-        Assert.That(viewModel, Is.InstanceOf<SelectTransferConnectionViewModel>());
-        Assert.That((SelectTransferConnectionViewModel)viewModel, Is.EqualTo(_informViewModel));
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel, Is.InstanceOf<SelectTransferConnectionViewModel>());
+            Assert.That((SelectTransferConnectionViewModel)viewModel, Is.EqualTo(_informViewModel));
+        });
     }
 
     [Test]

@@ -1,9 +1,4 @@
-﻿using System.Threading.Tasks;
-using AutoFixture.NUnit3;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Testing.AutoFixture;
@@ -37,7 +32,10 @@ public class WhenGettingDraft
 
         var result = await controller.Draft(request) as ViewResult;
 
-        Assert.That(result, Is.Not.Null);
-        Assert.That(viewModel, Is.EqualTo(result.Model));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.Not.Null);
+            Assert.That(viewModel, Is.EqualTo(result.Model));
+        });
     }
 }

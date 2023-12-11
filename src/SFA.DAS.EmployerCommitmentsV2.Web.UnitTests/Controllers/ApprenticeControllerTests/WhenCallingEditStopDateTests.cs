@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using NUnit.Framework;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using System.Threading.Tasks;
-using AutoFixture;
-using Moq;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
 

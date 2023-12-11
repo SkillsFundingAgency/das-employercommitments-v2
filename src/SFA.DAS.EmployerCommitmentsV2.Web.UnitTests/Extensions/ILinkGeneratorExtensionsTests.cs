@@ -1,7 +1,4 @@
-﻿using AutoFixture.NUnit3;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;

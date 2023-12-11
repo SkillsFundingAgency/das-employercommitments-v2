@@ -1,13 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
 using FluentValidation;
 using FluentValidation.Results;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
@@ -56,8 +50,11 @@ public class WhenPostingSelectProvider
 
         var result = await controller.SelectProvider(viewModel) as RedirectToActionResult;
 
-        Assert.That(result.ActionName, Is.EqualTo(nameof(CohortController.SelectProvider)));
-        Assert.That(controller.ModelState.IsValid, Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ActionName, Is.EqualTo(nameof(CohortController.SelectProvider)));
+            Assert.That(controller.ModelState.IsValid, Is.False);
+        });
     }
 
     [Test, MoqAutoData]
@@ -78,8 +75,11 @@ public class WhenPostingSelectProvider
         var result = await controller.SelectProvider(viewModel) as RedirectToActionResult;
 
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.ActionName, Is.EqualTo("Error"));
-        Assert.That(result.ControllerName, Is.EqualTo("Error"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ActionName, Is.EqualTo("Error"));
+            Assert.That(result.ControllerName, Is.EqualTo("Error"));
+        });
     }
 
 

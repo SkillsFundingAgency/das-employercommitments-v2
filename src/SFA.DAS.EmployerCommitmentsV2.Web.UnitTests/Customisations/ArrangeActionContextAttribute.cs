@@ -1,9 +1,5 @@
-﻿using AutoFixture;
-using AutoFixture.Kernel;
-using AutoFixture.NUnit3;
-using Microsoft.AspNetCore.Mvc;
+﻿using AutoFixture.Kernel;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
 using System.Reflection;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Customisations;
