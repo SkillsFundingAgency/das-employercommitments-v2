@@ -8,6 +8,13 @@ using Dasync.Collections;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Services;
 
+public interface IEmployerAccountsService
+{
+    Task<Account> GetAccount(long accountId);
+
+    Task<List<LegalEntity>> GetLegalEntitiesForAccount(string accountId);
+}
+
 public class EmployerAccountsService : IEmployerAccountsService
 {
     private readonly IAccountApiClient _accountsApiClient;
@@ -35,7 +42,10 @@ public class EmployerAccountsService : IEmployerAccountsService
     public async Task<List<LegalEntity>> GetLegalEntitiesForAccount(string accountId)
     {
         var listOfEntities = await _accountsApiClient.GetLegalEntitiesConnectedToAccount(accountId);
-        if (listOfEntities.Count == 0) return new List<LegalEntity>();
+        if (listOfEntities.Count == 0)
+        {
+            return [];
+        }
 
         var bag = new ConcurrentBag<LegalEntity>();
 
@@ -55,7 +65,7 @@ public class EmployerAccountsService : IEmployerAccountsService
                             Id = agreementSource.Id,
                             SignedDate = agreementSource.SignedDate,
                             SignedByName = agreementSource.SignedByName,
-                            Status = (EmployerAgreementStatus) agreementSource.Status,
+                            Status = agreementSource.Status,
                             TemplateVersionNumber = agreementSource.TemplateVersionNumber
                         }).ToList(),
                     Code = legalEntityViewModel.Code,

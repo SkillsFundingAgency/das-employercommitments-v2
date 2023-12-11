@@ -1,16 +1,11 @@
-﻿@inject ILinkGenerator LinkGenerator
-@using SFA.DAS.CommitmentsV2.Shared.Extensions
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ResumeRequestViewModel
 
 @{
-    string pageTitle;
-    string pageId;
-    string pageHeading;
-
-    pageTitle = "Apprenticeship resumed";
-    pageId = "apprentice-resumed";
-    pageHeading = "Resume apprenticeship";
+    var pageTitle = "Apprenticeship resumed";
+    var pageId = "apprentice-resumed";
+    var pageHeading = "Resume apprenticeship";
 
     ViewBag.Title = pageTitle;
     ViewBag.PageId = pageId;
