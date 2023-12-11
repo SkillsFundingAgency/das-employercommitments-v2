@@ -32,6 +32,5 @@ public class ConfirmProviderViewModelMapper : IMapper<ConfirmProviderRequest, Co
         };
 
         return result;
-
     }
 }

@@ -29,21 +29,6 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
     {
         GetCohortResponse cohort;
 
-        Task<bool> IsAgreementSigned(long accountLegalEntityId)
-        {
-            var request = new AgreementSignedRequest
-            {
-                AccountLegalEntityId = accountLegalEntityId
-            };
-
-            if (cohort.IsFundedByTransfer)
-            {
-                request.AgreementFeatures = new AgreementFeature[] { AgreementFeature.Transfers };
-            }
-
-            return _commitmentsApiClient.IsAgreementSigned(request);
-        }
-
         var cohortTask = _commitmentsApiClient.GetCohort(source.CohortId);
         var cohortDetailsTask = _approvalsApiClient.GetCohortDetails(source.AccountId, source.CohortId);
         var draftApprenticeshipsTask = _commitmentsApiClient.GetDraftApprenticeships(source.CohortId);
@@ -57,8 +42,8 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
         var emailOverlaps = (await emailOverlapsTask).ApprenticeshipEmailOverlaps.ToList();
 
         var courses = await GroupCourses(draftApprenticeships, emailOverlaps, cohort);
-        var viewOrApprove = cohort.WithParty == CommitmentsV2.Types.Party.Employer ? "Approve" : "View";
-        var isAgreementSigned = await IsAgreementSigned(cohort.AccountLegalEntityId);
+        var viewOrApprove = cohort.WithParty == Party.Employer ? "Approve" : "View";
+        var isAgreementSigned = await IsAgreementSigned(cohort.AccountLegalEntityId, cohort);
 
         return new DetailsViewModel
         {
@@ -84,6 +69,21 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
             ShowRofjaaRemovalBanner = cohortDetails.HasUnavailableFlexiJobAgencyDeliveryModel,
             Status = GetCohortStatus(cohort, draftApprenticeships)
         };
+    }
+
+    private Task<bool> IsAgreementSigned(long accountLegalEntityId, GetCohortResponse cohort)
+    {
+        var request = new AgreementSignedRequest
+        {
+            AccountLegalEntityId = accountLegalEntityId
+        };
+
+        if (cohort.IsFundedByTransfer)
+        {
+            request.AgreementFeatures = new[] { AgreementFeature.Transfers };
+        }
+
+        return _commitmentsApiClient.IsAgreementSigned(request);
     }
 
     private async Task<IReadOnlyCollection<DetailsViewCourseGroupingModel>> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships, List<ApprenticeshipEmailOverlap> emailOverlaps, GetCohortResponse cohortResponse)
@@ -130,7 +130,7 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
         return groupedByCourse;
     }
 
-    private bool IsDraftApprenticeshipComplete(DraftApprenticeshipDto draftApprenticeship, GetCohortResponse cohortResponse) =>
+    private static bool IsDraftApprenticeshipComplete(DraftApprenticeshipDto draftApprenticeship, GetCohortResponse cohortResponse) =>
         !(
             string.IsNullOrWhiteSpace(draftApprenticeship.FirstName) || string.IsNullOrWhiteSpace(draftApprenticeship.LastName)
                                                                      || draftApprenticeship.DateOfBirth == null || string.IsNullOrWhiteSpace(draftApprenticeship.CourseName)
@@ -148,22 +148,24 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
     {
         foreach (var draftApprenticeship in draftApprenticeships)
         {
-            if (!string.IsNullOrWhiteSpace(draftApprenticeship.ULN) && draftApprenticeship.StartDate.HasValue && draftApprenticeship.EndDate.HasValue)
+            if (string.IsNullOrWhiteSpace(draftApprenticeship.ULN) || !draftApprenticeship.StartDate.HasValue || !draftApprenticeship.EndDate.HasValue)
             {
-                var result = await _commitmentsApiClient.ValidateUlnOverlap(new CommitmentsV2.Api.Types.Requests.ValidateUlnOverlapRequest
-                {
-                    EndDate = draftApprenticeship.EndDate.Value,
-                    StartDate = draftApprenticeship.StartDate.Value,
-                    ULN = draftApprenticeship.ULN,
-                    ApprenticeshipId = draftApprenticeship.Id
-                });
-
-                draftApprenticeship.HasOverlappingUln = result.HasOverlappingStartDate || result.HasOverlappingEndDate;
+                continue;
             }
+            
+            var result = await _commitmentsApiClient.ValidateUlnOverlap(new ValidateUlnOverlapRequest
+            {
+                EndDate = draftApprenticeship.EndDate.Value,
+                StartDate = draftApprenticeship.StartDate.Value,
+                ULN = draftApprenticeship.ULN,
+                ApprenticeshipId = draftApprenticeship.Id
+            });
+
+            draftApprenticeship.HasOverlappingUln = result.HasOverlappingStartDate || result.HasOverlappingEndDate;
         }
     }
 
-    private void PopulateEmailOverlapsModel(List<DetailsViewCourseGroupingModel> courseGroups)
+    private static void PopulateEmailOverlapsModel(List<DetailsViewCourseGroupingModel> courseGroups)
     {
         foreach (var courseGroup in courseGroups)
         {
@@ -184,17 +186,19 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
         foreach (var courseGroup in courseGroups)
         {
             var apprenticesExceedingFundingBand = courseGroup.DraftApprenticeships.Where(x => x.ExceedsFundingBandCap).ToList();
-            int numberExceedingBand = apprenticesExceedingFundingBand.Count;
+            var numberExceedingBand = apprenticesExceedingFundingBand.Count;
 
-            if (numberExceedingBand > 0)
+            if (numberExceedingBand <= 0)
             {
-                var fundingExceededValues = apprenticesExceedingFundingBand.GroupBy(x => x.FundingBandCap).Select(fundingBand => fundingBand.Key);
-                var fundingBandCapExcessHeader = GetFundingBandExcessHeader(apprenticesExceedingFundingBand.Count);
-                var fundingBandCapExcessLabel = GetFundingBandExcessLabel(apprenticesExceedingFundingBand.Count);
-
-                courseGroup.FundingBandExcess =
-                    new FundingBandExcessModel(apprenticesExceedingFundingBand.Count, fundingExceededValues, fundingBandCapExcessHeader, fundingBandCapExcessLabel);
+                continue;
             }
+            
+            var fundingExceededValues = apprenticesExceedingFundingBand.GroupBy(x => x.FundingBandCap).Select(fundingBand => fundingBand.Key);
+            var fundingBandCapExcessHeader = GetFundingBandExcessHeader(apprenticesExceedingFundingBand.Count);
+            var fundingBandCapExcessLabel = GetFundingBandExcessLabel(apprenticesExceedingFundingBand.Count);
+
+            courseGroup.FundingBandExcess =
+                    new FundingBandExcessModel(apprenticesExceedingFundingBand.Count, fundingExceededValues, fundingBandCapExcessHeader, fundingBandCapExcessLabel);
         }
     }
 
@@ -222,7 +226,7 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
         }
     }
 
-    private int? GetFundingBandCap(GetTrainingProgrammeResponse course, DateTime? startDate)
+    private static int? GetFundingBandCap(GetTrainingProgrammeResponse course, DateTime? startDate)
     {
         if (startDate == null)
         {
@@ -244,25 +248,33 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
         return null;
     }
 
-    private string GetFundingBandExcessHeader(int apprenticeshipsOverCap)
+    private static string GetFundingBandExcessHeader(int apprenticeshipsOverCap)
     {
-        if (apprenticeshipsOverCap == 1)
-            return new string($"{apprenticeshipsOverCap} apprenticeship above funding band maximum");
-        if (apprenticeshipsOverCap > 1)
-            return new string($"{apprenticeshipsOverCap} apprenticeships above funding band maximum");
-        return null;
+        switch (apprenticeshipsOverCap)
+        {
+            case 1:
+                return new string($"{apprenticeshipsOverCap} apprenticeship above funding band maximum");
+            case > 1:
+                return new string($"{apprenticeshipsOverCap} apprenticeships above funding band maximum");
+            default:
+                return null;
+        }
     }
 
-    private string GetFundingBandExcessLabel(int apprenticeshipsOverCap)
+    private static string GetFundingBandExcessLabel(int apprenticeshipsOverCap)
     {
-        if (apprenticeshipsOverCap == 1)
-            return new string("The price for this apprenticeship is above its");
-        if (apprenticeshipsOverCap > 1)
-            return new string("The price for these apprenticeships is above the");
-        return null;
+        switch (apprenticeshipsOverCap)
+        {
+            case 1:
+                return new string("The price for this apprenticeship is above its");
+            case > 1:
+                return new string("The price for these apprenticeships is above the");
+            default:
+                return null;
+        }
     }
 
-    private string GetCohortStatus(GetCohortResponse cohort, IReadOnlyCollection<DraftApprenticeshipDto> draftApprenticeships)
+    private static string GetCohortStatus(GetCohortResponse cohort, IReadOnlyCollection<DraftApprenticeshipDto> draftApprenticeships)
     {
         if (cohort.TransferSenderId.HasValue &&
             cohort.TransferApprovalStatus == TransferApprovalStatus.Pending)

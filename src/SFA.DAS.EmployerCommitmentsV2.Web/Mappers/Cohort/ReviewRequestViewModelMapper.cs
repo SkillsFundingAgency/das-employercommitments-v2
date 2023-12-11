@@ -46,13 +46,10 @@ public class ReviewRequestViewModelMapper : IMapper<CohortsByAccountRequest, Rev
         return reviewViewModel;
     }
 
-    private string GetMessage(Message latestMessageFromProvider)
+    private static string GetMessage(Message latestMessageFromProvider)
     {
-        if (!string.IsNullOrWhiteSpace(latestMessageFromProvider?.Text))
-        {
-            return latestMessageFromProvider.Text;
-        }
-
-        return "No message added";
+        return !string.IsNullOrWhiteSpace(latestMessageFromProvider?.Text) 
+            ? latestMessageFromProvider.Text 
+            : "No message added";
     }
 }

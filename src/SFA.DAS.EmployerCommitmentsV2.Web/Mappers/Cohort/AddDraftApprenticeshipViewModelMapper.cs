@@ -11,8 +11,7 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<ApprenticeRequest, 
 {
     private readonly ICommitmentsApiClient _commitmentsApiClient;
 
-    public AddDraftApprenticeshipViewModelMapper(
-        ICommitmentsApiClient commitmentsApiClient)
+    public AddDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
     {
         _commitmentsApiClient = commitmentsApiClient;
     }

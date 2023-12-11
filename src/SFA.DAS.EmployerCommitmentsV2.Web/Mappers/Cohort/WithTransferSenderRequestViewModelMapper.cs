@@ -53,7 +53,7 @@ public class WithTransferSenderRequestViewModelMapper : IMapper<CohortsByAccount
         return reviewViewModel;
     }
 
-    private DateTime GetOrderByDate(CohortSummary s)
+    private static DateTime GetOrderByDate(CohortSummary s)
     {
         return new[] { s.LatestMessageFromEmployer?.SentOn, s.LatestMessageFromProvider?.SentOn, s.CreatedOn }.Max().Value;
     }

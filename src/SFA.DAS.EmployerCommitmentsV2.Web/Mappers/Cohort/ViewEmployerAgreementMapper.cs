@@ -19,7 +19,7 @@ public class ViewEmployerAgreementMapper : IMapper<DetailsViewModel, ViewEmploye
     public async Task<ViewEmployerAgreementRequest> Map(DetailsViewModel source)
     {
         var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
-        long? latestAgreementId = await _commitmentsApiClient.GetLatestAgreementId(cohort.AccountLegalEntityId);
+        var latestAgreementId = await _commitmentsApiClient.GetLatestAgreementId(cohort.AccountLegalEntityId);
 
         return new ViewEmployerAgreementRequest
         {

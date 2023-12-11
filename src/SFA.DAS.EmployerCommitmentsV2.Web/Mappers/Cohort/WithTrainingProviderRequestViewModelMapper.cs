@@ -54,13 +54,10 @@ public class WithTrainingProviderRequestViewModelMapper : IMapper<CohortsByAccou
         return reviewViewModel;
     }
 
-    private string GetMessage(Message latestMessageFromEmployer)
+    private static string GetMessage(Message latestMessageFromEmployer)
     {
-        if (!string.IsNullOrWhiteSpace(latestMessageFromEmployer?.Text))
-        {
-            return latestMessageFromEmployer.Text;
-        }
-
-        return "No message added";
+        return !string.IsNullOrWhiteSpace(latestMessageFromEmployer?.Text) 
+            ? latestMessageFromEmployer.Text
+            : "No message added";
     }
 }

@@ -16,7 +16,7 @@ public class ApprenticeViewModelMapper : IMapper<ApprenticeRequest, ApprenticeVi
 
     public async Task<ApprenticeViewModel> Map(ApprenticeRequest source)
     {
-        var ale = await _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
+        var accountLegalEntity = await _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
 
         var provider = await _commitmentsApiClient.GetProvider(source.ProviderId);
 
@@ -25,7 +25,7 @@ public class ApprenticeViewModelMapper : IMapper<ApprenticeRequest, ApprenticeVi
             AccountHashedId = source.AccountHashedId,
             AccountLegalEntityId = source.AccountLegalEntityId,
             AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
-            LegalEntityName = ale.LegalEntityName,
+            LegalEntityName = accountLegalEntity.LegalEntityName,
             StartDate = new MonthYearModel(source.StartMonthYear),
             ReservationId = source.ReservationId,
             CourseCode = source.CourseCode,

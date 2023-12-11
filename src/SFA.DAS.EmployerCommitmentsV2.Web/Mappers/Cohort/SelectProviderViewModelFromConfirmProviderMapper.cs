@@ -21,18 +21,15 @@ public class SelectProviderViewModelFromConfirmProviderMapper : IMapper<ConfirmP
         });
     }
 
-    private Origin DetermineOrigin(ConfirmProviderViewModel source)
+    private static Origin DetermineOrigin(ConfirmProviderViewModel source)
     {
         if (source.ReservationId.HasValue)
         {
             return Origin.Reservations;
         }
 
-        if (!string.IsNullOrWhiteSpace(source.EncodedPledgeApplicationId))
-        {
-            return Origin.LevyTransferMatching;
-        }
-
-        return Origin.Apprentices;
+        return !string.IsNullOrWhiteSpace(source.EncodedPledgeApplicationId) 
+            ? Origin.LevyTransferMatching 
+            : Origin.Apprentices;
     }
 }

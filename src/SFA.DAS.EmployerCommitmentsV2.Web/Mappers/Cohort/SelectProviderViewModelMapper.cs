@@ -32,18 +32,15 @@ public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, Sele
 
     }
 
-    private Origin DetermineOrigin(SelectProviderRequest source)
+    private static Origin DetermineOrigin(SelectProviderRequest source)
     {
         if (source.ReservationId.HasValue)
         {
             return Origin.Reservations;
         }
 
-        if(!string.IsNullOrWhiteSpace(source.EncodedPledgeApplicationId))
-        {
-            return Origin.LevyTransferMatching;
-        }
-
-        return Origin.Apprentices;
+        return !string.IsNullOrWhiteSpace(source.EncodedPledgeApplicationId)
+            ? Origin.LevyTransferMatching 
+            : Origin.Apprentices;
     }
 }
