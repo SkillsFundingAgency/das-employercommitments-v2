@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
-public static class ITempDataDictionaryExtensions
+public static class TempDataDictionaryExtensions
 {
     public static readonly string FlashMessageTitleTempDataKey = "FlashMessageTitle";
     public static readonly string FlashMessageBodyTempDataKey = "FlashMessageBody";

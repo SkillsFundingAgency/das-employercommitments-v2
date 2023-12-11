@@ -4,20 +4,32 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
+public enum CohortStatus
+{
+    Unknown,
+    Draft,
+    Review,
+    WithProvider,
+    WithTransferSender
+    
+}
 public static class CohortSummaryExtension
 {
     public static CohortStatus GetStatus(this CohortSummary cohort)
     {
-        if (cohort.IsDraft && cohort.WithParty == Party.Employer)
-            return CohortStatus.Draft;
-        else if (!cohort.IsDraft && cohort.WithParty == Party.Employer)
-            return CohortStatus.Review;
-        else if (!cohort.IsDraft && cohort.WithParty == Party.Provider)
-            return CohortStatus.WithProvider;
-        else if (!cohort.IsDraft && cohort.WithParty == Party.TransferSender)
-            return CohortStatus.WithTransferSender;
-        else
-            return CohortStatus.Unknown;
+        switch (cohort.IsDraft)
+        {
+            case true when cohort.WithParty == Party.Employer:
+                return CohortStatus.Draft;
+            case false when cohort.WithParty == Party.Employer:
+                return CohortStatus.Review;
+            case false when cohort.WithParty == Party.Provider:
+                return CohortStatus.WithProvider;
+            case false when cohort.WithParty == Party.TransferSender:
+                return CohortStatus.WithTransferSender;
+            default:
+                return CohortStatus.Unknown;
+        }
     }
 
     public static ApprenticeshipRequestsHeaderViewModel GetCohortCardLinkViewModel(this CohortSummary[] cohorts, IUrlHelper urlHelper, string accountHashedId, CohortStatus selectedStatus)
@@ -51,13 +63,4 @@ public static class CohortSummaryExtension
                 selectedStatus == CohortStatus.WithTransferSender)
         };
     }
-}
-
-public enum CohortStatus
-{
-    Unknown,
-    Draft,
-    Review,
-    WithProvider,
-    WithTransferSender
 }

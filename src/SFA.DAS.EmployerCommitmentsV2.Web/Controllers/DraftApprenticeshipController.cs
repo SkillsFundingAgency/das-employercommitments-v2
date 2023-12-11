@@ -321,7 +321,7 @@ public class DraftApprenticeshipController : Controller
         {
             var request = await _modelMapper.Map<DeleteDraftApprenticeshipRequest>(model);
             await _commitmentsApiClient.DeleteDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId.Value, request);
-            TempData.AddFlashMessage(ApprenticeDeletedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+            TempData.AddFlashMessage(ApprenticeDeletedMessage, TempDataDictionaryExtensions.FlashMessageLevel.Success);
             return await RedirectToCohortDetailsOrCohortsPage(model);
         }
 

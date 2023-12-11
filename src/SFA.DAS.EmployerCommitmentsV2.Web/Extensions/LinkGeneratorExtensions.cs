@@ -2,7 +2,7 @@ using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
-public static class ILinkGeneratorExtensions
+public static class LinkGeneratorExtensions
 {
     public static string YourOrganisationsAndAgreements(this ILinkGenerator linkGenerator, string accountHashedId)
     {

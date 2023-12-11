@@ -23,7 +23,7 @@ public class AjaxValidationAttribute : ActionFilterAttribute
         base.OnActionExecuting(filterContext);
     }
 
-    internal static IEnumerable<ErrorDetail> FindErrors(ModelStateDictionary modelState)
+    private static IEnumerable<ErrorDetail> FindErrors(ModelStateDictionary modelState)
     {
         var result = new List<ErrorDetail>();
         var erroneousFields = modelState.Where(ms => ms.Value.Errors.Any()).Select(x => new { x.Key, x.Value.Errors });

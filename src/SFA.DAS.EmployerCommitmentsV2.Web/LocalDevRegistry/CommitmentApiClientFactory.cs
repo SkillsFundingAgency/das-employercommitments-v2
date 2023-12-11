@@ -35,10 +35,8 @@ public class LocalDevApiClientFactory : ICommitmentsApiClientFactory, ICommitmen
             var restHttpClient = new CommitmentsRestHttpClient(httpClient, _loggerFactory);
             return new CommitmentsApiClient(restHttpClient);
         }
-        else
-        {
-            throw new UnauthorizedAccessException("Not accessible");
-        }
+
+        throw new UnauthorizedAccessException("Not accessible");
     }
 
     ICommitmentPermissionsApiClient ICommitmentPermissionsApiClientFactory.CreateClient()
@@ -56,9 +54,7 @@ public class LocalDevApiClientFactory : ICommitmentsApiClientFactory, ICommitmen
             var restHttpClient = new CommitmentsRestHttpClient(httpClient, _loggerFactory);
             return new CommitmentPermissionsApiClient(restHttpClient);
         }
-        else
-        {
-            throw new UnauthorizedAccessException("Not accessible");
-        }
+
+        throw new UnauthorizedAccessException("Not accessible");
     }
 }

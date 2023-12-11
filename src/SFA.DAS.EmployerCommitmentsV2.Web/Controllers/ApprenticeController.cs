@@ -106,7 +106,7 @@ public class ApprenticeController : Controller
         await _commitmentsApiClient.UpdateEndDateOfCompletedRecord(request, CancellationToken.None);
 
         TempData.AddFlashMessage(ApprenticeEndDateUpdatedOnCompletedRecord,
-            ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+            TempDataDictionaryExtensions.FlashMessageLevel.Success);
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
             new ApprenticeshipDetailsRequest
@@ -600,7 +600,7 @@ public class ApprenticeController : Controller
                 });
             }
 
-            TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+            TempData.AddFlashMessage(ApprenticeStoppedMessage, TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
@@ -636,7 +636,7 @@ public class ApprenticeController : Controller
 
             await _commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
 
-            TempData.AddFlashMessage(ApprenticePausedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+            TempData.AddFlashMessage(ApprenticePausedMessage, TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
@@ -664,7 +664,7 @@ public class ApprenticeController : Controller
 
             await _commitmentsApiClient.ResumeApprenticeship(resumeRequest, CancellationToken.None);
 
-            TempData.AddFlashMessage(ApprenticeResumeMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+            TempData.AddFlashMessage(ApprenticeResumeMessage, TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
@@ -698,7 +698,7 @@ public class ApprenticeController : Controller
         await _commitmentsApiClient.UpdateApprenticeshipStopDate(viewModel.ApprenticeshipId, request,
             CancellationToken.None);
 
-        TempData.AddFlashMessage(ApprenticeEditStopDate, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+        TempData.AddFlashMessage(ApprenticeEditStopDate, TempDataDictionaryExtensions.FlashMessageLevel.Success);
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
             new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
@@ -931,11 +931,11 @@ public class ApprenticeController : Controller
             {
                 TempData.AddFlashMessage(ApprenticeUpdated,
                     $"Your suggested changes have been sent to {viewModel.ProviderName} for approval.",
-                    ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                    TempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
             else
             {
-                TempData.AddFlashMessage(ApprenticeUpdated, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                TempData.AddFlashMessage(ApprenticeUpdated, TempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
         }
 
@@ -971,7 +971,7 @@ public class ApprenticeController : Controller
 
             await _commitmentsApiClient.AcceptApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
             TempData.AddFlashMessageWithDetail(ChangesApprovedMessage, AlertDetailsWhenApproved,
-                ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
         else
         {
@@ -983,7 +983,7 @@ public class ApprenticeController : Controller
             };
 
             await _commitmentsApiClient.RejectApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
-            TempData.AddFlashMessage(ChangesRejectedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+            TempData.AddFlashMessage(ChangesRejectedMessage, TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
@@ -1016,7 +1016,7 @@ public class ApprenticeController : Controller
 
             await _commitmentsApiClient.UndoApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
 
-            TempData.AddFlashMessage(ChangesUndoneMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+            TempData.AddFlashMessage(ChangesUndoneMessage, TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
@@ -1078,7 +1078,7 @@ public class ApprenticeController : Controller
                 new SaveDataRequest { UserInfo = authenticationService.UserInfo }, CancellationToken.None);
 
             TempData.AddFlashMessage("The invitation email has been resent.", null,
-                ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
         catch
         {
@@ -1140,7 +1140,7 @@ public class ApprenticeController : Controller
 
             TempData.AddFlashMessageWithDetail(ApprenticeEndDateConfirmed,
                 viewModel.EndDate.ToGdsFormatLongMonthNameWithoutDay(),
-                ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                TempDataDictionaryExtensions.FlashMessageLevel.Success);
 
             return RedirectToAction(nameof(ApprenticeshipDetails),
                 new ApprenticeshipDetailsRequest
@@ -1176,7 +1176,7 @@ public class ApprenticeController : Controller
                 }, CancellationToken.None);
 
             TempData.AddFlashMessage($"Apprenticeship confirmed",
-                ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
 
         return RedirectToAction(nameof(ApprenticeshipDetails), new
@@ -1209,7 +1209,7 @@ public class ApprenticeController : Controller
 
             TempData.AddFlashMessageWithDetail("Current stop date confirmed",
                 viewModel.StopDate.ToGdsFormatLongMonthNameWithoutDay(),
-                ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                TempDataDictionaryExtensions.FlashMessageLevel.Success);
 
             return RedirectToAction(nameof(ApprenticeshipDetails), new
             {

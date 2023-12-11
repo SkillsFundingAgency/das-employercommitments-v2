@@ -26,8 +26,7 @@ public static class PriceEpisodeExtenstions
         return priceEpisodes.GetPrice(DateTime.UtcNow);
     }
 
-    public static int GetPrice(this IEnumerable<PriceEpisode> priceEpisodes,
-        DateTime effectiveDate)
+    private static int GetPrice(this IEnumerable<PriceEpisode> priceEpisodes, DateTime effectiveDate)
     {
         var episodes = priceEpisodes.ToList();
 

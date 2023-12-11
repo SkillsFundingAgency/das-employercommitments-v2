@@ -9,7 +9,7 @@ public class GoogleAnalyticsFilter : ActionFilterAttribute
 {
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        if (!(context.Controller is Controller controller))
+        if (context.Controller is not Controller controller)
         {
             return;
         }
@@ -19,7 +19,7 @@ public class GoogleAnalyticsFilter : ActionFilterAttribute
         base.OnActionExecuting(context);
     }
 
-    private GaData PopulateGaData(ActionExecutingContext context)
+    private static GaData PopulateGaData(ActionExecutingContext context)
     {
         string hashedAccountId = null;
 

@@ -43,7 +43,7 @@ public static class DataLockStatusExtensions
         return dataLocks.Any(x => x.TriageStatus == TriageStatus.Change && x.DataLockStatus == Status.Fail && !x.IsResolved && x.ErrorCode.HasFlag(DataLockErrorCode.Dlock07));
     }
 
-    public static bool WithCourseError(this GetManageApprenticeshipDetailsResponse.GetDataLockResponse.DataLock dataLockStatus)
+    private static bool WithCourseError(this GetManageApprenticeshipDetailsResponse.GetDataLockResponse.DataLock dataLockStatus)
     {
         return dataLockStatus.ErrorCode.HasFlag(DataLockErrorCode.Dlock03)
                || dataLockStatus.ErrorCode.HasFlag(DataLockErrorCode.Dlock04)
