@@ -24,8 +24,7 @@ public class  CommitmentPermissionsApiClientFactory : ICommitmentPermissionsApiC
         var httpClientFactory = new ManagedIdentityHttpClientFactory(_configuration, _loggerFactory);
         var httpClient = httpClientFactory.CreateHttpClient();
         var restHttpClient = new RestHttpClient(httpClient);
-        var apiClient = new CommitmentPermissionsApiClient(restHttpClient);
-            
-        return apiClient;
+
+        return new CommitmentPermissionsApiClient(restHttpClient);
     }
 }
