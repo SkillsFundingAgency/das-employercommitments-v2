@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -31,7 +30,7 @@ public class ApprenticeController : Controller
     private readonly ICookieStorageService<IndexRequest> _cookieStorage;
     private readonly ICommitmentsApiClient _commitmentsApiClient;
     private readonly ILogger<ApprenticeController> _logger;
-    
+
     private const string ApprenticePausedMessage = "Apprenticeship paused";
     private const string ApprenticeResumeMessage = "Apprenticeship resumed";
     private const string ApprenticeStoppedMessage = "Apprenticeship stopped";
@@ -39,13 +38,17 @@ public class ApprenticeController : Controller
     private const string ApprenticeEditStopDate = "New stop date confirmed";
     private const string ApprenticeEndDateUpdatedOnCompletedRecord = "New planned training finish date confirmed";
     private const string ChangesApprovedMessage = "Changes approved";
-    private const string AlertDetailsWhenApproved = "An alert has been sent to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service.";
+
+    private const string AlertDetailsWhenApproved =
+        "An alert has been sent to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service.";
+
     private const string ChangesRejectedMessage = "Changes rejected";
     private const string ChangesUndoneMessage = "Changes undone";
     private const string ViewModelForEdit = "ViewModelForEdit";
     private const string ApprenticeEndDateConfirmed = "Current planned end date confirmed ";
 
-    public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage, ICommitmentsApiClient commitmentsApiClient, ILogger<ApprenticeController> logger)
+    public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage,
+        ICommitmentsApiClient commitmentsApiClient, ILogger<ApprenticeController> logger)
     {
         _modelMapper = modelMapper;
         _cookieStorage = cookieStorage;
@@ -102,9 +105,14 @@ public class ApprenticeController : Controller
         var request = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.EditEndDateRequest>(viewModel);
         await _commitmentsApiClient.UpdateEndDateOfCompletedRecord(request, CancellationToken.None);
 
-        TempData.AddFlashMessage(ApprenticeEndDateUpdatedOnCompletedRecord, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+        TempData.AddFlashMessage(ApprenticeEndDateUpdatedOnCompletedRecord,
+            ITempDataDictionaryExtensions.FlashMessageLevel.Success);
 
-        return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
+        return RedirectToAction(nameof(ApprenticeshipDetails),
+            new ApprenticeshipDetailsRequest
+            {
+                AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+            });
     }
 
     [Route("{apprenticeshipHashedId}/details/changestatus")]
@@ -122,17 +130,27 @@ public class ApprenticeController : Controller
         switch (viewModel.SelectedStatusChange)
         {
             case ChangeStatusType.Pause:
-                return RedirectToAction(nameof(PauseApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                return RedirectToAction(nameof(PauseApprenticeship),
+                    new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
             case ChangeStatusType.Stop:
-                var redirectToActionName = viewModel.CurrentStatus == ApprenticeshipStatus.WaitingToStart ? nameof(HasTheApprenticeBeenMadeRedundant) : nameof(WhyStopApprenticeship);
-                return RedirectToAction(redirectToActionName, new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                var redirectToActionName = viewModel.CurrentStatus == ApprenticeshipStatus.WaitingToStart
+                    ? nameof(HasTheApprenticeBeenMadeRedundant)
+                    : nameof(WhyStopApprenticeship);
+                return RedirectToAction(redirectToActionName,
+                    new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
             case ChangeStatusType.Resume:
-                return RedirectToAction(nameof(ResumeApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                return RedirectToAction(nameof(ResumeApprenticeship),
+                    new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
             default:
-                return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
+                return RedirectToAction(nameof(ApprenticeshipDetails),
+                    new ApprenticeshipDetailsRequest
+                    {
+                        AccountHashedId = viewModel.AccountHashedId,
+                        ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+                    });
         }
     }
 
@@ -199,14 +217,10 @@ public class ApprenticeController : Controller
     {
         var request = await _modelMapper.Map<ChangeOfProviderRequest>(vm);
 
-        if (vm.EmployerWillAdd == true)
-        {
-            return RedirectToRoute(RouteNames.WhatIsTheNewStartDate, request);
-        }
-        else
-        {
-            return RedirectToRoute(RouteNames.SendRequestNewTrainingProvider, request);
-        }
+        return RedirectToRoute(vm.EmployerWillAdd == true
+                ? RouteNames.WhatIsTheNewStartDate
+                : RouteNames.SendRequestNewTrainingProvider
+            , request);
     }
 
     [HttpGet]
@@ -240,12 +254,10 @@ public class ApprenticeController : Controller
     {
         var request = await _modelMapper.Map<ChangeOfProviderRequest>(vm);
 
-        if (vm.Edit)
-        {
-            return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, request);
-        }
-
-        return RedirectToRoute(RouteNames.WhatIsTheNewEndDate, request);
+        return RedirectToRoute(vm.Edit
+                ? RouteNames.ConfirmDetailsAndSendRequest
+                : RouteNames.WhatIsTheNewEndDate
+            , request);
     }
 
     [HttpGet]
@@ -281,12 +293,10 @@ public class ApprenticeController : Controller
     {
         var request = await _modelMapper.Map<ChangeOfProviderRequest>(viewModel);
 
-        if (viewModel.Edit)
-        {
-            return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, request);
-        }
-
-        return RedirectToRoute(RouteNames.WhatIsTheNewPrice, request);
+        return RedirectToRoute(viewModel.Edit
+                ? RouteNames.ConfirmDetailsAndSendRequest
+                : RouteNames.WhatIsTheNewPrice
+            , request);
     }
 
     [HttpGet]
@@ -354,7 +364,8 @@ public class ApprenticeController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Failed '{nameof(ApprenticeController)}-{nameof(ConfirmDetailsAndSendRequestPage)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
+            _logger.LogError(
+                $"Failed '{nameof(ApprenticeController)}-{nameof(ConfirmDetailsAndSendRequestPage)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
             return RedirectToAction("Error", "Error");
         }
     }
@@ -401,20 +412,29 @@ public class ApprenticeController : Controller
             {
                 var apiRequest = await _modelMapper.Map<CreateChangeOfPartyRequestRequest>(request);
                 await _commitmentsApiClient.CreateChangeOfPartyRequest(request.ApprenticeshipId, apiRequest);
-                return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation, new { request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId, request.StoppedDuringCoP, ProviderAddDetails = true });
+                return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation,
+                    new
+                    {
+                        request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId,
+                        request.StoppedDuringCoP, ProviderAddDetails = true
+                    });
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed '{nameof(ApprenticeController)}-{nameof(SendRequestNewTrainingProvider)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
+                _logger.LogError(
+                    $"Failed '{nameof(ApprenticeController)}-{nameof(SendRequestNewTrainingProvider)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
                 return RedirectToAction("Error", "Error");
             }
         }
 
-        return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = request.AccountHashedId, ApprenticeshipHashedId = request.ApprenticeshipHashedId });
+        return RedirectToAction(nameof(ApprenticeshipDetails),
+            new ApprenticeshipDetailsRequest
+                { AccountHashedId = request.AccountHashedId, ApprenticeshipHashedId = request.ApprenticeshipHashedId });
     }
 
     [HttpGet]
-    [Route("{apprenticeshipHashedId}/change-provider/change-provider-requested/{providerId}", Name = RouteNames.ChangeProviderRequestedConfirmation)]
+    [Route("{apprenticeshipHashedId}/change-provider/change-provider-requested/{providerId}",
+        Name = RouteNames.ChangeProviderRequestedConfirmation)]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> ChangeProviderRequested(ChangeProviderRequestedConfirmationRequest request)
     {
@@ -445,7 +465,12 @@ public class ApprenticeController : Controller
     [HttpPost]
     public IActionResult StopApprenticeship(StopRequestViewModel viewModel)
     {
-        return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney, viewModel.StopMonth, viewModel.StopYear });
+        return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant),
+            new
+            {
+                viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney,
+                viewModel.StopMonth, viewModel.StopYear
+            });
     }
 
     [Route("{apprenticeshipHashedId}/details/madeRedundant", Name = RouteNames.HasTheApprenticeBeenMadeRedundant)]
@@ -461,7 +486,12 @@ public class ApprenticeController : Controller
     [HttpPost]
     public IActionResult HasTheApprenticeBeenMadeRedundant(MadeRedundantViewModel viewModel)
     {
-        return RedirectToAction(nameof(ConfirmStop), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney, viewModel.StopMonth, viewModel.StopYear, viewModel.MadeRedundant });
+        return RedirectToAction(nameof(ConfirmStop),
+            new
+            {
+                viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney,
+                viewModel.StopMonth, viewModel.StopYear, viewModel.MadeRedundant
+            });
     }
 
     [Route("{apprenticeshipHashedId}/details/whystopapprenticeship")]
@@ -479,25 +509,36 @@ public class ApprenticeController : Controller
         switch (viewModel.SelectedStatusChange)
         {
             case StopStatusReason.LeftEmployment:
-                return RedirectToAction(nameof(StopApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                return RedirectToAction(nameof(StopApprenticeship),
+                    new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
             case StopStatusReason.ChangeProvider:
-                return RedirectToAction(nameof(StopApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                return RedirectToAction(nameof(StopApprenticeship),
+                    new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
             case StopStatusReason.TrainingEnded:
-                return RedirectToAction(nameof(ApprenticeshipNotEnded), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                return RedirectToAction(nameof(ApprenticeshipNotEnded),
+                    new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
             case StopStatusReason.Withdrawn:
-                return RedirectToAction(nameof(StopApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                return RedirectToAction(nameof(StopApprenticeship),
+                    new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
             case StopStatusReason.ProviderCorrectsApprenticeRecord:
-                return RedirectToAction(nameof(StopApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                return RedirectToAction(nameof(StopApprenticeship),
+                    new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
             case StopStatusReason.NeverStarted:
-                return RedirectToAction(nameof(ApprenticeshipNeverStarted), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                return RedirectToAction(nameof(ApprenticeshipNeverStarted),
+                    new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
             default:
-                return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
+                return RedirectToAction(nameof(ApprenticeshipDetails),
+                    new ApprenticeshipDetailsRequest
+                    {
+                        AccountHashedId = viewModel.AccountHashedId,
+                        ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+                    });
         }
     }
 
@@ -513,7 +554,12 @@ public class ApprenticeController : Controller
     [HttpPost]
     public IActionResult ApprenticeshipNeverStarted(ApprenticeshipNeverStartedViewModel viewModel)
     {
-        return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney, viewModel.StopMonth, viewModel.StopYear });
+        return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant),
+            new
+            {
+                viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney,
+                viewModel.StopMonth, viewModel.StopYear
+            });
     }
 
     [Route("{apprenticeshipHashedId}/details/apprenticeshipnotended")]
@@ -541,7 +587,8 @@ public class ApprenticeController : Controller
         {
             var stopApprenticeshipRequest = await _modelMapper.Map<StopApprenticeshipRequest>(viewModel);
 
-            await _commitmentsApiClient.StopApprenticeship(viewModel.ApprenticeshipId, stopApprenticeshipRequest, CancellationToken.None);
+            await _commitmentsApiClient.StopApprenticeship(viewModel.ApprenticeshipId, stopApprenticeshipRequest,
+                CancellationToken.None);
 
             if (viewModel.IsCoPJourney)
             {
@@ -555,7 +602,12 @@ public class ApprenticeController : Controller
 
             TempData.AddFlashMessage(ApprenticeStoppedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
-        return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
+
+        return RedirectToAction(nameof(ApprenticeshipDetails),
+            new ApprenticeshipDetailsRequest
+            {
+                AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+            });
     }
 
     [Route("{apprenticeshipHashedId}/change-provider/apprenticeshipStopped")]
@@ -587,7 +639,11 @@ public class ApprenticeController : Controller
             TempData.AddFlashMessage(ApprenticePausedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
 
-        return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
+        return RedirectToAction(nameof(ApprenticeshipDetails),
+            new ApprenticeshipDetailsRequest
+            {
+                AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+            });
     }
 
     [Route("{apprenticeshipHashedId}/details/resume")]
@@ -611,7 +667,8 @@ public class ApprenticeController : Controller
             TempData.AddFlashMessage(ApprenticeResumeMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
 
-        return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+        return RedirectToAction(nameof(ApprenticeshipDetails),
+            new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
     }
 
     [HttpGet]
@@ -638,11 +695,13 @@ public class ApprenticeController : Controller
     {
         var request = await _modelMapper.Map<ApprenticeshipStopDateRequest>(viewModel);
 
-        await _commitmentsApiClient.UpdateApprenticeshipStopDate(viewModel.ApprenticeshipId, request, CancellationToken.None);
+        await _commitmentsApiClient.UpdateApprenticeshipStopDate(viewModel.ApprenticeshipId, request,
+            CancellationToken.None);
 
         TempData.AddFlashMessage(ApprenticeEditStopDate, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
 
-        return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+        return RedirectToAction(nameof(ApprenticeshipDetails),
+            new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
     }
 
     [HttpGet]
@@ -650,30 +709,37 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/edit")]
     public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequest request)
     {
-        var viewModel = TempData.Get<EditApprenticeshipRequestViewModel>(ViewModelForEdit) ?? await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
+        var viewModel = TempData.Get<EditApprenticeshipRequestViewModel>(ViewModelForEdit) ??
+                        await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
         return View(viewModel);
     }
 
     [HttpPost]
     [Route("{apprenticeshipHashedId}/edit", Name = RouteNames.EditApprenticeship)]
-    public async Task<IActionResult> EditApprenticeship(string changeCourse, string changeDeliveryModel, EditApprenticeshipRequestViewModel viewModel)
+    public async Task<IActionResult> EditApprenticeship(string changeCourse, string changeDeliveryModel,
+        EditApprenticeshipRequestViewModel viewModel)
     {
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
             TempData.Put(ViewModelForEdit, viewModel);
-            return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId });
+            return RedirectToAction(
+                changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit),
+                new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId });
         }
 
         var apprenticeship = await _commitmentsApiClient.GetApprenticeship(viewModel.ApprenticeshipId);
         // Only calculate the version if the course changes, or the start date changes and is > than the original start date.
-        var triggerCalculate = viewModel.CourseCode != apprenticeship.CourseCode || apprenticeship.StartDate < viewModel.StartDate.Date.Value;
+        var triggerCalculate = viewModel.CourseCode != apprenticeship.CourseCode ||
+                               apprenticeship.StartDate < viewModel.StartDate.Date.Value;
         if (triggerCalculate)
         {
             TrainingProgramme trainingProgramme;
 
             if (int.TryParse(viewModel.CourseCode, out var standardId))
             {
-                var standardVersionResponse = await _commitmentsApiClient.GetCalculatedTrainingProgrammeVersion(standardId, viewModel.StartDate.Date.Value);
+                var standardVersionResponse =
+                    await _commitmentsApiClient.GetCalculatedTrainingProgrammeVersion(standardId,
+                        viewModel.StartDate.Date.Value);
 
                 trainingProgramme = standardVersionResponse.TrainingProgramme;
             }
@@ -698,12 +764,10 @@ public class ApprenticeController : Controller
 
         TempData.Put("EditApprenticeshipRequestViewModel", viewModel);
 
-        if (viewModel.HasOptions)
-        {
-            return RedirectToAction("ChangeOption", new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, accountHashedId = viewModel.AccountHashedId });
-        }
-
-        return RedirectToAction("ConfirmEditApprenticeship", new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, accountHashedId = viewModel.AccountHashedId });
+        return RedirectToAction(viewModel.HasOptions
+                ? nameof(ChangeOption)
+                : nameof(ConfirmEditApprenticeship)
+            , new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, accountHashedId = viewModel.AccountHashedId });
     }
 
     [HttpGet]
@@ -724,7 +788,7 @@ public class ApprenticeController : Controller
         if (string.IsNullOrEmpty(model.CourseCode))
         {
             throw new CommitmentsApiModelException(new List<ErrorDetail>
-                {new ErrorDetail(nameof(model.CourseCode), "You must select a training course")});
+                { new(nameof(model.CourseCode), "You must select a training course") });
         }
 
         var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
@@ -747,7 +811,8 @@ public class ApprenticeController : Controller
         {
             return View("SelectDeliveryModel", model);
         }
-        draft.DeliveryModel = (DeliveryModel) model.DeliveryModels.FirstOrDefault();
+
+        draft.DeliveryModel = (DeliveryModel)model.DeliveryModels.FirstOrDefault();
         TempData.Put(ViewModelForEdit, draft);
 
         return RedirectToAction("EditApprenticeship", new { request.AccountHashedId, request.ApprenticeshipHashedId });
@@ -761,11 +826,11 @@ public class ApprenticeController : Controller
         if (model.DeliveryModel == null)
         {
             throw new CommitmentsApiModelException(new List<ErrorDetail>
-                {new ErrorDetail("DeliveryModel", "You must select the apprenticeship delivery model")});
+                { new ErrorDetail("DeliveryModel", "You must select the apprenticeship delivery model") });
         }
 
         var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
-        draft.DeliveryModel = (DeliveryModel) model.DeliveryModel.Value;
+        draft.DeliveryModel = (DeliveryModel)model.DeliveryModel.Value;
         TempData.Put(ViewModelForEdit, draft);
         return RedirectToAction("EditApprenticeship");
     }
@@ -777,7 +842,8 @@ public class ApprenticeController : Controller
         var viewModel = await _modelMapper.Map<ChangeVersionViewModel>(request);
 
         // Get Edit Model if it exists to pre-select version if navigating back
-        var editApprenticeViewModel = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>("EditApprenticeshipRequestViewModel");
+        var editApprenticeViewModel =
+            TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>("EditApprenticeshipRequestViewModel");
 
         if (editApprenticeViewModel != null && !string.IsNullOrWhiteSpace(editApprenticeViewModel.Version))
         {
@@ -795,12 +861,13 @@ public class ApprenticeController : Controller
 
         TempData.Put("EditApprenticeshipRequestViewModel", editRequestViewModel);
 
-        if (editRequestViewModel.HasOptions)
-        {
-            return RedirectToAction("ChangeOption", new { apprenticeshipHashedId = changeVersionViewModel.ApprenticeshipHashedId, accountHashedId = changeVersionViewModel.AccountHashedId });
-        }
-
-        return RedirectToAction("ConfirmEditApprenticeship", new { apprenticeshipHashedId = changeVersionViewModel.ApprenticeshipHashedId, accountHashedId = changeVersionViewModel.AccountHashedId });
+        return RedirectToAction(editRequestViewModel.HasOptions 
+            ? nameof(ChangeOption) 
+            : nameof(ConfirmEditApprenticeship)
+            , new {
+            apprenticeshipHashedId = changeVersionViewModel.ApprenticeshipHashedId,
+            accountHashedId = changeVersionViewModel.AccountHashedId
+        });
     }
 
     [HttpGet]
@@ -818,18 +885,24 @@ public class ApprenticeController : Controller
     {
         var editViewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(viewModel);
 
-        TempData.Put("EditApprenticeshipRequestViewModel", editViewModel);
+        TempData.Put(nameof(EditApprenticeshipRequestViewModel), editViewModel);
 
-        return RedirectToAction("ConfirmEditApprenticeship", new { apprenticeshipHashedId = viewModel.ApprenticeshipHashedId, accountHashedId = viewModel.AccountHashedId });
+        return RedirectToAction("ConfirmEditApprenticeship",
+            new
+            {
+                apprenticeshipHashedId = viewModel.ApprenticeshipHashedId, accountHashedId = viewModel.AccountHashedId
+            });
     }
 
     [HttpGet]
-    [Route("{apprenticeshipHashedId}/cancel-change-of-circumstance", Name = RouteNames.CancelInProgressChangeOfCircumstance)]
+    [Route("{apprenticeshipHashedId}/cancel-change-of-circumstance",
+        Name = RouteNames.CancelInProgressChangeOfCircumstance)]
     public IActionResult CancelChangeOfCircumstance(CancelChangeOfCircumstanceRequest request)
     {
-        TempData.Remove("EditApprenticeshipRequestViewModel");
+        TempData.Remove(nameof(EditApprenticeshipRequestViewModel));
 
-        return RedirectToAction(nameof(ApprenticeshipDetails), new { request.AccountHashedId, request.ApprenticeshipHashedId });
+        return RedirectToAction(nameof(ApprenticeshipDetails),
+            new { request.AccountHashedId, request.ApprenticeshipHashedId });
     }
 
     [HttpGet]
@@ -837,7 +910,8 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/edit/confirm")]
     public async Task<IActionResult> ConfirmEditApprenticeship()
     {
-        var editApprenticeshipRequestViewModel = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>("EditApprenticeshipRequestViewModel");
+        var editApprenticeshipRequestViewModel =
+            TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel));
 
         var viewModel = await _modelMapper.Map<ConfirmEditApprenticeshipViewModel>(editApprenticeshipRequestViewModel);
 
@@ -855,7 +929,9 @@ public class ApprenticeController : Controller
 
             if (result.NeedReapproval)
             {
-                TempData.AddFlashMessage(ApprenticeUpdated, $"Your suggested changes have been sent to {viewModel.ProviderName} for approval.", ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+                TempData.AddFlashMessage(ApprenticeUpdated,
+                    $"Your suggested changes have been sent to {viewModel.ProviderName} for approval.",
+                    ITempDataDictionaryExtensions.FlashMessageLevel.Success);
             }
             else
             {
@@ -863,9 +939,10 @@ public class ApprenticeController : Controller
             }
         }
 
-        TempData.Remove("EditApprenticeshipRequestViewModel");
+        TempData.Remove(nameof(EditApprenticeshipRequestViewModel));
 
-        return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+        return RedirectToAction(nameof(ApprenticeshipDetails),
+            new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
     }
 
     [HttpGet]
@@ -880,7 +957,8 @@ public class ApprenticeController : Controller
 
     [HttpPost]
     [Route("{apprenticeshipHashedId}/changes/review")]
-    public async Task<IActionResult> ReviewApprenticeshipUpdates([FromServices] IAuthenticationService authenticationService, ReviewApprenticeshipUpdatesViewModel viewModel)
+    public async Task<IActionResult> ReviewApprenticeshipUpdates(
+        [FromServices] IAuthenticationService authenticationService, ReviewApprenticeshipUpdatesViewModel viewModel)
     {
         if (viewModel.ApproveChanges.Value)
         {
@@ -892,7 +970,8 @@ public class ApprenticeController : Controller
             };
 
             await _commitmentsApiClient.AcceptApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
-            TempData.AddFlashMessageWithDetail(ChangesApprovedMessage, AlertDetailsWhenApproved, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+            TempData.AddFlashMessageWithDetail(ChangesApprovedMessage, AlertDetailsWhenApproved,
+                ITempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
         else
         {
@@ -907,7 +986,8 @@ public class ApprenticeController : Controller
             TempData.AddFlashMessage(ChangesRejectedMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
 
-        return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+        return RedirectToAction(nameof(ApprenticeshipDetails),
+            new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
     }
 
     [HttpGet]
@@ -922,7 +1002,8 @@ public class ApprenticeController : Controller
 
     [HttpPost]
     [Route("{apprenticeshipHashedId}/changes/view")]
-    public async Task<IActionResult> ViewApprenticeshipUpdates([FromServices] IAuthenticationService authenticationService, ViewApprenticeshipUpdatesViewModel viewModel)
+    public async Task<IActionResult> ViewApprenticeshipUpdates(
+        [FromServices] IAuthenticationService authenticationService, ViewApprenticeshipUpdatesViewModel viewModel)
     {
         if (viewModel.UndoChanges.Value)
         {
@@ -938,7 +1019,8 @@ public class ApprenticeController : Controller
             TempData.AddFlashMessage(ChangesUndoneMessage, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
 
-        return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+        return RedirectToAction(nameof(ApprenticeshipDetails),
+            new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
     }
 
     [HttpGet]
@@ -955,21 +1037,24 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/changes/request")]
     public async Task<IActionResult> DataLockRequestChanges(DataLockRequestChangesViewModel viewModel)
     {
-        if (viewModel.AcceptChanges.HasValue)
+        if (!viewModel.AcceptChanges.HasValue)
+        { 
+            return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+        }
+        
+        if (viewModel.AcceptChanges.Value)
         {
-            if (viewModel.AcceptChanges.Value)
-            {
-                var request = await _modelMapper.Map<AcceptDataLocksRequestChangesRequest>(viewModel);
-                await _commitmentsApiClient.AcceptDataLockChanges(viewModel.ApprenticeshipId, request);
-            }
-            else
-            {
-                var request = await _modelMapper.Map<RejectDataLocksRequestChangesRequest>(viewModel);
-                await _commitmentsApiClient.RejectDataLockChanges(viewModel.ApprenticeshipId, request);
-            }
+            var request = await _modelMapper.Map<AcceptDataLocksRequestChangesRequest>(viewModel);
+            await _commitmentsApiClient.AcceptDataLockChanges(viewModel.ApprenticeshipId, request);
+        }
+        else
+        {
+            var request = await _modelMapper.Map<RejectDataLocksRequestChangesRequest>(viewModel);
+            await _commitmentsApiClient.RejectDataLockChanges(viewModel.ApprenticeshipId, request);
         }
 
-        return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+        return RedirectToAction(nameof(ApprenticeshipDetails),
+            new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
     }
 
     [HttpGet]
@@ -984,20 +1069,24 @@ public class ApprenticeController : Controller
 
     [Route("{apprenticeshipHashedId}/details/resend-email-invitation")]
     [HttpGet]
-    public async Task<IActionResult> ResendEmailInvitation([FromServices] IAuthenticationService authenticationService, ResendEmailInvitationRequest request)
+    public async Task<IActionResult> ResendEmailInvitation([FromServices] IAuthenticationService authenticationService,
+        ResendEmailInvitationRequest request)
     {
         try
         {
-            await _commitmentsApiClient.ResendApprenticeshipInvitation(request.ApprenticeshipId, new SaveDataRequest { UserInfo = authenticationService.UserInfo }, CancellationToken.None);
+            await _commitmentsApiClient.ResendApprenticeshipInvitation(request.ApprenticeshipId,
+                new SaveDataRequest { UserInfo = authenticationService.UserInfo }, CancellationToken.None);
 
-            TempData.AddFlashMessage("The invitation email has been resent.", null, ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+            TempData.AddFlashMessage("The invitation email has been resent.", null,
+                ITempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
-        catch { }
+        catch
+        {
+        }
 
         return RedirectToAction("ApprenticeshipDetails", new
         {
-            AccountHashedId = request.AccountHashedId,
-            ApprenticeshipHashedId = request.ApprenticeshipHashedId
+            request.AccountHashedId, request.ApprenticeshipHashedId
         });
     }
 
@@ -1025,12 +1114,12 @@ public class ApprenticeController : Controller
         {
             if (viewModel.StopConfirmed.Value)
             {
-                return RedirectToAction(nameof(StopApprenticeship), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+                return RedirectToAction(nameof(StopApprenticeship),
+                    new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
             }
-            else
-            {
-                return RedirectToAction(nameof(ReconfirmHasNotStop), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
-            }
+
+            return RedirectToAction(nameof(ReconfirmHasNotStop),
+                new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
         }
 
         return View(viewModel);
@@ -1042,20 +1131,27 @@ public class ApprenticeController : Controller
     {
         if (viewModel.EndDateConfirmed.Value)
         {
-            await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(new ResolveApprenticeshipOverlappingTrainingDateRequest
-            {
-                ApprenticeshipId = viewModel.ApprenticeshipId,
-                ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipEndDateIsCorrect
-            }, CancellationToken.None);
+            await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(
+                new ResolveApprenticeshipOverlappingTrainingDateRequest
+                {
+                    ApprenticeshipId = viewModel.ApprenticeshipId,
+                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipEndDateIsCorrect
+                }, CancellationToken.None);
 
-            TempData.AddFlashMessageWithDetail(ApprenticeEndDateConfirmed, viewModel.EndDate.ToGdsFormatLongMonthNameWithoutDay(), ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+            TempData.AddFlashMessageWithDetail(ApprenticeEndDateConfirmed,
+                viewModel.EndDate.ToGdsFormatLongMonthNameWithoutDay(),
+                ITempDataDictionaryExtensions.FlashMessageLevel.Success);
 
-            return RedirectToAction(nameof(ApprenticeshipDetails), new ApprenticeshipDetailsRequest { AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId });
+            return RedirectToAction(nameof(ApprenticeshipDetails),
+                new ApprenticeshipDetailsRequest
+                {
+                    AccountHashedId = viewModel.AccountHashedId,
+                    ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+                });
         }
-        else
-        {
-            return RedirectToAction(nameof(EditEndDate), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
-        }
+
+        return RedirectToAction(nameof(EditEndDate),
+            new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
     }
 
     [Route("{apprenticeshipHashedId}/details/reconfirmHasNotStop")]
@@ -1072,19 +1168,20 @@ public class ApprenticeController : Controller
     {
         if (viewModel.StopConfirmed.HasValue && viewModel.StopConfirmed.Value)
         {
-            await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(new ResolveApprenticeshipOverlappingTrainingDateRequest
-            {
-                ApprenticeshipId = viewModel.ApprenticeshipId,
-                ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipIsStillActive
-            }, CancellationToken.None);
+            await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(
+                new ResolveApprenticeshipOverlappingTrainingDateRequest
+                {
+                    ApprenticeshipId = viewModel.ApprenticeshipId,
+                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipIsStillActive
+                }, CancellationToken.None);
 
-            TempData.AddFlashMessage($"Apprenticeship confirmed", ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+            TempData.AddFlashMessage($"Apprenticeship confirmed",
+                ITempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
 
         return RedirectToAction(nameof(ApprenticeshipDetails), new
         {
-            AccountHashedId = viewModel.AccountHashedId,
-            ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+            viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId
         });
     }
 
@@ -1098,29 +1195,31 @@ public class ApprenticeController : Controller
 
     [HttpPost]
     [Route("{apprenticeshipHashedId}/details/confirmWhenApprenticeshipStopped")]
-    public async Task<IActionResult> ConfirmWhenApprenticeshipStopped(ConfirmWhenApprenticeshipStoppedViewModel viewModel)
+    public async Task<IActionResult> ConfirmWhenApprenticeshipStopped(
+        ConfirmWhenApprenticeshipStoppedViewModel viewModel)
     {
         if (viewModel.IsCorrectStopDate.Value)
         {
-            await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(new ResolveApprenticeshipOverlappingTrainingDateRequest
-            {
-                ApprenticeshipId = viewModel.ApprenticeshipId,
-                ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipStopDateIsCorrect
-            }, CancellationToken.None);
+            await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(
+                new ResolveApprenticeshipOverlappingTrainingDateRequest
+                {
+                    ApprenticeshipId = viewModel.ApprenticeshipId,
+                    ResolutionType = OverlappingTrainingDateRequestResolutionType.ApprenticeshipStopDateIsCorrect
+                }, CancellationToken.None);
 
-            TempData.AddFlashMessageWithDetail("Current stop date confirmed", viewModel.StopDate.ToGdsFormatLongMonthNameWithoutDay(), ITempDataDictionaryExtensions.FlashMessageLevel.Success);
+            TempData.AddFlashMessageWithDetail("Current stop date confirmed",
+                viewModel.StopDate.ToGdsFormatLongMonthNameWithoutDay(),
+                ITempDataDictionaryExtensions.FlashMessageLevel.Success);
 
             return RedirectToAction(nameof(ApprenticeshipDetails), new
             {
-                AccountHashedId = viewModel.AccountHashedId,
-                ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+                viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId
             });
         }
 
         return RedirectToAction(nameof(EditStopDate), new
         {
-            AccountHashedId = viewModel.AccountHashedId,
-            ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+            viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId
         });
     }
 }

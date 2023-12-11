@@ -1,4 +1,3 @@
-using System.Threading;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;

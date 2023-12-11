@@ -1,4 +1,3 @@
-using System.Threading;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SFA.DAS.EmployerAccounts.Api.Client;
 

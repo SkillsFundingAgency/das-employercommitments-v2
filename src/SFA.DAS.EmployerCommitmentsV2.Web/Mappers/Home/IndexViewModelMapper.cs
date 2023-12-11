@@ -2,7 +2,6 @@
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Home;
-using System.Threading;
 using Microsoft.Extensions.Configuration;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Home;

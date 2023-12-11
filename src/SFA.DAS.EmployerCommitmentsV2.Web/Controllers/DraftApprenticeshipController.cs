@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
@@ -217,7 +216,7 @@ public class DraftApprenticeshipController : Controller
         if (string.IsNullOrEmpty(model.CourseCode))
         {
             throw new CommitmentsApiModelException(new List<ErrorDetail>
-                {new ErrorDetail(nameof(model.CourseCode), "You must select a training course")});
+                {new(nameof(model.CourseCode), "You must select a training course")});
         }
 
         var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
@@ -361,7 +360,7 @@ public class DraftApprenticeshipController : Controller
         string cohortReference,
         string draftApprenticeshipHashedId)
     {
-        return (origin == DeleteDraftApprenticeshipOrigin.CohortDetails) 
+        return origin == DeleteDraftApprenticeshipOrigin.CohortDetails 
             ? RedirectToCohortDetails(accountHashedId, cohortReference)
             : RedirectToAction("Details", new { accountHashedId, cohortReference, draftApprenticeshipHashedId });
     }
