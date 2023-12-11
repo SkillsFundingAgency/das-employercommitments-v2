@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
@@ -13,7 +14,7 @@ public static class ConfigurationServiceRegistrations
     {
         services.AddOptions();
         
-        services.AddConfigurationFor<AccountIdHashingConfiguration>(configuration, ConfigurationKeys.AccountIdHashingConfiguration);
+        //services.AddConfigurationFor<AccountIdHashingConfiguration>(configuration, ConfigurationKeys.AccountIdHashingConfiguration);
         services.AddConfigurationFor<AuthenticationConfiguration>(configuration, ConfigurationKeys.AuthenticationConfiguration);
         services.AddConfigurationFor<CommitmentsClientApiConfiguration>(configuration, ConfigurationKeys.CommitmentsApiClientConfiguration);
         
@@ -21,9 +22,13 @@ public static class ConfigurationServiceRegistrations
         services.AddConfigurationFor<EmployerFeaturesConfiguration>(configuration, ConfigurationKeys.EmployerFeaturesConfiguration);
         
         services.AddConfigurationFor<EmployerCommitmentsV2Configuration>(configuration, ConfigurationKeys.EmployerCommitmentsV2);
-        services.AddConfigurationFor<PublicAccountIdHashingConfiguration>(configuration, ConfigurationKeys.PublicAccountIdHashingConfiguration);
-        services.AddConfigurationFor<PublicAccountLegalEntityIdHashingConfiguration>(configuration, ConfigurationKeys.PublicAccountLegalEntityIdHashingConfiguration);
-        services.AddConfigurationFor<EncodingConfig>(configuration, ConfigurationKeys.Encoding);
+       // services.AddConfigurationFor<PublicAccountIdHashingConfiguration>(configuration, ConfigurationKeys.PublicAccountIdHashingConfiguration);
+       // services.AddConfigurationFor<PublicAccountLegalEntityIdHashingConfiguration>(configuration, ConfigurationKeys.PublicAccountLegalEntityIdHashingConfiguration);
+        
+       var encodingConfigJson = configuration.GetSection(ConfigurationKeys.Encoding).Value;
+       var encodingConfig = JsonConvert.DeserializeObject<EncodingConfig>(encodingConfigJson);
+       services.AddSingleton(encodingConfig);
+       
         services.AddConfigurationFor<AccountApiConfiguration>(configuration, ConfigurationKeys.AccountApiConfiguration);
         services.AddConfigurationFor<ZenDeskConfiguration>(configuration, ConfigurationKeys.ZenDeskConfiguration);
         services.AddConfigurationFor<ApprovalsApiClientConfiguration>(configuration, ConfigurationKeys.ApprovalsApiClientConfiguration);
