@@ -1,11 +1,10 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
-using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
@@ -27,7 +26,7 @@ public class WhenMappingWithTrainingProviderRequestToViewModel
         var fixture = new WhenMappingWithTrainingProviderRequestToViewModelFixture();
         fixture.Map();
 
-        fixture.Verify_CohortRefrence_Is_Mapped();
+        fixture.Verify_CohortReference_Is_Mapped();
     }
 
     [Test]
@@ -97,105 +96,120 @@ public class WhenMappingWithTrainingProviderRequestToViewModel
 
 public class WhenMappingWithTrainingProviderRequestToViewModelFixture
 {
-    public Mock<IEncodingService> EncodingService { get; set; }
-    public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
-    public CohortsByAccountRequest CohortsByAccountRequest { get; set; }
-    public GetCohortsResponse GetCohortsResponse { get; set; }
-    public WithTrainingProviderRequestViewModelMapper Mapper { get; set; }
-    public WithTrainingProviderViewModel WithTrainingProviderViewModel { get; set; }
+    private readonly Mock<IEncodingService> _encodingService;
+    private readonly CohortsByAccountRequest _cohortsByAccountRequest;
+    private readonly GetCohortsResponse _getCohortsResponse;
+    private readonly WithTrainingProviderRequestViewModelMapper _mapper;
+    private WithTrainingProviderViewModel _withTrainingProviderViewModel;
 
-    public long AccountId => 1;
+    private static long AccountId => 1;
 
-    public string AccountHashedId => "1AccountHashedId";
+    private static string AccountHashedId => "1AccountHashedId";
 
     public WhenMappingWithTrainingProviderRequestToViewModelFixture()
     {
-        EncodingService = new Mock<IEncodingService>();
-        CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        _encodingService = new Mock<IEncodingService>();
+        var commitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
-        CohortsByAccountRequest = new CohortsByAccountRequest() { AccountId = AccountId, AccountHashedId = AccountHashedId };
-        GetCohortsResponse = CreateGetCohortsResponse();
+        _cohortsByAccountRequest = new CohortsByAccountRequest() { AccountId = AccountId, AccountHashedId = AccountHashedId };
+        _getCohortsResponse = CreateGetCohortsResponse();
 
-        CommitmentsApiClient.Setup(c => c.GetCohorts(It.Is<GetCohortsRequest>(r => r.AccountId == AccountId), CancellationToken.None)).Returns(Task.FromResult(GetCohortsResponse));
-        EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference)).Returns((long y, EncodingType z) => y + "_Encoded");
+        commitmentsApiClient.Setup(c => c.GetCohorts(It.Is<GetCohortsRequest>(r => r.AccountId == AccountId), CancellationToken.None)).Returns(Task.FromResult(_getCohortsResponse));
+        _encodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference)).Returns((long y, EncodingType z) => y + "_Encoded");
 
-        Mapper = new WithTrainingProviderRequestViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, Mock.Of<IUrlHelper>());
+        _mapper = new WithTrainingProviderRequestViewModelMapper(commitmentsApiClient.Object, _encodingService.Object, Mock.Of<IUrlHelper>());
     }
 
     public WhenMappingWithTrainingProviderRequestToViewModelFixture Map()
     {
-        WithTrainingProviderViewModel = Mapper.Map(CohortsByAccountRequest).Result;
+        _withTrainingProviderViewModel = _mapper.Map(_cohortsByAccountRequest).Result;
         return this;
     }
 
     public void Verify_Only_TheCohorts_WithTrainingProvider_Are_Mapped()
     {
-        Assert.That(WithTrainingProviderViewModel.Cohorts.Count(), Is.EqualTo(2));
-
-        Assert.That(GetCohortInTrainingProviderViewModel(1), Is.Not.Null);
-        Assert.That(GetCohortInTrainingProviderViewModel(2), Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(_withTrainingProviderViewModel.Cohorts.Count(), Is.EqualTo(2));
+            Assert.That(GetCohortInTrainingProviderViewModel(1), Is.Not.Null);
+            Assert.That(GetCohortInTrainingProviderViewModel(2), Is.Not.Null);
+        });
     }
 
-    public void Verify_CohortRefrence_Is_Mapped()
+    public void Verify_CohortReference_Is_Mapped()
     {
-        EncodingService.Verify(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference), Times.Exactly(2));
-
-        Assert.That(GetCohortInTrainingProviderViewModel(1).CohortReference, Is.EqualTo("1_Encoded"));
-        Assert.That(GetCohortInTrainingProviderViewModel(2).CohortReference, Is.EqualTo("2_Encoded"));
+        Assert.Multiple(() =>
+        {
+            _encodingService.Verify(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference), Times.Exactly(2));
+            Assert.That(GetCohortInTrainingProviderViewModel(1).CohortReference, Is.EqualTo("1_Encoded"));
+            Assert.That(GetCohortInTrainingProviderViewModel(2).CohortReference, Is.EqualTo("2_Encoded"));
+        });
     }
 
     public void Verify_ProviderName_Is_Mapped()
     {
-        Assert.That(GetCohortInTrainingProviderViewModel(1).ProviderName, Is.EqualTo("Provider1"));
-        Assert.That(GetCohortInTrainingProviderViewModel(2).ProviderName, Is.EqualTo("Provider2"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(GetCohortInTrainingProviderViewModel(1).ProviderName, Is.EqualTo("Provider1"));
+            Assert.That(GetCohortInTrainingProviderViewModel(2).ProviderName, Is.EqualTo("Provider2"));
+        });
     }
 
     public void Verify_NumberOfApprentices_Are_Mapped()
     {
-        Assert.That(GetCohortInTrainingProviderViewModel(1).NumberOfApprentices, Is.EqualTo(100));
-        Assert.That(GetCohortInTrainingProviderViewModel(2).NumberOfApprentices, Is.EqualTo(200));
+        Assert.Multiple(() =>
+        {
+            Assert.That(GetCohortInTrainingProviderViewModel(1).NumberOfApprentices, Is.EqualTo(100));
+            Assert.That(GetCohortInTrainingProviderViewModel(2).NumberOfApprentices, Is.EqualTo(200));
+        });
     }
 
     public void Verify_LastMessage_Is_MappedCorrectly()
     {
-        Assert.That(GetCohortInTrainingProviderViewModel(1).LastMessage, Is.EqualTo("this is the last message from Employer"));
-        Assert.That(GetCohortInTrainingProviderViewModel(2).LastMessage, Is.EqualTo("No message added"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(GetCohortInTrainingProviderViewModel(1).LastMessage, Is.EqualTo("this is the last message from Employer"));
+            Assert.That(GetCohortInTrainingProviderViewModel(2).LastMessage, Is.EqualTo("No message added"));
+        });
     }
 
     public void Verify_Ordered_By_DateCreated()
     {
-        Assert.That(WithTrainingProviderViewModel.Cohorts.First().CohortReference, Is.EqualTo("1_Encoded"));
-        Assert.That(WithTrainingProviderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("2_Encoded"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_withTrainingProviderViewModel.Cohorts.First().CohortReference, Is.EqualTo("1_Encoded"));
+            Assert.That(_withTrainingProviderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("2_Encoded"));
+        });
     }
 
     public void Verify_AccountHashedId_IsMapped()
     {
-        Assert.That(WithTrainingProviderViewModel.AccountHashedId, Is.EqualTo(AccountHashedId));
+        Assert.That(_withTrainingProviderViewModel.AccountHashedId, Is.EqualTo(AccountHashedId));
     }
 
     public void Verify_When_More_Than_One_Training_Provider_Title_IsMapped()
     {
-        Assert.That(WithTrainingProviderViewModel.Title, Is.EqualTo("Apprentice details with training providers"));
+        Assert.That(_withTrainingProviderViewModel.Title, Is.EqualTo("Apprentice details with training providers"));
     }
 
     public void Verify_When_One_Training_Provider_Title_IsMapped()
     {
-        Assert.That(WithTrainingProviderViewModel.Title, Is.EqualTo("Apprentice details with training provider"));
+        Assert.That(_withTrainingProviderViewModel.Title, Is.EqualTo("Apprentice details with training provider"));
     }
 
     public void SetOnlyOneTrainingProvider()
     {
-        foreach (var resp in GetCohortsResponse.Cohorts)
+        foreach (var resp in _getCohortsResponse.Cohorts)
         {
             resp.ProviderId = 1;
             resp.ProviderName = "provider1";
         }
     }
-    private GetCohortsResponse CreateGetCohortsResponse()
+    private static GetCohortsResponse CreateGetCohortsResponse()
     {
         IEnumerable<CohortSummary> cohorts = new List<CohortSummary>()
         {
-            new CohortSummary
+            new()
             {
                 CohortId = 1,
                 AccountId = 1,
@@ -207,7 +221,7 @@ public class WhenMappingWithTrainingProviderRequestToViewModelFixture
                 CreatedOn = DateTime.Now.AddMinutes(-10),
                 LatestMessageFromEmployer = new Message("this is the last message from Employer", DateTime.Now.AddMinutes(-10))
             },
-            new CohortSummary
+            new()
             {
                 CohortId = 2,
                 AccountId = 1,
@@ -219,7 +233,7 @@ public class WhenMappingWithTrainingProviderRequestToViewModelFixture
                 CreatedOn = DateTime.Now.AddMinutes(-8),
                 LatestMessageFromProvider = new Message("This is latestMessage from provider", DateTime.Now.AddMinutes(-8))
             },
-            new CohortSummary
+            new()
             {
                 CohortId = 3,
                 AccountId = 1,
@@ -230,7 +244,7 @@ public class WhenMappingWithTrainingProviderRequestToViewModelFixture
                 WithParty = Party.Employer,
                 CreatedOn = DateTime.Now.AddMinutes(-1)
             },
-            new CohortSummary
+            new()
             {
                 CohortId = 4,
                 AccountId = 1,
@@ -246,13 +260,13 @@ public class WhenMappingWithTrainingProviderRequestToViewModelFixture
         return new GetCohortsResponse(cohorts);
     }
 
-    private long GetCohortId(string cohortReference)
+    private static long GetCohortId(string cohortReference)
     {
         return long.Parse(cohortReference.Replace("_Encoded", ""));
     }
 
     private WithTrainingProviderCohortSummaryViewModel GetCohortInTrainingProviderViewModel(long id)
     {
-        return WithTrainingProviderViewModel.Cohorts.FirstOrDefault(x => GetCohortId(x.CohortReference) == id);
+        return _withTrainingProviderViewModel.Cohorts.FirstOrDefault(x => GetCohortId(x.CohortReference) == id);
     }
 }

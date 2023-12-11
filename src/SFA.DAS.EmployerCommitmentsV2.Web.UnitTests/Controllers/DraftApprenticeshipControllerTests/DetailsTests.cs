@@ -54,9 +54,9 @@ public class DetailsTests
             .WithCohortWithEmployer()
             .WithCohort();
 
-        var result = await fixtures.Sut.EditDraftApprenticeship(string.Empty, string.Empty, new EditDraftApprenticeshipViewModel { AccountHashedId = fixtures.AccountHashedId, CohortId = fixtures.CohortId, CohortReference = fixtures.CohortReference, DraftApprenticeshipId = fixtures.DraftApprenticeshipId });
+        var result = await fixtures.Sut.EditDraftApprenticeship(string.Empty, string.Empty, new EditDraftApprenticeshipViewModel { AccountHashedId = DetailsTestFixture.AccountHashedId, CohortId = DetailsTestFixture.CohortId, CohortReference = DetailsTestFixture.CohortReference, DraftApprenticeshipId = DetailsTestFixture.DraftApprenticeshipId });
 
-        fixtures.OuterApiClientMock.Verify(cs => cs.UpdateDraftApprenticeship(fixtures.CohortId, fixtures.DraftApprenticeshipId, It.IsAny<UpdateDraftApprenticeshipApimRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+        fixtures.OuterApiClientMock.Verify(cs => cs.UpdateDraftApprenticeship(DetailsTestFixture.CohortId, DetailsTestFixture.DraftApprenticeshipId, It.IsAny<UpdateDraftApprenticeshipApimRequest>(), It.IsAny<CancellationToken>()), Times.Once);
         result.VerifyReturnsRedirect();
     }
 
@@ -66,9 +66,9 @@ public class DetailsTests
         var fixtures = new DetailsTestFixture()
             .WithCohort();
 
-        var result = await fixtures.Sut.EditDraftApprenticeship(string.Empty, string.Empty, new EditDraftApprenticeshipViewModel { AccountHashedId = fixtures.AccountHashedId, CohortId = fixtures.CohortId, CohortReference = fixtures.CohortReference, DraftApprenticeshipId = fixtures.DraftApprenticeshipId });
+        var result = await fixtures.Sut.EditDraftApprenticeship(string.Empty, string.Empty, new EditDraftApprenticeshipViewModel { AccountHashedId = DetailsTestFixture.AccountHashedId, CohortId = DetailsTestFixture.CohortId, CohortReference = DetailsTestFixture.CohortReference, DraftApprenticeshipId = DetailsTestFixture.DraftApprenticeshipId });
 
-        fixtures.OuterApiClientMock.Verify(cs => cs.UpdateDraftApprenticeship(fixtures.CohortId, fixtures.DraftApprenticeshipId, It.IsAny<UpdateDraftApprenticeshipApimRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+        fixtures.OuterApiClientMock.Verify(cs => cs.UpdateDraftApprenticeship(DetailsTestFixture.CohortId, DetailsTestFixture.DraftApprenticeshipId, It.IsAny<UpdateDraftApprenticeshipApimRequest>(), It.IsAny<CancellationToken>()), Times.Once);
         var redirect = result.VerifyReturnsRedirectToActionResult();
         Assert.That(redirect.ActionName, Is.EqualTo("SelectOption"));
     }
@@ -129,21 +129,21 @@ public class DetailsTestFixture
             OuterApiClientMock.Object);
     }
 
-    public Mock<IModelMapper> ModelMapperMock { get; }
-    public Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }
+    private Mock<IModelMapper> ModelMapperMock { get; }
+    private Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }
     public Mock<IApprovalsApiClient> OuterApiClientMock { get; }
-    public GetCohortResponse CohortDetails { get; private set; }
-    public string AccountHashedId => "ACHID";
-    public long CohortId => 1;
-    public string CohortReference => "CHREF";
-    public long DraftApprenticeshipId => 99;
-    public long ViewDraftApprenticeshipId => 77;
-    public string DraftApprenticeshipHashedId => "DAHID";
+    private GetCohortResponse CohortDetails { get; set; }
+    public static string AccountHashedId => "ACHID";
+    public static long CohortId => 1;
+    public static string CohortReference => "CHREF";
+    public static long DraftApprenticeshipId => 99;
+    private static long ViewDraftApprenticeshipId => 77;
+    private static string DraftApprenticeshipHashedId => "DAHID";
     public GetDraftApprenticeshipResponse EditDraftApprenticeshipDetails { get; private set; }
     public DraftApprenticeshipController Sut { get; private set; }
     public List<ErrorDetail> ApiErrors { get; private set; }
-    public DetailsRequest DetailsRequest;
-    public Mock<IDraftApprenticeshipViewModel> ViewModel;
+    public readonly DetailsRequest DetailsRequest;
+    public readonly Mock<IDraftApprenticeshipViewModel> ViewModel;
 
     public DetailsTestFixture WithCohortWithOtherParty()
     {

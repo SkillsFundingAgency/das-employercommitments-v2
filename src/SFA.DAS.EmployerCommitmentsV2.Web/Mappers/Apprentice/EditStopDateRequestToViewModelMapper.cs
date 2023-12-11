@@ -35,9 +35,12 @@ public class EditStopDateRequestToViewModelMapper : IMapper<EditStopDateRequest,
 
             return result;
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            _logger.LogError(e, $"Error mapping for accountId {source.AccountHashedId}  and apprenticeship {source.ApprenticeshipHashedId} to EditStopDateViewModel");
+            _logger.LogError(exception, "Error mapping for accountId {AccountHashedId}  and apprenticeship {ApprenticeshipHashedId} to EditStopDateViewModel",
+                source.AccountHashedId,
+                source.ApprenticeshipHashedId);
+            
             throw;
         }
     }

@@ -297,11 +297,8 @@ public class ReviewApprenticeshipUpdatesRequestToViewModelMapperTests
     {
         private readonly ReviewApprenticeshipUpdatesRequestToViewModelMapper _mapper;
         public readonly ReviewApprenticeshipUpdatesRequest Source;
-        private readonly Mock<ICommitmentsApiClient> _commitmentApiClient;
         public readonly GetApprenticeshipResponse GetApprenticeshipResponse;
         public readonly GetApprenticeshipUpdatesResponse GetApprenticeshipUpdatesResponses;
-        public GetApprenticeshipUpdatesRequest GetApprenticeshipUpdatesRequest;
-        private readonly GetTrainingProgrammeResponse _getTrainingProgrammeResponse;
         public readonly ApprenticeshipUpdate ApprenticeshipUpdate;
 
         private const long ApprenticeshipId = 1;
@@ -310,14 +307,14 @@ public class ReviewApprenticeshipUpdatesRequestToViewModelMapperTests
         {
             var autoFixture = new Fixture();
             autoFixture.Customizations.Add(new DateTimeSpecimenBuilder());
-            _commitmentApiClient = new Mock<ICommitmentsApiClient>();
+            var commitmentApiClient = new Mock<ICommitmentsApiClient>();
 
             Source = new ReviewApprenticeshipUpdatesRequest { ApprenticeshipId = ApprenticeshipId, AccountId = 22, ApprenticeshipHashedId = "XXX", AccountHashedId = "YYY" };
             GetApprenticeshipResponse = autoFixture.Create<GetApprenticeshipResponse>();
             autoFixture.RepeatCount = 1;
             GetApprenticeshipUpdatesResponses = autoFixture.Create<GetApprenticeshipUpdatesResponse>();
             ApprenticeshipUpdate = GetApprenticeshipUpdatesResponses.ApprenticeshipUpdates.First();
-            _getTrainingProgrammeResponse = autoFixture.Create<GetTrainingProgrammeResponse>();
+            var getTrainingProgrammeResponse = autoFixture.Create<GetTrainingProgrammeResponse>();
 
             var priceEpisode = new GetPriceEpisodesResponse
             {
@@ -329,13 +326,13 @@ public class ReviewApprenticeshipUpdatesRequestToViewModelMapperTests
                 } }
             };
 
-            _commitmentApiClient.Setup(x => x.GetApprenticeship(ApprenticeshipId, It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(GetApprenticeshipResponse));
-            _commitmentApiClient.Setup(x => x.GetApprenticeshipUpdates(ApprenticeshipId, It.IsAny<GetApprenticeshipUpdatesRequest>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(GetApprenticeshipUpdatesResponses));
-            _commitmentApiClient.Setup(x => x.GetPriceEpisodes(ApprenticeshipId, It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(priceEpisode));
-            _commitmentApiClient.Setup(x => x.GetTrainingProgramme(It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(_getTrainingProgrammeResponse));
+            commitmentApiClient.Setup(x => x.GetApprenticeship(ApprenticeshipId, It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(GetApprenticeshipResponse));
+            commitmentApiClient.Setup(x => x.GetApprenticeshipUpdates(ApprenticeshipId, It.IsAny<GetApprenticeshipUpdatesRequest>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(GetApprenticeshipUpdatesResponses));
+            commitmentApiClient.Setup(x => x.GetPriceEpisodes(ApprenticeshipId, It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(priceEpisode));
+            commitmentApiClient.Setup(x => x.GetTrainingProgramme(It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(getTrainingProgrammeResponse));
 
 
-            _mapper = new ReviewApprenticeshipUpdatesRequestToViewModelMapper(_commitmentApiClient.Object);
+            _mapper = new ReviewApprenticeshipUpdatesRequestToViewModelMapper(commitmentApiClient.Object);
         }
 
         internal async Task<ReviewApprenticeshipUpdatesViewModel> Map()

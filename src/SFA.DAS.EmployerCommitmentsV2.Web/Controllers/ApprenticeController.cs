@@ -364,8 +364,10 @@ public class ApprenticeController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError(
-                $"Failed '{nameof(ApprenticeController)}-{nameof(ConfirmDetailsAndSendRequestPage)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
+            _logger.LogError(ex, "Failed '{ControllerName}.{ActionName}'.", 
+                nameof(ApprenticeController),
+                nameof(ConfirmDetailsAndSendRequestPage));
+
             return RedirectToAction("Error", "Error");
         }
     }
@@ -421,8 +423,10 @@ public class ApprenticeController : Controller
             }
             catch (Exception ex)
             {
-                _logger.LogError(
-                    $"Failed '{nameof(ApprenticeController)}-{nameof(SendRequestNewTrainingProvider)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
+                _logger.LogError(ex, "Failed '{ControllerName}.{ActionName}'.", 
+                    nameof(ApprenticeController),
+                    nameof(SendRequestNewTrainingProvider));
+                
                 return RedirectToAction("Error", "Error");
             }
         }
@@ -861,13 +865,14 @@ public class ApprenticeController : Controller
 
         TempData.Put("EditApprenticeshipRequestViewModel", editRequestViewModel);
 
-        return RedirectToAction(editRequestViewModel.HasOptions 
-            ? nameof(ChangeOption) 
-            : nameof(ConfirmEditApprenticeship)
-            , new {
-            apprenticeshipHashedId = changeVersionViewModel.ApprenticeshipHashedId,
-            accountHashedId = changeVersionViewModel.AccountHashedId
-        });
+        return RedirectToAction(editRequestViewModel.HasOptions
+                ? nameof(ChangeOption)
+                : nameof(ConfirmEditApprenticeship)
+            , new
+            {
+                apprenticeshipHashedId = changeVersionViewModel.ApprenticeshipHashedId,
+                accountHashedId = changeVersionViewModel.AccountHashedId
+            });
     }
 
     [HttpGet]
@@ -1038,10 +1043,11 @@ public class ApprenticeController : Controller
     public async Task<IActionResult> DataLockRequestChanges(DataLockRequestChangesViewModel viewModel)
     {
         if (!viewModel.AcceptChanges.HasValue)
-        { 
-            return RedirectToAction(nameof(ApprenticeshipDetails), new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+        {
+            return RedirectToAction(nameof(ApprenticeshipDetails),
+                new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
         }
-        
+
         if (viewModel.AcceptChanges.Value)
         {
             var request = await _modelMapper.Map<AcceptDataLocksRequestChangesRequest>(viewModel);
@@ -1082,9 +1088,10 @@ public class ApprenticeController : Controller
         }
         catch
         {
+            // ??
         }
 
-        return RedirectToAction("ApprenticeshipDetails", new
+        return RedirectToAction(nameof(ApprenticeshipDetails), new
         {
             request.AccountHashedId, request.ApprenticeshipHashedId
         });

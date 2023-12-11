@@ -1,8 +1,4 @@
-﻿using AutoFixture.Kernel;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.CommitmentsV2.Shared.Models;
-using System.Reflection;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models;
 
@@ -17,7 +13,6 @@ public class DraftApprenticeshipViewModelTests
         // Arrange
         var fixture = new Fixture();
         var baseDate = DateTime.Now;
-        var startDate = baseDate;
         var endDate = baseDate.AddYears(2);
         var dateOfBirth = baseDate.AddYears(-18);
         var employmentEndDate = baseDate.AddYears(1);
@@ -28,7 +23,7 @@ public class DraftApprenticeshipViewModelTests
                 var constructorInfo = x.GetType().GetConstructor(new[] { typeof(DateTime?), typeof(DateTime?), typeof(DateTime?), typeof(DateTime?) });
                 if (constructorInfo != null)
                 {
-                    constructorInfo.Invoke(x, new object[] { dateOfBirth, startDate, endDate, employmentEndDate });
+                    constructorInfo.Invoke(x, new object[] { dateOfBirth, baseDate, endDate, employmentEndDate });
                 }
             })
             .Without(x => x.StartDate)
@@ -43,9 +38,12 @@ public class DraftApprenticeshipViewModelTests
 
         // Assert
         Assert.That(clonedViewModel, Is.Not.Null);
-        Assert.That(clonedViewModel.ProviderId, Is.EqualTo(_draftApprenticeshipViewModel.ProviderId));
-        Assert.That(clonedViewModel.ProviderName, Is.EqualTo(_draftApprenticeshipViewModel.ProviderName));
-        Assert.That(clonedViewModel, Does.Not.Property("AccountLegalEntityId"));
-        Assert.That(clonedViewModel, Does.Not.Property("CohortId"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(clonedViewModel.ProviderId, Is.EqualTo(_draftApprenticeshipViewModel.ProviderId));
+            Assert.That(clonedViewModel.ProviderName, Is.EqualTo(_draftApprenticeshipViewModel.ProviderName));
+            Assert.That(clonedViewModel, Does.Not.Property("AccountLegalEntityId"));
+            Assert.That(clonedViewModel, Does.Not.Property("CohortId"));
+        });
     }   
 }

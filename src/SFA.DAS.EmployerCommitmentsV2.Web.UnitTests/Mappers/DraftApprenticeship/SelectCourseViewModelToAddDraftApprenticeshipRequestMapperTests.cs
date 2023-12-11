@@ -65,6 +65,7 @@ public class SelectCourseViewModelToAddDraftApprenticeshipRequestMapperTests
         Assert.That(_result.DeliveryModel, Is.EqualTo(_source.DeliveryModel));
     }
 
+    [Test]
     public void DraftApprenticeshipHashedIdIsMappedCorrectly()
     {
         Assert.That(_result.DraftApprenticeshipHashedId, Is.EqualTo(_source.DraftApprenticeshipHashedId));

@@ -1,11 +1,10 @@
-﻿using System;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Attributes;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Attributes;
-
+[AttributeUsage(AttributeTargets.Property)]
 public class SuppressArgumentExceptionAttribute : Attribute
 {
-    public string PropertyName { get; set; }
-    public string CustomErrorMessage { get; set; }
+    public string PropertyName { get; }
+    public string CustomErrorMessage { get; }
 
     public SuppressArgumentExceptionAttribute(string propertyName, string customErrorMessage)
     {

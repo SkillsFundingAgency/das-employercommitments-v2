@@ -111,14 +111,14 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
         return apprenticeship.StartDate.Value > new DateTime(_currentDateTime.UtcNow.Year, _currentDateTime.UtcNow.Month, 1);
     }
 
-    private bool IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(GetApprenticeshipResponse apprenticeship, bool isFundedByTransfer)
+    private static bool IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(GetApprenticeshipResponse apprenticeship, bool isFundedByTransfer)
     {
         return isFundedByTransfer
                && HasHadDataLockSuccess(apprenticeship) 
                && IsWaitingToStart(apprenticeship);
     }
 
-    private bool IsLiveAndHasHadDataLockSuccess(GetApprenticeshipResponse apprenticeship)
+    private static bool IsLiveAndHasHadDataLockSuccess(GetApprenticeshipResponse apprenticeship)
     {
         return IsLive(apprenticeship) && HasHadDataLockSuccess(apprenticeship);
     }

@@ -1,18 +1,17 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
-using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.CommitmentsV2.Api.Client;
-using Microsoft.AspNetCore.Mvc.Routing;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
 [TestFixture]
 public class WhenMappingTransferSenderRequestToViewModel
 {
-    WhenMappingTransferSenderRequestToViewModelFixture _fixture;
+    private WhenMappingTransferSenderRequestToViewModelFixture _fixture;
 
     [SetUp]
     public void SetUp()
@@ -63,10 +62,10 @@ public class WhenMappingTransferSenderRequestToViewModel
     }
 
     [Test]
-    public void Then_OrderBy_OnDateTransfered_Correctly()
+    public void Then_OrderBy_OnDateTransferred_Correctly()
     {
         _fixture.Map();
-        _fixture.Verify_Ordered_By_OnDateTransfered();
+        _fixture.Verify_Ordered_By_OnDateTransferred();
     }
 
     [Test]
@@ -118,119 +117,147 @@ public class WhenMappingTransferSenderRequestToViewModel
 
 public class WhenMappingTransferSenderRequestToViewModelFixture
 {
-    public Mock<IEncodingService> EncodingService { get; set; }
-    public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
-    public CohortsByAccountRequest CohortsByAccountRequest { get; set; }
-    public GetCohortsResponse GetCohortsResponse { get; set; }
-    public WithTransferSenderRequestViewModelMapper Mapper { get; set; }
-    public WithTransferSenderViewModel WithTransferSenderViewModel { get; set; }
+    private readonly Mock<IEncodingService> _encodingService;
+    private readonly CohortsByAccountRequest _cohortsByAccountRequest;
+    private readonly GetCohortsResponse _getCohortsResponse;
+    private readonly WithTransferSenderRequestViewModelMapper _mapper;
+    private WithTransferSenderViewModel _withTransferSenderViewModel;
 
-    public long AccountId => 1;
+    private static long AccountId => 1;
 
-    public string AccountHashedId => "1AccountHashedId";
+    private static string AccountHashedId => "1AccountHashedId";
 
     public WhenMappingTransferSenderRequestToViewModelFixture()
     {
-        EncodingService = new Mock<IEncodingService>();
-        CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        _encodingService = new Mock<IEncodingService>();
+        var commitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
-        CohortsByAccountRequest = new CohortsByAccountRequest() { AccountId = AccountId, AccountHashedId = AccountHashedId };
-        GetCohortsResponse = CreateGetCohortsResponse();
+        _cohortsByAccountRequest = new CohortsByAccountRequest() { AccountId = AccountId, AccountHashedId = AccountHashedId };
+        _getCohortsResponse = CreateGetCohortsResponse();
 
-        CommitmentsApiClient.Setup(c => c.GetCohorts(It.Is<GetCohortsRequest>(r => r.AccountId == AccountId), CancellationToken.None)).ReturnsAsync(GetCohortsResponse);
-        EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference)).Returns((long y, EncodingType z) => y + "_Encoded");
+        commitmentsApiClient.Setup(c => c.GetCohorts(It.Is<GetCohortsRequest>(r => r.AccountId == AccountId), CancellationToken.None)).ReturnsAsync(_getCohortsResponse);
+        _encodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference)).Returns((long y, EncodingType z) => y + "_Encoded");
 
-        Mapper = new WithTransferSenderRequestViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object,Mock.Of<IUrlHelper>());
+        _mapper = new WithTransferSenderRequestViewModelMapper(commitmentsApiClient.Object, _encodingService.Object,Mock.Of<IUrlHelper>());
     }
 
     public WhenMappingTransferSenderRequestToViewModelFixture Map()
     {
-        WithTransferSenderViewModel = Mapper.Map(CohortsByAccountRequest).Result;
+        _withTransferSenderViewModel = _mapper.Map(_cohortsByAccountRequest).Result;
         return this;
     }
 
     public void Verify_Only_TheCohorts_WithTransferSender_Are_Mapped()
     {
-        Assert.That(WithTransferSenderViewModel.Cohorts.Count(), Is.EqualTo(2));
-
-        Assert.That(GetCohortInTransferSenderViewModel(1), Is.Not.Null);
-        Assert.That(GetCohortInTransferSenderViewModel(2), Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(_withTransferSenderViewModel.Cohorts.Count(), Is.EqualTo(2));
+            Assert.That(GetCohortInTransferSenderViewModel(1), Is.Not.Null);
+            Assert.That(GetCohortInTransferSenderViewModel(2), Is.Not.Null);
+        });
     }
 
     public void Verify_CohortReference_Is_Mapped()
     {
-        EncodingService.Verify(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference), Times.Exactly(2));
+        _encodingService.Verify(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference), Times.Exactly(2));
 
-        Assert.That(GetCohortInTransferSenderViewModel(1).CohortReference, Is.EqualTo("1_Encoded"));
-        Assert.That(GetCohortInTransferSenderViewModel(2).CohortReference, Is.EqualTo("2_Encoded"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(GetCohortInTransferSenderViewModel(1).CohortReference, Is.EqualTo("1_Encoded"));
+            Assert.That(GetCohortInTransferSenderViewModel(2).CohortReference, Is.EqualTo("2_Encoded"));
+        });
     }
 
     public void Verify_ProviderName_Is_Mapped()
     {
-        Assert.That(GetCohortInTransferSenderViewModel(1).ProviderName, Is.EqualTo("Provider1"));
-        Assert.That(GetCohortInTransferSenderViewModel(2).ProviderName, Is.EqualTo("Provider2"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(GetCohortInTransferSenderViewModel(1).ProviderName, Is.EqualTo("Provider1"));
+            Assert.That(GetCohortInTransferSenderViewModel(2).ProviderName, Is.EqualTo("Provider2"));
+        });
     }
 
     public void Verify_TransferSenderName_Is_Mapped()
     {
-        Assert.That(GetCohortInTransferSenderViewModel(1).TransferSenderName, Is.EqualTo("TransferSender1"));
-        Assert.That(GetCohortInTransferSenderViewModel(2).TransferSenderName, Is.EqualTo("TransferSender2"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(GetCohortInTransferSenderViewModel(1).TransferSenderName, Is.EqualTo("TransferSender1"));
+            Assert.That(GetCohortInTransferSenderViewModel(2).TransferSenderName, Is.EqualTo("TransferSender2"));
+        });
     }
 
     public void Verify_TransferSenderId_Is_Mapped()
     {
-        Assert.That(GetCohortInTransferSenderViewModel(1).TransferSenderId, Is.EqualTo(1));
-        Assert.That(GetCohortInTransferSenderViewModel(2).TransferSenderId, Is.EqualTo(2));
+        Assert.Multiple(() =>
+        {
+            Assert.That(GetCohortInTransferSenderViewModel(1).TransferSenderId, Is.EqualTo(1));
+            Assert.That(GetCohortInTransferSenderViewModel(2).TransferSenderId, Is.EqualTo(2));
+        });
     }
 
     public void Verify_NumberOfApprentices_Are_Mapped()
     {
-        Assert.That(GetCohortInTransferSenderViewModel(1).NumberOfApprentices, Is.EqualTo(100));
-        Assert.That(GetCohortInTransferSenderViewModel(2).NumberOfApprentices, Is.EqualTo(200));
+        Assert.Multiple(() =>
+        {
+            Assert.That(GetCohortInTransferSenderViewModel(1).NumberOfApprentices, Is.EqualTo(100));
+            Assert.That(GetCohortInTransferSenderViewModel(2).NumberOfApprentices, Is.EqualTo(200));
+        });
     }
 
-    public void Verify_Ordered_By_OnDateTransfered()
+    public void Verify_Ordered_By_OnDateTransferred()
     {
-        Assert.That(WithTransferSenderViewModel.Cohorts.First().CohortReference, Is.EqualTo("1_Encoded"));
-        Assert.That(WithTransferSenderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("2_Encoded"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_withTransferSenderViewModel.Cohorts.First().CohortReference, Is.EqualTo("1_Encoded"));
+            Assert.That(_withTransferSenderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("2_Encoded"));
+        });
     }
 
     public void Verify_Ordered_By_OnDateCreated()
     {
-        Assert.That(WithTransferSenderViewModel.Cohorts.First().CohortReference, Is.EqualTo("2_Encoded"));
-        Assert.That(WithTransferSenderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("1_Encoded"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_withTransferSenderViewModel.Cohorts.First().CohortReference, Is.EqualTo("2_Encoded"));
+            Assert.That(_withTransferSenderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("1_Encoded"));
+        });
     }
 
     public void Verify_Ordered_By_LatestMessageByEmployer()
     {
-        Assert.That(WithTransferSenderViewModel.Cohorts.First().CohortReference, Is.EqualTo("2_Encoded"));
-        Assert.That(WithTransferSenderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("1_Encoded"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_withTransferSenderViewModel.Cohorts.First().CohortReference, Is.EqualTo("2_Encoded"));
+            Assert.That(_withTransferSenderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("1_Encoded"));
+        });
     }
 
     public void Verify_Ordered_By_LatestMessageByProvider()
     {
-        Assert.That(WithTransferSenderViewModel.Cohorts.First().CohortReference, Is.EqualTo("2_Encoded"));
-        Assert.That(WithTransferSenderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("1_Encoded"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_withTransferSenderViewModel.Cohorts.First().CohortReference, Is.EqualTo("2_Encoded"));
+            Assert.That(_withTransferSenderViewModel.Cohorts.Last().CohortReference, Is.EqualTo("1_Encoded"));
+        });
     }
 
     public void Verify_AccountHashedId_IsMapped()
     {
-        Assert.That(WithTransferSenderViewModel.AccountHashedId, Is.EqualTo(AccountHashedId));
+        Assert.That(_withTransferSenderViewModel.AccountHashedId, Is.EqualTo(AccountHashedId));
     }
 
     public void Verify_When_More_Than_One_TransferSender_Title_Is_Mapped()
     {
-        Assert.That(WithTransferSenderViewModel.Title, Is.EqualTo(WithTransferSenderRequestViewModelMapper.Title + "s"));
+        Assert.That(_withTransferSenderViewModel.Title, Is.EqualTo(WithTransferSenderRequestViewModelMapper.Title + "s"));
     }
 
     public void Verify_When_One_TransferSender_Title_Is_Mapped()
     {
-        Assert.That(WithTransferSenderViewModel.Title, Is.EqualTo(WithTransferSenderRequestViewModelMapper.Title));
+        Assert.That(_withTransferSenderViewModel.Title, Is.EqualTo(WithTransferSenderRequestViewModelMapper.Title));
     }
 
     public void SetOnlyOneTransferSender()
     {
-        foreach (var resp in GetCohortsResponse.Cohorts)
+        foreach (var resp in _getCohortsResponse.Cohorts)
         {
             resp.TransferSenderId = 1;
             resp.TransferSenderName = "TransferSender1";
@@ -239,9 +266,9 @@ public class WhenMappingTransferSenderRequestToViewModelFixture
 
     public WhenMappingTransferSenderRequestToViewModelFixture MakeTheMessagesNull()
     {
-        foreach (var c in GetCohortsResponse.Cohorts)
+        foreach (var cohortSummary in _getCohortsResponse.Cohorts)
         {
-            c.LatestMessageFromEmployer = c.LatestMessageFromProvider = null;
+            cohortSummary.LatestMessageFromEmployer = cohortSummary.LatestMessageFromProvider = null;
         }
 
         return this;
@@ -249,22 +276,22 @@ public class WhenMappingTransferSenderRequestToViewModelFixture
 
     public WhenMappingTransferSenderRequestToViewModelFixture SetCreatedOn()
     {
-        GetCohortsResponse.Cohorts.First(x => x.CohortId == 1).CreatedOn = DateTime.Now.AddMinutes(-5);
-        GetCohortsResponse.Cohorts.First(x => x.CohortId == 2).CreatedOn = DateTime.Now.AddMinutes(-7);
-        GetCohortsResponse.Cohorts.First(x => x.CohortId == 3).CreatedOn = DateTime.Now.AddMinutes(-9);
-        GetCohortsResponse.Cohorts.First(x => x.CohortId == 4).CreatedOn = DateTime.Now.AddMinutes(-10);
+        _getCohortsResponse.Cohorts.First(x => x.CohortId == 1).CreatedOn = DateTime.Now.AddMinutes(-5);
+        _getCohortsResponse.Cohorts.First(x => x.CohortId == 2).CreatedOn = DateTime.Now.AddMinutes(-7);
+        _getCohortsResponse.Cohorts.First(x => x.CohortId == 3).CreatedOn = DateTime.Now.AddMinutes(-9);
+        _getCohortsResponse.Cohorts.First(x => x.CohortId == 4).CreatedOn = DateTime.Now.AddMinutes(-10);
         return this;
     }
 
     public WhenMappingTransferSenderRequestToViewModelFixture SetLatestMessageFromEmployer()
     {
-        GetCohortsResponse.Cohorts.First(x => x.CohortId == 1).LatestMessageFromEmployer = 
+        _getCohortsResponse.Cohorts.First(x => x.CohortId == 1).LatestMessageFromEmployer = 
             new Message("1st Message", DateTime.Now.AddMinutes(-6));
-        GetCohortsResponse.Cohorts.First(x => x.CohortId == 2).LatestMessageFromEmployer =
+        _getCohortsResponse.Cohorts.First(x => x.CohortId == 2).LatestMessageFromEmployer =
             new Message("2nd Message", DateTime.Now.AddMinutes(-7));
-        GetCohortsResponse.Cohorts.First(x => x.CohortId == 3).LatestMessageFromEmployer = 
+        _getCohortsResponse.Cohorts.First(x => x.CohortId == 3).LatestMessageFromEmployer = 
             new Message("3rd Message", DateTime.Now.AddMinutes(-8));
-        GetCohortsResponse.Cohorts.First(x => x.CohortId == 4).LatestMessageFromEmployer = 
+        _getCohortsResponse.Cohorts.First(x => x.CohortId == 4).LatestMessageFromEmployer = 
             new Message("4th Message", DateTime.Now.AddMinutes(-9));
             
         return this;
@@ -272,23 +299,23 @@ public class WhenMappingTransferSenderRequestToViewModelFixture
 
     public WhenMappingTransferSenderRequestToViewModelFixture SetLatestMessageFromProvider()
     {
-        GetCohortsResponse.Cohorts.First(x => x.CohortId == 1).LatestMessageFromProvider =
+        _getCohortsResponse.Cohorts.First(x => x.CohortId == 1).LatestMessageFromProvider =
             new Message("1st Message", DateTime.Now.AddMinutes(-6));
-        GetCohortsResponse.Cohorts.First(x => x.CohortId == 2).LatestMessageFromProvider =
+        _getCohortsResponse.Cohorts.First(x => x.CohortId == 2).LatestMessageFromProvider =
             new Message("2nd Message", DateTime.Now.AddMinutes(-7));
-        GetCohortsResponse.Cohorts.First(x => x.CohortId == 3).LatestMessageFromProvider =
+        _getCohortsResponse.Cohorts.First(x => x.CohortId == 3).LatestMessageFromProvider =
             new Message("3rd Message", DateTime.Now.AddMinutes(-8));
-        GetCohortsResponse.Cohorts.First(x => x.CohortId == 4).LatestMessageFromProvider =
+        _getCohortsResponse.Cohorts.First(x => x.CohortId == 4).LatestMessageFromProvider =
             new Message("4th Message", DateTime.Now.AddMinutes(-9));
 
         return this;
     }
 
-    private GetCohortsResponse CreateGetCohortsResponse()
+    private static GetCohortsResponse CreateGetCohortsResponse()
     {
         IEnumerable<CohortSummary> cohorts = new List<CohortSummary>()
         {
-            new CohortSummary
+            new()
             {
                 CohortId = 1,
                 AccountId = 1,
@@ -302,7 +329,7 @@ public class WhenMappingTransferSenderRequestToViewModelFixture
                 LatestMessageFromEmployer = new Message("this is the last message from Employer", DateTime.Now.AddMinutes(-10)),
                 LatestMessageFromProvider = new Message("This is latestMessage from provider", DateTime.Now.AddMinutes(-11))
             },
-            new CohortSummary
+            new()
             {
                 CohortId = 2,
                 AccountId = 1,
@@ -317,7 +344,7 @@ public class WhenMappingTransferSenderRequestToViewModelFixture
                 LatestMessageFromProvider = new Message("This is latestMessage from provider", DateTime.Now.AddMinutes(-8)),
                 LatestMessageFromEmployer = new Message("This is latestMessage from Employer", DateTime.Now.AddMinutes(-7))
             },
-            new CohortSummary
+            new()
             {
                 CohortId = 3,
                 AccountId = 1,
@@ -330,7 +357,7 @@ public class WhenMappingTransferSenderRequestToViewModelFixture
                 WithParty = Party.Employer,
                 CreatedOn = DateTime.Now.AddMinutes(-1)
             },
-            new CohortSummary
+            new()
             {
                 CohortId = 4,
                 AccountId = 1,
@@ -346,13 +373,13 @@ public class WhenMappingTransferSenderRequestToViewModelFixture
         return new GetCohortsResponse(cohorts);
     }
 
-    private long GetCohortId(string cohortReference)
+    private static long GetCohortId(string cohortReference)
     {
         return long.Parse(cohortReference.Replace("_Encoded", ""));
     }
 
     private WithTransferSenderCohortSummaryViewModel GetCohortInTransferSenderViewModel(long id)
     {
-        return WithTransferSenderViewModel.Cohorts.FirstOrDefault(x => GetCohortId(x.CohortReference) == id);
+        return _withTransferSenderViewModel.Cohorts.FirstOrDefault(x => GetCohortId(x.CohortReference) == id);
     }
 }

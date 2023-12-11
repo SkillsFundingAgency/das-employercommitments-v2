@@ -59,7 +59,7 @@ public class MessageViewModelMapperTests
     [Test]
     public void ThenLegalEntityNameIsMappedCorrectly()
     {
-        Assert.That(_source.LegalEntityName, Is.EqualTo(_source.LegalEntityName));
+        Assert.That(_result.LegalEntityName, Is.EqualTo(_source.LegalEntityName));
     }
     [Test]
     public void ThenCourseCodeIsMapperCorrectly()

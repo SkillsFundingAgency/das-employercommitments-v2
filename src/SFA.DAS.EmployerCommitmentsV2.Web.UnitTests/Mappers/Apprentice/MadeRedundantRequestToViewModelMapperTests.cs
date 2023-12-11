@@ -10,21 +10,21 @@ public class MadeRedundantRequestToViewModelMapperTests
 {
     private const string ExpectedFullName = "FirstName LastName";
 
-    private Mock<ICommitmentsApiClient> mockCommitmentsApiClient;
+    private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
 
     [SetUp]
     public void SetUp()
     {
-        mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
-        mockCommitmentsApiClient
+        _mockCommitmentsApiClient
             .Setup(r => r.GetApprenticeship(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(GetApprenticeshipResponse());
     }
     [Test, MoqAutoData]
     public async Task ApprenticeshipHashedId_IsMapped(MadeRedundantRequest request)
     {
-        var mapper = new MadeRedundantRequestToViewModelMapper(mockCommitmentsApiClient.Object);
+        var mapper = new MadeRedundantRequestToViewModelMapper(_mockCommitmentsApiClient.Object);
         var result = await mapper.Map(request);
 
         Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(request.ApprenticeshipHashedId));
@@ -33,7 +33,7 @@ public class MadeRedundantRequestToViewModelMapperTests
     [Test, MoqAutoData]
     public async Task AccountHashedId_IsMapped(MadeRedundantRequest request)
     {
-        var mapper = new MadeRedundantRequestToViewModelMapper(mockCommitmentsApiClient.Object);
+        var mapper = new MadeRedundantRequestToViewModelMapper(_mockCommitmentsApiClient.Object);
         var result = await mapper.Map(request);
 
         Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
@@ -42,7 +42,7 @@ public class MadeRedundantRequestToViewModelMapperTests
     [Test, MoqAutoData]
     public async Task ApprenticeName_IsMapped(MadeRedundantRequest request)
     {
-        var mapper = new MadeRedundantRequestToViewModelMapper(mockCommitmentsApiClient.Object);
+        var mapper = new MadeRedundantRequestToViewModelMapper(_mockCommitmentsApiClient.Object);
         var result = await mapper.Map(request);
 
         Assert.That(result.ApprenticeName, Is.EqualTo(ExpectedFullName));
@@ -51,7 +51,7 @@ public class MadeRedundantRequestToViewModelMapperTests
     [Test, MoqAutoData]
     public async Task StopMonth_IsMapped(MadeRedundantRequest request)
     {
-        var mapper = new MadeRedundantRequestToViewModelMapper(mockCommitmentsApiClient.Object);
+        var mapper = new MadeRedundantRequestToViewModelMapper(_mockCommitmentsApiClient.Object);
         var result = await mapper.Map(request);
 
         Assert.That(result.StopMonth, Is.EqualTo(request.StopMonth));
@@ -60,13 +60,13 @@ public class MadeRedundantRequestToViewModelMapperTests
     [Test, MoqAutoData]
     public async Task StopYear_IsMapped(MadeRedundantRequest request)
     {
-        var mapper = new MadeRedundantRequestToViewModelMapper(mockCommitmentsApiClient.Object);
+        var mapper = new MadeRedundantRequestToViewModelMapper(_mockCommitmentsApiClient.Object);
         var result = await mapper.Map(request);
 
         Assert.That(result.StopYear, Is.EqualTo(request.StopYear));
     }
 
-    private GetApprenticeshipResponse GetApprenticeshipResponse()
+    private static GetApprenticeshipResponse GetApprenticeshipResponse()
     {
         return new GetApprenticeshipResponse
         {

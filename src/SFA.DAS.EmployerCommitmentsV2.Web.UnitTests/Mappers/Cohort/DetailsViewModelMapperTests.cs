@@ -204,7 +204,7 @@ public class DetailsViewModelMapperTests
             var draftApprenticeshipResult =
                 result.Courses.SelectMany(c => c.DraftApprenticeships).Single(x => x.Id == draftApprenticeship.Id);
 
-            fixture.AssertEquality(draftApprenticeship, draftApprenticeshipResult);
+            DetailsViewModelMapperTestsFixture.AssertEquality(draftApprenticeship, draftApprenticeshipResult);
         }
     }
 
@@ -769,16 +769,14 @@ public class DetailsViewModelMapperTests
 public class DetailsViewModelMapperTestsFixture
 {
     private readonly DetailsViewModelMapper _mapper;
-    public DetailsRequest Source;
-    public Mock<ICommitmentsApiClient> CommitmentsApiClient;
-    private readonly Mock<IApprovalsApiClient> _approvalsApiClient;
+    public readonly DetailsRequest Source;
+    public readonly Mock<ICommitmentsApiClient> CommitmentsApiClient;
     private readonly Mock<IEncodingService> _encodingService;
-    public GetCohortResponse Cohort;
-    public GetCohortDetailsResponse CohortDetails;
-    public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
+    public readonly GetCohortResponse Cohort;
+    public readonly GetCohortDetailsResponse CohortDetails;
+    public readonly GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
     public DateTime DefaultStartDate = new(2019, 10, 1);
-    private readonly AccountLegalEntityResponse _accountLegalEntityResponse;
-    public GetEmailOverlapsResponse EmailOverlapResponse;
+    public readonly GetEmailOverlapsResponse EmailOverlapResponse;
 
     private readonly Fixture _autoFixture;
     private readonly List<TrainingProgrammeFundingPeriod> _fundingPeriods;
@@ -792,15 +790,15 @@ public class DetailsViewModelMapperTestsFixture
         CohortDetails = _autoFixture.Build<GetCohortDetailsResponse>()
             .With(x => x.HasUnavailableFlexiJobAgencyDeliveryModel, false).Create();
         Cohort = _autoFixture.Build<GetCohortResponse>().Without(x => x.TransferSenderId).Without(x => x.ChangeOfPartyRequestId).Create();
-        _accountLegalEntityResponse = _autoFixture.Create<AccountLegalEntityResponse>();
+        var accountLegalEntityResponse = _autoFixture.Create<AccountLegalEntityResponse>();
         EmailOverlapResponse = new GetEmailOverlapsResponse { ApprenticeshipEmailOverlaps = new List<ApprenticeshipEmailOverlap>() };
 
         var draftApprenticeships = CreateDraftApprenticeshipDtos(_autoFixture);
         _autoFixture.Register(() => draftApprenticeships);
         DraftApprenticeshipsResponse = _autoFixture.Create<GetDraftApprenticeshipsResponse>();
 
-        _approvalsApiClient = new Mock<IApprovalsApiClient>();
-        _approvalsApiClient.Setup(x =>
+        var approvalsApiClient = new Mock<IApprovalsApiClient>();
+        approvalsApiClient.Setup(x =>
                 x.GetCohortDetails(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(CohortDetails);
 
@@ -810,7 +808,7 @@ public class DetailsViewModelMapperTestsFixture
         CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => DraftApprenticeshipsResponse);
         CommitmentsApiClient.Setup(x => x.GetAccountLegalEntity(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_accountLegalEntityResponse);
+            .ReturnsAsync(accountLegalEntityResponse);
         CommitmentsApiClient.Setup(x => x.GetEmailOverlapChecks(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(EmailOverlapResponse);
 
@@ -835,7 +833,7 @@ public class DetailsViewModelMapperTestsFixture
         _encodingService = new Mock<IEncodingService>();
         SetEncodingOfApprenticeIds();
 
-        _mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, _encodingService.Object, _approvalsApiClient.Object);
+        _mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, _encodingService.Object, approvalsApiClient.Object);
         Source = _autoFixture.Create<DetailsRequest>();
     }
 
@@ -912,7 +910,7 @@ public class DetailsViewModelMapperTestsFixture
         return _mapper.Map(TestHelper.Clone(Source));
     }
 
-    public void AssertEquality(DraftApprenticeshipDto source, CohortDraftApprenticeshipViewModel result)
+    public static void AssertEquality(DraftApprenticeshipDto source, CohortDraftApprenticeshipViewModel result)
     {
         Assert.Multiple(() =>
         {
@@ -929,7 +927,7 @@ public class DetailsViewModelMapperTestsFixture
 
     public static void AssertSequenceOrder<T>(List<T> expected, List<T> actual, Func<T, T, bool> evaluator)
     {
-        Assert.That(actual.Count, Is.EqualTo(expected.Count), "Expected and actual sequences are different lengths");
+        Assert.That(actual, Has.Count.EqualTo(expected.Count), "Expected and actual sequences are different lengths");
 
         for (var i = 0; i < actual.Count; i++)
         {

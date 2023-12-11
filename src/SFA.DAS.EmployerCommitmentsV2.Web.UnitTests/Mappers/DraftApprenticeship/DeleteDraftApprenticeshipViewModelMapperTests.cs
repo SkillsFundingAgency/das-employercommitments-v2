@@ -10,44 +10,54 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship;
 
 [TestFixture]
-public class DeleteDraftApprenticeshipViewModelMapperTests 
+public class DeleteDraftApprenticeshipViewModelMapperTests
 {
     [Test]
     public async Task WhenCohortExistsAndWithCorrectPartyAndApprenticeshipFound_ThenCallsCommitmentsApiToGetCohort()
     {
-        var f = new DeleteDraftApprenticeshipViewModelMapperTestsFixture().WithParty(Party.Employer).ApprenticeshipsExists();
+        var fixture = new DeleteDraftApprenticeshipViewModelMapperTestsFixture()
+            .WithParty(Party.Employer)
+            .ApprenticeshipsExists();
 
-        await f.Sut.Map(f.DeleteApprenticeshipRequest);
+        await fixture.Sut.Map(fixture.DeleteApprenticeshipRequest);
 
-        f.VerifyGetCohortIsCalledCorrectly();
+        fixture.VerifyGetCohortIsCalledCorrectly();
     }
 
     [Test]
-    public async Task WhenCohortExistsAndWithCorrectPartyAndApprenticeshipFound_ThenCallsCommitmentsApiToGetDraftApprenticeships()
+    public async Task
+        WhenCohortExistsAndWithCorrectPartyAndApprenticeshipFound_ThenCallsCommitmentsApiToGetDraftApprenticeships()
     {
-        var f = new DeleteDraftApprenticeshipViewModelMapperTestsFixture().WithParty(Party.Employer).ApprenticeshipsExists();
+        var fixture = new DeleteDraftApprenticeshipViewModelMapperTestsFixture()
+            .WithParty(Party.Employer)
+            .ApprenticeshipsExists();
 
-        await f.Sut.Map(f.DeleteApprenticeshipRequest);
+        await fixture.Sut.Map(fixture.DeleteApprenticeshipRequest);
 
-        f.VerifyGetDraftApprenticeshipsIsCalledCorrectly();
+        fixture.VerifyGetDraftApprenticeshipsIsCalledCorrectly();
     }
 
     [Test]
     public async Task WhenCohortExistsAndWithCorrectPartyAndApprenticeshipFound_ThenIsLastApprenticeshipIsFalse()
     {
-        var f = new DeleteDraftApprenticeshipViewModelMapperTestsFixture().WithParty(Party.Employer).ApprenticeshipsExists();
+        var fixture = new DeleteDraftApprenticeshipViewModelMapperTestsFixture()
+            .WithParty(Party.Employer)
+            .ApprenticeshipsExists();
 
-        var result = await f.Sut.Map(f.DeleteApprenticeshipRequest);
+        var result = await fixture.Sut.Map(fixture.DeleteApprenticeshipRequest);
 
         Assert.That(result.IsLastApprenticeshipInCohort, Is.False);
     }
 
     [Test]
-    public async Task WhenCohortExistsAndWithCorrectPartyAndThisIsTheLastApprenticeship_ThenMarksModelAsIsLastApprenticeship()
+    public async Task
+        WhenCohortExistsAndWithCorrectPartyAndThisIsTheLastApprenticeship_ThenMarksModelAsIsLastApprenticeship()
     {
-        var f = new DeleteDraftApprenticeshipViewModelMapperTestsFixture().WithParty(Party.Employer).WithSingleApprenticeship();
+        var fixture = new DeleteDraftApprenticeshipViewModelMapperTestsFixture()
+            .WithParty(Party.Employer)
+            .WithSingleApprenticeship();
 
-        var result = await f.Sut.Map(f.DeleteApprenticeshipRequest);
+        var result = await fixture.Sut.Map(fixture.DeleteApprenticeshipRequest);
 
         Assert.That(result.IsLastApprenticeshipInCohort, Is.True);
     }
@@ -55,43 +65,56 @@ public class DeleteDraftApprenticeshipViewModelMapperTests
     [Test]
     public void WhenCohortIsWithTheProvider_ThenThrowsException()
     {
-        var f = new DeleteDraftApprenticeshipViewModelMapperTestsFixture().WithParty(Party.Provider).ApprenticeshipsExists();
+        var fixture = new DeleteDraftApprenticeshipViewModelMapperTestsFixture()
+            .WithParty(Party.Provider)
+            .ApprenticeshipsExists();
 
-        Assert.ThrowsAsync<CohortEmployerUpdateDeniedException>(async () => await f.Sut.Map(f.DeleteApprenticeshipRequest));
+        Assert.ThrowsAsync<CohortEmployerUpdateDeniedException>(async () =>
+            await fixture.Sut.Map(fixture.DeleteApprenticeshipRequest));
     }
 
     [Test]
     public void WhenCohortExistsAndWithCorrectPartyButNoMatchingApprenticeship_ThenThrowsException()
     {
-        var f = new DeleteDraftApprenticeshipViewModelMapperTestsFixture().WithParty(Party.Employer).WithNoMatchingApprentices();
+        var fixture = new DeleteDraftApprenticeshipViewModelMapperTestsFixture()
+            .WithParty(Party.Employer)
+            .WithNoMatchingApprentices();
 
-        Assert.ThrowsAsync<DraftApprenticeshipNotFoundException>(async () => await f.Sut.Map(f.DeleteApprenticeshipRequest));
+        Assert.ThrowsAsync<DraftApprenticeshipNotFoundException>(async () =>
+            await fixture.Sut.Map(fixture.DeleteApprenticeshipRequest));
     }
 
     [Test, MoqAutoData]
     public async Task ThenMapsRequestValuesToViewModel()
     {
-        var f = new DeleteDraftApprenticeshipViewModelMapperTestsFixture().WithParty(Party.Employer).WithSingleApprenticeship();
+        var fixture = new DeleteDraftApprenticeshipViewModelMapperTestsFixture()
+            .WithParty(Party.Employer)
+            .WithSingleApprenticeship();
 
-        var result = await f.Sut.Map(f.DeleteApprenticeshipRequest);
+        var result = await fixture.Sut.Map(fixture.DeleteApprenticeshipRequest);
 
-        Assert.That(result.FirstName, Is.EqualTo(f.SingleApprenticeship.FirstName));
-        Assert.That(result.LastName, Is.EqualTo(f.SingleApprenticeship.LastName));
-        Assert.That(result.FullName, Is.EqualTo(f.SingleApprenticeship.FirstName + " " + f.SingleApprenticeship.LastName));
-        Assert.That(result.AccountHashedId, Is.EqualTo(f.DeleteApprenticeshipRequest.AccountHashedId));
-        Assert.That(result.DraftApprenticeshipHashedId, Is.EqualTo(f.DeleteApprenticeshipRequest.DraftApprenticeshipHashedId));
-        Assert.That(result.AccountHashedId, Is.EqualTo(f.DeleteApprenticeshipRequest.AccountHashedId));
-        Assert.That(result.Origin, Is.EqualTo(f.DeleteApprenticeshipRequest.Origin));
-        Assert.That(result.CohortReference, Is.EqualTo(f.DeleteApprenticeshipRequest.CohortReference));
-        Assert.That(result.LegalEntityName, Is.EqualTo(f.GetCohortResponse.LegalEntityName));
-        Assert.That(result.IsLastApprenticeshipInCohort, Is.True);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.FirstName, Is.EqualTo(fixture.SingleApprenticeship.FirstName));
+            Assert.That(result.LastName, Is.EqualTo(fixture.SingleApprenticeship.LastName));
+            Assert.That(result.FullName,
+                Is.EqualTo(fixture.SingleApprenticeship.FirstName + " " + fixture.SingleApprenticeship.LastName));
+            Assert.That(result.AccountHashedId, Is.EqualTo(fixture.DeleteApprenticeshipRequest.AccountHashedId));
+            Assert.That(result.DraftApprenticeshipHashedId,
+                Is.EqualTo(fixture.DeleteApprenticeshipRequest.DraftApprenticeshipHashedId));
+            Assert.That(result.AccountHashedId, Is.EqualTo(fixture.DeleteApprenticeshipRequest.AccountHashedId));
+            Assert.That(result.Origin, Is.EqualTo(fixture.DeleteApprenticeshipRequest.Origin));
+            Assert.That(result.CohortReference, Is.EqualTo(fixture.DeleteApprenticeshipRequest.CohortReference));
+            Assert.That(result.LegalEntityName, Is.EqualTo(fixture.GetCohortResponse.LegalEntityName));
+            Assert.That(result.IsLastApprenticeshipInCohort, Is.True);
+        });
     }
 
     public class DeleteDraftApprenticeshipViewModelMapperTestsFixture
     {
-        public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; }
+        private Mock<ICommitmentsApiClient> CommitmentsApiClient { get; }
         public GetCohortResponse GetCohortResponse { get; }
-        public GetDraftApprenticeshipsResponse GetDraftApprenticeshipsResponse { get; }
+        private GetDraftApprenticeshipsResponse GetDraftApprenticeshipsResponse { get; }
         public DeleteApprenticeshipRequest DeleteApprenticeshipRequest { get; private set; }
         public DeleteDraftApprenticeshipViewModelMapper Sut { get; }
         public DraftApprenticeshipDto SingleApprenticeship { get; private set; }
@@ -131,7 +154,8 @@ public class DeleteDraftApprenticeshipViewModelMapperTests
         public DeleteDraftApprenticeshipViewModelMapperTestsFixture WithSingleApprenticeship()
         {
             SingleApprenticeship = _autoFixture.Create<DraftApprenticeshipDto>();
-            GetDraftApprenticeshipsResponse.DraftApprenticeships = new List<DraftApprenticeshipDto> {SingleApprenticeship};
+            GetDraftApprenticeshipsResponse.DraftApprenticeships =
+                new List<DraftApprenticeshipDto> { SingleApprenticeship };
 
             CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(GetDraftApprenticeshipsResponse);
@@ -151,12 +175,15 @@ public class DeleteDraftApprenticeshipViewModelMapperTests
 
         public void VerifyGetCohortIsCalledCorrectly()
         {
-            CommitmentsApiClient.Verify(x => x.GetCohort(DeleteApprenticeshipRequest.CohortId, CancellationToken.None), Times.Once);
+            CommitmentsApiClient.Verify(x => x.GetCohort(DeleteApprenticeshipRequest.CohortId, CancellationToken.None),
+                Times.Once);
         }
 
         public void VerifyGetDraftApprenticeshipsIsCalledCorrectly()
         {
-            CommitmentsApiClient.Verify(x => x.GetDraftApprenticeships(DeleteApprenticeshipRequest.CohortId, CancellationToken.None), Times.Once);
+            CommitmentsApiClient.Verify(
+                x => x.GetDraftApprenticeships(DeleteApprenticeshipRequest.CohortId, CancellationToken.None),
+                Times.Once);
         }
     }
 }

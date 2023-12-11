@@ -1,11 +1,10 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
-using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
@@ -78,87 +77,103 @@ public class WhenMappingReviewRequestToViewModel
 
 public class WhenMappingReviewRequestToViewModelFixture
 {
-    public Mock<IEncodingService> EncodingService { get; set; }
-    public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
-    public CohortsByAccountRequest ReviewRequest { get; set; }
-    public GetCohortsResponse GetCohortsResponse { get; set; }
-    public ReviewRequestViewModelMapper Mapper { get; set; }
-    public ReviewViewModel ReviewViewModel { get; set; }
+    private readonly Mock<IEncodingService> _encodingService;
+    private readonly CohortsByAccountRequest _reviewRequest;
+    private readonly ReviewRequestViewModelMapper _mapper;
+    private ReviewViewModel _reviewViewModel;
+    
+    private static long AccountId => 1;
 
-    public long AccountId => 1;
-
-    public string AccountHashedId => "1AccountHashedId";
+    private static string AccountHashedId => "1AccountHashedId";
 
     public WhenMappingReviewRequestToViewModelFixture()
     {
-        EncodingService = new Mock<IEncodingService>();
-        CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        _encodingService = new Mock<IEncodingService>();
+        var commitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
-        ReviewRequest = new CohortsByAccountRequest() { AccountId = AccountId, AccountHashedId = AccountHashedId };
-        GetCohortsResponse = CreateGetCohortsResponse();
+        _reviewRequest = new CohortsByAccountRequest() { AccountId = AccountId, AccountHashedId = AccountHashedId };
+        var getCohortsResponse = CreateGetCohortsResponse();
            
-        CommitmentsApiClient.Setup(c => c.GetCohorts(It.Is<GetCohortsRequest>(r => r.AccountId == AccountId), CancellationToken.None)).Returns(Task.FromResult(GetCohortsResponse));
-        EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference)).Returns((long y, EncodingType z) => y + "_Encoded");
+        commitmentsApiClient.Setup(c => c.GetCohorts(It.Is<GetCohortsRequest>(r => r.AccountId == AccountId), CancellationToken.None)).Returns(Task.FromResult(getCohortsResponse));
+        _encodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference)).Returns((long y, EncodingType z) => y + "_Encoded");
 
-        Mapper = new ReviewRequestViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, Mock.Of<IUrlHelper>());
+        _mapper = new ReviewRequestViewModelMapper(commitmentsApiClient.Object, _encodingService.Object, Mock.Of<IUrlHelper>());
     }
 
     public WhenMappingReviewRequestToViewModelFixture Map()
     {
-        ReviewViewModel = Mapper.Map(ReviewRequest).Result;
+        _reviewViewModel = _mapper.Map(_reviewRequest).Result;
         return this;
     }
 
     public void Verify_OnlyTheCohorts_ReadyForReviewForEmployer_Are_Mapped()
     {
-        Assert.That(ReviewViewModel.Cohorts.Count(), Is.EqualTo(2));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_reviewViewModel.Cohorts.Count(), Is.EqualTo(2));
 
-        Assert.That(GetCohortInReviewViewModel(1), Is.Not.Null);
-        Assert.That(GetCohortInReviewViewModel(2), Is.Not.Null);
+            Assert.That(GetCohortInReviewViewModel(1), Is.Not.Null);
+            Assert.That(GetCohortInReviewViewModel(2), Is.Not.Null);
+        });
     }
 
     public void Verify_CohortReference_Is_Mapped()
     {
-        EncodingService.Verify(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference), Times.Exactly(2));
+        _encodingService.Verify(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference), Times.Exactly(2));
 
-        Assert.That(GetCohortInReviewViewModel(1).CohortReference, Is.EqualTo("1_Encoded"));
-        Assert.That(GetCohortInReviewViewModel(2).CohortReference, Is.EqualTo("2_Encoded"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(GetCohortInReviewViewModel(1).CohortReference, Is.EqualTo("1_Encoded"));
+            Assert.That(GetCohortInReviewViewModel(2).CohortReference, Is.EqualTo("2_Encoded"));
+        });
     }
 
     public void Verify_ProviderName_Is_Mapped()
     {
-        Assert.That(GetCohortInReviewViewModel(1).ProviderName, Is.EqualTo("Provider1"));
-        Assert.That(GetCohortInReviewViewModel(2).ProviderName, Is.EqualTo("Provider2"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(GetCohortInReviewViewModel(1).ProviderName, Is.EqualTo("Provider1"));
+            Assert.That(GetCohortInReviewViewModel(2).ProviderName, Is.EqualTo("Provider2"));
+        });
     }
 
     public void Verify_NumberOfApprentices_Are_Mapped()
     {
-        Assert.That(GetCohortInReviewViewModel(1).NumberOfApprentices, Is.EqualTo(100));
-        Assert.That(GetCohortInReviewViewModel(2).NumberOfApprentices, Is.EqualTo(200));
+        Assert.Multiple(() =>
+        {
+            Assert.That(GetCohortInReviewViewModel(1).NumberOfApprentices, Is.EqualTo(100));
+            Assert.That(GetCohortInReviewViewModel(2).NumberOfApprentices, Is.EqualTo(200));
+        });
     }
 
     public void Verify_LastMessage_Is_MappedCorrectly()
     {
-        Assert.That(GetCohortInReviewViewModel(1).LastMessage, Is.EqualTo("No message added"));
-        Assert.That(GetCohortInReviewViewModel(2).LastMessage, Is.EqualTo("This is latestMessage from provider"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(GetCohortInReviewViewModel(1).LastMessage, Is.EqualTo("No message added"));
+            Assert.That(GetCohortInReviewViewModel(2).LastMessage, Is.EqualTo("This is latestMessage from provider"));
+        });
     }
 
     public void Verify_Ordered_By_DateCreated()
     {
-        Assert.That(ReviewViewModel.Cohorts.First().CohortReference, Is.EqualTo("2_Encoded"));
-        Assert.That(ReviewViewModel.Cohorts.Last().CohortReference, Is.EqualTo("1_Encoded"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_reviewViewModel.Cohorts.First().CohortReference, Is.EqualTo("2_Encoded"));
+            Assert.That(_reviewViewModel.Cohorts.Last().CohortReference, Is.EqualTo("1_Encoded"));
+        });
     }
 
     public void Verify_AccountHashedId_IsMapped()
     {
-        Assert.That(ReviewViewModel.AccountHashedId, Is.EqualTo(AccountHashedId));
+        Assert.That(_reviewViewModel.AccountHashedId, Is.EqualTo(AccountHashedId));
     }
 
-    private GetCohortsResponse CreateGetCohortsResponse()
+    private static GetCohortsResponse CreateGetCohortsResponse()
     {
         IEnumerable<CohortSummary> cohorts = new List<CohortSummary>()
         {
-            new CohortSummary
+            new()
             {
                 CohortId = 1,
                 AccountId = 1,
@@ -169,7 +184,7 @@ public class WhenMappingReviewRequestToViewModelFixture
                 WithParty = Party.Employer,
                 CreatedOn = DateTime.Now.AddMinutes(-3)
             },
-            new CohortSummary
+            new()
             {
                 CohortId = 2,
                 AccountId = 1,
@@ -181,7 +196,7 @@ public class WhenMappingReviewRequestToViewModelFixture
                 CreatedOn = DateTime.Now.AddMinutes(-5),
                 LatestMessageFromProvider = new Message("This is latestMessage from provider", DateTime.Now.AddMinutes(-2))
             },
-            new CohortSummary
+            new()
             {
                 CohortId = 3,
                 AccountId = 1,
@@ -192,7 +207,7 @@ public class WhenMappingReviewRequestToViewModelFixture
                 WithParty = Party.Employer,
                 CreatedOn = DateTime.Now.AddMinutes(-1)
             },
-            new CohortSummary
+            new()
             {
                 CohortId = 4,
                 AccountId = 1,
@@ -208,13 +223,13 @@ public class WhenMappingReviewRequestToViewModelFixture
         return new GetCohortsResponse(cohorts);
     }
 
-    private long GetCohortId(string cohortReference)
+    private static long GetCohortId(string cohortReference)
     {
         return long.Parse(cohortReference.Replace("_Encoded",""));
     }
 
     private ReviewCohortSummaryViewModel GetCohortInReviewViewModel(long id)
     {
-        return ReviewViewModel.Cohorts.FirstOrDefault(x => GetCohortId(x.CohortReference) == id);
+        return _reviewViewModel.Cohorts.FirstOrDefault(x => GetCohortId(x.CohortReference) == id);
     }
 }

@@ -25,13 +25,13 @@ public class WhenMappingInformRequestToTransferConnectionViewModelTests
         _accountApiClient.Setup(x => x.GetTransferConnections(_informRequest.AccountHashedId))
             .ReturnsAsync(new List<TransferConnectionViewModel>
             {
-                new TransferConnectionViewModel
+                new()
                 {
                     FundingEmployerAccountId = 1234,
                     FundingEmployerAccountName = "FirstAccountName",
                     FundingEmployerHashedAccountId = "FAN"
                 },
-                new TransferConnectionViewModel
+                new()
                 {
                     FundingEmployerAccountId = 1235,
                     FundingEmployerAccountName = "SecondAccountName",
@@ -53,7 +53,6 @@ public class WhenMappingInformRequestToTransferConnectionViewModelTests
         Assert.That(result.AccountHashedId, Is.EqualTo(_informRequest.AccountHashedId));
     }
 
-
     [Test]
     public async Task Then_Non_Empty_List_Of_TransferConnections_Is_Mapped()
     {   
@@ -61,7 +60,7 @@ public class WhenMappingInformRequestToTransferConnectionViewModelTests
         var result = await _mapper.Map(_informRequest);
 
         //Assert           
-        Assert.That(result.TransferConnections.Count, Is.EqualTo(2));
+        Assert.That(result.TransferConnections, Has.Count.EqualTo(2));
     }
 
     [Test]
@@ -75,14 +74,14 @@ public class WhenMappingInformRequestToTransferConnectionViewModelTests
         var result = await _mapper.Map(_informRequest);
 
         //Assert           
-        Assert.That(result.TransferConnections.Count, Is.EqualTo(0));
+        Assert.That(result.TransferConnections, Is.Empty);
     }
 
     [Test]
     public async Task Then_GetTransferConnections_Is_Called()
     {
         //Act
-        var result = await _mapper.Map(_informRequest);
+        await _mapper.Map(_informRequest);
 
         //Assert
         _accountApiClient.Verify(x => x.GetTransferConnections(It.Is<String>(c => c == _informRequest.AccountHashedId)),                   

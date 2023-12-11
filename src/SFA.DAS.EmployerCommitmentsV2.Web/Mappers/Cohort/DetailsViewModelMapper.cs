@@ -67,7 +67,7 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
             HasEmailOverlaps = emailOverlaps.Any(),
             ShowAddAnotherApprenticeOption = !cohort.IsLinkedToChangeOfPartyRequest,
             ShowRofjaaRemovalBanner = cohortDetails.HasUnavailableFlexiJobAgencyDeliveryModel,
-            Status = GetCohortStatus(cohort, draftApprenticeships)
+            Status = GetCohortStatus(cohort)
         };
     }
 
@@ -274,7 +274,7 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
         }
     }
 
-    private static string GetCohortStatus(GetCohortResponse cohort, IReadOnlyCollection<DraftApprenticeshipDto> draftApprenticeships)
+    private static string GetCohortStatus(GetCohortResponse cohort)
     {
         if (cohort.TransferSenderId.HasValue &&
             cohort.TransferApprovalStatus == TransferApprovalStatus.Pending)

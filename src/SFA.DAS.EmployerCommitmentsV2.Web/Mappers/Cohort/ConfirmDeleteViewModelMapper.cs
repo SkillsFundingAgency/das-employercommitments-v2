@@ -34,7 +34,7 @@ public class ConfirmDeleteViewModelMapper : IMapper<DetailsRequest, ConfirmDelet
         };
     }
 
-    private IReadOnlyCollection<ConfirmDeleteViewModel.CourseGroupingModel> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships)
+    private static IReadOnlyCollection<ConfirmDeleteViewModel.CourseGroupingModel> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships)
     {
         var groupedByCourse = draftApprenticeships
             .GroupBy(a => new { a.CourseCode, a.CourseName })

@@ -23,11 +23,11 @@ public class IndexViewModelMapper : IMapper<IndexRequest, IndexViewModel>
     {
         try
         {
-            var response = await _commitmentsApiClient.GetProviderPaymentsPriority(source.AccountId, default(CancellationToken));
+            var response = await _commitmentsApiClient.GetProviderPaymentsPriority(source.AccountId);
             return new IndexViewModel
             {
                 AccountHashedId = source.AccountHashedId,
-                ShowSetPaymentOrderLink = response.ProviderPaymentPriorities.Count() > 1,
+                ShowSetPaymentOrderLink = response.ProviderPaymentPriorities.Count > 1,
                 PublicSectorReportingLink = $"https://reporting.{GetEnvironmentAndDomain(_configuration["ResourceEnvironmentName"])}/accounts/{source.AccountHashedId}/home"
             };
         }

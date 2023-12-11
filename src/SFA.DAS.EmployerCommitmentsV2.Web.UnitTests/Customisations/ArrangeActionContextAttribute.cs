@@ -15,7 +15,7 @@ public class ArrangeActionContextAttribute : CustomizeAttribute
 
         if (parameter.ParameterType != typeof(ActionExecutingContext))
         {
-            throw new ArgumentException(nameof(parameter));
+            throw new ArgumentException(null, nameof(parameter));
         }
 
         return new ArrangeActionContextCustomisation();

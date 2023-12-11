@@ -59,19 +59,19 @@ public class TransferRequestForSenderViewModelMapperTests
         _mockEncodingService = new Mock<IEncodingService>();
             
         _mockEncodingService.Setup(t => t.Encode(It.IsAny<long>(), EncodingType.AccountId))
-            .Returns((long value, EncodingType encodingType) => $"A{value}");
+            .Returns((long value, EncodingType _) => $"A{value}");
         _mockEncodingService.Setup(t => t.Encode(It.IsAny<long>(), EncodingType.PublicAccountId))
-            .Returns((long value, EncodingType encodingType) => $"P{value}");
+            .Returns((long value, EncodingType _) => $"P{value}");
         _mockEncodingService.Setup(t => t.Encode(It.IsAny<long>(), EncodingType.TransferRequestId))
-            .Returns((long value, EncodingType encodingType) => $"T{value}");
+            .Returns((long value, EncodingType _) => $"T{value}");
         _mockEncodingService.Setup(t => t.Encode(It.IsAny<long>(), EncodingType.CohortReference))
-            .Returns((long value, EncodingType encodingType) => $"C{value}");
+            .Returns((long value, EncodingType _) => $"C{value}");
         _mockEncodingService.Setup(t => t.Encode(It.IsAny<long>(), EncodingType.PledgeId))
-            .Returns((long value, EncodingType encodingType) => $"PL{value}");
+            .Returns((long value, EncodingType _) => $"PL{value}");
         _mockEncodingService.Setup(t => t.Encode(It.IsAny<long>(), EncodingType.PledgeApplicationId))
-            .Returns((long value, EncodingType encodingType) => $"PA{value}");
+            .Returns((long value, EncodingType _) => $"PA{value}");
         _mockEncodingService.Setup(t => t.Decode(It.IsAny<string>(), It.IsAny<EncodingType>()))
-            .Returns((string value, EncodingType encodingType) => long.Parse(Regex.Replace(value, "[A-Za-z ]", "")));
+            .Returns((string value, EncodingType _) => long.Parse(Regex.Replace(value, "[A-Za-z ]", "")));
 
         _mapper = new TransferRequestForSenderViewModelMapper(_mockCommitmentsApiClient.Object, _mockApprovalsApiClient.Object, _mockEncodingService.Object);
     }
@@ -247,7 +247,10 @@ public class TransferRequestForSenderViewModelMapperTests
 
         var result = await _mapper.Map(_request);
 
-        Assert.That(result.HashedPledgeApplicationId, Is.EqualTo(string.Empty));
-        Assert.That(result.HashedPledgeId, Is.EqualTo(string.Empty));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.HashedPledgeApplicationId, Is.EqualTo(string.Empty));
+            Assert.That(result.HashedPledgeId, Is.EqualTo(string.Empty));
+        });
     }
 }

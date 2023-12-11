@@ -19,7 +19,7 @@ public class WhenIMapEditDraftApprenticeshipDetailsToViewModel
         _mapper = new EditDraftApprenticeshipViewModelMapper();
         _source = fixture.Build<EditDraftApprenticeshipDetails>().Create();
 
-        _act = async () => await _mapper.Map(TestHelper.Clone(_source));
+        _act = () => _mapper.Map(TestHelper.Clone(_source));
     }
 
     [Test]
@@ -89,9 +89,13 @@ public class WhenIMapEditDraftApprenticeshipDetailsToViewModel
     public async Task ThenDateOfBirthIsMappedCorrectly()
     {
         var result = await _act();
-        Assert.That(result.DateOfBirth.Day, Is.EqualTo(_source.DateOfBirth?.Day));
-        Assert.That(result.DateOfBirth.Month, Is.EqualTo(_source.DateOfBirth?.Month));
-        Assert.That(result.DateOfBirth.Year, Is.EqualTo(_source.DateOfBirth?.Year));
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.DateOfBirth.Day, Is.EqualTo(_source.DateOfBirth?.Day));
+            Assert.That(result.DateOfBirth.Month, Is.EqualTo(_source.DateOfBirth?.Month));
+            Assert.That(result.DateOfBirth.Year, Is.EqualTo(_source.DateOfBirth?.Year));
+        });
     }
 
     [Test]
@@ -119,16 +123,22 @@ public class WhenIMapEditDraftApprenticeshipDetailsToViewModel
     public async Task ThenStartDateIsMappedCorrectly()
     {
         var result = await _act();
-        Assert.That(result.StartDate.Month, Is.EqualTo(_source.StartDate?.Month));
-        Assert.That(result.StartDate.Year, Is.EqualTo(_source.StartDate?.Year));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.StartDate.Month, Is.EqualTo(_source.StartDate?.Month));
+            Assert.That(result.StartDate.Year, Is.EqualTo(_source.StartDate?.Year));
+        });
     }
 
     [Test]
     public async Task ThenEndDateIsMappedCorrectly()
     {
         var result = await _act();
-        Assert.That(result.EndDate.Month, Is.EqualTo(_source.EndDate?.Month));
-        Assert.That(result.EndDate.Year, Is.EqualTo(_source.EndDate?.Year));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.EndDate.Month, Is.EqualTo(_source.EndDate?.Month));
+            Assert.That(result.EndDate.Year, Is.EqualTo(_source.EndDate?.Year));
+        });
     }
 
     [Test]

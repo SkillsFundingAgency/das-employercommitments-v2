@@ -32,7 +32,9 @@ public class TransferRequestController : Controller
     [Route("sender/transfers/{transferRequestHashedId}")]
     public async Task<IActionResult> TransferDetailsForSender(TransferRequestRequest request)
     {
-        _logger.LogInformation($"Getting TransferRequest Details, Transfer Account: {request.AccountId}, TransferRequestId: {request.TransferRequestId}");
+        _logger.LogInformation("Getting TransferRequest Details, Transfer Account: {AccountId}, TransferRequestId: {TransferRequestId}",
+            request.AccountId,
+            request.TransferRequestId);
 
         var viewModel = await _modelMapper.Map<TransferRequestForSenderViewModel>(request);
         return View(viewModel);
@@ -42,7 +44,9 @@ public class TransferRequestController : Controller
     [Route("sender/transfers/{transferRequestHashedId}")]
     public async Task<IActionResult> TransferDetailsForSender(TransferRequestForSenderViewModel viewModel)
     {
-        _logger.LogInformation($"Updating TransferRequest, Account: {viewModel.TransferSenderHashedAccountId}, CohortReference: {viewModel.HashedCohortReference}");
+        _logger.LogInformation("Updating TransferRequest, Account: {TransferSenderHashedAccountId}, CohortReference: {HashedCohortReference}",
+            viewModel.TransferSenderHashedAccountId,
+            viewModel.HashedCohortReference);
 
         try
         {
@@ -79,9 +83,12 @@ public class TransferRequestController : Controller
     [Route("receiver/transfers/{transferRequestHashedId}")]
     public async Task<IActionResult> TransferDetailsForReceiver(TransferRequestRequest request)
     {
-        _logger.LogInformation($"Getting TransferRequest Details, Transfer Account: {request.AccountId}, TransferRequestId: {request.TransferRequestId}");
+        _logger.LogInformation("Getting TransferRequest Details, Transfer Account: {AccountId}, TransferRequestId: {TransferRequestId}",
+            request.AccountId,
+            request.TransferRequestId);
 
         var viewModel = await _modelMapper.Map<TransferRequestForReceiverViewModel>(request);
+        
         return View(viewModel);
     }
 }

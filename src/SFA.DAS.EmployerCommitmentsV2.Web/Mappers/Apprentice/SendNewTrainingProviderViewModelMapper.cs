@@ -38,9 +38,10 @@ public class SendNewTrainingProviderViewModelMapper : IMapper<SendNewTrainingPro
 
             return result;
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            _logger.LogError($"Error mapping apprenticeshipId {source.ApprenticeshipId} to model {nameof(SendNewTrainingProviderViewModel)}", e);
+            _logger.LogError(exception, "Error mapping apprenticeshipId '{ApprenticeshipId}' to model {ViewModelName}.", source.ApprenticeshipId, nameof(SendNewTrainingProviderViewModel));
+           
             throw;
         }
     }

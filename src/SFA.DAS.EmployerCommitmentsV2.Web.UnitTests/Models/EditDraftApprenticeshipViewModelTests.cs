@@ -13,7 +13,6 @@ public class EditDraftApprenticeshipViewModelTests
         // Arrange
         var fixture = new Fixture();
         var baseDate = DateTime.Now;
-        var startDate = baseDate;
         var endDate = baseDate.AddYears(2);
         var dateOfBirth = baseDate.AddYears(-18);
 
@@ -23,7 +22,7 @@ public class EditDraftApprenticeshipViewModelTests
                 var constructorInfo = x.GetType().GetConstructor(new[] { typeof(DateTime?), typeof(DateTime?), typeof(DateTime?) });
                 if (constructorInfo != null)
                 {
-                    constructorInfo.Invoke(x, new object[] { dateOfBirth, startDate, endDate });
+                    constructorInfo.Invoke(x, new object[] { dateOfBirth, baseDate, endDate });
                 }
             })
             .Without(x => x.StartDate)
@@ -38,9 +37,12 @@ public class EditDraftApprenticeshipViewModelTests
 
         // Assert
         Assert.That(clonedViewModel, Is.Not.Null);
-        Assert.That(clonedViewModel.ProviderId, Is.EqualTo(_editDraftApprenticeshipViewModel.ProviderId));
-        Assert.That(clonedViewModel.ProviderName, Is.EqualTo(_editDraftApprenticeshipViewModel.ProviderName));
-        Assert.That(clonedViewModel, Does.Not.Property("AccountLegalEntityId"));
-        Assert.That(clonedViewModel, Does.Not.Property("CohortId"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(clonedViewModel.ProviderId, Is.EqualTo(_editDraftApprenticeshipViewModel.ProviderId));
+            Assert.That(clonedViewModel.ProviderName, Is.EqualTo(_editDraftApprenticeshipViewModel.ProviderName));
+            Assert.That(clonedViewModel, Does.Not.Property("AccountLegalEntityId"));
+            Assert.That(clonedViewModel, Does.Not.Property("CohortId"));
+        });
     }   
 }

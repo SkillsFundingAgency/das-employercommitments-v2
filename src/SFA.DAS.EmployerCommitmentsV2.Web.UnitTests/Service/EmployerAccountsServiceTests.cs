@@ -6,7 +6,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Service;
 
 public class EmployerAccountsServiceTests
 {
-    private Mock<IAccountApiClient> _accountApiClient;
+    private readonly Mock<IAccountApiClient> _accountApiClient;
     private EmployerAccountsService _employerAccountsService;
     private LegalEntityViewModel _legalEntityViewModel;        
     private const string ExpectedAccountId = "ABC3421";
@@ -30,7 +30,7 @@ public class EmployerAccountsServiceTests
     public async Task Then_Api_GetLegalEntitiesForAccount_Is_Called()
     {
         //Arrange
-        var expectedAccountId = "CDE3421";
+        const string expectedAccountId = "CDE3421";
         _accountApiClient.Setup(x => x.GetLegalEntitiesConnectedToAccount(expectedAccountId))
             .ReturnsAsync(new List<ResourceViewModel>());
 
@@ -48,7 +48,7 @@ public class EmployerAccountsServiceTests
 
         //Assert
         Assert.That(actual, Is.Not.Null);
-        Assert.That(actual.Count, Is.EqualTo(0));
+        Assert.That(actual, Is.Empty);
     }
 
     [Test]
@@ -58,8 +58,8 @@ public class EmployerAccountsServiceTests
         _accountApiClient.Setup(x => x.GetLegalEntitiesConnectedToAccount(ExpectedAccountId))
             .ReturnsAsync(new List<ResourceViewModel>
             {  
-                new ResourceViewModel {Id = "4587"},
-                new ResourceViewModel {Id = "85214"}
+                new() {Id = "4587"},
+                new() {Id = "85214"}
             });
         _accountApiClient.Setup(x => x.GetLegalEntity(ExpectedAccountId, It.IsAny<long>()))
             .ReturnsAsync(_legalEntityViewModel);
@@ -70,6 +70,6 @@ public class EmployerAccountsServiceTests
         //Assert
         _accountApiClient.Verify(x => x.GetLegalEntity(ExpectedAccountId, It.IsAny<long>()), Times.Exactly(2));
         Assert.That(actual, Is.Not.Null);
-        Assert.That(actual.Count, Is.EqualTo(2));
+        Assert.That(actual, Has.Count.EqualTo(2));
     }
 }

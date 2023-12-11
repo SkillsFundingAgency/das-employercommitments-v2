@@ -247,7 +247,10 @@ public class TransferRequestForReceiverViewModelMapperTests
 
         var result = await _mapper.Map(_request);
 
-        Assert.That(result.HashedPledgeApplicationId, Is.EqualTo(string.Empty));
-        Assert.That(result.HashedPledgeId, Is.EqualTo(string.Empty));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.HashedPledgeApplicationId, Is.EqualTo(string.Empty));
+            Assert.That(result.HashedPledgeId, Is.EqualTo(string.Empty));
+        });
     }
 }

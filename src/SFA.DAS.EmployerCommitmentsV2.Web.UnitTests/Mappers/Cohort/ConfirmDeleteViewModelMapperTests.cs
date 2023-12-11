@@ -10,7 +10,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 [Parallelizable(ParallelScope.All)]
 public class ConfirmDeleteViewModelMapperTests
 {
-
     [Test]
     public async Task AccountHashedIdIsMappedCorrectly()
     {

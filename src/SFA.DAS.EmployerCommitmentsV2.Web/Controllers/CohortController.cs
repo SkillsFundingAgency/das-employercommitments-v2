@@ -186,13 +186,11 @@ public class CohortController : Controller
                 return RedirectToAction("SelectProvider", returnModel.CloneBaseValues());
             }
 
-            _logger.LogError(
-                $"Failed '{nameof(CohortController)}-{nameof(SelectProvider)}': {nameof(ex.StatusCode)}='{ex.StatusCode}', {nameof(ex.ReasonPhrase)}='{ex.ReasonPhrase}'");
+            _logger.LogError(ex, "Failed '{ControllerName)}.{ActionName}'", nameof(CohortController), nameof(SelectProvider));
         }
         catch (Exception ex)
         {
-            _logger.LogError(
-                $"Failed '{nameof(CohortController)}-{nameof(SelectProvider)}': {nameof(ex.Message)}='{ex.Message}', {nameof(ex.StackTrace)}='{ex.StackTrace}'");
+            _logger.LogError(ex, "Failed '{ControllerName)}.{ActionName}'", nameof(CohortController), nameof(SelectProvider));
         }
 
         return RedirectToAction("Error", "Error");
