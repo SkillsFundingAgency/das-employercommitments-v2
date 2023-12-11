@@ -86,9 +86,12 @@ public class AuthenticationServiceTests
     {
         _fixture.SetAuthenticatedUser();
         Assert.That(_fixture.Sut.UserInfo, Is.Not.Null);
-        Assert.That(_fixture.Sut.UserInfo.UserId, Is.EqualTo("UserId"));
-        Assert.That(_fixture.Sut.UserInfo.UserDisplayName, Is.EqualTo("UserName"));
-        Assert.That(_fixture.Sut.UserInfo.UserEmail, Is.EqualTo("UserEmail"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.Sut.UserInfo.UserId, Is.EqualTo("UserId"));
+            Assert.That(_fixture.Sut.UserInfo.UserDisplayName, Is.EqualTo("UserName"));
+            Assert.That(_fixture.Sut.UserInfo.UserEmail, Is.EqualTo("UserEmail"));
+        });
     }
 
     [Test]
@@ -97,9 +100,12 @@ public class AuthenticationServiceTests
         _fixture.SetNoDasEmailAuthenticatedUser();
 
         Assert.That(_fixture.Sut.UserInfo, Is.Not.Null);
-        Assert.That(_fixture.Sut.UserInfo.UserId, Is.EqualTo("UserId"));
-        Assert.That(_fixture.Sut.UserInfo.UserDisplayName, Is.EqualTo("UserName"));
-        Assert.That(_fixture.Sut.UserInfo.UserEmail, Is.EqualTo("UserEmail"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.Sut.UserInfo.UserId, Is.EqualTo("UserId"));
+            Assert.That(_fixture.Sut.UserInfo.UserDisplayName, Is.EqualTo("UserName"));
+            Assert.That(_fixture.Sut.UserInfo.UserEmail, Is.EqualTo("UserEmail"));
+        });
     }
         
     [Test]
@@ -108,9 +114,12 @@ public class AuthenticationServiceTests
         _fixture.SetNoDasEmailAuthenticatedUserNoName();
 
         Assert.That(_fixture.Sut.UserInfo, Is.Not.Null);
-        Assert.That(_fixture.Sut.UserInfo.UserId, Is.EqualTo("UserId"));
-        Assert.That(_fixture.Sut.UserInfo.UserDisplayName, Is.EqualTo("Test Last"));
-        Assert.That(_fixture.Sut.UserInfo.UserEmail, Is.EqualTo("UserEmail"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.Sut.UserInfo.UserId, Is.EqualTo("UserId"));
+            Assert.That(_fixture.Sut.UserInfo.UserDisplayName, Is.EqualTo("Test Last"));
+            Assert.That(_fixture.Sut.UserInfo.UserEmail, Is.EqualTo("UserEmail"));
+        });
     }
 }
 

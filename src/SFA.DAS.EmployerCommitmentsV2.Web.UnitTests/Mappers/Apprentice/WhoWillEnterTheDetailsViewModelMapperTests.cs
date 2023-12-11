@@ -66,7 +66,7 @@ public class WhoWillEnterTheDetailsViewModelMapperTests
         Assert.That(_getProviderResponse.Name, Is.EqualTo(result.ProviderName));
     }
         
-    private GetProviderResponse MockGetProvider()
+    private static GetProviderResponse MockGetProvider()
     {
         return new GetProviderResponse
         {

@@ -1,5 +1,3 @@
-using System.Net;
-
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers;
 
 internal static class IActionResultTestExtensions

@@ -37,8 +37,11 @@ public class EditEndDateRequestMapperTests
         var mapper = new EditEndDateRequestMapper(authenticationService);
         var result = await mapper.Map(request);
 
-        Assert.That(result.UserInfo.UserEmail, Is.EqualTo(authenticationService.UserInfo.UserEmail));
-        Assert.That(result.UserInfo.UserId, Is.EqualTo(authenticationService.UserInfo.UserId));
-        Assert.That(result.UserInfo.UserDisplayName, Is.EqualTo(authenticationService.UserInfo.UserDisplayName));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.UserInfo.UserEmail, Is.EqualTo(authenticationService.UserInfo.UserEmail));
+            Assert.That(result.UserInfo.UserId, Is.EqualTo(authenticationService.UserInfo.UserId));
+            Assert.That(result.UserInfo.UserDisplayName, Is.EqualTo(authenticationService.UserInfo.UserDisplayName));
+        });
     }
 }

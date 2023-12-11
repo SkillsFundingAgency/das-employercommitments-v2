@@ -29,16 +29,19 @@ public class EmployerAccountsApiHealthCheckTests
     {
         var healthCheckResult = await _fixture.SetPingFailure().CheckHealthAsync();
 
-        Assert.That(healthCheckResult.Status, Is.EqualTo(HealthStatus.Degraded));
-        Assert.That(healthCheckResult.Description, Is.EqualTo(_fixture.Exception.Message));
+        Assert.Multiple(() =>
+        {
+            Assert.That(healthCheckResult.Status, Is.EqualTo(HealthStatus.Degraded));
+            Assert.That(healthCheckResult.Description, Is.EqualTo(_fixture.Exception.Message));
+        });
     }
 
     private class EmployerAccountsApiHealthCheckTestsFixture
     {
-        public HealthCheckContext HealthCheckContext { get; set; }
+        private HealthCheckContext HealthCheckContext { get; set; }
         public CancellationToken CancellationToken { get; set; }
-        public Mock<IEmployerAccountsApiClient> ProviderRelationshipsApiClient { get; set; }
-        public EmployerAccountsApiHealthCheck HealthCheck { get; set; }
+        private Mock<IEmployerAccountsApiClient> ProviderRelationshipsApiClient { get; set; }
+        private EmployerAccountsApiHealthCheck HealthCheck { get; set; }
         public Exception Exception { get; set; }
 
         public EmployerAccountsApiHealthCheckTestsFixture()

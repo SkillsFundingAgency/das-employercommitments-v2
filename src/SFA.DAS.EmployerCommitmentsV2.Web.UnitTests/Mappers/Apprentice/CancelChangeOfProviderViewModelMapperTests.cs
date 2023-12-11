@@ -2,8 +2,6 @@
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using SFA.DAS.Testing.AutoFixture;
-using System.Text;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice;
 
@@ -68,8 +66,11 @@ public class CancelChangeOfProviderViewModelMapperTests
     {
         var result = await _mapper.Map(_request);
 
-        Assert.That(result.NewStartMonth, Is.EqualTo(_request.NewStartMonth));
-        Assert.That(result.NewStartYear, Is.EqualTo(_request.NewStartYear));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.NewStartMonth, Is.EqualTo(_request.NewStartMonth));
+            Assert.That(result.NewStartYear, Is.EqualTo(_request.NewStartYear));
+        });
     }
 
     [Test]
@@ -77,8 +78,11 @@ public class CancelChangeOfProviderViewModelMapperTests
     {
         var result = await _mapper.Map(_request);
 
-        Assert.That(result.NewEndMonth, Is.EqualTo(_request.NewEndMonth));
-        Assert.That(result.NewEndYear, Is.EqualTo(_request.NewEndYear));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.NewEndMonth, Is.EqualTo(_request.NewEndMonth));
+            Assert.That(result.NewEndYear, Is.EqualTo(_request.NewEndYear));
+        });
     }
 
     [Test]

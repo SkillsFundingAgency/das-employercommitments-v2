@@ -29,7 +29,7 @@ public class PriceEpisodeExtensionsTests
         Assert.That(_priceEpisodes.GetPrice(effectiveDate), Is.EqualTo(expectedCost));
     }
 
-    private GetPriceEpisodesResponse.PriceEpisode CreatePriceEpisode(decimal cost, DateTime from, DateTime? to)
+    private static GetPriceEpisodesResponse.PriceEpisode CreatePriceEpisode(decimal cost, DateTime from, DateTime? to)
     {
         return new GetPriceEpisodesResponse.PriceEpisode { Cost = cost, FromDate = from, ToDate = to };
     }

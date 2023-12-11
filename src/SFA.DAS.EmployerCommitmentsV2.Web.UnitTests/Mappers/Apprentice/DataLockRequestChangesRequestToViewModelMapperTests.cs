@@ -135,7 +135,7 @@ public class DataLockRequestChangesRequestToViewModelMapperTests
         await _fixture.Map();
 
         //Assert
-        _fixture.VerifyULNIsMapped();
+        _fixture.VerifyUlnIsMapped();
     }
 
     [Test]
@@ -244,29 +244,29 @@ public class DataLockRequestChangesRequestToViewModelMapperTests
 
 public class DataLockRequestChangesRequestToViewModelMapperTestsFixture
 {
-    private Fixture AutoFixture;
+    private readonly Fixture _autoFixture;
         
-    private DataLockRequestChangesRequest _request;
+    private readonly DataLockRequestChangesRequest _request;
         
-    private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+    private readonly Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
     private GetDataLockSummariesResponse _dataLockSummariesResponse;
     private GetPriceEpisodesResponse _priceEpisodesResponse;
-    private GetApprenticeshipResponse _apprenticeshipResponse;
+    private readonly GetApprenticeshipResponse _apprenticeshipResponse;
     private GetAllTrainingProgrammesResponse _allTrainingProgrammeResponse;
 
-    private List<DataLock> DataLocksWithCourseMismatch = new List<DataLock>();
-    private List<DataLock> DataLocksWithOnlyPriceMismatch = new List<DataLock>();
-    private List<PriceEpisode> PriceEpisodes = new List<PriceEpisode>();
-    private List<TrainingProgramme> TrainingProgrammes = new List<TrainingProgramme>();
+    private readonly List<DataLock> _dataLocksWithCourseMismatch = [];
+    private readonly List<DataLock> _dataLocksWithOnlyPriceMismatch = [];
+    private readonly List<PriceEpisode> _priceEpisodes = [];
+    private readonly List<TrainingProgramme> _trainingProgrammes = [];
 
-    private DataLockRequestChangesRequestToViewModelMapper _mapper;
+    private readonly DataLockRequestChangesRequestToViewModelMapper _mapper;
     private DataLockRequestChangesViewModel _viewModel;
 
-    private DateTime CourseAndPriceChangeFromDate = DateTime.Now.Date.AddDays(15);
-    private decimal CourseAndPriceChangeCost = 1500.00M;
-    private string CourseAndPriceChangeCourseCode = "222";
-    private string CourseAndPriceChangeCourseName = "Training 222";
-    private TriageStatus CourseAndPriceChangeTriageStatus = TriageStatus.Change;
+    private readonly DateTime _courseAndPriceChangeFromDate = DateTime.Now.Date.AddDays(15);
+    private const decimal CourseAndPriceChangeCost = 1500.00M;
+    private const string CourseAndPriceChangeCourseCode = "222";
+    private const string CourseAndPriceChangeCourseName = "Training 222";
+    private const TriageStatus CourseAndPriceChangeTriageStatus = TriageStatus.Change;
 
     public async Task<DataLockRequestChangesViewModel> Map()
     {
@@ -338,7 +338,7 @@ public class DataLockRequestChangesRequestToViewModelMapperTestsFixture
         Assert.That(_viewModel.OriginalApprenticeship.DateOfBirth, Is.EqualTo(_apprenticeshipResponse.DateOfBirth.Date));
     }
 
-    internal void VerifyULNIsMapped()
+    internal void VerifyUlnIsMapped()
     {
         Assert.That(_viewModel.OriginalApprenticeship.ULN, Is.EqualTo(_apprenticeshipResponse.Uln));
     }
@@ -367,59 +367,65 @@ public class DataLockRequestChangesRequestToViewModelMapperTestsFixture
 
     internal void VerifyCourseChangesIsMapped()
     {
-        Assert.That(_viewModel.CourseChanges[0].CurrentStartDate, Is.EqualTo(DateTime.Now.Date));
-        Assert.That(_viewModel.CourseChanges[0].CurrentEndDate, Is.EqualTo(DateTime.Now.Date.AddDays(100)));
-        Assert.That(_viewModel.CourseChanges[0].CurrentTrainingProgram, Is.EqualTo("Training 111"));
-        Assert.That(_viewModel.CourseChanges[0].IlrStartDate, Is.EqualTo(CourseAndPriceChangeFromDate));
-        Assert.That(_viewModel.CourseChanges[0].IlrEndDate, Is.EqualTo(null));
-        Assert.That(_viewModel.CourseChanges[0].IlrTrainingProgram, Is.EqualTo(CourseAndPriceChangeCourseName));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_viewModel.CourseChanges[0].CurrentStartDate, Is.EqualTo(DateTime.Now.Date));
+            Assert.That(_viewModel.CourseChanges[0].CurrentEndDate, Is.EqualTo(DateTime.Now.Date.AddDays(100)));
+            Assert.That(_viewModel.CourseChanges[0].CurrentTrainingProgram, Is.EqualTo("Training 111"));
+            Assert.That(_viewModel.CourseChanges[0].IlrStartDate, Is.EqualTo(_courseAndPriceChangeFromDate));
+            Assert.That(_viewModel.CourseChanges[0].IlrEndDate, Is.EqualTo(null));
+            Assert.That(_viewModel.CourseChanges[0].IlrTrainingProgram, Is.EqualTo(CourseAndPriceChangeCourseName));
+        });
     }
 
     internal void VerifyPriceChangesIsMapped()
     {
-        Assert.That(_viewModel.PriceChanges[0].CurrentStartDate, Is.EqualTo(DateTime.Now.Date));
-        Assert.That(_viewModel.PriceChanges[0].CurrentEndDate, Is.EqualTo(null));
-        Assert.That(_viewModel.PriceChanges[0].CurrentCost, Is.EqualTo(1000.0M));
-        Assert.That(_viewModel.PriceChanges[0].IlrStartDate, Is.EqualTo(CourseAndPriceChangeFromDate));
-        Assert.That(_viewModel.PriceChanges[0].IlrEndDate, Is.EqualTo(null));
-        Assert.That(_viewModel.PriceChanges[0].IlrCost, Is.EqualTo(CourseAndPriceChangeCost));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_viewModel.PriceChanges[0].CurrentStartDate, Is.EqualTo(DateTime.Now.Date));
+            Assert.That(_viewModel.PriceChanges[0].CurrentEndDate, Is.EqualTo(null));
+            Assert.That(_viewModel.PriceChanges[0].CurrentCost, Is.EqualTo(1000.0M));
+            Assert.That(_viewModel.PriceChanges[0].IlrStartDate, Is.EqualTo(_courseAndPriceChangeFromDate));
+            Assert.That(_viewModel.PriceChanges[0].IlrEndDate, Is.EqualTo(null));
+            Assert.That(_viewModel.PriceChanges[0].IlrCost, Is.EqualTo(CourseAndPriceChangeCost));
+        });
     }
 
     internal void VerifyCourseChangesIsEmpty()
     {
-        Assert.That(_viewModel.CourseChanges.Count, Is.EqualTo(0));
+        Assert.That(_viewModel.CourseChanges, Is.Empty);
     }
 
     internal void VerifyPriceChangesIsEmpty()
     {
-        Assert.That(_viewModel.PriceChanges.Count, Is.EqualTo(0));
+        Assert.That(_viewModel.PriceChanges, Is.Empty);
     }
 
     public DataLockRequestChangesRequestToViewModelMapperTestsFixture()
     {
         // Arrange
-        AutoFixture = new Fixture();
-        _request = AutoFixture.Build<DataLockRequestChangesRequest>()
+        _autoFixture = new Fixture();
+        _request = _autoFixture.Build<DataLockRequestChangesRequest>()
             .With(x => x.AccountHashedId, "123")
             .With(x => x.ApprenticeshipHashedId, "456")
             .Create();
 
-        _dataLockSummariesResponse = AutoFixture.Build<GetDataLockSummariesResponse>()
-            .With(x => x.DataLocksWithCourseMismatch, DataLocksWithCourseMismatch)
-            .With(x => x.DataLocksWithOnlyPriceMismatch, DataLocksWithOnlyPriceMismatch)
+        _dataLockSummariesResponse = _autoFixture.Build<GetDataLockSummariesResponse>()
+            .With(x => x.DataLocksWithCourseMismatch, _dataLocksWithCourseMismatch)
+            .With(x => x.DataLocksWithOnlyPriceMismatch, _dataLocksWithOnlyPriceMismatch)
             .Create();
 
-        PriceEpisodes.Add(new PriceEpisode { FromDate = DateTime.Now.Date, ToDate = null, Cost = 1000.0M });
-        _priceEpisodesResponse = AutoFixture.Build<GetPriceEpisodesResponse>()
-            .With(x => x.PriceEpisodes, PriceEpisodes)
+        _priceEpisodes.Add(new PriceEpisode { FromDate = DateTime.Now.Date, ToDate = null, Cost = 1000.0M });
+        _priceEpisodesResponse = _autoFixture.Build<GetPriceEpisodesResponse>()
+            .With(x => x.PriceEpisodes, _priceEpisodes)
             .Create();
 
-        TrainingProgrammes.Add(new TrainingProgramme { CourseCode = "111", ProgrammeType = ProgrammeType.Standard, Name = "Training 111" });
-        _allTrainingProgrammeResponse = AutoFixture.Build<GetAllTrainingProgrammesResponse>()
-            .With(x => x.TrainingProgrammes, TrainingProgrammes)
+        _trainingProgrammes.Add(new TrainingProgramme { CourseCode = "111", ProgrammeType = ProgrammeType.Standard, Name = "Training 111" });
+        _allTrainingProgrammeResponse = _autoFixture.Build<GetAllTrainingProgrammesResponse>()
+            .With(x => x.TrainingProgrammes, _trainingProgrammes)
             .Create();
 
-        _apprenticeshipResponse = AutoFixture.Build<GetApprenticeshipResponse>()
+        _apprenticeshipResponse = _autoFixture.Build<GetApprenticeshipResponse>()
             .With(p => p.CourseCode, "111")
             .With(p => p.CourseName, "Training 111")
             .With(p => p.EndDate, DateTime.Now.Date.AddDays(100))
@@ -444,18 +450,18 @@ public class DataLockRequestChangesRequestToViewModelMapperTestsFixture
 
     public DataLockRequestChangesRequestToViewModelMapperTestsFixture WithCourseAndPriceDataLock()
     {
-        return WithCourseAndPriceDataLock(CourseAndPriceChangeFromDate, CourseAndPriceChangeCost, CourseAndPriceChangeCourseCode, CourseAndPriceChangeTriageStatus, DataLockErrorCode.Dlock03 | DataLockErrorCode.Dlock07)
+        return WithCourseAndPriceDataLock(_courseAndPriceChangeFromDate, CourseAndPriceChangeCost, CourseAndPriceChangeCourseCode, CourseAndPriceChangeTriageStatus, DataLockErrorCode.Dlock03 | DataLockErrorCode.Dlock07)
             .WithTrainingProgramme(CourseAndPriceChangeCourseCode, ProgrammeType.Standard, CourseAndPriceChangeCourseName);
     }
 
     public DataLockRequestChangesRequestToViewModelMapperTestsFixture WithCourseDataLock(DataLockErrorCode courseDataLockErrorCode)
     {
-        DataLocksWithCourseMismatch.Add(
+        _dataLocksWithCourseMismatch.Add(
             new DataLock { IsResolved = false, DataLockStatus = Status.Fail, ErrorCode = courseDataLockErrorCode });
 
-        _dataLockSummariesResponse = AutoFixture.Build<GetDataLockSummariesResponse>()
-            .With(x => x.DataLocksWithCourseMismatch, DataLocksWithCourseMismatch)
-            .With(x => x.DataLocksWithOnlyPriceMismatch, DataLocksWithOnlyPriceMismatch)
+        _dataLockSummariesResponse = _autoFixture.Build<GetDataLockSummariesResponse>()
+            .With(x => x.DataLocksWithCourseMismatch, _dataLocksWithCourseMismatch)
+            .With(x => x.DataLocksWithOnlyPriceMismatch, _dataLocksWithOnlyPriceMismatch)
             .Create();
 
         _mockCommitmentsApiClient.Setup(r => r.GetApprenticeshipDatalockSummariesStatus(It.IsAny<long>(), CancellationToken.None))
@@ -466,12 +472,12 @@ public class DataLockRequestChangesRequestToViewModelMapperTestsFixture
 
     public DataLockRequestChangesRequestToViewModelMapperTestsFixture WithPriceDataLock(DateTime ilrEffectiveFromDate)
     {
-        DataLocksWithOnlyPriceMismatch.Add(
+        _dataLocksWithOnlyPriceMismatch.Add(
             new DataLock { IsResolved = false, DataLockStatus = Status.Fail, ErrorCode = DataLockErrorCode.Dlock07, IlrEffectiveFromDate = ilrEffectiveFromDate });
 
-        _dataLockSummariesResponse = AutoFixture.Build<GetDataLockSummariesResponse>()
-            .With(x => x.DataLocksWithCourseMismatch, DataLocksWithCourseMismatch)
-            .With(x => x.DataLocksWithOnlyPriceMismatch, DataLocksWithOnlyPriceMismatch)
+        _dataLockSummariesResponse = _autoFixture.Build<GetDataLockSummariesResponse>()
+            .With(x => x.DataLocksWithCourseMismatch, _dataLocksWithCourseMismatch)
+            .With(x => x.DataLocksWithOnlyPriceMismatch, _dataLocksWithOnlyPriceMismatch)
             .Create();
 
         _mockCommitmentsApiClient.Setup(r => r.GetApprenticeshipDatalockSummariesStatus(It.IsAny<long>(), CancellationToken.None))
@@ -480,23 +486,23 @@ public class DataLockRequestChangesRequestToViewModelMapperTestsFixture
         return this;
     }
 
-    public DataLockRequestChangesRequestToViewModelMapperTestsFixture WithCourseAndPriceDataLock(DateTime IlrEffectiveFromDate, decimal totalCost, string ilrTrainingCourseCode, TriageStatus triageStatus, DataLockErrorCode courseDataLockErrorCode)
+    private DataLockRequestChangesRequestToViewModelMapperTestsFixture WithCourseAndPriceDataLock(DateTime ilrEffectiveFromDate, decimal totalCost, string ilrTrainingCourseCode, TriageStatus triageStatus, DataLockErrorCode courseDataLockErrorCode)
     {
-        DataLocksWithCourseMismatch.Add(
+        _dataLocksWithCourseMismatch.Add(
             new DataLock 
             { 
                 IsResolved = false, 
                 DataLockStatus = Status.Fail, 
-                IlrEffectiveFromDate = IlrEffectiveFromDate,
+                IlrEffectiveFromDate = ilrEffectiveFromDate,
                 IlrTotalCost = totalCost,
                 IlrTrainingCourseCode = ilrTrainingCourseCode,
                 TriageStatus = triageStatus,
                 ErrorCode = courseDataLockErrorCode | DataLockErrorCode.Dlock07 
             });
 
-        _dataLockSummariesResponse = AutoFixture.Build<GetDataLockSummariesResponse>()
-            .With(x => x.DataLocksWithCourseMismatch, DataLocksWithCourseMismatch)
-            .With(x => x.DataLocksWithOnlyPriceMismatch, DataLocksWithOnlyPriceMismatch)
+        _dataLockSummariesResponse = _autoFixture.Build<GetDataLockSummariesResponse>()
+            .With(x => x.DataLocksWithCourseMismatch, _dataLocksWithCourseMismatch)
+            .With(x => x.DataLocksWithOnlyPriceMismatch, _dataLocksWithOnlyPriceMismatch)
             .Create();
 
         _mockCommitmentsApiClient.Setup(r => r.GetApprenticeshipDatalockSummariesStatus(It.IsAny<long>(), CancellationToken.None))
@@ -507,12 +513,12 @@ public class DataLockRequestChangesRequestToViewModelMapperTestsFixture
 
     public DataLockRequestChangesRequestToViewModelMapperTestsFixture WithPriceEpisode(DateTime fromDate, DateTime? toDate, decimal cost)
     {
-        PriceEpisodes.Clear();
-        PriceEpisodes.Add(
+        _priceEpisodes.Clear();
+        _priceEpisodes.Add(
             new PriceEpisode { FromDate = fromDate, ToDate = toDate, Cost = cost });
 
-        _priceEpisodesResponse = AutoFixture.Build<GetPriceEpisodesResponse>()
-            .With(x => x.PriceEpisodes, PriceEpisodes)
+        _priceEpisodesResponse = _autoFixture.Build<GetPriceEpisodesResponse>()
+            .With(x => x.PriceEpisodes, _priceEpisodes)
             .Create();
 
         _mockCommitmentsApiClient.Setup(c => c.GetPriceEpisodes(It.IsAny<long>(), CancellationToken.None))
@@ -521,13 +527,13 @@ public class DataLockRequestChangesRequestToViewModelMapperTestsFixture
         return this;
     }
 
-    public DataLockRequestChangesRequestToViewModelMapperTestsFixture WithTrainingProgramme(string courseCode, ProgrammeType programmeType, string name)
+    private DataLockRequestChangesRequestToViewModelMapperTestsFixture WithTrainingProgramme(string courseCode, ProgrammeType programmeType, string name)
     {
-        TrainingProgrammes.Add(
+        _trainingProgrammes.Add(
             new TrainingProgramme { CourseCode = courseCode, ProgrammeType = programmeType, Name = name });
 
-        _allTrainingProgrammeResponse = AutoFixture.Build<GetAllTrainingProgrammesResponse>()
-            .With(x => x.TrainingProgrammes, TrainingProgrammes)
+        _allTrainingProgrammeResponse = _autoFixture.Build<GetAllTrainingProgrammesResponse>()
+            .With(x => x.TrainingProgrammes, _trainingProgrammes)
             .Create();
 
         _mockCommitmentsApiClient.Setup(t => t.GetAllTrainingProgrammes(It.IsAny<CancellationToken>()))

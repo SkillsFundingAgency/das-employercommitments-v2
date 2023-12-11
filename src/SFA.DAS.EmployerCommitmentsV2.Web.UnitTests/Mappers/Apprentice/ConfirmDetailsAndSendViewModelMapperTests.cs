@@ -67,7 +67,7 @@ public class ConfirmDetailsAndSendViewModelMapperTests
     [Test]
     public async Task GetFundingCapIsCalled()
     {
-        var result = await _mapper.Map(_request);
+        await _mapper.Map(_request);
 
         _mockCommitmentsApiClient.Verify(t => t.GetTrainingProgramme(_apprenticeshipResponse.CourseCode, It.IsAny<CancellationToken>()), Times.Once());
     }
@@ -75,7 +75,7 @@ public class ConfirmDetailsAndSendViewModelMapperTests
     [Test]
     public async Task GetPriceEpisodesCapIsCalled()
     {
-        var result = await _mapper.Map(_request);
+        await _mapper.Map(_request);
 
         _mockCommitmentsApiClient.Verify(c => c.GetPriceEpisodes(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
     }
@@ -91,7 +91,7 @@ public class ConfirmDetailsAndSendViewModelMapperTests
     [Test]
     public async Task GetApprenticeshipCapIsCalled()
     {
-        var result = await _mapper.Map(_request);
+        await _mapper.Map(_request);
 
         _mockCommitmentsApiClient.Verify(c => c.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
     }
@@ -115,16 +115,16 @@ public class ConfirmDetailsAndSendViewModelMapperTests
         Assert.That(result.ExceedsMaxFunding, Is.EqualTo(expectsExceedsMaxFunding));
     }
 
-    public List<TrainingProgrammeFundingPeriod> SetPriceBand(int fundingCap)
+    private static List<TrainingProgrammeFundingPeriod> SetPriceBand(int fundingCap)
     {
-        return new List<TrainingProgrammeFundingPeriod>
-        {
+        return
+        [
             new TrainingProgrammeFundingPeriod
             {
                 EffectiveFrom = new DateTime(2019, 1, 1),
                 EffectiveTo = DateTime.Now.AddMonths(1),
                 FundingCap = fundingCap
             }
-        };
+        ];
     }
 }

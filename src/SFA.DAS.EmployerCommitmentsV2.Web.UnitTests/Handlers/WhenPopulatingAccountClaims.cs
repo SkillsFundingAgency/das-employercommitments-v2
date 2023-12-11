@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Security.Claims;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authentication;

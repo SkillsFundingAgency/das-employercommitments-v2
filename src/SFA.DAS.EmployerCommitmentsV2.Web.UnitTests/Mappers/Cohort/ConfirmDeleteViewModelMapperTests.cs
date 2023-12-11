@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
@@ -83,20 +82,18 @@ public class ConfirmDeleteViewModelMapperTests
             .Select(c => c.CourseName)
             .ToList();
 
-        fixture.AssertSequenceOrder(expectedSequence, actualSequence, (e, a) => e == a);
+        ConfirmDeleteViewModelMapperTestsFixture.AssertSequenceOrder(expectedSequence, actualSequence, (e, a) => e == a);
     }
 }
 
 public class ConfirmDeleteViewModelMapperTestsFixture
 {
-    public ConfirmDeleteViewModelMapper Sut;
-    public DetailsRequest Source;
-    public ConfirmDeleteViewModel Result;
-    public Mock<ICommitmentsApiClient> CommitmentsApiClient;
-    public GetCohortResponse Cohort;
-    public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
+    private readonly ConfirmDeleteViewModelMapper _sut;
+    public readonly DetailsRequest Source;
+    public readonly GetCohortResponse Cohort;
+    public readonly GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
 
-    private Fixture _autoFixture;
+    private readonly Fixture _autoFixture;
 
     public ConfirmDeleteViewModelMapperTestsFixture()
     {
@@ -108,13 +105,13 @@ public class ConfirmDeleteViewModelMapperTestsFixture
         _autoFixture.Register(() => draftApprenticeships);
         DraftApprenticeshipsResponse = _autoFixture.Create<GetDraftApprenticeshipsResponse>();
 
-        CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-        CommitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+        var commitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        commitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Cohort);
-        CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+        commitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(DraftApprenticeshipsResponse);
 
-        Sut = new ConfirmDeleteViewModelMapper(CommitmentsApiClient.Object);
+        _sut = new ConfirmDeleteViewModelMapper(commitmentsApiClient.Object);
         Source = _autoFixture.Create<DetailsRequest>();
     }
 
@@ -128,32 +125,20 @@ public class ConfirmDeleteViewModelMapperTestsFixture
 
     public Task<ConfirmDeleteViewModel> Map()
     {
-        return Sut.Map(TestHelper.Clone(Source));
+        return _sut.Map(TestHelper.Clone(Source));
     }
-
-    public void AssertEquality(DraftApprenticeshipDto source, CohortDraftApprenticeshipViewModel result)
+    
+    public static void AssertSequenceOrder<T>(List<T> expected, List<T> actual, Func<T, T, bool> evaluator)
     {
-        Assert.That(result.Id, Is.EqualTo(source.Id));
-        Assert.That(result.FirstName, Is.EqualTo(source.FirstName));
-        Assert.That(result.LastName, Is.EqualTo(source.LastName));
-        Assert.That(result.DateOfBirth, Is.EqualTo(source.DateOfBirth));
-        Assert.That(result.Cost, Is.EqualTo(source.Cost));
-        Assert.That(result.StartDate, Is.EqualTo(source.StartDate));
-        Assert.That(result.EndDate, Is.EqualTo(source.EndDate));
-        Assert.That(result.DraftApprenticeshipHashedId, Is.EqualTo($"X{source.Id}X"));
-    }
+        Assert.That(actual, Has.Count.EqualTo(expected.Count), "Expected and actual sequences are different lengths");
 
-    public void AssertSequenceOrder<T>(List<T> expected, List<T> actual, Func<T, T, bool> evaluator)
-    {
-        Assert.That(actual.Count, Is.EqualTo(expected.Count), "Expected and actual sequences are different lengths");
-
-        for (int i = 0; i < actual.Count; i++)
+        for (var index = 0; index < actual.Count; index++)
         {
-            Assert.That(evaluator(expected[i], actual[i]), Is.True, "Actual sequence are not in same order as expected");
+            Assert.That(evaluator(expected[index], actual[index]), Is.True, "Actual sequence are not in same order as expected");
         }
     }
 
-    private IReadOnlyCollection<DraftApprenticeshipDto> CreateDraftApprenticeshipDtos(Fixture autoFixture)
+    private static IReadOnlyCollection<DraftApprenticeshipDto> CreateDraftApprenticeshipDtos(Fixture autoFixture)
     {
         var draftApprenticeships = autoFixture.CreateMany<DraftApprenticeshipDto>(6).ToArray();
         SetCourseDetails(draftApprenticeships[0], "Course1", "C1", 1000);
@@ -168,7 +153,7 @@ public class ConfirmDeleteViewModelMapperTestsFixture
         return draftApprenticeships;
     }
 
-    private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode, int? cost)
+    private static void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode, int? cost)
     {
         draftApprenticeship.CourseName = courseName;
         draftApprenticeship.CourseCode = courseCode;

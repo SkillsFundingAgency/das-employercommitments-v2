@@ -1,6 +1,4 @@
-﻿using System.Net;
-using System.Net.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
@@ -146,22 +144,21 @@ public class DeleteDraftApprenticeshipTests
 
 public class DeleteDraftApprenticeshipTestsFixture
 {
-    public Mock<ICommitmentsApiClient> CommitmentApiClient { get; }
-    public string AccountHashedId => "ACHID";
-    public long CohortId => 1;
-    public string CohortReference => "CHREF";
-    public long DraftApprenticeshipId => 99;
-    public string DraftApprenticeshipHashedId => "DAHID";
+    private Mock<ICommitmentsApiClient> CommitmentApiClient { get; }
+    private static string AccountHashedId => "ACHID";
+    private static long CohortId => 1;
+    private static string CohortReference => "CHREF";
+    private static long DraftApprenticeshipId => 99;
+    private static string DraftApprenticeshipHashedId => "DAHID";
 
-    public DeleteDraftApprenticeshipViewModel DeleteDraftApprenticeshipViewModel { get; set; }
-    public DeleteApprenticeshipRequest DeleteDraftApprenticeshipRequest { get; set; }
-    public Mock<IModelMapper> ModelMapperMock { get; }
-    public Mock<IApprovalsApiClient> OuterApiClientMock { get; set; }
-    public DraftApprenticeshipController Sut { get; }
+    private DeleteDraftApprenticeshipViewModel DeleteDraftApprenticeshipViewModel { get; set; }
+    private DeleteApprenticeshipRequest DeleteDraftApprenticeshipRequest { get; set; }
+    private Mock<IModelMapper> ModelMapperMock { get; }
+    private Mock<IApprovalsApiClient> OuterApiClientMock { get; set; }
+    private DraftApprenticeshipController Sut { get; }
 
     public DeleteDraftApprenticeshipTestsFixture()
     {
-        var fixture = new Fixture();
         CommitmentApiClient = new Mock<ICommitmentsApiClient>();
         CommitmentApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetCohortResponse());
 

@@ -21,7 +21,7 @@ public class ArrangeActionContextAttribute : CustomizeAttribute
         return new ArrangeActionContextCustomisation();
     }
 
-    public class ArrangeActionContextCustomisation : ICustomization
+    private class ArrangeActionContextCustomisation : ICustomization
     {
         public void Customize(IFixture fixture)
         {
@@ -31,7 +31,7 @@ public class ArrangeActionContextAttribute : CustomizeAttribute
         }
     }
 
-    public class ActionExecutingContextBuilder : ISpecimenBuilder
+    private class ActionExecutingContextBuilder : ISpecimenBuilder
     {
         public object Create(object request, ISpecimenContext context)
         {

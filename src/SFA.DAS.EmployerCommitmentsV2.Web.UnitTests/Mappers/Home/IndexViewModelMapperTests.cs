@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Home;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Home;
@@ -49,11 +48,10 @@ public class IndexViewModelMapperTests
 
     private class IndexViewModelMapperTestsFixture
     {
-        private IndexViewModelMapper _mapper;
-        private Mock<ICommitmentsApiClient> _apiClient;
-        private Mock<ILogger<IndexViewModelMapper>> _logger;
+        private readonly IndexViewModelMapper _mapper;
+        private readonly Mock<ICommitmentsApiClient> _apiClient;
         private GetProviderPaymentsPriorityResponse _apiProvidersResponse;
-        private IndexRequest _request;
+        private readonly IndexRequest _request;
         private IndexViewModel _result;
         private readonly Mock<IConfiguration> _configuration;
 
@@ -62,11 +60,11 @@ public class IndexViewModelMapperTests
             var autoFixture = new Fixture();
 
             _apiClient = new Mock<ICommitmentsApiClient>();
-            _logger = new Mock<ILogger<IndexViewModelMapper>>();
+            var logger = new Mock<ILogger<IndexViewModelMapper>>();
             _configuration = new Mock<IConfiguration>();
             _configuration.Setup(x => x["ResourceEnvironmentName"]).Returns("test");
                 
-            _mapper = new IndexViewModelMapper(_apiClient.Object, _logger.Object, _configuration.Object);
+            _mapper = new IndexViewModelMapper(_apiClient.Object, logger.Object, _configuration.Object);
             _request = autoFixture.Create<IndexRequest>();
         }
 

@@ -57,7 +57,10 @@ public class WhenCallingResendEmailInvitationTestsFixture : ApprenticeController
 
         var redirect = result as RedirectToActionResult;
 
-        Assert.That(_request.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
-        Assert.That(_request.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_request.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
+            Assert.That(_request.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
+        });
     }
 }

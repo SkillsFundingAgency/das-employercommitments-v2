@@ -41,7 +41,7 @@ public class WhenPostingConfirmWhenApprenticeshipStoppedChangesTests : Apprentic
 
         Assert.Multiple(() =>
         {
-            Assert.That("EditStopDate", Is.EqualTo(redirect.ActionName));
+            Assert.That(redirect.ActionName, Is.EqualTo("EditStopDate"));
             Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
             Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
             MockCommitmentsApiClient.Verify(
@@ -69,7 +69,7 @@ public class WhenPostingConfirmWhenApprenticeshipStoppedChangesTests : Apprentic
         {
             Assert.That(Controller.TempData.Values.Contains("Current stop date confirmed"), Is.True);
             Assert.That(Controller.TempData.Values.Contains("January 2022"), Is.True);
-            Assert.That("ApprenticeshipDetails", Is.EqualTo(redirect.ActionName));
+            Assert.That(redirect.ActionName, Is.EqualTo("ApprenticeshipDetails"));
             Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
             Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
             MockCommitmentsApiClient

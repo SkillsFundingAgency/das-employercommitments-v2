@@ -39,7 +39,7 @@ public class WhenPostingReconfirmHasNotStopChangesTests : ApprenticeControllerTe
         Assert.Multiple(() =>
         {
             Assert.That(Controller.TempData.Values.Contains($"Apprenticeship confirmed"), Is.True);
-            Assert.That("ApprenticeshipDetails", Is.EqualTo(redirect.ActionName));
+            Assert.That(redirect.ActionName, Is.EqualTo("ApprenticeshipDetails"));
             Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
             Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
         });

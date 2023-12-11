@@ -72,8 +72,11 @@ public class GetApprenticeshipsCsvContentMapperTests
         //Act
         var content = await mapper.Map(request);
 
-        //Assert
-        Assert.That(content.Name, Is.EqualTo(expectedFileName));
-        Assert.That(content.Content, Is.EqualTo(expectedMemoryStream));
+        Assert.Multiple(() =>
+        {
+            //Assert
+            Assert.That(content.Name, Is.EqualTo(expectedFileName));
+            Assert.That(content.Content, Is.EqualTo(expectedMemoryStream));
+        });
     }
 }

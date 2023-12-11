@@ -76,8 +76,8 @@ public class WhenPostingSendRequestNewTrainingProviderTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(RouteNames.ChangeProviderRequestedConfirmation, Is.EqualTo(actionResult.RouteName));
-            Assert.That(true, Is.EqualTo(actionResult.RouteValues[nameof(ChangeProviderRequestedConfirmationRequest.ProviderAddDetails)]));
+            Assert.That(actionResult.RouteName, Is.EqualTo(RouteNames.ChangeProviderRequestedConfirmation));
+            Assert.That(actionResult.RouteValues[nameof(ChangeProviderRequestedConfirmationRequest.ProviderAddDetails)], Is.EqualTo(true));
         });
     }
 }

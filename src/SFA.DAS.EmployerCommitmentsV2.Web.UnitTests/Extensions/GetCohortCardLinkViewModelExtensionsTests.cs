@@ -2,7 +2,6 @@
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using System.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;
 
@@ -60,11 +59,11 @@ public class GetCohortCardLinkViewModelExtensionsTests
     private class GetCohortCardLinkViewModelTestsFixture
     {
         private readonly Fixture _fixture;
-        public Mock<IUrlHelper> UrlHelper { get; }
+        private Mock<IUrlHelper> UrlHelper { get; }
 
-        public CohortSummary[] CohortSummaries { get; set; }
+        private CohortSummary[] CohortSummaries { get; set; }
 
-        private string AccountHashed => "ABC123";
+        private static string AccountHashed => "ABC123";
 
         public GetCohortCardLinkViewModelTestsFixture()
         {

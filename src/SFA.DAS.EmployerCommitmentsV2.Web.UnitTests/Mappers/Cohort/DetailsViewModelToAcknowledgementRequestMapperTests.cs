@@ -45,10 +45,13 @@ public class DetailsViewModelToAcknowledgementRequestMapperTests
 
         await _mapper.Map(request);
 
-        Assert.That(_apiRequestAccountId, Is.EqualTo(request.AccountId));
-        Assert.That(_apiRequestCohortId, Is.EqualTo(request.CohortId));
-        Assert.That(_apiRequestBody.Message, Is.EqualTo(request.ApproveMessage));
-        Assert.That(_apiRequestBody.SubmissionType, Is.EqualTo(PostCohortDetailsRequest.CohortSubmissionType.Approve));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_apiRequestAccountId, Is.EqualTo(request.AccountId));
+            Assert.That(_apiRequestCohortId, Is.EqualTo(request.CohortId));
+            Assert.That(_apiRequestBody.Message, Is.EqualTo(request.ApproveMessage));
+            Assert.That(_apiRequestBody.SubmissionType, Is.EqualTo(PostCohortDetailsRequest.CohortSubmissionType.Approve));
+        });
     }
 
     [Test]
@@ -61,9 +64,12 @@ public class DetailsViewModelToAcknowledgementRequestMapperTests
 
         await _mapper.Map(request);
 
-        Assert.That(_apiRequestAccountId, Is.EqualTo(request.AccountId));
-        Assert.That(_apiRequestCohortId, Is.EqualTo(request.CohortId));
-        Assert.That(_apiRequestBody.Message, Is.EqualTo(request.SendMessage));
-        Assert.That(_apiRequestBody.SubmissionType, Is.EqualTo(PostCohortDetailsRequest.CohortSubmissionType.Send));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_apiRequestAccountId, Is.EqualTo(request.AccountId));
+            Assert.That(_apiRequestCohortId, Is.EqualTo(request.CohortId));
+            Assert.That(_apiRequestBody.Message, Is.EqualTo(request.SendMessage));
+            Assert.That(_apiRequestBody.SubmissionType, Is.EqualTo(PostCohortDetailsRequest.CohortSubmissionType.Send));
+        });
     }
 }

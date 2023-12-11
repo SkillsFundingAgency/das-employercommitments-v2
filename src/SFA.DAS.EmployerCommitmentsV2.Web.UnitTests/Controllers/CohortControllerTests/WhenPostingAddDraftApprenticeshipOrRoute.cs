@@ -50,8 +50,11 @@ public class WhenPostingAddDraftApprenticeshipOrRoute
         var result = await controller.AddDraftApprenticeshipOrRoute("", "", viewModel) as RedirectToActionResult;
 
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.ActionName, Is.EqualTo("SelectOption"));
-        Assert.That(result.ControllerName, Is.EqualTo("DraftApprenticeship"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ActionName, Is.EqualTo("SelectOption"));
+            Assert.That(result.ControllerName, Is.EqualTo("DraftApprenticeship"));
+        });
     }
 
     [Test, MoqAutoData]

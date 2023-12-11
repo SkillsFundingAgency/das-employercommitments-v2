@@ -61,7 +61,7 @@ public class CreateCohortWithOtherPartyControllerTests
         var redirect = result.VerifyReturnsRedirectToActionResult();
         Assert.Multiple(() =>
         {
-            Assert.That("Finished", Is.EqualTo(redirect.ActionName));
+            Assert.That(redirect.ActionName, Is.EqualTo("Finished"));
             Assert.That(model.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
             Assert.That(createCohortResponse.CohortReference, Is.EqualTo(redirect.RouteValues["CohortReference"]));
         });
@@ -159,12 +159,15 @@ public class CreateCohortWithOtherPartyControllerTests
 
         public CreateCohortWithOtherPartyControllerTestFixture VerifyViewModelIsMappedCorrectly(MessageViewModel model)
         {
-            Assert.That(model.AccountHashedId, Is.EqualTo(MessageViewModel.AccountHashedId));
-            Assert.That(model.CourseCode, Is.EqualTo(MessageViewModel.CourseCode));
-            Assert.That(model.StartMonthYear, Is.EqualTo(MessageViewModel.StartMonthYear));
-            Assert.That(model.ProviderId, Is.EqualTo(MessageViewModel.ProviderId));
-            Assert.That(model.AccountLegalEntityHashedId, Is.EqualTo(MessageViewModel.AccountLegalEntityHashedId));
-            Assert.That(model.ReservationId, Is.EqualTo(MessageViewModel.ReservationId));
+            Assert.Multiple(() =>
+            {
+                Assert.That(model.AccountHashedId, Is.EqualTo(MessageViewModel.AccountHashedId));
+                Assert.That(model.CourseCode, Is.EqualTo(MessageViewModel.CourseCode));
+                Assert.That(model.StartMonthYear, Is.EqualTo(MessageViewModel.StartMonthYear));
+                Assert.That(model.ProviderId, Is.EqualTo(MessageViewModel.ProviderId));
+                Assert.That(model.AccountLegalEntityHashedId, Is.EqualTo(MessageViewModel.AccountLegalEntityHashedId));
+                Assert.That(model.ReservationId, Is.EqualTo(MessageViewModel.ReservationId));
+            });
 
             return this;
         }

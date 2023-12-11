@@ -1,6 +1,4 @@
-﻿using System.Net;
-using System.Net.Http;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.Results;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;

@@ -17,9 +17,9 @@ public class EnterNewTrainingProviderViewModelMapperTests
     [SetUp]
     public void Arrange()
     {
-        var _autoFixture = new Fixture();
+        var autoFixture = new Fixture();
 
-        _apprenticeshipResponse = _autoFixture.Build<GetApprenticeshipResponse>().Create();
+        _apprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>().Create();
 
         _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
@@ -69,7 +69,7 @@ public class EnterNewTrainingProviderViewModelMapperTests
     {
         var result = await _mapper.Map(request);
 
-        Assert.That(result.Providers.Count, Is.EqualTo(3));
+        Assert.That(result.Providers, Has.Count.EqualTo(3));
     }
 
     [Test, MoqAutoData]
@@ -80,16 +80,16 @@ public class EnterNewTrainingProviderViewModelMapperTests
         _mockCommitmentsApiClient.Verify(c => c.GetApprenticeship(It.Is<long>(id => id == request.ApprenticeshipId), It.IsAny<CancellationToken>()), Times.Once);
         Assert.That(result.CurrentProviderId, Is.EqualTo(_apprenticeshipResponse.ProviderId));
     }
-    private GetAllProvidersResponse MockGetAllProvidersResponse()
+    private static GetAllProvidersResponse MockGetAllProvidersResponse()
     {
         return new GetAllProvidersResponse
         {
-            Providers = new List<Provider>
-            {
+            Providers =
+            [
                 new Provider { Ukprn = 10000001, Name = "Provider 1" },
                 new Provider { Ukprn = 10000002, Name = "Provider 2" },
                 new Provider { Ukprn = 10000003, Name = "Provider 3" }
-            }
+            ]
         };
     }
 }

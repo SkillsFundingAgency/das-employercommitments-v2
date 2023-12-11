@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;

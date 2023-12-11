@@ -60,9 +60,12 @@ public class AuthorizationContextProviderTests
         var authorizationContext = _fixture.GetAuthorizationContext();
 
         Assert.That(authorizationContext, Is.Not.Null);
-        Assert.That(authorizationContext.Get<long?>("CohortId"), Is.EqualTo(_fixture.CohortId));
-        Assert.That(authorizationContext.Get<Party?>("Party"), Is.EqualTo(Party.Employer));
-        Assert.That(authorizationContext.Get<long?>("PartyId"), Is.EqualTo(_fixture.AccountId));
+        Assert.Multiple(() =>
+        {
+            Assert.That(authorizationContext.Get<long?>("CohortId"), Is.EqualTo(_fixture.CohortId));
+            Assert.That(authorizationContext.Get<Party?>("Party"), Is.EqualTo(Party.Employer));
+            Assert.That(authorizationContext.Get<long?>("PartyId"), Is.EqualTo(_fixture.AccountId));
+        });
     }
 
     [Test]

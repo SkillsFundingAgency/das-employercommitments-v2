@@ -1,20 +1,17 @@
-﻿using AutoFixture.Dsl;
+﻿using System.Reflection;
+using AutoFixture.Dsl;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EAS.Account.Api.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
 using SFA.DAS.Http;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Reflection;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
@@ -151,9 +148,9 @@ public class DetailsViewModelMapperTests
         Assert.That(result.Courses.First().DraftApprenticeships.First().DisplayEmploymentDates, Is.EqualTo(display));
     }
 
-    private DateTime? TryParseNullableDate(string startDate)
+    private static DateTime? TryParseNullableDate(string startDate)
     {
-        return DateTime.TryParse(startDate, out DateTime parsed) ? parsed : (DateTime?)null;
+        return DateTime.TryParse(startDate, out var parsed) ? parsed : null;
     }
 
     [Test]
@@ -163,7 +160,7 @@ public class DetailsViewModelMapperTests
         var result = await fixture.Map();
 
         var expectedSequence = fixture.DraftApprenticeshipsResponse.DraftApprenticeships
-            .Select(c => new { c.CourseName, c.CourseCode, DeliveryModel = c.DeliveryModel })
+            .Select(c => new { c.CourseName, c.CourseCode, c.DeliveryModel })
             .Distinct()
             .OrderBy(c => c.CourseName).ThenBy(c => c.CourseCode).ThenBy(c => c.DeliveryModel)
             .ToList();
@@ -173,7 +170,7 @@ public class DetailsViewModelMapperTests
             .OrderBy(c => c.CourseName).ThenBy(c => c.CourseCode).ThenBy(c => c.DeliveryModel)
             .ToList();
 
-        fixture.AssertSequenceOrder(expectedSequence, actualSequence, (e, a) => e.CourseName == a.CourseName && e.CourseCode == a.CourseCode && e.DeliveryModel == a.DeliveryModel);
+        DetailsViewModelMapperTestsFixture.AssertSequenceOrder(expectedSequence, actualSequence, (e, a) => e.CourseName == a.CourseName && e.CourseCode == a.CourseCode && e.DeliveryModel == a.DeliveryModel);
     }
 
     [Test]
@@ -192,7 +189,7 @@ public class DetailsViewModelMapperTests
 
             var actualSequence = course.DraftApprenticeships.Select(a => a.DisplayName).ToList();
 
-            fixture.AssertSequenceOrder(expectedSequence, actualSequence, (e, a) => e == a);
+            DetailsViewModelMapperTestsFixture.AssertSequenceOrder(expectedSequence, actualSequence, (e, a) => e == a);
         }
     }
 
@@ -212,7 +209,7 @@ public class DetailsViewModelMapperTests
     }
 
     [Test]
-    public async Task FundingBandCapsAreMappedCorrectlyForCoursesStartingOnDefaultdate()
+    public async Task FundingBandCapsAreMappedCorrectlyForCoursesStartingOnDefaultDate()
     {
         var fixture = new DetailsViewModelMapperTestsFixture();
         var result = await fixture.Map();
@@ -545,10 +542,14 @@ public class DetailsViewModelMapperTests
         var course = result.Courses.FirstOrDefault(x => x.DraftApprenticeships.Any(y => y.Id == apprenticeshipId));
 
         Assert.That(course, Is.Not.Null);
-        Assert.That(course.EmailOverlaps, Is.Not.Null);
-        Assert.That(course.EmailOverlaps.NumberOfEmailOverlaps, Is.EqualTo(1));
-        Assert.That(course.DraftApprenticeships.Count(x => x.HasOverlappingEmail), Is.EqualTo(1));
-        Assert.That(course.DraftApprenticeships.First(x => x.HasOverlappingEmail).Id, Is.EqualTo(apprenticeshipId));
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(course.EmailOverlaps, Is.Not.Null);
+            Assert.That(course.EmailOverlaps.NumberOfEmailOverlaps, Is.EqualTo(1));
+            Assert.That(course.DraftApprenticeships.Count(x => x.HasOverlappingEmail), Is.EqualTo(1));
+            Assert.That(course.DraftApprenticeships.First(x => x.HasOverlappingEmail).Id, Is.EqualTo(apprenticeshipId));
+        });
     }
 
     [TestCase(true, true)]
@@ -767,25 +768,22 @@ public class DetailsViewModelMapperTests
 
 public class DetailsViewModelMapperTestsFixture
 {
-    public DetailsViewModelMapper Mapper;
+    private readonly DetailsViewModelMapper _mapper;
     public DetailsRequest Source;
-    public DetailsViewModel Result;
     public Mock<ICommitmentsApiClient> CommitmentsApiClient;
-    public Mock<IApprovalsApiClient> ApprovalsApiClient;
-    public Mock<IEncodingService> EncodingService;
+    private readonly Mock<IApprovalsApiClient> _approvalsApiClient;
+    private readonly Mock<IEncodingService> _encodingService;
     public GetCohortResponse Cohort;
     public GetCohortDetailsResponse CohortDetails;
     public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
-    public DateTime DefaultStartDate = new DateTime(2019, 10, 1);
-    public AccountLegalEntityResponse AccountLegalEntityResponse;
-    public LegalEntityViewModel LegalEntityViewModel;
+    public DateTime DefaultStartDate = new(2019, 10, 1);
+    private readonly AccountLegalEntityResponse _accountLegalEntityResponse;
     public GetEmailOverlapsResponse EmailOverlapResponse;
 
-    private Fixture _autoFixture;
-    private TrainingProgramme _trainingProgramme;
-    private List<TrainingProgrammeFundingPeriod> _fundingPeriods;
-    private DateTime _startFundingPeriod = new DateTime(2019, 10, 1);
-    private DateTime _endFundingPeriod = new DateTime(2019, 10, 30);
+    private readonly Fixture _autoFixture;
+    private readonly List<TrainingProgrammeFundingPeriod> _fundingPeriods;
+    private readonly DateTime _startFundingPeriod = new(2019, 10, 1);
+    private readonly DateTime _endFundingPeriod = new(2019, 10, 30);
 
     public DetailsViewModelMapperTestsFixture()
     {
@@ -794,16 +792,15 @@ public class DetailsViewModelMapperTestsFixture
         CohortDetails = _autoFixture.Build<GetCohortDetailsResponse>()
             .With(x => x.HasUnavailableFlexiJobAgencyDeliveryModel, false).Create();
         Cohort = _autoFixture.Build<GetCohortResponse>().Without(x => x.TransferSenderId).Without(x => x.ChangeOfPartyRequestId).Create();
-        AccountLegalEntityResponse = _autoFixture.Create<AccountLegalEntityResponse>();
-        LegalEntityViewModel = _autoFixture.Create<LegalEntityViewModel>();
+        _accountLegalEntityResponse = _autoFixture.Create<AccountLegalEntityResponse>();
         EmailOverlapResponse = new GetEmailOverlapsResponse { ApprenticeshipEmailOverlaps = new List<ApprenticeshipEmailOverlap>() };
 
         var draftApprenticeships = CreateDraftApprenticeshipDtos(_autoFixture);
         _autoFixture.Register(() => draftApprenticeships);
         DraftApprenticeshipsResponse = _autoFixture.Create<GetDraftApprenticeshipsResponse>();
 
-        ApprovalsApiClient = new Mock<IApprovalsApiClient>();
-        ApprovalsApiClient.Setup(x =>
+        _approvalsApiClient = new Mock<IApprovalsApiClient>();
+        _approvalsApiClient.Setup(x =>
                 x.GetCohortDetails(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(CohortDetails);
 
@@ -813,19 +810,19 @@ public class DetailsViewModelMapperTestsFixture
         CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => DraftApprenticeshipsResponse);
         CommitmentsApiClient.Setup(x => x.GetAccountLegalEntity(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(AccountLegalEntityResponse);
+            .ReturnsAsync(_accountLegalEntityResponse);
         CommitmentsApiClient.Setup(x => x.GetEmailOverlapChecks(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(EmailOverlapResponse);
 
-        _fundingPeriods = new List<TrainingProgrammeFundingPeriod>
-        {
-            new TrainingProgrammeFundingPeriod{ EffectiveFrom = _startFundingPeriod, EffectiveTo = _endFundingPeriod, FundingCap = 1000},
-            new TrainingProgrammeFundingPeriod{ EffectiveFrom = _startFundingPeriod.AddMonths(1), EffectiveTo = _endFundingPeriod.AddMonths(1), FundingCap = 500}
-        };
-        _trainingProgramme = new TrainingProgramme { EffectiveFrom = DefaultStartDate, EffectiveTo = DefaultStartDate.AddYears(1), FundingPeriods = _fundingPeriods };
+        _fundingPeriods =
+        [
+            new() { EffectiveFrom = _startFundingPeriod, EffectiveTo = _endFundingPeriod, FundingCap = 1000 },
+            new() { EffectiveFrom = _startFundingPeriod.AddMonths(1), EffectiveTo = _endFundingPeriod.AddMonths(1), FundingCap = 500 }
+        ];
+        var trainingProgramme = new TrainingProgramme { EffectiveFrom = DefaultStartDate, EffectiveTo = DefaultStartDate.AddYears(1), FundingPeriods = _fundingPeriods };
 
         CommitmentsApiClient.Setup(x => x.GetTrainingProgramme(It.Is<string>(c => !string.IsNullOrEmpty(c)), CancellationToken.None))
-            .ReturnsAsync(new GetTrainingProgrammeResponse { TrainingProgramme = _trainingProgramme });
+            .ReturnsAsync(new GetTrainingProgrammeResponse { TrainingProgramme = trainingProgramme });
         CommitmentsApiClient.Setup(x => x.GetTrainingProgramme("no-course", CancellationToken.None))
             .ThrowsAsync(new RestHttpClientException(new HttpResponseMessage(HttpStatusCode.NotFound)
             {
@@ -835,10 +832,10 @@ public class DetailsViewModelMapperTestsFixture
         CommitmentsApiClient.Setup(x => x.ValidateUlnOverlap(It.IsAny<ValidateUlnOverlapRequest>(), CancellationToken.None))
             .ReturnsAsync(new ValidateUlnOverlapResult { HasOverlappingEndDate = false, HasOverlappingStartDate = false });
 
-        EncodingService = new Mock<IEncodingService>();
+        _encodingService = new Mock<IEncodingService>();
         SetEncodingOfApprenticeIds();
 
-        Mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object, ApprovalsApiClient.Object);
+        _mapper = new DetailsViewModelMapper(CommitmentsApiClient.Object, _encodingService.Object, _approvalsApiClient.Object);
         Source = _autoFixture.Create<DetailsRequest>();
     }
 
@@ -853,16 +850,16 @@ public class DetailsViewModelMapperTestsFixture
         Cohort.TransferSenderId = transferSenderId;
         if (transferSenderId.HasValue)
         {
-            EncodingService.Setup(x => x.Encode(transferSenderId.Value, EncodingType.PublicAccountId))
+            _encodingService.Setup(x => x.Encode(transferSenderId.Value, EncodingType.PublicAccountId))
                 .Returns(expectedHashedId);
         }
 
         return this;
     }
 
-    public DetailsViewModelMapperTestsFixture SetEncodingOfApprenticeIds()
+    private DetailsViewModelMapperTestsFixture SetEncodingOfApprenticeIds()
     {
-        EncodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.ApprenticeshipId))
+        _encodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.ApprenticeshipId))
             .Returns((long p, EncodingType t) => $"X{p}X");
 
         return this;
@@ -889,7 +886,7 @@ public class DetailsViewModelMapperTestsFixture
         var draftApprenticeship = DraftApprenticeshipsResponse.DraftApprenticeships.First();
         if (!string.IsNullOrWhiteSpace(propertyName))
         {
-            PropertyInfo propertyInfo = draftApprenticeship.GetType().GetProperty(propertyName);
+            var propertyInfo = draftApprenticeship.GetType().GetProperty(propertyName);
             // make sure object has the property we are after
             if (propertyInfo != null)
             {
@@ -910,47 +907,31 @@ public class DetailsViewModelMapperTestsFixture
         return this;
     }
 
-    public DetailsViewModelMapperTestsFixture WithTwoEmailOverlappingOnSameCourse()
-    {
-        var draftApprenticeships = _autoFixture.CreateMany<DraftApprenticeshipDto>(5).ToArray();
-        foreach (var draftApprenticeship in draftApprenticeships)
-        {
-            draftApprenticeship.CourseCode = "ABC";
-            draftApprenticeship.CourseName = "ABC Name";
-            draftApprenticeship.DeliveryModel = DeliveryModel.Regular;
-        }
-        DraftApprenticeshipsResponse.DraftApprenticeships = draftApprenticeships;
-        var first = DraftApprenticeshipsResponse.DraftApprenticeships.First();
-        var last = DraftApprenticeshipsResponse.DraftApprenticeships.Last();
-        var emailOverlap1 = _autoFixture.Build<ApprenticeshipEmailOverlap>().With(x => x.Id, first.Id).Create();
-        var emailOverlap2 = _autoFixture.Build<ApprenticeshipEmailOverlap>().With(x => x.Id, last.Id).Create();
-        EmailOverlapResponse.ApprenticeshipEmailOverlaps = new List<ApprenticeshipEmailOverlap> { emailOverlap1, emailOverlap2 };
-
-        return this;
-    }
-
     public Task<DetailsViewModel> Map()
     {
-        return Mapper.Map(TestHelper.Clone(Source));
+        return _mapper.Map(TestHelper.Clone(Source));
     }
 
     public void AssertEquality(DraftApprenticeshipDto source, CohortDraftApprenticeshipViewModel result)
     {
-        Assert.That(result.Id, Is.EqualTo(source.Id));
-        Assert.That(result.FirstName, Is.EqualTo(source.FirstName));
-        Assert.That(result.LastName, Is.EqualTo(source.LastName));
-        Assert.That(result.DateOfBirth, Is.EqualTo(source.DateOfBirth));
-        Assert.That(result.Cost, Is.EqualTo(source.Cost));
-        Assert.That(result.StartDate, Is.EqualTo(source.StartDate));
-        Assert.That(result.EndDate, Is.EqualTo(source.EndDate));
-        Assert.That(result.DraftApprenticeshipHashedId, Is.EqualTo($"X{source.Id}X"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Id, Is.EqualTo(source.Id));
+            Assert.That(result.FirstName, Is.EqualTo(source.FirstName));
+            Assert.That(result.LastName, Is.EqualTo(source.LastName));
+            Assert.That(result.DateOfBirth, Is.EqualTo(source.DateOfBirth));
+            Assert.That(result.Cost, Is.EqualTo(source.Cost));
+            Assert.That(result.StartDate, Is.EqualTo(source.StartDate));
+            Assert.That(result.EndDate, Is.EqualTo(source.EndDate));
+            Assert.That(result.DraftApprenticeshipHashedId, Is.EqualTo($"X{source.Id}X"));
+        });
     }
 
-    public void AssertSequenceOrder<T>(List<T> expected, List<T> actual, Func<T, T, bool> evaluator)
+    public static void AssertSequenceOrder<T>(List<T> expected, List<T> actual, Func<T, T, bool> evaluator)
     {
         Assert.That(actual.Count, Is.EqualTo(expected.Count), "Expected and actual sequences are different lengths");
 
-        for (int i = 0; i < actual.Count; i++)
+        for (var i = 0; i < actual.Count; i++)
         {
             Assert.That(evaluator(expected[i], actual[i]), Is.True, "Actual sequence are not in same order as expected");
         }
@@ -1048,10 +1029,10 @@ public class DetailsViewModelMapperTestsFixture
 
     public DetailsViewModelMapperTestsFixture SetNoCourseSet()
     {
-        DraftApprenticeshipsResponse.DraftApprenticeships = DraftApprenticeshipsResponse.DraftApprenticeships.Select(c =>
+        DraftApprenticeshipsResponse.DraftApprenticeships = DraftApprenticeshipsResponse.DraftApprenticeships.Select(draftApprenticeshipDto =>
         {
-            c.CourseCode = "";
-            return c;
+            draftApprenticeshipDto.CourseCode = "";
+            return draftApprenticeshipDto;
         }).ToList();
         return this;
     }

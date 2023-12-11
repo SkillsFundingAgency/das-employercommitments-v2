@@ -408,27 +408,27 @@ public class EditApprenticeshipRequestToViewModelMapperTests
 
 public class EditApprenticeshipRequestToViewModelMapperTestsFixture
 {
-    public EditApprenticeshipRequest _request;
+    public EditApprenticeshipRequest Request;
     public GetApprenticeshipResponse ApprenticeshipResponse { get; set; }
-    private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
-    private Mock<IAcademicYearDateProvider> _mockAcademicYearDateProvider;
-    private Mock<ICurrentDateTime> _mockCurrentDateTimeProvider;
-    private Mock<IEncodingService> _mockEncodingService;
-    private Mock<IApprovalsApiClient> _mockApprovalsOuterApiClient;
+    private readonly Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+    private readonly Mock<IAcademicYearDateProvider> _mockAcademicYearDateProvider;
+    private readonly Mock<ICurrentDateTime> _mockCurrentDateTimeProvider;
+    private readonly Mock<IEncodingService> _mockEncodingService;
+    private readonly Mock<IApprovalsApiClient> _mockApprovalsOuterApiClient;
 
 
-    private GetPriceEpisodesResponse _priceEpisodesResponse;
-    private GetEditApprenticeshipResponse _getEditApprenticeshipResponse;
-    private AccountResponse _accountResponse;
-    private GetAllTrainingProgrammeStandardsResponse _allTrainingProgrammeStandardsResponse;
-    private GetAllTrainingProgrammesResponse _allTrainingProgrammeResponse;
-    private EditApprenticeshipRequestToViewModelMapper _mapper;
+    private readonly GetPriceEpisodesResponse _priceEpisodesResponse;
+    private readonly GetEditApprenticeshipResponse _getEditApprenticeshipResponse;
+    private readonly AccountResponse _accountResponse;
+    private readonly GetAllTrainingProgrammeStandardsResponse _allTrainingProgrammeStandardsResponse;
+    private readonly GetAllTrainingProgrammesResponse _allTrainingProgrammeResponse;
+    private readonly EditApprenticeshipRequestToViewModelMapper _mapper;
     private EditApprenticeshipRequestViewModel _viewModel;
     private IEnumerable<TrainingProgramme> _courses;
 
     public async Task<EditApprenticeshipRequestViewModel> Map()
     {
-        _viewModel = await _mapper.Map(_request);
+        _viewModel = await _mapper.Map(Request);
         return _viewModel;
     }
 
@@ -452,13 +452,13 @@ public class EditApprenticeshipRequestToViewModelMapperTestsFixture
 
     internal EditApprenticeshipRequestToViewModelMapperTestsFixture SetUpLevyAccount()
     {
-        _accountResponse.LevyStatus = CommitmentsV2.Types.ApprenticeshipEmployerType.Levy;
+        _accountResponse.LevyStatus = ApprenticeshipEmployerType.Levy;
         return this;
     }
 
     internal EditApprenticeshipRequestToViewModelMapperTestsFixture SetUpNonLevyAccount()
     {
-        _accountResponse.LevyStatus = CommitmentsV2.Types.ApprenticeshipEmployerType.NonLevy;
+        _accountResponse.LevyStatus = ApprenticeshipEmployerType.NonLevy;
         return this;
     }
 
@@ -505,7 +505,7 @@ public class EditApprenticeshipRequestToViewModelMapperTestsFixture
 
     internal void VerifyHashedApprenticeshipIdIsMapped()
     {
-        Assert.That(_viewModel.HashedApprenticeshipId, Is.EqualTo(_request.ApprenticeshipHashedId));
+        Assert.That(_viewModel.HashedApprenticeshipId, Is.EqualTo(Request.ApprenticeshipHashedId));
     }
 
     internal void VerifyLastNameIsMapped()
@@ -637,7 +637,7 @@ public class EditApprenticeshipRequestToViewModelMapperTestsFixture
     {
         //Arrange
         var autoFixture = new Fixture();
-        _request = autoFixture.Build<EditApprenticeshipRequest>()
+        Request = autoFixture.Build<EditApprenticeshipRequest>()
             .With(x => x.AccountHashedId, "123")
             .With(x => x.ApprenticeshipHashedId, "456")
             .Create();
@@ -667,7 +667,7 @@ public class EditApprenticeshipRequestToViewModelMapperTestsFixture
         _mockApprovalsOuterApiClient.Setup(t => t.GetEditApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => _getEditApprenticeshipResponse);
 
-        _mockCommitmentsApiClient.Setup(t => t.GetAccount(_request.AccountId, It.IsAny<CancellationToken>()))
+        _mockCommitmentsApiClient.Setup(t => t.GetAccount(Request.AccountId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => _accountResponse);
 
         _mockCommitmentsApiClient.Setup(t => t.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()))

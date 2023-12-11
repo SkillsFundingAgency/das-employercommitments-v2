@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
@@ -143,24 +142,28 @@ public class IndexViewModelMapperTests
 
         //Assert
         Assert.That(viewModel, Is.Not.Null);
-        Assert.That(viewModel.AccountHashedId, Is.EqualTo(request.AccountHashedId));
-        viewModel.Apprenticeships.Should().AllBeEquivalentTo(expectedViewModel);
-        Assert.That(viewModel.FilterModel.TotalNumberOfApprenticeshipsFound, Is.EqualTo(apprenticeshipsResponse.TotalApprenticeshipsFound));
-        Assert.That(viewModel.FilterModel.TotalNumberOfApprenticeshipsWithAlertsFound, Is.EqualTo(apprenticeshipsResponse.TotalApprenticeshipsWithAlertsFound));
-        Assert.That(viewModel.FilterModel.TotalNumberOfApprenticeships, Is.EqualTo(apprenticeshipsResponse.TotalApprenticeships));
-        Assert.That(viewModel.FilterModel.PageNumber, Is.EqualTo(apprenticeshipsResponse.PageNumber));
-        Assert.That(viewModel.FilterModel.ReverseSort, Is.EqualTo(request.ReverseSort));
-        Assert.That(viewModel.FilterModel.SortField, Is.EqualTo(request.SortField));
-        Assert.That(viewModel.FilterModel.ProviderFilters, Is.EqualTo(filtersResponse.ProviderNames));
-        Assert.That(viewModel.FilterModel.CourseFilters, Is.EqualTo(filtersResponse.CourseNames));
-        Assert.That(viewModel.FilterModel.EndDateFilters, Is.EqualTo(filtersResponse.EndDates));
-        Assert.That(viewModel.FilterModel.SearchTerm, Is.EqualTo(request.SearchTerm));
-        Assert.That(viewModel.FilterModel.SelectedProvider, Is.EqualTo(request.SelectedProvider));
-        Assert.That(viewModel.FilterModel.SelectedCourse, Is.EqualTo(request.SelectedCourse));
-        Assert.That(viewModel.FilterModel.SelectedStatus, Is.EqualTo(request.SelectedStatus));
-        Assert.That(viewModel.FilterModel.SelectedEndDate, Is.EqualTo(request.SelectedEndDate));
-        Assert.That(viewModel.FilterModel.SelectedAlert, Is.EqualTo(request.SelectedAlert));
-        Assert.That(viewModel.FilterModel.SelectedApprenticeConfirmation, Is.EqualTo(request.SelectedApprenticeConfirmation));
+      
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.AccountHashedId, Is.EqualTo(request.AccountHashedId));
+            viewModel.Apprenticeships.Should().AllBeEquivalentTo(expectedViewModel);
+            Assert.That(viewModel.FilterModel.TotalNumberOfApprenticeshipsFound, Is.EqualTo(apprenticeshipsResponse.TotalApprenticeshipsFound));
+            Assert.That(viewModel.FilterModel.TotalNumberOfApprenticeshipsWithAlertsFound, Is.EqualTo(apprenticeshipsResponse.TotalApprenticeshipsWithAlertsFound));
+            Assert.That(viewModel.FilterModel.TotalNumberOfApprenticeships, Is.EqualTo(apprenticeshipsResponse.TotalApprenticeships));
+            Assert.That(viewModel.FilterModel.PageNumber, Is.EqualTo(apprenticeshipsResponse.PageNumber));
+            Assert.That(viewModel.FilterModel.ReverseSort, Is.EqualTo(request.ReverseSort));
+            Assert.That(viewModel.FilterModel.SortField, Is.EqualTo(request.SortField));
+            Assert.That(viewModel.FilterModel.ProviderFilters, Is.EqualTo(filtersResponse.ProviderNames));
+            Assert.That(viewModel.FilterModel.CourseFilters, Is.EqualTo(filtersResponse.CourseNames));
+            Assert.That(viewModel.FilterModel.EndDateFilters, Is.EqualTo(filtersResponse.EndDates));
+            Assert.That(viewModel.FilterModel.SearchTerm, Is.EqualTo(request.SearchTerm));
+            Assert.That(viewModel.FilterModel.SelectedProvider, Is.EqualTo(request.SelectedProvider));
+            Assert.That(viewModel.FilterModel.SelectedCourse, Is.EqualTo(request.SelectedCourse));
+            Assert.That(viewModel.FilterModel.SelectedStatus, Is.EqualTo(request.SelectedStatus));
+            Assert.That(viewModel.FilterModel.SelectedEndDate, Is.EqualTo(request.SelectedEndDate));
+            Assert.That(viewModel.FilterModel.SelectedAlert, Is.EqualTo(request.SelectedAlert));
+            Assert.That(viewModel.FilterModel.SelectedApprenticeConfirmation, Is.EqualTo(request.SelectedApprenticeConfirmation));
+        });
     }
 
     [Test, MoqAutoData]
@@ -197,12 +200,15 @@ public class IndexViewModelMapperTests
         //Act
         var viewModel = await mapper.Map(request);
 
-        Assert.That(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.Live), Is.True);
-        Assert.That(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.Paused), Is.True);
-        Assert.That(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.Stopped), Is.True);
-        Assert.That(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.WaitingToStart), Is.True);
-        Assert.That(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.Unknown), Is.False);
-        Assert.That(viewModel.FilterModel.StatusFilters.Contains(ApprenticeshipStatus.Completed), Is.True);
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.FilterModel.StatusFilters, Does.Contain(ApprenticeshipStatus.Live));
+            Assert.That(viewModel.FilterModel.StatusFilters, Does.Contain(ApprenticeshipStatus.Paused));
+            Assert.That(viewModel.FilterModel.StatusFilters, Does.Contain(ApprenticeshipStatus.Stopped));
+            Assert.That(viewModel.FilterModel.StatusFilters, Does.Contain(ApprenticeshipStatus.WaitingToStart));
+            Assert.That(viewModel.FilterModel.StatusFilters, Does.Not.Contain(ApprenticeshipStatus.Unknown));
+            Assert.That(viewModel.FilterModel.StatusFilters, Does.Contain(ApprenticeshipStatus.Completed));
+        });
     }
 
     [Test, MoqAutoData]
@@ -242,8 +248,11 @@ public class IndexViewModelMapperTests
         //Act
         var viewModel = await mapper.Map(request);
 
-        //Assert
-        Assert.That(viewModel.FilterModel.PageLinks.Count(x => x.IsCurrent.HasValue && x.IsCurrent.Value), Is.EqualTo(1));
-        Assert.That(viewModel.FilterModel.PageLinks.Last().IsCurrent, Is.True);
+        Assert.Multiple(() =>
+        {
+            //Assert
+            Assert.That(viewModel.FilterModel.PageLinks.Count(x => x.IsCurrent.HasValue && x.IsCurrent.Value), Is.EqualTo(1));
+            Assert.That(viewModel.FilterModel.PageLinks.Last().IsCurrent, Is.True);
+        });
     }
 }

@@ -26,7 +26,7 @@ public class WhenPostingHasTheApprenticeBeenMadeRedundant : ApprenticeController
         var redirect = result.VerifyReturnsRedirectToActionResult();
         Assert.Multiple(() =>
         {
-            Assert.That("ConfirmStop", Is.EqualTo(redirect.ActionName));
+            Assert.That(redirect.ActionName, Is.EqualTo("ConfirmStop"));
             Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
             Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
             Assert.That(viewModel.StopMonth, Is.EqualTo(redirect.RouteValues["StopMonth"]));

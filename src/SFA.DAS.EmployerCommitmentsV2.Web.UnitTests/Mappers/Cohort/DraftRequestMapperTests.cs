@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+﻿using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;

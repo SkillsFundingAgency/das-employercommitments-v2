@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 using SFA.DAS.Testing.AutoFixture;
 

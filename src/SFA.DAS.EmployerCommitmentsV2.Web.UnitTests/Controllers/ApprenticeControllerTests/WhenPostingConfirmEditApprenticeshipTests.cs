@@ -44,7 +44,7 @@ public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTes
         
         Assert.Multiple(() =>
         {
-            Assert.That("ApprenticeshipDetails", Is.EqualTo(redirect.ActionName));
+            Assert.That(redirect.ActionName, Is.EqualTo("ApprenticeshipDetails"));
             Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
             Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
             Assert.That(Controller.TempData.Values.Contains($"Your suggested changes have been sent to {viewModel.ProviderName} for approval."), Is.True);
@@ -62,7 +62,7 @@ public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTes
         var redirect = result.VerifyReturnsRedirectToActionResult();
         Assert.Multiple(() =>
         {
-            Assert.That("ApprenticeshipDetails", Is.EqualTo(redirect.ActionName));
+            Assert.That(redirect.ActionName, Is.EqualTo("ApprenticeshipDetails"));
             Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
             Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
             Assert.That(Controller.TempData.Values.Contains(EditApprenticeUpdated), Is.True);
@@ -78,7 +78,7 @@ public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTes
         viewModel.ConfirmChanges = true;
 
         //Act
-        var result = await Controller.ConfirmEditApprenticeship(viewModel) as RedirectToActionResult;
+        await Controller.ConfirmEditApprenticeship(viewModel);
 
         //Assert
         MockCommitmentsApiClient.Verify(x => x.EditApprenticeship(It.IsAny<EditApprenticeshipApiRequest>(), CancellationToken.None), Times.Once);

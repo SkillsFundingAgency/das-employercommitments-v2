@@ -1,6 +1,5 @@
 ﻿using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
-using System.Linq;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;
 

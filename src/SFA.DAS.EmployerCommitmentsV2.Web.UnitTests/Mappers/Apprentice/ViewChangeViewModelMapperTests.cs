@@ -19,16 +19,16 @@ public class ViewChangeViewModelMapperTests
     private GetPriceEpisodesResponse _priceEpisodesResponse;
     private GetProviderResponse _providerResponse;
 
-    private const long _providerId = 10000;
-    private const long _cohortId = 10001;
-    private const string _cohortReference = "ABC123";
+    private const long ProviderId = 10000;
+    private const long CohortId = 10001;
+    private const string CohortReference = "ABC123";
 
     private readonly DateTime _oldFromDate = DateTime.Now.AddDays(-30);
     private readonly DateTime _oldToDate = DateTime.Now.AddDays(-15);
     private readonly DateTime _newFromDate = DateTime.Now.AddDays(-15);
     private readonly DateTime? _newToDate = null;
 
-    private const int _newPrice = 1500;
+    private const int NewPrice = 1500;
 
     private Fixture _autoFixture;
     private ViewChangesRequest _request;
@@ -68,7 +68,7 @@ public class ViewChangeViewModelMapperTests
 
         _mockEncodingService = new Mock<IEncodingService>();
         _mockEncodingService.Setup(c => c.Encode(It.IsAny<long>(), EncodingType.CohortReference))
-            .Returns(_cohortReference);
+            .Returns(CohortReference);
 
         _mockCommitmentsApiClient.Setup(c => c.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(GetCohortResponseMock());
@@ -111,7 +111,7 @@ public class ViewChangeViewModelMapperTests
 
         var result = await _mapper.Map(_request);
 
-        Assert.That(result.CurrentPrice, Is.EqualTo(_newPrice));
+        Assert.That(result.CurrentPrice, Is.EqualTo(NewPrice));
     }
 
     [Test]
@@ -123,7 +123,7 @@ public class ViewChangeViewModelMapperTests
         _mockCommitmentsApiClient.Setup(c => c.GetChangeOfPartyRequests(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_changeOfPartyResponse);
 
-        _mockCommitmentsApiClient.Setup(c => c.GetProvider(_providerId, It.IsAny<CancellationToken>()))
+        _mockCommitmentsApiClient.Setup(c => c.GetProvider(ProviderId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetProviderResponse { Name = "NewProvider" });
 
         var result = await _mapper.Map(_request);
@@ -208,31 +208,31 @@ public class ViewChangeViewModelMapperTests
     {
         var result = await _mapper.Map(_request);
 
-        Assert.That(result.NewPrice, Is.EqualTo(_newPrice));
+        Assert.That(result.NewPrice, Is.EqualTo(NewPrice));
     }
 
     private List<ChangeOfPartyRequest> GetChangeOfPartyRequestsMock()
     {
-        return new List<ChangeOfPartyRequest>
-        {
+        return
+        [
             new ChangeOfPartyRequest
             {
                 ChangeOfPartyType = ChangeOfPartyRequestType.ChangeProvider,
                 Status = ChangeOfPartyRequestStatus.Pending,
-                ProviderId = _providerId,
-                CohortId = _cohortId,
-                Price = _newPrice,
+                ProviderId = ProviderId,
+                CohortId = CohortId,
+                Price = NewPrice,
                 StartDate = _newFromDate,
                 WithParty = Party.Provider
             }
-        };
+        ];
     }
 
-    private GetCohortResponse GetCohortResponseMock()
+    private static GetCohortResponse GetCohortResponseMock()
     {
         var response = new GetCohortResponse
         {
-            CohortId = _cohortId
+            CohortId = CohortId
         };
 
         return response;
@@ -240,40 +240,43 @@ public class ViewChangeViewModelMapperTests
 
     private List<PriceEpisode> GetPriceEpisodesMock()
     {
-        return new List<PriceEpisode>
-        {
-            new PriceEpisode {
+        return
+        [
+            new PriceEpisode
+            {
                 ApprenticeshipId = _apprenticeshipResponse.Id,
                 Cost = 1000,
                 FromDate = DateTime.Now.AddDays(-30)
             }
-        };
+        ];
     }
 
     private List<PriceEpisode> GetPriceEpisodesWithMultipleChangesMock()
     {
-        return new List<PriceEpisode>
-        {
-            new PriceEpisode {
+        return
+        [
+            new PriceEpisode
+            {
                 ApprenticeshipId = _apprenticeshipResponse.Id,
                 Cost = 1000,
                 FromDate = _oldFromDate,
                 ToDate = _oldToDate
             },
+
             new PriceEpisode
             {
                 ApprenticeshipId = _apprenticeshipResponse.Id,
-                Cost = _newPrice,
+                Cost = NewPrice,
                 FromDate = _newFromDate,
                 ToDate = null
             }
-        };
+        ];
     }
 
     private List<ChangeOfPartyRequest> GetChangeOfPartyRequestsWithMultipleRequestsMock()
     {
-        return new List<ChangeOfPartyRequest>
-        {
+        return
+        [
             new ChangeOfPartyRequest
             {
                 ChangeOfPartyType = ChangeOfPartyRequestType.ChangeProvider,
@@ -285,17 +288,18 @@ public class ViewChangeViewModelMapperTests
                 WithParty = Party.Provider
             },
 
+
             new ChangeOfPartyRequest
             {
                 ChangeOfPartyType = ChangeOfPartyRequestType.ChangeProvider,
                 StartDate = _oldFromDate,
                 EndDate = _newToDate,
-                ProviderId = _providerId,
-                CohortId = _cohortId,
-                Price = _newPrice,
+                ProviderId = ProviderId,
+                CohortId = CohortId,
+                Price = NewPrice,
                 Status = ChangeOfPartyRequestStatus.Pending,
                 WithParty = Party.Provider
             }
-        };
+        ];
     }
 }

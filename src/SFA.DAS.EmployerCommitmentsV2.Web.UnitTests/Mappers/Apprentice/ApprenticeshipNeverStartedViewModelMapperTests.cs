@@ -8,7 +8,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice;
 
 public class ApprenticeshipNeverStartedViewModelMapperTests
 {
-    private Mock<ICommitmentsApiClient> mockCommitmentsApiClient;
+    private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
 
     private readonly DateTime _referenceDate = DateTime.UtcNow;
 
@@ -18,9 +18,9 @@ public class ApprenticeshipNeverStartedViewModelMapperTests
     public void SetUp()
     {
 
-        mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
-        mockCommitmentsApiClient
+        _mockCommitmentsApiClient
             .Setup(r => r.GetApprenticeship(_apprenticeshipId, CancellationToken.None))
             .ReturnsAsync(GetApprenticeshipResponse(_referenceDate));
     }
@@ -29,7 +29,7 @@ public class ApprenticeshipNeverStartedViewModelMapperTests
     public async Task ApprenticeshipHashedId_IsMapped(ApprenticeshipNeverStartedRequest request)
     {
         request.ApprenticeshipId = _apprenticeshipId;
-        var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
+        var mapper = new ApprenticeshipNeverStartedViewModelMapper(_mockCommitmentsApiClient.Object);
         var result = await mapper.Map(request);
 
         Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(request.ApprenticeshipHashedId));
@@ -39,7 +39,7 @@ public class ApprenticeshipNeverStartedViewModelMapperTests
     public async Task AccountHashedId_IsMapped(ApprenticeshipNeverStartedRequest request)
     {
         request.ApprenticeshipId = _apprenticeshipId;
-        var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
+        var mapper = new ApprenticeshipNeverStartedViewModelMapper(_mockCommitmentsApiClient.Object);
         var result = await mapper.Map(request);
 
         Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
@@ -49,7 +49,7 @@ public class ApprenticeshipNeverStartedViewModelMapperTests
     public async Task ApprenticeshipId_IsMapped(ApprenticeshipNeverStartedRequest request)
     {
         request.ApprenticeshipId = _apprenticeshipId;
-        var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
+        var mapper = new ApprenticeshipNeverStartedViewModelMapper(_mockCommitmentsApiClient.Object);
         var result = await mapper.Map(request);
 
         Assert.That(result.ApprenticeshipId, Is.EqualTo(_apprenticeshipId));
@@ -59,7 +59,7 @@ public class ApprenticeshipNeverStartedViewModelMapperTests
     public async Task StartDate_IsMapped(ApprenticeshipNeverStartedRequest request)
     {
         request.ApprenticeshipId = _apprenticeshipId;
-        var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
+        var mapper = new ApprenticeshipNeverStartedViewModelMapper(_mockCommitmentsApiClient.Object);
         var result = await mapper.Map(request);
 
         Assert.That(_referenceDate, Is.EqualTo(result.PlannedStartDate));
@@ -69,17 +69,17 @@ public class ApprenticeshipNeverStartedViewModelMapperTests
     public async Task IsCopJourney_IsAlwaysFalse(ApprenticeshipNeverStartedRequest request)
     {
         request.ApprenticeshipId = _apprenticeshipId;
-        var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
+        var mapper = new ApprenticeshipNeverStartedViewModelMapper(_mockCommitmentsApiClient.Object);
         var result = await mapper.Map(request);
 
-        Assert.That(false, Is.EqualTo(result.IsCoPJourney));
+        Assert.That(result.IsCoPJourney, Is.EqualTo(false));
     }
 
     [Test, MoqAutoData]
     public async Task StopMonth_IsSameAsPlannedDtartDateMonth(ApprenticeshipNeverStartedRequest request)
     {
         request.ApprenticeshipId = _apprenticeshipId;
-        var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
+        var mapper = new ApprenticeshipNeverStartedViewModelMapper(_mockCommitmentsApiClient.Object);
         var result = await mapper.Map(request);
 
         Assert.That(_referenceDate.Month, Is.EqualTo(result.StopMonth));
@@ -89,7 +89,7 @@ public class ApprenticeshipNeverStartedViewModelMapperTests
     public async Task StopYear_IsSameAsPlannedDtartDateYear(ApprenticeshipNeverStartedRequest request)
     {
         request.ApprenticeshipId = _apprenticeshipId;
-        var mapper = new ApprenticeshipNeverStartedViewModelMapper(mockCommitmentsApiClient.Object);
+        var mapper = new ApprenticeshipNeverStartedViewModelMapper(_mockCommitmentsApiClient.Object);
         var result = await mapper.Map(request);
 
         Assert.That(_referenceDate.Year, Is.EqualTo(result.StopYear));

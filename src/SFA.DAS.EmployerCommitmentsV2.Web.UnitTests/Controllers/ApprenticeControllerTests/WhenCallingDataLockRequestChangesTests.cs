@@ -12,6 +12,7 @@ public class WhenCallingDataLockRequestChangesTests
         _fixture = new WhenCallingDataLockRequestChangesTestsFixture();
     }
 
+    [Test]
     public async Task ThenTheCorrectViewIsReturned()
     {
         var result = await _fixture.DataLockRequestChanges();

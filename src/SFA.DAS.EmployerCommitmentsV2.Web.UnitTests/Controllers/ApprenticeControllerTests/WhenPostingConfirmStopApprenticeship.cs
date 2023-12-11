@@ -44,7 +44,7 @@ public class WhenPostingConfirmStopApprenticeship : ApprenticeControllerTestBase
         
         Assert.Multiple(() =>
         {
-            Assert.That("ApprenticeshipStoppedInform", Is.EqualTo(redirect.ActionName));
+            Assert.That(redirect.ActionName, Is.EqualTo("ApprenticeshipStoppedInform"));
             Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
             Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
         });
