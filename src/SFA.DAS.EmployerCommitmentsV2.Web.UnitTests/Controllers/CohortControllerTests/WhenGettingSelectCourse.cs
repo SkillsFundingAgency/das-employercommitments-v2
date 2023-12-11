@@ -9,26 +9,25 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests;
+
+public class WhenGettingSelectCourse
 {
-    public class WhenGettingSelectCourse
+    [Test, MoqAutoData]
+    public async Task ThenReturnsView(
+        ApprenticeRequest request,
+        SelectCourseViewModel viewModel,
+        [Frozen] Mock<IModelMapper> mockMapper,
+        [Greedy] CohortController controller)
     {
-        [Test, MoqAutoData]
-        public async Task ThenReturnsView(
-            ApprenticeRequest request,
-            SelectCourseViewModel viewModel,
-            [Frozen] Mock<IModelMapper> mockMapper,
-            [Greedy] CohortController controller)
-        {
-            mockMapper
-                .Setup(mapper => mapper.Map<SelectCourseViewModel>(request))
-                .ReturnsAsync(viewModel);
+        mockMapper
+            .Setup(mapper => mapper.Map<SelectCourseViewModel>(request))
+            .ReturnsAsync(viewModel);
 
-            var result = await controller.SelectCourse(request) as ViewResult;
+        var result = await controller.SelectCourse(request) as ViewResult;
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.ViewName, Is.SameAs("SelectCourse"));
-            Assert.That(result.Model, Is.SameAs(viewModel));
-        }
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.ViewName, Is.SameAs("SelectCourse"));
+        Assert.That(result.Model, Is.SameAs(viewModel));
     }
 }

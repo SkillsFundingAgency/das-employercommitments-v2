@@ -10,85 +10,84 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
+
+[TestFixture]
+[Parallelizable(ParallelScope.All)]
+public class SentViewModelMapperTests
 {
-    [TestFixture]
-    [Parallelizable(ParallelScope.All)]
-    public class SentViewModelMapperTests
+    [Test]
+    public async Task AccountHashedIdIsMappedCorrectly()
     {
-        [Test]
-        public async Task AccountHashedIdIsMappedCorrectly()
-        {
-            var fixture = new SentViewModelMapperTestsFixture();
-            var result = await fixture.Map();
-            Assert.That(result.AccountHashedId, Is.EqualTo(fixture.Source.AccountHashedId));
-        }
-
-        [Test]
-        public async Task LegalEntityNameIsMappedCorrectly()
-        {
-            var fixture = new SentViewModelMapperTestsFixture();
-            var result = await fixture.Map();
-            Assert.That(result.LegalEntityName, Is.EqualTo(fixture.Cohort.LegalEntityName));
-        }
-
-        [Test]
-        public async Task ProviderNameIsMappedCorrectly()
-        {
-            var fixture = new SentViewModelMapperTestsFixture();
-            var result = await fixture.Map();
-            Assert.That(result.ProviderName, Is.EqualTo(fixture.Cohort.ProviderName));
-        }
-
-        [Test]
-        public async Task CohortReferenceIsMappedCorrectly()
-        {
-            var fixture = new SentViewModelMapperTestsFixture();
-            var result = await fixture.Map();
-            Assert.That(result.CohortReference, Is.EqualTo(fixture.Source.CohortReference));
-        }
-
-        [Test]
-        public async Task CohortIdIsMappedCorrectly()
-        {
-            var fixture = new SentViewModelMapperTestsFixture();
-            var result = await fixture.Map();
-            Assert.That(result.CohortId, Is.EqualTo(fixture.Source.CohortId));
-        }
+        var fixture = new SentViewModelMapperTestsFixture();
+        var result = await fixture.Map();
+        Assert.That(result.AccountHashedId, Is.EqualTo(fixture.Source.AccountHashedId));
     }
 
-    public class SentViewModelMapperTestsFixture
+    [Test]
+    public async Task LegalEntityNameIsMappedCorrectly()
     {
-        public SentViewModelMapper Mapper;
-        public SentRequest Source;
-        public SentViewModel Result;
-        public Mock<ICommitmentsApiClient> CommitmentsApiClient;
-        public GetCohortResponse Cohort;
-        public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
-        private Fixture _autoFixture;
+        var fixture = new SentViewModelMapperTestsFixture();
+        var result = await fixture.Map();
+        Assert.That(result.LegalEntityName, Is.EqualTo(fixture.Cohort.LegalEntityName));
+    }
 
-        public SentViewModelMapperTestsFixture()
-        {
-            _autoFixture = new Fixture();
+    [Test]
+    public async Task ProviderNameIsMappedCorrectly()
+    {
+        var fixture = new SentViewModelMapperTestsFixture();
+        var result = await fixture.Map();
+        Assert.That(result.ProviderName, Is.EqualTo(fixture.Cohort.ProviderName));
+    }
 
-            Cohort = _autoFixture.Create<GetCohortResponse>();
+    [Test]
+    public async Task CohortReferenceIsMappedCorrectly()
+    {
+        var fixture = new SentViewModelMapperTestsFixture();
+        var result = await fixture.Map();
+        Assert.That(result.CohortReference, Is.EqualTo(fixture.Source.CohortReference));
+    }
 
-            DraftApprenticeshipsResponse = _autoFixture.Create<GetDraftApprenticeshipsResponse>();
+    [Test]
+    public async Task CohortIdIsMappedCorrectly()
+    {
+        var fixture = new SentViewModelMapperTestsFixture();
+        var result = await fixture.Map();
+        Assert.That(result.CohortId, Is.EqualTo(fixture.Source.CohortId));
+    }
+}
 
-            CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            CommitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(Cohort);
+public class SentViewModelMapperTestsFixture
+{
+    public SentViewModelMapper Mapper;
+    public SentRequest Source;
+    public SentViewModel Result;
+    public Mock<ICommitmentsApiClient> CommitmentsApiClient;
+    public GetCohortResponse Cohort;
+    public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
+    private Fixture _autoFixture;
 
-            CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(DraftApprenticeshipsResponse);
+    public SentViewModelMapperTestsFixture()
+    {
+        _autoFixture = new Fixture();
 
-            Mapper = new SentViewModelMapper(CommitmentsApiClient.Object);
-            Source = _autoFixture.Create<SentRequest>();
-        }
+        Cohort = _autoFixture.Create<GetCohortResponse>();
 
-        public Task<SentViewModel> Map()
-        {
-            return Mapper.Map(TestHelper.Clone(Source));
-        }
+        DraftApprenticeshipsResponse = _autoFixture.Create<GetDraftApprenticeshipsResponse>();
+
+        CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        CommitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Cohort);
+
+        CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(DraftApprenticeshipsResponse);
+
+        Mapper = new SentViewModelMapper(CommitmentsApiClient.Object);
+        Source = _autoFixture.Create<SentRequest>();
+    }
+
+    public Task<SentViewModel> Map()
+    {
+        return Mapper.Map(TestHelper.Clone(Source));
     }
 }

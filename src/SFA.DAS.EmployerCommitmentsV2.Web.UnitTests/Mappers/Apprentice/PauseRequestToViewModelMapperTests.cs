@@ -8,79 +8,78 @@ using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice;
+
+public class PauseRequestToViewModelMapperTests
 {
-    public class PauseRequestToViewModelMapperTests
+    private const string ExpectedFullName = "FirstName LastName";
+    private const string ExpectedCourseName = "Test Apprenticeship";
+    private const string ExpectedUln = "1234567890";
+
+    private Mock<ICommitmentsApiClient> mockCommitmentsApiClient;
+
+    [SetUp]
+    public void SetUp()
     {
-        private const string ExpectedFullName = "FirstName LastName";
-        private const string ExpectedCourseName = "Test Apprenticeship";
-        private const string ExpectedUln = "1234567890";
+        mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
-        private Mock<ICommitmentsApiClient> mockCommitmentsApiClient;
+        mockCommitmentsApiClient
+            .Setup(r => r.GetApprenticeship(It.IsAny<long>(), CancellationToken.None))
+            .ReturnsAsync(GetApprenticeshipResponse());
+    }
+    [Test, MoqAutoData]
+    public async Task ApprenticeshipHashedId_IsMapped(PauseRequest request)
+    {
+        var mapper = new PauseRequestToViewModelMapper(mockCommitmentsApiClient.Object);
+        var result = await mapper.Map(request);
 
-        [SetUp]
-        public void SetUp()
+        Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(request.ApprenticeshipHashedId));
+    }
+
+    [Test, MoqAutoData]
+    public async Task AccountHashedId_IsMapped(PauseRequest request)
+    {
+        var mapper = new PauseRequestToViewModelMapper(mockCommitmentsApiClient.Object);
+        var result = await mapper.Map(request);
+
+        Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
+    }
+
+    [Test, MoqAutoData]
+    public async Task ApprenticeName_IsMapped(PauseRequest request)
+    {
+        var mapper = new PauseRequestToViewModelMapper(mockCommitmentsApiClient.Object);
+        var result = await mapper.Map(request);
+
+        Assert.That(result.ApprenticeName, Is.EqualTo(ExpectedFullName));
+    }
+
+    [Test, MoqAutoData]
+    public async Task CourseName_IsMapped(PauseRequest request)
+    {
+        var mapper = new PauseRequestToViewModelMapper(mockCommitmentsApiClient.Object);
+        var result = await mapper.Map(request);
+
+        Assert.That(result.Course, Is.EqualTo(ExpectedCourseName));
+    }
+
+    [Test, MoqAutoData]
+    public async Task ULN_IsMapped(PauseRequest request)
+    {
+        var mapper = new PauseRequestToViewModelMapper(mockCommitmentsApiClient.Object);
+        var result = await mapper.Map(request);
+
+        Assert.That(result.ULN, Is.EqualTo(ExpectedUln));
+    }
+
+    private GetApprenticeshipResponse GetApprenticeshipResponse()
+    {
+        return new GetApprenticeshipResponse
         {
-            mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-
-            mockCommitmentsApiClient
-                .Setup(r => r.GetApprenticeship(It.IsAny<long>(), CancellationToken.None))
-                .ReturnsAsync(GetApprenticeshipResponse());
-        }
-        [Test, MoqAutoData]
-        public async Task ApprenticeshipHashedId_IsMapped(PauseRequest request)
-        {
-            var mapper = new PauseRequestToViewModelMapper(mockCommitmentsApiClient.Object);
-            var result = await mapper.Map(request);
-
-            Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(request.ApprenticeshipHashedId));
-        }
-
-        [Test, MoqAutoData]
-        public async Task AccountHashedId_IsMapped(PauseRequest request)
-        {
-            var mapper = new PauseRequestToViewModelMapper(mockCommitmentsApiClient.Object);
-            var result = await mapper.Map(request);
-
-            Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
-        }
-
-        [Test, MoqAutoData]
-        public async Task ApprenticeName_IsMapped(PauseRequest request)
-        {
-            var mapper = new PauseRequestToViewModelMapper(mockCommitmentsApiClient.Object);
-            var result = await mapper.Map(request);
-
-            Assert.That(result.ApprenticeName, Is.EqualTo(ExpectedFullName));
-        }
-
-        [Test, MoqAutoData]
-        public async Task CourseName_IsMapped(PauseRequest request)
-        {
-            var mapper = new PauseRequestToViewModelMapper(mockCommitmentsApiClient.Object);
-            var result = await mapper.Map(request);
-
-            Assert.That(result.Course, Is.EqualTo(ExpectedCourseName));
-        }
-
-        [Test, MoqAutoData]
-        public async Task ULN_IsMapped(PauseRequest request)
-        {
-            var mapper = new PauseRequestToViewModelMapper(mockCommitmentsApiClient.Object);
-            var result = await mapper.Map(request);
-
-            Assert.That(result.ULN, Is.EqualTo(ExpectedUln));
-        }
-
-        private GetApprenticeshipResponse GetApprenticeshipResponse()
-        {
-            return new GetApprenticeshipResponse
-            {
-                FirstName = "FirstName",
-                LastName = "LastName",
-                Uln = "1234567890",
-                CourseName = "Test Apprenticeship"
-            };
-        }
+            FirstName = "FirstName",
+            LastName = "LastName",
+            Uln = "1234567890",
+            CourseName = "Test Apprenticeship"
+        };
     }
 }

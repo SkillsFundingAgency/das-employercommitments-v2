@@ -12,27 +12,26 @@ using SFA.DAS.Testing.AutoFixture;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests;
+
+public class WhenPostingSetDeliveryModel
 {
-    public class WhenPostingSetDeliveryModel
+    [Test, MoqAutoData]
+    public async Task ThenReturnsRedirect(
+        ApprenticeRequest request,
+        SelectDeliveryModelViewModel viewModel,
+        [Frozen] Mock<IModelMapper> mockMapper,
+        [Greedy] CohortController controller)
     {
-        [Test, MoqAutoData]
-        public async Task ThenReturnsRedirect(
-            ApprenticeRequest request,
-            SelectDeliveryModelViewModel viewModel,
-            [Frozen] Mock<IModelMapper> mockMapper,
-            [Greedy] CohortController controller)
-        {
-            viewModel.DeliveryModels = new Fixture().CreateMany<DeliveryModel>().ToArray();
+        viewModel.DeliveryModels = new Fixture().CreateMany<DeliveryModel>().ToArray();
 
-            mockMapper
-                .Setup(mapper => mapper.Map<ApprenticeRequest>(viewModel))
-                .ReturnsAsync(request);
+        mockMapper
+            .Setup(mapper => mapper.Map<ApprenticeRequest>(viewModel))
+            .ReturnsAsync(request);
 
-            var result = await controller.SetDeliveryModel(viewModel) as RedirectToActionResult;
+        var result = await controller.SetDeliveryModel(viewModel) as RedirectToActionResult;
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.ActionName, Is.EqualTo("AddDraftApprenticeship"));
-        }
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.ActionName, Is.EqualTo("AddDraftApprenticeship"));
     }
 }

@@ -4,28 +4,27 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice;
+
+public class EditEndDateViewModelMapperTests
 {
-    public class EditEndDateViewModelMapperTests
+    [Test, MoqAutoData]
+    public async Task ApprenticeshipHashedId_IsMapped(
+        EditEndDateRequest request)
     {
-        [Test, MoqAutoData]
-        public async Task ApprenticeshipHashedId_IsMapped(
-            EditEndDateRequest request)
-        {
-            var mapper = new EditEndDateViewModelMapper();
-            var result = await mapper.Map(request);
+        var mapper = new EditEndDateViewModelMapper();
+        var result = await mapper.Map(request);
 
-            Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(request.ApprenticeshipHashedId));
-        }
+        Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(request.ApprenticeshipHashedId));
+    }
 
-        [Test, MoqAutoData]
-        public async Task AccountHashedId_IsMapped(
-            EditEndDateRequest request)
-        {
-            var mapper = new EditEndDateViewModelMapper();
-            var result = await mapper.Map(request);
+    [Test, MoqAutoData]
+    public async Task AccountHashedId_IsMapped(
+        EditEndDateRequest request)
+    {
+        var mapper = new EditEndDateViewModelMapper();
+        var result = await mapper.Map(request);
 
-            Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
-        }
+        Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
     }
 }

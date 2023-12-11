@@ -1,42 +1,38 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenRequestingApprenticeshipStoppedInformPageTests
 {
-    public class WhenRequestingApprenticeshipStoppedInformPageTests
+    private WhenRequestingApprenticeshipStoppedInformPageTestsFixture _fixture;
+
+    [SetUp]
+    public void Arrange()
     {
-        private WhenRequestingApprenticeshipStoppedInformPageTestsFixture _fixture;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new WhenRequestingApprenticeshipStoppedInformPageTestsFixture();
-        }
-
-        [Test]
-        public void ThenCorrectViewIsReturned()
-        {
-            var actionResult = _fixture.ApprenticeshipStoppedInform();
-
-            _fixture.VerifyView(actionResult);
-        }
+        _fixture = new WhenRequestingApprenticeshipStoppedInformPageTestsFixture();
     }
 
-    public class WhenRequestingApprenticeshipStoppedInformPageTestsFixture : ApprenticeControllerTestFixtureBase
+    [Test]
+    public void ThenCorrectViewIsReturned()
     {
-        public WhenRequestingApprenticeshipStoppedInformPageTestsFixture() 
-            : base(){}
+        var actionResult = _fixture.ApprenticeshipStoppedInform();
 
-        public IActionResult ApprenticeshipStoppedInform()
-        {
-            return _controller.ApprenticeshipStoppedInform();
-        }
+        WhenRequestingApprenticeshipStoppedInformPageTestsFixture.VerifyView(actionResult);
+    }
+}
 
-        public void VerifyView(IActionResult actionResult)
-        {
-            var viewResult = actionResult as ViewResult;
+public class WhenRequestingApprenticeshipStoppedInformPageTestsFixture : ApprenticeControllerTestFixtureBase
+{
+    public IActionResult ApprenticeshipStoppedInform()
+    {
+        return Controller.ApprenticeshipStoppedInform();
+    }
 
-            Assert.That(viewResult, Is.Not.Null);
-        }
+    public static void VerifyView(IActionResult actionResult)
+    {
+        var viewResult = actionResult as ViewResult;
+
+        Assert.That(viewResult, Is.Not.Null);
     }
 }

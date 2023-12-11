@@ -14,192 +14,191 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice;
+
+public class ChangeOptionViewModelMapperTests
 {
-    public class ChangeOptionViewModelMapperTests
+    private Fixture _fixture;
+
+    private ChangeOptionRequest _request;
+
+    private GetApprenticeshipResponse _getApprenticeshipResponse;
+    private GetTrainingProgrammeResponse _getVersionResponse;
+    private EditApprenticeshipRequestViewModel _editViewModel;
+
+    private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+    private Mock<ITempDataDictionaryFactory> _mockTempDataFactory;
+    private Mock<ITempDataDictionary> _mockTempDataDictionary;
+
+    private ChangeOptionViewModelMapper _mapper;
+
+    [SetUp]
+    public void Arrange()
     {
-        private Fixture _fixture;
+        _fixture = new Fixture();
 
-        private ChangeOptionRequest _request;
+        _request = _fixture.Create<ChangeOptionRequest>();
 
-        private GetApprenticeshipResponse _getApprenticeshipResponse;
-        private GetTrainingProgrammeResponse _getVersionResponse;
-        private EditApprenticeshipRequestViewModel _editViewModel;
+        var baseDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+        var startDate = baseDate;
+        var employmentEndDate = baseDate.AddYears(1);
+        var endDate = baseDate.AddYears(2);
+        var dateOfBirth = baseDate.AddYears(-18);
 
-        private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
-        private Mock<ITempDataDictionaryFactory> _mockTempDataFactory;
-        private Mock<ITempDataDictionary> _mockTempDataDictionary;
+        _getApprenticeshipResponse = _fixture.Build<GetApprenticeshipResponse>()
+            .With(x => x.StartDate, startDate)
+            .With(x => x.EndDate, endDate)
+            .With(x => x.DateOfBirth, dateOfBirth)
+            .With(x => x.EmploymentEndDate, employmentEndDate)
+            .Create();
 
-        private ChangeOptionViewModelMapper _mapper;
+        _editViewModel = _fixture.Build<EditApprenticeshipRequestViewModel>()
+            .With(x => x.CourseCode, _getApprenticeshipResponse.CourseCode)
+            .With(x => x.Version, _getApprenticeshipResponse.Version)
+            .With(x => x.StartDate, new MonthYearModel(startDate.ToString("MMyyyy")))
+            .With(x => x.EndDate, new MonthYearModel(endDate.ToString("MMyyyy")))
+            .With(x => x.DateOfBirth, new MonthYearModel(dateOfBirth.ToString("MMyyyy")))
+            .With(x => x.EmploymentEndDate, new MonthYearModel(employmentEndDate.ToString("MMyyyy")))
+            .Create();
 
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new Fixture();
+        _getVersionResponse = _fixture.Create<GetTrainingProgrammeResponse>();
 
-            _request = _fixture.Create<ChangeOptionRequest>();
+        _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        _mockCommitmentsApiClient
+            .Setup(c => c.GetTrainingProgrammeVersionByCourseCodeAndVersion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_getVersionResponse);
+        _mockCommitmentsApiClient
+            .Setup(c => c.GetApprenticeship(_request.ApprenticeshipId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_getApprenticeshipResponse);
 
-            var baseDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            var startDate = baseDate;
-            var employmentEndDate = baseDate.AddYears(1);
-            var endDate = baseDate.AddYears(2);
-            var dateOfBirth = baseDate.AddYears(-18);
+        _mockTempDataDictionary = new Mock<ITempDataDictionary>();
 
-            _getApprenticeshipResponse = _fixture.Build<GetApprenticeshipResponse>()
-                    .With(x => x.StartDate, startDate)
-                    .With(x => x.EndDate, endDate)
-                    .With(x => x.DateOfBirth, dateOfBirth)
-                    .With(x => x.EmploymentEndDate, employmentEndDate)
-                .Create();
+        _mockTempDataFactory = new Mock<ITempDataDictionaryFactory>();
+        _mockTempDataFactory.Setup(f => f.GetTempData(It.IsAny<HttpContext>()))
+            .Returns(_mockTempDataDictionary.Object);
 
-            _editViewModel = _fixture.Build<EditApprenticeshipRequestViewModel>()
-                    .With(x => x.CourseCode, _getApprenticeshipResponse.CourseCode)
-                    .With(x => x.Version, _getApprenticeshipResponse.Version)
-                    .With(x => x.StartDate, new MonthYearModel(startDate.ToString("MMyyyy")))
-                    .With(x => x.EndDate, new MonthYearModel(endDate.ToString("MMyyyy")))
-                    .With(x => x.DateOfBirth, new MonthYearModel(dateOfBirth.ToString("MMyyyy")))
-                    .With(x => x.EmploymentEndDate, new MonthYearModel(employmentEndDate.ToString("MMyyyy")))
-                .Create();
+        _mapper = new ChangeOptionViewModelMapper(_mockCommitmentsApiClient.Object, 
+            Mock.Of<IHttpContextAccessor>(),
+            _mockTempDataFactory.Object);
+    }
 
-            _getVersionResponse = _fixture.Create<GetTrainingProgrammeResponse>();
+    [Test]
+    public async Task Then_AccountHashedIdIsMapped()
+    {
+        var viewModel = await _mapper.Map(_request);
 
-            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockCommitmentsApiClient
-                .Setup(c => c.GetTrainingProgrammeVersionByCourseCodeAndVersion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_getVersionResponse);
-            _mockCommitmentsApiClient
-                .Setup(c => c.GetApprenticeship(_request.ApprenticeshipId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_getApprenticeshipResponse);
+        viewModel.AccountHashedId.Should().Be(_request.AccountHashedId);
+    }
 
-            _mockTempDataDictionary = new Mock<ITempDataDictionary>();
+    [Test]
+    public async Task Then_ApprenticeshipHashedIdIsMapped()
+    {
+        var viewModel = await _mapper.Map(_request);
 
-            _mockTempDataFactory = new Mock<ITempDataDictionaryFactory>();
-            _mockTempDataFactory.Setup(f => f.GetTempData(It.IsAny<HttpContext>()))
-                .Returns(_mockTempDataDictionary.Object);
+        viewModel.ApprenticeshipHashedId.Should().Be(_request.ApprenticeshipHashedId);
+    }
 
-            _mapper = new ChangeOptionViewModelMapper(_mockCommitmentsApiClient.Object, 
-                Mock.Of<IHttpContextAccessor>(),
-                _mockTempDataFactory.Object);
-        }
+    [Test]
+    public async Task Then_SelectedVersionIsMapped()
+    {
+        var viewModel = await _mapper.Map(_request);
 
-        [Test]
-        public async Task Then_AccountHashedIdIsMapped()
-        {
-            var viewModel = await _mapper.Map(_request);
+        viewModel.SelectedVersion.Should().Be(_editViewModel.Version);
+    }
 
-            viewModel.AccountHashedId.Should().Be(_request.AccountHashedId);
-        }
+    [Test]
+    public async Task Then_SelectedVersionNameIsMapped()
+    {
+        var viewModel = await _mapper.Map(_request);
 
-        [Test]
-        public async Task Then_ApprenticeshipHashedIdIsMapped()
-        {
-            var viewModel = await _mapper.Map(_request);
+        viewModel.SelectedVersionName.Should().Be(_getVersionResponse.TrainingProgramme.Name);
+    }
 
-            viewModel.ApprenticeshipHashedId.Should().Be(_request.ApprenticeshipHashedId);
-        }
+    [Test]
+    public async Task Then_SelectedVersionUrlIsMapped()
+    {
+        var viewModel = await _mapper.Map(_request);
 
-        [Test]
-        public async Task Then_SelectedVersionIsMapped()
-        {
-            var viewModel = await _mapper.Map(_request);
+        viewModel.SelectedVersionUrl.Should().Be(_getVersionResponse.TrainingProgramme.StandardPageUrl);
+    }
 
-            viewModel.SelectedVersion.Should().Be(_editViewModel.Version);
-        }
+    [Test]
+    public async Task Then_CurrentOptionIsMapped()
+    {
+        var viewModel = await _mapper.Map(_request);
 
-        [Test]
-        public async Task Then_SelectedVersionNameIsMapped()
-        {
-            var viewModel = await _mapper.Map(_request);
+        viewModel.CurrentOption.Should().Be(_getApprenticeshipResponse.Option);
+    }
 
-            viewModel.SelectedVersionName.Should().Be(_getVersionResponse.TrainingProgramme.Name);
-        }
+    [Test]
+    public async Task And_ApprenticeshipOption_IsEmpty_Then_CurrentOptionIsMappedToTBC()
+    {
+        _getApprenticeshipResponse.Option = string.Empty;
 
-        [Test]
-        public async Task Then_SelectedVersionUrlIsMapped()
-        {
-            var viewModel = await _mapper.Map(_request);
+        var viewModel = await _mapper.Map(_request);
 
-            viewModel.SelectedVersionUrl.Should().Be(_getVersionResponse.TrainingProgramme.StandardPageUrl);
-        }
+        viewModel.CurrentOption.Should().Be("TBC");
+    }
 
-        [Test]
-        public async Task Then_CurrentOptionIsMapped()
-        {
-            var viewModel = await _mapper.Map(_request);
+    [Test]
+    public async Task Then_OptionsAreMapped()
+    {
+        var viewModel = await _mapper.Map(_request);
 
-            viewModel.CurrentOption.Should().Be(_getApprenticeshipResponse.Option);
-        }
+        viewModel.Options.Should().BeEquivalentTo(_getVersionResponse.TrainingProgramme.Options);
+    }
 
-        [Test]
-        public async Task And_ApprenticeshipOption_IsEmpty_Then_CurrentOptionIsMappedToTBC()
-        {
-            _getApprenticeshipResponse.Option = string.Empty;
+    [Test]
+    public async Task When_CourseCodeHasChanged_Then_SetReturnToEditTrue()
+    {
+        _editViewModel.CourseCode = "1"; 
+        SetupTempDataDictionary();
 
-            var viewModel = await _mapper.Map(_request);
+        var viewModel = await _mapper.Map(_request);
 
-            viewModel.CurrentOption.Should().Be("TBC");
-        }
+        viewModel.ReturnToEdit.Should().BeTrue();
+    }
 
-        [Test]
-        public async Task Then_OptionsAreMapped()
-        {
-            var viewModel = await _mapper.Map(_request);
+    [Test]
+    public async Task When_StartDateHasChanged_Then_SetReturnToEditTrue()
+    {
+        _editViewModel.StartDate.Month = _editViewModel.StartDate.Date.Value.AddMonths(1).Month;
+        SetupTempDataDictionary();
 
-            viewModel.Options.Should().BeEquivalentTo(_getVersionResponse.TrainingProgramme.Options);
-        }
+        var viewModel = await _mapper.Map(_request);
 
-        [Test]
-        public async Task When_CourseCodeHasChanged_Then_SetReturnToEditTrue()
-        {
-            _editViewModel.CourseCode = "1"; 
-            SetupTempDataDictionary();
+        viewModel.ReturnToEdit.Should().BeTrue();
+    }
 
-            var viewModel = await _mapper.Map(_request);
+    [Test]
+    public async Task When_VersionHasChanged_Then_SetReturnToChangeVersionTrue()
+    {
+        _editViewModel.Version = "1.1";
+        SetupTempDataDictionary();
 
-            viewModel.ReturnToEdit.Should().BeTrue();
-        }
+        var viewModel = await _mapper.Map(_request);
 
-        [Test]
-        public async Task When_StartDateHasChanged_Then_SetReturnToEditTrue()
-        {
-            _editViewModel.StartDate.Month = _editViewModel.StartDate.Date.Value.AddMonths(1).Month;
-            SetupTempDataDictionary();
+        viewModel.ReturnToChangeVersion.Should().BeTrue();
+    }
 
-            var viewModel = await _mapper.Map(_request);
+    [Test]
+    public async Task When_UnconfirmedChangesAreInProgress_Then_MapNewValues()
+    {
+        _editViewModel.Version = "1.1";
+        _editViewModel.Option = "New Option";
+        SetupTempDataDictionary();
 
-            viewModel.ReturnToEdit.Should().BeTrue();
-        }
+        var viewModel = await _mapper.Map(_request);
 
-        [Test]
-        public async Task When_VersionHasChanged_Then_SetReturnToChangeVersionTrue()
-        {
-            _editViewModel.Version = "1.1";
-            SetupTempDataDictionary();
+        viewModel.SelectedVersion.Should().Be(_editViewModel.Version);
+        viewModel.SelectedOption.Should().Be(_editViewModel.Option);
+    }
 
-            var viewModel = await _mapper.Map(_request);
+    private void SetupTempDataDictionary()
+    {
+        object viewModel = JsonConvert.SerializeObject(_editViewModel);
 
-            viewModel.ReturnToChangeVersion.Should().BeTrue();
-        }
-
-        [Test]
-        public async Task When_UnconfirmedChangesAreInProgress_Then_MapNewValues()
-        {
-            _editViewModel.Version = "1.1";
-            _editViewModel.Option = "New Option";
-            SetupTempDataDictionary();
-
-            var viewModel = await _mapper.Map(_request);
-
-            viewModel.SelectedVersion.Should().Be(_editViewModel.Version);
-            viewModel.SelectedOption.Should().Be(_editViewModel.Option);
-        }
-
-        private void SetupTempDataDictionary()
-        {
-            object viewModel = JsonConvert.SerializeObject(_editViewModel);
-
-            _mockTempDataDictionary.Setup(d => d.Peek("EditApprenticeshipRequestViewModel"))
-                .Returns(viewModel);
-        }
+        _mockTempDataDictionary.Setup(d => d.Peek("EditApprenticeshipRequestViewModel"))
+            .Returns(viewModel);
     }
 }

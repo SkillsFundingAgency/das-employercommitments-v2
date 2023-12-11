@@ -4,96 +4,95 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;
+
+[TestFixture]
+[Parallelizable]
+public class HttpHelperZendeskExtensionsTests
 {
-    [TestFixture]
-    [Parallelizable]
-    public class HttpHelperZendeskExtensionsTests
+    private HttpHelperZendeskExtensionsTestsFixture _fixture;
+    [SetUp]
+    public void Arrange()
     {
-        private HttpHelperZendeskExtensionsTestsFixture _fixture;
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new HttpHelperZendeskExtensionsTestsFixture();
-        }
-
-        [Test]
-        public void SetZendeskSuggestion_IsCreatedCorrectly()
-        {
-            var suggestion = "iowoiwueoiwue";
-            var htmlSnippet = _fixture.Sut.SetZendeskSuggestion(suggestion);
-
-            _fixture.ExpectedSuggestionJavaScriptSnippet(suggestion, htmlSnippet.ToString());
-        }
-
-        [Test]
-        public void SetZendeskSuggestion_IsCreatedCorrectlyWithApostrophesEscaped()
-        {
-            var suggestion = "'help's";
-            var htmlSnippet = _fixture.Sut.SetZendeskSuggestion(suggestion);
-
-            _fixture.ExpectedSuggestionJavaScriptSnippet(@"\'help\'s", htmlSnippet.ToString());
-        }
-
-        [Test]
-        public void SetZendeskLabels_IsCreatedCorrectlyForNoItems()
-        {
-            var labels = new String[0];
-            var htmlSnippet = _fixture.Sut.SetZendeskLabels(labels);
-
-            _fixture.ExpectedLabelJavaScriptSnippet("", htmlSnippet.ToString());
-        }
-
-        [Test]
-        public void SetZendeskLabels_IsCreatedCorrectlyForOneItem()
-        {
-            var labels = new [] { "one" };
-            var htmlSnippet = _fixture.Sut.SetZendeskLabels(labels);
-
-            _fixture.ExpectedLabelJavaScriptSnippet("'one'", htmlSnippet.ToString());
-        }
-
-        [Test]
-        public void SetZendeskLabels_IsCreatedCorrectlyForTwoItems()
-        {
-            var labels = new[] { "one", "two" };
-            var htmlSnippet = _fixture.Sut.SetZendeskLabels(labels);
-
-            _fixture.ExpectedLabelJavaScriptSnippet("'one','two'", htmlSnippet.ToString());
-        }
-
-        [Test]
-        public void SetZendeskLabels_IsCreatedCorrectlyForOneItemWithApostrophesEscaped()
-        {
-            var labels = new[] { "one's" };
-            var htmlSnippet = _fixture.Sut.SetZendeskLabels(labels);
-
-            _fixture.ExpectedLabelJavaScriptSnippet(@"'one\'s'", htmlSnippet.ToString());
-        }
+        _fixture = new HttpHelperZendeskExtensionsTestsFixture();
     }
 
-    public class HttpHelperZendeskExtensionsTestsFixture
+    [Test]
+    public void SetZendeskSuggestion_IsCreatedCorrectly()
     {
-        public Mock<IHtmlHelper> MockHtmlHelper;
-        public IHtmlHelper Sut => MockHtmlHelper.Object;
+        var suggestion = "iowoiwueoiwue";
+        var htmlSnippet = _fixture.Sut.SetZendeskSuggestion(suggestion);
 
-        private const string StartLabelSnipet = "<script type=\"text/javascript\">zE('webWidget', 'helpCenter:setSuggestions', { labels: [";
-        private const string EndLabelSnipet = "] });</script>";
+        _fixture.ExpectedSuggestionJavaScriptSnippet(suggestion, htmlSnippet.ToString());
+    }
 
-        public HttpHelperZendeskExtensionsTestsFixture()
-        {
-            MockHtmlHelper = new Mock<IHtmlHelper>();
-        }
+    [Test]
+    public void SetZendeskSuggestion_IsCreatedCorrectlyWithApostrophesEscaped()
+    {
+        var suggestion = "'help's";
+        var htmlSnippet = _fixture.Sut.SetZendeskSuggestion(suggestion);
 
-        public void ExpectedSuggestionJavaScriptSnippet(string suggestion, string snippet)
-        {
-            Assert.That(snippet, Is.EqualTo($"<script type=\"text/javascript\">zE('webWidget', 'helpCenter:setSuggestions', {{ search: '{suggestion}' }});</script>"));
-        }
+        _fixture.ExpectedSuggestionJavaScriptSnippet(@"\'help\'s", htmlSnippet.ToString());
+    }
 
-        public void ExpectedLabelJavaScriptSnippet(string labels, string snippet)
-        {
-            var expected = StartLabelSnipet + labels + EndLabelSnipet;
-            Assert.That(snippet, Is.EqualTo(expected));
-        }
+    [Test]
+    public void SetZendeskLabels_IsCreatedCorrectlyForNoItems()
+    {
+        var labels = new String[0];
+        var htmlSnippet = _fixture.Sut.SetZendeskLabels(labels);
+
+        _fixture.ExpectedLabelJavaScriptSnippet("", htmlSnippet.ToString());
+    }
+
+    [Test]
+    public void SetZendeskLabels_IsCreatedCorrectlyForOneItem()
+    {
+        var labels = new [] { "one" };
+        var htmlSnippet = _fixture.Sut.SetZendeskLabels(labels);
+
+        _fixture.ExpectedLabelJavaScriptSnippet("'one'", htmlSnippet.ToString());
+    }
+
+    [Test]
+    public void SetZendeskLabels_IsCreatedCorrectlyForTwoItems()
+    {
+        var labels = new[] { "one", "two" };
+        var htmlSnippet = _fixture.Sut.SetZendeskLabels(labels);
+
+        _fixture.ExpectedLabelJavaScriptSnippet("'one','two'", htmlSnippet.ToString());
+    }
+
+    [Test]
+    public void SetZendeskLabels_IsCreatedCorrectlyForOneItemWithApostrophesEscaped()
+    {
+        var labels = new[] { "one's" };
+        var htmlSnippet = _fixture.Sut.SetZendeskLabels(labels);
+
+        _fixture.ExpectedLabelJavaScriptSnippet(@"'one\'s'", htmlSnippet.ToString());
+    }
+}
+
+public class HttpHelperZendeskExtensionsTestsFixture
+{
+    public Mock<IHtmlHelper> MockHtmlHelper;
+    public IHtmlHelper Sut => MockHtmlHelper.Object;
+
+    private const string StartLabelSnipet = "<script type=\"text/javascript\">zE('webWidget', 'helpCenter:setSuggestions', { labels: [";
+    private const string EndLabelSnipet = "] });</script>";
+
+    public HttpHelperZendeskExtensionsTestsFixture()
+    {
+        MockHtmlHelper = new Mock<IHtmlHelper>();
+    }
+
+    public void ExpectedSuggestionJavaScriptSnippet(string suggestion, string snippet)
+    {
+        Assert.That(snippet, Is.EqualTo($"<script type=\"text/javascript\">zE('webWidget', 'helpCenter:setSuggestions', {{ search: '{suggestion}' }});</script>"));
+    }
+
+    public void ExpectedLabelJavaScriptSnippet(string labels, string snippet)
+    {
+        var expected = StartLabelSnipet + labels + EndLabelSnipet;
+        Assert.That(snippet, Is.EqualTo(expected));
     }
 }

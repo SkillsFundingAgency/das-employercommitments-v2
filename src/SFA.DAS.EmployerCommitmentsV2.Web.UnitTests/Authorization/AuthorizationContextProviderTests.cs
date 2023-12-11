@@ -12,338 +12,337 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.Encoding;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Authorization;
+
+[TestFixture]
+[Parallelizable]
+public class AuthorizationContextProviderTests
 {
-    [TestFixture]
-    [Parallelizable]
-    public class AuthorizationContextProviderTests
+    private AuthorizationContextProviderTestsFixture _fixture;
+
+    [SetUp]
+    public void SetUp()
     {
-        private AuthorizationContextProviderTestsFixture _fixture;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _fixture = new AuthorizationContextProviderTestsFixture();
-        }
-
-        [Test]
-        public void GetAuthorizationContext_WhenAccountIdExistsAndIsValid_ThenShouldReturnAuthorizationContextWithAccountId()
-        {
-            _fixture.SetUserRef(Guid.NewGuid()).SetValidAccountId();
-
-            var authorizationContext = _fixture.GetAuthorizationContext();
-
-            Assert.That(authorizationContext, Is.Not.Null);
-            Assert.That(authorizationContext.Get<long?>("AccountId"), Is.EqualTo(_fixture.AccountId));
-        }
-
-        [Test]
-        public void GetAuthorizationContext_WhenAccountIdDoesNotExist_ThenShouldThrowKeyNotFoundException()
-        {
-            _fixture.SetUserRef(Guid.NewGuid());
-
-            var authorizationContext = _fixture.GetAuthorizationContext();
-
-            Assert.That(authorizationContext, Is.Not.Null);
-            Assert.Throws<KeyNotFoundException>(() => authorizationContext.Get<long?>("AccountId"));
-        }
-
-        [Test]
-        public void GetAuthorizationContext_WhenAccountIdExistsAndIsInvalid_ThenShouldThrowUnauthorizedAccessException()
-        {
-            _fixture.SetInvalidAccountId();
-
-            Assert.Throws<UnauthorizedAccessException>(() => _fixture.GetAuthorizationContext());
-        }
-
-        [Test]
-        public void GetAuthorizationContext_WhenCohortIdAndAccountIdExistAndAreValid_ThenShouldReturnAuthorizationContextWithCohortIdAndPartyId()
-        {
-            _fixture.SetValidAccountId().SetValidCohortId();
-
-            var authorizationContext = _fixture.GetAuthorizationContext();
-
-            Assert.That(authorizationContext, Is.Not.Null);
-            Assert.That(authorizationContext.Get<long?>("CohortId"), Is.EqualTo(_fixture.CohortId));
-            Assert.That(authorizationContext.Get<Party?>("Party"), Is.EqualTo(Party.Employer));
-            Assert.That(authorizationContext.Get<long?>("PartyId"), Is.EqualTo(_fixture.AccountId));
-        }
-
-        [Test]
-        public void GetAuthorizationContext_WhenAccountIdExistsAndIsValidAndCohortIdExistsAndIsInvalid_ThenShouldThrowUnauthorizedAccessException()
-        {
-            _fixture.SetValidAccountId().SetInvalidCohortId();
-
-            Assert.Throws<UnauthorizedAccessException>(() => _fixture.GetAuthorizationContext());
-        }
-
-        [Test]
-        public void GetAuthorizationContext_WhenCohortIdDoesNotExist_ThenShouldThrowKeyNotFoundException()
-        {
-            var authorizationContext = _fixture.GetAuthorizationContext();
-
-            Assert.That(authorizationContext, Is.Not.Null);
-            Assert.Throws<KeyNotFoundException>(() => authorizationContext.Get<long?>("CohortId"));
-        }
-
-        [Test]
-        public void GetAuthorizationContext_WhenUserIsAuthenticatedAndUserRefExistsAndIsValid_ThenShouldReturnAuthorizationContextWithUserRef()
-        {
-            _fixture.SetUserRef(Guid.NewGuid()).SetValidAccountId();
-
-            var authorizationContext = _fixture.GetAuthorizationContext();
-
-            Assert.That(authorizationContext, Is.Not.Null);
-            Assert.That(authorizationContext.Get<Guid?>("UserRef"), Is.EqualTo(_fixture.UserRef));
-        }
-
-        [Test]
-        public void GetAuthorizationContext_WhenUserIsNotAuthenticated_ThenShouldThrowKeyNotFoundException()
-        {
-            var authorizationContext = _fixture.GetAuthorizationContext();
-
-            Assert.That(authorizationContext, Is.Not.Null);
-            Assert.Throws<KeyNotFoundException>(() => authorizationContext.Get<Guid?>("UserRef"));
-        }
-
-        [Test]
-        public void GetAuthorizationContext_WhenUserIsAuthenticatedAndUserRefIsNull_ThenShouldThrowUnauthorizedAccessException()
-        {
-            _fixture.SetUserRef(null);
-
-            Assert.Throws<UnauthorizedAccessException>(() => _fixture.GetAuthorizationContext());
-        }
-
-        [Test]
-        public void GetAuthorizationContext_WhenUserIsAuthenticatedAndUserRefIsNotAGuid_ThenShouldThrowUnauthorizedAccessException()
-        {
-            _fixture.SetInvalidUserRef();
-
-            Assert.Throws<UnauthorizedAccessException>(() => _fixture.GetAuthorizationContext());
-        }
-
-        [Test]
-        public void GetAuthorizationContext_WhenDaftApprenticeshipIdDoesNotExist_ThenShouldThrowKeyNotFoundException()
-        {
-            _fixture.SetInvalidDraftApprenticeshipId();
-
-            Assert.Throws<UnauthorizedAccessException>(() => _fixture.GetAuthorizationContext());
-        }
-
-        [Test]
-        public void GetAuthorizationContext_WhenDraftApprenticeshipIdExistAndIsValid_ThenShouldReturnAuthorizationContextWithDraftApprenticeshipId()
-        {
-            _fixture.SetValidDraftApprenticeshipId();
-
-            var authorizationContext = _fixture.GetAuthorizationContext();
-
-            Assert.That(authorizationContext, Is.Not.Null);
-            Assert.That(authorizationContext.Get<long?>("DraftApprenticeshipId"), Is.EqualTo(_fixture.DraftApprenticeshipId));
-        }
-
-        [Test]
-        public void GetAuthorizationContext_WhenAccountId_And_CohortIdExist_AndIsValid_ThenShouldReturnAuthorizationContextWithEmployerParty()
-        {
-            _fixture
-                .SetValidAccountId()
-                .SetValidCohortId()
-                .SetUserRef(Guid.NewGuid());
-
-            var authorizationContext = _fixture.GetAuthorizationContext();
-
-            Assert.That(authorizationContext, Is.Not.Null);
-            Assert.That(authorizationContext.Get<Party>("Party"), Is.EqualTo(Party.Employer));
-        }
-
-        [Test]
-        public void GetAuthorizationContext_WhenAccountId_And_ApprenticeshipIdExist_AndIsValid_ThenShouldReturnAuthorizationContextWithEmployerParty()
-        {
-            _fixture
-                .SetValidAccountId()
-                .SetValidApprenticeshipId()
-                .SetUserRef(Guid.NewGuid());
-
-            var authorizationContext = _fixture.GetAuthorizationContext();
-
-            Assert.That(authorizationContext, Is.Not.Null);
-            Assert.That(authorizationContext.Get<Party>("Party"), Is.EqualTo(Party.Employer));
-        }
+        _fixture = new AuthorizationContextProviderTestsFixture();
     }
 
-    public class AuthorizationContextProviderTestsFixture
+    [Test]
+    public void GetAuthorizationContext_WhenAccountIdExistsAndIsValid_ThenShouldReturnAuthorizationContextWithAccountId()
     {
-        public IAuthorizationContextProvider AuthorizationContextProvider { get; private set; }
-        public Mock<IHttpContextAccessor> HttpContextAccessor { get; private set; }
-        public Mock<IAuthenticationService> UserService { get; private set; }
-        public Mock<IRoutingFeature> RoutingFeature { get; private set; }
-        public Mock<IEncodingService> EncodingService { get; private set; }
-        public string DraftApprenticeshipHashedId { get; private set; }
-        public long DraftApprenticeshipId { get; private set; }
-        public long CohortId { get; private set; }
-        public string CohortReference { get; private set; }
-        public string AccountHashedId { get; private set; }
-        public long AccountId { get; private set; }
-        public Guid? UserRef { get; private set; }
-        public string UserRefClaimValue { get; private set; }
-        public RouteData RouteData { get; private set; }
-        public string ApprenticeshipHashedId { get; private set; }
-        public long ApprenticeshipId { get; private set; }
+        _fixture.SetUserRef(Guid.NewGuid()).SetValidAccountId();
 
-        public AuthorizationContextProviderTestsFixture()
-        {
-            UserService = new Mock<IAuthenticationService>();
-            HttpContextAccessor = new Mock<IHttpContextAccessor>();
-            RoutingFeature = new Mock<IRoutingFeature>();
-            EncodingService = new Mock<IEncodingService>();
-            RouteData = new RouteData();
-            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
-            UserRef = Guid.NewGuid();
+        var authorizationContext = _fixture.GetAuthorizationContext();
 
-            var featureCollection = new Mock<IFeatureCollection>();
-            featureCollection.Setup(f => f.Get<IRoutingFeature>()).Returns(RoutingFeature.Object);
+        Assert.That(authorizationContext, Is.Not.Null);
+        Assert.That(authorizationContext.Get<long?>("AccountId"), Is.EqualTo(_fixture.AccountId));
+    }
 
-            var context = new Mock<HttpContext>();
-            context.Setup(c => c.Features).Returns(featureCollection.Object);
-            context.Setup(c => c.Request.Query).Returns(new QueryCollection());
-            context.Setup(c => c.Request.Form).Returns(new FormCollection(new Dictionary<string, StringValues>()));
+    [Test]
+    public void GetAuthorizationContext_WhenAccountIdDoesNotExist_ThenShouldThrowKeyNotFoundException()
+    {
+        _fixture.SetUserRef(Guid.NewGuid());
 
-            HttpContextAccessor.Setup(c => c.HttpContext).Returns(context.Object);
+        var authorizationContext = _fixture.GetAuthorizationContext();
 
-            AuthorizationContextProvider = new AuthorizationContextProvider(HttpContextAccessor.Object, EncodingService.Object, UserService.Object);
-        }
+        Assert.That(authorizationContext, Is.Not.Null);
+        Assert.Throws<KeyNotFoundException>(() => authorizationContext.Get<long?>("AccountId"));
+    }
 
-        public IAuthorizationContext GetAuthorizationContext()
-        {
-            return AuthorizationContextProvider.GetAuthorizationContext();
-        }
+    [Test]
+    public void GetAuthorizationContext_WhenAccountIdExistsAndIsInvalid_ThenShouldThrowUnauthorizedAccessException()
+    {
+        _fixture.SetInvalidAccountId();
 
-        public AuthorizationContextProviderTestsFixture SetValidAccountId()
-        {
-            AccountHashedId = "ABC";
-            AccountId = 123;
+        Assert.Throws<UnauthorizedAccessException>(() => _fixture.GetAuthorizationContext());
+    }
 
-            //var routeData = new RouteData();
-            var accountId = AccountId;
+    [Test]
+    public void GetAuthorizationContext_WhenCohortIdAndAccountIdExistAndAreValid_ThenShouldReturnAuthorizationContextWithCohortIdAndPartyId()
+    {
+        _fixture.SetValidAccountId().SetValidCohortId();
 
-            RouteData.Values[RouteValueKeys.AccountHashedId] = AccountHashedId;
+        var authorizationContext = _fixture.GetAuthorizationContext();
 
-            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
-            EncodingService.Setup(h => h.TryDecode(AccountHashedId, EncodingType.AccountId, out accountId)).Returns(true);
+        Assert.That(authorizationContext, Is.Not.Null);
+        Assert.That(authorizationContext.Get<long?>("CohortId"), Is.EqualTo(_fixture.CohortId));
+        Assert.That(authorizationContext.Get<Party?>("Party"), Is.EqualTo(Party.Employer));
+        Assert.That(authorizationContext.Get<long?>("PartyId"), Is.EqualTo(_fixture.AccountId));
+    }
 
-            return this;
-        }
+    [Test]
+    public void GetAuthorizationContext_WhenAccountIdExistsAndIsValidAndCohortIdExistsAndIsInvalid_ThenShouldThrowUnauthorizedAccessException()
+    {
+        _fixture.SetValidAccountId().SetInvalidCohortId();
 
-        public AuthorizationContextProviderTestsFixture SetInvalidAccountId()
-        {
-            AccountHashedId = "AAA";
+        Assert.Throws<UnauthorizedAccessException>(() => _fixture.GetAuthorizationContext());
+    }
 
-            //var routeData = new RouteData();
-            var accountLegalEntityId = 0L;
+    [Test]
+    public void GetAuthorizationContext_WhenCohortIdDoesNotExist_ThenShouldThrowKeyNotFoundException()
+    {
+        var authorizationContext = _fixture.GetAuthorizationContext();
 
-            RouteData.Values[RouteValueKeys.AccountHashedId] = AccountHashedId;
+        Assert.That(authorizationContext, Is.Not.Null);
+        Assert.Throws<KeyNotFoundException>(() => authorizationContext.Get<long?>("CohortId"));
+    }
 
-            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
-            EncodingService.Setup(h => h.TryDecode(AccountHashedId, EncodingType.PublicAccountLegalEntityId, out accountLegalEntityId)).Returns(false);
+    [Test]
+    public void GetAuthorizationContext_WhenUserIsAuthenticatedAndUserRefExistsAndIsValid_ThenShouldReturnAuthorizationContextWithUserRef()
+    {
+        _fixture.SetUserRef(Guid.NewGuid()).SetValidAccountId();
 
-            return this;
-        }
+        var authorizationContext = _fixture.GetAuthorizationContext();
 
-        public AuthorizationContextProviderTestsFixture SetValidCohortId()
-        {
-            CohortReference = "CDE";
-            CohortId = 345;
+        Assert.That(authorizationContext, Is.Not.Null);
+        Assert.That(authorizationContext.Get<Guid?>("UserRef"), Is.EqualTo(_fixture.UserRef));
+    }
 
-            //var routeData = new RouteData();
-            var cohortId = CohortId;
+    [Test]
+    public void GetAuthorizationContext_WhenUserIsNotAuthenticated_ThenShouldThrowKeyNotFoundException()
+    {
+        var authorizationContext = _fixture.GetAuthorizationContext();
 
-            RouteData.Values[RouteValueKeys.CohortReference] = CohortReference;
+        Assert.That(authorizationContext, Is.Not.Null);
+        Assert.Throws<KeyNotFoundException>(() => authorizationContext.Get<Guid?>("UserRef"));
+    }
 
-            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
-            EncodingService.Setup(h => h.TryDecode(CohortReference, EncodingType.CohortReference, out cohortId)).Returns(true);
+    [Test]
+    public void GetAuthorizationContext_WhenUserIsAuthenticatedAndUserRefIsNull_ThenShouldThrowUnauthorizedAccessException()
+    {
+        _fixture.SetUserRef(null);
 
-            return this;
-        }
+        Assert.Throws<UnauthorizedAccessException>(() => _fixture.GetAuthorizationContext());
+    }
 
-        public AuthorizationContextProviderTestsFixture SetInvalidCohortId()
-        {
-            CohortReference = "BBB";
+    [Test]
+    public void GetAuthorizationContext_WhenUserIsAuthenticatedAndUserRefIsNotAGuid_ThenShouldThrowUnauthorizedAccessException()
+    {
+        _fixture.SetInvalidUserRef();
 
-            var cohortId = CohortId;
+        Assert.Throws<UnauthorizedAccessException>(() => _fixture.GetAuthorizationContext());
+    }
 
-            RouteData.Values[RouteValueKeys.CohortReference] = CohortReference;
+    [Test]
+    public void GetAuthorizationContext_WhenDaftApprenticeshipIdDoesNotExist_ThenShouldThrowKeyNotFoundException()
+    {
+        _fixture.SetInvalidDraftApprenticeshipId();
 
-            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
-            EncodingService.Setup(h => h.TryDecode(CohortReference, EncodingType.CohortReference, out cohortId)).Returns(false);
+        Assert.Throws<UnauthorizedAccessException>(() => _fixture.GetAuthorizationContext());
+    }
 
-            return this;
-        }
+    [Test]
+    public void GetAuthorizationContext_WhenDraftApprenticeshipIdExistAndIsValid_ThenShouldReturnAuthorizationContextWithDraftApprenticeshipId()
+    {
+        _fixture.SetValidDraftApprenticeshipId();
 
-        public AuthorizationContextProviderTestsFixture SetValidDraftApprenticeshipId()
-        {
-            DraftApprenticeshipHashedId = "DEF";
-            DraftApprenticeshipId = 989;
+        var authorizationContext = _fixture.GetAuthorizationContext();
 
-            var draftApprenticeshipId = DraftApprenticeshipId;
+        Assert.That(authorizationContext, Is.Not.Null);
+        Assert.That(authorizationContext.Get<long?>("DraftApprenticeshipId"), Is.EqualTo(_fixture.DraftApprenticeshipId));
+    }
 
-            RouteData.Values[RouteValueKeys.DraftApprenticeshipHashedId] = DraftApprenticeshipHashedId;
+    [Test]
+    public void GetAuthorizationContext_WhenAccountId_And_CohortIdExist_AndIsValid_ThenShouldReturnAuthorizationContextWithEmployerParty()
+    {
+        _fixture
+            .SetValidAccountId()
+            .SetValidCohortId()
+            .SetUserRef(Guid.NewGuid());
 
-            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
-            EncodingService.Setup(h => h.TryDecode(DraftApprenticeshipHashedId, EncodingType.ApprenticeshipId, out draftApprenticeshipId)).Returns(true);
+        var authorizationContext = _fixture.GetAuthorizationContext();
 
-            return this;
-        }
+        Assert.That(authorizationContext, Is.Not.Null);
+        Assert.That(authorizationContext.Get<Party>("Party"), Is.EqualTo(Party.Employer));
+    }
 
-        public AuthorizationContextProviderTestsFixture SetInvalidDraftApprenticeshipId()
-        {
-            DraftApprenticeshipHashedId = "CCCC";
+    [Test]
+    public void GetAuthorizationContext_WhenAccountId_And_ApprenticeshipIdExist_AndIsValid_ThenShouldReturnAuthorizationContextWithEmployerParty()
+    {
+        _fixture
+            .SetValidAccountId()
+            .SetValidApprenticeshipId()
+            .SetUserRef(Guid.NewGuid());
 
-            var draftApprenticeshipId = DraftApprenticeshipId;
+        var authorizationContext = _fixture.GetAuthorizationContext();
 
-            RouteData.Values[RouteValueKeys.DraftApprenticeshipHashedId] = DraftApprenticeshipHashedId;
+        Assert.That(authorizationContext, Is.Not.Null);
+        Assert.That(authorizationContext.Get<Party>("Party"), Is.EqualTo(Party.Employer));
+    }
+}
 
-            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
-            EncodingService.Setup(h => h.TryDecode(DraftApprenticeshipHashedId, EncodingType.ApprenticeshipId, out draftApprenticeshipId)).Returns(false);
+public class AuthorizationContextProviderTestsFixture
+{
+    public IAuthorizationContextProvider AuthorizationContextProvider { get; private set; }
+    public Mock<IHttpContextAccessor> HttpContextAccessor { get; private set; }
+    public Mock<IAuthenticationService> UserService { get; private set; }
+    public Mock<IRoutingFeature> RoutingFeature { get; private set; }
+    public Mock<IEncodingService> EncodingService { get; private set; }
+    public string DraftApprenticeshipHashedId { get; private set; }
+    public long DraftApprenticeshipId { get; private set; }
+    public long CohortId { get; private set; }
+    public string CohortReference { get; private set; }
+    public string AccountHashedId { get; private set; }
+    public long AccountId { get; private set; }
+    public Guid? UserRef { get; private set; }
+    public string UserRefClaimValue { get; private set; }
+    public RouteData RouteData { get; private set; }
+    public string ApprenticeshipHashedId { get; private set; }
+    public long ApprenticeshipId { get; private set; }
 
-            return this;
-        }
+    public AuthorizationContextProviderTestsFixture()
+    {
+        UserService = new Mock<IAuthenticationService>();
+        HttpContextAccessor = new Mock<IHttpContextAccessor>();
+        RoutingFeature = new Mock<IRoutingFeature>();
+        EncodingService = new Mock<IEncodingService>();
+        RouteData = new RouteData();
+        RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
+        UserRef = Guid.NewGuid();
 
-        public AuthorizationContextProviderTestsFixture SetUserRef(Guid? userRef)
-        {
-            UserRef = userRef;
-            UserRefClaimValue = UserRef == null ? null : UserRef.ToString();
+        var featureCollection = new Mock<IFeatureCollection>();
+        featureCollection.Setup(f => f.Get<IRoutingFeature>()).Returns(RoutingFeature.Object);
 
-            var userIdClaimValue = UserRefClaimValue;
+        var context = new Mock<HttpContext>();
+        context.Setup(c => c.Features).Returns(featureCollection.Object);
+        context.Setup(c => c.Request.Query).Returns(new QueryCollection());
+        context.Setup(c => c.Request.Form).Returns(new FormCollection(new Dictionary<string, StringValues>()));
 
-            UserService.Setup(a => a.IsUserAuthenticated()).Returns(true);
-            UserService.Setup(a => a.TryGetUserClaimValue(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, out userIdClaimValue)).Returns(true);
+        HttpContextAccessor.Setup(c => c.HttpContext).Returns(context.Object);
 
-            return this;
-        }
+        AuthorizationContextProvider = new AuthorizationContextProvider(HttpContextAccessor.Object, EncodingService.Object, UserService.Object);
+    }
 
-        public AuthorizationContextProviderTestsFixture SetInvalidUserRef()
-        {
-            UserRefClaimValue = "XXXXX";
+    public IAuthorizationContext GetAuthorizationContext()
+    {
+        return AuthorizationContextProvider.GetAuthorizationContext();
+    }
 
-            var userIdClaimValue = UserRefClaimValue;
+    public AuthorizationContextProviderTestsFixture SetValidAccountId()
+    {
+        AccountHashedId = "ABC";
+        AccountId = 123;
 
-            UserService.Setup(a => a.IsUserAuthenticated()).Returns(true);
-            UserService.Setup(a => a.TryGetUserClaimValue(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, out userIdClaimValue)).Returns(true);
+        //var routeData = new RouteData();
+        var accountId = AccountId;
 
-            return this;
-        }
+        RouteData.Values[RouteValueKeys.AccountHashedId] = AccountHashedId;
 
-        public AuthorizationContextProviderTestsFixture SetValidApprenticeshipId()
-        {
-            ApprenticeshipHashedId = "XYRZ";
-            ApprenticeshipId = 887;
+        RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
+        EncodingService.Setup(h => h.TryDecode(AccountHashedId, EncodingType.AccountId, out accountId)).Returns(true);
 
-            long decodedApprenticeshipId;
-            RouteData.Values[RouteValueKeys.ApprenticeshipHashedId] = ApprenticeshipHashedId;
+        return this;
+    }
 
-            RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
-            EncodingService.Setup(h => h.TryDecode(ApprenticeshipHashedId, EncodingType.ApprenticeshipId, out decodedApprenticeshipId)).Returns(true);
+    public AuthorizationContextProviderTestsFixture SetInvalidAccountId()
+    {
+        AccountHashedId = "AAA";
 
-            return this;
-        }
+        //var routeData = new RouteData();
+        var accountLegalEntityId = 0L;
+
+        RouteData.Values[RouteValueKeys.AccountHashedId] = AccountHashedId;
+
+        RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
+        EncodingService.Setup(h => h.TryDecode(AccountHashedId, EncodingType.PublicAccountLegalEntityId, out accountLegalEntityId)).Returns(false);
+
+        return this;
+    }
+
+    public AuthorizationContextProviderTestsFixture SetValidCohortId()
+    {
+        CohortReference = "CDE";
+        CohortId = 345;
+
+        //var routeData = new RouteData();
+        var cohortId = CohortId;
+
+        RouteData.Values[RouteValueKeys.CohortReference] = CohortReference;
+
+        RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
+        EncodingService.Setup(h => h.TryDecode(CohortReference, EncodingType.CohortReference, out cohortId)).Returns(true);
+
+        return this;
+    }
+
+    public AuthorizationContextProviderTestsFixture SetInvalidCohortId()
+    {
+        CohortReference = "BBB";
+
+        var cohortId = CohortId;
+
+        RouteData.Values[RouteValueKeys.CohortReference] = CohortReference;
+
+        RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
+        EncodingService.Setup(h => h.TryDecode(CohortReference, EncodingType.CohortReference, out cohortId)).Returns(false);
+
+        return this;
+    }
+
+    public AuthorizationContextProviderTestsFixture SetValidDraftApprenticeshipId()
+    {
+        DraftApprenticeshipHashedId = "DEF";
+        DraftApprenticeshipId = 989;
+
+        var draftApprenticeshipId = DraftApprenticeshipId;
+
+        RouteData.Values[RouteValueKeys.DraftApprenticeshipHashedId] = DraftApprenticeshipHashedId;
+
+        RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
+        EncodingService.Setup(h => h.TryDecode(DraftApprenticeshipHashedId, EncodingType.ApprenticeshipId, out draftApprenticeshipId)).Returns(true);
+
+        return this;
+    }
+
+    public AuthorizationContextProviderTestsFixture SetInvalidDraftApprenticeshipId()
+    {
+        DraftApprenticeshipHashedId = "CCCC";
+
+        var draftApprenticeshipId = DraftApprenticeshipId;
+
+        RouteData.Values[RouteValueKeys.DraftApprenticeshipHashedId] = DraftApprenticeshipHashedId;
+
+        RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
+        EncodingService.Setup(h => h.TryDecode(DraftApprenticeshipHashedId, EncodingType.ApprenticeshipId, out draftApprenticeshipId)).Returns(false);
+
+        return this;
+    }
+
+    public AuthorizationContextProviderTestsFixture SetUserRef(Guid? userRef)
+    {
+        UserRef = userRef;
+        UserRefClaimValue = UserRef == null ? null : UserRef.ToString();
+
+        var userIdClaimValue = UserRefClaimValue;
+
+        UserService.Setup(a => a.IsUserAuthenticated()).Returns(true);
+        UserService.Setup(a => a.TryGetUserClaimValue(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, out userIdClaimValue)).Returns(true);
+
+        return this;
+    }
+
+    public AuthorizationContextProviderTestsFixture SetInvalidUserRef()
+    {
+        UserRefClaimValue = "XXXXX";
+
+        var userIdClaimValue = UserRefClaimValue;
+
+        UserService.Setup(a => a.IsUserAuthenticated()).Returns(true);
+        UserService.Setup(a => a.TryGetUserClaimValue(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, out userIdClaimValue)).Returns(true);
+
+        return this;
+    }
+
+    public AuthorizationContextProviderTestsFixture SetValidApprenticeshipId()
+    {
+        ApprenticeshipHashedId = "XYRZ";
+        ApprenticeshipId = 887;
+
+        long decodedApprenticeshipId;
+        RouteData.Values[RouteValueKeys.ApprenticeshipHashedId] = ApprenticeshipHashedId;
+
+        RoutingFeature.Setup(f => f.RouteData).Returns(RouteData);
+        EncodingService.Setup(h => h.TryDecode(ApprenticeshipHashedId, EncodingType.ApprenticeshipId, out decodedApprenticeshipId)).Returns(true);
+
+        return this;
     }
 }

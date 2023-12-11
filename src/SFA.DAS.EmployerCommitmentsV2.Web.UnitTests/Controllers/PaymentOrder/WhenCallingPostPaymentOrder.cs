@@ -14,58 +14,57 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.PaymentOrderControllerTests;
+
+public class WhenCallingPostPaymentOrder
 {
-    public class WhenCallingPostPaymentOrder
+    [Test, MoqAutoData]
+    public async Task And_UpdateProviderPaymentsPriority_Succeeds_Then_Redirect_To_Home(
+        Mock<ICommitmentsApiClient> mockCommitmentsApiClient,
+        UpdateProviderPaymentsPriorityRequest request,
+        PaymentOrderViewModel viewModel,
+        [Frozen] Mock<IModelMapper> mockMapper,
+        [Greedy] PaymentOrderController controller)
     {
-        [Test, MoqAutoData]
-        public async Task And_UpdateProviderPaymentsPriority_Succeeds_Then_Redirect_To_Home(
-            Mock<ICommitmentsApiClient> mockCommitmentsApiClient,
-            UpdateProviderPaymentsPriorityRequest request,
-            PaymentOrderViewModel viewModel,
-            [Frozen] Mock<IModelMapper> mockMapper,
-            [Greedy] PaymentOrderController controller)
+        mockMapper
+            .Setup(mapper => mapper.Map<UpdateProviderPaymentsPriorityRequest>(viewModel))
+            .ReturnsAsync(request);
+
+        mockCommitmentsApiClient
+            .Setup(r => r.UpdateProviderPaymentsPriority(
+                It.IsAny<long>(),
+                It.IsAny<UpdateProviderPaymentsPriorityRequest>(),
+                It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var expectedRouteValues = new RouteValueDictionary(new
         {
-            mockMapper
-                .Setup(mapper => mapper.Map<UpdateProviderPaymentsPriorityRequest>(viewModel))
-                .ReturnsAsync(request);
+            viewModel.AccountHashedId
+        });
 
-            mockCommitmentsApiClient
-                .Setup(r => r.UpdateProviderPaymentsPriority(
-                    It.IsAny<long>(),
-                    It.IsAny<UpdateProviderPaymentsPriorityRequest>(),
-                    It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask);
+        var result = (await controller.ProviderPaymentOrder(viewModel)) as RedirectToActionResult;
 
-            var expectedRouteValues = new RouteValueDictionary(new
-            {
-                viewModel.AccountHashedId
-            });
+        result.Should().NotBeNull();
+        result.ActionName.Should().Be("Index");
+        result.ControllerName.Should().Be("Home");
+        result.RouteValues.Should().BeEquivalentTo(expectedRouteValues);
+    }
 
-            var result = (await controller.ProviderPaymentOrder(viewModel)) as RedirectToActionResult;
+    [Test, MoqAutoData]
+    public async Task And_UpdateProviderPaymentsPriority_Fails_Then_Redirect_To_Error(
+        PaymentOrderViewModel viewModel,
+        [Frozen] Mock<IModelMapper> mockMapper,
+        [Greedy] PaymentOrderController controller)
+    {
+        mockMapper
+            .Setup(mapper => mapper.Map<UpdateProviderPaymentsPriorityRequest>(viewModel))
+            .ThrowsAsync(new Exception("Some error"));
 
-            result.Should().NotBeNull();
-            result.ActionName.Should().Be("Index");
-            result.ControllerName.Should().Be("Home");
-            result.RouteValues.Should().BeEquivalentTo(expectedRouteValues);
-        }
+        var result = (await controller.ProviderPaymentOrder(viewModel)) as RedirectToActionResult;
 
-        [Test, MoqAutoData]
-        public async Task And_UpdateProviderPaymentsPriority_Fails_Then_Redirect_To_Error(
-            PaymentOrderViewModel viewModel,
-            [Frozen] Mock<IModelMapper> mockMapper,
-            [Greedy] PaymentOrderController controller)
-        {
-            mockMapper
-                .Setup(mapper => mapper.Map<UpdateProviderPaymentsPriorityRequest>(viewModel))
-                .ThrowsAsync(new Exception("Some error"));
-
-            var result = (await controller.ProviderPaymentOrder(viewModel)) as RedirectToActionResult;
-
-            result.Should().NotBeNull();
-            result.ActionName.Should().Be("Error");
-            result.ControllerName.Should().Be("Error");
-            result.RouteValues.Should().BeNull();
-        }
+        result.Should().NotBeNull();
+        result.ActionName.Should().Be("Error");
+        result.ControllerName.Should().Be("Error");
+        result.RouteValues.Should().BeNull();
     }
 }

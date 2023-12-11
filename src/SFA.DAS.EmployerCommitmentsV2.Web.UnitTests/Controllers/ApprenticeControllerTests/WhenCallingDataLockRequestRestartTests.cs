@@ -5,51 +5,50 @@ using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenCallingDataLockRequestRestartTests
 {
-    public class WhenCallingDataLockRequestRestartTests
+    private WhenCallingDataLockRequestRestartTestsFixture _fixture;
+
+    [SetUp]
+    public void Arrange()
     {
-        WhenCallingDataLockRequestRestartTestsFixture _fixture;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new WhenCallingDataLockRequestRestartTestsFixture();
-        }
-
-        public async Task ThenTheCorrectViewIsReturned()
-        {
-            var result = await _fixture.DataLockRequestRestart();
-
-            _fixture.VerifyViewModel(result as ViewResult);
-        }
+        _fixture = new WhenCallingDataLockRequestRestartTestsFixture();
     }
 
-    public class WhenCallingDataLockRequestRestartTestsFixture : ApprenticeControllerTestFixtureBase
+    public async Task ThenTheCorrectViewIsReturned()
     {
-        private readonly DataLockRequestRestartRequest _request;
-        private readonly DataLockRequestRestartViewModel _viewModel;
+        var result = await _fixture.DataLockRequestRestart();
 
-        public WhenCallingDataLockRequestRestartTestsFixture() : base()
-        {
-            _request = _autoFixture.Create<DataLockRequestRestartRequest>();
-            _viewModel = _autoFixture.Create<DataLockRequestRestartViewModel>();
+        _fixture.VerifyViewModel(result as ViewResult);
+    }
+}
 
-            _mockMapper.Setup(m => m.Map<DataLockRequestRestartViewModel>(_request))
-                .ReturnsAsync(_viewModel);
-        }
+public class WhenCallingDataLockRequestRestartTestsFixture : ApprenticeControllerTestFixtureBase
+{
+    private readonly DataLockRequestRestartRequest _request;
+    private readonly DataLockRequestRestartViewModel _viewModel;
 
-        public async Task<IActionResult> DataLockRequestRestart()
-        {
-            return await _controller.DataLockRequestRestart(_request);
-        }
+    public WhenCallingDataLockRequestRestartTestsFixture() : base()
+    {
+        _request = AutoFixture.Create<DataLockRequestRestartRequest>();
+        _viewModel = AutoFixture.Create<DataLockRequestRestartViewModel>();
 
-        public void VerifyViewModel(ViewResult viewResult)
-        {
-            var viewModel = viewResult.Model as DataLockRequestRestartViewModel;
+        MockMapper.Setup(m => m.Map<DataLockRequestRestartViewModel>(_request))
+            .ReturnsAsync(_viewModel);
+    }
 
-            Assert.That(viewModel, Is.InstanceOf<DataLockRequestRestartViewModel>());
-            Assert.That(viewModel, Is.EqualTo(_viewModel));
-        }
+    public async Task<IActionResult> DataLockRequestRestart()
+    {
+        return await Controller.DataLockRequestRestart(_request);
+    }
+
+    public void VerifyViewModel(ViewResult viewResult)
+    {
+        var viewModel = viewResult.Model as DataLockRequestRestartViewModel;
+
+        Assert.That(viewModel, Is.InstanceOf<DataLockRequestRestartViewModel>());
+        Assert.That(viewModel, Is.EqualTo(_viewModel));
     }
 }

@@ -11,26 +11,25 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests;
+
+public class WhenGettingConfirmProvider
 {
-    public class WhenGettingConfirmProvider
+    [Test, MoqAutoData]
+    public async Task Then_The_View_Is_Returned(
+        int providerId,
+        ConfirmProviderRequest confirmProviderRequest,
+        GetProviderResponse getProviderResponse,
+        [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
+        [Greedy] CohortController controller)
     {
-        [Test, MoqAutoData]
-        public async Task Then_The_View_Is_Returned(
-            int providerId,
-            ConfirmProviderRequest confirmProviderRequest,
-            GetProviderResponse getProviderResponse,
-            [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
-            [Greedy] CohortController controller)
-        {
-            confirmProviderRequest.ProviderId = providerId;
-            mockApiClient
-                .Setup(x => x.GetProvider(providerId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(getProviderResponse);
+        confirmProviderRequest.ProviderId = providerId;
+        mockApiClient
+            .Setup(x => x.GetProvider(providerId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(getProviderResponse);
 
-            var result = await controller.ConfirmProvider(confirmProviderRequest) as ViewResult;
+        var result = await controller.ConfirmProvider(confirmProviderRequest) as ViewResult;
 
-            result.ViewName.Should().BeNull();
-        }
+        result.ViewName.Should().BeNull();
     }
 }

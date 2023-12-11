@@ -5,52 +5,51 @@ using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenCallingDataLockRequestChangesTests
 {
-    public class WhenCallingDataLockRequestChangesTests
+    private WhenCallingDataLockRequestChangesTestsFixture _fixture;
+
+    [SetUp]
+    public void Arrange()
     {
-        WhenCallingDataLockRequestChangesTestsFixture _fixture;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new WhenCallingDataLockRequestChangesTestsFixture();
-        }
-
-        public async Task ThenTheCorrectViewIsReturned()
-        {
-            var result = await _fixture.DataLockRequestChanges();
-
-            _fixture.VerifyViewModel(result as ViewResult);
-        }
+        _fixture = new WhenCallingDataLockRequestChangesTestsFixture();
     }
 
-    public class WhenCallingDataLockRequestChangesTestsFixture : ApprenticeControllerTestFixtureBase
+    public async Task ThenTheCorrectViewIsReturned()
     {
-        private readonly DataLockRequestChangesRequest _request;
-        private readonly DataLockRequestChangesViewModel _viewModel;
+        var result = await _fixture.DataLockRequestChanges();
 
-        public WhenCallingDataLockRequestChangesTestsFixture() : base()
-        {
-            _request = _autoFixture.Create<DataLockRequestChangesRequest>();
-            _viewModel = _autoFixture.Create<DataLockRequestChangesViewModel>();
+        _fixture.VerifyViewModel(result as ViewResult);
+    }
+}
+
+public class WhenCallingDataLockRequestChangesTestsFixture : ApprenticeControllerTestFixtureBase
+{
+    private readonly DataLockRequestChangesRequest _request;
+    private readonly DataLockRequestChangesViewModel _viewModel;
+
+    public WhenCallingDataLockRequestChangesTestsFixture()
+    {
+        _request = AutoFixture.Create<DataLockRequestChangesRequest>();
+        _viewModel = AutoFixture.Create<DataLockRequestChangesViewModel>();
             
 
-            _mockMapper.Setup(m => m.Map<DataLockRequestChangesViewModel>(_request))
-                .ReturnsAsync(_viewModel);
-        }
+        MockMapper.Setup(m => m.Map<DataLockRequestChangesViewModel>(_request))
+            .ReturnsAsync(_viewModel);
+    }
 
-        public async Task<IActionResult> DataLockRequestChanges()
-        {
-            return await _controller.DataLockRequestChanges(_request);
-        }
+    public async Task<IActionResult> DataLockRequestChanges()
+    {
+        return await Controller.DataLockRequestChanges(_request);
+    }
 
-        public void VerifyViewModel(ViewResult viewResult)
-        {
-            var viewModel = viewResult.Model as DataLockRequestChangesViewModel;
+    public void VerifyViewModel(ViewResult viewResult)
+    {
+        var viewModel = viewResult.Model as DataLockRequestChangesViewModel;
 
-            Assert.That(viewModel, Is.InstanceOf<DataLockRequestChangesViewModel>());
-            Assert.That(viewModel, Is.EqualTo(_viewModel));
-        }
+        Assert.That(viewModel, Is.InstanceOf<DataLockRequestChangesViewModel>());
+        Assert.That(viewModel, Is.EqualTo(_viewModel));
     }
 }

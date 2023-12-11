@@ -7,26 +7,28 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+[TestFixture]
+public class WhenPostingHasTheApprenticeBeenMadeRedundant : ApprenticeControllerTestBase
 {
-    [TestFixture]
-    public class WhenPostingHasTheApprenticeBeenMadeRedundant : ApprenticeControllerTestBase
+    [SetUp]
+    public void Arrange()
     {
-        [SetUp]
-        public void Arrange()
-        {
-            _controller = new ApprenticeController(Mock.Of<IModelMapper>(),
-                Mock.Of<ICookieStorageService<IndexRequest>>(),
-                Mock.Of<ICommitmentsApiClient>(),
-                Mock.Of<ILogger<ApprenticeController>>());
-        }
+        Controller = new ApprenticeController(Mock.Of<IModelMapper>(),
+            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            Mock.Of<ICommitmentsApiClient>(),
+            Mock.Of<ILogger<ApprenticeController>>());
+    }
 
-        [Test, MoqAutoData]
-        public void AndTheUserAnswered_HasTheApprenticeBeenMadeRedundant_ThenRedirectToConfirmStopApprenticeship(MadeRedundantViewModel viewModel)
-        {
-            var result = _controller.HasTheApprenticeBeenMadeRedundant(viewModel);
+    [Test, MoqAutoData]
+    public void AndTheUserAnswered_HasTheApprenticeBeenMadeRedundant_ThenRedirectToConfirmStopApprenticeship(MadeRedundantViewModel viewModel)
+    {
+        var result = Controller.HasTheApprenticeBeenMadeRedundant(viewModel);
 
-            var redirect = result.VerifyReturnsRedirectToActionResult();
+        var redirect = result.VerifyReturnsRedirectToActionResult();
+        Assert.Multiple(() =>
+        {
             Assert.That("ConfirmStop", Is.EqualTo(redirect.ActionName));
             Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
             Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
@@ -34,6 +36,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.That(viewModel.StopYear, Is.EqualTo(redirect.RouteValues["StopYear"]));
             Assert.That(viewModel.IsCoPJourney, Is.EqualTo(redirect.RouteValues["IsCoPJourney"]));
             Assert.That(viewModel.MadeRedundant, Is.EqualTo(redirect.RouteValues["MadeRedundant"]));
-        }
+        });
     }
 }

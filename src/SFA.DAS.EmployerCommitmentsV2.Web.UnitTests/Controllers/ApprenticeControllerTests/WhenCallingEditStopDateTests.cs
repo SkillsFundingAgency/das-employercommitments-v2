@@ -1,61 +1,59 @@
-﻿using AutoFixture;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
+﻿using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System.Threading.Tasks;
+using AutoFixture;
+using Moq;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenCallingEditStopDateTests
 {
-    public class WhenCallingEditStopDateTests
+    private WhenCallingEditStopDateTestsFixture _fixture;
+
+    [SetUp]
+    public void Arrange()
     {
-        WhenCallingEditStopDateTestsFixture _fixture;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new WhenCallingEditStopDateTestsFixture();
-        }
-
-        [Test]
-        public async Task ThenTheCorrectViewIsReturned()
-        {
-            //Act
-            var result = await _fixture.EditStopDate();
-
-            //Assert
-            _fixture.VerifyViewModel(result as ViewResult);
-        }
+        _fixture = new WhenCallingEditStopDateTestsFixture();
     }
 
-    public class WhenCallingEditStopDateTestsFixture : ApprenticeControllerTestFixtureBase
+    [Test]
+    public async Task ThenTheCorrectViewIsReturned()
     {
-        private readonly EditStopDateRequest _request;
-        private readonly EditStopDateViewModel _viewModel;
+        //Act
+        var result = await _fixture.EditStopDate();
 
-        public WhenCallingEditStopDateTestsFixture() : base()
-        {
-            _request = _autoFixture.Create<EditStopDateRequest>();           
-            _autoFixture.Customize<EditStopDateViewModel>(c => c.Without(x => x.NewStopDate));
-            _viewModel = _autoFixture.Create<EditStopDateViewModel>();
-            _viewModel.NewStopDate = new CommitmentsV2.Shared.Models.MonthYearModel("062020");           
+        //Assert
+        _fixture.VerifyViewModel(result as ViewResult);
+    }
+}
 
-            _mockMapper.Setup(m => m.Map<EditStopDateViewModel>(_request))
-                .ReturnsAsync(_viewModel);
-        }
+public class WhenCallingEditStopDateTestsFixture : ApprenticeControllerTestFixtureBase
+{
+    private readonly EditStopDateRequest _request;
+    private readonly EditStopDateViewModel _viewModel;
 
-        public async Task<IActionResult> EditStopDate()
-        {
-            return await _controller.EditStopDate(_request);
-        }
+    public WhenCallingEditStopDateTestsFixture()
+    {
+        _request = AutoFixture.Create<EditStopDateRequest>();           
+        AutoFixture.Customize<EditStopDateViewModel>(c => c.Without(x => x.NewStopDate));
+        _viewModel = AutoFixture.Create<EditStopDateViewModel>();
+        _viewModel.NewStopDate = new CommitmentsV2.Shared.Models.MonthYearModel("062020");           
 
-        public void VerifyViewModel(ViewResult viewResult)
-        {
-            var viewModel = viewResult.Model as EditStopDateViewModel;
+        MockMapper.Setup(m => m.Map<EditStopDateViewModel>(_request))
+            .ReturnsAsync(_viewModel);
+    }
 
-            Assert.That(viewModel, Is.InstanceOf<EditStopDateViewModel>());
-            Assert.That(viewModel, Is.EqualTo(_viewModel));
-        }
+    public async Task<IActionResult> EditStopDate()
+    {
+        return await Controller.EditStopDate(_request);
+    }
 
+    public void VerifyViewModel(ViewResult viewResult)
+    {
+        var viewModel = viewResult.Model as EditStopDateViewModel;
+
+        Assert.That(viewModel, Is.InstanceOf<EditStopDateViewModel>());
+        Assert.That(viewModel, Is.EqualTo(_viewModel));
     }
 }

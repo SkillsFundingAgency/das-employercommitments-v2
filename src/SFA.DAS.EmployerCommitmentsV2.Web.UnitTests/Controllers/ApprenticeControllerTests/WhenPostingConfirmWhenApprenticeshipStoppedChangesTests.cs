@@ -17,63 +17,76 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+[TestFixture]
+public class WhenPostingConfirmWhenApprenticeshipStoppedChangesTests : ApprenticeControllerTestBase
 {
-    [TestFixture]
-    public class WhenPostingConfirmWhenApprenticeshipStoppedChangesTests : ApprenticeControllerTestBase
+    [SetUp]
+    public void Arrange()
     {
-        [SetUp]
-        public void Arrange()
+        MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        MockModelMapper = new Mock<IModelMapper>();
+
+        Controller = new ApprenticeController(MockModelMapper.Object,
+            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            MockCommitmentsApiClient.Object,
+            Mock.Of<ILogger<ApprenticeController>>());
+
+        Controller.TempData =
+            new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
+    }
+
+    [Test, MoqAutoData]
+    public async Task AndTheApprenticeship_StoppedIsWrong_ThenRedirectToApprenticeshipDetails(
+        ConfirmWhenApprenticeshipStoppedViewModel viewModel)
+    {
+        viewModel.IsCorrectStopDate = false;
+
+        var result = await Controller.ConfirmWhenApprenticeshipStopped(viewModel) as RedirectToActionResult;
+
+        var redirect = result.VerifyReturnsRedirectToActionResult();
+
+        Assert.Multiple(() =>
         {
-            var fixture = new Fixture();
-            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockModelMapper = new Mock<IModelMapper>();
-
-            _controller = new ApprenticeController(_mockModelMapper.Object,
-                Mock.Of<ICookieStorageService<IndexRequest>>(),
-                _mockCommitmentsApiClient.Object,
-                Mock.Of<ILogger<ApprenticeController>>());
-
-            _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
-        }
-
-        [Test, MoqAutoData]
-        public async Task AndTheApprenticeship_StoppedIsWrong_ThenRedirectToApprenticeshipDetails(ConfirmWhenApprenticeshipStoppedViewModel viewModel)
-        {
-            viewModel.IsCorrectStopDate = false;
-
-            var result = await _controller.ConfirmWhenApprenticeshipStopped(viewModel) as RedirectToActionResult;
-
-            var redirect = result.VerifyReturnsRedirectToActionResult();
-
             Assert.That("EditStopDate", Is.EqualTo(redirect.ActionName));
             Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
             Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
+            MockCommitmentsApiClient.Verify(
+                x => x.ResolveOverlappingTrainingDateRequest(
+                    It.IsAny<ResolveApprenticeshipOverlappingTrainingDateRequest>(), CancellationToken.None),
+                Times.Never);
+        });
+    }
 
-            _mockCommitmentsApiClient.Verify(x => x.ResolveOverlappingTrainingDateRequest(It.IsAny<ResolveApprenticeshipOverlappingTrainingDateRequest>(), CancellationToken.None), Times.Never);
-        }
+    [Test, MoqAutoData]
+    public async Task AndTheApprenticeship_StoppedIsCorrect_ThenRedirectToApprenticeshipDetails(
+        ConfirmWhenApprenticeshipStoppedViewModel viewModel)
+    {
+        //Arrange
+        viewModel.IsCorrectStopDate = true;
+        viewModel.StopDate = new DateTime(2022, 1, 1);
 
-        [Test, MoqAutoData]
-        public async Task AndTheApprenticeship_StoppedIsCorrect_ThenRedirectToApprenticeshipDetails(ConfirmWhenApprenticeshipStoppedViewModel viewModel)
+        //Act
+        var result = await Controller.ConfirmWhenApprenticeshipStopped(viewModel) as RedirectToActionResult;
+
+        //Assert
+        var redirect = result.VerifyReturnsRedirectToActionResult();
+
+        Assert.Multiple(() =>
         {
-            //Arrange
-            viewModel.IsCorrectStopDate = true;
-            viewModel.StopDate = new DateTime(2022, 1, 1);
-
-            //Act
-            var result = await _controller.ConfirmWhenApprenticeshipStopped(viewModel) as RedirectToActionResult;
-
-            //Assert
-            var redirect = result.VerifyReturnsRedirectToActionResult();
-
-            Assert.That(_controller.TempData.Values.Contains("Current stop date confirmed"), Is.True);
-            Assert.That(_controller.TempData.Values.Contains("January 2022"), Is.True);
+            Assert.That(Controller.TempData.Values.Contains("Current stop date confirmed"), Is.True);
+            Assert.That(Controller.TempData.Values.Contains("January 2022"), Is.True);
             Assert.That("ApprenticeshipDetails", Is.EqualTo(redirect.ActionName));
             Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
             Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
-
-            _mockCommitmentsApiClient
-                .Verify(x => x.ResolveOverlappingTrainingDateRequest(It.Is<ResolveApprenticeshipOverlappingTrainingDateRequest>(x => x.ResolutionType == OverlappingTrainingDateRequestResolutionType.ApprenticeshipStopDateIsCorrect), CancellationToken.None), Times.Once);
-        }
+            MockCommitmentsApiClient
+                .Verify(
+                    x => x.ResolveOverlappingTrainingDateRequest(
+                        It.Is<ResolveApprenticeshipOverlappingTrainingDateRequest>(x =>
+                            x.ResolutionType ==
+                            OverlappingTrainingDateRequestResolutionType.ApprenticeshipStopDateIsCorrect),
+                        CancellationToken.None), Times.Once);
+        });
     }
 }

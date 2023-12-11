@@ -14,128 +14,131 @@ using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+[TestFixture]
+public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTestBase
 {
-    [TestFixture]
-    public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTestBase
+    private const string EditApprenticeUpdated = "You have updated apprentice details";
+    private const string FlashMessageBody = "FlashMessageBody";
+    private const string FlashMessageLevel = "FlashMessageLevel";
+    private EditApprenticeshipResponse _response;
+
+    [SetUp]
+    public void Arrange()
     {
-        private const string EditApprenticeUpdated = "You have updated apprentice details";
-        private const string FlashMessageBody = "FlashMessageBody";
-        private const string FlashMessageLevel = "FlashMessageLevel";
-        private EditApprenticeshipResponse response;
+        MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        MockModelMapper = new Mock<IModelMapper>();
+        _response = new EditApprenticeshipResponse { NeedReapproval = true };
 
-        [SetUp]
-        public void Arrange()
+        MockCommitmentsApiClient.Setup(x => x.EditApprenticeship(It.IsAny<EditApprenticeshipApiRequest>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(_response));
+
+        Controller = new ApprenticeController(MockModelMapper.Object,
+            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            MockCommitmentsApiClient.Object,
+            Mock.Of<ILogger<ApprenticeController>>());
+        Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
+    }
+
+    [Test, MoqAutoData]
+    public async Task AndTheEditApprenticeship_IsConfirmed_WithIntermediateUpdate_ThenRedirectToApprenticeshipDetails(ConfirmEditApprenticeshipViewModel viewModel)
+    {
+        viewModel.ConfirmChanges = true;
+        var result = await Controller.ConfirmEditApprenticeship(viewModel);
+
+        var redirect = result.VerifyReturnsRedirectToActionResult();
+        
+        Assert.Multiple(() =>
         {
-            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockModelMapper = new Mock<IModelMapper>();
-            response = new EditApprenticeshipResponse { NeedReapproval = true };
-
-            _mockCommitmentsApiClient.Setup(x => x.EditApprenticeship(It.IsAny<EditApprenticeshipApiRequest>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(response));
-
-            _controller = new ApprenticeController(_mockModelMapper.Object,
-                Mock.Of<ICookieStorageService<IndexRequest>>(),
-                _mockCommitmentsApiClient.Object,
-                Mock.Of<ILogger<ApprenticeController>>());
-            _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
-        }
-
-        [Test, MoqAutoData]
-        public async Task AndTheEditApprenticeship_IsConfirmed_WithIntermediateUpdate_ThenRedirectToApprenticeshipDetails(ConfirmEditApprenticeshipViewModel viewModel)
-        {
-            viewModel.ConfirmChanges = true;
-            var result = await _controller.ConfirmEditApprenticeship(viewModel);
-
-            var redirect = result.VerifyReturnsRedirectToActionResult();
             Assert.That("ApprenticeshipDetails", Is.EqualTo(redirect.ActionName));
             Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
             Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
+            Assert.That(Controller.TempData.Values.Contains($"Your suggested changes have been sent to {viewModel.ProviderName} for approval."), Is.True);
+            Assert.That(Controller.TempData.ContainsKey(FlashMessageBody), Is.True);
+            Assert.That(Controller.TempData.ContainsKey(FlashMessageLevel), Is.True);
+        });
+    }
 
-            Assert.That(_controller.TempData.Values.Contains($"Your suggested changes have been sent to {viewModel.ProviderName} for approval."), Is.True);
-            Assert.That(_controller.TempData.ContainsKey(FlashMessageBody), Is.True);
-            Assert.That(_controller.TempData.ContainsKey(FlashMessageLevel), Is.True);
-        }
+    [Test, MoqAutoData]
+    public async Task AndTheApprenticeship_IsEdit_WithImmediateUpdate_ThenRedirectToApprenticeshipDetails(ConfirmEditApprenticeshipViewModel viewModel)
+    {
+        _response.NeedReapproval = false;
+        var result = await Controller.ConfirmEditApprenticeship(viewModel);
 
-        [Test, MoqAutoData]
-        public async Task AndTheApprenticeship_IsEdit_WithImmediateUpdate_ThenRedirectToApprenticeshipDetails(ConfirmEditApprenticeshipViewModel viewModel)
+        var redirect = result.VerifyReturnsRedirectToActionResult();
+        Assert.Multiple(() =>
         {
-            response.NeedReapproval = false;
-            var result = await _controller.ConfirmEditApprenticeship(viewModel);
-
-            var redirect = result.VerifyReturnsRedirectToActionResult();
             Assert.That("ApprenticeshipDetails", Is.EqualTo(redirect.ActionName));
             Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
             Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
+            Assert.That(Controller.TempData.Values.Contains(EditApprenticeUpdated), Is.True);
+            Assert.That(Controller.TempData.ContainsKey(FlashMessageBody), Is.True);
+            Assert.That(Controller.TempData.ContainsKey(FlashMessageLevel), Is.True);
+        });
+    }
 
-            Assert.That(_controller.TempData.Values.Contains(EditApprenticeUpdated), Is.True);
-            Assert.That(_controller.TempData.ContainsKey(FlashMessageBody), Is.True);
-            Assert.That(_controller.TempData.ContainsKey(FlashMessageLevel), Is.True);
-        }
+    [Test, MoqAutoData]
+    public async Task AndTheEditApprenticeship_IsConfirmed_CommitmentApi_IsCalled(ConfirmEditApprenticeshipViewModel viewModel)
+    {
+        //Arrange
+        viewModel.ConfirmChanges = true;
 
-        [Test, MoqAutoData]
-        public async Task AndTheEditApprenticeship_IsConfirmed_CommitmentApi_IsCalled(ConfirmEditApprenticeshipViewModel viewModel)
-        {
-            //Arrange
-            viewModel.ConfirmChanges = true;
+        //Act
+        var result = await Controller.ConfirmEditApprenticeship(viewModel) as RedirectToActionResult;
 
-            //Act
-            var result = await _controller.ConfirmEditApprenticeship(viewModel) as RedirectToActionResult;
+        //Assert
+        MockCommitmentsApiClient.Verify(x => x.EditApprenticeship(It.IsAny<EditApprenticeshipApiRequest>(), CancellationToken.None), Times.Once);
+    }
 
-            //Assert
-            _mockCommitmentsApiClient.Verify(x => x.EditApprenticeship(It.IsAny<EditApprenticeshipApiRequest>(), CancellationToken.None), Times.Once);
-        }
+    [Test, MoqAutoData]
+    public async Task AndTheEditApprenticeship_IsNotConfirmed_CommitmentApi_IsNotCalled(ConfirmEditApprenticeshipViewModel viewModel)
+    {
+        //Arrange
+        viewModel.ConfirmChanges = false;
 
-        [Test, MoqAutoData]
-        public async Task AndTheEditApprenticeship_IsNotConfirmed_CommitmentApi_IsNotCalled(ConfirmEditApprenticeshipViewModel viewModel)
-        {
-            //Arrange
-            viewModel.ConfirmChanges = false;
+        //Act
+        await Controller.ConfirmEditApprenticeship(viewModel);
 
-            //Act
-            var result = await _controller.ConfirmEditApprenticeship(viewModel) as RedirectToActionResult;
+        //Assert
+        MockCommitmentsApiClient.Verify(x => x.EditApprenticeship(It.IsAny<EditApprenticeshipApiRequest>(), CancellationToken.None), Times.Never);
+    }
 
+    [Test, MoqAutoData]
+    public async Task AndTheEditApprenticeship_IsConfirmed_and_Mapper_IsCalled(ConfirmEditApprenticeshipViewModel viewModel)
+    {
+        //Arrange
+        viewModel.ConfirmChanges = true;
 
-            //Assert
-            _mockCommitmentsApiClient.Verify(x => x.EditApprenticeship(It.IsAny<EditApprenticeshipApiRequest>(), CancellationToken.None), Times.Never);
-        }
+        //Act
+        await Controller.ConfirmEditApprenticeship(viewModel);
 
-        [Test, MoqAutoData]
-        public async Task AndTheEditApprenticeship_IsConfirmed_and_Mapper_IsCalled(ConfirmEditApprenticeshipViewModel viewModel)
-        {
-            //Arrange
-            viewModel.ConfirmChanges = true;
+        //Assert
+        MockModelMapper.Verify(x => x.Map<EditApprenticeshipApiRequest>(viewModel), Times.Once);
+    }
 
-            //Act
-            var result = await _controller.ConfirmEditApprenticeship(viewModel) as RedirectToActionResult;
+    [Test, MoqAutoData]
+    public async Task AndTheEditApprenticeship_IsNotConfirmed__and_Mapper_IsNotCalled(ConfirmEditApprenticeshipViewModel viewModel)
+    {
+        //Arrange
+        viewModel.ConfirmChanges = false;
 
-            //Assert
-            _mockModelMapper.Verify(x => x.Map<EditApprenticeshipApiRequest>(viewModel), Times.Once);
-        }
+        //Act
+        await Controller.ConfirmEditApprenticeship(viewModel);
 
-        [Test, MoqAutoData]
-        public async Task AndTheEditApprenticeship_IsNotConfirmed__and_Mapper_IsNotCalled(ConfirmEditApprenticeshipViewModel viewModel)
-        {
-            //Arrange
-            viewModel.ConfirmChanges = false;
+        //Assert
+        MockModelMapper.Verify(x => x.Map<EditApprenticeshipApiRequest>(viewModel), Times.Never);
+    }
 
-            //Act
-            var result = await _controller.ConfirmEditApprenticeship(viewModel) as RedirectToActionResult;
+    [Test, MoqAutoData]
+    public async Task AndTheEditApprenticeship_IsNotConfirmed_ThenRedirectsToApprenticeshipDetails(ConfirmEditApprenticeshipViewModel viewModel)
+    {
+        //Arrange
+        viewModel.ConfirmChanges = false;
 
-            //Assert
-            _mockModelMapper.Verify(x => x.Map<EditApprenticeshipApiRequest>(viewModel), Times.Never);
-        }
+        //Act
+        var result = await Controller.ConfirmEditApprenticeship(viewModel) as RedirectToActionResult;
 
-        [Test, MoqAutoData]
-        public async Task AndTheEditApprenticeship_IsNotConfirmed_ThenRedirectsToApprenticeshipDetails(ConfirmEditApprenticeshipViewModel viewModel)
-        {
-            //Arrange
-            viewModel.ConfirmChanges = false;
-
-            //Act
-            var result = await _controller.ConfirmEditApprenticeship(viewModel) as RedirectToActionResult;
-
-            //Assert
-            Assert.That(result.ActionName, Is.EqualTo("ApprenticeshipDetails"));
-        }
+        //Assert
+        Assert.That(result.ActionName, Is.EqualTo("ApprenticeshipDetails"));
     }
 }

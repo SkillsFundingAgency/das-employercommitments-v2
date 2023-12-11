@@ -6,104 +6,103 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenCallingGetEnterNewTrainingProviderTests
 {
-    public class WhenCallingGetEnterNewTrainingProviderTests
+    WhenCallingGetEnterNewTrainingProviderTestsFixture _fixture;
+
+    [SetUp]
+    public void Arrange()
     {
-        WhenCallingGetEnterNewTrainingProviderTestsFixture _fixture;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new WhenCallingGetEnterNewTrainingProviderTestsFixture();
-        }
-
-        [Test]
-        public async Task ThenViewIsReturned()
-        {
-            var result = await _fixture.EnterNewTrainingProvider();
-
-            _fixture.VerifyViewModel(result);
-        }
-
-        [Test]
-        [TestCase(true, RouteNames.ConfirmDetailsAndSendRequest, Description = "Should return to confirm changes")]
-        [TestCase(false, RouteNames.ChangeProviderInform, Description = "Should return to previous question")]
-        [TestCase(null, RouteNames.ChangeProviderInform, Description = "Should return to previous question")]
-        public async Task BackNavigationSetCorrectly(bool? isEdit, string expectedBackNavigationUrl)
-        {
-            _fixture.ArrangeRequestEditFlag(isEdit);
-
-            var result = await _fixture.EnterNewTrainingProvider();
-
-            _fixture.VerifyBackNavigation(expectedBackNavigationUrl);
-        }
-
-
-        [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        [TestCase(null)]
-        public async Task BackNavigationSetCorrectlyInViewData(bool? isEdit)
-        {
-            _fixture.ArrangeRequestEditFlag(isEdit);
-
-            var result = await _fixture.EnterNewTrainingProvider();
-
-            _fixture.VerifyViewDataSet(result as ViewResult);
-        }
+        _fixture = new WhenCallingGetEnterNewTrainingProviderTestsFixture();
     }
 
-    public class WhenCallingGetEnterNewTrainingProviderTestsFixture : ApprenticeControllerTestFixtureBase
+    [Test]
+    public async Task ThenViewIsReturned()
     {
-        private readonly ChangeOfProviderRequest _request;
-        private readonly EnterNewTrainingProviderViewModel _viewModel;
-        private const string ConfirmDetailsLink = "cofirm-details-link";
-        private const string PreviousQuestionLink = "previous-question-link";
-        private string ExpectedBackLinkSet = "";
+        var result = await _fixture.EnterNewTrainingProvider();
 
-        public WhenCallingGetEnterNewTrainingProviderTestsFixture() : base()
-        {
-            _request = _autoFixture.Create<ChangeOfProviderRequest>();
-            _viewModel = _autoFixture.Create<EnterNewTrainingProviderViewModel>();
+        _fixture.VerifyViewModel(result);
+    }
 
-            _mockMapper
-                .Setup(m => m.Map<EnterNewTrainingProviderViewModel>(_request))
-                .ReturnsAsync(_viewModel);
+    [Test]
+    [TestCase(true, RouteNames.ConfirmDetailsAndSendRequest, Description = "Should return to confirm changes")]
+    [TestCase(false, RouteNames.ChangeProviderInform, Description = "Should return to previous question")]
+    [TestCase(null, RouteNames.ChangeProviderInform, Description = "Should return to previous question")]
+    public async Task BackNavigationSetCorrectly(bool? isEdit, string expectedBackNavigationUrl)
+    {
+        _fixture.ArrangeRequestEditFlag(isEdit);
 
-            _mockUrlHelper
-               .Setup(mock => mock.Link(RouteNames.ConfirmDetailsAndSendRequest, It.IsAny<object>()))
-               .Returns(ConfirmDetailsLink)
-               .Callback(() => ExpectedBackLinkSet = ConfirmDetailsLink);
+        var result = await _fixture.EnterNewTrainingProvider();
 
-            _mockUrlHelper
-               .Setup(mock => mock.Link(RouteNames.ChangeProviderInform, It.IsAny<object>()))
-               .Returns(PreviousQuestionLink)
-               .Callback(() => ExpectedBackLinkSet = PreviousQuestionLink);
-        }
-
-        internal void ArrangeRequestEditFlag(bool? isEdit) => _request.Edit = isEdit;
-
-        internal void VerifyBackNavigation(string expectedBackNavigationUrl) => _mockUrlHelper.Verify(mock => mock.Link(expectedBackNavigationUrl, It.IsAny<object>()), Times.Once);
+        _fixture.VerifyBackNavigation(expectedBackNavigationUrl);
+    }
 
 
-        internal void VerifyViewDataSet(ViewResult viewResult) => Assert.That(viewResult.ViewData["BackUrl"], Is.EqualTo(ExpectedBackLinkSet));
+    [Test]
+    [TestCase(true)]
+    [TestCase(false)]
+    [TestCase(null)]
+    public async Task BackNavigationSetCorrectlyInViewData(bool? isEdit)
+    {
+        _fixture.ArrangeRequestEditFlag(isEdit);
 
-        public async Task<IActionResult> EnterNewTrainingProvider()
-        {
-            return await _controller.EnterNewTrainingProvider(_request);
-        }
+        var result = await _fixture.EnterNewTrainingProvider();
 
-        public void VerifyViewModel(IActionResult actionResult)
-        {
-            var result = actionResult as ViewResult;
-            var viewModel = result.Model;
+        _fixture.VerifyViewDataSet(result as ViewResult);
+    }
+}
 
-            Assert.That(viewModel, Is.InstanceOf<EnterNewTrainingProviderViewModel>());
+public class WhenCallingGetEnterNewTrainingProviderTestsFixture : ApprenticeControllerTestFixtureBase
+{
+    private readonly ChangeOfProviderRequest _request;
+    private readonly EnterNewTrainingProviderViewModel _viewModel;
+    private const string ConfirmDetailsLink = "cofirm-details-link";
+    private const string PreviousQuestionLink = "previous-question-link";
+    private string ExpectedBackLinkSet = "";
 
-            var enterNewTrainingProviderViewModel = (EnterNewTrainingProviderViewModel)viewModel;
+    public WhenCallingGetEnterNewTrainingProviderTestsFixture() : base()
+    {
+        _request = AutoFixture.Create<ChangeOfProviderRequest>();
+        _viewModel = AutoFixture.Create<EnterNewTrainingProviderViewModel>();
 
-            Assert.That(enterNewTrainingProviderViewModel, Is.EqualTo(_viewModel));
-        }
+        MockMapper
+            .Setup(m => m.Map<EnterNewTrainingProviderViewModel>(_request))
+            .ReturnsAsync(_viewModel);
+
+        MockUrlHelper
+            .Setup(mock => mock.Link(RouteNames.ConfirmDetailsAndSendRequest, It.IsAny<object>()))
+            .Returns(ConfirmDetailsLink)
+            .Callback(() => ExpectedBackLinkSet = ConfirmDetailsLink);
+
+        MockUrlHelper
+            .Setup(mock => mock.Link(RouteNames.ChangeProviderInform, It.IsAny<object>()))
+            .Returns(PreviousQuestionLink)
+            .Callback(() => ExpectedBackLinkSet = PreviousQuestionLink);
+    }
+
+    internal void ArrangeRequestEditFlag(bool? isEdit) => _request.Edit = isEdit;
+
+    internal void VerifyBackNavigation(string expectedBackNavigationUrl) => MockUrlHelper.Verify(mock => mock.Link(expectedBackNavigationUrl, It.IsAny<object>()), Times.Once);
+
+
+    internal void VerifyViewDataSet(ViewResult viewResult) => Assert.That(viewResult.ViewData["BackUrl"], Is.EqualTo(ExpectedBackLinkSet));
+
+    public async Task<IActionResult> EnterNewTrainingProvider()
+    {
+        return await Controller.EnterNewTrainingProvider(_request);
+    }
+
+    public void VerifyViewModel(IActionResult actionResult)
+    {
+        var result = actionResult as ViewResult;
+        var viewModel = result.Model;
+
+        Assert.That(viewModel, Is.InstanceOf<EnterNewTrainingProviderViewModel>());
+
+        var enterNewTrainingProviderViewModel = (EnterNewTrainingProviderViewModel)viewModel;
+
+        Assert.That(enterNewTrainingProviderViewModel, Is.EqualTo(_viewModel));
     }
 }

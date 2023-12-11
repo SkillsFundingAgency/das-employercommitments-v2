@@ -16,106 +16,106 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+[TestFixture]
+public class WhenSelectingDeliveryModelOnEditApprenticeship
 {
-    [TestFixture]
-    public class WhenSelectingDeliveryModelOnEditApprenticeship
+    [Test]
+    public async Task GettingDeliveryModel_ForProviderAndCourse_WithOnlyOneOption_ShouldRedirectToEditDraftApprenticeship()
     {
-        [Test]
-        public async Task GettingDeliveryModel_ForProviderAndCourse_WithOnlyOneOption_ShouldRedirectToEditDraftApprenticeship()
-        {
-            var fixture = new WhenSelectingDeliveryModelOnEditApprenticeshipFixture()
-                .WithTempViewModel()
-                .WithDeliveryModels(new List<DeliveryModel> { DeliveryModel.Regular });
+        var fixture = new WhenSelectingDeliveryModelOnEditApprenticeshipFixture()
+            .WithTempViewModel()
+            .WithDeliveryModels([DeliveryModel.Regular]);
 
-            var result = await fixture.Sut.SelectDeliveryModelForEdit(fixture.Request) as RedirectToActionResult;
-            result.ActionName.Should().Be("EditApprenticeship");
+        var result = await fixture.Sut.SelectDeliveryModelForEdit(fixture.Request) as RedirectToActionResult;
+        result.ActionName.Should().Be("EditApprenticeship");
+    }
+
+    [Test]
+    public async Task GettingDeliveryModel_ForProviderAndCourse_WithMultipleOptions_ShouldRedirectToSelectDeliveryModel()
+    {
+        var fixture = new WhenSelectingDeliveryModelOnEditApprenticeshipFixture()
+            .WithTempViewModel()
+            .WithDeliveryModels([DeliveryModel.Regular, DeliveryModel.PortableFlexiJob]);
+
+        var result = await fixture.Sut.SelectDeliveryModelForEdit(fixture.Request) as ViewResult;
+        result.ViewName.Should().Be("SelectDeliveryModel");
+    }
+
+    [Test]
+    public void WhenSettingDeliveryModel_AndNoOptionSet_ShouldThrowException()
+    {
+        var fixture = new WhenSelectingDeliveryModelOnEditApprenticeshipFixture
+        {
+            ViewModel = { DeliveryModel = null }
+        };
+
+        try
+        {
+            fixture.Sut.SetDeliveryModelForEdit(fixture.ViewModel);
+            Assert.Fail("Should have had exception thrown");
         }
-
-        [Test]
-        public async Task GettingDeliveryModel_ForProviderAndCourse_WithMultipleOptions_ShouldRedirectToSelectDeliveryModel()
+        catch (CommitmentsApiModelException e)
         {
-            var fixture = new WhenSelectingDeliveryModelOnEditApprenticeshipFixture()
-                .WithTempViewModel()
-                .WithDeliveryModels(new List<DeliveryModel> { DeliveryModel.Regular, DeliveryModel.PortableFlexiJob });
-
-            var result = await fixture.Sut.SelectDeliveryModelForEdit(fixture.Request) as ViewResult;
-            result.ViewName.Should().Be("SelectDeliveryModel");
-        }
-
-        [Test]
-        public void WhenSettingDeliveryModel_AndNoOptionSet_ShouldThrowException()
-        {
-            var fixture = new WhenSelectingDeliveryModelOnEditApprenticeshipFixture();
-
-            fixture.ViewModel.DeliveryModel = null;
-
-            try
-            {
-                fixture.Sut.SetDeliveryModelForEdit(fixture.ViewModel);
-                Assert.Fail("Should have had exception thrown");
-            }
-            catch (CommitmentsApiModelException e)
-            {
-                e.Errors[0].Field.Should().Be("DeliveryModel");
-                e.Errors[0].Message.Should().Be("You must select the apprenticeship delivery model");
-            }
-        }
-
-        [Test]
-        public void WhenSettingDeliveryModel_AndOptionSet_ShouldRedirectToAddDraftApprenticeship()
-        {
-            var fixture = new WhenSelectingDeliveryModelOnEditApprenticeshipFixture()
-                .WithTempViewModel()
-                .WithDeliveryModels(new List<DeliveryModel> { DeliveryModel.Regular, DeliveryModel.PortableFlexiJob });
-
-            fixture.ViewModel.DeliveryModel = DeliveryModel.PortableFlexiJob;
-
-            var result = fixture.Sut.SetDeliveryModelForEdit(fixture.ViewModel) as RedirectToActionResult;
-            result.ActionName.Should().Be("EditApprenticeship");
+            e.Errors[0].Field.Should().Be("DeliveryModel");
+            e.Errors[0].Message.Should().Be("You must select the apprenticeship delivery model");
         }
     }
 
-    public class WhenSelectingDeliveryModelOnEditApprenticeshipFixture
+    [Test]
+    public void WhenSettingDeliveryModel_AndOptionSet_ShouldRedirectToAddDraftApprenticeship()
     {
-        public ApprenticeController Sut { get; set; }
+        var fixture = new WhenSelectingDeliveryModelOnEditApprenticeshipFixture()
+            .WithTempViewModel()
+            .WithDeliveryModels([DeliveryModel.Regular, DeliveryModel.PortableFlexiJob]);
 
-        public Mock<IModelMapper> ModelMapperMock;
-        public Mock<ITempDataDictionary> TempDataMock;
-        public EditApprenticeshipDeliveryModelViewModel ViewModel;
-        public EditApprenticeshipRequest Request;
-        public EditApprenticeshipRequestViewModel Apprenticeship;
+        fixture.ViewModel.DeliveryModel = DeliveryModel.PortableFlexiJob;
 
-        public WhenSelectingDeliveryModelOnEditApprenticeshipFixture()
-        {
-            var fixture = new Fixture();
-            ViewModel = fixture.Create<EditApprenticeshipDeliveryModelViewModel>();
-            Request = fixture.Create<EditApprenticeshipRequest>();
-            Apprenticeship = fixture.Build<EditApprenticeshipRequestViewModel>().Without(x => x.BirthDay).Without(x => x.BirthMonth).Without(x => x.BirthYear)
-                .Without(x => x.StartMonth).Without(x => x.StartYear).Without(x => x.StartDate)
-                .Without(x => x.EndDate).Without(x => x.EndMonth).Without(x => x.EndYear)
-                .Without(x => x.EmploymentEndDate).Without(x => x.EmploymentEndMonth).Without(x => x.EmploymentEndYear)
-                .Create();
+        var result = fixture.Sut.SetDeliveryModelForEdit(fixture.ViewModel) as RedirectToActionResult;
+        result.ActionName.Should().Be("EditApprenticeship");
+    }
+}
 
-            ModelMapperMock = new Mock<IModelMapper>();
-            TempDataMock = new Mock<ITempDataDictionary>();
+public class WhenSelectingDeliveryModelOnEditApprenticeshipFixture
+{
+    public ApprenticeController Sut { get; set; }
 
-            Sut = new ApprenticeController(ModelMapperMock.Object, Mock.Of<ICookieStorageService<IndexRequest>>(), Mock.Of<ICommitmentsApiClient>(), Mock.Of<ILogger<ApprenticeController>>());
-            Sut.TempData = TempDataMock.Object;
-        }
+    public Mock<IModelMapper> ModelMapperMock;
+    public Mock<ITempDataDictionary> TempDataMock;
+    public EditApprenticeshipDeliveryModelViewModel ViewModel;
+    public EditApprenticeshipRequest Request;
+    public EditApprenticeshipRequestViewModel Apprenticeship;
 
-        public WhenSelectingDeliveryModelOnEditApprenticeshipFixture WithDeliveryModels(List<EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel> list)
-        {
-            ModelMapperMock.Setup(x => x.Map<EditApprenticeshipDeliveryModelViewModel>(It.IsAny<EditApprenticeshipRequestViewModel>()))
-                .ReturnsAsync(new EditApprenticeshipDeliveryModelViewModel { DeliveryModels = list });
-            return this;
-        }
+    public WhenSelectingDeliveryModelOnEditApprenticeshipFixture()
+    {
+        var fixture = new Fixture();
+        ViewModel = fixture.Create<EditApprenticeshipDeliveryModelViewModel>();
+        Request = fixture.Create<EditApprenticeshipRequest>();
+        Apprenticeship = fixture.Build<EditApprenticeshipRequestViewModel>().Without(x => x.BirthDay).Without(x => x.BirthMonth).Without(x => x.BirthYear)
+            .Without(x => x.StartMonth).Without(x => x.StartYear).Without(x => x.StartDate)
+            .Without(x => x.EndDate).Without(x => x.EndMonth).Without(x => x.EndYear)
+            .Without(x => x.EmploymentEndDate).Without(x => x.EmploymentEndMonth).Without(x => x.EmploymentEndYear)
+            .Create();
 
-        public WhenSelectingDeliveryModelOnEditApprenticeshipFixture WithTempViewModel()
-        {
-            object asString = JsonConvert.SerializeObject(Apprenticeship);
-            TempDataMock.Setup(x => x.Peek(It.IsAny<string>())).Returns(asString);
-            return this;
-        }
+        ModelMapperMock = new Mock<IModelMapper>();
+        TempDataMock = new Mock<ITempDataDictionary>();
+
+        Sut = new ApprenticeController(ModelMapperMock.Object, Mock.Of<ICookieStorageService<IndexRequest>>(), Mock.Of<ICommitmentsApiClient>(), Mock.Of<ILogger<ApprenticeController>>());
+        Sut.TempData = TempDataMock.Object;
+    }
+
+    public WhenSelectingDeliveryModelOnEditApprenticeshipFixture WithDeliveryModels(List<EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel> list)
+    {
+        ModelMapperMock.Setup(x => x.Map<EditApprenticeshipDeliveryModelViewModel>(It.IsAny<EditApprenticeshipRequestViewModel>()))
+            .ReturnsAsync(new EditApprenticeshipDeliveryModelViewModel { DeliveryModels = list });
+        return this;
+    }
+
+    public WhenSelectingDeliveryModelOnEditApprenticeshipFixture WithTempViewModel()
+    {
+        object asString = JsonConvert.SerializeObject(Apprenticeship);
+        TempDataMock.Setup(x => x.Peek(It.IsAny<string>())).Returns(asString);
+        return this;
     }
 }

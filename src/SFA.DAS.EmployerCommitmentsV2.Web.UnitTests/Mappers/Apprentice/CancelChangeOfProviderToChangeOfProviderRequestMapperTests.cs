@@ -8,96 +8,95 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice;
+
+public class CancelChangeOfProviderToChangeOfProviderRequestMapperTests
 {
-    public class CancelChangeOfProviderToChangeOfProviderRequestMapperTests
+    private CancelChangeOfProviderToChangeOfProviderRequestMapper _mapper;
+
+    [SetUp]
+    public void Arrange()
     {
-        private CancelChangeOfProviderToChangeOfProviderRequestMapper _mapper;
+        _mapper = new CancelChangeOfProviderToChangeOfProviderRequestMapper();
+    }
 
-        [SetUp]
-        public void Arrange()
-        {
-            _mapper = new CancelChangeOfProviderToChangeOfProviderRequestMapper();
-        }
+    [Test, MoqAutoData]
+    public async Task ApprenticeshipHashedId_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
+    {
+        var result = await _mapper.Map(viewModel);
 
-        [Test, MoqAutoData]
-        public async Task ApprenticeshipHashedId_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
-        {
-            var result = await _mapper.Map(viewModel);
+        Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(viewModel.ApprenticeshipHashedId));
+    }
 
-            Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(viewModel.ApprenticeshipHashedId));
-        }
+    [Test, MoqAutoData]
+    public async Task AccountHashedId_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
+    {
+        var result = await _mapper.Map(viewModel);
 
-        [Test, MoqAutoData]
-        public async Task AccountHashedId_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
-        {
-            var result = await _mapper.Map(viewModel);
+        Assert.That(result.AccountHashedId, Is.EqualTo(viewModel.AccountHashedId));
+    }
 
-            Assert.That(result.AccountHashedId, Is.EqualTo(viewModel.AccountHashedId));
-        }
+    [Test, MoqAutoData]
+    public async Task Provider_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
+    {
+        var result = await _mapper.Map(viewModel);
 
-        [Test, MoqAutoData]
-        public async Task Provider_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
-        {
-            var result = await _mapper.Map(viewModel);
+        Assert.That(result.ProviderId, Is.EqualTo(viewModel.ProviderId));
+    }
 
-            Assert.That(result.ProviderId, Is.EqualTo(viewModel.ProviderId));
-        }
+    [Test, MoqAutoData]
+    public async Task ProviderName_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
+    {
+        var result = await _mapper.Map(viewModel);
 
-        [Test, MoqAutoData]
-        public async Task ProviderName_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
-        {
-            var result = await _mapper.Map(viewModel);
+        Assert.That(result.ProviderName, Is.EqualTo(viewModel.ProviderName));
+    }
 
-            Assert.That(result.ProviderName, Is.EqualTo(viewModel.ProviderName));
-        }
+    [Test, MoqAutoData]
+    public async Task EmployerWillAdd_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
+    {
+        var result = await _mapper.Map(viewModel);
 
-        [Test, MoqAutoData]
-        public async Task EmployerWillAdd_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
-        {
-            var result = await _mapper.Map(viewModel);
+        Assert.That(result.EmployerWillAdd, Is.EqualTo(viewModel.EmployerWillAdd));
+    }
 
-            Assert.That(result.EmployerWillAdd, Is.EqualTo(viewModel.EmployerWillAdd));
-        }
+    [Test, MoqAutoData]
+    public async Task NewStartMonth_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
+    {
+        var result = await _mapper.Map(viewModel);
 
-        [Test, MoqAutoData]
-        public async Task NewStartMonth_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
-        {
-            var result = await _mapper.Map(viewModel);
+        Assert.That(result.NewStartMonth, Is.EqualTo(viewModel.NewStartMonth));
+    }
 
-            Assert.That(result.NewStartMonth, Is.EqualTo(viewModel.NewStartMonth));
-        }
+    [Test, MoqAutoData]
+    public async Task NewStartYear_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
+    {
+        var result = await _mapper.Map(viewModel);
 
-        [Test, MoqAutoData]
-        public async Task NewStartYear_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
-        {
-            var result = await _mapper.Map(viewModel);
+        Assert.That(result.NewStartYear, Is.EqualTo(viewModel.NewStartYear));
+    }
 
-            Assert.That(result.NewStartYear, Is.EqualTo(viewModel.NewStartYear));
-        }
+    [Test, MoqAutoData]
+    public async Task NewEndMonth_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
+    {
+        var result = await _mapper.Map(viewModel);
 
-        [Test, MoqAutoData]
-        public async Task NewEndMonth_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
-        {
-            var result = await _mapper.Map(viewModel);
+        Assert.That(result.NewEndMonth, Is.EqualTo(viewModel.NewEndMonth));
+    }
 
-            Assert.That(result.NewEndMonth, Is.EqualTo(viewModel.NewEndMonth));
-        }
+    [Test, MoqAutoData]
+    public async Task NewEndYear_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
+    {
+        var result = await _mapper.Map(viewModel);
 
-        [Test, MoqAutoData]
-        public async Task NewEndYear_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
-        {
-            var result = await _mapper.Map(viewModel);
+        Assert.That(result.NewEndYear, Is.EqualTo(viewModel.NewEndYear));
+    }
 
-            Assert.That(result.NewEndYear, Is.EqualTo(viewModel.NewEndYear));
-        }
+    [Test, MoqAutoData]
+    public async Task NewPrice_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
+    {
+        var result = await _mapper.Map(viewModel);
 
-        [Test, MoqAutoData]
-        public async Task NewPrice_IsMapped(CancelChangeOfProviderRequestViewModel viewModel)
-        {
-            var result = await _mapper.Map(viewModel);
-
-            Assert.That(result.NewPrice, Is.EqualTo(viewModel.NewPrice));
-        }
+        Assert.That(result.NewPrice, Is.EqualTo(viewModel.NewPrice));
     }
 }

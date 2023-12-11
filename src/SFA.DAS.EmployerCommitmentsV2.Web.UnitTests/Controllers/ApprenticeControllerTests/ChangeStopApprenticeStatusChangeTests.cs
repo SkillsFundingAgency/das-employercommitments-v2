@@ -10,87 +10,86 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Testing.AutoFixture;
 using static SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.WhyStopApprenticeshipViewModel;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class ChangeStopApprenticeStatusChangeTests : ApprenticeControllerTestBase
 {
-    public class ChangeStopApprenticeStatusChangeTests : ApprenticeControllerTestBase
+
+    [Test, MoqAutoData]
+    public void AndLeftEmploymentIsSelected_ThenRedirectToStopApprenticeshipAction([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
     {
+        //Arrange
+        viewModel.SelectedStatusChange = StopStatusReason.LeftEmployment;
 
-        [Test, MoqAutoData]
-        public void AndLeftEmploymentIsSelected_ThenRedirectToStopApprenticeshipAction([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
-        {
-            //Arrange
-            viewModel.SelectedStatusChange = StopStatusReason.LeftEmployment;
+        //Act
+        var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
 
-            //Act
-            var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
+        //Assert
+        Assert.That(response.ActionName, Is.EqualTo("StopApprenticeship"));
+    }
 
-            //Assert
-            Assert.That(response.ActionName, Is.EqualTo("StopApprenticeship"));
-        }
+    [Test, MoqAutoData]
+    public void AndChangeProviderIsSelected_ThenRedirectToStopApprenticeshipAction([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
+    {
+        //Arrange
+        viewModel.SelectedStatusChange = StopStatusReason.ChangeProvider;
 
-        [Test, MoqAutoData]
-        public void AndChangeProviderIsSelected_ThenRedirectToStopApprenticeshipAction([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
-        {
-            //Arrange
-            viewModel.SelectedStatusChange = StopStatusReason.ChangeProvider;
+        //Act
+        var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
 
-            //Act
-            var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
+        //Assert
+        Assert.That(response.ActionName, Is.EqualTo("StopApprenticeship"));
+    }
 
-            //Assert
-            Assert.That(response.ActionName, Is.EqualTo("StopApprenticeship"));
-        }
+    [Test, MoqAutoData]
+    public void AndWithdrawnIsSelected_ThenRedirectToStopApprenticeshipAction([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
+    {
+        //Arrange
+        viewModel.SelectedStatusChange = StopStatusReason.Withdrawn;
 
-        [Test, MoqAutoData]
-        public void AndWithdrawnIsSelected_ThenRedirectToStopApprenticeshipAction([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
-        {
-            //Arrange
-            viewModel.SelectedStatusChange = StopStatusReason.Withdrawn;
+        //Act
+        var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
 
-            //Act
-            var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
+        //Assert
+        Assert.That(response.ActionName, Is.EqualTo("StopApprenticeship"));
+    }
 
-            //Assert
-            Assert.That(response.ActionName, Is.EqualTo("StopApprenticeship"));
-        }
+    [Test, MoqAutoData]
+    public void AndNeverStartedIsSelected_ThenRedirectToStopApprenticeshipAction([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
+    {
+        //Arrange
+        viewModel.SelectedStatusChange = StopStatusReason.NeverStarted;
 
-        [Test, MoqAutoData]
-        public void AndNeverStartedIsSelected_ThenRedirectToStopApprenticeshipAction([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
-        {
-            //Arrange
-            viewModel.SelectedStatusChange = StopStatusReason.NeverStarted;
+        //Act
+        var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
 
-            //Act
-            var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
+        //Assert
+        Assert.That(response.ActionName, Is.EqualTo("ApprenticeshipNeverStarted"));
+    }
 
-            //Assert
-            Assert.That(response.ActionName, Is.EqualTo("ApprenticeshipNeverStarted"));
-        }
+    [Test, MoqAutoData]
+    public void AndProviderCorrectsApprenticeRecordIsSelected_ThenRedirectToStopApprenticeshipAction([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
+    {
+        //Arrange
+        viewModel.SelectedStatusChange = StopStatusReason.ProviderCorrectsApprenticeRecord;
 
-        [Test, MoqAutoData]
-        public void AndProviderCorrectsApprenticeRecordIsSelected_ThenRedirectToStopApprenticeshipAction([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
-        {
-            //Arrange
-            viewModel.SelectedStatusChange = StopStatusReason.ProviderCorrectsApprenticeRecord;
+        //Act
+        var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
 
-            //Act
-            var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
+        //Assert
+        Assert.That(response.ActionName, Is.EqualTo("StopApprenticeship"));
+    }
 
-            //Assert
-            Assert.That(response.ActionName, Is.EqualTo("StopApprenticeship"));
-        }
+    [Test, MoqAutoData]
+    public void AndNeverEndedIsSelected_ThenRedirectToTrainingEnded([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
+    {
+        //Arrange
+        viewModel.SelectedStatusChange = StopStatusReason.TrainingEnded;
 
-        [Test, MoqAutoData]
-        public void AndNeverEndedIsSelected_ThenRedirectToTrainingEnded([NoAutoProperties] ApprenticeController controller, WhyStopApprenticeshipViewModel viewModel)
-        {
-            //Arrange
-            viewModel.SelectedStatusChange = StopStatusReason.TrainingEnded;
+        //Act
+        var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
 
-            //Act
-            var response = controller.WhyStopApprenticeship(viewModel) as RedirectToActionResult;
-
-            //Assert
-            Assert.That(response.ActionName, Is.EqualTo("ApprenticeshipNotEnded"));
-        }
+        //Assert
+        Assert.That(response.ActionName, Is.EqualTo("ApprenticeshipNotEnded"));
     }
 }

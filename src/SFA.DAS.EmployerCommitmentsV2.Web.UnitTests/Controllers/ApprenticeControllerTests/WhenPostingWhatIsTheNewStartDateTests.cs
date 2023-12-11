@@ -6,66 +6,66 @@ using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenPostingWhatIsTheNewStartDateTests
 {
-    public class WhenPostingWhatIsTheNewStartDateTests
+    private Fixture _autoFixture;
+    private WhenPostingWhatIsTheNewStartDateTestFixture _fixture;
+
+    private WhatIsTheNewStartDateViewModel _viewModel;
+
+    [SetUp]
+    public void Arrange()
     {
-        private Fixture _autoFixture;
-        private WhenPostingWhatIsTheNewStartDateTestFixture _fixture;
+        _autoFixture = new Fixture();
 
-        private WhatIsTheNewStartDateViewModel _viewModel;
+        _viewModel = _autoFixture.Build<WhatIsTheNewStartDateViewModel>().Create();
 
-        [SetUp]
-        public void Arrange()
-        {
-            _autoFixture = new Fixture();
-
-            _viewModel = _autoFixture.Build<WhatIsTheNewStartDateViewModel>().Create();
-
-            _fixture = new WhenPostingWhatIsTheNewStartDateTestFixture();
-        }
-
-        [Test]
-        public async Task ThenRedirectToTheWhatIsTheNewStopDatePage()
-        {
-            _viewModel.Edit = false;
-            _fixture.SetupAdvanceToStopDate();
-
-            var result = await _fixture.WhatIsTheNewStartDate(_viewModel);
-
-            _fixture.VerifyRedirectsToTheWhatIsTheNewEndDatePage(result as RedirectToRouteResult);
-        }
-
-        [Test]
-        public async Task AndUserIsChangingTheirAnswer_ThenRedirectToTheConfirmationPage()
-        {
-            _viewModel.Edit = true;
-            _fixture.SetupReturnToCheckYourAnswers();
-            var result = await _fixture.WhatIsTheNewStartDate(_viewModel);
-
-            _fixture.VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(result as RedirectToRouteResult);
-        }
+        _fixture = new WhenPostingWhatIsTheNewStartDateTestFixture();
     }
 
-    public class WhenPostingWhatIsTheNewStartDateTestFixture : ApprenticeControllerTestFixtureBase
+    [Test]
+    public async Task ThenRedirectToTheWhatIsTheNewStopDatePage()
     {
-        private ChangeOfProviderRequest _request;
+        _viewModel.Edit = false;
+        _fixture.SetupAdvanceToStopDate();
 
-        public WhenPostingWhatIsTheNewStartDateTestFixture() : base() { }
+        var result = await _fixture.WhatIsTheNewStartDate(_viewModel);
 
-        public async Task<IActionResult> WhatIsTheNewStartDate(WhatIsTheNewStartDateViewModel viewModel)
+        _fixture.VerifyRedirectsToTheWhatIsTheNewEndDatePage(result as RedirectToRouteResult);
+    }
+
+    [Test]
+    public async Task AndUserIsChangingTheirAnswer_ThenRedirectToTheConfirmationPage()
+    {
+        _viewModel.Edit = true;
+        _fixture.SetupReturnToCheckYourAnswers();
+        var result = await _fixture.WhatIsTheNewStartDate(_viewModel);
+
+        _fixture.VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(result as RedirectToRouteResult);
+    }
+}
+
+public class WhenPostingWhatIsTheNewStartDateTestFixture : ApprenticeControllerTestFixtureBase
+{
+    private ChangeOfProviderRequest _request;
+
+    public async Task<IActionResult> WhatIsTheNewStartDate(WhatIsTheNewStartDateViewModel viewModel)
+    {
+        return await Controller.WhatIsTheNewStartDate(viewModel);
+    }
+
+    public void VerifyRedirectsToTheWhatIsTheNewEndDatePage(IActionResult result)
+    {
+        var redirectResult = (RedirectToRouteResult)result;
+
+        Assert.That(redirectResult.RouteName, Is.EqualTo(RouteNames.WhatIsTheNewEndDate));
+
+        var routeValues = redirectResult.RouteValues;
+
+        Assert.Multiple(() =>
         {
-            return await _controller.WhatIsTheNewStartDate(viewModel);
-        }
-
-        public void VerifyRedirectsToTheWhatIsTheNewEndDatePage(IActionResult result)
-        {
-            var redirectResult = (RedirectToRouteResult)result;
-
-            Assert.That(redirectResult.RouteName, Is.EqualTo(RouteNames.WhatIsTheNewEndDate));
-
-            var routeValues = redirectResult.RouteValues;
-
             Assert.That(routeValues["ProviderId"], Is.EqualTo(_request.ProviderId));
             Assert.That(routeValues["ApprenticeshipHashedId"], Is.EqualTo(_request.ApprenticeshipHashedId));
             Assert.That(routeValues["AccountHashedId"], Is.EqualTo(_request.AccountHashedId));
@@ -74,16 +74,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.That(routeValues["NewEndMonth"], Is.EqualTo(null));
             Assert.That(routeValues["NewEndYear"], Is.EqualTo(null));
             Assert.That(routeValues["NewPrice"], Is.EqualTo(null));
-        }
+        });
+    }
 
-        public void VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(IActionResult result)
+    public void VerifyRedirectsBackToConfirmDetailsAndSendRequestPage(IActionResult result)
+    {
+        var redirectResult = (RedirectToRouteResult)result;
+
+        Assert.That(redirectResult.RouteName, Is.EqualTo(RouteNames.ConfirmDetailsAndSendRequest));
+
+        var routeValues = redirectResult.RouteValues;
+
+        Assert.Multiple(() =>
         {
-            var redirectResult = (RedirectToRouteResult)result;
-
-            Assert.That(redirectResult.RouteName, Is.EqualTo(RouteNames.ConfirmDetailsAndSendRequest));
-
-            var routeValues = redirectResult.RouteValues;
-
             Assert.That(routeValues["ProviderId"], Is.EqualTo(_request.ProviderId));
             Assert.That(routeValues["ApprenticeshipHashedId"], Is.EqualTo(_request.ApprenticeshipHashedId));
             Assert.That(routeValues["AccountHashedId"], Is.EqualTo(_request.AccountHashedId));
@@ -92,39 +95,39 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.That(routeValues["NewEndMonth"], Is.EqualTo(_request.NewEndMonth));
             Assert.That(routeValues["NewEndYear"], Is.EqualTo(_request.NewEndYear));
             Assert.That(routeValues["NewPrice"], Is.EqualTo(_request.NewPrice));
-        }
+        });
+    }
 
-        public WhenPostingWhatIsTheNewStartDateTestFixture SetupAdvanceToStopDate()
-        {
-            _request = _autoFixture.Build<ChangeOfProviderRequest>()
-                .With(x => x.NewStartMonth, 1)
-                .With(x => x.NewStartYear, 2020)
-                .Create();
+    public WhenPostingWhatIsTheNewStartDateTestFixture SetupAdvanceToStopDate()
+    {
+        _request = AutoFixture.Build<ChangeOfProviderRequest>()
+            .With(x => x.NewStartMonth, 1)
+            .With(x => x.NewStartYear, 2020)
+            .Create();
 
-            _request.NewEndMonth = null;
-            _request.NewEndYear = null;
-            _request.NewPrice = null;
+        _request.NewEndMonth = null;
+        _request.NewEndYear = null;
+        _request.NewPrice = null;
 
-            _mockMapper.Setup(m => m.Map<ChangeOfProviderRequest>(It.IsAny<WhatIsTheNewStartDateViewModel>()))
-                .ReturnsAsync(_request);
+        MockMapper.Setup(m => m.Map<ChangeOfProviderRequest>(It.IsAny<WhatIsTheNewStartDateViewModel>()))
+            .ReturnsAsync(_request);
 
-            return this;
-        }
+        return this;
+    }
 
-        public WhenPostingWhatIsTheNewStartDateTestFixture SetupReturnToCheckYourAnswers()
-        {
-            _request = _autoFixture.Build<ChangeOfProviderRequest>()
-                .With(x => x.NewStartMonth, 1)
-                .With(x => x.NewStartYear, 2020)
-                .With(x => x.NewEndMonth, 1)
-                .With(x => x.NewEndYear, 2022)
-                .With(x => x.NewPrice, 500)
-                .Create();
+    public WhenPostingWhatIsTheNewStartDateTestFixture SetupReturnToCheckYourAnswers()
+    {
+        _request = AutoFixture.Build<ChangeOfProviderRequest>()
+            .With(x => x.NewStartMonth, 1)
+            .With(x => x.NewStartYear, 2020)
+            .With(x => x.NewEndMonth, 1)
+            .With(x => x.NewEndYear, 2022)
+            .With(x => x.NewPrice, 500)
+            .Create();
 
-            _mockMapper.Setup(m => m.Map<ChangeOfProviderRequest>(It.IsAny<WhatIsTheNewStartDateViewModel>()))
-                .ReturnsAsync(_request);
+        MockMapper.Setup(m => m.Map<ChangeOfProviderRequest>(It.IsAny<WhatIsTheNewStartDateViewModel>()))
+            .ReturnsAsync(_request);
 
-            return this;
-        }
+        return this;
     }
 }

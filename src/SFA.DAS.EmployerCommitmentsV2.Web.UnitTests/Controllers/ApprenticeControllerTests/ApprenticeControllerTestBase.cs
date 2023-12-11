@@ -4,17 +4,16 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class ApprenticeControllerTestBase
 {
-    public class ApprenticeControllerTestBase
-    {
-        protected const string _apprenticeshipDetailsUrl = "https://commitments.apprenticeships.gov.uk/accounts/apprentices/ABC123/details";
-        protected const string _apprenticeshipStopUrl = "https://commitments.apprenticeships.gov.uk/accounts/apprentices/ABC123/stop/whentoapply";
+    protected const string ApprenticeshipDetailsUrl = "https://commitments.apprenticeships.gov.uk/accounts/apprentices/ABC123/details";
+    protected const string ApprenticeshipStopUrl = "https://commitments.apprenticeships.gov.uk/accounts/apprentices/ABC123/stop/whentoapply";
 
-        protected Mock<IModelMapper> _mockModelMapper;
-        protected Mock<ICookieStorageService<IndexRequest>> _mockCookieStorageService;
-        protected Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+    protected Mock<IModelMapper> MockModelMapper;
+    protected Mock<ICookieStorageService<IndexRequest>> MockCookieStorageService;
+    protected Mock<ICommitmentsApiClient> MockCommitmentsApiClient;
 
-        protected ApprenticeController _controller;
-    }
+    protected ApprenticeController Controller;
 }

@@ -9,32 +9,31 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenRequestingChangeStatusPage : ApprenticeControllerTestBase
 {
-    public class WhenRequestingChangeStatusPage : ApprenticeControllerTestBase
+    [SetUp]
+    public void Arrange()
     {
-        [SetUp]
-        public void Arrange()
-        {
-            _mockModelMapper = new Mock<IModelMapper>();
-            _mockCookieStorageService = new Mock<ICookieStorageService<IndexRequest>>();
-            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        MockModelMapper = new Mock<IModelMapper>();
+        MockCookieStorageService = new Mock<ICookieStorageService<IndexRequest>>();
+        MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
         
-            _controller = new ApprenticeController(_mockModelMapper.Object,
-                _mockCookieStorageService.Object,
-                _mockCommitmentsApiClient.Object,
-                Mock.Of<ILogger<ApprenticeController>>());
-        }
+        Controller = new ApprenticeController(MockModelMapper.Object,
+            MockCookieStorageService.Object,
+            MockCommitmentsApiClient.Object,
+            Mock.Of<ILogger<ApprenticeController>>());
+    }
 
-        [Test]
-        public async Task AndCurrentStatusIsLive_ThenViewIsReturned()
-        {
-            _mockModelMapper.Setup(m => m.Map<ChangeStatusRequestViewModel>(It.IsAny<ChangeStatusRequest>()))
-                .ReturnsAsync(new ChangeStatusRequestViewModel { CurrentStatus = ApprenticeshipStatus.Live });
+    [Test]
+    public async Task AndCurrentStatusIsLive_ThenViewIsReturned()
+    {
+        MockModelMapper.Setup(m => m.Map<ChangeStatusRequestViewModel>(It.IsAny<ChangeStatusRequest>()))
+            .ReturnsAsync(new ChangeStatusRequestViewModel { CurrentStatus = ApprenticeshipStatus.Live });
 
-            var result = await _controller.ChangeStatus(new ChangeStatusRequest());
+        var result = await Controller.ChangeStatus(new ChangeStatusRequest());
 
-            Assert.That(result, Is.InstanceOf<ViewResult>());
-        }
+        Assert.That(result, Is.InstanceOf<ViewResult>());
     }
 }

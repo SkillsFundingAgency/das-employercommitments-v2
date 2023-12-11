@@ -16,52 +16,52 @@ using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+[TestFixture]
+public class WhenPostingReconfirmHasNotStopChangesTests : ApprenticeControllerTestBase
 {
-    [TestFixture]
-    public class WhenPostingReconfirmHasNotStopChangesTests : ApprenticeControllerTestBase
+    [SetUp]
+    public void Arrange()
     {
-        private string ApprenticeHasNotStoppedConrimedMessage;
+        var fixture = new Fixture();
+        MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        MockModelMapper = new Mock<IModelMapper>();
 
-        [SetUp]
-        public void Arrange()
+        Controller = new ApprenticeController(MockModelMapper.Object,
+            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            MockCommitmentsApiClient.Object,
+            Mock.Of<ILogger<ApprenticeController>>());
+
+        Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
+    }
+
+    [Test, MoqAutoData]
+    public async Task AndTheApprenticeship_IsNotStoppedIsConfirmed_ThenRedirectToApprenticeshipDetails(ReconfirmHasNotStopViewModel viewModel)
+    {
+        var result = await Controller.ReconfirmHasNotStopChangesAsync(viewModel);
+
+        var redirect = result.VerifyReturnsRedirectToActionResult();
+
+        Assert.Multiple(() =>
         {
-            var fixture = new Fixture();
-            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockModelMapper = new Mock<IModelMapper>();
-
-            _controller = new ApprenticeController(_mockModelMapper.Object,
-                Mock.Of<ICookieStorageService<IndexRequest>>(),
-                _mockCommitmentsApiClient.Object,
-                Mock.Of<ILogger<ApprenticeController>>());
-
-            _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
-        }
-
-        [Test, MoqAutoData]
-        public async Task AndTheApprenticeship_IsNotStoppedIsConfirmed_ThenRedirectToApprenticeshipDetails(ReconfirmHasNotStopViewModel viewModel)
-        {
-            var result = await _controller.ReconfirmHasNotStopChangesAsync(viewModel);
-
-            var redirect = result.VerifyReturnsRedirectToActionResult();
-
-            Assert.That(_controller.TempData.Values.Contains($"Apprenticeship confirmed"), Is.True);
+            Assert.That(Controller.TempData.Values.Contains($"Apprenticeship confirmed"), Is.True);
             Assert.That("ApprenticeshipDetails", Is.EqualTo(redirect.ActionName));
             Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
             Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
-        }
+        });
+    }
 
-        [Test, MoqAutoData]
-        public async Task AndTheApprenticeship_IsNotStoppedIsConfirmed_CommitmentApi_IsCalled(ReconfirmHasNotStopViewModel viewModel)
-        {
-            //Arrange
-            viewModel.StopConfirmed = true;
+    [Test, MoqAutoData]
+    public async Task AndTheApprenticeship_IsNotStoppedIsConfirmed_CommitmentApi_IsCalled(ReconfirmHasNotStopViewModel viewModel)
+    {
+        //Arrange
+        viewModel.StopConfirmed = true;
 
-            //Act
-            var result = await _controller.ReconfirmHasNotStopChangesAsync(viewModel) as RedirectToActionResult;
+        //Act
+        await Controller.ReconfirmHasNotStopChangesAsync(viewModel);
 
-            //Assert
-            _mockCommitmentsApiClient.Verify(x => x.ResolveOverlappingTrainingDateRequest(It.IsAny<ResolveApprenticeshipOverlappingTrainingDateRequest>(), CancellationToken.None), Times.Once);
-        }
+        //Assert
+        MockCommitmentsApiClient.Verify(x => x.ResolveOverlappingTrainingDateRequest(It.IsAny<ResolveApprenticeshipOverlappingTrainingDateRequest>(), CancellationToken.None), Times.Once);
     }
 }

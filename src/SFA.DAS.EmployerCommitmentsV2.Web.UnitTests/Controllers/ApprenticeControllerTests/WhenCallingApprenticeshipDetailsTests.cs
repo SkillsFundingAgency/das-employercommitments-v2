@@ -8,84 +8,86 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenCallingApprenticeshipDetailsTests
 {
-    public class WhenCallingApprenticeshipDetailsTests
+    private WhenCallingApprenticeshipDetailsTestsFixture _fixture;
+
+    [SetUp]
+    public void Arrange()
     {
-        WhenCallingApprenticeshipDetailsTestsFixture _fixture;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new WhenCallingApprenticeshipDetailsTestsFixture(ApprenticeshipStatus.Live);
-        }
-
-        [TestCase(ApprenticeshipStatus.Live)]
-        [TestCase(ApprenticeshipStatus.Paused)]
-        [TestCase(ApprenticeshipStatus.WaitingToStart)]
-        [TestCase(ApprenticeshipStatus.Stopped)]
-        [TestCase(ApprenticeshipStatus.Completed)]
-        public async Task ThenTheCorrectViewIsReturned(ApprenticeshipStatus apprenticeshipStatus)
-        {
-            _fixture = new WhenCallingApprenticeshipDetailsTestsFixture(apprenticeshipStatus);
-
-            var result = await _fixture.ApprenticeshipDetails();
-
-            _fixture.VerifyViewModel(result as ViewResult);
-        }
-
-        [Test]
-        public async Task ThenTheCorrectViewIsReturnedWithoutFlashMessage()
-        {
-            _fixture = new WhenCallingApprenticeshipDetailsTestsFixture(ApprenticeshipStatus.Stopped);
-
-            var result = await _fixture.ApprenticeshipDetails();
-
-            _fixture.VerifyNoFlashMessage(result as ViewResult);
-        } 
+        _fixture = new WhenCallingApprenticeshipDetailsTestsFixture(ApprenticeshipStatus.Live);
     }
 
-    public class WhenCallingApprenticeshipDetailsTestsFixture : ApprenticeControllerTestFixtureBase
+    [TestCase(ApprenticeshipStatus.Live)]
+    [TestCase(ApprenticeshipStatus.Paused)]
+    [TestCase(ApprenticeshipStatus.WaitingToStart)]
+    [TestCase(ApprenticeshipStatus.Stopped)]
+    [TestCase(ApprenticeshipStatus.Completed)]
+    public async Task ThenTheCorrectViewIsReturned(ApprenticeshipStatus apprenticeshipStatus)
     {
-        private readonly ApprenticeshipDetailsRequest _request;
-        private readonly ApprenticeshipDetailsRequestViewModel _viewModel;
-        private const string ApprenticeStoppedMessage = "Apprenticeship stopped";
-        private const string FlashMessage = "FlashMessage";
-        private const string FlashMessageLevel = "FlashMessageLevel";
+        _fixture = new WhenCallingApprenticeshipDetailsTestsFixture(apprenticeshipStatus);
 
-        public WhenCallingApprenticeshipDetailsTestsFixture(ApprenticeshipStatus apprenticeshipStatus) : base()
+        var result = await _fixture.ApprenticeshipDetails();
+
+        _fixture.VerifyViewModel(result as ViewResult);
+    }
+
+    [Test]
+    public async Task ThenTheCorrectViewIsReturnedWithoutFlashMessage()
+    {
+        _fixture = new WhenCallingApprenticeshipDetailsTestsFixture(ApprenticeshipStatus.Stopped);
+
+        var result = await _fixture.ApprenticeshipDetails();
+
+        _fixture.VerifyNoFlashMessage(result as ViewResult);
+    } 
+}
+
+public class WhenCallingApprenticeshipDetailsTestsFixture : ApprenticeControllerTestFixtureBase
+{
+    private readonly ApprenticeshipDetailsRequest _request;
+    private readonly ApprenticeshipDetailsRequestViewModel _viewModel;
+    private const string ApprenticeStoppedMessage = "Apprenticeship stopped";
+    private const string FlashMessage = "FlashMessage";
+    private const string FlashMessageLevel = "FlashMessageLevel";
+
+    public WhenCallingApprenticeshipDetailsTestsFixture(ApprenticeshipStatus apprenticeshipStatus) : base()
+    {
+        _request = AutoFixture.Create<ApprenticeshipDetailsRequest>();
+        _viewModel = AutoFixture.Create<ApprenticeshipDetailsRequestViewModel>();
+        _viewModel.ApprenticeshipStatus = apprenticeshipStatus;
+        Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
+
+        MockMapper.Setup(m => m.Map<ApprenticeshipDetailsRequestViewModel>(_request))
+            .ReturnsAsync(_viewModel);
+    }
+
+    public async Task<IActionResult> ApprenticeshipDetails()
+    {
+        return await Controller.ApprenticeshipDetails(_request);
+    }
+
+    public void VerifyViewModel(ViewResult viewResult)
+    {
+        var viewModel = viewResult.Model as ApprenticeshipDetailsRequestViewModel;
+
+        Assert.That(viewModel, Is.InstanceOf<ApprenticeshipDetailsRequestViewModel>());
+        Assert.That(viewModel, Is.EqualTo(_viewModel));
+    }
+
+    public void VerifyNoFlashMessage(ViewResult viewResult)
+    {
+        var viewModel = viewResult.Model as ApprenticeshipDetailsRequestViewModel;
+
+        Assert.Multiple(() =>
         {
-            _request = _autoFixture.Create<ApprenticeshipDetailsRequest>();
-            _viewModel = _autoFixture.Create<ApprenticeshipDetailsRequestViewModel>();
-            _viewModel.ApprenticeshipStatus = apprenticeshipStatus;
-            _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
-
-            _mockMapper.Setup(m => m.Map<ApprenticeshipDetailsRequestViewModel>(_request))
-                .ReturnsAsync(_viewModel);
-        }
-
-        public async Task<IActionResult> ApprenticeshipDetails()
-        {
-            return await _controller.ApprenticeshipDetails(_request);
-        }
-
-        public void VerifyViewModel(ViewResult viewResult)
-        {
-            var viewModel = viewResult.Model as ApprenticeshipDetailsRequestViewModel;
-
             Assert.That(viewModel, Is.InstanceOf<ApprenticeshipDetailsRequestViewModel>());
             Assert.That(viewModel, Is.EqualTo(_viewModel));
-        }
-
-        public void VerifyNoFlashMessage(ViewResult viewResult)
-        {
-            var viewModel = viewResult.Model as ApprenticeshipDetailsRequestViewModel;
-
-            Assert.That(viewModel, Is.InstanceOf<ApprenticeshipDetailsRequestViewModel>());
-            Assert.That(viewModel, Is.EqualTo(_viewModel));
-            Assert.That(_controller.TempData.Values.Contains(ApprenticeStoppedMessage), Is.False);
-            Assert.That(_controller.TempData.ContainsKey(FlashMessage), Is.False);
-            Assert.That(_controller.TempData.ContainsKey(FlashMessageLevel), Is.False);
-        }
+            Assert.That(Controller.TempData.Values.Contains(ApprenticeStoppedMessage), Is.False);
+            Assert.That(Controller.TempData.ContainsKey(FlashMessage), Is.False);
+            Assert.That(Controller.TempData.ContainsKey(FlashMessageLevel), Is.False);
+        });
     }
 }

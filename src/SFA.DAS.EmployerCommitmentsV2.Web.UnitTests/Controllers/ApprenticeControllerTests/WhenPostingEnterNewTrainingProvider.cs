@@ -8,58 +8,50 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenPostingEnterNewTrainingProvider
 {
-    public class WhenPostingEnterNewTrainingProvider
+    private WhenPostingEnterNewTrainingProviderFixture _fixture;
+
+    [SetUp]
+    public void Arrange()
     {
-        private WhenPostingEnterNewTrainingProviderFixture _fixture;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new WhenPostingEnterNewTrainingProviderFixture();
-        }
-
-        [Test]
-        public async Task ThenRedirectToWhoWillEnterTheDetailsPage()
-        {
-            var result = await _fixture.EnterNewTrainingProvider();
-
-            _fixture.VerifyRedirectsToWhoWillEnterTheDetailsPage(result);
-        }
+        _fixture = new WhenPostingEnterNewTrainingProviderFixture();
     }
 
-    public class WhenPostingEnterNewTrainingProviderFixture : ApprenticeControllerTestFixtureBase
+    [Test]
+    public async Task ThenRedirectToWhoWillEnterTheDetailsPage()
     {
-        private readonly EnterNewTrainingProviderViewModel _viewModel;
+        var result = await _fixture.EnterNewTrainingProvider();
 
-        public WhenPostingEnterNewTrainingProviderFixture()
-        {
-            _viewModel = _autoFixture.Create<EnterNewTrainingProviderViewModel>();
+        WhenPostingEnterNewTrainingProviderFixture.VerifyRedirectsToWhoWillEnterTheDetailsPage(result);
+    }
+}
 
-            _mockMapper.Setup(m => m.Map<WhoWillEnterTheDetailsRequest>(_viewModel))
-                .ReturnsAsync(new WhoWillEnterTheDetailsRequest { AccountHashedId = _viewModel.AccountHashedId, ApprenticeshipHashedId = _viewModel.ApprenticeshipHashedId, ProviderId = _viewModel.ProviderId.Value });
-            _mockMapper.Setup(m => m.Map<SendNewTrainingProviderRequest>(_viewModel))
-                .ReturnsAsync(new SendNewTrainingProviderRequest { AccountHashedId = _viewModel.AccountHashedId, ApprenticeshipHashedId = _viewModel.ApprenticeshipHashedId, ProviderId = _viewModel.ProviderId.Value });
-        }
+public class WhenPostingEnterNewTrainingProviderFixture : ApprenticeControllerTestFixtureBase
+{
+    private readonly EnterNewTrainingProviderViewModel _viewModel;
 
-        public async Task<IActionResult> EnterNewTrainingProvider()
-        {
-            return await _controller.EnterNewTrainingProvider(_viewModel);
-        }
+    public WhenPostingEnterNewTrainingProviderFixture()
+    {
+        _viewModel = AutoFixture.Create<EnterNewTrainingProviderViewModel>();
 
-        public void VerifyRedirectsToWhoWillEnterTheDetailsPage(IActionResult result)
-        {
-            var redirect = (RedirectToRouteResult)result;
+        MockMapper.Setup(m => m.Map<WhoWillEnterTheDetailsRequest>(_viewModel))
+            .ReturnsAsync(new WhoWillEnterTheDetailsRequest { AccountHashedId = _viewModel.AccountHashedId, ApprenticeshipHashedId = _viewModel.ApprenticeshipHashedId, ProviderId = _viewModel.ProviderId.Value });
+        MockMapper.Setup(m => m.Map<SendNewTrainingProviderRequest>(_viewModel))
+            .ReturnsAsync(new SendNewTrainingProviderRequest { AccountHashedId = _viewModel.AccountHashedId, ApprenticeshipHashedId = _viewModel.ApprenticeshipHashedId, ProviderId = _viewModel.ProviderId.Value });
+    }
 
-            Assert.That(redirect.RouteName, Is.EqualTo(RouteNames.WhoWillEnterTheDetails));
-        }
+    public async Task<IActionResult> EnterNewTrainingProvider()
+    {
+        return await Controller.EnterNewTrainingProvider(_viewModel);
+    }
 
-        public void VerifyRedirectsToSendNewTrainingProviderRequestPage(IActionResult result)
-        {
-            var redirect = (RedirectToRouteResult)result;
+    public static void VerifyRedirectsToWhoWillEnterTheDetailsPage(IActionResult result)
+    {
+        var redirect = (RedirectToRouteResult)result;
 
-            Assert.That(redirect.RouteName, Is.EqualTo(RouteNames.SendRequestNewTrainingProvider));
-        }
+        Assert.That(redirect.RouteName, Is.EqualTo(RouteNames.WhoWillEnterTheDetails));
     }
 }

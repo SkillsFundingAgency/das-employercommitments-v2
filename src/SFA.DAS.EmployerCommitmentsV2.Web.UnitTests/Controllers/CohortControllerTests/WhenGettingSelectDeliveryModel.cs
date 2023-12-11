@@ -12,47 +12,46 @@ using SFA.DAS.Testing.AutoFixture;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests;
+
+public class WhenGettingSelectDeliveryModel
 {
-    public class WhenGettingSelectDeliveryModel
+    [Test, MoqAutoData]
+    public async Task WithDeliveryModelsThenReturnsView(
+        ApprenticeRequest request,
+        SelectDeliveryModelViewModel viewModel,
+        [Frozen] Mock<IModelMapper> mockMapper,
+        [Greedy] CohortController controller)
     {
-        [Test, MoqAutoData]
-        public async Task WithDeliveryModelsThenReturnsView(
-            ApprenticeRequest request,
-            SelectDeliveryModelViewModel viewModel,
-            [Frozen] Mock<IModelMapper> mockMapper,
-            [Greedy] CohortController controller)
-        {
-            viewModel.DeliveryModels = new Fixture().CreateMany<DeliveryModel>().ToArray();
+        viewModel.DeliveryModels = new Fixture().CreateMany<DeliveryModel>().ToArray();
 
-            mockMapper
-                .Setup(mapper => mapper.Map<SelectDeliveryModelViewModel>(request))
-                .ReturnsAsync(viewModel);
+        mockMapper
+            .Setup(mapper => mapper.Map<SelectDeliveryModelViewModel>(request))
+            .ReturnsAsync(viewModel);
 
-            var result = await controller.SelectDeliveryModel(request) as ViewResult;
+        var result = await controller.SelectDeliveryModel(request) as ViewResult;
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.ViewName, Is.SameAs("SelectDeliveryModel"));
-            Assert.That(result.Model, Is.SameAs(viewModel));
-        }
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.ViewName, Is.SameAs("SelectDeliveryModel"));
+        Assert.That(result.Model, Is.SameAs(viewModel));
+    }
 
-        [Test, MoqAutoData]
-        public async Task WithOutDeliveryModelsThenReturnsRedirect(
-            ApprenticeRequest request,
-            SelectDeliveryModelViewModel viewModel,
-            [Frozen] Mock<IModelMapper> mockMapper,
-            [Greedy] CohortController controller)
-        {
-            viewModel.DeliveryModels = new DeliveryModel[0];
+    [Test, MoqAutoData]
+    public async Task WithOutDeliveryModelsThenReturnsRedirect(
+        ApprenticeRequest request,
+        SelectDeliveryModelViewModel viewModel,
+        [Frozen] Mock<IModelMapper> mockMapper,
+        [Greedy] CohortController controller)
+    {
+        viewModel.DeliveryModels = new DeliveryModel[0];
 
-            mockMapper
-                .Setup(mapper => mapper.Map<SelectDeliveryModelViewModel>(request))
-                .ReturnsAsync(viewModel);
+        mockMapper
+            .Setup(mapper => mapper.Map<SelectDeliveryModelViewModel>(request))
+            .ReturnsAsync(viewModel);
 
-            var result = await controller.SelectDeliveryModel(request) as RedirectToActionResult;
+        var result = await controller.SelectDeliveryModel(request) as RedirectToActionResult;
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.ActionName, Is.EqualTo("AddDraftApprenticeship"));
-        }
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.ActionName, Is.EqualTo("AddDraftApprenticeship"));
     }
 }

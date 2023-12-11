@@ -12,46 +12,45 @@ using SFA.DAS.Encoding;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests;
+
+[TestFixture]
+public class WhenGettingInform
 {
-    [TestFixture]
-    public class WhenGettingInform
+    private InformRequest _request;
+    private InformViewModel _viewModel;
+    private CohortController _controller;
+    private Mock<IModelMapper> _modelMapper;
+
+    [SetUp]
+    public void Arrange()
     {
-        private InformRequest _request;
-        private InformViewModel _viewModel;
-        private CohortController _controller;
-        private Mock<IModelMapper> _modelMapper;
+        var autoFixture = new Fixture();
+        _request = autoFixture.Create<InformRequest>();
+        _viewModel = autoFixture.Create<InformViewModel>();
 
-        [SetUp]
-        public void Arrange()
-        {
-            var autoFixture = new Fixture();
-            _request = autoFixture.Create<InformRequest>();
-            _viewModel = autoFixture.Create<InformViewModel>();
+        _modelMapper = new Mock<IModelMapper>();
+        _modelMapper.Setup(x => x.Map<InformViewModel>(It.Is<InformRequest>(r => r == _request)))
+            .ReturnsAsync(_viewModel);
 
-            _modelMapper = new Mock<IModelMapper>();
-            _modelMapper.Setup(x => x.Map<InformViewModel>(It.Is<InformRequest>(r => r == _request)))
-             .ReturnsAsync(_viewModel);
+        _controller = new CohortController(Mock.Of<ICommitmentsApiClient>(),
+            Mock.Of<ILogger<CohortController>>(),
+            Mock.Of<ILinkGenerator>(),
+            _modelMapper.Object,
+            Mock.Of<IEncodingService>(),
+            Mock.Of<IApprovalsApiClient>());
+    }
 
-            _controller = new CohortController(Mock.Of<ICommitmentsApiClient>(),
-              Mock.Of<ILogger<CohortController>>(),
-              Mock.Of<ILinkGenerator>(),
-              _modelMapper.Object,
-              Mock.Of<IEncodingService>(),
-              Mock.Of<IApprovalsApiClient>());
-        }
+    [TearDown]
+    public void TearDown() => _controller?.Dispose();
 
-        [TearDown]
-        public void TearDown() => _controller?.Dispose();
+    [Test]
+    public async Task Then_The_Correct_ViewModel_Is_Returned()
+    {
+        //Act
+        var result = await _controller.Inform(_request) as ViewResult;
 
-        [Test]
-        public async Task Then_The_Correct_ViewModel_Is_Returned()
-        {
-            //Act
-            var result = await _controller.Inform(_request) as ViewResult;
-
-            //Assert
-            Assert.That(result.Model, Is.InstanceOf<InformViewModel>());
-        }
+        //Assert
+        Assert.That(result.Model, Is.InstanceOf<InformViewModel>());
     }
 }

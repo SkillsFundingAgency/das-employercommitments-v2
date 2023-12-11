@@ -12,44 +12,43 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenPostingChangeOptionTests : ApprenticeControllerTestBase
 {
-    public class WhenPostingChangeOptionTests : ApprenticeControllerTestBase
+    private ChangeOptionViewModel _viewModel;
+
+    [SetUp]
+    public void Arrange()
     {
-        private ChangeOptionViewModel _viewModel;
+        var fixture = new Fixture();
 
-        [SetUp]
-        public void Arrange()
-        {
-            var fixture = new Fixture();
+        _viewModel = fixture.Create<ChangeOptionViewModel>();
 
-            _viewModel = fixture.Create<ChangeOptionViewModel>();
+        MockModelMapper = new Mock<IModelMapper>();
 
-            _mockModelMapper = new Mock<IModelMapper>();
+        Controller = new ApprenticeController(
+            MockModelMapper.Object,
+            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            Mock.Of<ICommitmentsApiClient>(),
+            Mock.Of<ILogger<ApprenticeController>>());
 
-            _controller = new ApprenticeController(
-                _mockModelMapper.Object,
-                Mock.Of<ICookieStorageService<IndexRequest>>(),
-                Mock.Of<ICommitmentsApiClient>(),
-                Mock.Of<ILogger<ApprenticeController>>());
+        Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
+    }
 
-            _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
-        }
+    [Test]
+    public async Task Then_MapperIsCalled()
+    {
+        await Controller.ChangeOption(_viewModel);
 
-        [Test]
-        public async Task Then_MapperIsCalled()
-        {
-            await _controller.ChangeOption(_viewModel);
+        MockModelMapper.Verify(m => m.Map<EditApprenticeshipRequestViewModel>(_viewModel), Times.Once());
+    }
 
-            _mockModelMapper.Verify(m => m.Map<EditApprenticeshipRequestViewModel>(_viewModel), Times.Once());
-        }
+    [Test]
+    public async Task Then_RedirectToConfirmChanges()
+    {
+        var result = await Controller.ChangeOption(_viewModel) as RedirectToActionResult;
 
-        [Test]
-        public async Task Then_RedirectToConfirmChanges()
-        {
-            var result = await _controller.ChangeOption(_viewModel) as RedirectToActionResult;
-
-            result.ActionName.Should().Be("ConfirmEditApprenticeship");
-        }
+        result.ActionName.Should().Be("ConfirmEditApprenticeship");
     }
 }

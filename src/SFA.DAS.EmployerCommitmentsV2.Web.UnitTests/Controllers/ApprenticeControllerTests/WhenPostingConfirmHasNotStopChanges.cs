@@ -14,50 +14,48 @@ using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+[TestFixture]
+public class WhenPostingConfirmHasNotStopChanges : ApprenticeControllerTestBase
 {
-    [TestFixture]
-    public class WhenPostingConfirmHasNotStopChanges : ApprenticeControllerTestBase
+    [SetUp]
+    public void Arrange()
     {
-        [SetUp]
-        public void Arrange()
-        {
-            var fixture = new Fixture();
-            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockModelMapper = new Mock<IModelMapper>();
+        MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        MockModelMapper = new Mock<IModelMapper>();
 
-            _controller = new ApprenticeController(_mockModelMapper.Object,
-                Mock.Of<ICookieStorageService<IndexRequest>>(),
-                _mockCommitmentsApiClient.Object,
-                Mock.Of<ILogger<ApprenticeController>>());
+        Controller = new ApprenticeController(MockModelMapper.Object,
+            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            MockCommitmentsApiClient.Object,
+            Mock.Of<ILogger<ApprenticeController>>());
 
-            _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
-        }
+        Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
+    }
 
-        [Test, MoqAutoData]
-        public void AndTheApprenticeship_IsStopped_ThenRedirectToStopApprenticeship(ConfirmHasNotStopViewModel request)
-        {
-            //Arrange
-            request.StopConfirmed = true;
+    [Test, MoqAutoData]
+    public void AndTheApprenticeship_IsStopped_ThenRedirectToStopApprenticeship(ConfirmHasNotStopViewModel request)
+    {
+        //Arrange
+        request.StopConfirmed = true;
 
-            //Act
-            var result = _controller.ConfirmHasNotStopChanges(request) as RedirectToActionResult;
+        //Act
+        var result = Controller.ConfirmHasNotStopChanges(request) as RedirectToActionResult;
 
-            //Assert
-            Assert.That(result.ActionName, Is.EqualTo("StopApprenticeship"));
-        }
+        //Assert
+        Assert.That(result.ActionName, Is.EqualTo("StopApprenticeship"));
+    }
 
-        [Test, MoqAutoData]
-        public void AndTheApprenticeship_IsNotStopped_ThenRedirectToReconfirmHasNotStop(ConfirmHasNotStopViewModel request)
-        {
-            //Arrange
-            request.StopConfirmed = false;
+    [Test, MoqAutoData]
+    public void AndTheApprenticeship_IsNotStopped_ThenRedirectToReconfirmHasNotStop(ConfirmHasNotStopViewModel request)
+    {
+        //Arrange
+        request.StopConfirmed = false;
 
-            //Act
-            var result = _controller.ConfirmHasNotStopChanges(request) as RedirectToActionResult;
+        //Act
+        var result = Controller.ConfirmHasNotStopChanges(request) as RedirectToActionResult;
 
-            //Assert
-            Assert.That(result.ActionName, Is.EqualTo("ReconfirmHasNotStop"));
-        }
+        //Assert
+        Assert.That(result.ActionName, Is.EqualTo("ReconfirmHasNotStop"));
     }
 }

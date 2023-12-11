@@ -4,69 +4,68 @@ using System.Collections.Generic;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using System.Linq;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;
+
+[TestFixture]
+public class CohortSummaryExtensionTest
 {
-    [TestFixture]
-    public class CohortSummaryExtensionTest
+    [Test]
+    public void CohortSummary_GetStatus_Returns_Correct_Status_For_Review()
     {
-        [Test]
-        public void CohortSummary_GetStatus_Returns_Correct_Status_For_Review()
+        var cohortSummary = new CohortSummary
         {
-            var cohortSummary = new CohortSummary
-            {
-                CohortId = 1,
-                IsDraft = false,
-                WithParty = Party.Employer
-            };
+            CohortId = 1,
+            IsDraft = false,
+            WithParty = Party.Employer
+        };
 
-            var status =  cohortSummary.GetStatus();
+        var status =  cohortSummary.GetStatus();
 
-            Assert.That(status, Is.EqualTo(CohortStatus.Review));
-        }
+        Assert.That(status, Is.EqualTo(CohortStatus.Review));
+    }
 
-        [Test]
-        public void CohortSummary_GetStatus_Returns_Correct_Status_For_Draft()
+    [Test]
+    public void CohortSummary_GetStatus_Returns_Correct_Status_For_Draft()
+    {
+        var cohortSummary = new CohortSummary
         {
-            var cohortSummary = new CohortSummary
-            {
-                CohortId = 1,
-                IsDraft = true,
-                WithParty = Party.Employer
-            };
+            CohortId = 1,
+            IsDraft = true,
+            WithParty = Party.Employer
+        };
 
-            var status = cohortSummary.GetStatus();
+        var status = cohortSummary.GetStatus();
 
-            Assert.That(status, Is.EqualTo(CohortStatus.Draft));
-        }
+        Assert.That(status, Is.EqualTo(CohortStatus.Draft));
+    }
 
-        [Test]
-        public void CohortSummary_GetStatus_Returns_Correct_Status_For_WithTrainingProvider()
+    [Test]
+    public void CohortSummary_GetStatus_Returns_Correct_Status_For_WithTrainingProvider()
+    {
+        var cohortSummary = new CohortSummary
         {
-            var cohortSummary = new CohortSummary
-            {
-                CohortId = 1,
-                IsDraft = false,
-                WithParty = Party.Provider
-            };
+            CohortId = 1,
+            IsDraft = false,
+            WithParty = Party.Provider
+        };
 
-            var status = cohortSummary.GetStatus();
+        var status = cohortSummary.GetStatus();
 
-            Assert.That(status, Is.EqualTo(CohortStatus.WithProvider));
-        }
+        Assert.That(status, Is.EqualTo(CohortStatus.WithProvider));
+    }
 
-        [Test]
-        public void CohortSummary_GetStatus_Returns_Unknown_If_Unable_To_Find_The_Status()
+    [Test]
+    public void CohortSummary_GetStatus_Returns_Unknown_If_Unable_To_Find_The_Status()
+    {
+        var cohortSummary = new CohortSummary
         {
-            var cohortSummary = new CohortSummary
-            {
-                CohortId = 1,
-                IsDraft = true,
-                WithParty = Party.Provider
-            };
+            CohortId = 1,
+            IsDraft = true,
+            WithParty = Party.Provider
+        };
 
-            var status = cohortSummary.GetStatus();
+        var status = cohortSummary.GetStatus();
 
-            Assert.That(status, Is.EqualTo(CohortStatus.Unknown));
-        }
+        Assert.That(status, Is.EqualTo(CohortStatus.Unknown));
     }
 }
