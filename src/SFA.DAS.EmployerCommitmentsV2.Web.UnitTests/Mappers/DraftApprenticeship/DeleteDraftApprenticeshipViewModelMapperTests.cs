@@ -12,7 +12,6 @@ using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
-using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship
@@ -118,7 +117,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeshi
                 CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(GetDraftApprenticeshipsResponse);
 
-                Sut = new DeleteDraftApprenticeshipViewModelMapper(CommitmentsApiClient.Object, Mock.Of<ILinkGenerator>());
+                Sut = new DeleteDraftApprenticeshipViewModelMapper(CommitmentsApiClient.Object);
             }
 
             public DeleteDraftApprenticeshipViewModelMapperTestsFixture WithParty(Party party)

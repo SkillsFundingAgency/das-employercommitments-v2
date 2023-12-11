@@ -12,7 +12,10 @@ public class SelectDeliveryModelViewModelToAddDraftApprenticeshipRequestMapper :
     private readonly IEncodingService _encodingService;
 
     public SelectDeliveryModelViewModelToAddDraftApprenticeshipRequestMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
-        => (_commitmentsApiClient, _encodingService) = (commitmentsApiClient, encodingService);
+    {
+        _commitmentsApiClient = commitmentsApiClient;
+        _encodingService = encodingService;
+    }
 
     public async Task<AddDraftApprenticeshipRequest> Map(SelectDeliveryModelViewModel source)
     {

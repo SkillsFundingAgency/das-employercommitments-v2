@@ -24,7 +24,7 @@ public class PaymentOrderViewModelMapper : IMapper<PaymentOrderRequest, PaymentO
         return viewModel;
     }
 
-    private PaymentOrderViewModel MapPayment(IList<ProviderPaymentPriorityItem> data)
+    private static PaymentOrderViewModel MapPayment(IList<ProviderPaymentPriorityItem> data)
     {
         var items = data.Select(m => new PaymentOrderItem
             {

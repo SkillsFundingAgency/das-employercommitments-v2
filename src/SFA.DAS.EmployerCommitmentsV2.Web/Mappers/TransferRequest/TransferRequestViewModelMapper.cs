@@ -42,7 +42,7 @@ public class TransferRequestViewModelMapper<T> where T : TransferRequestViewMode
         };
     }
 
-    private TrainingCourseSummaryViewModel MapTrainingCourse(TrainingCourseSummary trainingCourseSummary)
+    private static TrainingCourseSummaryViewModel MapTrainingCourse(TrainingCourseSummary trainingCourseSummary)
     {
         return new TrainingCourseSummaryViewModel
         {

@@ -7,7 +7,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.TransferRequest;
 
 public class TransferConfirmationViewModelMapper : IMapper<TransferConfirmationRequest, TransferConfirmationViewModel>
 {
-    protected readonly ICommitmentsApiClient _commitmentsApiClient;
+    private readonly ICommitmentsApiClient _commitmentsApiClient;
 
     public TransferConfirmationViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
     {

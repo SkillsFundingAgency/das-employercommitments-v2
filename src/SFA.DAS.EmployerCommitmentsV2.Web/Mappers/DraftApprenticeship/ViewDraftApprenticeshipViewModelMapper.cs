@@ -57,7 +57,7 @@ public class ViewDraftApprenticeshipViewModelMapper : IMapper<ViewDraftApprentic
         return result;
     }
 
-    private string GetCourseOption(string draftApprenticeshipTrainingCourseOption)
+    private static string GetCourseOption(string draftApprenticeshipTrainingCourseOption)
     {
         return draftApprenticeshipTrainingCourseOption switch
         {

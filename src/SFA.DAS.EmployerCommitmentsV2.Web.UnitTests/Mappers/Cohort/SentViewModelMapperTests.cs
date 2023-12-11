@@ -63,7 +63,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         public SentRequest Source;
         public SentViewModel Result;
         public Mock<ICommitmentsApiClient> CommitmentsApiClient;
-        public Mock<IEncodingService> EncodingService;
         public GetCohortResponse Cohort;
         public GetDraftApprenticeshipsResponse DraftApprenticeshipsResponse;
         private Fixture _autoFixture;
@@ -83,9 +82,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             CommitmentsApiClient.Setup(x => x.GetDraftApprenticeships(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(DraftApprenticeshipsResponse);
 
-            EncodingService = new Mock<IEncodingService>();
-
-            Mapper = new SentViewModelMapper(CommitmentsApiClient.Object, EncodingService.Object);
+            Mapper = new SentViewModelMapper(CommitmentsApiClient.Object);
             Source = _autoFixture.Create<SentRequest>();
         }
 
@@ -93,6 +90,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         {
             return Mapper.Map(TestHelper.Clone(Source));
         }
-
     }
 }

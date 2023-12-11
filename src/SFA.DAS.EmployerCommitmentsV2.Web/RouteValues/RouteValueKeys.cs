@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 
-public class RouteValueKeys
+public static class RouteValueKeys
 {
     public const string AccountHashedId = "AccountHashedId";
     public const string CohortReference = "cohortReference";

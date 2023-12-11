@@ -2,7 +2,7 @@
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 
 public class DeleteDraftApprenticeshipRequestMapper : IMapper<DeleteDraftApprenticeshipViewModel, DeleteDraftApprenticeshipRequest>
 {
