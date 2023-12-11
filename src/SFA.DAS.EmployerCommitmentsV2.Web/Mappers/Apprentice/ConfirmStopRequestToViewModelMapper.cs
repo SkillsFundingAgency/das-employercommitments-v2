@@ -16,7 +16,7 @@ public class ConfirmStopRequestToViewModelMapper : IMapper<ConfirmStopRequest, C
     public async Task<ConfirmStopRequestViewModel> Map(ConfirmStopRequest source)
     {
         var apprenticeship = await _client.GetApprenticeship(source.ApprenticeshipId);
-        DateTime stoppedDate = GetStoppedDate(source, apprenticeship);
+        var stoppedDate = GetStoppedDate(source, apprenticeship);
 
         return new ConfirmStopRequestViewModel
         {
@@ -33,13 +33,10 @@ public class ConfirmStopRequestToViewModelMapper : IMapper<ConfirmStopRequest, C
         };
     }
 
-    private DateTime GetStoppedDate(ConfirmStopRequest source, GetApprenticeshipResponse apprenticeship)
+    private static DateTime GetStoppedDate(ConfirmStopRequest source, GetApprenticeshipResponse apprenticeship)
     {
-        if (apprenticeship.Status == CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart)
-        {
-            return apprenticeship.StartDate.Value;
-        }
-
-        return new DateTime(source.StopYear.Value, source.StopMonth.Value, 1);
+        return apprenticeship.Status == CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart 
+            ? apprenticeship.StartDate.Value 
+            : new DateTime(source.StopYear.Value, source.StopMonth.Value, 1);
     }
 }

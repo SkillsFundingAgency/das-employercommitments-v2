@@ -55,7 +55,7 @@ public class DataLockRequestRestartRequestToViewModelMapper : IMapper<DataLockRe
         };
     }
 
-    private BaseEdit GetOriginalApprenticeship(GetApprenticeshipResponse apprenticeship)
+    private static BaseEdit GetOriginalApprenticeship(GetApprenticeshipResponse apprenticeship)
     {
         var OriginalApprenticeship = new BaseEdit
         {

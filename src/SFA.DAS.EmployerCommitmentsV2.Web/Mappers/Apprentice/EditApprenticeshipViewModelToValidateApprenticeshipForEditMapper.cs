@@ -8,12 +8,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
 public class EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper : IMapper<EditApprenticeshipRequestViewModel, ValidateApprenticeshipForEditRequest>
 {
-    private readonly IAuthenticationService _authenticationService;
-
-    public EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper(IAuthenticationService authenticationService)
-    {
-        _authenticationService = authenticationService;
-    }
     public Task<ValidateApprenticeshipForEditRequest> Map(EditApprenticeshipRequestViewModel source)
     {
         var result = new ValidateApprenticeshipForEditRequest
@@ -36,6 +30,7 @@ public class EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper : 
             EmploymentEndDate = source.EmploymentEndDate.Date,
             EmploymentPrice = source.EmploymentPrice,
         };
+        
         return Task.FromResult(result);
     }
 }

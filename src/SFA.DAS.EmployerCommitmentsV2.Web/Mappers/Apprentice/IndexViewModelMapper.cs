@@ -90,6 +90,7 @@ public class IndexViewModelMapper : IMapper<IndexRequest, IndexViewModel>
         }
 
         var apprenticeships = new List<ApprenticeshipDetailsViewModel>();
+        
         foreach (var apprenticeshipDetailsResponse in response.Apprenticeships)
         {
             var apprenticeship = await _modelMapper.Map<ApprenticeshipDetailsViewModel>(apprenticeshipDetailsResponse);

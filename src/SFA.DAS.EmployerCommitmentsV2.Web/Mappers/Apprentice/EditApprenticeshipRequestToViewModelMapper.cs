@@ -101,7 +101,7 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
         if (!CheckWaitingToStart(apprenticeship)) return IsPaused(apprenticeship) && !IsWithInFundingPeriod(apprenticeship.StartDate.Value); else return false;
     }
 
-    private bool IsPaused(GetApprenticeshipResponse apprenticeship)
+    private static bool IsPaused(GetApprenticeshipResponse apprenticeship)
     {
         return apprenticeship.Status == ApprenticeshipStatus.Paused;
     }
@@ -128,22 +128,22 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
         return IsLive(apprenticeship) && !IsWithInFundingPeriod(apprenticeship.StartDate.Value);
     }
 
-    private bool IsWaitingToStart(GetApprenticeshipResponse apprenticeship)
+    private static bool IsWaitingToStart(GetApprenticeshipResponse apprenticeship)
     {
         return apprenticeship.Status == ApprenticeshipStatus.WaitingToStart;
     }
 
-    private bool IsLive(GetApprenticeshipResponse apprenticeship)
+    private static bool IsLive(GetApprenticeshipResponse apprenticeship)
     {
         return apprenticeship.Status == ApprenticeshipStatus.Live;
     }
 
-    private bool HasHadDataLockSuccess(GetApprenticeshipResponse apprenticeship)
+    private static bool HasHadDataLockSuccess(GetApprenticeshipResponse apprenticeship)
     {
         return apprenticeship.HasHadDataLockSuccess;
     }
 
-    private bool IsEndDateLocked(bool isLockedForUpdate, bool hasHadDataLockSuccess, ApprenticeshipStatus status)
+    private static bool IsEndDateLocked(bool isLockedForUpdate, bool hasHadDataLockSuccess, ApprenticeshipStatus status)
     {
         var result = isLockedForUpdate;
         if (hasHadDataLockSuccess)
@@ -156,12 +156,7 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
 
     private bool IsWithInFundingPeriod(DateTime trainingStartDate)
     {
-        if (trainingStartDate < _academicYearDateProvider.CurrentAcademicYearStartDate &&
-            _currentDateTime.UtcNow > _academicYearDateProvider.LastAcademicYearFundingPeriod)
-        {
-            return false;
-        }
-
-        return true;
+        return trainingStartDate >= _academicYearDateProvider.CurrentAcademicYearStartDate ||
+               _currentDateTime.UtcNow <= _academicYearDateProvider.LastAcademicYearFundingPeriod;
     }
 }

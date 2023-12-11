@@ -46,7 +46,7 @@ public class ConfirmDetailsAndSendViewModelMapper : IMapper<ChangeOfProviderRequ
         return result;
     }
 
-    private int? GetFundingBandCap(TrainingProgramme course, DateTime? startDate)
+    private static int? GetFundingBandCap(TrainingProgramme course, DateTime? startDate)
     {
         if (course == null)
         {

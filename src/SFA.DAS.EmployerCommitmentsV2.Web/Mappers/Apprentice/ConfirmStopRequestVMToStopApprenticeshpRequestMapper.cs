@@ -6,10 +6,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
 public class ConfirmStopRequestVMToStopApprenticeshpRequestMapper : IMapper<ConfirmStopRequestViewModel, StopApprenticeshipRequest>
 {
-    public ConfirmStopRequestVMToStopApprenticeshpRequestMapper()
-    {
-    }
-
     public Task<StopApprenticeshipRequest> Map(ConfirmStopRequestViewModel source)
     {
         return Task.FromResult(new StopApprenticeshipRequest

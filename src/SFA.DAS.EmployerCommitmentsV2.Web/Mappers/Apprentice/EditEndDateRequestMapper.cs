@@ -2,7 +2,6 @@
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
-
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
 public class EditEndDateRequestMapper : IMapper<EditEndDateViewModel, CommitmentsV2.Api.Types.Requests.EditEndDateRequest>
@@ -13,6 +12,7 @@ public class EditEndDateRequestMapper : IMapper<EditEndDateViewModel, Commitment
     {
         _authenticationService = authenticationService;
     }
+    
     public Task<CommitmentsV2.Api.Types.Requests.EditEndDateRequest> Map(EditEndDateViewModel source)
     {
         var result = new CommitmentsV2.Api.Types.Requests.EditEndDateRequest

@@ -41,11 +41,11 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
 
             var currentTrainingProgramme = await GetTrainingProgramme(response.Apprenticeship.CourseCode, response.Apprenticeship.StandardUId);
 
-            PendingChanges pendingChange = GetPendingChanges(response.ApprenticeshipUpdates);
+            var pendingChange = GetPendingChanges(response.ApprenticeshipUpdates);
 
-            bool dataLockCourseTriaged = response.DataLocks.HasDataLockCourseTriaged();
-            bool dataLockCourseChangedTraiged = response.DataLocks.HasDataLockCourseChangeTriaged();
-            bool dataLockPriceTriaged = response.DataLocks.HasDataLockPriceTriaged();
+            var dataLockCourseTriaged = response.DataLocks.HasDataLockCourseTriaged();
+            var dataLockCourseChangedTraiged = response.DataLocks.HasDataLockCourseChangeTriaged();
+            var dataLockPriceTriaged = response.DataLocks.HasDataLockPriceTriaged();
 
             var pendingChangeOfProviderRequest = response.ChangeOfPartyRequests?
                 .Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
@@ -53,9 +53,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
             var hasPendingoverlappingTrainingDateRequest = response.OverlappingTrainingDateRequest != null &&
                                                            response?.OverlappingTrainingDateRequest?.Any(x => x.Status == OverlappingTrainingDateRequestStatus.Pending) == true;
 
-            bool enableEdit = EnableEdit(response.Apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged, hasPendingoverlappingTrainingDateRequest);
-
-            var apprenticeshipDetails = await _approvalsApiClient.GetApprenticeshipDetails(response.Apprenticeship.ProviderId, apprenticeshipId, CancellationToken.None);
+            var enableEdit = EnableEdit(response.Apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged, hasPendingoverlappingTrainingDateRequest);
 
             var result = new ApprenticeshipDetailsRequestViewModel
             {
@@ -136,12 +134,10 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
 
             return trainingProgrammeVersionResponse.TrainingProgramme;
         }
-        else
-        {
-            var frameworkResponse = await _commitmentsApiClient.GetTrainingProgramme(courseCode);
 
-            return frameworkResponse.TrainingProgramme;
-        }
+        var frameworkResponse = await _commitmentsApiClient.GetTrainingProgramme(courseCode);
+
+        return frameworkResponse.TrainingProgramme;
     }
 
     private static bool EnableEdit(GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse apprenticeship, PendingChanges pendingChange,
@@ -167,17 +163,14 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
 
     private async Task<bool> HasNewerVersions(TrainingProgramme trainingProgramme)
     {
-        if (trainingProgramme.ProgrammeType == ProgrammeType.Standard)
+        if (trainingProgramme.ProgrammeType != ProgrammeType.Standard)
         {
-            var newerVersionsResponse = await _commitmentsApiClient.GetNewerTrainingProgrammeVersions(trainingProgramme.StandardUId);
-
-            if (newerVersionsResponse?.NewerVersions != null && newerVersionsResponse.NewerVersions.Count() > 0)
-            {
-                return true;
-            }
+            return false;
         }
+        
+        var newerVersionsResponse = await _commitmentsApiClient.GetNewerTrainingProgrammeVersions(trainingProgramme.StandardUId);
 
-        return false;
+        return newerVersionsResponse?.NewerVersions != null && newerVersionsResponse.NewerVersions.Any();
     }
 
 }

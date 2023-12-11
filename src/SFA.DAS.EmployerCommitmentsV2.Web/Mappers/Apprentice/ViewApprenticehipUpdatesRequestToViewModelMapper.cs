@@ -27,24 +27,25 @@ public class ViewApprenticehipUpdatesRequestToViewModelMapper : IMapper<ViewAppr
         var updates = updatesTask.Result;
         var apprenticeship = apprenticeshipTask.Result;
 
-        if (updates.ApprenticeshipUpdates.Count == 1)
+        if (updates.ApprenticeshipUpdates.Count != 1)
         {
-            var update = updates.ApprenticeshipUpdates.First();
-
-            var apprenticeshipUpdates = GetApprenticeshipUpdates(update);
-            var originalApprenticeship = await GetOriginalApprenticeship(apprenticeship, update.Cost.HasValue);
-
-            return new ViewApprenticeshipUpdatesViewModel
-            {
-                ApprenticeshipUpdates = apprenticeshipUpdates,
-                OriginalApprenticeship = originalApprenticeship,
-                ProviderName = apprenticeship.ProviderName,
-                AccountHashedId = source.AccountHashedId,
-                ApprenticeshipHashedId = source.ApprenticeshipHashedId
-            };
+            throw new Exception("Multiple pending updates found");
         }
+        
+        var update = updates.ApprenticeshipUpdates.First();
 
-        throw new Exception("Multiple pending updates found");
+        var apprenticeshipUpdates = GetApprenticeshipUpdates(update);
+        var originalApprenticeship = await GetOriginalApprenticeship(apprenticeship, update.Cost.HasValue);
+
+        return new ViewApprenticeshipUpdatesViewModel
+        {
+            ApprenticeshipUpdates = apprenticeshipUpdates,
+            OriginalApprenticeship = originalApprenticeship,
+            ProviderName = apprenticeship.ProviderName,
+            AccountHashedId = source.AccountHashedId,
+            ApprenticeshipHashedId = source.ApprenticeshipHashedId
+        };
+
     }
 
     private static BaseEdit GetApprenticeshipUpdates(GetApprenticeshipUpdatesResponse.ApprenticeshipUpdate update)

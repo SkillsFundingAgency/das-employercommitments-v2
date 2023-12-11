@@ -32,8 +32,8 @@ public class ChangeOptionViewModelMapper : IMapper<ChangeOptionRequest, ChangeOp
         string selectedCourseCode;
         string selectedOption;
 
-        bool returnToChangeVersion = false;
-        bool returnToEdit = false;
+        var returnToChangeVersion = false;
+        var returnToEdit = false;
 
         if (editViewModel != null)
         {

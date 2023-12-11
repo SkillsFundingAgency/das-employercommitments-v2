@@ -53,7 +53,7 @@ public class DataLockRequestChangesRequestToViewModelMapper : IMapper<DataLockRe
         };
     }
 
-    private BaseEdit GetOriginalApprenticeship(GetApprenticeshipResponse apprenticeship)
+    private static BaseEdit GetOriginalApprenticeship(GetApprenticeshipResponse apprenticeship)
     {
         var OriginalApprenticeship = new BaseEdit
         {
@@ -70,7 +70,7 @@ public class DataLockRequestChangesRequestToViewModelMapper : IMapper<DataLockRe
         return OriginalApprenticeship;
     }
 
-    private IList<DataLockPriceChange> MapPriceChanges(IEnumerable<DataLock> dataLocks, IReadOnlyCollection<GetPriceEpisodesResponse.PriceEpisode> priceEpisodes)
+    private static IList<DataLockPriceChange> MapPriceChanges(IEnumerable<DataLock> dataLocks, IReadOnlyCollection<GetPriceEpisodesResponse.PriceEpisode> priceEpisodes)
     {
         return dataLocks
             .Select(dataLock =>
@@ -81,9 +81,7 @@ public class DataLockRequestChangesRequestToViewModelMapper : IMapper<DataLockRe
 
                 if (previousPriceEpisode == null)
                 {
-                    previousPriceEpisode = priceEpisodes
-                        .OrderByDescending(m => m.FromDate)
-                        .FirstOrDefault();
+                    previousPriceEpisode = priceEpisodes.MaxBy(m => m.FromDate);
                 }
 
                 return new DataLockPriceChange
@@ -99,7 +97,7 @@ public class DataLockRequestChangesRequestToViewModelMapper : IMapper<DataLockRe
             }).ToList();
     }
 
-    private IList<DataLockCourseChange> MapCourseChanges(IEnumerable<DataLock> dataLocks, GetApprenticeshipResponse apprenticeship, IReadOnlyCollection<GetPriceEpisodesResponse.PriceEpisode> priceHistory, IEnumerable<TrainingProgramme> trainingProgrammes)
+    private static IList<DataLockCourseChange> MapCourseChanges(IEnumerable<DataLock> dataLocks, GetApprenticeshipResponse apprenticeship, IReadOnlyCollection<GetPriceEpisodesResponse.PriceEpisode> priceHistory, IEnumerable<TrainingProgramme> trainingProgrammes)
     {
         var earliestPriceHistory = priceHistory.Min(x => x.FromDate);
 

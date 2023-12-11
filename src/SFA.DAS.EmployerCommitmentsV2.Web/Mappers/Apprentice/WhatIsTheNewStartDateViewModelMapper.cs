@@ -6,7 +6,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
 public class WhatIsTheNewStartDateViewModelMapper : IMapper<ChangeOfProviderRequest, WhatIsTheNewStartDateViewModel>
 {
-
     private readonly ICommitmentsApiClient _client;
 
     public WhatIsTheNewStartDateViewModelMapper(ICommitmentsApiClient client)
