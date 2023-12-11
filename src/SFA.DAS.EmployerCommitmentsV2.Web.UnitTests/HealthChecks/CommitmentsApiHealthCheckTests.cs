@@ -8,37 +8,38 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.HealthChecks;
 using SFA.DAS.Http;
-using SFA.DAS.Testing;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.HealthChecks;
 
 [TestFixture]
 [Parallelizable]
-public class CommitmentsApiHealthCheckTests : FluentTest<CommitmentsApiHealthCheckTestsFixture>
+public class CommitmentsApiHealthCheckTests
 {
-    [TestCase(new [] { Role.Employer }, HealthStatus.Healthy)]
-    [TestCase(new [] { Role.Provider }, HealthStatus.Unhealthy)]
-    [TestCase(new [] { Role.Employer, Role.Provider }, HealthStatus.Unhealthy)]
-    public async Task CheckHealthAsync_WhenWhoAmISucceedsAndUserIsInRoles_ThenShouldReturnHealthStatus(string[] roles, HealthStatus healthStatus)
+    [TestCase(new[] { Role.Employer }, HealthStatus.Healthy)]
+    [TestCase(new[] { Role.Provider }, HealthStatus.Unhealthy)]
+    [TestCase(new[] { Role.Employer, Role.Provider }, HealthStatus.Unhealthy)]
+    public async Task CheckHealthAsync_WhenWhoAmISucceedsAndUserIsInRoles_ThenShouldReturnHealthStatus(string[] roles,
+        HealthStatus healthStatus)
     {
-        await TestAsync(
-            f => f.SetWhoAmISuccess(roles),
-            f => f.CheckHealthAsync(),
-            (f, r) =>
-            {
-                r.Should().NotBeNull();
-                r.Status.Should().Be(healthStatus);
-                r.Data["Roles"].Should().BeOfType<List<string>>().Which.Should().BeEquivalentTo(roles);
-            });
+        var fixture = new CommitmentsApiHealthCheckTestsFixture();
+        fixture.SetWhoAmISuccess(roles);
+
+        var result = await fixture.CheckHealthAsync();
+
+        result.Should().NotBeNull();
+        result.Status.Should().Be(healthStatus);
+        result.Data["Roles"].Should().BeOfType<List<string>>().Which.Should().BeEquivalentTo(roles);
     }
-        
+
     [Test]
-    public async Task CheckHealthAsync_WhenWhoAmIFails_ThenShouldThrowException()
+    public void CheckHealthAsync_WhenWhoAmIFails_ThenShouldThrowException()
     {
-        await TestExceptionAsync(
-            f => f.SetWhoAmIFailure(),
-            f => f.CheckHealthAsync(),
-            (f, r) => r.Should().ThrowAsync<Exception>().Result.Which.Should().Be(f.Exception));
+        var fixture = new CommitmentsApiHealthCheckTestsFixture();
+        fixture.SetWhoAmIFailure();
+
+        Func<Task> result = async () => await fixture.CheckHealthAsync();
+
+        result.Should().ThrowAsync<Exception>().Result.Which.Should().Be(fixture.Exception);
     }
 }
 
@@ -56,7 +57,7 @@ public class CommitmentsApiHealthCheckTestsFixture
         {
             Registration = new HealthCheckRegistration("Foo", Mock.Of<IHealthCheck>(), null, null)
         };
-            
+
         ApiClient = new Mock<ICommitmentsApiClient>();
         HealthCheck = new CommitmentsApiHealthCheck(ApiClient.Object);
 
@@ -65,7 +66,7 @@ public class CommitmentsApiHealthCheckTestsFixture
             RequestMessage = new HttpRequestMessage(),
             ReasonPhrase = "Url not found"
         };
-            
+
         Exception = new RestHttpClientException(HttpResponseMessage, "Url not found");
     }
 
@@ -77,14 +78,14 @@ public class CommitmentsApiHealthCheckTestsFixture
     public CommitmentsApiHealthCheckTestsFixture SetWhoAmISuccess(IEnumerable<string> roles)
     {
         ApiClient.Setup(c => c.WhoAmI()).ReturnsAsync(new WhoAmIResponse { Roles = roles.ToList() });
-            
+
         return this;
     }
 
     public CommitmentsApiHealthCheckTestsFixture SetWhoAmIFailure()
     {
         ApiClient.Setup(c => c.WhoAmI()).ThrowsAsync(Exception);
-            
+
         return this;
     }
 }

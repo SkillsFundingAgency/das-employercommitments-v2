@@ -7,42 +7,42 @@ using System.Linq;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;
 
 [TestFixture]
-public class GetCohortCardLinkViewModelExtentsionsTests
+public class GetCohortCardLinkViewModelExtensionsTests
 {
     [Test]
     public void TheCohortsInDraftIsPopulatedCorrectly()
     {
-        var f = new GetCohortCardLinkViewModelTestsFixture();
-        var result = f.GetCohortCardLinkViewModel();
+        var fixture = new GetCohortCardLinkViewModelTestsFixture();
+        var result = fixture.GetCohortCardLinkViewModel();
 
-        f.VerifyCohortsInDraftIsCorrect(result);
+        fixture.VerifyCohortsInDraftIsCorrect(result);
     }
 
     [Test]
     public void TheCohortsInReviewIsPopulatedCorrectly()
     {
-        var f = new GetCohortCardLinkViewModelTestsFixture();
-        var result = f.GetCohortCardLinkViewModel();
+        var fixture = new GetCohortCardLinkViewModelTestsFixture();
+        var result = fixture.GetCohortCardLinkViewModel();
 
-        f.VerifyCohortsInReviewIsCorrect(result);
+        fixture.VerifyCohortsInReviewIsCorrect(result);
     }
 
     [Test]
     public void TheCohortsWithTrainingProviderIsPopulatedCorrectly()
     {
-        var f = new GetCohortCardLinkViewModelTestsFixture();
-        var result = f.GetCohortCardLinkViewModel();
+        var fixture = new GetCohortCardLinkViewModelTestsFixture();
+        var result = fixture.GetCohortCardLinkViewModel();
 
-        f.VerifyCohortsWithProviderIsCorrect(result);
+        fixture.VerifyCohortsWithProviderIsCorrect(result);
     }
 
     [Test]
     public void TheCohortsWithTransferSenderIsPopulatedCorrectly()
     {
-        var f = new GetCohortCardLinkViewModelTestsFixture();
-        var result = f.GetCohortCardLinkViewModel();
+        var fixture = new GetCohortCardLinkViewModelTestsFixture();
+        var result = fixture.GetCohortCardLinkViewModel();
 
-        f.VerifyCohortsWithTransferSenderIsCorrect(result);
+        fixture.VerifyCohortsWithTransferSenderIsCorrect(result);
     }
 
     [TestCase(CohortStatus.Draft)]
@@ -51,20 +51,20 @@ public class GetCohortCardLinkViewModelExtentsionsTests
     [TestCase(CohortStatus.WithTransferSender)]
     public void TheCohortsStatusIsSetCorrectly(CohortStatus selectedCohortStatus)
     {
-        var f = new GetCohortCardLinkViewModelTestsFixture();
-        var result = f.GetCohortCardLinkViewModel(selectedCohortStatus);
+        var fixture = new GetCohortCardLinkViewModelTestsFixture();
+        var result = fixture.GetCohortCardLinkViewModel(selectedCohortStatus);
 
-        f.VerifySelectedCohortStatusIsCorrect(result, selectedCohortStatus);
+        GetCohortCardLinkViewModelTestsFixture.VerifySelectedCohortStatusIsCorrect(result, selectedCohortStatus);
     }
 
-    public class GetCohortCardLinkViewModelTestsFixture
+    private class GetCohortCardLinkViewModelTestsFixture
     {
-        private Fixture _fixture;
+        private readonly Fixture _fixture;
         public Mock<IUrlHelper> UrlHelper { get; }
 
         public CohortSummary[] CohortSummaries { get; set; }
 
-        private string accountHashed => "ABC123";
+        private string AccountHashed => "ABC123";
 
         public GetCohortCardLinkViewModelTestsFixture()
         {
@@ -107,17 +107,20 @@ public class GetCohortCardLinkViewModelExtentsionsTests
             UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "WithTransferSender")));
         }
 
-        public void VerifySelectedCohortStatusIsCorrect(ApprenticeshipRequestsHeaderViewModel result, CohortStatus expectedCohortStatus)
+        public static void VerifySelectedCohortStatusIsCorrect(ApprenticeshipRequestsHeaderViewModel result, CohortStatus expectedCohortStatus)
         {
-            Assert.That(result.CohortsWithTransferSender.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.WithTransferSender));
-            Assert.That(result.CohortsInDraft.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.Draft));
-            Assert.That(result.CohortsInReview.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.Review));
-            Assert.That(result.CohortsWithTrainingProvider.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.WithProvider));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.CohortsWithTransferSender.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.WithTransferSender));
+                Assert.That(result.CohortsInDraft.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.Draft));
+                Assert.That(result.CohortsInReview.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.Review));
+                Assert.That(result.CohortsWithTrainingProvider.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.WithProvider));
+            });
         }
 
         public ApprenticeshipRequestsHeaderViewModel GetCohortCardLinkViewModel(CohortStatus selectedCohortStatus = CohortStatus.Draft)
         {
-            return CohortSummaries.GetCohortCardLinkViewModel(UrlHelper.Object, accountHashed, selectedCohortStatus);
+            return CohortSummaries.GetCohortCardLinkViewModel(UrlHelper.Object, AccountHashed, selectedCohortStatus);
         }
 
         private static List<CohortSummary> PopulateWith(List<CohortSummary> list, bool draft, Party withParty)
@@ -140,7 +143,7 @@ public class GetCohortCardLinkViewModelExtentsionsTests
             PopulateWith(listInReview, false, Party.Employer);
 
             var listWithProvider = _fixture.CreateMany<CohortSummary>(3).ToList();
-            PopulateWith(listWithProvider, false, Party.Provider).ToList();
+            PopulateWith(listWithProvider, false, Party.Provider);
 
             var listWithTransferSender = _fixture.CreateMany<CohortSummary>(2).ToList();
             PopulateWith(listWithTransferSender, false, Party.TransferSender);

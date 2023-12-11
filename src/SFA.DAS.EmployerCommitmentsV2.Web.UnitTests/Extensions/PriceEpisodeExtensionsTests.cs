@@ -11,12 +11,12 @@ public class PriceEpisodeExtensionsTests
     [SetUp]
     public void Arrange()
     {
-        _priceEpisodes = new List<GetPriceEpisodesResponse.PriceEpisode>
-        {
-            CreatePriceEpisode(1, new DateTime(2018,01,01), new DateTime(2018,12,31)),
-            CreatePriceEpisode(2, new DateTime(2019,01,01), new DateTime(2019,12,31)),
-            CreatePriceEpisode(3, new DateTime(2020,01,01), null)
-        };
+        _priceEpisodes =
+        [
+            CreatePriceEpisode(1, new DateTime(2018, 01, 01), new DateTime(2018, 12, 31)),
+            CreatePriceEpisode(2, new DateTime(2019, 01, 01), new DateTime(2019, 12, 31)),
+            CreatePriceEpisode(3, new DateTime(2020, 01, 01), null)
+        ];
     }
 
     [TestCase("2017-01-01", 1, Description = "First price episode if all future-dated")]

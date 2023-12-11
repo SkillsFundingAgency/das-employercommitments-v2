@@ -29,11 +29,17 @@ public class WhenAddingGoogleAnalyticsInformation
 
         //Assert
         var actualController = context.Controller as Controller;
+        
         Assert.That(actualController, Is.Not.Null);
+        
         var viewBagData = actualController.ViewBag.GaData as GaData;
+        
         Assert.That(viewBagData, Is.Not.Null);
-        Assert.That(viewBagData.Acc, Is.EqualTo(accountId.ToString()));
-        Assert.That(viewBagData.UserId, Is.EqualTo(userId.ToString()));
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewBagData.Acc, Is.EqualTo(accountId.ToString()));
+            Assert.That(viewBagData.UserId, Is.EqualTo(userId.ToString()));
+        });
     }
 
     [Test, DomainAutoData]

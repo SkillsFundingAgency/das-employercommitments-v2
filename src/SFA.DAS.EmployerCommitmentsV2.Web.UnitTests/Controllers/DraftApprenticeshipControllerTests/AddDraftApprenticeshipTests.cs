@@ -11,7 +11,6 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
-using SFA.DAS.Testing;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
@@ -19,44 +18,46 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprentic
 
 [TestFixture]
 [Parallelizable]
-public class AddDraftApprenticeshipTests : FluentTest<AddDraftApprenticeshipTestsFixture>
+public class AddDraftApprenticeshipTests
 {
     [Test]
     public async Task WhenGettingAction_ThenShouldReturnView()
     {
-        await TestAsync(
-            f => f.Get(),
-            (f, r) => r.Should().NotBeNull()
-                .And.BeOfType<ViewResult>()
-                .Which.Model.Should().NotBeNull()
-                .And.Match<AddDraftApprenticeshipViewModel>(m => m == f.ViewModel));
+        var fixture = new AddDraftApprenticeshipTestsFixture();
+        var result = await fixture.Get();
+        result.Should().NotBeNull()
+            .And.BeOfType<ViewResult>()
+            .Which.Model.Should().NotBeNull()
+            .And.Match<AddDraftApprenticeshipViewModel>(m => m == fixture.ViewModel);
     }
 
     [Test]
     public async Task WhenGettingActionAndCohortIsNotWithEmployer_ThenShouldRedirectToCohortDetailsUrl()
     {
-        await TestAsync(
-            f => f.SetCohortWithOtherParty(),
-            f => f.Get(),
-            (f, r) => r.Should().NotBeNull()
-                .And.BeEquivalentTo(new { ActionName = "Details", ControllerName = "Cohort" }, op => op.ExcludingMissingMembers()));
+        var fixture = new AddDraftApprenticeshipTestsFixture();
+        fixture.SetCohortWithOtherParty();
+        var result = await fixture.Get();
+        result.Should().NotBeNull()
+            .And.BeEquivalentTo(new { ActionName = "Details", ControllerName = "Cohort" },
+                op => op.ExcludingMissingMembers());
     }
 
     [Test]
     public async Task WhenPostingAction_ThenShouldAddDraftApprenticeship()
     {
-        await TestAsync(
-            f => f.Post(),
-            f => f.OuterApiClient.Verify(c => c.AddDraftApprenticeship(f.ViewModel.CohortId.Value, f.AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>())));
+        var fixture = new AddDraftApprenticeshipTestsFixture();
+        await fixture.Post();
+        fixture.OuterApiClient.Verify(c => c.AddDraftApprenticeship(fixture.ViewModel.CohortId.Value,
+            fixture.AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>()));
     }
 
     [Test]
     public async Task WhenPostingAction_ThenShouldRedirectToSelectOptionPage()
     {
-        await TestAsync(
-            f => f.Post(),
-            (f, r) => r.Should().NotBeNull()
-                .And.BeOfType<RedirectToActionResult>().Which.ActionName.Should().Be("SelectOption"));
+        var fixture = new AddDraftApprenticeshipTestsFixture();
+        var result = await fixture.Post();
+        result.Should().NotBeNull()
+            .And.BeOfType<RedirectToActionResult>().Which.ActionName.Should().Be("SelectOption");
     }
 }
 
@@ -116,7 +117,8 @@ public class AddDraftApprenticeshipTestsFixture
         StandardCourses = new List<TrainingProgramme>();
         Courses = new List<TrainingProgramme>();
         CohortDetailsUrl = $"accounts/{Request.AccountHashedId}/apprentices/{Request.CohortReference}/details";
-        CommitmentsApiModelException = new CommitmentsApiModelException(new List<ErrorDetail> { new ErrorDetail("Foo", "Bar") });
+        CommitmentsApiModelException =
+            new CommitmentsApiModelException(new List<ErrorDetail> { new ErrorDetail("Foo", "Bar") });
         CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
         OuterApiClient = new Mock<IApprovalsApiClient>();
         ModelMapper = new Mock<IModelMapper>();
@@ -135,14 +137,20 @@ public class AddDraftApprenticeshipTestsFixture
 
         Controller.TempData = TempData.Object;
 
-        CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammes(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammesResponse{TrainingProgrammes = Courses});
-        CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammeStandards(CancellationToken.None)).ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse{TrainingProgrammes = StandardCourses});
-        OuterApiClient.Setup(c => c.AddDraftApprenticeship(ViewModel.CohortId.Value, AddDraftApprenticeshipRequest, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new EmployerCommitmentsV2.Services.Approvals.Responses.AddDraftApprenticeshipResponse { DraftApprenticeshipId = 123456 });
+        CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammes(CancellationToken.None))
+            .ReturnsAsync(new GetAllTrainingProgrammesResponse { TrainingProgrammes = Courses });
+        CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammeStandards(CancellationToken.None))
+            .ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse { TrainingProgrammes = StandardCourses });
+        OuterApiClient.Setup(c => c.AddDraftApprenticeship(ViewModel.CohortId.Value, AddDraftApprenticeshipRequest,
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new EmployerCommitmentsV2.Services.Approvals.Responses.AddDraftApprenticeshipResponse
+                { DraftApprenticeshipId = 123456 });
 
-        ModelMapper.Setup(m => m.Map<AddDraftApprenticeshipApimRequest>(ViewModel)).Returns(Task.FromResult(AddDraftApprenticeshipRequest));
+        ModelMapper.Setup(m => m.Map<AddDraftApprenticeshipApimRequest>(ViewModel))
+            .Returns(Task.FromResult(AddDraftApprenticeshipRequest));
 
-        ModelMapper.Setup(m => m.Map<AddDraftApprenticeshipViewModel>(It.IsAny<AddDraftApprenticeshipRequest>())).ReturnsAsync(ViewModel);
+        ModelMapper.Setup(m => m.Map<AddDraftApprenticeshipViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
+            .ReturnsAsync(ViewModel);
     }
 
     public Task<IActionResult> Get()

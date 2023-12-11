@@ -39,7 +39,7 @@ public class DataLockStatusExtensionsTests
     {
         //Arrange
         _dataLocks = new List<DataLock>
-        { new DataLock
+        { new()
             {
                 Id = 1,
                 TriageStatus = TriageStatus.Restart,
@@ -47,7 +47,7 @@ public class DataLockStatusExtensionsTests
                 IsResolved = false,
                 ErrorCode = errorCode
             },
-            new DataLock
+            new()
             {
                 Id = 2,
                 TriageStatus = TriageStatus.Unknown,
@@ -73,7 +73,7 @@ public class DataLockStatusExtensionsTests
     {
         //Arrange
         _dataLocks = new List<DataLock>
-        { new DataLock
+        { new()
             {
                 Id = 1,
                 TriageStatus = TriageStatus.Change,
@@ -81,7 +81,7 @@ public class DataLockStatusExtensionsTests
                 IsResolved = false,
                 ErrorCode = errorCode
             },
-            new DataLock
+            new()
             {
                 Id = 2,
                 TriageStatus = TriageStatus.Unknown,
@@ -106,7 +106,7 @@ public class DataLockStatusExtensionsTests
     {
         //Arrange
         _dataLocks = new List<DataLock>
-        { new DataLock
+        { new()
             {
                 Id = 1,
                 TriageStatus = TriageStatus.Change,
@@ -114,7 +114,7 @@ public class DataLockStatusExtensionsTests
                 IsResolved = false,
                 ErrorCode = errorCode
             },
-            new DataLock
+            new()
             {
                 Id = 2,
                 TriageStatus = TriageStatus.Unknown,

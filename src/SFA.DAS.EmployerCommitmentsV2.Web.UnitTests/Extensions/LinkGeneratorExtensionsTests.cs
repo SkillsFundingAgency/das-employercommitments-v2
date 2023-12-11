@@ -5,13 +5,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Extensions;
 
 [TestFixture]
 [Parallelizable]
-public class ILinkGeneratorExtensionsTests
+public class LinkGeneratorExtensionsTests
 {
-    private ILinkGeneratorExtensionsTestsFixture _fixture;
+    private LinkGeneratorExtensionsTestsFixture _fixture;
     [SetUp]
     public void Arrange()
     {
-        _fixture = new ILinkGeneratorExtensionsTestsFixture();
+        _fixture = new LinkGeneratorExtensionsTestsFixture();
     }
 
     [Test, AutoData]
@@ -19,7 +19,7 @@ public class ILinkGeneratorExtensionsTests
     {
         var url = _fixture.Sut.YourOrganisationsAndAgreements(accountHashedId);
 
-        Assert.That(url, Is.EqualTo($"{_fixture.AccountsLink}accounts/{accountHashedId}/agreements"));
+        Assert.That(url, Is.EqualTo($"{LinkGeneratorExtensionsTestsFixture.AccountsLink}accounts/{accountHashedId}/agreements"));
     }
 
     [Test, AutoData]
@@ -27,24 +27,24 @@ public class ILinkGeneratorExtensionsTests
     {
         var url = _fixture.Sut.PayeSchemes(accountHashedId);
 
-        Assert.That(url, Is.EqualTo($"{_fixture.AccountsLink}accounts/{accountHashedId}/schemes"));
+        Assert.That(url, Is.EqualTo($"{LinkGeneratorExtensionsTestsFixture.AccountsLink}accounts/{accountHashedId}/schemes"));
     }
 
     [Test, AutoData]
     public void EmployerHome_BuildsPathCorrectly(string accountHashedId)
     {
         var url = _fixture.Sut.EmployerHome(accountHashedId);
-        Assert.That(url, Is.EqualTo($"{_fixture.AccountsLink}accounts/{accountHashedId}/teams"));
+        Assert.That(url, Is.EqualTo($"{LinkGeneratorExtensionsTestsFixture.AccountsLink}accounts/{accountHashedId}/teams"));
     }
 
-    public class ILinkGeneratorExtensionsTestsFixture
+    public class LinkGeneratorExtensionsTestsFixture
     {
         public Mock<ILinkGenerator> MockILinkGenerator;
         public ILinkGenerator Sut => MockILinkGenerator.Object;
-        public string AccountsLink => "https://accounts.com/";
-        public string UsersLink => "https://users.com/";
+        public static string AccountsLink => "https://accounts.com/";
+        public static string UsersLink => "https://users.com/";
 
-        public ILinkGeneratorExtensionsTestsFixture()
+        public LinkGeneratorExtensionsTestsFixture()
         {
             MockILinkGenerator = new Mock<ILinkGenerator>();
             MockILinkGenerator.Setup(x => x.AccountsLink(It.IsAny<string>())).Returns((string path) => AccountsLink + path);
