@@ -4,8 +4,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Features;
 
 public class EmployerFeatureToggle : FeatureToggle
 {
-    public List<long> AccountWhitelist { get; set; } = new List<long>();
-    public List<string> EmailWhitelist { get; set; } = new List<string>();
+    public List<long> AccountWhitelist { get; set; } = new();
+    public List<string> EmailWhitelist { get; set; } = new();
     public long? EnabledByAgreementVersion { get; set; }
 
     public bool IsWhitelistEnabled => IsEmailWhitelistEnabled || IsAccountWhitelistEnabled;
@@ -31,6 +31,6 @@ public class EmployerFeatureToggle : FeatureToggle
 
 
         return emails.Any(email => email.Equals(userEmail, StringComparison.InvariantCultureIgnoreCase))
-               || wildcards.Any(pattern => Regex.IsMatch(userEmail, pattern, RegexOptions.IgnoreCase));
+               || wildcards.Any(pattern => Regex.IsMatch(userEmail, pattern, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(10)));
     }
 }
