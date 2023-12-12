@@ -111,7 +111,7 @@ public class WhenAddingServicesToTheContainer
         services.AddApplicationServices(employerCommitmentsV2Configuration);
         services.AddModelMappings();
         services.AddDasMvc(configuration);
-        services.AddEmployerUrlHelper();
+       // services.AddEmployerUrlHelper();
 
         services.AddTransient<IUrlHelper, StubUrlHelper>();
 
