@@ -3,14 +3,18 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Stubs;
+using SFA.DAS.EmployerUrlHelper.Configuration;
 using SFA.DAS.EmployerUrlHelper.DependencyResolution;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests;
 
@@ -26,6 +30,22 @@ public class WhenAddingServicesToTheContainer
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_ModelMappers(TestType toResolve)
     {
         RunTestForType(toResolve);
+    }
+    
+    [TestCase(typeof(EmployerCommitmentsV2Configuration))]
+    [TestCase(typeof(CommitmentPermissionsApiClientConfiguration))]
+    [TestCase(typeof(AuthenticationConfiguration))]
+    [TestCase(typeof(ZenDeskConfiguration))]
+    [TestCase(typeof(CommitmentsClientApiConfiguration))]
+    [TestCase(typeof(CommitmentPermissionsApiClientConfiguration))]
+    [TestCase(typeof(EmployerFeaturesConfiguration))]
+    [TestCase(typeof(EncodingConfig))]
+    [TestCase(typeof(EmployerUrlHelperConfiguration))]
+    [TestCase(typeof(AccountApiConfiguration))]
+    [TestCase(typeof(ApprovalsApiClientConfiguration))]
+    public void Then_The_Dependencies_Are_Correctly_Resolved_For_Configuration(Type toResolve)
+    {
+        RunTestForType(new TestType(toResolve.Name, toResolve));
     }
 
     [TestCaseSource(nameof(GetControllerTypes))]
