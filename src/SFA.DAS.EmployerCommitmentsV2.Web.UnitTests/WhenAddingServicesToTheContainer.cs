@@ -57,7 +57,7 @@ public class WhenAddingServicesToTheContainer
 
         var type = provider.GetService(toResolve.Type);
        
-        Assert.That(type, Is.Not.Null, toResolve.Name);
+        Assert.That(type, Is.Not.Null, $"Unable to resolve all required services for type '{toResolve.Name}'.");
     }
 
     private static IEnumerable<TestType> GetControllerTypes()
