@@ -44,7 +44,7 @@ public class WhenCallingGetSendRequestNewTrainingProviderTestsFixture
             .ReturnsAsync(_expectedViewModel);
 
         _controller = new ApprenticeController(_modelMapper.Object,
-            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             Mock.Of<ICommitmentsApiClient>(),
             Mock.Of<ILogger<ApprenticeController>>());
     }

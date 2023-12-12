@@ -41,12 +41,8 @@ public static class EmployerAuthenticationServiceRegistrations
 
     private static void ConfigureGovSignIn(IServiceCollection services, IConfiguration configuration)
     {
-        var govConfig = configuration.GetSection(ConfigurationKeys.GovUkSignInConfiguration);
-        services.Configure<GovUkOidcConfiguration>(configuration.GetSection("GovUkOidcConfiguration"));
-        govConfig["ResourceEnvironmentName"] = configuration["ResourceEnvironmentName"];
-        govConfig["StubAuth"] = configuration["StubAuth"];
         services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
-        services.AddAndConfigureGovUkAuthentication(govConfig,
+        services.AddAndConfigureGovUkAuthentication(configuration,
             typeof(EmployerAccountPostAuthenticationClaimsHandler),
             "",
             "/service/SignIn-Stub");

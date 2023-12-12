@@ -28,7 +28,7 @@ public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTes
         MockCommitmentsApiClient.Setup(x => x.EditApprenticeship(It.IsAny<EditApprenticeshipApiRequest>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(_response));
 
         Controller = new ApprenticeController(MockModelMapper.Object,
-            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             MockCommitmentsApiClient.Object,
             Mock.Of<ILogger<ApprenticeController>>());
         Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);

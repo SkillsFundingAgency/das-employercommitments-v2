@@ -40,7 +40,7 @@ public class WhenPostingChangeVersionTests : ApprenticeControllerTestBase
             .ReturnsAsync(_editRequestViewModel);
 
         Controller = new ApprenticeController(MockModelMapper.Object, 
-            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             MockCommitmentsApiClient.Object,
             Mock.Of<ILogger<ApprenticeController>>());
 

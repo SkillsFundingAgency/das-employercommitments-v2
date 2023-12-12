@@ -12,7 +12,7 @@ public class WhenRequestingPauseApprenticeshipConfirmationPage : ApprenticeContr
     public void Arrange()
     {
         MockModelMapper = new Mock<IModelMapper>();
-        MockCookieStorageService = new Mock<ICookieStorageService<IndexRequest>>();
+        MockCookieStorageService = new Mock<Interfaces.ICookieStorageService<IndexRequest>>();
         MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
         Controller = new ApprenticeController(MockModelMapper.Object,

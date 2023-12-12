@@ -21,7 +21,7 @@ public class WhenPostingEditStopDateTests : ApprenticeControllerTestBase
     public void Arrange()
     {           
         MockModelMapper = new Mock<IModelMapper>();
-        MockCookieStorageService = new Mock<ICookieStorageService<IndexRequest>>();
+        MockCookieStorageService = new Mock<Interfaces.ICookieStorageService<IndexRequest>>();
         MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
         _autoFixture = new Fixture();
         _autoFixture.Customize<EditStopDateViewModel>(c => c.Without(x => x.NewStopDate));

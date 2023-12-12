@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 public class ApprenticeController : Controller
 {
     private readonly IModelMapper _modelMapper;
-    private readonly ICookieStorageService<IndexRequest> _cookieStorage;
+    private readonly Interfaces.ICookieStorageService<IndexRequest> _cookieStorage;
     private readonly ICommitmentsApiClient _commitmentsApiClient;
     private readonly ILogger<ApprenticeController> _logger;
 
@@ -47,7 +47,7 @@ public class ApprenticeController : Controller
     private const string ViewModelForEdit = "ViewModelForEdit";
     private const string ApprenticeEndDateConfirmed = "Current planned end date confirmed ";
 
-    public ApprenticeController(IModelMapper modelMapper, ICookieStorageService<IndexRequest> cookieStorage,
+    public ApprenticeController(IModelMapper modelMapper, Interfaces.ICookieStorageService<IndexRequest> cookieStorage,
         ICommitmentsApiClient commitmentsApiClient, ILogger<ApprenticeController> logger)
     {
         _modelMapper = modelMapper;

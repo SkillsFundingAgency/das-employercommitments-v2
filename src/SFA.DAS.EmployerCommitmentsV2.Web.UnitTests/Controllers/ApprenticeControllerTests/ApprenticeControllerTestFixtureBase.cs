@@ -27,7 +27,7 @@ public class ApprenticeControllerTestFixtureBase
         TempDataDictionary = new Mock<ITempDataDictionary>();
 
         Controller = new ApprenticeController(MockMapper.Object,
-            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             MockCommitmentsApiClient.Object,
             Mock.Of<ILogger<ApprenticeController>>());
 

@@ -92,7 +92,7 @@ public class WhenSelectingCourseOnEditApprenticeshipFixture
         CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
         CommitmentsApiClientMock.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(Cohort);
 
-        Sut = new ApprenticeController(ModelMapperMock.Object, Mock.Of<ICookieStorageService<IndexRequest>>(), CommitmentsApiClientMock.Object, Mock.Of<ILogger<ApprenticeController>>());
+        Sut = new ApprenticeController(ModelMapperMock.Object, Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(), CommitmentsApiClientMock.Object, Mock.Of<ILogger<ApprenticeController>>());
         Sut.TempData = TempDataMock.Object;
     }
 

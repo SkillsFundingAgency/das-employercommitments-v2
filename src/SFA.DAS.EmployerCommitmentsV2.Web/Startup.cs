@@ -54,7 +54,7 @@ public class Startup
             .AddEmployerUrlHelper()
             .AddMemoryCache()
             .AddApplicationInsightsTelemetry()
-            .AddDataProtection(_configuration, _environment);
+            .AddDasDataProtection(_configuration, _environment);
     }
 
     public void Configure(IApplicationBuilder app)

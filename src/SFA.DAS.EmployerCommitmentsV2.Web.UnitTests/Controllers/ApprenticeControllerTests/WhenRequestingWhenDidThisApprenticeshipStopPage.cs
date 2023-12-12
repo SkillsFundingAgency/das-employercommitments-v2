@@ -11,7 +11,7 @@ public class WhenRequestingWhenDidThisApprenticeshipStopPage : ApprenticeControl
     public void Arrange()
     {
         MockModelMapper = new Mock<IModelMapper>();
-        MockCookieStorageService = new Mock<ICookieStorageService<IndexRequest>>();
+        MockCookieStorageService = new Mock<Interfaces.ICookieStorageService<IndexRequest>>();
         MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
         Controller = new ApprenticeController(MockModelMapper.Object,

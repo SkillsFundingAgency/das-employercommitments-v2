@@ -13,7 +13,7 @@ public class WhenPostingHasTheApprenticeBeenMadeRedundant : ApprenticeController
     public void Arrange()
     {
         Controller = new ApprenticeController(Mock.Of<IModelMapper>(),
-            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             Mock.Of<ICommitmentsApiClient>(),
             Mock.Of<ILogger<ApprenticeController>>());
     }

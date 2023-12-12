@@ -29,7 +29,7 @@ public class WhenPostingConfirmStopApprenticeship : ApprenticeControllerTestBase
             .ReturnsAsync(stopApprenticeshipRequest);
 
         Controller = new ApprenticeController(MockModelMapper.Object,
-            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             MockCommitmentsApiClient.Object,
             Mock.Of<ILogger<ApprenticeController>>());
         Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);

@@ -44,7 +44,7 @@ public class WhenCallingChangeProviderRequestedConfirmationPageTestsFixture
             .ReturnsAsync(_viewModel);
 
         _controller = new ApprenticeController(_mockMapper.Object,
-            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             Mock.Of<ICommitmentsApiClient>(),
             Mock.Of<ILogger<ApprenticeController>>());                
     }

@@ -94,7 +94,7 @@ public class WhenSelectingDeliveryModelOnEditApprenticeshipFixture
         ModelMapperMock = new Mock<IModelMapper>();
         TempDataMock = new Mock<ITempDataDictionary>();
 
-        Sut = new ApprenticeController(ModelMapperMock.Object, Mock.Of<ICookieStorageService<IndexRequest>>(), Mock.Of<ICommitmentsApiClient>(), Mock.Of<ILogger<ApprenticeController>>());
+        Sut = new ApprenticeController(ModelMapperMock.Object, Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(), Mock.Of<ICommitmentsApiClient>(), Mock.Of<ILogger<ApprenticeController>>());
         Sut.TempData = TempDataMock.Object;
     }
 

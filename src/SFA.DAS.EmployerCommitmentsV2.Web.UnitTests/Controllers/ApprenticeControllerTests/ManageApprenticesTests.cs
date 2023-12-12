@@ -56,7 +56,7 @@ public class ManageApprenticesTests
         IndexRequest request,
         IndexViewModel expectedViewModel,
         [Frozen] Mock<IModelMapper> apprenticeshipMapper,
-        [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
+        [Frozen] Mock<Interfaces.ICookieStorageService<IndexRequest>> cookieService,
         [Greedy] ApprenticeController controller)
     {
         //Arrange
@@ -80,7 +80,7 @@ public class ManageApprenticesTests
         IndexRequest savedRequest,
         IndexViewModel expectedViewModel,
         [Frozen] Mock<IModelMapper> apprenticeshipMapper,
-        [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
+        [Frozen] Mock<Interfaces.ICookieStorageService<IndexRequest>> cookieService,
         [Greedy] ApprenticeController controller)
     {
         //Arrange
@@ -107,7 +107,7 @@ public class ManageApprenticesTests
         IndexRequest savedRequest,
         IndexViewModel expectedViewModel,
         [Frozen] Mock<IModelMapper> apprenticeshipMapper,
-        [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
+        [Frozen] Mock<Interfaces.ICookieStorageService<IndexRequest>> cookieService,
         [Greedy] ApprenticeController controller)
     {
         //Arrange
@@ -134,7 +134,7 @@ public class ManageApprenticesTests
         IndexRequest savedRequest,
         IndexViewModel expectedViewModel,
         [Frozen] Mock<IModelMapper> apprenticeshipMapper,
-        [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
+        [Frozen] Mock<Interfaces.ICookieStorageService<IndexRequest>> cookieService,
         [Greedy] ApprenticeController controller)
     {
         //Arrange
@@ -161,7 +161,7 @@ public class ManageApprenticesTests
         IndexRequest request,
         IndexViewModel expectedViewModel,
         [Frozen] Mock<IModelMapper> apprenticeshipMapper,
-        [Frozen] Mock<ICookieStorageService<IndexRequest>> cookieService,
+        [Frozen] Mock<Interfaces.ICookieStorageService<IndexRequest>> cookieService,
         [Greedy] ApprenticeController controller)
     {
         //Arrange

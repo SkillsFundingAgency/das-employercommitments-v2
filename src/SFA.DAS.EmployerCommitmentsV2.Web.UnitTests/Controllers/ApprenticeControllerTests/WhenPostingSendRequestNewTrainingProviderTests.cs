@@ -96,7 +96,7 @@ public class WhenPostingSendRequestNewTrainingProviderTestsFixture
         _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
         _controller = new ApprenticeController(Mock.Of<IModelMapper>(),
-            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             _commitmentsApiClient.Object,
             Mock.Of<ILogger<ApprenticeController>>());
     }

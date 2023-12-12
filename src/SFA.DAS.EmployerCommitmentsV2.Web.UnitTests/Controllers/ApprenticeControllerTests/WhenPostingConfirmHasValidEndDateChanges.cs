@@ -18,7 +18,7 @@ public class WhenPostingConfirmHasValidEndDateChanges : ApprenticeControllerTest
         MockModelMapper = new Mock<IModelMapper>();
 
         Controller = new ApprenticeController(MockModelMapper.Object,
-            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             MockCommitmentsApiClient.Object,
             Mock.Of<ILogger<ApprenticeController>>());
 

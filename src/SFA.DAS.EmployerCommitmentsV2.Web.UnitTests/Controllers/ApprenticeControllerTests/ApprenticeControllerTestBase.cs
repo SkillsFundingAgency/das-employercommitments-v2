@@ -11,7 +11,7 @@ public class ApprenticeControllerTestBase
     protected const string ApprenticeshipStopUrl = "https://commitments.apprenticeships.gov.uk/accounts/apprentices/ABC123/stop/whentoapply";
 
     protected Mock<IModelMapper> MockModelMapper;
-    protected Mock<ICookieStorageService<IndexRequest>> MockCookieStorageService;
+    protected Mock<Interfaces.ICookieStorageService<IndexRequest>> MockCookieStorageService;
     protected Mock<ICommitmentsApiClient> MockCommitmentsApiClient;
 
     protected ApprenticeController Controller;

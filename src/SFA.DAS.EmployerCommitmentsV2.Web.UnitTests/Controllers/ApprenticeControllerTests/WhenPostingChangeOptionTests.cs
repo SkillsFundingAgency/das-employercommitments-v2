@@ -23,7 +23,7 @@ public class WhenPostingChangeOptionTests : ApprenticeControllerTestBase
 
         Controller = new ApprenticeController(
             MockModelMapper.Object,
-            Mock.Of<ICookieStorageService<IndexRequest>>(),
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             Mock.Of<ICommitmentsApiClient>(),
             Mock.Of<ILogger<ApprenticeController>>());
 

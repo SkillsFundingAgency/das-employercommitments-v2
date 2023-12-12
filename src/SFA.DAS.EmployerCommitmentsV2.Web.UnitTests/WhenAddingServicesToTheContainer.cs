@@ -2,8 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using Microsoft.Extensions.Hosting;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
+using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 
@@ -31,22 +32,35 @@ public class WhenAddingServicesToTheContainer
             .Where(type => typeof(Controller).IsAssignableFrom(type));
     }
     
-    private static void SetupServiceCollection(IServiceCollection serviceCollection)
+    private static void SetupServiceCollection(IServiceCollection services)
     {
+        var mockHostEnvironment = new Mock<IHostEnvironment>();
+        
         var configuration = GenerateConfiguration();
         var employerCommitmentsV2Configuration = configuration
-            .GetSection("EmployerCommitmentsV2Configuration")
+            .GetSection(ConfigurationKeys.EmployerCommitmentsV2)
             .Get<EmployerCommitmentsV2Configuration>();
-        serviceCollection.AddSingleton(Mock.Of<IWebHostEnvironment>());
-        serviceCollection.AddSingleton(Mock.Of<IConfiguration>());
-        serviceCollection.AddConfigurationOptions(configuration);
-        serviceCollection.AddDistributedMemoryCache();
-        serviceCollection.AddModelMappings();
-        //serviceCollection.AddApplicationServices();
+
+        services.AddLogging();
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddHttpContextAccessor();
+        services.AddSingleton(Mock.Of<IWebHostEnvironment>());
+        services.AddSingleton(Mock.Of<IConfiguration>());
+        services.AddConfigurationOptions(configuration);
+        services.AddDistributedMemoryCache();
+        services.AddModelMappings();
+        services.AddApplicationServices(employerCommitmentsV2Configuration);
+
+        services.AddCommitmentsApiClient(configuration);
+        services.AddApprovalsApiClient();
+        services.AddEncodingServices(configuration);
+        services.AddDasEmployerAuthentication(configuration);
+        
+        services.AddDasDataProtection(configuration, mockHostEnvironment.Object);
 
         foreach (var controllerType in GetControllerTypes())
         {
-            serviceCollection.AddTransient(controllerType);
+            services.AddTransient(controllerType);
         }
     }
     
@@ -57,6 +71,21 @@ public class WhenAddingServicesToTheContainer
             InitialData = new List<KeyValuePair<string, string>>
             {
                 new($"{ConfigurationKeys.Encoding}", "{'Encodings':[{'EncodingType':'AccountId','Salt':'test','MinHashLength':6,'Alphabet':'46789BCDFGHJKLMNPRSTVWXY'}]}"),
+                
+                new($"{ConfigurationKeys.EmployerUrlConfiguration}:AccountsBaseUrl", "https://local.test/"),
+                
+                new($"{ConfigurationKeys.EmployerCommitmentsV2}:UseStubEmployerAccountsApiClient", "true"),
+                new($"{ConfigurationKeys.EmployerCommitmentsV2}:UseGovSignIn", "true"),
+                new("StubAuth", "true"),
+                new("ResourceEnvironmentName", "LOCAL"),
+                
+                // new($"{ConfigurationKeys.GovUkSignInConfiguration}:BaseUrl", "https://internal.test/"),
+                // new($"{ConfigurationKeys.GovUkSignInConfiguration}:ClientId", "SDFDFDF"),
+                // new($"{ConfigurationKeys.GovUkSignInConfiguration}:KeyVaultIdentifier", "1223445"),
+                //
+                new("GovUkOidcConfiguration:BaseUrl", "https://internal.test/"),
+                new("GovUkOidcConfiguration:ClientId", "SDFDFDF"),
+                new("GovUkOidcConfiguration:KeyVaultIdentifier", "1223445"),
                 
                 new($"{ConfigurationKeys.AuthenticationConfiguration}:Authority", "https://internal.test/"),
                 new($"{ConfigurationKeys.AuthenticationConfiguration}:ClientId", "ABC123"),

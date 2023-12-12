@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
 
 public static class DataProtectionStartupExtensions
 {
-    public static IServiceCollection AddDataProtection(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
+    public static IServiceCollection AddDasDataProtection(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
         if (environment.IsDevelopment())
         {
