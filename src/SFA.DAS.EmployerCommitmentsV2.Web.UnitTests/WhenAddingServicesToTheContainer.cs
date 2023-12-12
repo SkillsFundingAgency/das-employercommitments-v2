@@ -13,7 +13,6 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Stubs;
 using SFA.DAS.EmployerUrlHelper.Configuration;
-using SFA.DAS.EmployerUrlHelper.DependencyResolution;
 using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests;
@@ -111,7 +110,6 @@ public class WhenAddingServicesToTheContainer
         services.AddApplicationServices(employerCommitmentsV2Configuration);
         services.AddModelMappings();
         services.AddDasMvc(configuration);
-       // services.AddEmployerUrlHelper();
 
         services.AddTransient<IUrlHelper, StubUrlHelper>();
 
@@ -142,6 +140,7 @@ public class WhenAddingServicesToTheContainer
 
                 new($"{ConfigurationKeys.EmployerCommitmentsV2}:UseStubEmployerAccountsApiClient", "true"),
                 new($"{ConfigurationKeys.EmployerCommitmentsV2}:UseGovSignIn", "true"),
+                
                 new("StubAuth", "true"),
                 new("ResourceEnvironmentName", "LOCAL"),
                 
