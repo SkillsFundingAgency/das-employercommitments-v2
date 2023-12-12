@@ -2,6 +2,7 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
@@ -20,6 +21,9 @@ public static class MvcServiceRegistrations
         var commitmentsConfiguration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
             .Get<EmployerCommitmentsV2Configuration>();
 
+        services.AddHttpContextAccessor();
+        services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+        
         services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = false;

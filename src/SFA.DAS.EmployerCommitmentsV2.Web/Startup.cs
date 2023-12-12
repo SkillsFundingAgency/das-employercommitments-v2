@@ -33,7 +33,6 @@ public class Startup
             builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Information);
         });
         
-        services.AddHttpContextAccessor();
         services.AddConfigurationOptions(_configuration);
         services.AddEncodingServices(_configuration);
         services.AddModelMappings();

@@ -21,7 +21,6 @@ public static class ConfigurationServiceRegistrations
 
         services.AddConfigurationFor<CommitmentPermissionsApiClientConfiguration>(configuration, ConfigurationKeys.CommitmentsApiClientConfiguration);
         services.AddConfigurationFor<EmployerFeaturesConfiguration>(configuration, ConfigurationKeys.EmployerFeaturesConfiguration);
-      //  services.AddConfigurationFor<GovUkOidcConfiguration>(configuration, ConfigurationKeys.GovUkSignInConfiguration);
         services.AddConfigurationFor<EmployerUrlHelperConfiguration>(configuration, ConfigurationKeys.EmployerUrlConfiguration);
 
         services.AddConfigurationFor<EmployerCommitmentsV2Configuration>(configuration, ConfigurationKeys.EmployerCommitmentsV2);

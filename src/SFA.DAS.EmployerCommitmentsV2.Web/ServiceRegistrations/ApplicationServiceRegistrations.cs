@@ -7,6 +7,7 @@ using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.EmployerCommitmentsV2.Services.Stubs;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using SFA.DAS.EmployerUrlHelper;
 
@@ -28,6 +29,7 @@ public static class ApplicationServiceRegistrations
         
         services.AddSingleton<ILinkGenerator, LinkGenerator>();
         services.AddSingleton<IUserAccountService, UserAccountService>();
+        services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
         if (configuration.UseStubEmployerAccountsApiClient)
         {
