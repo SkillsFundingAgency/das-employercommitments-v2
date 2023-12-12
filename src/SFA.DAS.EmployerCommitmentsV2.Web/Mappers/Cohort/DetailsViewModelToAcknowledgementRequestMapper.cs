@@ -25,7 +25,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort
                 SubmissionType = source.Selection == CohortDetailsOptions.Approve
                     ? PostCohortDetailsRequest.CohortSubmissionType.Approve
                     : PostCohortDetailsRequest.CohortSubmissionType.Send,
-                Message = source.SendMessage,
+                Message = source.Selection == CohortDetailsOptions.Approve 
+                    ? source.ApproveMessage
+                    : source.SendMessage,
                 UserInfo = new ApimUserInfo
                 {
                     UserDisplayName = _authenticationService.UserName,
