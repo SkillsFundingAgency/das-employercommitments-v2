@@ -110,8 +110,8 @@ public class WhenAddingServicesToTheContainer
         services.AddModelMappings();
         services.AddApplicationServices(employerCommitmentsV2Configuration);
         services.AddModelMappings();
-        services.AddDasMvc(configuration)
-            .AddEmployerUrlHelper();
+        services.AddDasMvc(configuration);
+        services.AddEmployerUrlHelper();
 
         services.AddTransient<IUrlHelper, StubUrlHelper>();
 
