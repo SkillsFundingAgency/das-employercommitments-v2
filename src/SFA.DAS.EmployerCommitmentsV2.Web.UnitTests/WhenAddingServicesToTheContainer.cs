@@ -123,8 +123,7 @@ public class WhenAddingServicesToTheContainer
         services.AddApprovalsApiClient();
         services.AddAccountsApiClient(employerCommitmentsV2Configuration);
         services.AddEncodingServices(configuration);
-        services.AddDasEmployerAuthentication(configuration);
-
+        services.AddAuthenticationServices(configuration);
         services.AddDasDataProtection(configuration, mockHostEnvironment.Object);
 
         foreach (var controllerType in GetControllerTypes())

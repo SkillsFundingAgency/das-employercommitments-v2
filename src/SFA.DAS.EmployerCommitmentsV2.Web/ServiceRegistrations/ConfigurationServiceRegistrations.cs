@@ -17,7 +17,6 @@ public static class ConfigurationServiceRegistrations
     {
         services.AddOptions();
 
-        services.AddConfigurationFor<AuthenticationConfiguration>(configuration, ConfigurationKeys.AuthenticationConfiguration);
         services.AddConfigurationFor<CommitmentsClientApiConfiguration>(configuration, ConfigurationKeys.CommitmentsApiClientConfiguration);
 
         services.AddConfigurationFor<CommitmentPermissionsApiClientConfiguration>(configuration, ConfigurationKeys.CommitmentsApiClientConfiguration);

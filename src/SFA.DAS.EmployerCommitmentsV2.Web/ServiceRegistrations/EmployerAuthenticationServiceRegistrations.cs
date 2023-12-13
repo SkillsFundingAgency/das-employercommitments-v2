@@ -22,44 +22,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 
 public static class EmployerAuthenticationServiceRegistrations
 {
-    public static IServiceCollection AddDasEmployerAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddAuthenticationServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var commitmentsConfiguration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
-            .Get<EmployerCommitmentsV2Configuration>();
+        var commitmentsConfiguration = configuration.Get<EmployerCommitmentsV2Configuration>();
         
         services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
         services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
         services.AddTransient<IAuthorizationContext, AuthorizationContext>();
         
-        if (commitmentsConfiguration.UseGovSignIn)
-        {
-            ConfigureGovSignIn(services, configuration);
-        }
-        else
-        {
-            ConfigureAuthorization(services, configuration);
-        }
-            
-        return services;
-    }
-
-    private static void ConfigureGovSignIn(IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddAndConfigureGovUkAuthentication(configuration,
-            typeof(EmployerAccountPostAuthenticationClaimsHandler),
-            "",
-            "/service/SignIn-Stub");
-
         services.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
         
         services.AddAuthorization(options =>
         {
             options.AddPolicy(PolicyNames.HasActiveAccount, policy =>
-                {
-                    policy.Requirements.Add(new AccountActiveRequirement());
-                    policy.Requirements.Add(new EmployerAccountAllRolesRequirement());
-                    policy.RequireAuthenticatedUser();
-                });
+            {
+                policy.Requirements.Add(new AccountActiveRequirement());
+                policy.Requirements.Add(new EmployerAccountAllRolesRequirement());
+                policy.RequireAuthenticatedUser();
+            });
             
             options.AddPolicy(
                 PolicyNames.HasEmployerViewerTransactorOwnerAccount, policy =>
@@ -70,9 +50,11 @@ public static class EmployerAuthenticationServiceRegistrations
                     policy.RequireAuthenticatedUser();
                 });
         });
+        
+        return services;
     }
 
-    private static void ConfigureAuthorization(IServiceCollection services, IConfiguration configuration)
+    public static void AddAndConfigureEmployerAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         var authenticationConfiguration = configuration.GetSection(ConfigurationKeys.AuthenticationConfiguration).Get<AuthenticationConfiguration>();
             

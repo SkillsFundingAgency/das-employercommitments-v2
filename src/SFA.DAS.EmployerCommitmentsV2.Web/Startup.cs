@@ -7,9 +7,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 using SFA.DAS.EmployerUrlHelper.DependencyResolution;
+using SFA.DAS.GovUK.Auth.AppStart;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web;
 
@@ -46,7 +48,7 @@ public class Startup
             .AddCommitmentsApiClient(_configuration)
             .AddAccountsApiClient(employerCommitmentsV2Configuration)
             .AddCommitmentsAuthorization()
-            .AddDasEmployerAuthentication(_configuration)
+            .AddAuthenticationServices(_configuration)
             .AddDasHealthChecks()
             .AddDasMaMenuConfiguration(_configuration)
             .AddDasMvc(_configuration)
@@ -55,6 +57,21 @@ public class Startup
             .AddMemoryCache()
             .AddApplicationInsightsTelemetry()
             .AddDasDataProtection(_configuration, _environment);
+       
+        if (employerCommitmentsV2Configuration.UseGovSignIn)
+        {
+            var govConfig = _configuration.GetSection("SFA.DAS.Employer.GovSignIn");
+            govConfig["ResourceEnvironmentName"] = _configuration["ResourceEnvironmentName"];
+            govConfig["StubAuth"] = _configuration["StubAuth"];
+            services.AddAndConfigureGovUkAuthentication(govConfig,
+                typeof(EmployerAccountPostAuthenticationClaimsHandler),
+                "",
+                "/service/SignIn-Stub");
+        }
+        else
+        {
+            services.AddAndConfigureEmployerAuthentication(_configuration);
+        }
     }
 
     public void Configure(IApplicationBuilder app)
@@ -66,6 +83,7 @@ public class Startup
             .UseDasHealthChecks()
             .UseAuthentication()
             .UseRouting()
+            .UseAuthorization()
             .UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
