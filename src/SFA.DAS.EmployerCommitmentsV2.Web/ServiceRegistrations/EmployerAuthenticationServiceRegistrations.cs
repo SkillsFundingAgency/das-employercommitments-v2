@@ -27,6 +27,10 @@ public static class EmployerAuthenticationServiceRegistrations
         var commitmentsConfiguration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
             .Get<EmployerCommitmentsV2Configuration>();
         
+        services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
+        services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
+        services.AddTransient<IAuthorizationContext, AuthorizationContext>();
+        
         if (commitmentsConfiguration.UseGovSignIn)
         {
             ConfigureGovSignIn(services, configuration);
@@ -41,15 +45,13 @@ public static class EmployerAuthenticationServiceRegistrations
 
     private static void ConfigureGovSignIn(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
         services.AddAndConfigureGovUkAuthentication(configuration,
             typeof(EmployerAccountPostAuthenticationClaimsHandler),
             "",
             "/service/SignIn-Stub");
 
         services.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
-        services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
-                
+        
         services.AddAuthorization(options =>
         {
             options.AddPolicy(PolicyNames.HasActiveAccount, policy =>

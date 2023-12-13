@@ -30,15 +30,6 @@ public static class ApplicationServiceRegistrations
         services.AddSingleton<ILinkGenerator, LinkGenerator>();
         services.AddSingleton<IUserAccountService, UserAccountService>();
         services.AddSingleton<IAuthenticationService, AuthenticationService>();
-
-        if (configuration.UseStubEmployerAccountsApiClient)
-        {
-            services.AddTransient<IEmployerAccountsApiClient, StubEmployerAccountsApiClient>();
-        }
-        else
-        {
-            services.AddTransient<IEmployerAccountsApiClient, EmployerAccountsApiClient>();
-        }
         
         services.AddSingleton(typeof(Interfaces.ICookieStorageService<>), typeof(Infrastructure.CookieService.CookieStorageService<>));
         services.AddSingleton<ICurrentDateTime, CurrentDateTime>();

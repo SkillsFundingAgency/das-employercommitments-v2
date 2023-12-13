@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,8 +11,7 @@ public static class HealthChecksStartup
     public static IServiceCollection AddDasHealthChecks(this IServiceCollection services)
     {
         services.AddHealthChecks()
-            .AddCheck<CommitmentsApiHealthCheck>("Commitments API Health Check")
-            .AddCheck<EmployerAccountsApiHealthCheck>("Employer Accounts API Health Check");
+            .AddCheck<CommitmentsApiHealthCheck>("Commitments API Health Check");
             
         return services;
     }

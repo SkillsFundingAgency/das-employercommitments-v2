@@ -27,6 +27,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddSingleton(_configuration);
+        services.AddHttpClient();
         services.AddLogging(builder =>
         {
             builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
@@ -64,6 +65,7 @@ public class Startup
             .UseStaticFiles()
             .UseDasHealthChecks()
             .UseAuthentication()
+            .UseRouting()
             .UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

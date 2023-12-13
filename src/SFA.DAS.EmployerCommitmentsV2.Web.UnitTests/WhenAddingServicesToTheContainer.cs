@@ -46,6 +46,12 @@ public class WhenAddingServicesToTheContainer
     {
         RunTestForType(new TestType(toResolve.Name, toResolve));
     }
+    
+    [TestCase(typeof(IAccountApiClient))]
+    public void Then_The_Dependencies_Are_Correctly_Resolved_For_ApiClients(Type toResolve)
+    {
+        RunTestForType(new TestType(toResolve.Name, toResolve));
+    }
 
     [TestCaseSource(nameof(GetControllerTypes))]
     public void RunTestForType(TestType toResolve)
