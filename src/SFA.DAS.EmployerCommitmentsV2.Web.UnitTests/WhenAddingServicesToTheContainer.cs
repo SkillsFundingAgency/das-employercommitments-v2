@@ -33,7 +33,6 @@ public class WhenAddingServicesToTheContainer
     
     [TestCase(typeof(EmployerCommitmentsV2Configuration))]
     [TestCase(typeof(CommitmentPermissionsApiClientConfiguration))]
-    [TestCase(typeof(AuthenticationConfiguration))]
     [TestCase(typeof(ZenDeskConfiguration))]
     [TestCase(typeof(CommitmentsClientApiConfiguration))]
     [TestCase(typeof(CommitmentPermissionsApiClientConfiguration))]
