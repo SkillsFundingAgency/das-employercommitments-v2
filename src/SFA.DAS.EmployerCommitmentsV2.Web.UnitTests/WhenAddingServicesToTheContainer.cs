@@ -148,9 +148,9 @@ public class WhenAddingServicesToTheContainer
                 new("StubAuth", "true"),
                 new("ResourceEnvironmentName", "LOCAL"),
                 
-                new("GovUkOidcConfiguration:BaseUrl", "https://internal.test/"),
-                new("GovUkOidcConfiguration:ClientId", "SDFDFDF"),
-                new("GovUkOidcConfiguration:KeyVaultIdentifier", "1223445"),
+                new($"{ConfigurationKeys.GovUkSignInConfiguration}:BaseUrl", "https://internal.test/"),
+                new($"{ConfigurationKeys.GovUkSignInConfiguration}:ClientId", "SDFDFDF"),
+                new($"{ConfigurationKeys.GovUkSignInConfiguration}:KeyVaultIdentifier", "1223445"),
 
                 new($"{ConfigurationKeys.AuthenticationConfiguration}:Authority", "https://internal.test/"),
                 new($"{ConfigurationKeys.AuthenticationConfiguration}:ClientId", "ABC123"),
