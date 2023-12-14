@@ -36,7 +36,6 @@ public class WhenAddingServicesToTheContainer
     [TestCase(typeof(ZenDeskConfiguration))]
     [TestCase(typeof(CommitmentsClientApiConfiguration))]
     [TestCase(typeof(CommitmentPermissionsApiClientConfiguration))]
-    [TestCase(typeof(EmployerFeaturesConfiguration))]
     [TestCase(typeof(EncodingConfig))]
     [TestCase(typeof(EmployerUrlHelperConfiguration))]
     [TestCase(typeof(AccountApiConfiguration))]
