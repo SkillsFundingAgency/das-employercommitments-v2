@@ -66,8 +66,8 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
 
         if (employerAccounts != null)
         {
-            employerIdentifier = employerAccounts.ContainsKey(accountIdFromUrl)
-                ? employerAccounts[accountIdFromUrl] : null;
+            employerIdentifier = employerAccounts.TryGetValue(accountIdFromUrl, out var account)
+                ? account : null;
         }
 
         if (employerAccounts == null || !employerAccounts.ContainsKey(accountIdFromUrl))
@@ -76,7 +76,9 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
                 ? ClaimTypes.NameIdentifier : EmployeeClaims.IdamsUserIdClaimTypeIdentifier;
 
             if (!context.User.HasClaim(c => c.Type.Equals(requiredIdClaim)))
+            {
                 return false;
+            }
 
             var userClaim = context.User.Claims
                 .First(c => c.Type.Equals(requiredIdClaim));
@@ -106,12 +108,7 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
             _httpContextAccessor.HttpContext.Items.Add(ContextItemKeys.EmployerIdentifier, employerAccounts.GetValueOrDefault(accountIdFromUrl));
         }
 
-        if (!CheckUserRoleForAccess(employerIdentifier, allowAllUserRoles))
-        {
-            return false;
-        }
-
-        return true;
+        return CheckUserRoleForAccess(employerIdentifier, allowAllUserRoles);
     }
 
     public Task<bool> IsOutsideAccount(AuthorizationHandlerContext context)
@@ -124,7 +121,9 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
         var requiredIdClaim = _configuration.UseGovSignIn ? ClaimTypes.NameIdentifier : EmployeeClaims.IdamsUserIdClaimTypeIdentifier;
 
         if (!context.User.HasClaim(c => c.Type.Equals(requiredIdClaim)))
+        {
             return Task.FromResult(false);
+        }
 
         return Task.FromResult(true);
     }
