@@ -10,6 +10,7 @@ using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.GovUK.Auth.AppStart;
@@ -22,33 +23,43 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 
 public static class EmployerAuthenticationServiceRegistrations
 {
-    public static IServiceCollection AddAuthenticationServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddAuthenticationServices(this IServiceCollection services)
     {
-        var commitmentsConfiguration = configuration.Get<EmployerCommitmentsV2Configuration>();
-        
-        services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
         services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
-        services.AddTransient<IAuthorizationContext, AuthorizationContext>();
+        services.AddSingleton<ICommitmentsAuthorisationHandler, CommitmentsAuthorisationHandler>();
+        services.AddSingleton<IEmployerAccountAuthorisationHandler, EmployerAccountAuthorisationHandler>();
         
         services.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, EmployerAccountAllRolesAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, CommitmentAccessApprenticeshipAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, CommitmentAccessCohortAuthorizationHandler>();
+        
+        services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
+        services.AddTransient<IAuthorizationContext, AuthorizationContext>();
         
         services.AddAuthorization(options =>
         {
-            options.AddPolicy(PolicyNames.HasActiveAccount, policy =>
-            {
-                policy.Requirements.Add(new AccountActiveRequirement());
-                policy.Requirements.Add(new EmployerAccountAllRolesRequirement());
-                policy.RequireAuthenticatedUser();
-            });
-            
-            options.AddPolicy(
-                PolicyNames.HasEmployerViewerTransactorOwnerAccount, policy =>
+            options.AddPolicy(PolicyNames.HasEmployerViewerTransactorOwnerAccount, policy =>
                 {
                     policy.RequireClaim(EmployerClaims.AccountsClaimsTypeIdentifier);
                     policy.Requirements.Add(new AccountActiveRequirement());
                     policy.Requirements.Add(new EmployerAccountAllRolesRequirement());
                     policy.RequireAuthenticatedUser();
                 });
+            
+            options.AddPolicy(PolicyNames.AccessApprenticeship, policy =>
+            {
+                policy.Requirements.Add(new AccountActiveRequirement());
+                policy.Requirements.Add(new AccessApprenticeshipRequirement());
+                policy.RequireAuthenticatedUser();
+            });
+            
+            options.AddPolicy(PolicyNames.AccessCohort, policy =>
+            {
+                policy.Requirements.Add(new AccountActiveRequirement());
+                policy.Requirements.Add(new AccessCohortRequirement());
+                policy.RequireAuthenticatedUser();
+            });
         });
         
         return services;
