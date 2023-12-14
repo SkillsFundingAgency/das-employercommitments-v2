@@ -1,10 +1,8 @@
-﻿using SFA.DAS.CommitmentsV2.Types;
+﻿using System.Collections.Concurrent;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EAS.Account.Api.Client;
-using SFA.DAS.EAS.Account.Api.Types;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
-using System.Collections.Concurrent;
-using Dasync.Collections;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Services;
 
@@ -47,14 +45,15 @@ public class EmployerAccountsService : IEmployerAccountsService
             return [];
         }
 
-        var bag = new ConcurrentBag<LegalEntity>();
+        var legalEntities = new ConcurrentBag<LegalEntity>();
 
-        await listOfEntities.ParallelForEachAsync(async entity =>
+        ParallelOptions parallelOptions = new() { MaxDegreeOfParallelism = MaxConcurrentThreads };
+
+        await Parallel.ForEachAsync(listOfEntities, parallelOptions, async (resourceViewModel, _) =>
             {
-                var legalEntityViewModel =
-                    await _accountsApiClient.GetLegalEntity(accountId, Convert.ToInt64(entity.Id));
+                var legalEntityViewModel = await _accountsApiClient.GetLegalEntity(accountId, Convert.ToInt64(resourceViewModel.Id));
 
-                bag.Add(new LegalEntity
+                legalEntities.Add(new LegalEntity
                 {
                     Name = legalEntityViewModel.Name,
                     RegisteredAddress = legalEntityViewModel.Address,
@@ -72,10 +71,9 @@ public class EmployerAccountsService : IEmployerAccountsService
                     Id = legalEntityViewModel.LegalEntityId,
                     AccountLegalEntityPublicHashedId = legalEntityViewModel.AccountLegalEntityPublicHashedId
                 });
-            },
-            MaxConcurrentThreads
+            }
         );
 
-        return bag.OrderBy(le => le.Id).ToList();
+        return legalEntities.OrderBy(le => le.Id).ToList();
     }
 }
