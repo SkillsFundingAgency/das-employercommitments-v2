@@ -13,6 +13,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
+using SFA.DAS.EmployerCommitmentsV2.Web.ModelBinding;
 using SFA.DAS.GovUK.Auth.AppStart;
 using SFA.DAS.GovUK.Auth.Authentication;
 using SFA.DAS.GovUK.Auth.Configuration;
@@ -21,7 +22,7 @@ using SFA.DAS.GovUK.Auth.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 
-public static class EmployerAuthenticationServiceRegistrations
+public static class AuthenticationServiceRegistrations
 {
     public static IServiceCollection AddAuthenticationServices(this IServiceCollection services)
     {
@@ -33,6 +34,8 @@ public static class EmployerAuthenticationServiceRegistrations
         services.AddSingleton<IAuthorizationHandler, EmployerAccountAllRolesAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessApprenticeshipAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessCohortAuthorizationHandler>();
+        
+        services.AddSingleton<IAuthorizationContextProvider, AuthorizationContextProvider>();
         
         services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
         services.AddTransient<IAuthorizationContext, AuthorizationContext>();

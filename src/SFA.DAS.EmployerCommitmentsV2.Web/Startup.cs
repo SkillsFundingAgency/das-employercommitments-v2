@@ -36,8 +36,6 @@ public class Startup
             builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
             builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Information);
         });
-
-        services.AddSingleton<IAuthorizationContextProvider, AuthorizationContextProvider>();
         
         services.AddConfigurationOptions(_configuration);
         services.AddEncodingServices(_configuration);
