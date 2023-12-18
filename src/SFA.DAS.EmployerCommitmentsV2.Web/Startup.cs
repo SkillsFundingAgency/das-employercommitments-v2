@@ -50,6 +50,7 @@ public class Startup
             .AddAccountsApiClient(employerCommitmentsV2Configuration)
             .AddCommitmentsAuthorization()
             .AddAuthenticationServices()
+            .AddCommitmentPermissionsApiClient()
             .AddDasHealthChecks()
             .AddDasMaMenuConfiguration(_configuration)
             .AddDasMvc(_configuration)

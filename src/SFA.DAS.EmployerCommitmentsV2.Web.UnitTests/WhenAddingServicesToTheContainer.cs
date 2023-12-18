@@ -8,8 +8,13 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
+using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.ModelBinding;
 using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Stubs;
 using SFA.DAS.EmployerUrlHelper.Configuration;
@@ -45,13 +50,21 @@ public class WhenAddingServicesToTheContainer
         RunTestForType(new TestType(toResolve.Name, toResolve));
     }
     
+    [TestCase(typeof(IAuthorizationContext))]
+    [TestCase(typeof(IAuthorizationContextProvider))]
+    [TestCase(typeof(ICommitmentsAuthorisationHandler))]
+    [TestCase(typeof(IEmployerAccountAuthorisationHandler))]
+    public void Then_The_Dependencies_Are_Correctly_Resolved_For_Authorization_Services(Type toResolve)
+    {
+        RunTestForType(new TestType(toResolve.Name, toResolve));
+    }
+    
     [TestCase(typeof(IAccountApiClient))]
-    public void Then_The_Dependencies_Are_Correctly_Resolved_For_ApiClients(Type toResolve)
+    public void Then_The_Dependencies_Are_Correctly_Resolved_For_Client_Services(Type toResolve)
     {
         RunTestForType(new TestType(toResolve.Name, toResolve));
     }
 
-    [TestCaseSource(nameof(GetControllerTypes))]
     public void RunTestForType(TestType toResolve)
     {
         var serviceCollection = new ServiceCollection();
@@ -65,7 +78,7 @@ public class WhenAddingServicesToTheContainer
 
     private static IEnumerable<TestType> GetControllerTypes()
     {
-        var mappingAssembly = typeof(ChangeVersionViewModelMapper).Assembly;
+        var mappingAssembly = typeof(HomeController).Assembly;
 
         var types = mappingAssembly
             .GetTypes()
@@ -111,6 +124,7 @@ public class WhenAddingServicesToTheContainer
         services.AddConfigurationOptions(configuration);
         services.AddDistributedMemoryCache();
         services.AddModelMappings();
+        services.AddCommitmentPermissionsApiClient();
         services.AddApplicationServices(employerCommitmentsV2Configuration);
         services.AddModelMappings();
         services.AddDasMvc(configuration);
@@ -136,8 +150,7 @@ public class WhenAddingServicesToTheContainer
         {
             InitialData = new List<KeyValuePair<string, string>>
             {
-                new($"{ConfigurationKeys.Encoding}",
-                    "{'Encodings':[{'EncodingType':'AccountId','Salt':'test','MinHashLength':6,'Alphabet':'46789BCDFGHJKLMNPRSTVWXY'}]}"),
+                new($"{ConfigurationKeys.Encoding}", "{'Encodings':[{'EncodingType':'AccountId','Salt':'test','MinHashLength':6,'Alphabet':'46789BCDFGHJKLMNPRSTVWXY'}]}"),
 
                 new($"{ConfigurationKeys.EmployerUrlConfiguration}:AccountsBaseUrl", "https://local.test/"),
 
