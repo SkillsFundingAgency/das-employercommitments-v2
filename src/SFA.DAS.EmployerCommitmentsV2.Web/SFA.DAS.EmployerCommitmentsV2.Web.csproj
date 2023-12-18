@@ -47,7 +47,6 @@
 
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.25" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
     
   </ItemGroup>
 
