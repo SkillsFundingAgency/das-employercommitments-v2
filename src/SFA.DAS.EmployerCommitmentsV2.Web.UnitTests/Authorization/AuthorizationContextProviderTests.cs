@@ -5,6 +5,7 @@ using Microsoft.Extensions.Primitives;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
+using SFA.DAS.EmployerCommitmentsV2.Web.ModelBinding;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.Encoding;
 
