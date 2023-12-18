@@ -27,7 +27,7 @@
     
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="2.2.5" />
     
-    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="6.33.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.0.3" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.0.3" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24" />
     <PackageReference Include="Scrutor" Version="4.2.2" />
@@ -42,6 +42,7 @@
     <PackageReference Include="SFA.DAS.NLog.Targets.Redis" Version="1.2.1" />
     <PackageReference Include="SFA.DAS.Validation.Mvc" Version="6.0.30" />
     <PackageReference Include="StackExchange.Redis" Version="2.7.4" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
     <PackageReference Include="WebEssentials.AspNetCore.CdnTagHelpers" Version="1.0.21" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
 
