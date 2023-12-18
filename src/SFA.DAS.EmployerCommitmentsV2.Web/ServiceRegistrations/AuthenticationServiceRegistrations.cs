@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
@@ -14,10 +13,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.ModelBinding;
-using SFA.DAS.GovUK.Auth.AppStart;
 using SFA.DAS.GovUK.Auth.Authentication;
-using SFA.DAS.GovUK.Auth.Configuration;
-using SFA.DAS.GovUK.Auth.Extensions;
 using SFA.DAS.GovUK.Auth.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
@@ -29,34 +25,41 @@ public static class AuthenticationServiceRegistrations
         services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
         services.AddSingleton<ICommitmentsAuthorisationHandler, CommitmentsAuthorisationHandler>();
         services.AddSingleton<IEmployerAccountAuthorisationHandler, EmployerAccountAuthorisationHandler>();
-        
+
         services.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, EmployerAccountAllRolesAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessApprenticeshipAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessCohortAuthorizationHandler>();
-        
-        services.AddSingleton<IAuthorizationContextProvider, AuthorizationContextProvider>();
-        
-        services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
+
         services.AddTransient<IAuthorizationContext, AuthorizationContext>();
-        
+        services.AddSingleton<IAuthorizationContextProvider, AuthorizationContextProvider>();
+
+        services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
+
+        AddAuthorizationPolicies(services);
+
+        return services;
+    }
+
+    private static void AddAuthorizationPolicies(IServiceCollection services)
+    {
         services.AddAuthorization(options =>
         {
             options.AddPolicy(PolicyNames.HasEmployerViewerTransactorOwnerAccount, policy =>
-                {
-                    policy.RequireClaim(EmployerClaims.AccountsClaimsTypeIdentifier);
-                    policy.Requirements.Add(new AccountActiveRequirement());
-                    policy.Requirements.Add(new EmployerAccountAllRolesRequirement());
-                    policy.RequireAuthenticatedUser();
-                });
-            
+            {
+                policy.RequireClaim(EmployerClaims.AccountsClaimsTypeIdentifier);
+                policy.Requirements.Add(new AccountActiveRequirement());
+                policy.Requirements.Add(new EmployerAccountAllRolesRequirement());
+                policy.RequireAuthenticatedUser();
+            });
+
             options.AddPolicy(PolicyNames.AccessApprenticeship, policy =>
             {
                 policy.Requirements.Add(new AccountActiveRequirement());
                 policy.Requirements.Add(new AccessApprenticeshipRequirement());
                 policy.RequireAuthenticatedUser();
             });
-            
+
             options.AddPolicy(PolicyNames.AccessCohort, policy =>
             {
                 policy.Requirements.Add(new AccountActiveRequirement());
@@ -64,79 +67,56 @@ public static class AuthenticationServiceRegistrations
                 policy.RequireAuthenticatedUser();
             });
         });
-        
-        return services;
     }
 
-    public static void AddAndConfigureEmployerAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static void AddAndConfigureEmployerAuthentication(this IServiceCollection services,
+        IConfiguration configuration)
     {
-        var authenticationConfiguration = configuration.GetSection(ConfigurationKeys.AuthenticationConfiguration).Get<AuthenticationConfiguration>();
-            
+        var authenticationConfiguration = configuration.GetSection(ConfigurationKeys.AuthenticationConfiguration)
+            .Get<AuthenticationConfiguration>();
+
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
         services
-            .AddAuthentication(o =>
+            .AddAuthentication(options =>
             {
-                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                o.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                o.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
-            .AddCookie(o =>
+            .AddCookie(options =>
             {
-                o.AccessDeniedPath = "/error?statuscode=403";
-                o.Cookie.Name = CookieNames.Authentication;
-                o.Cookie.SameSite = SameSiteMode.None;
-                o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                o.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-                o.SlidingExpiration = true;
+                options.AccessDeniedPath = "/error?statuscode=403";
+                options.Cookie.Name = CookieNames.Authentication;
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.SlidingExpiration = true;
             })
-            .AddOpenIdConnect(o =>
+            .AddOpenIdConnect(options =>
             {
-                o.Authority = authenticationConfiguration.Authority;
-                o.ClientId = authenticationConfiguration.ClientId;
-                o.ClientSecret = authenticationConfiguration.ClientSecret;
-                o.MetadataAddress = authenticationConfiguration.MetadataAddress;
-                o.ResponseType = "code";
-                o.UsePkce = false;
+                options.Authority = authenticationConfiguration.Authority;
+                options.ClientId = authenticationConfiguration.ClientId;
+                options.ClientSecret = authenticationConfiguration.ClientSecret;
+                options.MetadataAddress = authenticationConfiguration.MetadataAddress;
+                options.ResponseType = "code";
+                options.UsePkce = false;
 
-                o.ClaimActions.MapUniqueJsonKey("sub", "id");
-                        
-                o.Events.OnRemoteFailure = c =>
+                options.ClaimActions.MapUniqueJsonKey("sub", "id");
+
+                options.Events.OnRemoteFailure = remoteFailureContext =>
                 {
-                    if (c.Failure.Message.Contains("Correlation failed"))
+                    if (!remoteFailureContext.Failure.Message.Contains("Correlation failed"))
                     {
-                        c.Response.Redirect("/");
-                        c.HandleResponse();
+                        return Task.CompletedTask;
                     }
-        
+                    
+                    remoteFailureContext.Response.Redirect("/");
+                    remoteFailureContext.HandleResponse();
+
                     return Task.CompletedTask;
                 };
             });
-    }
-}
-//TODO once upgraded to .net6 - this filter can be deleted
-public class AccountActiveFilter : IActionFilter
-{
-    private readonly IConfiguration _configuration;
-
-    public AccountActiveFilter(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-    public void OnActionExecuted(ActionExecutedContext context)
-    {
-    }
-
-    public void OnActionExecuting(ActionExecutingContext context)
-    {
-        if (context != null)
-        {
-            var isAccountSuspended = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.AuthorizationDecision))?.Value;
-            if (isAccountSuspended != null && isAccountSuspended.Equals("Suspended", StringComparison.CurrentCultureIgnoreCase))
-            {
-                context.HttpContext.Response.Redirect(RedirectExtension.GetAccountSuspendedRedirectUrl(_configuration["ResourceEnvironmentName"]));
-            }
-        }
     }
 }
