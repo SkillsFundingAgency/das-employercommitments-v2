@@ -36,6 +36,13 @@ public static class ConfigurationExtensions
         return config.Build();
     }
     
+    public static bool UseGovUkSignIn(this IConfiguration configuration)
+    {
+        return configuration[$"{ConfigurationKeys.EmployerCommitmentsV2}:UseGovSignIn"] != null &&
+               configuration[$"{ConfigurationKeys.EmployerCommitmentsV2}:UseGovSignIn"]
+                   .Equals("true", StringComparison.CurrentCultureIgnoreCase);
+    }
+    
     public static bool IsDev(this IConfiguration configuration) => configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase);
     
     public static bool UseLocalRegistry(this IConfiguration configuration)

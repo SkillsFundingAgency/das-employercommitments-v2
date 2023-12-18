@@ -58,7 +58,7 @@ public class Startup
             .AddApplicationInsightsTelemetry()
             .AddDasDataProtection(_configuration, _environment);
        
-        if (employerCommitmentsV2Configuration.UseGovSignIn)
+        if (_configuration.UseGovUkSignIn())
         {
             var govConfig = _configuration.GetSection("SFA.DAS.Employer.GovSignIn");
             govConfig["ResourceEnvironmentName"] = _configuration["ResourceEnvironmentName"];
