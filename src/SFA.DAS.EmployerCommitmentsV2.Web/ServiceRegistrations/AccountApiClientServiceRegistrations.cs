@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.CommitmentsV2.Shared.Services;
+﻿using SFA.DAS.CommitmentsV2.Shared.Services;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 

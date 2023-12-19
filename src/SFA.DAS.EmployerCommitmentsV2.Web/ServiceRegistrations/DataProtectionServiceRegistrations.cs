@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using StackExchange.Redis;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
+namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 
-public static class DataProtectionStartupExtensions
+public static class DataProtectionServiceRegistrations
 {
     public static IServiceCollection AddDasDataProtection(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {

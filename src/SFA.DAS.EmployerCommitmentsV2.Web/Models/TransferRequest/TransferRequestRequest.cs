@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
 
 public class TransferRequestRequest : IAuthorizationContextModel
 {

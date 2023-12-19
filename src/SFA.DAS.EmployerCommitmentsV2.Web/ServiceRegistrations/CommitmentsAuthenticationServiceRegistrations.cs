@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.EmployerCommitmentsV2.Client;
+﻿using SFA.DAS.EmployerCommitmentsV2.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
 using SFA.DAS.GovUK.Auth.Authentication;

@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 

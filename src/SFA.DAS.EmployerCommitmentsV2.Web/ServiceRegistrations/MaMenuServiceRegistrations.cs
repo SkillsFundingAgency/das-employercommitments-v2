@@ -1,12 +1,11 @@
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
+namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 
-public static class MaMenuStartup
+public static class MaMenuServiceRegistrations
 {
     public static IServiceCollection AddDasMaMenuConfiguration(this IServiceCollection services, IConfiguration configuration)
     {

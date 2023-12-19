@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 
 public class ReviewApprenticeshipUpdatesRequest : IAuthorizationContextModel
 {

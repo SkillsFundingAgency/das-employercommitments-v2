@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.Encoding;

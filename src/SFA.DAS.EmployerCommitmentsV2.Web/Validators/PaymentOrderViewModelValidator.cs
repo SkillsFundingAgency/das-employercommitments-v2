@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 

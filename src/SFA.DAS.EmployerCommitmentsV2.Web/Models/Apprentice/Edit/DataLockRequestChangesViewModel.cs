@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 

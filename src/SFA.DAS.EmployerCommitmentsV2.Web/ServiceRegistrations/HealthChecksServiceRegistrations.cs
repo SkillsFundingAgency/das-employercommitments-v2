@@ -1,12 +1,10 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.HealthChecks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
+namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 
-public static class HealthChecksStartup
+public static class HealthChecksServiceRegistrations
 {
     public static IServiceCollection AddDasHealthChecks(this IServiceCollection services)
     {

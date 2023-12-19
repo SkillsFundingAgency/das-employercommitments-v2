@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 

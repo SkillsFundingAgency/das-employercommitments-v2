@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 public class EditEndDateRequest : IAuthorizationContextModel
 {
