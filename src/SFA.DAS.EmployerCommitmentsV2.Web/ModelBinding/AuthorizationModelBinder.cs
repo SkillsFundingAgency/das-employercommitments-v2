@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.ModelBinding;
 

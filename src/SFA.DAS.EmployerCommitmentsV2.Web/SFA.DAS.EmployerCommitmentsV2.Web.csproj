@@ -56,10 +56,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Apprentice\DataLock\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="SFA.DAS.CommitmentsV2.Shared" />
   </ItemGroup>
   <ItemGroup>

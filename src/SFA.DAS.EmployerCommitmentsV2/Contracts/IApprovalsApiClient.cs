@@ -1,7 +1,7 @@
-﻿using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+﻿using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+namespace SFA.DAS.EmployerCommitmentsV2.Contracts;
 
 public interface IApprovalsApiClient
 {

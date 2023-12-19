@@ -1,6 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Types;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
+namespace SFA.DAS.EmployerCommitmentsV2.Contracts;
 
 public interface IAuthenticationService
 {

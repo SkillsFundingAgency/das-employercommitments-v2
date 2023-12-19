@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 

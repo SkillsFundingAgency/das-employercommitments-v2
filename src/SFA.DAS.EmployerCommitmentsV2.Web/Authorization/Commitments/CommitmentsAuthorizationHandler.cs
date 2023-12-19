@@ -1,14 +1,9 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Client;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
-
-public interface ICommitmentsAuthorisationHandler
-{
-    Task<bool> CanAccessCohort();
-    Task<bool> CanAccessApprenticeship();
-}
 
 public class CommitmentsAuthorisationHandler : ICommitmentsAuthorisationHandler
 {

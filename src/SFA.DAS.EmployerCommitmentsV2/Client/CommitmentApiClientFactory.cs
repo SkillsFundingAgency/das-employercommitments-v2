@@ -1,10 +1,9 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.CommitmentsV2.Api.Client.Http;
-using SFA.DAS.EmployerCommitmentsV2.Client;
 using SFA.DAS.Http;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.LocalDevRegistry;
+namespace SFA.DAS.EmployerCommitmentsV2.Client;
 
 public class LocalDevApiClientFactory : ICommitmentsApiClientFactory, ICommitmentPermissionsApiClientFactory
 {

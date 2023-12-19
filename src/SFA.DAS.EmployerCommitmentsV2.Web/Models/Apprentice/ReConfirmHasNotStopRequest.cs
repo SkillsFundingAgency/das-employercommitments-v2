@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
+
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 public class ReConfirmHasNotStopRequest : IAuthorizationContextModel
 {

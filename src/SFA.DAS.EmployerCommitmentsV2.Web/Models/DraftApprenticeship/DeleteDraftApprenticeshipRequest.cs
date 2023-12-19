@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
+
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
 public class DeleteApprenticeshipRequest : IAuthorizationContextModel
 {

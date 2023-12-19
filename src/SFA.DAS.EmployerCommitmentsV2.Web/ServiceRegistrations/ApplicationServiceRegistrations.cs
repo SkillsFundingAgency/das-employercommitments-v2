@@ -3,6 +3,7 @@ using SFA.DAS.CommitmentsV2.Services.Shared;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Services;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.EmployerCommitmentsV2.Services.Stubs;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;

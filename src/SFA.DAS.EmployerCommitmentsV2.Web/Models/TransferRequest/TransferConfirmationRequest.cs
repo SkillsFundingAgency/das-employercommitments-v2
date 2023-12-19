@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
+﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
+
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
 
 public class TransferConfirmationRequest : IAuthorizationContextModel
 {

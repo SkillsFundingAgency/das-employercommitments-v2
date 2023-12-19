@@ -1,7 +1,7 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
+using SFA.DAS.EmployerCommitmentsV2.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;

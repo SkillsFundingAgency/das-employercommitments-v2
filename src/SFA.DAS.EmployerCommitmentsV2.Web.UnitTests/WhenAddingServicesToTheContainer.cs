@@ -7,6 +7,7 @@ using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;

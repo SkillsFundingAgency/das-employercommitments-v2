@@ -4,6 +4,7 @@ using AutoFixture.NUnit3;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 

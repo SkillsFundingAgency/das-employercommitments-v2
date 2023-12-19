@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;

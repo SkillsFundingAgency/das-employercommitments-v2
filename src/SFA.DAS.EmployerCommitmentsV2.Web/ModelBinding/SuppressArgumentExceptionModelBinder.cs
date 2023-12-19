@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using SFA.DAS.EmployerCommitmentsV2.Web.Attributes;
+using SFA.DAS.EmployerCommitmentsV2.Attributes;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.ModelBinding;
 

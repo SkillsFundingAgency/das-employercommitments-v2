@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Shared.Models;
 using System.ComponentModel.DataAnnotations;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 

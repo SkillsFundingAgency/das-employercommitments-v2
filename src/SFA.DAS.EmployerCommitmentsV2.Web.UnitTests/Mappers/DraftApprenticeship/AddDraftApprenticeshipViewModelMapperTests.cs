@@ -2,7 +2,7 @@
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
+using SFA.DAS.EmployerCommitmentsV2.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.Encoding;

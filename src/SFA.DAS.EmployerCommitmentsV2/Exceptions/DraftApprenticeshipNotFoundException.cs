@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Exceptions;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Exceptions;
 
 public class DraftApprenticeshipNotFoundException : Exception
 {

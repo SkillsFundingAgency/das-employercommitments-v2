@@ -4,6 +4,12 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.HealthChecks;
 
+public static class Role
+{
+    public const string Employer = nameof(Employer);
+    public const string Provider = nameof(Provider);
+}
+
 public class CommitmentsApiHealthCheck : IHealthCheck
 {        
     private readonly ICommitmentsApiClient _apiClient;
@@ -13,7 +19,7 @@ public class CommitmentsApiHealthCheck : IHealthCheck
         _apiClient = apiClient;
     }
         
-    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
+    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new())
     {
         var response = await _apiClient.WhoAmI();
         var data = new Dictionary<string, object> { ["Roles"] = response.Roles };

@@ -2,17 +2,11 @@
 using SFA.DAS.CommitmentsV2.Api.Types.Http;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
-public interface IOuterApiClient
-{
-    Task<TResponse> Get<TResponse>(string url);
-    Task<TResponse> Post<TResponse>(string url, object data);
-    Task<TResponse> Put<TResponse>(string url, object data);
-}
-    
 public class OuterApiClient : IOuterApiClient
 {
     private const string SubscriptionKeyRequestHeaderKey = "Ocp-Apim-Subscription-Key";

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
 using SFA.DAS.EmployerCommitmentsV2.Models.UserAccounts;
 using SFA.DAS.EmployerCommitmentsV2.Services;
@@ -10,12 +11,6 @@ using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using JsonClaimValueTypes = Microsoft.IdentityModel.JsonWebTokens.JsonClaimValueTypes;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
-
-public interface IEmployerAccountAuthorisationHandler
-{
-    Task<bool> IsEmployerAuthorised(AuthorizationHandlerContext context, bool allowAllUserRoles);
-    Task<bool> IsOutsideAccount(AuthorizationHandlerContext context);
-}
 
 public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisationHandler
 {

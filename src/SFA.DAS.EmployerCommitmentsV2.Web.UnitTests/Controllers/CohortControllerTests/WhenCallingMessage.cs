@@ -5,6 +5,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;

@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
+﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
+
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
 
 public class PaymentOrderRequest : IAuthorizationContextModel
 {

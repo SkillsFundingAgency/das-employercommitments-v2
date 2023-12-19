@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;

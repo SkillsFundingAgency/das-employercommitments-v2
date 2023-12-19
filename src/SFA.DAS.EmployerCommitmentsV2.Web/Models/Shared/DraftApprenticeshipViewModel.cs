@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using SFA.DAS.CommitmentsV2.Shared.Models;
-using SFA.DAS.EmployerCommitmentsV2.Web.Attributes;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Attributes;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;

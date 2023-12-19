@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;

@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Attributes;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Attributes;
 
 [AttributeUsage(AttributeTargets.Property)]
 public class SuppressArgumentExceptionAttribute : Attribute
