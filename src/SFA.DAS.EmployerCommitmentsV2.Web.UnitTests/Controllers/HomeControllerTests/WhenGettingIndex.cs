@@ -40,7 +40,7 @@ public class WhenGettingIndex
             ModelMapper.Setup(x => x.Map<IndexViewModel>(It.Is<IndexRequest>(r => r == Request)))
                 .ReturnsAsync(ViewModel);
 
-            Controller = new HomeController(ModelMapper.Object, Mock.Of<ILogger<HomeController>>());
+            Controller = new HomeController(ModelMapper.Object);
         }
 
         public async Task GetIndex()
