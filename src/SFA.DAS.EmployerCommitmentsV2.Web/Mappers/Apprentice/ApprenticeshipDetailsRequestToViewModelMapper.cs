@@ -121,7 +121,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     IsDurationReducedByRpl = response.Apprenticeship.IsDurationReducedByRpl,
                     HasPendingOverlappingTrainingDateRequest = hasPendingoverlappingTrainingDateRequest,
                     HasMultipleDeliveryModelOptions = response.HasMultipleDeliveryModelOptions,
-                    IsOnFlexiPaymentPilot = response.Apprenticeship.IsOnFlexiPaymentPilot
+                    IsOnFlexiPaymentPilot = response.Apprenticeship.IsOnFlexiPaymentPilot,
+                    PendingPriceChange = Map(response.PendingPriceChange)
                 };
 
                 return result;
@@ -131,6 +132,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 _logger.LogError(e, $"Error mapping for accountId {source.AccountHashedId}  and apprenticeship {source.ApprenticeshipHashedId} to ApprenticeshipDetailsRequestViewModel");
                 throw;
             }
+        }
+
+        private PendingPriceChange Map(GetManageApprenticeshipDetailsResponse.PendingPriceChangeDetails priceChangeDetails)
+        {
+            if (priceChangeDetails == null)
+            {
+                return null;
+            }
+
+            return new PendingPriceChange
+            {
+                Cost = priceChangeDetails.Cost,
+                EndPointAssessmentPrice = priceChangeDetails.EndPointAssessmentPrice,
+                TrainingPrice = priceChangeDetails.TrainingPrice
+            };
         }
 
         private async Task<TrainingProgramme> GetTrainingProgramme(string courseCode, string standardUId)

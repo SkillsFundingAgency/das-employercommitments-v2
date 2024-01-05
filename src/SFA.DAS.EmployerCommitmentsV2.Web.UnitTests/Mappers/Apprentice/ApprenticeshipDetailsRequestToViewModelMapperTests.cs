@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentAssertions;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetPriceEpisodeResponse;
@@ -835,6 +836,27 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.IsOnFlexiPaymentPilot, result.IsOnFlexiPaymentPilot);
+        }
+
+        [Test]
+        public async Task And_PriceChangeDetailsIsNull_Then_PriceChangeDetailsNotReturned()
+        {
+            GetManageApprenticeshipDetailsResponse.PendingPriceChange = null;
+
+            var result = await _mapper.Map(_request);
+
+            result.PendingPriceChange.Should().BeNull();
+        }
+
+        [Test]
+        public async Task And_PriceChangeDetailsArePopulated_Then_PriceChangeDetailsReturned()
+        {
+            var result = await _mapper.Map(_request);
+
+            Assert.IsNotNull(result.PendingPriceChange);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.Cost, result.PendingPriceChange.Cost);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EndPointAssessmentPrice, result.PendingPriceChange.EndPointAssessmentPrice);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.TrainingPrice, result.PendingPriceChange.TrainingPrice);
         }
     }
 }
