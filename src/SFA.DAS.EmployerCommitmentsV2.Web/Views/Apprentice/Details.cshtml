@@ -1,7 +1,7 @@
-﻿@inject ILinkGenerator LinkGenerator
-@using SFA.DAS.CommitmentsV2.Shared.Extensions
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.Employer.Shared.UI
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 
@@ -27,7 +27,7 @@
             <div class="govuk-inset-text">
                 This apprentice is part of the simplified payments pilot. To change these details, you must contact your training provider.
             </div>
-        }
+        }   
 
         @{
             if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped && Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
@@ -392,7 +392,7 @@
                     </tr>
                 </tbody>
             </table>
-            <a id="linkViewPendingPrice" asp-external-controller="" asp-external-subdomain="apprenticeshipdetails" asp-external-relativeroute="@Model.PendingPriceChangeRoute" class="govuk-link">Review price change</a>
+            <a id="linkViewPendingPrice" href="@Model.PendingPriceChangeUrl" class="govuk-link">Review price change</a>
         }
 
         @if (Model.RecognisePriorLearning != null)
