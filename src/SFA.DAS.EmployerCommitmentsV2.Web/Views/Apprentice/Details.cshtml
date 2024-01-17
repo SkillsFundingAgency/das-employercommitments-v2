@@ -387,8 +387,8 @@
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Total price</th>
-                        <td class="govuk-table__cell">@Model.Cost.FormatCost()</td>
-                        <td class="govuk-table__cell">@Model.PendingPriceChange.Cost.FormatCost()</td>
+                        <td class="govuk-table__cell" id="priceChangeCurrentTotalPrice">@Model.Cost.FormatCost()</td>
+                        <td class="govuk-table__cell" id="priceChangeRequestedTotalPrice">@Model.PendingPriceChange.Cost.FormatCost()</td>
                     </tr>
                 </tbody>
             </table>
