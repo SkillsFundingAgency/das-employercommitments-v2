@@ -17,7 +17,6 @@ public class ApprenticeshipNeverStartedViewModelMapperTests
     [SetUp]
     public void SetUp()
     {
-
         _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
         _mockCommitmentsApiClient

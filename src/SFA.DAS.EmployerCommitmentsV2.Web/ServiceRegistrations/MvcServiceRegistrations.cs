@@ -1,11 +1,9 @@
 ﻿using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Filters;
 using SFA.DAS.EmployerCommitmentsV2.Web.ModelBinding;
 using SFA.DAS.EmployerCommitmentsV2.Web.Validators;
@@ -14,14 +12,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 
 public static class MvcServiceRegistrations
 {
-    public static IServiceCollection AddDasMvc(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDasMvc(this IServiceCollection services)
     {
-        var commitmentsConfiguration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
-            .Get<EmployerCommitmentsV2Configuration>();
-
         services.AddHttpContextAccessor();
         services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-        
+
         services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = false;
@@ -35,7 +30,8 @@ public static class MvcServiceRegistrations
             .AddControllersAsServices()
             .SetDefaultNavigationSection(NavigationSection.ApprenticesHome);
 
-        services.AddFluentValidationAutoValidation()
+        services
+            .AddFluentValidationAutoValidation()
             .AddValidatorsFromAssemblyContaining<AddDraftApprenticeshipViewModelValidator>();
 
         return services;

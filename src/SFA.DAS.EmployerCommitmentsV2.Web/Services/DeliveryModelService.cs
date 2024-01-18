@@ -23,6 +23,6 @@ public class DeliveryModelService : IDeliveryModelService
     {
         var aleId = _encodingService.Decode(accountLegalEntity, EncodingType.PublicAccountLegalEntityId);
         var response = await _approvalsApiClient.GetProviderCourseDeliveryModels(providerId, courseCode, aleId);
-        return (response?.DeliveryModels.Count() > 1);
+        return response?.DeliveryModels.Count() > 1;
     }
 }

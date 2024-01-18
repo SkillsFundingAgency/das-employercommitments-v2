@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.ModelBinding;
 
@@ -9,8 +8,7 @@ public class AuthorizationModelBinderProvider : IModelBinderProvider
 {
     public IModelBinder GetBinder(ModelBinderProviderContext context)
     {
-        if (!typeof(IAuthorizationContextModel).IsAssignableFrom(context.Metadata.ContainerType) ||
-            context.Metadata.IsComplexType)
+        if (!typeof(IAuthorizationContextModel).IsAssignableFrom(context.Metadata.ContainerType) || context.Metadata.IsComplexType)
         {
             return null;
         }

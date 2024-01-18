@@ -1,4 +1,5 @@
-﻿using SFA.DAS.AutoConfiguration;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.AutoConfiguration;
 using SFA.DAS.CommitmentsV2.Services.Shared;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Services;
@@ -22,6 +23,7 @@ public static class ApplicationServiceRegistrations
         services.AddTransient<IAzureTableStorageConnectionAdapter, AzureTableStorageConnectionAdapter>();
         services.AddTransient<IEnvironmentService, EnvironmentService>();
         services.AddTransient<IAutoConfigurationService, TableStorageConfigurationService>();
+        services.AddTransient<IDeliveryModelService, DeliveryModelService>();
 
         services.AddTransient<IEmployerAccountsService, EmployerAccountsService>();
         services.AddSingleton<StubEmployerAccountsApiClient, StubEmployerAccountsApiClient>();

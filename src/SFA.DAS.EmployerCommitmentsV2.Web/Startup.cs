@@ -48,7 +48,7 @@ public class Startup
             .AddCommitmentPermissionsApiClient()
             .AddDasHealthChecks()
             .AddDasMaMenuConfiguration(_configuration)
-            .AddDasMvc(_configuration)
+            .AddDasMvc()
             .AddUrlHelper()
             .AddEmployerUrlHelper()
             .AddMemoryCache()
@@ -81,11 +81,7 @@ public class Startup
             .UseAuthentication()
             .UseRouting()
             .UseAuthorization()
-            .UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+            .UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute()
+            );
     }
 }
