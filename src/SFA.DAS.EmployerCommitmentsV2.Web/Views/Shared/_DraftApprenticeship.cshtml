@@ -42,6 +42,7 @@ else
 <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
 <input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
 <input type="hidden" asp-for="ProviderName" class="govuk-radios__input" value="@Model.ProviderName">
+<input type="hidden" asp-for="AccountHashedId" class="govuk-radios__input" value="@Model.AccountHashedId">
 
 @if (!Model.IsContinuation)
 {
@@ -427,7 +428,7 @@ else
 </div>
 @functions
 {
-    private string DisplayCost(int? value)
+    private static string DisplayCost(int? value)
     {
         return value.HasValue ? value.Value.ToGdsCostFormat() : "--";
     }
