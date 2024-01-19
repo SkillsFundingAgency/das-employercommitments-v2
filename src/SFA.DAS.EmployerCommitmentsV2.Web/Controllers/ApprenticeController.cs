@@ -727,7 +727,7 @@ public class ApprenticeController : Controller
             TempData.Put(ViewModelForEdit, viewModel);
             return RedirectToAction(
                 changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit),
-                new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId });
+                new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, viewModel.AccountHashedId });
         }
 
         var apprenticeship = await _commitmentsApiClient.GetApprenticeship(viewModel.ApprenticeshipId);

@@ -29,14 +29,14 @@ public class WhenPostingEditApprenticeshipDetails
         _apprenticeshipResponse = _autoFixture.Build<GetApprenticeshipResponse>()
             .With(x => x.CourseCode, _autoFixture.Create<int>().ToString())
             .Create();
-            
+
         _standardVersionResponse = _autoFixture.Build<GetTrainingProgrammeResponse>()
             .With(x => x.TrainingProgramme, _autoFixture.Build<TrainingProgramme>()
                 .With(x => x.Version, "1.0")
                 .With(x => x.Options, new List<string>())
                 .Create())
             .Create();
-            
+
         _frameworkResponse = _autoFixture.Create<GetTrainingProgrammeResponse>();
         _frameworkResponse.TrainingProgramme.Version = null;
 
@@ -49,9 +49,9 @@ public class WhenPostingEditApprenticeshipDetails
             .Create();
 
         _viewModel.StartDate = new MonthYearModel(_apprenticeshipResponse.StartDate.Value.ToString("MMyyyy"));
-            
+
         _fixture.SetUpGetApprenticeship(_apprenticeshipResponse);
-    }   
+    }
 
     [Test]
     public async Task And_NewStandardSelected_Then_GetCalculatedVersion()
@@ -74,7 +74,7 @@ public class WhenPostingEditApprenticeshipDetails
 
         _fixture.VerifyGetCalculatedTrainingProgrameVersionIsCalled();
     }
-            
+
     [Test]
     public async Task And_StandardNotChanged_And_StartDateNotMovedForward_Then_NeitherGetTrainingProgrammeMethodCalled()
     {
@@ -150,6 +150,8 @@ public class WhenPostingEditApprenticeshipDetails
     {
         var result = await _fixture.EditChangingCourse(_viewModel);
         WhenPostingEditApprenticeshipDetailsFixture.VerifyRedirectedTo(result, "SelectCourseForEdit");
+        WhenPostingEditApprenticeshipDetailsFixture.VerifyRouteValue(result, "AccountHashedId", _viewModel.AccountHashedId);
+        WhenPostingEditApprenticeshipDetailsFixture.VerifyRouteValue(result, "ApprenticeshipHashedId", _viewModel.HashedApprenticeshipId);
     }
 
     [Test]
@@ -158,14 +160,13 @@ public class WhenPostingEditApprenticeshipDetails
         var result = await _fixture.EditChangingDeliveryModel(_viewModel);
         WhenPostingEditApprenticeshipDetailsFixture.VerifyRedirectedTo(result, "SelectDeliveryModelForEdit");
     }
-
 }
 
 public class WhenPostingEditApprenticeshipDetailsFixture : ApprenticeControllerTestFixtureBase
 {
     public WhenPostingEditApprenticeshipDetailsFixture()
     {
-        Controller.TempData = new TempDataDictionary( Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
+        Controller.TempData = new TempDataDictionary(Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
     }
 
     public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequestViewModel viewModel)
@@ -235,9 +236,14 @@ public class WhenPostingEditApprenticeshipDetailsFixture : ApprenticeControllerT
     {
         result.ActionName.Should().Be("ChangeOption");
     }
-        
+
     public static void VerifyRedirectedTo(IActionResult actionResult, string actionName)
     {
         actionResult.VerifyReturnsRedirectToActionResult().WithActionName(actionName);
+    }
+
+    public static void VerifyRouteValue(IActionResult actionResult, string name, string value)
+    {
+        actionResult.VerifyRouteValue(name, value);
     }
 }

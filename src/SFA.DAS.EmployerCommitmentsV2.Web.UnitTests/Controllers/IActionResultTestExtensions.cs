@@ -1,3 +1,5 @@
+using FluentAssertions;
+
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers;
 
 internal static class IActionResultTestExtensions
@@ -15,6 +17,13 @@ internal static class IActionResultTestExtensions
     public static RedirectToActionResult VerifyReturnsRedirectToActionResult(this IActionResult result)
     {
         return result.VerifyResponseObjectType<RedirectToActionResult>();
+    }
+
+    public static void VerifyRouteValue(this IActionResult actionResult, string name, string value)
+    {
+        var routeValue = ((RedirectToActionResult)actionResult).RouteValues.SingleOrDefault(x => x.Key.Equals(name, StringComparison.OrdinalIgnoreCase));
+        routeValue.Should().NotBeNull();
+        routeValue.Value.Should().Be(value);
     }
 
     public static RedirectToActionResult WithActionName(this RedirectToActionResult result, string expectedName)
@@ -40,7 +49,6 @@ internal static class IActionResultTestExtensions
 
         return badRequest;
     }
-
 
     public static ObjectResult VerifyReturnsSpecifiedStatusCode(this IActionResult result, HttpStatusCode expectedStatusCode)
     {
