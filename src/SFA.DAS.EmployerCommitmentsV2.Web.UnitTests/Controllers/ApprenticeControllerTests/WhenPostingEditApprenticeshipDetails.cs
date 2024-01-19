@@ -5,6 +5,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
@@ -149,7 +150,7 @@ public class WhenPostingEditApprenticeshipDetails
     public async Task AndSelectCourseIsToBeChangedThenTheUserIsRedirectedToSelectCoursePage()
     {
         var result = await _fixture.EditChangingCourse(_viewModel);
-        WhenPostingEditApprenticeshipDetailsFixture.VerifyRedirectedTo(result, "SelectCourseForEdit");
+        WhenPostingEditApprenticeshipDetailsFixture.VerifyRedirectedTo(result, nameof(ApprenticeController.SelectCourseForEdit));
         WhenPostingEditApprenticeshipDetailsFixture.VerifyRouteValue(result, "AccountHashedId", _viewModel.AccountHashedId);
         WhenPostingEditApprenticeshipDetailsFixture.VerifyRouteValue(result, "ApprenticeshipHashedId", _viewModel.HashedApprenticeshipId);
     }
@@ -158,7 +159,7 @@ public class WhenPostingEditApprenticeshipDetails
     public async Task AndSelectDeliveryModelIsToBeChangedThenTheUserIsRedirectedToSelectDeliveryModelPage()
     {
         var result = await _fixture.EditChangingDeliveryModel(_viewModel);
-        WhenPostingEditApprenticeshipDetailsFixture.VerifyRedirectedTo(result, "SelectDeliveryModelForEdit");
+        WhenPostingEditApprenticeshipDetailsFixture.VerifyRedirectedTo(result, nameof(ApprenticeController.SelectDeliveryModelForEdit));
     }
 }
 
