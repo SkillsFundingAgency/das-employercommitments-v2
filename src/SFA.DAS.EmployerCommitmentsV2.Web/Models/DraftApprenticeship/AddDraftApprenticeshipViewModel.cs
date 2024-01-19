@@ -7,7 +7,6 @@ public class AddDraftApprenticeshipViewModel : DraftApprenticeshipViewModel, IAu
 {
     public long AccountId { get; set; }
     public string AccountHashedId { get; set; }
-
     public string LegalEntityName { get; set; }
     public string TransferSenderHashedId { get; set; }
     public bool AutoCreatedReservation { get; set; }
