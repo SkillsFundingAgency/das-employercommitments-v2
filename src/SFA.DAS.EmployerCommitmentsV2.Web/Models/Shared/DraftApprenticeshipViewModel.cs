@@ -22,8 +22,8 @@ public class DraftApprenticeshipViewModel : BaseDraftApprenticeshipViewModel, IA
     public long? CohortId { get; set; }
         
     public long AccountLegalEntityId { get; set; }
-       
 }
+
 public class BaseDraftApprenticeshipViewModel
 {
     public BaseDraftApprenticeshipViewModel()
@@ -128,6 +128,7 @@ public class BaseDraftApprenticeshipViewModel
 
     public IEnumerable<TrainingProgramme> Courses { get; set; }
 
+    public string AccountHashedId { get; set; }
     public bool IsContinuation { get; set; }     
     public string AccountLegalEntityHashedId { get; set; }
     public bool? HasMultipleDeliveryModelOptions { get; set; }
