@@ -42,7 +42,6 @@ else
 <input type="hidden" asp-for="CourseCode" value="@Model.CourseCode">
 <input type="hidden" asp-for="DeliveryModel" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
 <input type="hidden" asp-for="ProviderName" value="@Model.ProviderName">
-<input type="hidden" asp-for="AccountHashedId" value="@Model.AccountHashedId">
 
 @if (!Model.IsContinuation)
 {

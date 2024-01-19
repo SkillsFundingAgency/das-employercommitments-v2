@@ -128,7 +128,6 @@ public class BaseDraftApprenticeshipViewModel
 
     public IEnumerable<TrainingProgramme> Courses { get; set; }
 
-    public string AccountHashedId { get; set; }
     public bool IsContinuation { get; set; }     
     public string AccountLegalEntityHashedId { get; set; }
     public bool? HasMultipleDeliveryModelOptions { get; set; }

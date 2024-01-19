@@ -6,13 +6,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
 public class AddDraftApprenticeshipRequest : BaseAddDraftApprenticeshipRequest, IAuthorizationContextModel
 {
-    public string AccountHashedId { get; set; }        
     public long CohortId { get; set; }        
     public long AccountLegalEntityId { get; set; }
 }
 
 public class BaseAddDraftApprenticeshipRequest
 {
+    public string AccountHashedId { get; set; }
     public string CohortReference { get; set; }
     public string AccountLegalEntityHashedId { get; set; }
     public string DraftApprenticeshipHashedId { get; set; }
