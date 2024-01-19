@@ -6,7 +6,6 @@ using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerUrlHelper.Configuration;
 using SFA.DAS.Encoding;
-using SFA.DAS.GovUK.Auth.Configuration;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using SFA.DAS.EmployerCommitmentsV2.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
@@ -12,7 +13,6 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
-using SFA.DAS.EmployerCommitmentsV2.Web.ModelBinding;
 using SFA.DAS.GovUK.Auth.Authentication;
 using SFA.DAS.GovUK.Auth.Services;
 
@@ -22,17 +22,19 @@ public static class AuthenticationServiceRegistrations
 {
     public static IServiceCollection AddAuthenticationServices(this IServiceCollection services)
     {
-        services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
+        services.AddSingleton<CommitmentsAuthorisationHandler>();
         services.AddSingleton<ICommitmentsAuthorisationHandler, CommitmentsAuthorisationHandler>();
+        services.AddTransient<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactory>();
+        services.AddSingleton(serviceProvider => serviceProvider.GetService<ICommitmentPermissionsApiClientFactory>().CreateClient());
+        
+        services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
+        
         services.AddSingleton<IEmployerAccountAuthorisationHandler, EmployerAccountAuthorisationHandler>();
 
         services.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, EmployerAccountAllRolesAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessApprenticeshipAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessCohortAuthorizationHandler>();
-
-        services.AddTransient<IAuthorizationContext, AuthorizationContext>();
-        services.AddSingleton<IAuthorizationContextProvider, AuthorizationContextProvider>();
 
         services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
 
@@ -111,7 +113,7 @@ public static class AuthenticationServiceRegistrations
                     {
                         return Task.CompletedTask;
                     }
-                    
+
                     remoteFailureContext.Response.Redirect("/");
                     remoteFailureContext.HandleResponse();
 

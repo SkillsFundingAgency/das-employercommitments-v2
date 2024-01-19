@@ -4,7 +4,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
 
 public static class ErrorPagesStartup
 {
-    public static IApplicationBuilder UseDasErrorPages(this IApplicationBuilder app, IWebHostEnvironment environment)
+    public static IApplicationBuilder UseDasErrorPages(this IApplicationBuilder app, IHostEnvironment environment)
     {
         if (environment.IsDevelopment())
         {

@@ -9,8 +9,10 @@ public static class MaMenuServiceRegistrations
 {
     public static IServiceCollection AddDasMaMenuConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
-        var commitmentsConfiguration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
+        var commitmentsConfiguration = configuration
+            .GetSection(ConfigurationKeys.EmployerCommitmentsV2)
             .Get<EmployerCommitmentsV2Configuration>();
+
         if (commitmentsConfiguration.UseGovSignIn)
         {
             services.AddMaMenuConfiguration(RouteNames.SignOut, configuration["ResourceEnvironmentName"]);

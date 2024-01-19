@@ -1,6 +1,7 @@
 ﻿using AspNetCore.IServiceCollection.AddIUrlHelper;
-using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
@@ -14,9 +15,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web;
 public class Startup
 {
     private readonly IConfiguration _configuration;
-    private readonly IWebHostEnvironment _environment;
+    private readonly IHostEnvironment _environment;
 
-    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+    public Startup(IConfiguration configuration, IHostEnvironment environment)
     {
         _configuration = configuration.BuildDasConfiguration();
         _environment = environment;
@@ -43,7 +44,6 @@ public class Startup
             .AddApplicationServices(employerCommitmentsV2Configuration)
             .AddCommitmentsApiClient(_configuration)
             .AddAccountsApiClient(employerCommitmentsV2Configuration)
-            .AddCommitmentsAuthorization()
             .AddAuthenticationServices()
             .AddCommitmentPermissionsApiClient()
             .AddDasHealthChecks()

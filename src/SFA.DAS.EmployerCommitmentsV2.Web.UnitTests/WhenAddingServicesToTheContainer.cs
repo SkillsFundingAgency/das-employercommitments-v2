@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using FluentAssertions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,14 +9,9 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
-using SFA.DAS.EmployerCommitmentsV2.Web.ModelBinding;
 using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Stubs;
 using SFA.DAS.EmployerUrlHelper.Configuration;
@@ -36,7 +32,7 @@ public class WhenAddingServicesToTheContainer
     {
         RunTestForType(toResolve);
     }
-    
+
     [TestCase(typeof(EmployerCommitmentsV2Configuration))]
     [TestCase(typeof(CommitmentPermissionsApiClientConfiguration))]
     [TestCase(typeof(ZenDeskConfiguration))]
@@ -50,31 +46,30 @@ public class WhenAddingServicesToTheContainer
     {
         RunTestForType(new TestType(toResolve.Name, toResolve));
     }
-    
-    [TestCase(typeof(IAuthorizationContext))]
-    [TestCase(typeof(IAuthorizationContextProvider))]
+
+
     [TestCase(typeof(ICommitmentsAuthorisationHandler))]
     [TestCase(typeof(IEmployerAccountAuthorisationHandler))]
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_Authorization_Services(Type toResolve)
     {
         RunTestForType(new TestType(toResolve.Name, toResolve));
     }
-    
+
     [TestCase(typeof(IAccountApiClient))]
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_Client_Services(Type toResolve)
     {
         RunTestForType(new TestType(toResolve.Name, toResolve));
     }
 
-    public void RunTestForType(TestType toResolve)
+    private static void RunTestForType(TestType toResolve)
     {
         var serviceCollection = new ServiceCollection();
         SetupServiceCollection(serviceCollection);
         var provider = serviceCollection.BuildServiceProvider();
 
         var type = provider.GetService(toResolve.Type);
-       
-        Assert.That(type, Is.Not.Null, $"Unable to resolve all required services for type '{toResolve.Name}'.");
+
+        type.Should().NotBeNull($"Unable to resolve all required services for type '{toResolve.Name}'.");
     }
 
     private static IEnumerable<TestType> GetControllerTypes()
@@ -97,7 +92,7 @@ public class WhenAddingServicesToTheContainer
         var mappingTypes = mappingAssembly
             .GetTypes()
             .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMapper<,>)));
-        
+
         foreach (var mapperType in mappingTypes.Where(x => x != typeof(AttachUserInfoToSaveRequests<,>)))
         {
             var interfaceType = mapperType
@@ -157,10 +152,10 @@ public class WhenAddingServicesToTheContainer
 
                 new($"{ConfigurationKeys.EmployerCommitmentsV2}:UseStubEmployerAccountsApiClient", "true"),
                 new($"{ConfigurationKeys.EmployerCommitmentsV2}:UseGovSignIn", "true"),
-                
+
                 new("StubAuth", "true"),
                 new("ResourceEnvironmentName", "LOCAL"),
-                
+
                 new($"{ConfigurationKeys.GovUkSignInConfiguration}:BaseUrl", "https://internal.test/"),
                 new($"{ConfigurationKeys.GovUkSignInConfiguration}:ClientId", "SDFDFDF"),
                 new($"{ConfigurationKeys.GovUkSignInConfiguration}:KeyVaultIdentifier", "1223445"),
