@@ -36,6 +36,9 @@ public static class AuthenticationServiceRegistrations
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessApprenticeshipAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessCohortAuthorizationHandler>();
 
+        services.AddTransient<IAuthorizationContext, AuthorizationContext>();
+        services.AddSingleton<IAuthorizationContextProvider, AuthorizationContextProvider>();
+
         services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
 
         AddAuthorizationPolicies(services);

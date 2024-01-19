@@ -21,6 +21,7 @@ public static class MvcServiceRegistrations
                 options.AddValidation();
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 options.Filters.Add(new GoogleAnalyticsFilter());
+                options.ModelBinderProviders.Insert(0, new AuthorizationModelBinderProvider());
                 options.ModelBinderProviders.Insert(1, new SuppressArgumentExceptionModelBinderProvider());
                 options.AddStringModelBinderProvider();
             })

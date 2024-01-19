@@ -47,7 +47,8 @@ public class WhenAddingServicesToTheContainer
         RunTestForType(new TestType(toResolve.Name, toResolve));
     }
 
-
+    [TestCase(typeof(IAuthorizationContext))]
+    [TestCase(typeof(IAuthorizationContextProvider))]
     [TestCase(typeof(ICommitmentsAuthorisationHandler))]
     [TestCase(typeof(IEmployerAccountAuthorisationHandler))]
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_Authorization_Services(Type toResolve)
