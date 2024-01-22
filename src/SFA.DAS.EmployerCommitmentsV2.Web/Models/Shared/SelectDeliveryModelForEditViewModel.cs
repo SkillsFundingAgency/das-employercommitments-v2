@@ -2,6 +2,7 @@
 
 public class SelectDeliveryModelForEditViewModel : IDeliveryModelSelection
 {
+    public string AccountHashedId { get; set; }
     public List<EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel> DeliveryModels { get; set; }
     public EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel? DeliveryModel { get; set; }
     public string LegalEntityName { get; set; }

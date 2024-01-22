@@ -265,8 +265,7 @@ public class DraftApprenticeshipController : Controller
 
         if (model.DeliveryModel == null)
         {
-            throw new CommitmentsApiModelException(new List<ErrorDetail>
-                {new ErrorDetail("DeliveryModel", "You must select the apprenticeship delivery model")});
+            throw new CommitmentsApiModelException(new List<ErrorDetail> {new("DeliveryModel", "You must select the apprenticeship delivery model")});
         }
 
         return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), model);
