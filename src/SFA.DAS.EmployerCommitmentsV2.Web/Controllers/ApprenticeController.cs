@@ -725,8 +725,7 @@ public class ApprenticeController : Controller
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
             TempData.Put(ViewModelForEdit, viewModel);
-            return RedirectToAction(
-                changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit),
+            return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit),
                 new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, viewModel.AccountHashedId });
         }
 
@@ -799,7 +798,7 @@ public class ApprenticeController : Controller
 
         TempData.Put(ViewModelForEdit, draft);
 
-       return RedirectToAction(nameof(SelectDeliveryModelForEdit), new { model.AccountHashedId });
+       return RedirectToAction(nameof(SelectDeliveryModelForEdit), new { model.ApprenticeshipHashedId, model.AccountHashedId });
     }
 
     [HttpGet]
