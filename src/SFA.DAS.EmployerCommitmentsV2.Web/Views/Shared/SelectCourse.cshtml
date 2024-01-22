@@ -11,6 +11,7 @@
         <h1 class="govuk-heading-xl">Select standard</h1>
         <input type="hidden" asp-for="AccountHashedId" />
         <input type="hidden" asp-for="CohortReference" />
+        <input type="hidden" asp-for="DraftApprenticeshipHashedId" />
 
         <form id="addApprenticeship" novalidate method="post">
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
