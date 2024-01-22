@@ -363,7 +363,7 @@ public class ApprenticeController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed '{ControllerName}.{ActionName}'.", 
+            _logger.LogError(ex, "Failed '{ControllerName}.{ActionName}'.",
                 nameof(ApprenticeController),
                 nameof(ConfirmDetailsAndSendRequestPage));
 
@@ -422,10 +422,10 @@ public class ApprenticeController : Controller
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed '{ControllerName}.{ActionName}'.", 
+                _logger.LogError(ex, "Failed '{ControllerName}.{ActionName}'.",
                     nameof(ApprenticeController),
                     nameof(SendRequestNewTrainingProvider));
-                
+
                 return RedirectToAction("Error", "Error");
             }
         }
@@ -799,7 +799,7 @@ public class ApprenticeController : Controller
 
         TempData.Put(ViewModelForEdit, draft);
 
-        return RedirectToAction(nameof(SelectDeliveryModelForEdit));
+       return RedirectToAction(nameof(SelectDeliveryModelForEdit), new { model.AccountHashedId });
     }
 
     [HttpGet]

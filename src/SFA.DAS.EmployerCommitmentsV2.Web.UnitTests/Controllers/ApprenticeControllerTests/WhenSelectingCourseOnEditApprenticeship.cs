@@ -55,7 +55,8 @@ public class WhenSelectingCourseOnEditApprenticeship
         fixture.ViewModel.CourseCode = "123";
 
         var result = fixture.Sut.SetCourseForEdit(fixture.ViewModel);
-        result.VerifyReturnsRedirectToActionResult().ActionName.Should().Be("SelectDeliveryModelForEdit");
+        result.VerifyReturnsRedirectToActionResult().ActionName.Should().Be(nameof(ApprenticeController.SelectDeliveryModelForEdit));
+        result.VerifyRouteValue("AccountHashedId", fixture.ViewModel.AccountHashedId);
     }
 }
 
