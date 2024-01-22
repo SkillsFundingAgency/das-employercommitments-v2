@@ -9,6 +9,8 @@
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
         <h1 class="govuk-heading-xl">Select standard</h1>
+        <input type="hidden" asp-for="AccountHashedId" />
+        <input type="hidden" asp-for="CohortReference" />
 
         <form id="addApprenticeship" novalidate method="post">
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
