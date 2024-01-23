@@ -26,13 +26,14 @@ public static class DataProtectionServiceRegistrations
         var redisConnectionString = redisConfiguration.RedisConnectionString;
         var dataProtectionKeysDatabase = redisConfiguration.DataProtectionKeysDatabase;
 
+        var configurationOptions = ConfigurationOptions.Parse($"{redisConnectionString},{dataProtectionKeysDatabase}");
         var redis = ConnectionMultiplexer
-            .Connect($"{redisConnectionString},{dataProtectionKeysDatabase}");
+            .Connect(configurationOptions);
 
         services.AddDataProtection()
             .SetApplicationName("das-employer")
             .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
-        
+
         return services;
     }
 }
