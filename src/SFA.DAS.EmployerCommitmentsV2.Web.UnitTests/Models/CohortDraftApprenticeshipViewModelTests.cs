@@ -46,7 +46,7 @@ public class CohortDraftApprenticeshipViewModelTests
         Assert.That(_viewModel.DisplayTrainingDates, Is.EqualTo(expectedDisplayTrainingDates));
     }
 
-    [TestCase("2017-09-01", "1 Sep 2017")]
+    [TestCase("2017-09-01", "1 Sept 2017")]
     [TestCase("2018-10-10", "10 Oct 2018")]
     public void ThenDisplayDateOfBirth(DateTime? dateOfBirth, string expectedDisplayDateOfBirth)
     {
