@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddDasAuthorization()
+                .AddDasAuthorization(_configuration)
                 .AddDasEmployerAuthentication(_configuration)
                 .AddDasHealthChecks()
                 .AddDasMaMenuConfiguration(_configuration)
