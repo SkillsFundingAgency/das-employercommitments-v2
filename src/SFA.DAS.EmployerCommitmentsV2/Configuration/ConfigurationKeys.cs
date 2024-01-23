@@ -4,7 +4,7 @@ public static class ConfigurationKeys
 {
     public const string Encoding = "SFA.DAS.Encoding";
     public const string EmployerUrlConfiguration = "SFA.DAS.EmployerUrlHelper";
-    public const string GovUkSignInConfiguration = "GovUkOidcConfiguration";
+    public const string GovUkSignInConfiguration = "SFA.DAS.Employer.GovSignIn";
 
     public const string EmployerCommitmentsV2 = "SFA.DAS.EmployerCommitmentsV2";
     

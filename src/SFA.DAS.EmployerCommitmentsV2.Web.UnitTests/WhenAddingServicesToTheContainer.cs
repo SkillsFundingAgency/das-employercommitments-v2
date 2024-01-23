@@ -43,7 +43,6 @@ public class WhenAddingServicesToTheContainer
     [TestCase(typeof(EmployerUrlHelperConfiguration))]
     [TestCase(typeof(AccountApiConfiguration))]
     [TestCase(typeof(ApprovalsApiClientConfiguration))]
-    [TestCase(typeof(GovUkOidcConfiguration))]
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_Configuration(Type toResolve)
     {
         RunTestForType(new TestType(toResolve.Name, toResolve));

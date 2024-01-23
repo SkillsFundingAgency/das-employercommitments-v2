@@ -23,7 +23,7 @@ public static class ConfigurationServiceRegistrations
 
         services.AddConfigurationFor<EmployerCommitmentsV2Configuration>(configuration, ConfigurationKeys.EmployerCommitmentsV2);
         services.AddConfigurationFor<EmployerAccountsApiClientConfiguration>(configuration, ConfigurationKeys.AccountApiConfiguration);
-        services.AddConfigurationFor<GovUkOidcConfiguration>(configuration, ConfigurationKeys.AccountApiConfiguration);
+        services.AddConfigurationFor<GovUkOidcConfiguration>(configuration, ConfigurationKeys.GovUkSignInConfiguration);
 
         var encodingConfigJson = configuration.GetSection(ConfigurationKeys.Encoding).Value;
         var encodingConfig = JsonConvert.DeserializeObject<EncodingConfig>(encodingConfigJson);

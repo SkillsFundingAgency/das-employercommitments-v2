@@ -89,21 +89,21 @@ public static class AuthenticationServiceRegistrations
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services
-                .AddAuthentication(o =>
+                .AddAuthentication(options =>
                 {
-                    o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    o.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                    o.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    o.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
                 })
-                .AddCookie(o =>
+                .AddCookie(options =>
                 {
-                    o.AccessDeniedPath = "/error?statuscode=403";
-                    o.Cookie.Name = CookieNames.Authentication;
-                    o.Cookie.SameSite = SameSiteMode.None;
-                    o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                    o.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-                    o.SlidingExpiration = true;
+                    options.AccessDeniedPath = "/error?statuscode=403";
+                    options.Cookie.Name = CookieNames.Authentication;
+                    options.Cookie.SameSite = SameSiteMode.None;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                    options.SlidingExpiration = true;
                 })
                 .AddOpenIdConnect(connectOptions =>
                 {
@@ -158,56 +158,5 @@ public static class AuthenticationServiceRegistrations
                 policy.RequireAuthenticatedUser();
             });
         });
-    }
-
-    public static void AddAndConfigureEmployerAuthentication(this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        var authenticationConfiguration = configuration.GetSection(ConfigurationKeys.AuthenticationConfiguration)
-            .Get<AuthenticationConfiguration>();
-
-        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
-        services
-            .AddAuthentication(options =>
-            {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
-            })
-            .AddCookie(options =>
-            {
-                options.AccessDeniedPath = "/error?statuscode=403";
-                options.Cookie.Name = CookieNames.Authentication;
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-                options.SlidingExpiration = true;
-            })
-            .AddOpenIdConnect(options =>
-            {
-                options.Authority = authenticationConfiguration.Authority;
-                options.ClientId = authenticationConfiguration.ClientId;
-                options.ClientSecret = authenticationConfiguration.ClientSecret;
-                options.MetadataAddress = authenticationConfiguration.MetadataAddress;
-                options.ResponseType = "code";
-                options.UsePkce = false;
-
-                options.ClaimActions.MapUniqueJsonKey("sub", "id");
-
-                options.Events.OnRemoteFailure = remoteFailureContext =>
-                {
-                    if (!remoteFailureContext.Failure.Message.Contains("Correlation failed"))
-                    {
-                        return Task.CompletedTask;
-                    }
-
-                    remoteFailureContext.Response.Redirect("/");
-                    remoteFailureContext.HandleResponse();
-
-                    return Task.CompletedTask;
-                };
-            });
     }
 }
