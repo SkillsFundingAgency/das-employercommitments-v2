@@ -55,83 +55,93 @@ public static class AuthenticationServiceRegistrations
         
         if (commitmentsConfiguration.UseGovSignIn)
         {
-            var govConfig = configuration.GetSection(ConfigurationKeys.GovUkSignInConfiguration);
-            services.Configure<GovUkOidcConfiguration>(configuration.GetSection("GovUkOidcConfiguration"));
-           
-            govConfig["ResourceEnvironmentName"] = configuration["ResourceEnvironmentName"];
-            govConfig["StubAuth"] = configuration["StubAuth"];
-            
-            services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
-            services.AddAndConfigureGovUkAuthentication(govConfig,
-                typeof(EmployerAccountPostAuthenticationClaimsHandler),
-                "",
-                "/service/SignIn-Stub");
-
-            services.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
-            services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
-
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(
-                    "HasActiveAccount"
-                    , policy =>
-                    {
-                        policy.Requirements.Add(new AccountActiveRequirement());
-                        policy.Requirements.Add(new UserIsInAccountRequirement());
-                        policy.RequireAuthenticatedUser();
-                    });
-            });
+            ConfigureGovSignInAuth(services, configuration);
         }
         else
         {
-            var authenticationConfiguration = configuration.GetSection(ConfigurationKeys.AuthenticationConfiguration).Get<AuthenticationConfiguration>();
-
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
-            services
-                .AddAuthentication(options =>
-                {
-                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                })
-                .AddCookie(options =>
-                {
-                    options.AccessDeniedPath = "/error?statuscode=403";
-                    options.Cookie.Name = CookieNames.Authentication;
-                    options.Cookie.SameSite = SameSiteMode.None;
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-                    options.SlidingExpiration = true;
-                })
-                .AddOpenIdConnect(connectOptions =>
-                {
-                    connectOptions.Authority = authenticationConfiguration.Authority;
-                    connectOptions.ClientId = authenticationConfiguration.ClientId;
-                    connectOptions.ClientSecret = authenticationConfiguration.ClientSecret;
-                    connectOptions.MetadataAddress = authenticationConfiguration.MetadataAddress;
-                    connectOptions.ResponseType = "code";
-                    connectOptions.UsePkce = false;
-
-                    connectOptions.ClaimActions.MapUniqueJsonKey("sub", "id");
-
-                    connectOptions.Events.OnRemoteFailure = failureContext =>
-                    {
-                        if (failureContext.Failure.Message.Contains("Correlation failed"))
-                        {
-                            failureContext.Response.Redirect("/");
-                            failureContext.HandleResponse();
-                        }
-
-                        return Task.CompletedTask;
-                    };
-                });
+            ConfigureEmployerAuth(services, configuration);
         }
 
         return services;
     }
+    
+    private static void ConfigureGovSignInAuth(IServiceCollection services, IConfiguration configuration)
+    {
+        var govConfig = configuration.GetSection(ConfigurationKeys.GovUkSignInConfiguration);
+        services.Configure<GovUkOidcConfiguration>(configuration.GetSection("GovUkOidcConfiguration"));
+           
+        govConfig["ResourceEnvironmentName"] = configuration["ResourceEnvironmentName"];
+        govConfig["StubAuth"] = configuration["StubAuth"];
+            
+        services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
+        services.AddAndConfigureGovUkAuthentication(govConfig,
+            typeof(EmployerAccountPostAuthenticationClaimsHandler),
+            "",
+            "/service/SignIn-Stub");
 
+        services.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
+        services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
+
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(
+                "HasActiveAccount"
+                , policy =>
+                {
+                    policy.Requirements.Add(new AccountActiveRequirement());
+                    policy.Requirements.Add(new UserIsInAccountRequirement());
+                    policy.RequireAuthenticatedUser();
+                });
+        });
+    }
+
+    private static void ConfigureEmployerAuth(IServiceCollection services, IConfiguration configuration)
+    {
+        var authenticationConfiguration = configuration.GetSection(ConfigurationKeys.AuthenticationConfiguration).Get<AuthenticationConfiguration>();
+
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+        services
+            .AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+            .AddCookie(options =>
+            {
+                options.AccessDeniedPath = "/error?statuscode=403";
+                options.Cookie.Name = CookieNames.Authentication;
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.SlidingExpiration = true;
+            })
+            .AddOpenIdConnect(connectOptions =>
+            {
+                connectOptions.Authority = authenticationConfiguration.Authority;
+                connectOptions.ClientId = authenticationConfiguration.ClientId;
+                connectOptions.ClientSecret = authenticationConfiguration.ClientSecret;
+                connectOptions.MetadataAddress = authenticationConfiguration.MetadataAddress;
+                connectOptions.ResponseType = "code";
+                connectOptions.UsePkce = false;
+
+                connectOptions.ClaimActions.MapUniqueJsonKey("sub", "id");
+
+                connectOptions.Events.OnRemoteFailure = failureContext =>
+                {
+                    if (failureContext.Failure.Message.Contains("Correlation failed"))
+                    {
+                        failureContext.Response.Redirect("/");
+                        failureContext.HandleResponse();
+                    }
+
+                    return Task.CompletedTask;
+                };
+            });
+    }
+    
     private static void AddAuthorizationPolicies(IServiceCollection services)
     {
         services.AddAuthorization(options =>
