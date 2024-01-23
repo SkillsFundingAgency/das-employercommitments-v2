@@ -38,10 +38,10 @@ public static class AuthenticationServiceRegistrations
         services.AddTransient<IAuthorizationContext, AuthorizationContext>();
         services.AddSingleton<IAuthorizationContextProvider, AuthorizationContextProvider>();
 
-        var commitmentsConfiguration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
+        var employerCommitmentsV2Configuration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
             .Get<EmployerCommitmentsV2Configuration>();
 
-        AddAuthorizationPolicies(services, commitmentsConfiguration.UseGovSignIn);
+        AddAuthorizationPolicies(services, employerCommitmentsV2Configuration.UseGovSignIn);
 
         return services;
     }
