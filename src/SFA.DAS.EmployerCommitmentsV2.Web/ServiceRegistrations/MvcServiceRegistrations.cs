@@ -31,11 +31,6 @@ public static class MvcServiceRegistrations
                 options.ModelBinderProviders.Insert(0, new AuthorizationModelBinderProvider());
                 options.ModelBinderProviders.Insert(1, new SuppressArgumentExceptionModelBinderProvider());
                 options.AddStringModelBinderProvider();
-
-                if (commitmentsConfiguration.UseGovSignIn)
-                {
-                    options.Filters.Add(new AuthorizeFilter(PolicyNames.HasActiveAccount));
-                }
             })
             .AddControllersAsServices()
             .SetDefaultNavigationSection(NavigationSection.ApprenticesHome);
