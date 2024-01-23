@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Startup
         {
 			BearerTokenProvider.SetSigningKey(configuration["SFA.DAS.EmployerCommitmentsV2:UserBearerTokenSigningKey"]);
 
-			return services.AddAuthorization<AuthorizationContextProvider>()
+            return services.AddAuthorization<AuthorizationContextProvider>()
                 .AddCommitmentPermissionsAuthorization()
                 .AddEmployerFeaturesAuthorization();
         }
