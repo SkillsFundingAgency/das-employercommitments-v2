@@ -41,6 +41,7 @@ public class Startup
         var employerCommitmentsV2Configuration = _configuration.Get<EmployerCommitmentsV2Configuration>();
         
         services
+            .AddDasEmployerAuthentication(_configuration)
             .AddApplicationServices(employerCommitmentsV2Configuration)
             .AddCommitmentsApiClient(_configuration)
             .AddAccountsApiClient(employerCommitmentsV2Configuration)
