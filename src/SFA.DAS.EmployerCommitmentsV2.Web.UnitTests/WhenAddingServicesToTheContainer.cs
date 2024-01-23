@@ -125,7 +125,7 @@ public class WhenAddingServicesToTheContainer
         services.AddCommitmentPermissionsApiClient();
         services.AddApplicationServices(employerCommitmentsV2Configuration);
         services.AddModelMappings();
-        services.AddDasMvc();
+        services.AddDasMvc(configuration);
 
         services.AddTransient<IUrlHelper, StubUrlHelper>();
 
@@ -133,7 +133,8 @@ public class WhenAddingServicesToTheContainer
         services.AddApprovalsApiClient();
         services.AddAccountsApiClient(employerCommitmentsV2Configuration);
         services.AddEncodingServices(configuration);
-        services.AddAuthenticationServices();
+        services.AddAuthorizationServices(configuration);
+        services.AddDasEmployerAuthentication(configuration);
         services.AddDasDataProtection(configuration, mockHostEnvironment.Object);
 
         foreach (var controllerType in GetControllerTypes())
@@ -184,6 +185,11 @@ public class WhenAddingServicesToTheContainer
                 new($"{ConfigurationKeys.ApprovalsApiClientConfiguration}:ApiBaseUrl", "https://internal.test/"),
                 new($"{ConfigurationKeys.ApprovalsApiClientConfiguration}:ApiVersion", "1"),
                 new($"{ConfigurationKeys.ApprovalsApiClientConfiguration}:SubscriptionKey", "test"),
+                
+                
+                new($"{ConfigurationKeys.GovUkSignInConfiguration}:GovUkOidcConfiguration:BaseUrl", "https://internal.test/"),
+                new($"{ConfigurationKeys.GovUkSignInConfiguration}:GovUkOidcConfiguration:ClientId", "test"),
+                new($"{ConfigurationKeys.GovUkSignInConfiguration}:GovUkOidcConfiguration:KeyVaultIdentifier", "test"),
             }
         };
 

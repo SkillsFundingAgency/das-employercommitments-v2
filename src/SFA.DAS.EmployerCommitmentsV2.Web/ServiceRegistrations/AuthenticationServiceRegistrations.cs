@@ -22,18 +22,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 
 public static class AuthenticationServiceRegistrations
 {
-    public static IServiceCollection AddAuthenticationServices(this IServiceCollection services)
+    public static IServiceCollection AddAuthorizationServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<CommitmentsAuthorisationHandler>();
         services.AddSingleton<ICommitmentsAuthorisationHandler, CommitmentsAuthorisationHandler>();
         services.AddTransient<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactory>();
         services.AddSingleton(serviceProvider => serviceProvider.GetService<ICommitmentPermissionsApiClientFactory>().CreateClient());
 
-        services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
-
         services.AddSingleton<IEmployerAccountAuthorisationHandler, EmployerAccountAuthorisationHandler>();
 
-        services.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, EmployerAccountAllRolesAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessApprenticeshipAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessCohortAuthorizationHandler>();
@@ -41,9 +38,10 @@ public static class AuthenticationServiceRegistrations
         services.AddTransient<IAuthorizationContext, AuthorizationContext>();
         services.AddSingleton<IAuthorizationContextProvider, AuthorizationContextProvider>();
 
-        services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
+        var commitmentsConfiguration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
+            .Get<EmployerCommitmentsV2Configuration>();
 
-        AddAuthorizationPolicies(services);
+        AddAuthorizationPolicies(services, commitmentsConfiguration.UseGovSignIn);
 
         return services;
     }
@@ -52,7 +50,7 @@ public static class AuthenticationServiceRegistrations
     {
         var commitmentsConfiguration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
             .Get<EmployerCommitmentsV2Configuration>();
-        
+
         if (commitmentsConfiguration.UseGovSignIn)
         {
             ConfigureGovSignInAuth(services, configuration);
@@ -64,35 +62,23 @@ public static class AuthenticationServiceRegistrations
 
         return services;
     }
-    
+
     private static void ConfigureGovSignInAuth(IServiceCollection services, IConfiguration configuration)
     {
         var govConfig = configuration.GetSection(ConfigurationKeys.GovUkSignInConfiguration);
         services.Configure<GovUkOidcConfiguration>(configuration.GetSection("GovUkOidcConfiguration"));
-           
+
         govConfig["ResourceEnvironmentName"] = configuration["ResourceEnvironmentName"];
         govConfig["StubAuth"] = configuration["StubAuth"];
-            
+
         services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
+        services.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
+        services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
+
         services.AddAndConfigureGovUkAuthentication(govConfig,
             typeof(EmployerAccountPostAuthenticationClaimsHandler),
             "",
             "/service/SignIn-Stub");
-
-        services.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
-        services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
-
-        services.AddAuthorization(options =>
-        {
-            options.AddPolicy(
-                "HasActiveAccount"
-                , policy =>
-                {
-                    policy.Requirements.Add(new AccountActiveRequirement());
-                    policy.Requirements.Add(new UserIsInAccountRequirement());
-                    policy.RequireAuthenticatedUser();
-                });
-        });
     }
 
     private static void ConfigureEmployerAuth(IServiceCollection services, IConfiguration configuration)
@@ -141,11 +127,21 @@ public static class AuthenticationServiceRegistrations
                 };
             });
     }
-    
-    private static void AddAuthorizationPolicies(IServiceCollection services)
+
+    private static void AddAuthorizationPolicies(IServiceCollection services, bool useGovSignIn)
     {
         services.AddAuthorization(options =>
         {
+            if (useGovSignIn)
+            {
+                options.AddPolicy(PolicyNames.HasActiveAccount, policy =>
+                {
+                    policy.Requirements.Add(new AccountActiveRequirement());
+                    policy.Requirements.Add(new UserIsInAccountRequirement());
+                    policy.RequireAuthenticatedUser();
+                });
+            }
+
             options.AddPolicy(PolicyNames.HasEmployerViewerTransactorOwnerAccount, policy =>
             {
                 policy.RequireClaim(EmployerClaims.AccountsClaimsTypeIdentifier);
