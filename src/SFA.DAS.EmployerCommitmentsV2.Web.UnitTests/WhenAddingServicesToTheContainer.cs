@@ -186,7 +186,6 @@ public class WhenAddingServicesToTheContainer
                 new($"{ConfigurationKeys.ApprovalsApiClientConfiguration}:ApiVersion", "1"),
                 new($"{ConfigurationKeys.ApprovalsApiClientConfiguration}:SubscriptionKey", "test"),
                 
-                
                 new($"{ConfigurationKeys.GovUkSignInConfiguration}:GovUkOidcConfiguration:BaseUrl", "https://internal.test/"),
                 new($"{ConfigurationKeys.GovUkSignInConfiguration}:GovUkOidcConfiguration:ClientId", "test"),
                 new($"{ConfigurationKeys.GovUkSignInConfiguration}:GovUkOidcConfiguration:KeyVaultIdentifier", "test"),
