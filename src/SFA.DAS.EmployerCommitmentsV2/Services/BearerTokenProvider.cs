@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services
 			if (signingKey.Length * 8 < minimumKeySize)
 			{
 				// This checks the key is at least 128 bits long, otherwise the token will fail to be generated
-				throw new BearerTokenException("Signing key must exceed 128bits in length");
+				throw new BearerTokenException("Signing key must be at least 128bits in length");
 			}
 
 			_signingKey = signingKey;
