@@ -16,6 +16,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Stubs;
 using SFA.DAS.EmployerUrlHelper.Configuration;
 using SFA.DAS.Encoding;
+using SFA.DAS.GovUK.Auth.Configuration;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests;
 
@@ -42,6 +43,7 @@ public class WhenAddingServicesToTheContainer
     [TestCase(typeof(EmployerUrlHelperConfiguration))]
     [TestCase(typeof(AccountApiConfiguration))]
     [TestCase(typeof(ApprovalsApiClientConfiguration))]
+    [TestCase(typeof(GovUkOidcConfiguration))]
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_Configuration(Type toResolve)
     {
         RunTestForType(new TestType(toResolve.Name, toResolve));
