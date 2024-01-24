@@ -28,8 +28,6 @@
             <input type="hidden" asp-for="TransferReceiverName" />
             <input type="hidden" asp-for="TransferApprovalStatus" />
 
-            @Html.AntiForgeryToken()
-
             <h2 class="govuk-heading-m">What next?</h2>
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.SelectedOption,  "govuk-form-group--error")">
