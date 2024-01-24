@@ -4,14 +4,8 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using SFA.DAS.EmployerCommitmentsV2.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
-using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.GovUK.Auth.AppStart;
 using SFA.DAS.GovUK.Auth.Authentication;
@@ -22,30 +16,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 
 public static class AuthenticationServiceRegistrations
 {
-    public static IServiceCollection AddAuthorizationServices(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddSingleton<CommitmentsAuthorisationHandler>();
-        services.AddSingleton<ICommitmentsAuthorisationHandler, CommitmentsAuthorisationHandler>();
-        services.AddTransient<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactory>();
-        services.AddSingleton(serviceProvider => serviceProvider.GetService<ICommitmentPermissionsApiClientFactory>().CreateClient());
-
-        services.AddSingleton<IEmployerAccountAuthorisationHandler, EmployerAccountAuthorisationHandler>();
-
-        services.AddSingleton<IAuthorizationHandler, EmployerAccountAllRolesAuthorizationHandler>();
-        services.AddSingleton<IAuthorizationHandler, CommitmentAccessApprenticeshipAuthorizationHandler>();
-        services.AddSingleton<IAuthorizationHandler, CommitmentAccessCohortAuthorizationHandler>();
-
-        services.AddTransient<IAuthorizationContext, AuthorizationContext>();
-        services.AddSingleton<IAuthorizationContextProvider, AuthorizationContextProvider>();
-
-        var employerCommitmentsV2Configuration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
-            .Get<EmployerCommitmentsV2Configuration>();
-
-        AddAuthorizationPolicies(services, employerCommitmentsV2Configuration.UseGovSignIn);
-
-        return services;
-    }
-
     public static IServiceCollection AddDasEmployerAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         var commitmentsConfiguration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
@@ -126,43 +96,5 @@ public static class AuthenticationServiceRegistrations
                     return Task.CompletedTask;
                 };
             });
-    }
-
-    private static void AddAuthorizationPolicies(IServiceCollection services, bool useGovSignIn)
-    {
-        services.AddAuthorization(options =>
-        {
-            if (useGovSignIn)
-            {
-                options.AddPolicy(PolicyNames.HasActiveAccount, policy =>
-                {
-                    policy.Requirements.Add(new AccountActiveRequirement());
-                    policy.Requirements.Add(new UserIsInAccountRequirement());
-                    policy.RequireAuthenticatedUser();
-                });
-            }
-
-            options.AddPolicy(PolicyNames.HasEmployerViewerTransactorOwnerAccount, policy =>
-            {
-                policy.RequireClaim(EmployerClaims.AccountsClaimsTypeIdentifier);
-                policy.Requirements.Add(new AccountActiveRequirement());
-                policy.Requirements.Add(new EmployerAccountAllRolesRequirement());
-                policy.RequireAuthenticatedUser();
-            });
-
-            options.AddPolicy(PolicyNames.AccessApprenticeship, policy =>
-            {
-                policy.Requirements.Add(new AccountActiveRequirement());
-                policy.Requirements.Add(new AccessApprenticeshipRequirement());
-                policy.RequireAuthenticatedUser();
-            });
-
-            options.AddPolicy(PolicyNames.AccessCohort, policy =>
-            {
-                policy.Requirements.Add(new AccountActiveRequirement());
-                policy.Requirements.Add(new AccessCohortRequirement());
-                policy.RequireAuthenticatedUser();
-            });
-        });
     }
 }
