@@ -128,6 +128,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     IsOnFlexiPaymentPilot = response.Apprenticeship.IsOnFlexiPaymentPilot,
                     PendingPriceChange = Map(response.PendingPriceChange),
                     PendingPriceChangeUrl = response.PendingPriceChange != null ? _urlBuilder.ApprenticeshipsLink("ViewPendingPriceChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
+                    AmendPriceUrl = response.PendingPriceChange == null ? _urlBuilder.ApprenticeshipsLink("CreatePendingPriceChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
                 };
 
                 return result;

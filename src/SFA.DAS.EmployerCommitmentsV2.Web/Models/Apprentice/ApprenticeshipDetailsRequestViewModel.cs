@@ -90,6 +90,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public PendingPriceChange PendingPriceChange { get; set; }
         public bool HasPendingPriceChange => PendingPriceChange != null;
         public string PendingPriceChangeUrl { get; set; }
+        public string AmendPriceUrl { get; set; }
 
         public ActionRequiredBanner GetActionRequiredBanners()
         {
