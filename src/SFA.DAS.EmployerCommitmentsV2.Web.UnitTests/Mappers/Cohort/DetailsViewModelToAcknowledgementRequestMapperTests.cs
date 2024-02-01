@@ -5,6 +5,7 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using System.Threading.Tasks;
+using AutoFixture;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 
@@ -19,6 +20,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         private PostCohortDetailsRequest _apiRequestBody;
         private long _apiRequestAccountId;
         private long _apiRequestCohortId;
+        private readonly Fixture _autoFixture = new();
 
         [SetUp]
         public void Setup()
@@ -42,10 +44,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public async Task Cohort_Approval_Is_Submitted_Correctly()
         {
-            var request = new DetailsViewModel
-            {
-                Selection = CohortDetailsOptions.Approve
-            };
+            var request = _autoFixture.Build<DetailsViewModel>()
+                .With(x => x.Selection, CohortDetailsOptions.Approve)
+                .Create();
 
             await _mapper.Map(request);
 
@@ -58,10 +59,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public async Task Cohort_Send_Is_Submitted_Correctly()
         {
-            var request = new DetailsViewModel
-            {
-                Selection = CohortDetailsOptions.Send
-            };
+            var request = _autoFixture.Build<DetailsViewModel>()
+                .With(x => x.Selection, CohortDetailsOptions.Send)
+                .Create();
 
             await _mapper.Map(request);
 
