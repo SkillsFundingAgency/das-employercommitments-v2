@@ -234,6 +234,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         }
 
         [Test]
+        public async Task FundingBandCapsAreMappedCorrectlyForPilotApprenticeships()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture();
+            var result = await fixture.Map();
+
+            foreach (var draftApprenticeship in fixture.DraftApprenticeshipsResponse.DraftApprenticeships.Where(x => x.IsOnFlexiPaymentPilot.GetValueOrDefault() && x.StartDate == fixture.DefaultStartDate))
+            {
+                var draftApprenticeshipResult =
+                    result.Courses.SelectMany(c => c.DraftApprenticeships).Single(x => x.Id == draftApprenticeship.Id);
+
+                Assert.AreEqual(1000, draftApprenticeshipResult.FundingBandCap);
+            }
+        }
+
+        [Test]
         public async Task Then_Funding_Cap_Is_Null_When_No_Course_Found()
         {
             var fixture = new DetailsViewModelMapperTestsFixture().SetNoCourse();
@@ -991,6 +1006,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             draftApprenticeship.StartDate = startDate;
             draftApprenticeship.OriginalStartDate = originalStartDate;
             draftApprenticeship.DeliveryModel = dm;
+            draftApprenticeship.ActualStartDate = startDate;
         }
 
         public DetailsViewModelMapperTestsFixture SetIsAgreementSigned(bool isAgreementSigned)
