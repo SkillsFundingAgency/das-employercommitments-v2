@@ -236,7 +236,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
         [Test]
         public async Task FundingBandCapsAreMappedCorrectlyForPilotApprenticeships()
         {
-            var fixture = new DetailsViewModelMapperTestsFixture();
+            var fixture = new DetailsViewModelMapperTestsFixture().SetOnlyActualStartDateToHaveValidFundingBandCap();
             var result = await fixture.Map();
 
             foreach (var draftApprenticeship in fixture.DraftApprenticeshipsResponse.DraftApprenticeships.Where(x => x.IsOnFlexiPaymentPilot.GetValueOrDefault() && x.StartDate == fixture.DefaultStartDate))
@@ -1074,6 +1074,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort
             DraftApprenticeshipsResponse.DraftApprenticeships = DraftApprenticeshipsResponse.DraftApprenticeships.Select(c =>
             {
                 c.CourseCode = "";
+                return c;
+            }).ToList();
+            return this;
+        }
+
+        public DetailsViewModelMapperTestsFixture SetOnlyActualStartDateToHaveValidFundingBandCap()
+        {
+            DraftApprenticeshipsResponse.DraftApprenticeships = DraftApprenticeshipsResponse.DraftApprenticeships.Select(c =>
+            {
+                c.StartDate = c.StartDate.GetValueOrDefault().AddMonths(2);
                 return c;
             }).ToList();
             return this;
