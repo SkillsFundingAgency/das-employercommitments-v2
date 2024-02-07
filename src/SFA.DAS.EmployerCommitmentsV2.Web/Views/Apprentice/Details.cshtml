@@ -24,7 +24,12 @@
         {
             <partial name="DetailsPartials/_PriceChangeRejectedBanner" />
         }
-        
+    
+        @if (Model.HasPendingPriceChange)
+        {
+            <partial name="DetailsPartials/_PendingPriceChangeBanner" />
+        }
+
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
 
         @if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
@@ -377,27 +382,31 @@
 
         @if (Model.HasPendingPriceChange)
         {
-            <div class="govuk-grid-row govuk-!-margin-bottom-2">
-                <div class="govuk-grid-column-two-thirds">
-                    <h2 class="govuk-heading-m">Price change requested</h2>
+            <div class="govuk-inset-text das-inset-text--highlight">
+                <div class="govuk-grid-row govuk-!-margin-bottom-2">
+                    <div class="govuk-grid-column-two-thirds">
+                        <h2 class="govuk-heading-m">Price change requested</h2>
+                        <strong class="govuk-tag govuk-tag">Pending</strong>
+                    </div>
                 </div>
-            </div>
 
-            <table class="govuk-table">
-                <tbody class="govuk-table__body">
+                <table class="govuk-table">
+                    <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header"></th>
                         <th class="govuk-table__header">Current</th>
                         <th class="govuk-table__header">Requested</th>
                     </tr>
-                    <tr class="govuk-table__row">
+                    <tr class="govuk-table__row" id="pendingPriceChangeTrainingPriceRow">
                         <th scope="row" class="govuk-table__header">Total price</th>
                         <td class="govuk-table__cell" id="priceChangeCurrentTotalPrice">@Model.Cost.FormatCost()</td>
                         <td class="govuk-table__cell" id="priceChangeRequestedTotalPrice">@Model.PendingPriceChange.Cost.FormatCost()</td>
                     </tr>
-                </tbody>
-            </table>
-            <a id="linkViewPendingPrice" href="@Model.PendingPriceChangeUrl" class="govuk-link">Review price change</a>
+                    </tbody>
+                </table>
+                <a id="linkViewPendingPrice" href="@Model.PendingPriceChangeUrl" class="govuk-link">Review price change</a>
+            </div>
+            <br/><br />
         }
 
         @if (Model.RecognisePriorLearning != null)
