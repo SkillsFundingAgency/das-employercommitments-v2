@@ -17,8 +17,7 @@ using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.D
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
-[Authorize(Policy = nameof(PolicyNames.HasEmployerViewerTransactorOwnerAccount))]
-[Authorize(Policy = nameof(PolicyNames.AccessCohort))]
+[Authorize(Policy = nameof(PolicyNames.AccessDraftApprenticeship))]
 [Route("{AccountHashedId}/unapproved/{cohortReference}/apprentices")]
 public class DraftApprenticeshipController : Controller
 {

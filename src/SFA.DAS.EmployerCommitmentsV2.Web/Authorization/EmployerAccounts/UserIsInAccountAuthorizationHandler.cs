@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Requirements;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
 

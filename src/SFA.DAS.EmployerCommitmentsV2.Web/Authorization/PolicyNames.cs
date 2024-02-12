@@ -6,4 +6,5 @@ public static class PolicyNames
     public static string HasEmployerViewerTransactorOwnerAccount => nameof(HasEmployerViewerTransactorOwnerAccount);
     public static string AccessCohort => nameof(AccessCohort);
     public static string AccessApprenticeship => nameof(AccessApprenticeship);
+    public static string AccessDraftApprenticeship => nameof(AccessDraftApprenticeship);
 }

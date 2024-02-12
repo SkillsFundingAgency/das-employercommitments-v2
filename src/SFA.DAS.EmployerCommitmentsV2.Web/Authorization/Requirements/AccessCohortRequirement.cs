@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Requirements;
 
 public class AccessCohortRequirement : IAuthorizationRequirement
 {

@@ -7,7 +7,6 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;

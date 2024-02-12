@@ -7,6 +7,7 @@ using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
+using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Requirements;
 using SFA.DAS.GovUK.Auth.Authentication;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
@@ -22,7 +23,7 @@ public static class AuthorizationServiceRegistrations
 
         services.AddSingleton<IEmployerAccountAuthorisationHandler, EmployerAccountAuthorisationHandler>();
 
-        services.AddSingleton<IAuthorizationHandler, EmployerAccountAllRolesAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, EmployerViewerTransactorOwnerAccountAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessApprenticeshipAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessCohortAuthorizationHandler>();
 
@@ -55,7 +56,7 @@ public static class AuthorizationServiceRegistrations
             {
                 policy.RequireClaim(EmployerClaims.AccountsClaimsTypeIdentifier);
                 policy.Requirements.Add(new AccountActiveRequirement());
-                policy.Requirements.Add(new EmployerAccountAllRolesRequirement());
+                policy.Requirements.Add(new EmployerViewerTransactorOwnerAccountRequirement());
                 policy.RequireAuthenticatedUser();
             });
 
@@ -63,6 +64,13 @@ public static class AuthorizationServiceRegistrations
             {
                 policy.Requirements.Add(new AccountActiveRequirement());
                 policy.Requirements.Add(new AccessApprenticeshipRequirement());
+                policy.RequireAuthenticatedUser();
+            });
+
+            options.AddPolicy(PolicyNames.AccessDraftApprenticeship, policy =>
+            {
+                policy.Requirements.Add(new AccountActiveRequirement());
+                policy.Requirements.Add(new AccessDraftApprenticeshipRequirement());
                 policy.RequireAuthenticatedUser();
             });
 
