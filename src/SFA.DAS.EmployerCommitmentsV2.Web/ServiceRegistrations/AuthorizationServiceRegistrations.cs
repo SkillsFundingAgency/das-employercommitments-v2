@@ -26,6 +26,8 @@ public static class AuthorizationServiceRegistrations
         services.AddSingleton<IAuthorizationHandler, EmployerViewerTransactorOwnerAccountAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessApprenticeshipAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessCohortAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, Authorization.Commitments.AccessDraftApprenticeshipAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, Authorization.EmployerAccounts.AccessDraftApprenticeshipAuthorizationHandler>();
 
         services.AddTransient<IAuthorizationContext, AuthorizationContext>();
         services.AddSingleton<IAuthorizationContextProvider, AuthorizationContextProvider>();
