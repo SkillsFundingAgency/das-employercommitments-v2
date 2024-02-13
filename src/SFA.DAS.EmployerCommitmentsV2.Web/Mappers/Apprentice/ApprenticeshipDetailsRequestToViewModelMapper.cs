@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Employer.Shared.UI;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
@@ -21,18 +22,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
         private readonly ICommitmentsApiClient _commitmentsApiClient;
         private readonly IEncodingService _encodingService;
         private readonly ILogger<ApprenticeshipDetailsRequestToViewModelMapper> _logger;
+        private readonly UrlBuilder _urlBuilder;
         private readonly IApprovalsApiClient _approvalsApiClient;
 
         public ApprenticeshipDetailsRequestToViewModelMapper(
             ICommitmentsApiClient commitmentsApiClient,
             IEncodingService encodingService,
             IApprovalsApiClient approvalsApiClient,
-            ILogger<ApprenticeshipDetailsRequestToViewModelMapper> logger)
+            ILogger<ApprenticeshipDetailsRequestToViewModelMapper> logger,
+            UrlBuilder urlBuilder)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _encodingService = encodingService;
             _approvalsApiClient = approvalsApiClient;
             _logger = logger;
+            _urlBuilder = urlBuilder;
         }
 
         public async Task<ApprenticeshipDetailsRequestViewModel> Map(ApprenticeshipDetailsRequest source)
@@ -121,7 +125,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                     IsDurationReducedByRpl = response.Apprenticeship.IsDurationReducedByRpl,
                     HasPendingOverlappingTrainingDateRequest = hasPendingoverlappingTrainingDateRequest,
                     HasMultipleDeliveryModelOptions = response.HasMultipleDeliveryModelOptions,
-                    IsOnFlexiPaymentPilot = response.Apprenticeship.IsOnFlexiPaymentPilot
+                    IsOnFlexiPaymentPilot = response.Apprenticeship.IsOnFlexiPaymentPilot,
+                    PendingPriceChange = Map(response.PendingPriceChange),
+                    PendingPriceChangeUrl = response.PendingPriceChange != null ? _urlBuilder.ApprenticeshipsLink("ViewPendingPriceChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
                 };
 
                 return result;
@@ -131,6 +137,21 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
                 _logger.LogError(e, $"Error mapping for accountId {source.AccountHashedId}  and apprenticeship {source.ApprenticeshipHashedId} to ApprenticeshipDetailsRequestViewModel");
                 throw;
             }
+        }
+
+        private PendingPriceChange Map(GetManageApprenticeshipDetailsResponse.PendingPriceChangeDetails priceChangeDetails)
+        {
+            if (priceChangeDetails == null)
+            {
+                return null;
+            }
+
+            return new PendingPriceChange
+            {
+                Cost = priceChangeDetails.Cost,
+                EndPointAssessmentPrice = priceChangeDetails.EndPointAssessmentPrice,
+                TrainingPrice = priceChangeDetails.TrainingPrice
+            };
         }
 
         private async Task<TrainingProgramme> GetTrainingProgramme(string courseCode, string standardUId)

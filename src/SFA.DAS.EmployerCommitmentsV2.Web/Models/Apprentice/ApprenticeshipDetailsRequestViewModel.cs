@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 {
@@ -86,6 +87,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public bool HasMultipleDeliveryModelOptions { get; set; }
         public bool? IsOnFlexiPaymentPilot { get; set; }
 
+        public PendingPriceChange PendingPriceChange { get; set; }
+        public bool HasPendingPriceChange => PendingPriceChange != null;
+        public string PendingPriceChangeUrl { get; set; }
+        public bool ShowPriceChangeRejected { get; set; }
+
         public ActionRequiredBanner GetActionRequiredBanners()
         {
             var actionRequiredBanner = ActionRequiredBanner.None;
@@ -165,5 +171,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public DateTime ToDate { get; set; }
         public string HashedApprenticeshipId { get; set; }
         public bool ShowLink { get; set; }
+    }
+
+    public class PendingPriceChange
+    {
+        public decimal Cost { get; set; }
+        public decimal? TrainingPrice { get; set; }
+        public decimal? EndPointAssessmentPrice { get; set; }
     }
 }

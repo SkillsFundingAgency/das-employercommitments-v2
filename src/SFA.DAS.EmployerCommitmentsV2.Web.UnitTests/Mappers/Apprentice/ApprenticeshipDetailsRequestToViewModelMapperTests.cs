@@ -17,6 +17,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentAssertions;
+using SFA.DAS.Employer.Shared.UI;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetPriceEpisodeResponse;
@@ -146,7 +148,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .ReturnsAsync(GetManageApprenticeshipDetailsResponse);
 
 
-            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
         }
 
         [Test]
@@ -634,7 +636,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             };
 
 
-            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
 
             //Act
             var result = await _mapper.Map(_request);
@@ -667,7 +669,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _apprenticeshipDetailsResponse = autoFixture.Create<GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse>();
 
-            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
 
             // Act
             var result = await _mapper.Map(_request);
@@ -752,7 +754,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _overlappingTrainingDateRequestResponce = autoFixture.Create<GetManageApprenticeshipDetailsResponse.GetApprenticeshipOverlappingTrainingDateResponse>();
             _overlappingTrainingDateRequestResponce.ApprenticeshipOverlappingTrainingDates.First().Status = OverlappingTrainingDateRequestStatus.Pending;
 
-            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
 
             //Act
             var result = await _mapper.Map(_request);
@@ -767,7 +769,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Arrange
             _overlappingTrainingDateRequestResponce = null;
 
-            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
 
             //Act
             var result = await _mapper.Map(_request);
@@ -786,7 +788,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 request.Status = OverlappingTrainingDateRequestStatus.Rejected;
             }
 
-            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
 
             //Act
             var result = await _mapper.Map(_request);
@@ -835,6 +837,32 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.IsOnFlexiPaymentPilot, result.IsOnFlexiPaymentPilot);
+        }
+
+        [Test]
+        public async Task And_PriceChangeDetailsIsNull_Then_PriceChangeDetailsNotReturned()
+        {
+            GetManageApprenticeshipDetailsResponse.PendingPriceChange = null;
+
+            var result = await _mapper.Map(_request);
+
+            result.PendingPriceChange.Should().BeNull();
+        }
+
+        [Test]
+        public async Task And_PriceChangeDetailsArePopulated_Then_PriceChangeDetailsReturned()
+        {
+            var result = await _mapper.Map(_request);
+
+            Assert.IsNotNull(result.PendingPriceChange);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.Cost, result.PendingPriceChange.Cost);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EndPointAssessmentPrice, result.PendingPriceChange.EndPointAssessmentPrice);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.TrainingPrice, result.PendingPriceChange.TrainingPrice);
+        }
+
+        private UrlBuilder GetMockUrlBuilder()
+        {
+            return new UrlBuilder("unit tests");
         }
     }
 }
