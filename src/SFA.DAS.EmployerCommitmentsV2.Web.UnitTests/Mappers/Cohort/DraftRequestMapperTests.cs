@@ -27,7 +27,7 @@ public class WhenMappingDraftRequestToViewModel
         var fixture = new WhenMappingDraftRequestToViewModelFixture();
         fixture.Map();
 
-        fixture.Verify_CohortRefrence_Is_Mapped();
+        fixture.Verify_CohortReference_Is_Mapped();
     }
 
     [Test]
@@ -115,7 +115,7 @@ public class WhenMappingDraftRequestToViewModelFixture
         });
     }
 
-    public void Verify_CohortRefrence_Is_Mapped()
+    public void Verify_CohortReference_Is_Mapped()
     {
         EncodingService.Verify(x => x.Encode(It.IsAny<long>(), EncodingType.CohortReference), Times.Exactly(2));
 
@@ -158,7 +158,7 @@ public class WhenMappingDraftRequestToViewModelFixture
         Assert.That(DraftViewModel.AccountHashedId, Is.EqualTo(AccountHashedId));
     }
 
-    private GetCohortsResponse CreateGetCohortsResponse()
+    private static GetCohortsResponse CreateGetCohortsResponse()
     {
         IEnumerable<CohortSummary> cohorts = new List<CohortSummary>
         {

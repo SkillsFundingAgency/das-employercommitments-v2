@@ -47,7 +47,7 @@ public class Startup
             .AddCommitmentPermissionsApiClient()
             .AddDasHealthChecks()
             .AddDasMaMenuConfiguration(_configuration)
-            .AddDasMvc(_configuration)
+            .AddDasMvc()
             .AddUrlHelper()
             .AddEmployerUrlHelper()
             .AddMemoryCache()

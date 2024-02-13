@@ -4,7 +4,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
 public class UpdateDraftApprenticeshipApimRequest : ApimSaveDataRequest
 {
-    public Party? RequestingParty => Party.Employer;
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }

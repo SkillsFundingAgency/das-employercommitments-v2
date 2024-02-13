@@ -10,23 +10,18 @@ public class StubEmployerAccountsApiClient : IEmployerAccountsApiClient
 
     public StubEmployerAccountsApiClient()
     {
-        _httpClient = new HttpClient { BaseAddress = new System.Uri("http://localhost:3999/accounts-api/") };
+        _httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:3999/accounts-api/") };
     }
 
     public async Task<bool> IsUserInRole(IsUserInRoleRequest roleRequest, CancellationToken cancellationToken)
     {
         var user = await GetUser(roleRequest.AccountId, roleRequest.UserRef, cancellationToken).ConfigureAwait(false); ;
-        if (user == null) return false;
-
-        foreach (var role in user.Roles)
+        if (user == null)
         {
-            if (roleRequest.Roles.Contains(role))
-            {
-                return true;
-            }
+            return false;
         }
 
-        return false;
+        return user.Roles.Any(role => roleRequest.Roles.Contains(role));
     }
 
     public async Task<bool> IsUserInAnyRole(IsUserInAnyRoleRequest roleRequest, CancellationToken cancellationToken)
@@ -35,7 +30,7 @@ public class StubEmployerAccountsApiClient : IEmployerAccountsApiClient
         return user != null && user.Roles.Any();
     }
 
-    public Task Ping(CancellationToken cancellationToken = new CancellationToken())
+    public Task Ping(CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
@@ -55,7 +50,7 @@ public class StubEmployerAccountsApiClient : IEmployerAccountsApiClient
             // so we can run this locally, the stub can be run locally, but the ROI isn't worthwhile considering we not generaLLY interested in permissions
             return new List<UserDto> { new UserDto { UserRef = currentUserRef, Roles = new HashSet<UserRole> { UserRole.Owner } } };
         }
-        var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         var items = JsonConvert.DeserializeObject<List<UserDto>>(content);
         return items;
     }

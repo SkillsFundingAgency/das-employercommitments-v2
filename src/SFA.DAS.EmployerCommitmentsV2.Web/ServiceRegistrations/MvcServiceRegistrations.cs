@@ -14,13 +14,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 
 public static class MvcServiceRegistrations
 {
-    public static IServiceCollection AddDasMvc(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDasMvc(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
         services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
-        var commitmentsConfiguration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
-            .Get<EmployerCommitmentsV2Configuration>();
 
         services.AddMvc(options =>
             {

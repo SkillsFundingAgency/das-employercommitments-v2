@@ -4,7 +4,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
 public class CreateCohortApimRequest : ApimSaveDataRequest
 {
-    public Party? RequestingParty => Party.Employer;
     public long AccountId { get; set; }
     public long AccountLegalEntityId { get; set; }
     public long ProviderId { get; set; }

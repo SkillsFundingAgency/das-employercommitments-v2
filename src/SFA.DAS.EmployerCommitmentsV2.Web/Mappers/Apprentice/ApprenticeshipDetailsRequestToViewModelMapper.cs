@@ -121,7 +121,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
         }
         catch (Exception e)
         {
-            _logger.LogError(e, $"Error mapping for accountId {source.AccountHashedId}  and apprenticeship {source.ApprenticeshipHashedId} to ApprenticeshipDetailsRequestViewModel");
+            _logger.LogError(e, "Error mapping for accountId {AccountHashedId}  and apprenticeship {ApprenticeshipHashedId} to ApprenticeshipDetailsRequestViewModel", source.AccountHashedId, source.ApprenticeshipHashedId);
             throw;
         }
     }

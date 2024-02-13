@@ -529,8 +529,11 @@ public class DetailsViewModelMapperTests
             .SetupChangeOfPartyScenario()
             .Map();
 
-        Assert.That(result.Courses.First().DraftApprenticeships.First().FundingBandCap, Is.EqualTo(1000));
-        Assert.That(result.Courses.First().DraftApprenticeships.First().ExceedsFundingBandCap, Is.EqualTo(true));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Courses.First().DraftApprenticeships.First().FundingBandCap, Is.EqualTo(1000));
+            Assert.That(result.Courses.First().DraftApprenticeships.First().ExceedsFundingBandCap, Is.EqualTo(true));
+        });
     }
 
     [Test]

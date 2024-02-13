@@ -18,7 +18,7 @@ public class SelectedLegalEntityToSignedAgreementViewModelMapper : IMapper<Selec
     {
         var legalEntities = await _employerAccountsService.GetLegalEntitiesForAccount(source.AccountHashedId);
 
-        var legalEntity = legalEntities.FirstOrDefault(x => x.Id.Equals(source.LegalEntityId));
+        var legalEntity = legalEntities.Find(x => x.Id.Equals(source.LegalEntityId));
 
         if (legalEntity == null)
         {

@@ -29,8 +29,8 @@ public class ApprovalsApiClientFactory : IApprovalsApiClientFactory
             .WithLogging(_loggerFactory)
             .Build();
 
-        httpClient.BaseAddress = !_configuration.ApiBaseUrl.EndsWith("/") 
-            ? new Uri(_configuration.ApiBaseUrl + "/") 
+        httpClient.BaseAddress = !_configuration.ApiBaseUrl.EndsWith('/') 
+            ? new Uri($"{_configuration.ApiBaseUrl}/") 
             : new Uri(_configuration.ApiBaseUrl);
 
         return new ApprovalsApiClient(new OuterApiClient(httpClient, _configuration, _loggerFactory.CreateLogger<OuterApiClient>()));

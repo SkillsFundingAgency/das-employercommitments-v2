@@ -125,7 +125,7 @@ public class WhenAddingServicesToTheContainer
         services.AddCommitmentPermissionsApiClient();
         services.AddApplicationServices(employerCommitmentsV2Configuration);
         services.AddModelMappings();
-        services.AddDasMvc(configuration);
+        services.AddDasMvc();
 
         services.AddTransient<IUrlHelper, StubUrlHelper>();
 

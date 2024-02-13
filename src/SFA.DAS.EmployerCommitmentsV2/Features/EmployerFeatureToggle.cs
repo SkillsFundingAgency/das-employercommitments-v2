@@ -26,9 +26,8 @@ public class EmployerFeatureToggle : FeatureToggle
             return false;
         }
 
-        var wildcards = EmailWhitelist.Where(s => s.Contains("*"));
+        var wildcards = EmailWhitelist.Where(s => s.Contains('*')).ToList();
         var emails = EmailWhitelist.Except(wildcards);
-
 
         return emails.Any(email => email.Equals(userEmail, StringComparison.InvariantCultureIgnoreCase))
                || wildcards.Any(pattern => Regex.IsMatch(userEmail, pattern, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(10)));
