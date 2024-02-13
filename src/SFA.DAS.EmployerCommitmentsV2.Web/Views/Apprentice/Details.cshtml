@@ -369,7 +369,7 @@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Total agreed apprenticeship price</th>
                         <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost()</td>
-                        <td class="govuk-table__cell"></td>
+                        <td class="govuk-table__cell"><a id="linkChangeApprenticeshipPrice" href="@Model.PriceChangeUrl" class="govuk-link">Change</a></td>
                     </tr>
                 }
                 <tr class="govuk-table__row">
