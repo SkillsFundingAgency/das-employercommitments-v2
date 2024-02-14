@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
@@ -49,6 +50,8 @@ public class CohortController : Controller
     public async Task<IActionResult> Details(DetailsRequest request)
     {
         var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
+        
+        _logger.LogInformation("Details ViewModel:'{ViewModel}'.", JsonConvert.SerializeObject(viewModel));
         
         StoreViewEmployerAgreementModelState(
             new ViewEmployerAgreementModel {
