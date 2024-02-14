@@ -25,6 +25,11 @@
             <partial name="DetailsPartials/_PriceChangeRejectedBanner" />
         }
     
+        @if (Model.ShowPriceChangeApproved)
+        {
+            <partial name="DetailsPartials/_PriceChangeApprovedBanner" />
+        }
+        
         @if (Model.HasPendingPriceChange)
         {
             <partial name="DetailsPartials/_PendingPriceChangeBanner" />
