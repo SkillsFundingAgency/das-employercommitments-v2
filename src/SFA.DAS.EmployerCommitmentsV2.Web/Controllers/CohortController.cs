@@ -51,8 +51,6 @@ public class CohortController : Controller
     {
         var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
         
-        _logger.LogInformation("Details ViewModel:'{ViewModel}'.", JsonConvert.SerializeObject(viewModel));
-        
         StoreViewEmployerAgreementModelState(
             new ViewEmployerAgreementModel {
                 AccountHashedId = viewModel.AccountHashedId, 
