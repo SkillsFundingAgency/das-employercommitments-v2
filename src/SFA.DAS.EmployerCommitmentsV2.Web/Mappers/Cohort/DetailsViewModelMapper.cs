@@ -28,8 +28,6 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
 
     public async Task<DetailsViewModel> Map(DetailsRequest source)
     {
-        GetCohortResponse cohort;
-
         var cohortTask = _commitmentsApiClient.GetCohort(source.CohortId);
         var cohortDetailsTask = _approvalsApiClient.GetCohortDetails(source.AccountId, source.CohortId);
         var draftApprenticeshipsTask = _commitmentsApiClient.GetDraftApprenticeships(source.CohortId);
@@ -37,7 +35,7 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
 
         await Task.WhenAll(cohortTask, draftApprenticeshipsTask, emailOverlapsTask, cohortDetailsTask);
 
-        cohort = await cohortTask;
+        var cohort = await cohortTask;
         var cohortDetails = cohortDetailsTask.Result;
         var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
         var emailOverlaps = (await emailOverlapsTask).ApprenticeshipEmailOverlaps.ToList();
