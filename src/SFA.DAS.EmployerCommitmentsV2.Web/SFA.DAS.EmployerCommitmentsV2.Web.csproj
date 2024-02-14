@@ -25,7 +25,7 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.27" />
     
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.2.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.2.0" />
@@ -34,8 +34,8 @@
     <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.76" />
     
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
-    <PackageReference Include="NLog.Schema" Version="5.2.7" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.7" />
+    <PackageReference Include="NLog.Schema" Version="5.2.8" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.8" />
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84" />
     <PackageReference Include="SFA.DAS.Employer.Shared.UI" Version="17.1.79" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />
@@ -46,8 +46,8 @@
     <PackageReference Include="WebEssentials.AspNetCore.CdnTagHelpers" Version="1.0.21" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
 
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.26" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.25" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.27" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.27" />
     
   </ItemGroup>
 
