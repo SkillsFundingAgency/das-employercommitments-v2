@@ -169,4 +169,11 @@ public class WhenIMapDraftApprenticeshipToUpdateRequest
         var result = await _act();
         Assert.That(result.ActualStartDate, Is.EqualTo(_source.ActualStartDate));
     }
+    
+    [Test]
+    public async Task ThenRequestingPartyIsNotMissing()
+    {
+        var result = await _act();
+        Assert.That(result.RequestingParty, Is.EqualTo(Party.Employer));
+    }
 }

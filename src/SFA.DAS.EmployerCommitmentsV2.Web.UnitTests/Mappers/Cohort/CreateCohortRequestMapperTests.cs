@@ -1,4 +1,5 @@
-﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
+﻿using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
@@ -149,5 +150,11 @@ public class CreateCohortRequestMapperTests
     public void ThenIsOnFlexiPaymentPilotIsMappedCorrectly()
     {
         Assert.That(_result.IsOnFlexiPaymentPilot, Is.EqualTo(_source.IsOnFlexiPaymentPilot));
+    }
+    
+    [Test]
+    public void ThenRequestingPartyIsNotMissing()
+    {
+        Assert.That(_result.RequestingParty, Is.EqualTo(Party.Employer));
     }
 }

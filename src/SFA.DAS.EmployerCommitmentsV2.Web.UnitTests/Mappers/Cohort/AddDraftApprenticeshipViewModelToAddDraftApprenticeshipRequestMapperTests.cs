@@ -1,4 +1,5 @@
 using FluentAssertions;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
@@ -30,6 +31,7 @@ public class AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMappe
         request.EndDate.Should().Be(fixture.ViewModel.EndDate.Date);
         request.OriginatorReference.Should().Be(fixture.ViewModel.Reference);
         request.ReservationId.Should().Be(fixture.ViewModel.ReservationId);
+        request.RequestingParty.Should().Be(Party.Employer);
     }
 }
 
