@@ -89,6 +89,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 
         public PendingPriceChange PendingPriceChange { get; set; }
         public bool HasPendingPriceChange => PendingPriceChange != null;
+        public bool HasPendingProviderInitiatedPriceChange => PendingPriceChange?.ProviderApprovedDate != null;
         public string PendingPriceChangeUrl { get; set; }
         public bool ShowPriceChangeRejected { get; set; }
         public bool ShowPriceChangeRequestSent { get; set; }
@@ -179,5 +180,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public decimal Cost { get; set; }
         public decimal? TrainingPrice { get; set; }
         public decimal? EndPointAssessmentPrice { get; set; }
+        public DateTime? ProviderApprovedDate { get; set; }
+        public DateTime? EmployerApprovedDate { get; set; }
     }
 }

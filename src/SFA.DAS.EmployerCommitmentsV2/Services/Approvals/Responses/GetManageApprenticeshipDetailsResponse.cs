@@ -186,6 +186,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
             public decimal Cost { get; set; }
             public decimal? TrainingPrice { get; set; }
             public decimal? EndPointAssessmentPrice { get; set; }
+            public DateTime? ProviderApprovedDate { get; set; }
+            public DateTime? EmployerApprovedDate { get; set; }
         }
     }
 }
