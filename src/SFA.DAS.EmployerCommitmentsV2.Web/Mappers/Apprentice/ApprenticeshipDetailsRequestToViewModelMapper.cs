@@ -150,7 +150,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
             {
                 Cost = priceChangeDetails.Cost,
                 EndPointAssessmentPrice = priceChangeDetails.EndPointAssessmentPrice,
-                TrainingPrice = priceChangeDetails.TrainingPrice
+                TrainingPrice = priceChangeDetails.TrainingPrice,
+                ProviderApprovedDate = priceChangeDetails.ProviderApprovedDate,
+                EmployerApprovedDate = priceChangeDetails.EmployerApprovedDate
             };
         }
 
