@@ -36,10 +36,7 @@ public class ApprenticeController : Controller
     private const string ApprenticeEditStopDate = "New stop date confirmed";
     private const string ApprenticeEndDateUpdatedOnCompletedRecord = "New planned training finish date confirmed";
     private const string ChangesApprovedMessage = "Changes approved";
-
-    private const string AlertDetailsWhenApproved =
-        "An alert has been sent to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service.";
-
+    private const string AlertDetailsWhenApproved = "An alert has been sent to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service.";
     private const string ChangesRejectedMessage = "Changes rejected";
     private const string ChangesUndoneMessage = "Changes undone";
     private const string ViewModelForEdit = "ViewModelForEdit";
@@ -797,7 +794,7 @@ public class ApprenticeController : Controller
 
         TempData.Put(ViewModelForEdit, draft);
 
-       return RedirectToAction(nameof(SelectDeliveryModelForEdit), new { model.ApprenticeshipHashedId, model.AccountHashedId });
+        return RedirectToAction(nameof(SelectDeliveryModelForEdit), new { model.ApprenticeshipHashedId, model.AccountHashedId });
     }
 
     [HttpGet]
@@ -826,14 +823,15 @@ public class ApprenticeController : Controller
     {
         if (model.DeliveryModel == null)
         {
-            throw new CommitmentsApiModelException(new List<ErrorDetail>
-                { new ErrorDetail("DeliveryModel", "You must select the apprenticeship delivery model") });
+            throw new CommitmentsApiModelException(new List<ErrorDetail> { new("DeliveryModel", "You must select the apprenticeship delivery model") });
         }
 
         var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
         draft.DeliveryModel = (DeliveryModel)model.DeliveryModel.Value;
+        
         TempData.Put(ViewModelForEdit, draft);
-        return RedirectToAction("EditApprenticeship");
+        
+        return RedirectToAction(nameof(EditApprenticeship), new { apprenticeshipHashedId = draft.HashedApprenticeshipId, draft.AccountHashedId });
     }
 
     [HttpGet]
