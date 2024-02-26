@@ -93,6 +93,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
         public string PriceChangeUrl { get; set; }
         public string PendingPriceChangeUrl { get; set; }
         public bool ShowPriceChangeRejected { get; set; }
+        public bool ShowPriceChangeApproved { get; set; }
         public bool ShowPriceChangeRequestSent { get; set; }
 
         public ActionRequiredBanner GetActionRequiredBanners()
