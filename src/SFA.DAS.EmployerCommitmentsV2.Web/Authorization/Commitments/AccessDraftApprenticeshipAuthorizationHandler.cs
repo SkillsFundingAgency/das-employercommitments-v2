@@ -8,7 +8,7 @@ public class AccessDraftApprenticeshipAuthorizationHandler(ICommitmentsAuthorisa
 {
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AccessDraftApprenticeshipRequirement requirement)
     {
-        if (!await handler.CanAccessCohort())
+        if (!await handler.CanAccessApprenticeship())
         {
             return;
         }
