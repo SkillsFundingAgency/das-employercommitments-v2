@@ -992,7 +992,7 @@ public class ApprenticeController : Controller
 
     [HttpGet]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
-    [Route("{apprenticeshipHashedId}/changes/view", Name = RouteNames.ApprenticesViewUpdates)]
+    [Route("{apprenticeshipHashedId}/changes/view", Name = RouteNames.ApprenticeViewUpdates)]
     public async Task<IActionResult> ViewApprenticeshipUpdates(ViewApprenticeshipUpdatesRequest request)
     {
         var viewModel = await _modelMapper.Map<ViewApprenticeshipUpdatesViewModel>(request);

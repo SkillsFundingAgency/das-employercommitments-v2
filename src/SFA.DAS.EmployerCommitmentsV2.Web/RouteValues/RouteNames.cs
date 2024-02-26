@@ -7,7 +7,7 @@ public static class RouteNames
     public const string ApprenticesDownload = "apprentices-download";
     public const string ApprenticeDetail = "apprentice-details";
     public const string ApprenticeEditEndDate = "apprentice-edit-enddate";
-    public const string ApprenticesViewUpdates = "apprenticeship-view-updates";
+    public const string ApprenticeViewUpdates = "apprenticeship-view-updates";
 
     public const string ChangeProviderInform = "change-provider-inform";
     public const string ApprenticeNotStoppedError = "aprentice-not-stopped-error";
