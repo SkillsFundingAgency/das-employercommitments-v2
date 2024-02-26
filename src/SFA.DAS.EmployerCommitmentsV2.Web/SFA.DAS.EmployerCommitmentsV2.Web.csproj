@@ -28,7 +28,6 @@
         <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.2.0"/>
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.2.0"/>
         <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24"/>
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16"/>
         <PackageReference Include="Scrutor" Version="4.2.2"/>
         <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.80"/>
         <PackageReference Include="NLog.Schema" Version="5.2.8"/>
