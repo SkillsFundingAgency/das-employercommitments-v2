@@ -21,10 +21,11 @@
                 </ul>
             </p>
             <p class="govuk-body-s">
-                <a id="view-changes-banner-link" class="govuk-link" href="@Url.Action("ViewApprenticeshipUpdates", new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">View changes</a>
+                <a id="view-changes-banner-link" class="govuk-link" href="@Url.Action("ViewApprenticeshipUpdates", "Apprentice",new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">View changes</a>
             </p>
         </div>
     }
+
     @if (changeToApprenticeshipBanners.HasFlag(ChangeToApprenticeshipBanner.InFlightChangeOfProviderPendingOther))
     {
         <div class="govuk-inset-text govuk-!-margin-top-0">
