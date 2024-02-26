@@ -1,5 +1,6 @@
 ﻿@using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
 
 @{
@@ -26,7 +27,7 @@
             {
                 <p class="govuk-notification-banner__heading">
                     The new training provider has reviewed the change of provider request. You need to review the new details.
-                    <a id="change-of-party-review-changes-link" class="govuk-notification-banner__link" href="@Url.RouteUrl("view-changes")">View changes</a>
+                    <a id="change-of-party-review-changes-link" class="govuk-notification-banner__link" href="@Url.RouteUrl(RouteNames.ViewChanges, new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">View changes</a>
                 </p>
             }
             @if (actionRequiredBanners.HasFlag(ActionRequiredBanner.DataLockChange))
