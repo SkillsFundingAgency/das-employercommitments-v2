@@ -30,9 +30,14 @@
             <partial name="DetailsPartials/_PriceChangeApprovedBanner" />
         }
         
-        @if (Model.HasPendingPriceChange)
+        @if (Model.HasPendingProviderInitiatedPriceChange)
         {
             <partial name="DetailsPartials/_PendingPriceChangeBanner" />
+        }
+    
+        @if (Model.ShowPriceChangeRequestSent)
+        {
+            <partial name="DetailsPartials/_ChangeOfPriceRequestSentBanner" />
         }
 
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>

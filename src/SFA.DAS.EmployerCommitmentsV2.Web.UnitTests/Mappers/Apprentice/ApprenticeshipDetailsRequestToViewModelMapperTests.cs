@@ -858,6 +858,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.Cost, result.PendingPriceChange.Cost);
             Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EndPointAssessmentPrice, result.PendingPriceChange.EndPointAssessmentPrice);
             Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.TrainingPrice, result.PendingPriceChange.TrainingPrice);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.ProviderApprovedDate, result.PendingPriceChange.ProviderApprovedDate);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EmployerApprovedDate, result.PendingPriceChange.EmployerApprovedDate);
         }
 
         private UrlBuilder GetMockUrlBuilder()
