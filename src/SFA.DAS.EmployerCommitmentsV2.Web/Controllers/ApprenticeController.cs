@@ -992,7 +992,7 @@ public class ApprenticeController : Controller
 
     [HttpGet]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
-    [Route("{apprenticeshipHashedId}/changes/view")]
+    [Route("{apprenticeshipHashedId}/changes/view", Name = RouteNames.ApprenticesViewUpdates)]
     public async Task<IActionResult> ViewApprenticeshipUpdates(ViewApprenticeshipUpdatesRequest request)
     {
         var viewModel = await _modelMapper.Map<ViewApprenticeshipUpdatesViewModel>(request);
@@ -1002,8 +1002,7 @@ public class ApprenticeController : Controller
 
     [HttpPost]
     [Route("{apprenticeshipHashedId}/changes/view")]
-    public async Task<IActionResult> ViewApprenticeshipUpdates(
-        [FromServices] IAuthenticationService authenticationService, ViewApprenticeshipUpdatesViewModel viewModel)
+    public async Task<IActionResult> ViewApprenticeshipUpdates([FromServices] IAuthenticationService authenticationService, ViewApprenticeshipUpdatesViewModel viewModel)
     {
         if (viewModel.UndoChanges.Value)
         {
