@@ -129,7 +129,7 @@ public class CohortController : Controller
         if (viewModel.ConfirmDeletion == true)
         {
             await _commitmentsApiClient.DeleteCohort(viewModel.CohortId, authenticationService.UserInfo, CancellationToken.None);
-            return RedirectToAction("Review", new { viewModel.AccountHashedId });
+            return RedirectToAction("Review", new { viewModel.CohortReference, viewModel.AccountHashedId });
         }
         return RedirectToAction("Details", new { viewModel.CohortReference, viewModel.AccountHashedId });
     }

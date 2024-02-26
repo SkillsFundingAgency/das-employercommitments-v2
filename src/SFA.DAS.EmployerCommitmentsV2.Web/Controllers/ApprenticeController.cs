@@ -383,7 +383,7 @@ public class ApprenticeController : Controller
     {
         if (viewModel.CancelRequest.Value)
         {
-            return RedirectToRoute(RouteNames.ApprenticeDetail);
+            return RedirectToRoute(RouteNames.ApprenticeDetail, new { viewModel.ApprenticeshipHashedId, viewModel.AccountHashedId });
         }
 
         var request = await _modelMapper.Map<ChangeOfProviderRequest>(viewModel);
@@ -828,9 +828,9 @@ public class ApprenticeController : Controller
 
         var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
         draft.DeliveryModel = (DeliveryModel)model.DeliveryModel.Value;
-        
+
         TempData.Put(ViewModelForEdit, draft);
-        
+
         return RedirectToAction(nameof(EditApprenticeship), new { apprenticeshipHashedId = draft.HashedApprenticeshipId, draft.AccountHashedId });
     }
 
