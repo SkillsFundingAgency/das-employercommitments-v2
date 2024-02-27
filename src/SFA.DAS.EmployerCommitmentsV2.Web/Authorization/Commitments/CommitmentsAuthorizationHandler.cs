@@ -60,9 +60,9 @@ public class CommitmentsAuthorisationHandler : ICommitmentsAuthorisationHandler
         var apprenticeshipId = GetApprenticeshipId();
         var accountId = GetAccountId();
 
-        if (cohortId == 0 && apprenticeshipId == 0)
+        if (cohortId == 0 && apprenticeshipId == 0 && accountId == 0)
         {
-            throw new KeyNotFoundException("At least one key of 'CohortId' or 'ApprenticeshipId' should be present in the authorization context");
+            throw new KeyNotFoundException("At least one key of 'AccountId', 'CohortId' or 'ApprenticeshipId' should be present in the authorization context");
         }
 
         return (cohortId, apprenticeshipId, accountId);
