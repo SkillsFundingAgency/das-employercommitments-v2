@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using SFA.DAS.EmployerCommitmentsV2.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Requirements;
 
@@ -15,7 +16,7 @@ public class UserIsInAccountAuthorizationHandler : AuthorizationHandler<UserIsIn
 
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserIsInAccountRequirement ownerRequirement)
     {
-        if (!await _handler.IsEmployerAuthorised(context, true))
+        if (!await _handler.IsEmployerAuthorised(context, EmployerUserRole.Viewer))
         {
             return;
         }

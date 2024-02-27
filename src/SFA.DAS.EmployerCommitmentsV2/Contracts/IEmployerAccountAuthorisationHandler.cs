@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
+using SFA.DAS.EmployerCommitmentsV2.Authorization;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Contracts;
 
 public interface IEmployerAccountAuthorisationHandler
 {
-    Task<bool> IsEmployerAuthorised(AuthorizationHandlerContext context, bool allowAllUserRoles);
-    Task<bool> IsOutsideAccount(AuthorizationHandlerContext context);
+    Task<bool> IsEmployerAuthorised(AuthorizationHandlerContext context, EmployerUserRole minimumAllowedRole);
 }

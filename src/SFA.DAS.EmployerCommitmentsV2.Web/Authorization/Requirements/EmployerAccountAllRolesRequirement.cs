@@ -2,6 +2,6 @@
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Requirements;
 
-public class EmployerViewerTransactorOwnerAccountRequirement : IAuthorizationRequirement
+public class EmployerAccountAllRolesRequirement : IAuthorizationRequirement
 {
 }

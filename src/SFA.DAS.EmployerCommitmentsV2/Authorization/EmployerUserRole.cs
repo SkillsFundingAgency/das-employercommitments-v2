@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Authorization;
 
 public enum EmployerUserRole
 {

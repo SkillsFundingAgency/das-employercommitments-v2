@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.EAS.Account.Api.Client;
-using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerUrlHelper.Configuration;
 using SFA.DAS.Encoding;
@@ -22,7 +21,6 @@ public static class ConfigurationServiceRegistrations
         services.AddConfigurationFor<EmployerUrlHelperConfiguration>(configuration, ConfigurationKeys.EmployerUrlConfiguration);
 
         services.AddConfigurationFor<EmployerCommitmentsV2Configuration>(configuration, ConfigurationKeys.EmployerCommitmentsV2);
-        services.AddConfigurationFor<EmployerAccountsApiClientConfiguration>(configuration, ConfigurationKeys.AccountApiConfiguration);
         services.AddConfigurationFor<GovUkOidcConfiguration>(configuration, ConfigurationKeys.GovUkSignInConfiguration);
 
         var encodingConfigJson = configuration.GetSection(ConfigurationKeys.Encoding).Value;

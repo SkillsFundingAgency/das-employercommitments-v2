@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using SFA.DAS.EmployerCommitmentsV2.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
@@ -32,12 +33,13 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
         _configuration = configuration;
     }
 
-    public async Task<bool> IsEmployerAuthorised(AuthorizationHandlerContext context, bool allowAllUserRoles)
+    public async Task<bool> IsEmployerAuthorised(AuthorizationHandlerContext context, EmployerUserRole minimumAllowedRole)
     {
         if (!_httpContextAccessor.HttpContext.Request.RouteValues.ContainsKey(RouteValueKeys.AccountHashedId))
         {
             return false;
         }
+
         var accountIdFromUrl = _httpContextAccessor.HttpContext.Request.RouteValues[RouteValueKeys.AccountHashedId].ToString().ToUpper();
         var employerAccountClaim = context.User.FindFirst(c => c.Type.Equals(EmployeeClaims.AccountsClaimsTypeIdentifier));
 
@@ -61,13 +63,15 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
         if (employerAccounts != null)
         {
             employerIdentifier = employerAccounts.TryGetValue(accountIdFromUrl, out var account)
-                ? account : null;
+                ? account
+                : null;
         }
 
         if (employerAccounts == null || !employerAccounts.ContainsKey(accountIdFromUrl))
         {
             var requiredIdClaim = _configuration.UseGovSignIn
-                ? ClaimTypes.NameIdentifier : EmployeeClaims.IdamsUserIdClaimTypeIdentifier;
+                ? ClaimTypes.NameIdentifier
+                : EmployeeClaims.IdamsUserIdClaimTypeIdentifier;
 
             if (!context.User.HasClaim(c => c.Type.Equals(requiredIdClaim)))
             {
@@ -94,6 +98,7 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
             {
                 return false;
             }
+
             employerIdentifier = updatedEmployerAccounts[accountIdFromUrl];
         }
 
@@ -102,7 +107,7 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
             _httpContextAccessor.HttpContext.Items.Add(ContextItemKeys.EmployerIdentifier, employerAccounts.GetValueOrDefault(accountIdFromUrl));
         }
 
-        return CheckUserRoleForAccess(employerIdentifier, allowAllUserRoles);
+        return CheckUserRoleForAccess(employerIdentifier, minimumAllowedRole);
     }
 
     public Task<bool> IsOutsideAccount(AuthorizationHandlerContext context)
@@ -121,14 +126,23 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
 
         return Task.FromResult(true);
     }
-
-    private static bool CheckUserRoleForAccess(EmployerUserAccountItem employerIdentifier, bool allowAllUserRoles)
+    
+    private static bool CheckUserRoleForAccess(EmployerUserAccountItem employerIdentifier, EmployerUserRole minimumAllowedRole)
     {
-        if (!Enum.TryParse<EmployerUserRole>(employerIdentifier.Role, true, out var userRole))
+        var tryParse = Enum.TryParse<EmployerUserRole>(employerIdentifier.Role, true, out var userRole);
+
+        if (!tryParse)
         {
             return false;
         }
 
-        return allowAllUserRoles || userRole == EmployerUserRole.Owner;
+        return minimumAllowedRole switch
+        {
+            EmployerUserRole.Owner => userRole is EmployerUserRole.Owner,
+            EmployerUserRole.Transactor => userRole is EmployerUserRole.Owner or EmployerUserRole.Transactor,
+            EmployerUserRole.Viewer => userRole is EmployerUserRole.Owner or EmployerUserRole.Transactor
+                or EmployerUserRole.Viewer,
+            _ => false
+        };
     }
 }

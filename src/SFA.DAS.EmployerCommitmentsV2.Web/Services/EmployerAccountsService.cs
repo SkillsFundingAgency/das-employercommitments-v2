@@ -26,7 +26,7 @@ public class EmployerAccountsService : IEmployerAccountsService
             Id = account.AccountId,
             ApprenticeshipEmployerType = account.ApprenticeshipEmployerType.ToEnum<ApprenticeshipEmployerType>()
         };
-
+        
         return response;
     }
 

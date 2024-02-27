@@ -5,7 +5,6 @@ using SFA.DAS.CommitmentsV2.Shared.Services;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services;
-using SFA.DAS.EmployerCommitmentsV2.Services.Stubs;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Services;
 using SFA.DAS.EmployerUrlHelper;
@@ -25,7 +24,6 @@ public static class ApplicationServiceRegistrations
         services.AddTransient<IDeliveryModelService, DeliveryModelService>();
 
         services.AddTransient<IEmployerAccountsService, EmployerAccountsService>();
-        services.AddSingleton<StubEmployerAccountsApiClient, StubEmployerAccountsApiClient>();
         
         services.AddSingleton<ILinkGenerator, LinkGenerator>();
         services.AddSingleton<IUserAccountService, UserAccountService>();

@@ -23,10 +23,10 @@ public static class AuthorizationServiceRegistrations
 
         services.AddSingleton<IEmployerAccountAuthorisationHandler, EmployerAccountAuthorisationHandler>();
 
-        services.AddSingleton<IAuthorizationHandler, EmployerViewerTransactorOwnerAccountAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, EmployerAccountAllRolesAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessApprenticeshipAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, CommitmentAccessCohortAuthorizationHandler>();
-        services.AddSingleton<IAuthorizationHandler, AccessDraftApprenticeshipAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, EmployerTransactorOwnerAccountAuthorizationHandler>();
 
         services.AddTransient<IAuthorizationContext, AuthorizationContext>();
         services.AddSingleton<IAuthorizationContextProvider, AuthorizationContextProvider>();
@@ -57,7 +57,7 @@ public static class AuthorizationServiceRegistrations
             {
                 policy.RequireClaim(EmployerClaims.AccountsClaimsTypeIdentifier);
                 policy.Requirements.Add(new AccountActiveRequirement());
-                policy.Requirements.Add(new EmployerViewerTransactorOwnerAccountRequirement());
+                policy.Requirements.Add(new EmployerAccountAllRolesRequirement());
                 policy.RequireAuthenticatedUser();
             });
 
@@ -71,7 +71,8 @@ public static class AuthorizationServiceRegistrations
             options.AddPolicy(PolicyNames.AccessDraftApprenticeship, policy =>
             {
                 policy.Requirements.Add(new AccountActiveRequirement());
-                policy.Requirements.Add(new AccessDraftApprenticeshipRequirement());
+                policy.Requirements.Add(new AccessCohortRequirement());
+                policy.Requirements.Add(new EmployerTransactorOwnerAccountRequirement());
                 policy.RequireAuthenticatedUser();
             });
 
