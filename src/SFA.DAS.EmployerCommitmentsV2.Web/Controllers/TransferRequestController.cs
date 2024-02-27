@@ -8,7 +8,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
-[Authorize(Policy = nameof(PolicyNames.HasEmployerViewerTransactorOwnerAccount))]
+[Authorize(Policy = nameof(PolicyNames.HasEmployerTransactorOwnerAccount))]
 [Route("{accountHashedId}")]
 public class TransferRequestController : Controller
 {

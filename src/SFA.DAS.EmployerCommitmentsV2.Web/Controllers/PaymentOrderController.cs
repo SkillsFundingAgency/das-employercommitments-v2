@@ -8,7 +8,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
-[Authorize(Policy = nameof(PolicyNames.HasEmployerViewerTransactorOwnerAccount))]
+[Authorize(Policy = nameof(PolicyNames.HasEmployerTransactorOwnerAccount))]
 [Route("accounts/{accountHashedId}/apprentices/manage")]
 public class PaymentOrderController : Controller
 {
