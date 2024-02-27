@@ -21,6 +21,35 @@ public class WhenHandlingEmployerAccountAuthorization
     [Test]
     [MoqInlineAutoData("Transactor")]
     [MoqInlineAutoData("Viewer")]
+    [MoqInlineAutoData("Owner")]
+    public async Task Then_Viewer_And_Transactor_And_Owner_Are_Allowed_For_All_Roles(
+        string role,
+        EmployerIdentifier employerIdentifier,
+        EmployerAccountAllRolesRequirement allRolesRequirement,
+        [Frozen] Mock<IHttpContextAccessor> httpContextAccessor,
+        EmployerAccountAuthorisationHandler authorizationHandler)
+    {
+        //Arrange
+        employerIdentifier.Role = role;
+        employerIdentifier.AccountId = employerIdentifier.AccountId.ToUpper();
+        var employerAccounts = new Dictionary<string, EmployerIdentifier> { { employerIdentifier.AccountId, employerIdentifier } };
+        var claim = new Claim(EmployerClaims.AccountsClaimsTypeIdentifier, JsonConvert.SerializeObject(employerAccounts));
+        var claimsPrinciple = new ClaimsPrincipal(new[] { new ClaimsIdentity(new[] { claim }) });
+        var context = new AuthorizationHandlerContext(new[] { allRolesRequirement }, claimsPrinciple, null);
+        var httpContext = new DefaultHttpContext(new FeatureCollection());
+        httpContext.Request.RouteValues.Add(RouteValueKeys.AccountHashedId, employerIdentifier.AccountId);
+        httpContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
+
+        //Act
+        var actual = await authorizationHandler.IsEmployerAuthorised(context, EmployerUserRole.All);
+
+        //Assert
+        actual.Should().BeTrue();
+    }
+    
+    [Test]
+    [MoqInlineAutoData("Transactor")]
+    [MoqInlineAutoData("Viewer")]
     public async Task Then_Viewer_And_Transactor_Are_Allowed_For_All_Roles(
         string role,
         EmployerIdentifier employerIdentifier,

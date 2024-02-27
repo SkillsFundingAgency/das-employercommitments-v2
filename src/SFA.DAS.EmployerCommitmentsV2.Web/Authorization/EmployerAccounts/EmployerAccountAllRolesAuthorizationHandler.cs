@@ -5,9 +5,9 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Requirements;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
 
-public class EmployerAccountAllRolesAuthorizationHandler(IEmployerAccountAuthorisationHandler handler) : AuthorizationHandler<EmployerTransactorOwnerAccountRequirement>
+public class EmployerAccountAllRolesAuthorizationHandler(IEmployerAccountAuthorisationHandler handler) : AuthorizationHandler<EmployerAccountAllRolesRequirement>
 {
-    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, EmployerTransactorOwnerAccountRequirement ownerRequirement)
+    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, EmployerAccountAllRolesRequirement ownerRequirement)
     {
         if (!await handler.IsEmployerAuthorised(context, EmployerUserRole.All))
         {
