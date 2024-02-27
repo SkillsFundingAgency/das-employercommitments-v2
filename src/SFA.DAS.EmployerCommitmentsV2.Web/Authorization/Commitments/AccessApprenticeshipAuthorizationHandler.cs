@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Requirements;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
 
-public class CommitmentAccessApprenticeshipAuthorizationHandler : AuthorizationHandler<AccessApprenticeshipRequirement>
+public class AccessApprenticeshipAuthorizationHandler : AuthorizationHandler<AccessApprenticeshipRequirement>
 {
     private readonly ICommitmentsAuthorisationHandler _handler;
 
-    public CommitmentAccessApprenticeshipAuthorizationHandler(ICommitmentsAuthorisationHandler handler)
+    public AccessApprenticeshipAuthorizationHandler(ICommitmentsAuthorisationHandler handler)
     {
         _handler = handler;
     }

@@ -10,7 +10,6 @@ using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Requirements;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.Testing.AutoFixture;
 

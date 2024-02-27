@@ -7,7 +7,6 @@ using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Requirements;
 using SFA.DAS.GovUK.Auth.Authentication;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
@@ -23,9 +22,9 @@ public static class AuthorizationServiceRegistrations
 
         services.AddSingleton<IEmployerAccountAuthorisationHandler, EmployerAccountAuthorisationHandler>();
 
-        services.AddSingleton<IAuthorizationHandler, EmployerAccountAllRolesAuthorizationHandler>();
-        services.AddSingleton<IAuthorizationHandler, CommitmentAccessApprenticeshipAuthorizationHandler>();
-        services.AddSingleton<IAuthorizationHandler, CommitmentAccessCohortAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, EmployerAccountAllRoleAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, AccessApprenticeshipAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, AccessCohortAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, EmployerTransactorOwnerAccountAuthorizationHandler>();
 
         services.AddTransient<IAuthorizationContext, AuthorizationContext>();
@@ -71,6 +70,7 @@ public static class AuthorizationServiceRegistrations
             options.AddPolicy(PolicyNames.AccessDraftApprenticeship, policy =>
             {
                 policy.Requirements.Add(new AccountActiveRequirement());
+                policy.Requirements.Add(new AccessCohortRequirement());
                 policy.Requirements.Add(new EmployerTransactorOwnerAccountRequirement());
                 policy.RequireAuthenticatedUser();
             });
