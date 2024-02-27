@@ -74,6 +74,31 @@ public class WhenHandlingEmployerAccountAuthorization
         //Assert
         actual.Should().BeTrue();
     }
+    
+    [Test, MoqAutoData]
+    public async Task Then_Viewer_Is_Not_Allowed_For_Transactor_Role(
+        EmployerIdentifier employerIdentifier,
+        EmployerTransactorOwnerAccountRequirement transactorOwnerRolesRequirement,
+        [Frozen] Mock<IHttpContextAccessor> httpContextAccessor,
+        EmployerAccountAuthorisationHandler authorizationHandler)
+    {
+        //Arrange
+        employerIdentifier.Role = "Viewer";
+        employerIdentifier.AccountId = employerIdentifier.AccountId.ToUpper();
+        var employerAccounts = new Dictionary<string, EmployerIdentifier> { { employerIdentifier.AccountId, employerIdentifier } };
+        var claim = new Claim(EmployerClaims.AccountsClaimsTypeIdentifier, JsonConvert.SerializeObject(employerAccounts));
+        var claimsPrinciple = new ClaimsPrincipal(new[] { new ClaimsIdentity(new[] { claim }) });
+        var context = new AuthorizationHandlerContext(new[] { transactorOwnerRolesRequirement }, claimsPrinciple, null);
+        var httpContext = new DefaultHttpContext(new FeatureCollection());
+        httpContext.Request.RouteValues.Add(RouteValueKeys.AccountHashedId, employerIdentifier.AccountId);
+        httpContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
+
+        //Act
+        var actual = await authorizationHandler.IsEmployerAuthorised(context, EmployerUserRole.Transactor);
+
+        //Assert
+        actual.Should().BeFalse();
+    }
 
     [Test, MoqAutoData]
     public async Task Then_Returns_False_If_Employer_Is_Not_Authorized(

@@ -71,7 +71,6 @@ public static class AuthorizationServiceRegistrations
             options.AddPolicy(PolicyNames.AccessDraftApprenticeship, policy =>
             {
                 policy.Requirements.Add(new AccountActiveRequirement());
-                policy.Requirements.Add(new AccessCohortRequirement());
                 policy.Requirements.Add(new EmployerTransactorOwnerAccountRequirement());
                 policy.RequireAuthenticatedUser();
             });
