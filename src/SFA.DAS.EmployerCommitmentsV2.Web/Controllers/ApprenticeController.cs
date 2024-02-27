@@ -612,9 +612,15 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/change-provider/apprenticeshipStopped")]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [HttpGet]
-    public IActionResult ApprenticeshipStoppedInform()
+    public IActionResult ApprenticeshipStoppedInform(ApprenticeshipStopInformRequest request)
     {
-        return View();
+        var viewModel = new ApprenticeshipStopInformViewModel
+        {
+            ApprenticeshipHashedId = request.ApprenticeshipHashedId,
+            AccountHashedId = request.AccountHashedId
+        };
+        
+        return View(viewModel);
     }
 
     [Route("{apprenticeshipHashedId}/details/pause")]

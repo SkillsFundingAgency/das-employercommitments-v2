@@ -1,4 +1,7 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+﻿using FluentAssertions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
 
 public class WhenRequestingApprenticeshipStoppedInformPageTests
 {
@@ -21,15 +24,26 @@ public class WhenRequestingApprenticeshipStoppedInformPageTests
 
 public class WhenRequestingApprenticeshipStoppedInformPageTestsFixture : ApprenticeControllerTestFixtureBase
 {
+    private const string AccountHashedId = "SDSDKJE£WF";
+    private const string ApprenticeshipHashedId = "df4kjss89HG£WF";
+    
     public IActionResult ApprenticeshipStoppedInform()
     {
-        return Controller.ApprenticeshipStoppedInform();
+        return Controller.ApprenticeshipStoppedInform(new ApprenticeshipStopInformRequest
+        {
+            AccountHashedId = AccountHashedId,
+            ApprenticeshipHashedId = ApprenticeshipHashedId
+        });
     }
 
     public static void VerifyView(IActionResult actionResult)
     {
         var viewResult = actionResult as ViewResult;
 
-        Assert.That(viewResult, Is.Not.Null);
+        viewResult.Should().NotBeNull();
+        
+        var viewModel = viewResult.Model as ApprenticeshipStopInformViewModel;
+        viewModel.AccountHashedId.Should().Be(AccountHashedId);
+        viewModel.ApprenticeshipHashedId.Should().Be(ApprenticeshipHashedId);
     }
 }

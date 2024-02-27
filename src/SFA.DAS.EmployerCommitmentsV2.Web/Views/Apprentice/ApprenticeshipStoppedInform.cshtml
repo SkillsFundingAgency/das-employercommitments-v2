@@ -1,11 +1,10 @@
-﻿@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipStopInformViewModel
+@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["Title"] = "Changing training provider - Apprenticeship stopped";
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/change-provider/apprentice-stopped";
-
-    var accountHashedId = ViewContext.RouteData.Values["accountHashedId"];
-    var apprenticeshipHashedId = ViewContext.RouteData.Values["apprenticeshipHashedId"];
 }
 
     <div class="govuk-grid-row">
@@ -17,7 +16,7 @@
                 You can now continue to change training provider.
             </p>
             <a id="continue-button" class="govuk-button"
-               asp-route="@RouteNames.EnterNewTrainingProvider" asp-route-stoppedDuringCoP="true" asp-route-accountHashedIdHashedId="@accountHashedId" asp-route-apprenticeshipHashedId="@apprenticeshipHashedId">
+               asp-route="@RouteNames.EnterNewTrainingProvider" asp-route-stoppedDuringCoP="true" asp-route-accountHashedIdHashedId="@Model.AccountHashedId" asp-route-apprenticeshipHashedId="@Model.ApprenticeshipHashedId">
                 Continue
             </a>
         </div>
