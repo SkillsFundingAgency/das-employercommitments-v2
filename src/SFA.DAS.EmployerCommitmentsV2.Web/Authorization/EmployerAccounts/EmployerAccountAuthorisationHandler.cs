@@ -129,6 +129,11 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
     
     private static bool CheckUserRoleForAccess(EmployerUserAccountItem employerIdentifier, EmployerUserRole minimumAllowedRole)
     {
+        if (minimumAllowedRole == EmployerUserRole.All)
+        {
+            return true;
+        }
+        
         var tryParse = Enum.TryParse<EmployerUserRole>(employerIdentifier.Role, true, out var userRole);
 
         if (!tryParse)

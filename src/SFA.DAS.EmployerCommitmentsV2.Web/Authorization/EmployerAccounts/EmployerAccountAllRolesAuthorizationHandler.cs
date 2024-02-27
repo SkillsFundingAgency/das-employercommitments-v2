@@ -9,7 +9,7 @@ public class EmployerAccountAllRolesAuthorizationHandler(IEmployerAccountAuthori
 {
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, EmployerTransactorOwnerAccountRequirement ownerRequirement)
     {
-        if (!await handler.IsEmployerAuthorised(context, EmployerUserRole.Viewer))
+        if (!await handler.IsEmployerAuthorised(context, EmployerUserRole.All))
         {
             return;
         }
