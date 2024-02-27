@@ -5,7 +5,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Home;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
-[Authorize(Policy = nameof(PolicyNames.HasEmployerViewerTransactorOwnerAccount))]
+[Authorize(Policy = nameof(PolicyNames.HasEmployerTransactorOwnerAccount))]
 [Route("{accountHashedId}")]
 public class HomeController : Controller
 {
