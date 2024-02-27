@@ -18,7 +18,7 @@ using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
-[Authorize(Policy = nameof(PolicyNames.HasEmployerViewerTransactorOwnerAccount))]
+[Authorize(Policy = nameof(PolicyNames.AccessDraftApprenticeship))]
 [Route("{accountHashedId}/unapproved")]
 public class CohortController : Controller
 {
