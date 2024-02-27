@@ -59,6 +59,14 @@ public static class AuthorizationServiceRegistrations
                 policy.Requirements.Add(new EmployerAccountAllRolesRequirement());
                 policy.RequireAuthenticatedUser();
             });
+            
+            options.AddPolicy(PolicyNames.HasEmployerTransactorOwnerAccount, policy =>
+            {
+                policy.RequireClaim(EmployerClaims.AccountsClaimsTypeIdentifier);
+                policy.Requirements.Add(new AccountActiveRequirement());
+                policy.Requirements.Add(new EmployerTransactorOwnerAccountRequirement());
+                policy.RequireAuthenticatedUser();
+            });
 
             options.AddPolicy(PolicyNames.AccessApprenticeship, policy =>
             {
