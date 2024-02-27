@@ -22,7 +22,6 @@ public static class AuthorizationServiceRegistrations
 
         services.AddSingleton<IEmployerAccountAuthorisationHandler, EmployerAccountAuthorisationHandler>();
 
-        services.AddSingleton<IAuthorizationHandler, EmployerAccountAllRoleAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, AccessApprenticeshipAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, AccessCohortAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, EmployerTransactorOwnerAccountAuthorizationHandler>();
@@ -51,14 +50,6 @@ public static class AuthorizationServiceRegistrations
                     policy.RequireAuthenticatedUser();
                 });
             }
-
-            options.AddPolicy(PolicyNames.HasEmployerViewerTransactorOwnerAccount, policy =>
-            {
-                policy.RequireClaim(EmployerClaims.AccountsClaimsTypeIdentifier);
-                policy.Requirements.Add(new AccountActiveRequirement());
-                policy.Requirements.Add(new EmployerAccountAllRolesRequirement());
-                policy.RequireAuthenticatedUser();
-            });
             
             options.AddPolicy(PolicyNames.HasEmployerTransactorOwnerAccount, policy =>
             {
