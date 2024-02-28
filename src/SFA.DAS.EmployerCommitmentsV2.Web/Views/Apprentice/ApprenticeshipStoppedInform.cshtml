@@ -14,7 +14,7 @@
         <p class="govuk-body">
             You can now continue to change training provider.
         </p>
-        <a id="continue-button" class="govuk-button" href="@Url.RouteUrl(RouteNames.EnterNewTrainingProvider, new { accountHashedId = Model.AccountHashedId, apprenticeshipHashedId = Model.ApprenticeshipHashedId })">
+        <a id="continue-button" class="govuk-button" href="@Url.RouteUrl(RouteNames.EnterNewTrainingProvider, new { accountHashedId = Model.AccountHashedId, apprenticeshipHashedId = Model.ApprenticeshipHashedId, stoppedDuringCoP = true })">
             Continue
         </a>
     </div>
