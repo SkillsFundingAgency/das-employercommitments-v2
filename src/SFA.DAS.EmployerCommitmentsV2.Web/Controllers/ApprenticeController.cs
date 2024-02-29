@@ -621,9 +621,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers
         [HttpGet]
         [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
         [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
-        public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request)
+        public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, bool showPriceChangeRejected = false, bool showPriceChangeApproved = false)
         {
             var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
+            viewModel.ShowPriceChangeRejected = showPriceChangeRejected;
+            viewModel.ShowPriceChangeApproved = showPriceChangeApproved;
             return View("details", viewModel);
         }
 
