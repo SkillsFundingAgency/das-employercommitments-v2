@@ -1,12 +1,11 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2
+﻿namespace SFA.DAS.EmployerCommitmentsV2;
+
+public static class Constants
 {
-    public static class Constants
+    public static class ApprenticesSearch
     {
-        public static class ApprenticesSearch
-        {
-            public const int NumberOfApprenticesPerSearchPage = 100;
-            public const int NumberOfApprenticesRequiredForSearch = 10;
-            public const int NumberOfApprenticesPerDownloadPage = 200;
-        }
+        public const int NumberOfApprenticesPerSearchPage = 100;
+        public const int NumberOfApprenticesRequiredForSearch = 10;
+        public const int NumberOfApprenticesPerDownloadPage = 200;
     }
 }

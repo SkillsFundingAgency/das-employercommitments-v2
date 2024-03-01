@@ -1,380 +1,429 @@
-﻿using AutoFixture;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using SFA.DAS.CommitmentsV2.Types;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetPriceEpisodesResponse;
 using SFA.DAS.Encoding;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice;
+
+public class ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTests
 {
-    public class ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTests
+    private ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTestsFixture _fixture;
+
+    [SetUp]
+    public void Setup()
     {
-        ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTestsFixture fixture;
-
-        [SetUp]
-        public void Setup()
-        {
-            fixture = new ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTestsFixture();
-        }
-
-        [Test]
-        public async Task CommitmentApiToGetApprenticeshipIsCalled()
-        {
-           await fixture.Map();
-
-            fixture.VerifyCommitmentApiIsCalled();
-        }
-
-        [Test]
-        public async Task CommitmentApiToGetPriceEpisodeIsCalled()
-        {
-            await fixture.Map();
-
-            fixture.VerifyPriceEpisodeIsCalled();
-        }
-
-        [Test]
-        public async Task WhenOnlyEmployerReferenceIsChanged()
-        {
-            fixture.source.EmployerReference = "EmployerRef";
-
-            var result = await fixture.Map();
-
-            Assert.AreNotEqual(fixture.source.EmployerReference, fixture.ApprenticeshipResponse.EmployerReference);
-            Assert.AreEqual(fixture.source.EmployerReference, result.EmployerReference);
-            Assert.AreEqual(fixture.ApprenticeshipResponse.EmployerReference, result.OriginalApprenticeship.EmployerReference);
-        }
-
-        [Test]
-        public async Task WhenFirstNameIsChanged()
-        {
-            fixture.source.FirstName = "FirstName";
-
-            var result = await fixture.Map();
-
-            Assert.AreNotEqual(fixture.source.FirstName, fixture.ApprenticeshipResponse.FirstName);
-            Assert.AreEqual(fixture.source.FirstName, result.FirstName);
-            Assert.AreEqual(fixture.ApprenticeshipResponse.FirstName, result.OriginalApprenticeship.FirstName);
-        }
-
-        [Test]
-        public async Task WhenLastNameIsChanged()
-        {
-            fixture.source.LastName = "LastName";
-
-            var result = await fixture.Map();
-
-            Assert.AreNotEqual(fixture.source.LastName, fixture.ApprenticeshipResponse.LastName);
-            Assert.AreEqual(fixture.source.LastName, result.LastName);
-            Assert.AreEqual(fixture.ApprenticeshipResponse.LastName, result.OriginalApprenticeship.LastName);
-        }
-
-        [Test]
-        public async Task WhenEmailIsChanged()
-        {
-            fixture.source.Email = "Email";
-
-            var result = await fixture.Map();
-
-            Assert.AreNotEqual(fixture.source.Email, fixture.ApprenticeshipResponse.Email);
-            Assert.AreEqual(fixture.source.Email, result.Email);
-            Assert.AreEqual(fixture.ApprenticeshipResponse.Email, result.OriginalApprenticeship.Email);
-        }
-
-        [Test]
-        public async Task WhenDobIsChanged()
-        {
-            fixture.source.DateOfBirth = new CommitmentsV2.Shared.Models.DateModel(new DateTime(2000,12,31));
-
-            var result = await fixture.Map();
-
-            Assert.AreNotEqual(fixture.source.DateOfBirth.Day, fixture.ApprenticeshipResponse.DateOfBirth.Day);
-            Assert.AreEqual(fixture.source.DateOfBirth.Date, result.DateOfBirth);
-            Assert.AreEqual(fixture.ApprenticeshipResponse.DateOfBirth, result.OriginalApprenticeship.DateOfBirth);
-        }
-
-        [TestCase(DeliveryModel.Regular, DeliveryModel.PortableFlexiJob)]
-        [TestCase(DeliveryModel.PortableFlexiJob, DeliveryModel.Regular)]
-        public async Task WhenDeliveryModelIsChanged(DeliveryModel original, DeliveryModel changedTo)
-        {
-            fixture.ApprenticeshipResponse.DeliveryModel = original;
-            fixture.source.DeliveryModel = changedTo;
-
-            var result = await fixture.Map();
-
-            Assert.AreNotEqual(fixture.source.DeliveryModel, fixture.ApprenticeshipResponse.DeliveryModel);
-            Assert.AreEqual(fixture.source.DeliveryModel, result.DeliveryModel);
-            Assert.AreEqual(fixture.ApprenticeshipResponse.DeliveryModel, result.OriginalApprenticeship.DeliveryModel);
-        }
-
-        [Test]
-        public async Task WhenEmploymentEndDateIsChanged()
-        {
-            var newDate = fixture.ApprenticeshipResponse.EmploymentEndDate.Value.AddMonths(-1);
-            fixture.source.EmploymentEndDate = new CommitmentsV2.Shared.Models.MonthYearModel(newDate.Month.ToString() + newDate.Year);
-
-            var result = await fixture.Map();
-
-            Assert.AreNotEqual(fixture.source.EmploymentEndDate.Date, fixture.ApprenticeshipResponse.EmploymentEndDate);
-            Assert.AreEqual(fixture.source.EmploymentEndDate.Date, result.EmploymentEndDate);
-            Assert.AreEqual(fixture.ApprenticeshipResponse.EmploymentEndDate, result.OriginalApprenticeship.EmploymentEndDate);
-        }
-
-        [Test]
-        public async Task WhenEmploymentPriceIsChanged()
-        {
-            fixture.source.EmploymentPrice = 1234;
-            var result = await fixture.Map();
-
-            Assert.AreNotEqual(fixture.source.EmploymentPrice, fixture.ApprenticeshipResponse.EmploymentPrice);
-            Assert.AreEqual(fixture.source.EmploymentPrice, result.EmploymentPrice);
-            Assert.AreEqual(fixture.ApprenticeshipResponse.EmploymentPrice, result.OriginalApprenticeship.EmploymentPrice);
-        }
-
-        [Test]
-        public async Task WhenStartDateIsChanged()
-        {
-            var newStartDate = fixture.ApprenticeshipResponse.StartDate.Value.AddMonths(-1);
-            fixture.source.StartDate = new CommitmentsV2.Shared.Models.MonthYearModel(newStartDate.Month.ToString() + newStartDate.Year);
-
-            var result = await fixture.Map();
-
-            Assert.AreNotEqual(fixture.source.StartDate.Date, fixture.ApprenticeshipResponse.StartDate);
-            Assert.AreEqual(fixture.source.StartDate.Date, result.StartDate);
-            Assert.AreEqual(fixture.ApprenticeshipResponse.StartDate, result.OriginalApprenticeship.StartDate);
-        }
-
-        [Test]
-        public async Task WhenEndDateIsChanged()
-        {
-            var newEndDate = fixture.ApprenticeshipResponse.EndDate.AddMonths(-1);
-            fixture.source.EndDate = new CommitmentsV2.Shared.Models.MonthYearModel(newEndDate.Month.ToString() + newEndDate.Year);
-
-            var result = await fixture.Map();
-
-            Assert.AreNotEqual(fixture.source.EndDate.Date, fixture.ApprenticeshipResponse.EndDate);
-            Assert.AreEqual(fixture.source.EndDate.Date, result.EndDate);
-            Assert.AreEqual(fixture.ApprenticeshipResponse.EndDate, result.OriginalApprenticeship.EndDate);
-        }
-
-        [Test]
-        public async Task WhenCourseIsChanged()
-        {
-            fixture.source.CourseCode = "Abc";
-
-            var result = await fixture.Map();
-
-            Assert.AreNotEqual(fixture.source.CourseCode, fixture.ApprenticeshipResponse.CourseCode);
-            Assert.AreEqual(fixture.source.CourseCode, result.CourseCode);
-            Assert.AreEqual(fixture.ApprenticeshipResponse.CourseCode, result.OriginalApprenticeship.CourseCode);
-        }
-
-        [Test]
-        public async Task WhenVersionIsChanged()
-        {
-            fixture.source.Version = "1.1";
-
-            var result = await fixture.Map();
-
-            Assert.AreNotEqual(fixture.source.Version, fixture.ApprenticeshipResponse.Version);
-            Assert.AreEqual(fixture.source.Version, result.Version);
-        }
-
-        [Test]
-        public async Task WhenCourseCodeIsChangeButVersionIsNotChanged_ThenVersionIsMapped()
-        {
-            fixture.source.CourseCode = "123";
-
-            var result = await fixture.Map();
-
-            Assert.AreNotEqual(fixture.source.Version, fixture.ApprenticeshipResponse.Version);
-            Assert.AreEqual(fixture.source.Version, result.Version);
-        }
-
-        [Test]
-        public async Task WhenOptionIsChanged()
-        {
-            fixture.source.Option = "NewOption";
-
-            var result = await fixture.Map();
-
-            Assert.AreNotEqual(fixture.source.Option, fixture.ApprenticeshipResponse.Option);
-            Assert.AreEqual(fixture.source.Option, result.Option);
-        }
-
-        [Test]
-        public async Task When_VersionHasOptions_Then_ReturnToChangeOptionsIsTrue()
-        {
-            fixture.source.HasOptions = true;
-
-            var result = await fixture.Map();
-
-            Assert.True(result.ReturnToChangeOption);
-        }
-
-        [Test]
-        public async Task When_VersionIsChangedDirectly_Then_ReturnToChangeVersionIsTrue()
-        {
-            fixture.source.Version = "NewVersion";
-
-            var result = await fixture.Map();
-
-            Assert.True(result.ReturnToChangeVersion);
-        }
-
-        [Test]
-        public async Task When_VersionIsChangedByEditCourse_Then_ReturnToChangeVersionAndOptionAreFalse()
-        {
-            fixture.source.Version = "NewVersion";
-            fixture.source.CourseCode = "NewCourseCode";
-
-            var result = await fixture.Map();
-
-            Assert.False(result.ReturnToChangeVersion);
-            Assert.False(result.ReturnToChangeOption);
-        }
-
-        [Test]
-        public async Task When_VersionIsChangedByEditStartDate_Then_ReturnToChangeVersionAndOptionAreFalse()
-        {
-            fixture.source.Version = "NewVersion";
-            fixture.source.StartDate = new MonthYearModel(DateTime.Now.ToString("MMyyyy"));
-
-            var result = await fixture.Map();
-
-            Assert.False(result.ReturnToChangeVersion);
-            Assert.False(result.ReturnToChangeOption);
-        }
-
-        [Test]
-        public async Task WhenMultipleFieldsAreChanged_TheyAreChanged()
-        {
-            fixture.source.CourseCode = "NewCourse";
-            fixture.source.LastName = "NewLastName";
-
-            var result = await fixture.Map();
-
-            Assert.AreEqual(fixture.source.LastName, result.LastName);
-            Assert.AreEqual(fixture.source.CourseCode, result.CourseCode);
-        }
-
-        [Test]
-        public async Task UnchangedFieldsAreNull()
-        {
-            fixture.source.CourseCode = "Course";
-
-            var result = await fixture.Map();
-            Assert.IsNull(result.FirstName);
-            Assert.IsNull(result.LastName);
-            Assert.IsNull(result.EndMonth);
-            Assert.IsNull(result.StartMonth);
-            Assert.IsNull(result.BirthMonth);
-        }
+        _fixture = new ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTestsFixture();
     }
 
-    public class ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTestsFixture
+    [Test]
+    public async Task CommitmentApiToGetApprenticeshipIsCalled()
     {
-        private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+        await _fixture.Map();
 
-        internal GetApprenticeshipResponse ApprenticeshipResponse;
-        private GetPriceEpisodesResponse _priceEpisodeResponse;
+        _fixture.VerifyCommitmentApiIsCalled();
+    }
 
-        private ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapper _mapper;
-        private TrainingProgramme _standardSummary;
-        private Mock<IEncodingService> _encodingService;
-        public EditApprenticeshipRequestViewModel source;
-        public ConfirmEditApprenticeshipViewModel resultViewModl;
+    [Test]
+    public async Task CommitmentApiToGetPriceEpisodeIsCalled()
+    {
+        await _fixture.Map();
 
-        public ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTestsFixture()
+        _fixture.VerifyPriceEpisodeIsCalled();
+    }
+
+    [Test]
+    public async Task WhenOnlyEmployerReferenceIsChanged()
+    {
+        _fixture.source.EmployerReference = "EmployerRef";
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
         {
-            var autoFixture = new Fixture();
+            Assert.That(_fixture.ApprenticeshipResponse.EmployerReference, Is.Not.EqualTo(_fixture.source.EmployerReference));
+            Assert.That(result.EmployerReference, Is.EqualTo(_fixture.source.EmployerReference));
+            Assert.That(result.OriginalApprenticeship.EmployerReference, Is.EqualTo(_fixture.ApprenticeshipResponse.EmployerReference));
+        });
+    }
 
-            ApprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>()
-                .With(x => x.CourseCode, "ABC")
-                .With(x => x.Version, "1.0")
-                .With(x => x.StartDate, new DateTime(2020, 1, 1))
-                .With(x => x.EndDate, new DateTime(2021, 1, 1))
-                .With(x => x.EmploymentEndDate, new DateTime(2020, 9, 1))
-                .With(x => x.DateOfBirth, new DateTime(1990,1,1))
-                .Create();
+    [Test]
+    public async Task WhenFirstNameIsChanged()
+    {
+        _fixture.source.FirstName = "FirstName";
 
-            source = new EditApprenticeshipRequestViewModel();
-            source.ApprenticeshipId = ApprenticeshipResponse.Id;
-            source.CourseCode = ApprenticeshipResponse.CourseCode;
-            source.FirstName = ApprenticeshipResponse.FirstName;
-            source.LastName = ApprenticeshipResponse.LastName;
-            source.Email = ApprenticeshipResponse.Email;
-            source.DateOfBirth = new CommitmentsV2.Shared.Models.DateModel(ApprenticeshipResponse.DateOfBirth);
-            source.Cost = 1000;
-            source.EmployerReference = ApprenticeshipResponse.EmployerReference;
-            source.StartDate = new CommitmentsV2.Shared.Models.MonthYearModel(ApprenticeshipResponse.StartDate.Value.Month.ToString() + ApprenticeshipResponse.StartDate.Value.Year) ;
-            source.EndDate = new CommitmentsV2.Shared.Models.MonthYearModel(ApprenticeshipResponse.EndDate.Month.ToString() + ApprenticeshipResponse.EndDate.Year);
+        var result = await _fixture.Map();
 
-            _priceEpisodeResponse = autoFixture.Build<GetPriceEpisodesResponse>()
-                .With(x => x.PriceEpisodes, new List<PriceEpisode> {
-                    new PriceEpisode { Cost = 1000, FromDate = DateTime.Now.AddMonths(-1), ToDate = null}})
-                .Create();
-
-            _standardSummary = autoFixture.Create<TrainingProgramme>();
-            _standardSummary.EffectiveFrom = new DateTime(2018, 1, 1);
-            _standardSummary.EffectiveTo = new DateTime(2022, 1, 1);
-            _standardSummary.FundingPeriods = SetPriceBand(1000);
-
-            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-
-            _mockCommitmentsApiClient.Setup(c => c.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(ApprenticeshipResponse);
-            _mockCommitmentsApiClient.Setup(c => c.GetPriceEpisodes(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_priceEpisodeResponse);
-            _mockCommitmentsApiClient.Setup(t => t.GetTrainingProgrammeVersionByCourseCodeAndVersion(source.CourseCode, source.Version, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetTrainingProgrammeResponse
-                {
-                    TrainingProgramme = _standardSummary
-                });
-
-            _encodingService = new Mock<IEncodingService>();
-            _encodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.ApprenticeshipId)).Returns(ApprenticeshipResponse.Id);
-            _encodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.AccountId)).Returns(ApprenticeshipResponse.EmployerAccountId);
-
-            _mapper = new ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapper(_mockCommitmentsApiClient.Object, _encodingService.Object);
-        }
-
-        public List<TrainingProgrammeFundingPeriod> SetPriceBand(int fundingCap)
+        Assert.Multiple(() =>
         {
-            return new List<TrainingProgrammeFundingPeriod>
+            Assert.That(_fixture.ApprenticeshipResponse.FirstName, Is.Not.EqualTo(_fixture.source.FirstName));
+            Assert.That(result.FirstName, Is.EqualTo(_fixture.source.FirstName));
+            Assert.That(result.OriginalApprenticeship.FirstName, Is.EqualTo(_fixture.ApprenticeshipResponse.FirstName));
+        });
+    }
+
+    [Test]
+    public async Task WhenLastNameIsChanged()
+    {
+        _fixture.source.LastName = "LastName";
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.ApprenticeshipResponse.LastName, Is.Not.EqualTo(_fixture.source.LastName));
+            Assert.That(result.LastName, Is.EqualTo(_fixture.source.LastName));
+            Assert.That(result.OriginalApprenticeship.LastName, Is.EqualTo(_fixture.ApprenticeshipResponse.LastName));
+        });
+    }
+
+    [Test]
+    public async Task WhenEmailIsChanged()
+    {
+        _fixture.source.Email = "Email";
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.ApprenticeshipResponse.Email, Is.Not.EqualTo(_fixture.source.Email));
+            Assert.That(result.Email, Is.EqualTo(_fixture.source.Email));
+            Assert.That(result.OriginalApprenticeship.Email, Is.EqualTo(_fixture.ApprenticeshipResponse.Email));
+        });
+    }
+
+    [Test]
+    public async Task WhenDobIsChanged()
+    {
+        _fixture.source.DateOfBirth = new DateModel(new DateTime(2000,12,31));
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.ApprenticeshipResponse.DateOfBirth.Day, Is.Not.EqualTo(_fixture.source.DateOfBirth.Day));
+            Assert.That(result.DateOfBirth, Is.EqualTo(_fixture.source.DateOfBirth.Date));
+            Assert.That(result.OriginalApprenticeship.DateOfBirth, Is.EqualTo(_fixture.ApprenticeshipResponse.DateOfBirth));
+        });
+    }
+
+    [TestCase(DeliveryModel.Regular, DeliveryModel.PortableFlexiJob)]
+    [TestCase(DeliveryModel.PortableFlexiJob, DeliveryModel.Regular)]
+    public async Task WhenDeliveryModelIsChanged(DeliveryModel original, DeliveryModel changedTo)
+    {
+        _fixture.ApprenticeshipResponse.DeliveryModel = original;
+        _fixture.source.DeliveryModel = changedTo;
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.ApprenticeshipResponse.DeliveryModel, Is.Not.EqualTo(_fixture.source.DeliveryModel));
+            Assert.That(result.DeliveryModel, Is.EqualTo(_fixture.source.DeliveryModel));
+            Assert.That(result.OriginalApprenticeship.DeliveryModel, Is.EqualTo(_fixture.ApprenticeshipResponse.DeliveryModel));
+        });
+    }
+
+    [Test]
+    public async Task WhenEmploymentEndDateIsChanged()
+    {
+        var newDate = _fixture.ApprenticeshipResponse.EmploymentEndDate.Value.AddMonths(-1);
+        _fixture.source.EmploymentEndDate = new MonthYearModel(newDate.Month.ToString() + newDate.Year);
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.ApprenticeshipResponse.EmploymentEndDate, Is.Not.EqualTo(_fixture.source.EmploymentEndDate.Date));
+            Assert.That(result.EmploymentEndDate, Is.EqualTo(_fixture.source.EmploymentEndDate.Date));
+            Assert.That(result.OriginalApprenticeship.EmploymentEndDate, Is.EqualTo(_fixture.ApprenticeshipResponse.EmploymentEndDate));
+        });
+    }
+
+    [Test]
+    public async Task WhenEmploymentPriceIsChanged()
+    {
+        _fixture.source.EmploymentPrice = 1234;
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.ApprenticeshipResponse.EmploymentPrice, Is.Not.EqualTo(_fixture.source.EmploymentPrice));
+            Assert.That(result.EmploymentPrice, Is.EqualTo(_fixture.source.EmploymentPrice));
+            Assert.That(result.OriginalApprenticeship.EmploymentPrice, Is.EqualTo(_fixture.ApprenticeshipResponse.EmploymentPrice));
+        });
+    }
+
+    [Test]
+    public async Task WhenStartDateIsChanged()
+    {
+        var newStartDate = _fixture.ApprenticeshipResponse.StartDate.Value.AddMonths(-1);
+        _fixture.source.StartDate = new MonthYearModel(newStartDate.Month.ToString() + newStartDate.Year);
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.ApprenticeshipResponse.StartDate, Is.Not.EqualTo(_fixture.source.StartDate.Date));
+            Assert.That(result.StartDate, Is.EqualTo(_fixture.source.StartDate.Date));
+            Assert.That(result.OriginalApprenticeship.StartDate, Is.EqualTo(_fixture.ApprenticeshipResponse.StartDate));
+        });
+    }
+
+    [Test]
+    public async Task WhenEndDateIsChanged()
+    {
+        var newEndDate = _fixture.ApprenticeshipResponse.EndDate.AddMonths(-1);
+        _fixture.source.EndDate = new MonthYearModel(newEndDate.Month.ToString() + newEndDate.Year);
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.ApprenticeshipResponse.EndDate, Is.Not.EqualTo(_fixture.source.EndDate.Date));
+            Assert.That(result.EndDate, Is.EqualTo(_fixture.source.EndDate.Date));
+            Assert.That(result.OriginalApprenticeship.EndDate, Is.EqualTo(_fixture.ApprenticeshipResponse.EndDate));
+        });
+    }
+
+    [Test]
+    public async Task WhenCourseIsChanged()
+    {
+        _fixture.source.CourseCode = "Abc";
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.ApprenticeshipResponse.CourseCode, Is.Not.EqualTo(_fixture.source.CourseCode));
+            Assert.That(result.CourseCode, Is.EqualTo(_fixture.source.CourseCode));
+            Assert.That(result.OriginalApprenticeship.CourseCode, Is.EqualTo(_fixture.ApprenticeshipResponse.CourseCode));
+        });
+    }
+
+    [Test]
+    public async Task WhenVersionIsChanged()
+    {
+        _fixture.source.Version = "1.1";
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.ApprenticeshipResponse.Version, Is.Not.EqualTo(_fixture.source.Version));
+            Assert.That(result.Version, Is.EqualTo(_fixture.source.Version));
+        });
+    }
+
+    [Test]
+    public async Task WhenCourseCodeIsChangeButVersionIsNotChanged_ThenVersionIsMapped()
+    {
+        _fixture.source.CourseCode = "123";
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.ApprenticeshipResponse.Version, Is.Not.EqualTo(_fixture.source.Version));
+            Assert.That(result.Version, Is.EqualTo(_fixture.source.Version));
+        });
+    }
+
+    [Test]
+    public async Task WhenOptionIsChanged()
+    {
+        _fixture.source.Option = "NewOption";
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fixture.ApprenticeshipResponse.Option, Is.Not.EqualTo(_fixture.source.Option));
+            Assert.That(result.Option, Is.EqualTo(_fixture.source.Option));
+        });
+    }
+
+    [Test]
+    public async Task When_VersionHasOptions_Then_ReturnToChangeOptionsIsTrue()
+    {
+        _fixture.source.HasOptions = true;
+
+        var result = await _fixture.Map();
+
+        Assert.That(result.ReturnToChangeOption, Is.True);
+    }
+
+    [Test]
+    public async Task When_VersionIsChangedDirectly_Then_ReturnToChangeVersionIsTrue()
+    {
+        _fixture.source.Version = "NewVersion";
+
+        var result = await _fixture.Map();
+
+        Assert.That(result.ReturnToChangeVersion, Is.True);
+    }
+
+    [Test]
+    public async Task When_VersionIsChangedByEditCourse_Then_ReturnToChangeVersionAndOptionAreFalse()
+    {
+        _fixture.source.Version = "NewVersion";
+        _fixture.source.CourseCode = "NewCourseCode";
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ReturnToChangeVersion, Is.False);
+            Assert.That(result.ReturnToChangeOption, Is.False);
+        });
+    }
+
+    [Test]
+    public async Task When_VersionIsChangedByEditStartDate_Then_ReturnToChangeVersionAndOptionAreFalse()
+    {
+        _fixture.source.Version = "NewVersion";
+        _fixture.source.StartDate = new MonthYearModel(DateTime.Now.ToString("MMyyyy"));
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ReturnToChangeVersion, Is.False);
+            Assert.That(result.ReturnToChangeOption, Is.False);
+        });
+    }
+
+    [Test]
+    public async Task WhenMultipleFieldsAreChanged_TheyAreChanged()
+    {
+        _fixture.source.CourseCode = "NewCourse";
+        _fixture.source.LastName = "NewLastName";
+
+        var result = await _fixture.Map();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.LastName, Is.EqualTo(_fixture.source.LastName));
+            Assert.That(result.CourseCode, Is.EqualTo(_fixture.source.CourseCode));
+        });
+    }
+
+    [Test]
+    public async Task UnchangedFieldsAreNull()
+    {
+        _fixture.source.CourseCode = "Course";
+
+        var result = await _fixture.Map();
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.FirstName, Is.Null);
+            Assert.That(result.LastName, Is.Null);
+            Assert.That(result.EndMonth, Is.Null);
+            Assert.That(result.StartMonth, Is.Null);
+            Assert.That(result.BirthMonth, Is.Null);
+        });
+    }
+}
+
+public class ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTestsFixture
+{
+    private readonly Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+
+    internal readonly GetApprenticeshipResponse ApprenticeshipResponse;
+    private readonly GetPriceEpisodesResponse _priceEpisodeResponse;
+
+    private readonly ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapper _mapper;
+    private TrainingProgramme _standardSummary;
+    private Mock<IEncodingService> _encodingService;
+    public EditApprenticeshipRequestViewModel source;
+    private ConfirmEditApprenticeshipViewModel _resultViewModl;
+
+    public ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapperTestsFixture()
+    {
+        var autoFixture = new Fixture();
+
+        ApprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>()
+            .With(x => x.CourseCode, "ABC")
+            .With(x => x.Version, "1.0")
+            .With(x => x.StartDate, new DateTime(2020, 1, 1))
+            .With(x => x.EndDate, new DateTime(2021, 1, 1))
+            .With(x => x.EmploymentEndDate, new DateTime(2020, 9, 1))
+            .With(x => x.DateOfBirth, new DateTime(1990,1,1))
+            .Create();
+
+        source = new EditApprenticeshipRequestViewModel
+        {
+            ApprenticeshipId = ApprenticeshipResponse.Id,
+            CourseCode = ApprenticeshipResponse.CourseCode,
+            FirstName = ApprenticeshipResponse.FirstName,
+            LastName = ApprenticeshipResponse.LastName,
+            Email = ApprenticeshipResponse.Email,
+            DateOfBirth = new DateModel(ApprenticeshipResponse.DateOfBirth),
+            Cost = 1000,
+            EmployerReference = ApprenticeshipResponse.EmployerReference,
+            StartDate = new MonthYearModel(ApprenticeshipResponse.StartDate.Value.Month.ToString() + ApprenticeshipResponse.StartDate.Value.Year),
+            EndDate = new MonthYearModel(ApprenticeshipResponse.EndDate.Month.ToString() + ApprenticeshipResponse.EndDate.Year)
+        };
+
+        _priceEpisodeResponse = autoFixture.Build<GetPriceEpisodesResponse>()
+            .With(x => x.PriceEpisodes, new List<PriceEpisode> {
+                new() { Cost = 1000, FromDate = DateTime.Now.AddMonths(-1), ToDate = null}})
+            .Create();
+
+        _standardSummary = autoFixture.Create<TrainingProgramme>();
+        _standardSummary.EffectiveFrom = new DateTime(2018, 1, 1);
+        _standardSummary.EffectiveTo = new DateTime(2022, 1, 1);
+        _standardSummary.FundingPeriods = SetPriceBand(1000);
+
+        _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+
+        _mockCommitmentsApiClient.Setup(c => c.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ApprenticeshipResponse);
+        _mockCommitmentsApiClient.Setup(c => c.GetPriceEpisodes(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_priceEpisodeResponse);
+        _mockCommitmentsApiClient.Setup(t => t.GetTrainingProgrammeVersionByCourseCodeAndVersion(source.CourseCode, source.Version, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GetTrainingProgrammeResponse
             {
-                new TrainingProgrammeFundingPeriod
-                {
-                        EffectiveFrom = new DateTime(2019, 1, 1),
-                        EffectiveTo = DateTime.Now.AddMonths(1),
-                        FundingCap = fundingCap
-                }
-            };
-        }
+                TrainingProgramme = _standardSummary
+            });
 
-        public async Task<ConfirmEditApprenticeshipViewModel> Map()
-        {
-          resultViewModl =  await _mapper.Map(source);
-            return resultViewModl;
-        }
+        _encodingService = new Mock<IEncodingService>();
+        _encodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.ApprenticeshipId)).Returns(ApprenticeshipResponse.Id);
+        _encodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.AccountId)).Returns(ApprenticeshipResponse.EmployerAccountId);
 
-        internal void VerifyCommitmentApiIsCalled()
-        {
-            _mockCommitmentsApiClient.Verify(c => c.GetApprenticeship(ApprenticeshipResponse.Id, It.IsAny<CancellationToken>()), Times.Once());
-        }
+        _mapper = new ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapper(_mockCommitmentsApiClient.Object, _encodingService.Object);
+    }
 
-        internal void VerifyPriceEpisodeIsCalled()
+    private static List<TrainingProgrammeFundingPeriod> SetPriceBand(int fundingCap)
+    {
+        return new List<TrainingProgrammeFundingPeriod>
         {
-            _mockCommitmentsApiClient.Verify(c => c.GetPriceEpisodes(ApprenticeshipResponse.Id, It.IsAny<CancellationToken>()), Times.Once());
-        }
+            new()
+            {
+                EffectiveFrom = new DateTime(2019, 1, 1),
+                EffectiveTo = DateTime.Now.AddMonths(1),
+                FundingCap = fundingCap
+            }
+        };
+    }
+
+    public async Task<ConfirmEditApprenticeshipViewModel> Map()
+    {
+        _resultViewModl =  await _mapper.Map(source);
+        return _resultViewModl;
+    }
+
+    internal void VerifyCommitmentApiIsCalled()
+    {
+        _mockCommitmentsApiClient.Verify(c => c.GetApprenticeship(ApprenticeshipResponse.Id, It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    internal void VerifyPriceEpisodeIsCalled()
+    {
+        _mockCommitmentsApiClient.Verify(c => c.GetPriceEpisodes(ApprenticeshipResponse.Id, It.IsAny<CancellationToken>()), Times.Once());
     }
 }

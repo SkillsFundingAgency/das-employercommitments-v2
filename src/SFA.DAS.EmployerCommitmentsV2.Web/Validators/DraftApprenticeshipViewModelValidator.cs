@@ -1,16 +1,14 @@
-﻿using FluentValidation;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
+
+public class DraftApprenticeshipViewModelValidator : AbstractValidator<DraftApprenticeshipViewModel>
 {
-    public class DraftApprenticeshipViewModelValidator : AbstractValidator<DraftApprenticeshipViewModel>
+    public DraftApprenticeshipViewModelValidator()
     {
-        public DraftApprenticeshipViewModelValidator()
-        {
-            RuleFor(x => x.DateOfBirth).Must(y => y.IsValid).WithMessage("The Date of birth is not valid").When(z => z.DateOfBirth.HasValue);
-            RuleFor(x => x.StartDate).Must(y => y.IsValid).WithMessage("The start date is not valid").When(z => z.StartDate.HasValue);
-            RuleFor(x => x.EndDate).Must(y => y.IsValid).WithMessage("The end date is not valid").When(z => z.EndDate.HasValue);
-            RuleFor(x => x.DeliveryModel).NotNull().WithMessage("Select a delivery model");
-        }
+        RuleFor(x => x.DateOfBirth).Must(y => y.IsValid).WithMessage("The Date of birth is not valid").When(z => z.DateOfBirth.HasValue);
+        RuleFor(x => x.StartDate).Must(y => y.IsValid).WithMessage("The start date is not valid").When(z => z.StartDate.HasValue);
+        RuleFor(x => x.EndDate).Must(y => y.IsValid).WithMessage("The end date is not valid").When(z => z.EndDate.HasValue);
+        RuleFor(x => x.DeliveryModel).NotNull().WithMessage("Select a delivery model");
     }
 }

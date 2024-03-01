@@ -7,7 +7,6 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared.DraftApprenticeshipViewModel
 @inject ICommitmentsApiClient CommitmentsApiClient
 @inject IDeliveryModelService DeliveryModelService
-@inject SFA.DAS.Authorization.Services.IAuthorizationService AuthorizationService
 
 @Html.HiddenFor(x => x.ReservationId)
 @Html.HiddenFor(x => x.StandardUId)
@@ -40,9 +39,9 @@ else
 </div>
 
 <div>
-<input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
-<input type="hidden" asp-for="DeliveryModel" class="govuk-radios__input" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
-<input type="hidden" asp-for="ProviderName" class="govuk-radios__input" value="@Model.ProviderName">
+<input type="hidden" asp-for="CourseCode" value="@Model.CourseCode">
+<input type="hidden" asp-for="DeliveryModel" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
+<input type="hidden" asp-for="ProviderName" value="@Model.ProviderName">
 
 @if (!Model.IsContinuation)
 {
@@ -428,7 +427,7 @@ else
 </div>
 @functions
 {
-    private string DisplayCost(int? value)
+    private static string DisplayCost(int? value)
     {
         return value.HasValue ? value.Value.ToGdsCostFormat() : "--";
     }

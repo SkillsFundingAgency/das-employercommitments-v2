@@ -99,7 +99,8 @@
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
-        "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]"
+        "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
+        "configNames": "SFA.DAS.EmployerCommitmentsV2,SFA.DAS.Encoding,SFA.DAS.EmployerUrlHelper,SFA.DAS.Employer.Shared.UI,SFA.DAS.Employer.GovSignIn"
     },
     "resources": [
         {
@@ -241,6 +242,10 @@
                                 {
                                     "name": "StubAuth",
                                     "value": "[parameters('stubAuth')]"
+                                },
+                                {
+                                    "name": "ConfigNames",
+                                    "value": "[variables('configNames')]"
                                 }
                             ]
                         }

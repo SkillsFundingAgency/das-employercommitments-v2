@@ -1,9 +1,8 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+
+public class ApimUserInfo
 {
-    public class ApimUserInfo
-    {
-        public string UserId { get; set; }
-        public string UserDisplayName { get; set; }
-        public string UserEmail { get; set; }
-    }
+    public string UserId { get; set; }
+    public string UserDisplayName { get; set; }
+    public string UserEmail { get; set; }
 }

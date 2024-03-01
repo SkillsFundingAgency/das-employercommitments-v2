@@ -1,14 +1,12 @@
-﻿using FluentValidation;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
+
+public class SelectTransferConnectionViewModelValidator : AbstractValidator<SelectTransferConnectionViewModel>
 {
-    public class SelectTransferConnectionViewModelValidator : AbstractValidator<SelectTransferConnectionViewModel>
+    public SelectTransferConnectionViewModelValidator()
     {
-        public SelectTransferConnectionViewModelValidator()
-        {
-            RuleFor(x => x.AccountHashedId).NotEmpty();
-            RuleFor(x => x.TransferConnectionCode).NotEmpty().WithMessage("Please choose an option");            
-        }
+        RuleFor(x => x.AccountHashedId).NotEmpty();
+        RuleFor(x => x.TransferConnectionCode).NotEmpty().WithMessage("Please choose an option");            
     }
 }

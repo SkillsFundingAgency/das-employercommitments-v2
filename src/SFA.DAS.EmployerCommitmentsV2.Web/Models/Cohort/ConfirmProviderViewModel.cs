@@ -1,24 +1,21 @@
-﻿using System.Collections.Generic;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+public class ConfirmProviderViewModel : IndexViewModel
 {
-    public class ConfirmProviderViewModel : IndexViewModel
+    public long ProviderId { get; set; }
+    public string ProviderName { get; set; }
+    public string LegalEntityName { get; set; }
+
+    public bool? UseThisProvider { get; set; }
+    public string TransferSenderId { get; set; }
+    public string EncodedPledgeApplicationId { get; set; }
+
+    public override Dictionary<string, string> ToDictionary()
     {
-        public long ProviderId { get; set; }
-        public string ProviderName { get; set; }
-        public string LegalEntityName { get; set; }
+        var result = base.ToDictionary();
 
-        public bool? UseThisProvider { get; set; }
-        public string TransferSenderId { get; set; }
-        public string EncodedPledgeApplicationId { get; set; }
+        result.Add("ProviderId", ProviderId.ToString());
 
-        public override Dictionary<string, string> ToDictionary()
-        {
-            var result = base.ToDictionary();
-
-            result.Add("ProviderId", ProviderId.ToString());
-
-            return result;
-        }
+        return result;
     }
 }

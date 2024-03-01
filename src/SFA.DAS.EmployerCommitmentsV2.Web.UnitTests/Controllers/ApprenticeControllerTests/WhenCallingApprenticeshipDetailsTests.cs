@@ -57,20 +57,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
 
         public WhenCallingApprenticeshipDetailsTestsFixture(ApprenticeshipStatus apprenticeshipStatus, bool showPriceChangeRejected = false, bool showPriceChangeApproved = false) : base()
         {
-            _request = _autoFixture.Create<ApprenticeshipDetailsRequest>();
-            _viewModel = _autoFixture.Create<ApprenticeshipDetailsRequestViewModel>();
+            _request = AutoFixture.Create<ApprenticeshipDetailsRequest>();
+            _viewModel = AutoFixture.Create<ApprenticeshipDetailsRequestViewModel>();
             _viewModel.ApprenticeshipStatus = apprenticeshipStatus;
             _viewModel.ShowPriceChangeRejected = showPriceChangeRejected;
             _viewModel.ShowPriceChangeApproved = showPriceChangeApproved;
-            _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
+            Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
 
-            _mockMapper.Setup(m => m.Map<ApprenticeshipDetailsRequestViewModel>(_request))
+            MockMapper.Setup(m => m.Map<ApprenticeshipDetailsRequestViewModel>(_request))
                 .ReturnsAsync(_viewModel);
         }
 
         public async Task<IActionResult> ApprenticeshipDetails()
         {
-            return await _controller.ApprenticeshipDetails(_request);
+            return await Controller.ApprenticeshipDetails(_request);
         }
 
         public void VerifyViewModel(ViewResult viewResult)
@@ -78,18 +78,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             var viewModel = viewResult.Model as ApprenticeshipDetailsRequestViewModel;
 
             Assert.IsInstanceOf<ApprenticeshipDetailsRequestViewModel>(viewModel);
-            Assert.AreEqual(_viewModel, viewModel);
+            Assert.That(_viewModel, Is.EqualTo(viewModel));
         }
 
         public void VerifyNoFlashMessage(ViewResult viewResult)
         {
             var viewModel = viewResult.Model as ApprenticeshipDetailsRequestViewModel;
-         
+
             Assert.IsInstanceOf<ApprenticeshipDetailsRequestViewModel>(viewModel);
-            Assert.AreEqual(_viewModel, viewModel);
-            Assert.IsFalse(_controller.TempData.Values.Contains(ApprenticeStoppedMessage));
-            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessage));
-            Assert.IsFalse(_controller.TempData.ContainsKey(FlashMessageLevel));
+            Assert.That(_viewModel, Is.EqualTo(viewModel));
+            Assert.That(Controller.TempData.Values.Contains(ApprenticeStoppedMessage), Is.False);
+            Assert.That(Controller.TempData.ContainsKey(FlashMessage), Is.False);
+            Assert.That(Controller.TempData.ContainsKey(FlashMessageLevel), Is.False);
         }
     }
 }

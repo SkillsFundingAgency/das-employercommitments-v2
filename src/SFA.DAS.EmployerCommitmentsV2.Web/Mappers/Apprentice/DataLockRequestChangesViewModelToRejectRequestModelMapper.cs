@@ -1,27 +1,26 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
+
+public class DataLockRequestChangesViewModelToRejectRequestModelMapper : IMapper<DataLockRequestChangesViewModel, RejectDataLocksRequestChangesRequest>
 {
-    public class DataLockRequestChangesViewModelToRejectRequestModelMapper : IMapper<DataLockRequestChangesViewModel, RejectDataLocksRequestChangesRequest>
+    private readonly IAuthenticationService _authenticationService;
+
+    public DataLockRequestChangesViewModelToRejectRequestModelMapper(IAuthenticationService authenticationService)
     {
-        private readonly IAuthenticationService _authenticationService;
+        _authenticationService = authenticationService;
+    }
 
-        public DataLockRequestChangesViewModelToRejectRequestModelMapper(IAuthenticationService authenticationService)
+    public async Task<RejectDataLocksRequestChangesRequest> Map(DataLockRequestChangesViewModel source)
+    {
+        return await Task.FromResult(new RejectDataLocksRequestChangesRequest
         {
-            _authenticationService = authenticationService;
-        }
-
-        public async Task<RejectDataLocksRequestChangesRequest> Map(DataLockRequestChangesViewModel source)
-        {
-            return await Task.FromResult(new RejectDataLocksRequestChangesRequest
-            {
-                ApprenticeshipId = source.ApprenticeshipId,
-                UserInfo = _authenticationService.UserInfo
-            });
-        }
+            ApprenticeshipId = source.ApprenticeshipId,
+            UserInfo = _authenticationService.UserInfo
+        });
     }
 }

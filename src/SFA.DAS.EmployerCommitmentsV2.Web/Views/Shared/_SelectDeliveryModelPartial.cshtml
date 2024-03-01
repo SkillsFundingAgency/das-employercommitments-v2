@@ -1,6 +1,5 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
-@using SFA.DAS.EmployerCommitmentsV2.Extensions
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared.IDeliveryModelSelection
 
 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.DeliveryModel, " govuk-form-group--error")">
@@ -11,7 +10,7 @@
         @Html.ValidationMessageFor(m => m.DeliveryModel, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DeliveryModel) })
         <div class="govuk-radios">
 
-            @foreach (var deliveryModelOption in @Model.DeliveryModels)
+            @foreach (var deliveryModelOption in Model.DeliveryModels)
             {
                 <div class="govuk-radios__item">
                     <input type="radio" asp-for="DeliveryModel" class="govuk-radios__input" value="@deliveryModelOption" id="@deliveryModelOption">

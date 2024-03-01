@@ -1,12 +1,12 @@
 ﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
-@if (TempData.ContainsKey(ITempDataDictionaryExtensions.FlashMessageBodyTempDataKey))
+@if (TempData.ContainsKey(TempDataDictionaryExtensions.FlashMessageBodyTempDataKey))
 {
-    var body = TempData[ITempDataDictionaryExtensions.FlashMessageBodyTempDataKey];
-    var detail = TempData[ITempDataDictionaryExtensions.FlashMessageTempDetailKey];
-    var title = TempData[ITempDataDictionaryExtensions.FlashMessageTitleTempDataKey];
-    var level = (ITempDataDictionaryExtensions.FlashMessageLevel) TempData[ITempDataDictionaryExtensions.FlashMessageLevelTempDataKey];
+    var body = TempData[TempDataDictionaryExtensions.FlashMessageBodyTempDataKey];
+    var detail = TempData[TempDataDictionaryExtensions.FlashMessageTempDetailKey];
+    var title = TempData[TempDataDictionaryExtensions.FlashMessageTitleTempDataKey];
+    var level = (TempDataDictionaryExtensions.FlashMessageLevel) TempData[TempDataDictionaryExtensions.FlashMessageLevelTempDataKey];
 
-    @if (level == ITempDataDictionaryExtensions.FlashMessageLevel.Info)
+    @if (level == TempDataDictionaryExtensions.FlashMessageLevel.Info)
     {
         <div class="govuk-grid-column-two-thirds das-notification govuk-!-margin-bottom-4 das-notification--info" tabindex="-1">
             <h3 class="das-notification__heading">@body</h3>
@@ -15,7 +15,7 @@
             </div>
         </div>
     }
-    @if (level == ITempDataDictionaryExtensions.FlashMessageLevel.Success)
+    @if (level == TempDataDictionaryExtensions.FlashMessageLevel.Success)
     {
         if (title == null)
         {

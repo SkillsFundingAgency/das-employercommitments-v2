@@ -1,17 +1,13 @@
-﻿
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
-using FluentValidation;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
+public class ViewChangesRequestValidator : AbstractValidator<ViewChangesRequest>
 {
-    public class ViewChangesRequestValidator : AbstractValidator<ViewChangesRequest>
+    public ViewChangesRequestValidator()
     {
-        public ViewChangesRequestValidator()
-        {
-            RuleFor(x => x.ApprenticeshipHashedId).NotEmpty();
-            RuleFor(x => x.AccountHashedId).NotEmpty();
-            RuleFor(x => x.ApprenticeshipId).GreaterThan(0);
-        }
+        RuleFor(x => x.ApprenticeshipHashedId).NotEmpty();
+        RuleFor(x => x.AccountHashedId).NotEmpty();
+        RuleFor(x => x.ApprenticeshipId).GreaterThan(0);
     }
 }
