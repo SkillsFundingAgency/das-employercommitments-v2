@@ -235,7 +235,7 @@ public class DetailsViewModelMapperTests
                 var draftApprenticeshipResult =
                     result.Courses.SelectMany(c => c.DraftApprenticeships).Single(x => x.Id == draftApprenticeship.Id);
 
-                Assert.AreEqual(1000, draftApprenticeshipResult.FundingBandCap);
+                Assert.That(draftApprenticeshipResult.FundingBandCap, Is.EqualTo(1000));
             }
         }
 

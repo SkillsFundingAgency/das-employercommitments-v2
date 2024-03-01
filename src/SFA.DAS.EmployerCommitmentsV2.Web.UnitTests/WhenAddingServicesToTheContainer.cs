@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using AspNetCore.IServiceCollection.AddIUrlHelper;
+using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EAS.Account.Api.Client;
+using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -126,8 +128,9 @@ public class WhenAddingServicesToTheContainer
         services.AddApplicationServices(employerCommitmentsV2Configuration);
         services.AddModelMappings();
         services.AddDasMvc();
-
+        
         services.AddTransient<IUrlHelper, StubUrlHelper>();
+        services.AddTransient<UrlBuilder>(_ => new UrlBuilder("test"));
 
         services.AddCommitmentsApiClient(configuration);
         services.AddApprovalsApiClient();
