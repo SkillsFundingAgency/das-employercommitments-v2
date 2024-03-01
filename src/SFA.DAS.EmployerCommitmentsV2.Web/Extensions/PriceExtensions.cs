@@ -5,7 +5,12 @@
         public static string FormatCost(this decimal? cost)
         {
             if (!cost.HasValue) return string.Empty;
-            return $"£{cost.Value:n0}";
+            return FormatCost(cost.Value);
+        }
+
+        public static string FormatCost(this decimal cost)
+        {
+            return $"£{cost:n0}";
         }
 
         public static string FormatCost(this int? cost)
