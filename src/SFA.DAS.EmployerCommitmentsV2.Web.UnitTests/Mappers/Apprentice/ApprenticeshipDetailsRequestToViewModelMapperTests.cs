@@ -138,8 +138,8 @@ public class ApprenticeshipDetailsRequestToViewModelMapperTests
             .ReturnsAsync(GetManageApprenticeshipDetailsResponse);
 
 
-        _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
-    }
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
+        }
 
     [Test]
     public async Task HashedApprenticeshipId_IsMapped()
@@ -626,7 +626,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapperTests
         };
 
 
-        _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
 
         //Act
         var result = await _mapper.Map(_request);
@@ -659,7 +659,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapperTests
 
         _apprenticeshipDetailsResponse = autoFixture.Create<GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse>();
 
-        _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
 
         // Act
         var result = await _mapper.Map(_request);
@@ -744,7 +744,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapperTests
         _overlappingTrainingDateRequestResponce = autoFixture.Create<GetManageApprenticeshipDetailsResponse.GetApprenticeshipOverlappingTrainingDateResponse>();
         _overlappingTrainingDateRequestResponce.ApprenticeshipOverlappingTrainingDates.First().Status = OverlappingTrainingDateRequestStatus.Pending;
 
-        _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
 
         //Act
         var result = await _mapper.Map(_request);
@@ -759,7 +759,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapperTests
         //Arrange
         _overlappingTrainingDateRequestResponce = null;
 
-        _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
 
         //Act
         var result = await _mapper.Map(_request);
@@ -778,7 +778,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapperTests
             request.Status = OverlappingTrainingDateRequestStatus.Rejected;
         }
 
-        _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>());
+            _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
 
         //Act
         var result = await _mapper.Map(_request);
@@ -825,7 +825,34 @@ public class ApprenticeshipDetailsRequestToViewModelMapperTests
         //Act
         var result = await _mapper.Map(_request);
 
-        //Assert
-        Assert.That(result.IsOnFlexiPaymentPilot, Is.EqualTo(GetManageApprenticeshipDetailsResponse.Apprenticeship.IsOnFlexiPaymentPilot));
+            //Assert
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.Apprenticeship.IsOnFlexiPaymentPilot, result.IsOnFlexiPaymentPilot);
+        }
+
+        [Test]
+        public async Task And_PriceChangeDetailsIsNull_Then_PriceChangeDetailsNotReturned()
+        {
+            GetManageApprenticeshipDetailsResponse.PendingPriceChange = null;
+
+            var result = await _mapper.Map(_request);
+
+            result.PendingPriceChange.Should().BeNull();
+        }
+
+        [Test]
+        public async Task And_PriceChangeDetailsArePopulated_Then_PriceChangeDetailsReturned()
+        {
+            var result = await _mapper.Map(_request);
+
+            Assert.IsNotNull(result.PendingPriceChange);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.Cost, result.PendingPriceChange.Cost);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EndPointAssessmentPrice, result.PendingPriceChange.EndPointAssessmentPrice);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.TrainingPrice, result.PendingPriceChange.TrainingPrice);
+        }
+
+        private UrlBuilder GetMockUrlBuilder()
+        {
+            return new UrlBuilder("unit tests");
+        }
     }
 }

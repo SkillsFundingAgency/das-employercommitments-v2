@@ -16,19 +16,22 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
     private readonly ICommitmentsApiClient _commitmentsApiClient;
     private readonly IEncodingService _encodingService;
     private readonly ILogger<ApprenticeshipDetailsRequestToViewModelMapper> _logger;
+    private readonly UrlBuilder _urlBuilder;
     private readonly IApprovalsApiClient _approvalsApiClient;
 
-    public ApprenticeshipDetailsRequestToViewModelMapper(
-        ICommitmentsApiClient commitmentsApiClient,
-        IEncodingService encodingService,
-        IApprovalsApiClient approvalsApiClient,
-        ILogger<ApprenticeshipDetailsRequestToViewModelMapper> logger)
-    {
-        _commitmentsApiClient = commitmentsApiClient;
-        _encodingService = encodingService;
-        _approvalsApiClient = approvalsApiClient;
-        _logger = logger;
-    }
+        public ApprenticeshipDetailsRequestToViewModelMapper(
+            ICommitmentsApiClient commitmentsApiClient,
+            IEncodingService encodingService,
+            IApprovalsApiClient approvalsApiClient,
+            ILogger<ApprenticeshipDetailsRequestToViewModelMapper> logger,
+            UrlBuilder urlBuilder)
+        {
+            _commitmentsApiClient = commitmentsApiClient;
+            _encodingService = encodingService;
+            _approvalsApiClient = approvalsApiClient;
+            _logger = logger;
+            _urlBuilder = urlBuilder;
+        }
 
     public async Task<ApprenticeshipDetailsRequestViewModel> Map(ApprenticeshipDetailsRequest source)
     {
@@ -95,36 +98,53 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                     })
                     .ToList(),
 
-                PendingDataLockChange = dataLockPriceTriaged || dataLockCourseChangedTraiged,
-                PendingDataLockRestart = dataLockCourseTriaged,
-                ConfirmationStatus = response.Apprenticeship.ConfirmationStatus,
-                Email = response.Apprenticeship.Email,
-                EmailShouldBePresent = response.Apprenticeship.EmailShouldBePresent,
-                HasNewerVersions = await HasNewerVersions(currentTrainingProgramme),
-                Option = response.Apprenticeship.Option,
-                VersionOptions = currentTrainingProgramme.Options,
-                EmailAddressConfirmedByApprentice = response.Apprenticeship.EmailAddressConfirmedByApprentice,
-                EmploymentEndDate = response.Apprenticeship.EmploymentEndDate,
-                EmploymentPrice = response.Apprenticeship.EmploymentPrice,
-                RecognisePriorLearning = response.Apprenticeship.RecognisePriorLearning,
-                DurationReducedBy = response.Apprenticeship.DurationReducedBy,
-                PriceReducedBy = response.Apprenticeship.PriceReducedBy,
-                TrainingTotalHours = response.Apprenticeship.TrainingTotalHours,
-                DurationReducedByHours = response.Apprenticeship.DurationReducedByHours,
-                IsDurationReducedByRpl = response.Apprenticeship.IsDurationReducedByRpl,
-                HasPendingOverlappingTrainingDateRequest = hasPendingoverlappingTrainingDateRequest,
-                HasMultipleDeliveryModelOptions = response.HasMultipleDeliveryModelOptions,
-                IsOnFlexiPaymentPilot = response.Apprenticeship.IsOnFlexiPaymentPilot
-            };
+                    PendingDataLockChange = dataLockPriceTriaged || dataLockCourseChangedTraiged,
+                    PendingDataLockRestart = dataLockCourseTriaged,
+                    ConfirmationStatus = response.Apprenticeship.ConfirmationStatus,
+                    Email = response.Apprenticeship.Email,
+                    EmailShouldBePresent = response.Apprenticeship.EmailShouldBePresent,
+                    HasNewerVersions = await HasNewerVersions(currentTrainingProgramme),
+                    Option = response.Apprenticeship.Option,
+                    VersionOptions = currentTrainingProgramme.Options,
+                    EmailAddressConfirmedByApprentice = response.Apprenticeship.EmailAddressConfirmedByApprentice,
+                    EmploymentEndDate = response.Apprenticeship.EmploymentEndDate,
+                    EmploymentPrice = response.Apprenticeship.EmploymentPrice,
+                    RecognisePriorLearning = response.Apprenticeship.RecognisePriorLearning,
+                    DurationReducedBy = response.Apprenticeship.DurationReducedBy,
+                    PriceReducedBy = response.Apprenticeship.PriceReducedBy,
+                    TrainingTotalHours = response.Apprenticeship.TrainingTotalHours,
+                    DurationReducedByHours = response.Apprenticeship.DurationReducedByHours,
+                    IsDurationReducedByRpl = response.Apprenticeship.IsDurationReducedByRpl,
+                    HasPendingOverlappingTrainingDateRequest = hasPendingoverlappingTrainingDateRequest,
+                    HasMultipleDeliveryModelOptions = response.HasMultipleDeliveryModelOptions,
+                    IsOnFlexiPaymentPilot = response.Apprenticeship.IsOnFlexiPaymentPilot,
+                    PendingPriceChange = Map(response.PendingPriceChange),
+                    PendingPriceChangeUrl = response.PendingPriceChange != null ? _urlBuilder.ApprenticeshipsLink("ViewPendingPriceChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
+                };
 
-            return result;
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Error mapping for accountId {source.AccountHashedId}  and apprenticeship {source.ApprenticeshipHashedId} to ApprenticeshipDetailsRequestViewModel");
+                throw;
+            }
         }
-        catch (Exception e)
+
+        private PendingPriceChange Map(GetManageApprenticeshipDetailsResponse.PendingPriceChangeDetails priceChangeDetails)
         {
-            _logger.LogError(e, "Error mapping for accountId {AccountHashedId}  and apprenticeship {ApprenticeshipHashedId} to ApprenticeshipDetailsRequestViewModel", source.AccountHashedId, source.ApprenticeshipHashedId);
-            throw;
+            if (priceChangeDetails == null)
+            {
+                return null;
+            }
+
+            return new PendingPriceChange
+            {
+                Cost = priceChangeDetails.Cost,
+                EndPointAssessmentPrice = priceChangeDetails.EndPointAssessmentPrice,
+                TrainingPrice = priceChangeDetails.TrainingPrice
+            };
         }
-    }
 
     private async Task<TrainingProgramme> GetTrainingProgramme(string courseCode, string standardUId)
     {

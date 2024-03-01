@@ -224,10 +224,25 @@ public class DetailsViewModelMapperTests
         }
     }
 
-    [Test]
-    public async Task Then_Funding_Cap_Is_Null_When_No_Course_Found()
-    {
-        var fixture = new DetailsViewModelMapperTestsFixture().SetNoCourse();
+        [Test]
+        public async Task FundingBandCapsAreMappedCorrectlyForPilotApprenticeships()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().SetOnlyActualStartDateToHaveValidFundingBandCap();
+            var result = await fixture.Map();
+
+            foreach (var draftApprenticeship in fixture.DraftApprenticeshipsResponse.DraftApprenticeships.Where(x => x.IsOnFlexiPaymentPilot.GetValueOrDefault() && x.StartDate == fixture.DefaultStartDate))
+            {
+                var draftApprenticeshipResult =
+                    result.Courses.SelectMany(c => c.DraftApprenticeships).Single(x => x.Id == draftApprenticeship.Id);
+
+                Assert.AreEqual(1000, draftApprenticeshipResult.FundingBandCap);
+            }
+        }
+
+        [Test]
+        public async Task Then_Funding_Cap_Is_Null_When_No_Course_Found()
+        {
+            var fixture = new DetailsViewModelMapperTestsFixture().SetNoCourse();
 
         var result = await fixture.Map();
 
@@ -961,13 +976,14 @@ public class DetailsViewModelMapperTestsFixture
     {
         startDate = startDate ?? DefaultStartDate;
 
-        draftApprenticeship.CourseName = courseName;
-        draftApprenticeship.CourseCode = courseCode;
-        draftApprenticeship.Cost = cost;
-        draftApprenticeship.StartDate = startDate;
-        draftApprenticeship.OriginalStartDate = originalStartDate;
-        draftApprenticeship.DeliveryModel = dm;
-    }
+            draftApprenticeship.CourseName = courseName;
+            draftApprenticeship.CourseCode = courseCode;
+            draftApprenticeship.Cost = cost;
+            draftApprenticeship.StartDate = startDate;
+            draftApprenticeship.OriginalStartDate = originalStartDate;
+            draftApprenticeship.DeliveryModel = dm;
+            draftApprenticeship.ActualStartDate = startDate;
+        }
 
     public DetailsViewModelMapperTestsFixture SetIsAgreementSigned(bool isAgreementSigned)
     {
@@ -1039,10 +1055,20 @@ public class DetailsViewModelMapperTestsFixture
         return this;
     }
 
-    internal DetailsViewModelMapperTestsFixture SetUlnOverlap(bool hasOverlap)
-    {
-        CommitmentsApiClient.Setup(x => x.ValidateUlnOverlap(It.IsAny<ValidateUlnOverlapRequest>(), CancellationToken.None))
-            .ReturnsAsync(new ValidateUlnOverlapResult { HasOverlappingEndDate = hasOverlap, HasOverlappingStartDate = hasOverlap });
+        public DetailsViewModelMapperTestsFixture SetOnlyActualStartDateToHaveValidFundingBandCap()
+        {
+            DraftApprenticeshipsResponse.DraftApprenticeships = DraftApprenticeshipsResponse.DraftApprenticeships.Select(c =>
+            {
+                c.StartDate = c.StartDate.GetValueOrDefault().AddMonths(2);
+                return c;
+            }).ToList();
+            return this;
+        }
+
+        internal DetailsViewModelMapperTestsFixture SetUlnOverlap(bool hasOverlap)
+        {
+            CommitmentsApiClient.Setup(x => x.ValidateUlnOverlap(It.IsAny<ValidateUlnOverlapRequest>(), CancellationToken.None))
+             .ReturnsAsync(new ValidateUlnOverlapResult { HasOverlappingEndDate = hasOverlap, HasOverlappingStartDate = hasOverlap });
 
         return this;
     }

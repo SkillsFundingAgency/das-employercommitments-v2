@@ -164,6 +164,28 @@ public class GetManageApprenticeshipDetailsResponse
         public IReadOnlyCollection<ChangeOfProviderLink> ChangeOfProviderChain { get; set; }
     }
 
+        public class GetApprenticeshipOverlappingTrainingDateResponse
+        {
+            public class ApprenticeshipOverlappingTrainingDate
+            {
+                public long Id { get; set; }
+                public long DraftApprenticeshipId { get; set; }
+                public long PreviousApprenticeshipId { get; set; }
+                public OverlappingTrainingDateRequestResolutionType? ResolutionType { get; set; }
+                public OverlappingTrainingDateRequestStatus Status { get; set; }
+                public DateTime? ActionedOn { get; set; }
+            }
+            public IReadOnlyCollection<ApprenticeshipOverlappingTrainingDate> ApprenticeshipOverlappingTrainingDates { get; set; }
+        }
+
+        public class PendingPriceChangeDetails
+        {
+            public decimal Cost { get; set; }
+            public decimal? TrainingPrice { get; set; }
+            public decimal? EndPointAssessmentPrice { get; set; }
+        }
+    }
+}
     public class GetApprenticeshipOverlappingTrainingDateResponse
     {
         public class ApprenticeshipOverlappingTrainingDate

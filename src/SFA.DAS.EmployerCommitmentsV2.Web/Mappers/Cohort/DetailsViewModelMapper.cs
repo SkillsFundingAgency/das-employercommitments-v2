@@ -219,11 +219,13 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
             }
         }
 
-        foreach (var draftApprenticeship in draftApprenticeships)
-        {
-            draftApprenticeship.FundingBandCap = GetFundingBandCap(course, draftApprenticeship.OriginalStartDate ?? draftApprenticeship.StartDate);
+            foreach (var draftApprenticeship in draftApprenticeships)
+            {
+                draftApprenticeship.FundingBandCap = draftApprenticeship.IsOnFlexiPaymentPilot.GetValueOrDefault()
+                    ? GetFundingBandCap(course, draftApprenticeship.OriginalStartDate ?? draftApprenticeship.ActualStartDate)
+                    : GetFundingBandCap(course, draftApprenticeship.OriginalStartDate ?? draftApprenticeship.StartDate);
+            }
         }
-    }
 
     private static int? GetFundingBandCap(GetTrainingProgrammeResponse course, DateTime? startDate)
     {

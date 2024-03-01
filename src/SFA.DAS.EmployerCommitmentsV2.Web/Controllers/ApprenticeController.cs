@@ -682,6 +682,9 @@ public class ApprenticeController : Controller
     public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request)
     {
         var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
+        viewModel.ShowPriceChangeRejected = showPriceChangeRejected;
+        viewModel.ShowPriceChangeApproved = showPriceChangeApproved;
+
         return View("details", viewModel);
     }
 

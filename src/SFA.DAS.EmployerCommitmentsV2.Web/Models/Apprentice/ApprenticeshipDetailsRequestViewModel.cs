@@ -83,9 +83,15 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public bool HasMultipleDeliveryModelOptions { get; set; }
     public bool? IsOnFlexiPaymentPilot { get; set; }
 
-    public ActionRequiredBanner GetActionRequiredBanners()
-    {
-        var actionRequiredBanner = ActionRequiredBanner.None;
+        public PendingPriceChange PendingPriceChange { get; set; }
+        public bool HasPendingPriceChange => PendingPriceChange != null;
+        public string PendingPriceChangeUrl { get; set; }
+        public bool ShowPriceChangeRejected { get; set; }
+        public bool ShowPriceChangeApproved { get; set; }
+
+        public ActionRequiredBanner GetActionRequiredBanners()
+        {
+            var actionRequiredBanner = ActionRequiredBanner.None;
 
         actionRequiredBanner |= PendingChanges == PendingChanges.ReadyForApproval
             ? ActionRequiredBanner.PendingChangeForApproval
@@ -155,11 +161,19 @@ public enum ChangeToApprenticeshipBanner
     InFlightChangeOfProviderPendingOther = 2
 }
 
-public class TrainingProviderHistory
-{
-    public string ProviderName { get; set; }
-    public DateTime FromDate { get; set; }
-    public DateTime ToDate { get; set; }
-    public string HashedApprenticeshipId { get; set; }
-    public bool ShowLink { get; set; }
+    public class TrainingProviderHistory
+    {
+        public string ProviderName { get; set; }
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
+        public string HashedApprenticeshipId { get; set; }
+        public bool ShowLink { get; set; }
+    }
+
+    public class PendingPriceChange
+    {
+        public decimal Cost { get; set; }
+        public decimal? TrainingPrice { get; set; }
+        public decimal? EndPointAssessmentPrice { get; set; }
+    }
 }
