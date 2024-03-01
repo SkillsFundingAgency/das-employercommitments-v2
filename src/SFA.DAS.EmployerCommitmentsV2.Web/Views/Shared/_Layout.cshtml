@@ -1,14 +1,14 @@
-﻿@using SFA.DAS.Employer.Shared.UI.Models
-
-<!DOCTYPE html>
-<html lang="en" class="govuk-template ">
-
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@using SFA.DAS.Employer.Shared.UI.Models
 @{
-
     var accountHashedId = (string)ViewContext.RouteData.Values["accountHashedId"];
     ViewBag.HideHeaderBorder = true;
     var footerModel = new FooterModel { AccountId = accountHashedId, UsePrivacyV2 = true };
 }
+
+<!DOCTYPE html>
+<html lang="en" class="govuk-template ">
 
 <head>
     <!-- Google Tag Manager -->
@@ -26,37 +26,28 @@
 
     <meta charset="utf-8" />
     <title>@ViewData["Title"]</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0b0c0c" />
-
-    <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon" />
-    <link rel="mask-icon" href="/assets/images/govuk-mask-icon.svg" color="#0b0c0c" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/govuk-apple-touch-icon-180x180.png" />
-    <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/govuk-apple-touch-icon-167x167.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png" />
-    <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png" />
-
-    <link href="/libs/select2/style.css" rel="stylesheet" />
-
-    <!--[if !IE 8]><!-->
+    <link rel="icon" sizes="48x48" href="/assets/images/favicon.ico" />
+    <link rel="icon" sizes="any" href="/assets/images/favicon.svg" type="image/svg+xml" />
+    <link rel="mask-icon" href="/assets/images/govuk-icon-mask.svg" color="#0b0c0c" />
+    <link rel="apple-touch-icon" href="/assets/images/govuk-icon-180.png" />
     <link href="/css/main.css" rel="stylesheet" />
     <link href="/css/app.css" rel="stylesheet" no-cdn />
-    <!--<![endif]-->
-
-    <meta property="og:image" content="/assets/images/govuk-opengraph-image.png" />
 </head>
+
 <body class="govuk-template__body">
 
     <!-- Google Tag Manager (noscript) -->
     <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KWQBWGJ"
-                height="0" width="0" style="display: none; visibility: hidden">
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KWQBWGJ" height="0" width="0"
+            style="display: none; visibility: hidden">
         </iframe>
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
 
     <script>
-        document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+        document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
     </script>
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
@@ -82,14 +73,20 @@
     <partial name="_Footer" model="@footerModel" />
     <partial name="_GoogleAnalyticsInfo" />
 
+    <script type="module" src="/libs/govuk-frontend/govuk-frontend.min.js"></script>
+    <script type="module" cdnify>
+        import {
+            initAll
+        } from '@Configuration["cdn:url"]/libs/govuk-frontend/govuk-frontend.min.js'
+        initAll()
+    </script>
+
     <script src="/libs/accessible-autocomplete/accessible-autocomplete.min.js"></script>
-    <script src="/libs/govuk-frontend/all.js"></script>
     <script src="/libs/jquery/jquery.min.js"></script>
     <script src="/js/das-all.js"></script>
     <script src="/js/app.min.js"></script>
 
     <script>
-        window.GOVUKFrontend.initAll();
         window.DASFrontend.initAll();
     </script>
 
@@ -124,8 +121,8 @@
                     }
                 }
             });
-            form.on('submit', function() {
-                $('.autocomplete__input').each(function() {
+            form.on('submit', function () {
+                $('.autocomplete__input').each(function () {
                     var that = $(this);
                     if (that.val().length === 0) {
                         var fieldId = that.attr('id'),
@@ -155,4 +152,5 @@
     @RenderSection("Scripts", required: false)
 
 </body>
+
 </html>
