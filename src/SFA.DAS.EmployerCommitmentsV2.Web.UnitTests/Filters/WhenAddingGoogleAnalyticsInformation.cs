@@ -1,71 +1,70 @@
-﻿using AutoFixture.NUnit3;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Moq;
-using NUnit.Framework;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Filters;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Customisations;
 using SFA.DAS.Testing.AutoFixture;
-using System;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Filters
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Filters;
+
+[TestFixture]
+public class WhenAddingGoogleAnalyticsInformation
 {
-    [TestFixture]
-    public class WhenAddingGoogleAnalyticsInformation
+    [Test, DomainAutoData]
+    public async Task Then_If_Employer_Adds_The_AccountId_And_UserId_To_The_ViewBag_Data(
+        Guid userId,
+        long accountId,
+        [ArrangeActionContext] ActionExecutingContext context,
+        [Frozen] Mock<ActionExecutionDelegate> nextMethod,
+        GoogleAnalyticsFilter filter)
     {
-        [Test, DomainAutoData]
-        public async Task Then_If_Employer_Adds_The_AccountId_And_UserId_To_The_ViewBag_Data(
-            Guid userId,
-            long accountId,
-            [ArrangeActionContext] ActionExecutingContext context,
-            [Frozen] Mock<ActionExecutionDelegate> nextMethod,
-            GoogleAnalyticsFilter filter)
+        //Arrange
+        var claim = new Claim(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, userId.ToString());
+        context.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { claim }));
+        context.RouteData.Values.Add("AccountHashedId", accountId);
+
+        //Act
+        await filter.OnActionExecutionAsync(context, nextMethod.Object);
+
+        //Assert
+        var actualController = context.Controller as Controller;
+        
+        Assert.That(actualController, Is.Not.Null);
+        
+        var viewBagData = actualController.ViewBag.GaData as GaData;
+        
+        Assert.That(viewBagData, Is.Not.Null);
+        Assert.Multiple(() =>
         {
-            //Arrange
-            var claim = new Claim(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, userId.ToString());
-            context.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { claim }));
-            context.RouteData.Values.Add("AccountHashedId", accountId);
+            Assert.That(viewBagData.Acc, Is.EqualTo(accountId.ToString()));
+            Assert.That(viewBagData.UserId, Is.EqualTo(userId.ToString()));
+        });
+    }
 
-            //Act
-            await filter.OnActionExecutionAsync(context, nextMethod.Object);
+    [Test, DomainAutoData]
+    public async Task And_Context_Is_Non_Controller_Then_No_Data_Is_Added_To_ViewBag(
+        Guid userId,
+        long accountId,
+        [ArrangeActionContext] ActionExecutingContext context,
+        [Frozen] Mock<ActionExecutionDelegate> nextMethod,
+        GoogleAnalyticsFilter filter)
+    {
+        //Arrange
+        var claim = new Claim(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, userId.ToString());
+        context.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { claim }));
+        context.RouteData.Values.Add("employerAccountId", accountId);
 
-            //Assert
-            var actualController = context.Controller as Controller;
-            Assert.IsNotNull(actualController);
-            var viewBagData = actualController.ViewBag.GaData as GaData;
-            Assert.IsNotNull(viewBagData);
-            Assert.AreEqual(accountId.ToString(), viewBagData.Acc);
-            Assert.AreEqual(userId.ToString(), viewBagData.UserId);
-        }
+        var contextWithoutController = new ActionExecutingContext(
+            new ActionContext(context.HttpContext, context.RouteData, context.ActionDescriptor),
+            context.Filters,
+            context.ActionArguments,
+            "");
 
-        [Test, DomainAutoData]
-        public async Task And_Context_Is_Non_Controller_Then_No_Data_Is_Added_To_ViewBag(
-            Guid userId,
-            long accountId,
-            [ArrangeActionContext] ActionExecutingContext context,
-            [Frozen] Mock<ActionExecutionDelegate> nextMethod,
-            GoogleAnalyticsFilter filter)
-        {
-            //Arrange
-            var claim = new Claim(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, userId.ToString());
-            context.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { claim }));
-            context.RouteData.Values.Add("employerAccountId", accountId);
+        //Act
+        await filter.OnActionExecutionAsync(contextWithoutController, nextMethod.Object);
 
-            var contextWithoutController = new ActionExecutingContext(
-                new ActionContext(context.HttpContext, context.RouteData, context.ActionDescriptor),
-                context.Filters,
-                context.ActionArguments,
-                "");
-
-            //Act
-            await filter.OnActionExecutionAsync(contextWithoutController, nextMethod.Object);
-
-            //Assert
-            Assert.DoesNotThrowAsync(() => filter.OnActionExecutionAsync(contextWithoutController, nextMethod.Object));
-        }
+        //Assert
+        Assert.DoesNotThrowAsync(() => filter.OnActionExecutionAsync(contextWithoutController, nextMethod.Object));
     }
 }

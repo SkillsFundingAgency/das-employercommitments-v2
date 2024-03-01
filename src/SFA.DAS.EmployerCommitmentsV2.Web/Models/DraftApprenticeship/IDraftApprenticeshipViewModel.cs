@@ -1,8 +1,7 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+
+public interface IDraftApprenticeshipViewModel
 {
-    public interface IDraftApprenticeshipViewModel
-    {
-        string AccountHashedId { get; }
-        string CohortReference { get; }
-    }
+    string AccountHashedId { get; }
+    string CohortReference { get; }
 }

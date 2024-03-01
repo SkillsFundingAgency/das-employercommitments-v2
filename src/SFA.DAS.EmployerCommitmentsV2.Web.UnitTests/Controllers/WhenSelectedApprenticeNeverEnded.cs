@@ -1,44 +1,42 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers;
+
+public class WhenSelectedApprenticeNeverEnded:ApprenticeControllerTestBase
 {
-    public class WhenSelectedApprenticeNeverEnded:ApprenticeControllerTestBase
+    [SetUp]
+    public void Arrange()
     {
-        [SetUp]
-        public void Arrange()
+        MockModelMapper = new Mock<IModelMapper>();
+        MockCookieStorageService = new Mock<Interfaces.ICookieStorageService<IndexRequest>>();
+        MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+
+        Controller = new ApprenticeController(MockModelMapper.Object,
+            MockCookieStorageService.Object,
+            MockCommitmentsApiClient.Object,
+            Mock.Of<ILogger<ApprenticeController>>());
+    }
+
+    [Test, MoqAutoData]
+    public async Task WhenSelected_ApprenticeshipNotEnded_ThenApprenticeshipNotEndedViewModelIsPassedToTheView(ApprenticeshipNotEndedViewModel expectedViewModel)
+    {
+        MockModelMapper.Setup(m => m.Map<ApprenticeshipNotEndedViewModel>(It.IsAny<ApprenticeshipNotEndedRequest>()))
+            .ReturnsAsync(expectedViewModel);
+
+        var viewResult = await Controller.ApprenticeshipNotEnded(new ApprenticeshipNotEndedRequest()) as ViewResult;
+        var viewModel = viewResult.Model;
+
+        var actualViewModel = (ApprenticeshipNotEndedViewModel)viewModel;
+
+        Assert.Multiple(() =>
         {
-            _mockModelMapper = new Mock<IModelMapper>();
-            _mockCookieStorageService = new Mock<ICookieStorageService<IndexRequest>>();
-            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-
-            _controller = new ApprenticeController(_mockModelMapper.Object,
-                _mockCookieStorageService.Object,
-                _mockCommitmentsApiClient.Object,
-                Mock.Of<ILogger<ApprenticeController>>());
-        }
-
-        [Test, MoqAutoData]
-        public async Task WhenSelected_ApprenticeshipNotEnded_ThenApprenticeshipNotEndedViewModelIsPassedToTheView(ApprenticeshipNotEndedViewModel expectedViewModel)
-        {
-            _mockModelMapper.Setup(m => m.Map<ApprenticeshipNotEndedViewModel>(It.IsAny<ApprenticeshipNotEndedRequest>()))
-                .ReturnsAsync(expectedViewModel);
-
-            var viewResult = await _controller.ApprenticeshipNotEnded(new ApprenticeshipNotEndedRequest()) as ViewResult;
-            var viewModel = viewResult.Model;
-
-            var actualViewModel = (ApprenticeshipNotEndedViewModel)viewModel;
-
-            Assert.IsInstanceOf<ApprenticeshipNotEndedViewModel>(viewModel);
-            Assert.AreEqual(expectedViewModel, actualViewModel);
-        }
+            Assert.That(viewModel, Is.InstanceOf<ApprenticeshipNotEndedViewModel>());
+            Assert.That(actualViewModel, Is.EqualTo(expectedViewModel));
+        });
     }
 }

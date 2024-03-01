@@ -1,14 +1,12 @@
-﻿using FluentValidation;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
+
+public class StopRequestValidator : AbstractValidator<StopRequest>
 {
-    public class StopRequestValidator : AbstractValidator<StopRequest>
+    public StopRequestValidator()
     {
-        public StopRequestValidator()
-        {
-            RuleFor(x => x.AccountHashedId).NotEmpty();
-            RuleFor(x => x.ApprenticeshipHashedId).NotEmpty();
-        }
+        RuleFor(x => x.AccountHashedId).NotEmpty();
+        RuleFor(x => x.ApprenticeshipHashedId).NotEmpty();
     }
 }

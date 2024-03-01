@@ -1,108 +1,102 @@
-﻿using AutoFixture;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenRequestingTheWhatIsTheNewStartDatePage 
 {
-    public class WhenRequestingTheWhatIsTheNewStartDatePage 
+    private WhenRequestingTheWhatIsTheNewStartDatePageTestFixture _fixture;
+
+    [SetUp]
+    public void Arrange()
     {
-        private WhenRequestingTheWhatIsTheNewStartDatePageTestFixture _fixture;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new WhenRequestingTheWhatIsTheNewStartDatePageTestFixture();
-        }
-
-        [Test]
-        public async Task ThenTheCorrectViewIsReturned()
-        {
-            var result = await _fixture.WhatIsTheNewStartDate();
-
-            _fixture.VerifyViewModel(result as ViewResult);
-        }
-
-        [Test]
-        [TestCase(true, RouteNames.ConfirmDetailsAndSendRequest, Description = "Should return to confirm changes")]
-        [TestCase(false , RouteNames.WhoWillEnterTheDetails, Description = "Should return to previous question")]
-        [TestCase(null, RouteNames.WhoWillEnterTheDetails, Description = "Should return to previous question")]
-        public async Task BackNavigationSetCorrectly(bool isEdit, string expectedBackNavigationUrl)
-        {
-            _fixture.ArrangeRequestEditFlag(isEdit);
-
-            var result = await _fixture.WhatIsTheNewStartDate();
-
-            _fixture.VerifyBackNavigation(expectedBackNavigationUrl);
-        }
-
-
-        [Test]
-        [TestCase(true)]
-        [TestCase(false)]
-        [TestCase(null)]
-        public async Task BackNavigationSetCorrectlyInViewData(bool isEdit)
-        {
-            _fixture.ArrangeRequestEditFlag(isEdit);
-
-            var result = await _fixture.WhatIsTheNewStartDate();
-
-            _fixture.VerifyViewDataSet(result as ViewResult);
-        }
+        _fixture = new WhenRequestingTheWhatIsTheNewStartDatePageTestFixture();
     }
 
-    public class WhenRequestingTheWhatIsTheNewStartDatePageTestFixture : ApprenticeControllerTestFixtureBase
+    [Test]
+    public async Task ThenTheCorrectViewIsReturned()
     {
-        private readonly ChangeOfProviderRequest _request;
-        private readonly WhatIsTheNewStartDateViewModel _viewModel;
-        private const string ConfirmDetailsLink = "cofirm-details-link";
-        private const string PreviousQuestionLink = "previous-question-link";
-        private string ExpectedBackLinkSet = "";
+        var result = await _fixture.WhatIsTheNewStartDate();
 
-        public WhenRequestingTheWhatIsTheNewStartDatePageTestFixture() : base()
-        {
-            _request = _autoFixture.Create<ChangeOfProviderRequest>();
-            _viewModel = _autoFixture.Create<WhatIsTheNewStartDateViewModel>();
+        _fixture.VerifyViewModel(result as ViewResult);
+    }
 
-            _mockMapper.Setup(m => m.Map<WhatIsTheNewStartDateViewModel>(_request))
-                .ReturnsAsync(_viewModel);
+    [Test]
+    [TestCase(true, RouteNames.ConfirmDetailsAndSendRequest, Description = "Should return to confirm changes")]
+    [TestCase(false , RouteNames.WhoWillEnterTheDetails, Description = "Should return to previous question")]
+    [TestCase(null, RouteNames.WhoWillEnterTheDetails, Description = "Should return to previous question")]
+    public async Task BackNavigationSetCorrectly(bool? isEdit, string expectedBackNavigationUrl)
+    {
+        _fixture.ArrangeRequestEditFlag(isEdit);
 
-            _mockUrlHelper
-               .Setup(mock => mock.Link(RouteNames.ConfirmDetailsAndSendRequest, It.IsAny<object>()))
-               .Returns(ConfirmDetailsLink)
-               .Callback(() => ExpectedBackLinkSet = ConfirmDetailsLink);
+        await _fixture.WhatIsTheNewStartDate();
 
-            _mockUrlHelper
-               .Setup(mock => mock.Link(RouteNames.WhoWillEnterTheDetails, It.IsAny<object>()))
-               .Returns(PreviousQuestionLink)
-               .Callback(() => ExpectedBackLinkSet = PreviousQuestionLink);
-        }
+        _fixture.VerifyBackNavigation(expectedBackNavigationUrl);
+    }
 
-        internal void ArrangeRequestEditFlag(bool isEdit) => _request.Edit = isEdit;
 
-        internal async Task<IActionResult> WhatIsTheNewStartDate()
-        {
-            return await _controller.WhatIsTheNewStartDate(_request);
-        }
+    [Test]
+    [TestCase(true)]
+    [TestCase(false)]
+    [TestCase(null)]
+    public async Task BackNavigationSetCorrectlyInViewData(bool? isEdit)
+    {
+        _fixture.ArrangeRequestEditFlag(isEdit);
 
-        internal void VerifyViewModel(ViewResult viewResult)
-        {
-            var viewModel = viewResult.Model as WhatIsTheNewStartDateViewModel;
+        var result = await _fixture.WhatIsTheNewStartDate();
 
-            Assert.IsInstanceOf<WhatIsTheNewStartDateViewModel>(viewModel);
-            Assert.AreEqual(_viewModel, viewModel);
-        }
-        internal void VerifyBackNavigation(string expectedBackNavigationUrl)
-        {
-            _mockUrlHelper.Verify(mock => mock.Link(expectedBackNavigationUrl, It.IsAny<object>()), Times.Once);
-        }
+        _fixture.VerifyViewDataSet(result as ViewResult);
+    }
+}
 
-        internal void VerifyViewDataSet(ViewResult viewResult)
-        {
-            Assert.AreEqual(ExpectedBackLinkSet, viewResult.ViewData["BackUrl"]);
-        }
+public class WhenRequestingTheWhatIsTheNewStartDatePageTestFixture : ApprenticeControllerTestFixtureBase
+{
+    private readonly ChangeOfProviderRequest _request;
+    private readonly WhatIsTheNewStartDateViewModel _viewModel;
+    private const string ConfirmDetailsLink = "cofirm-details-link";
+    private const string PreviousQuestionLink = "previous-question-link";
+    private string ExpectedBackLinkSet = "";
+
+    public WhenRequestingTheWhatIsTheNewStartDatePageTestFixture()
+    {
+        _request = AutoFixture.Create<ChangeOfProviderRequest>();
+        _viewModel = AutoFixture.Create<WhatIsTheNewStartDateViewModel>();
+
+        MockMapper.Setup(m => m.Map<WhatIsTheNewStartDateViewModel>(_request))
+            .ReturnsAsync(_viewModel);
+
+        MockUrlHelper
+            .Setup(mock => mock.Link(RouteNames.ConfirmDetailsAndSendRequest, It.IsAny<object>()))
+            .Returns(ConfirmDetailsLink)
+            .Callback(() => ExpectedBackLinkSet = ConfirmDetailsLink);
+
+        MockUrlHelper
+            .Setup(mock => mock.Link(RouteNames.WhoWillEnterTheDetails, It.IsAny<object>()))
+            .Returns(PreviousQuestionLink)
+            .Callback(() => ExpectedBackLinkSet = PreviousQuestionLink);
+    }
+
+    internal void ArrangeRequestEditFlag(bool? isEdit) => _request.Edit = isEdit;
+
+    internal async Task<IActionResult> WhatIsTheNewStartDate()
+    {
+        return await Controller.WhatIsTheNewStartDate(_request);
+    }
+
+    internal void VerifyViewModel(ViewResult viewResult)
+    {
+        var viewModel = viewResult.Model as WhatIsTheNewStartDateViewModel;
+
+        Assert.That(viewModel, Is.InstanceOf<WhatIsTheNewStartDateViewModel>());
+        Assert.That(viewModel, Is.EqualTo(_viewModel));
+    }
+    internal void VerifyBackNavigation(string expectedBackNavigationUrl)
+    {
+        MockUrlHelper.Verify(mock => mock.Link(expectedBackNavigationUrl, It.IsAny<object>()), Times.Once);
+    }
+
+    internal void VerifyViewDataSet(ViewResult viewResult)
+    {
+        Assert.That(viewResult.ViewData["BackUrl"], Is.EqualTo(ExpectedBackLinkSet));
     }
 }

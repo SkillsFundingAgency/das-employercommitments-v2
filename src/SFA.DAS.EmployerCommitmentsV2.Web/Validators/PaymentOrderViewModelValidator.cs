@@ -1,21 +1,18 @@
-﻿using FluentValidation;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
-using System.Linq;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.PaymentOrder;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
+
+public class PaymentOrderViewModelValidator : AbstractValidator<PaymentOrderViewModel>
 {
-    public class PaymentOrderViewModelValidator : AbstractValidator<PaymentOrderViewModel>
+    public PaymentOrderViewModelValidator()
     {
-        public PaymentOrderViewModelValidator()
-        {
-            RuleFor(x => x.ProviderPaymentOrder)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .Must(x =>
-                {
-                    var hasDuplicates = x.GroupBy(y => y).Any(g => g.Count() > 1);
-                    return !hasDuplicates;
-                }).WithMessage("Each training provider can only appear once in the list");
-        }
+        RuleFor(x => x.ProviderPaymentOrder)
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty()
+            .Must(x =>
+            {
+                var hasDuplicates = x.GroupBy(y => y).Any(g => g.Count() > 1);
+                return !hasDuplicates;
+            }).WithMessage("Each training provider can only appear once in the list");
     }
 }

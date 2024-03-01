@@ -1,10 +1,8 @@
-﻿using System;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Attributes;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Attributes
+[AttributeUsage(AttributeTargets.Field)]
+public class ReferenceMetadataAttribute : Attribute
 {
-    public class ReferenceMetadataAttribute : Attribute
-    {
-        public string Description { get; set; }
-        public string Hint { get; set; }
-    }
+    public string Description { get; set; }
+    public string Hint { get; set; }
 }

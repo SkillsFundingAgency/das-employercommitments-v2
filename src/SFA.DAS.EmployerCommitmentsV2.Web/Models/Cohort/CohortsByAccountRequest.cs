@@ -1,11 +1,10 @@
-﻿using SFA.DAS.Authorization.ModelBinding;
+﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+
+public class CohortsByAccountRequest : IAuthorizationContextModel
 {
-    public class CohortsByAccountRequest : IAuthorizationContextModel
-    {
-        public string AccountHashedId { get; set; }
-        public long AccountId { get; set; }
+    public string AccountHashedId { get; set; }
+    public long AccountId { get; set; }
 
-    }
 }

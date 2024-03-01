@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
+﻿using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
+namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+
+public class GetEditApprenticeshipDeliveryModelResponse
 {
-    public class GetEditApprenticeshipDeliveryModelResponse
-    {
-        public string LegalEntityName { get; set; }
-        public DeliveryModel DeliveryModel { get; set; }
-        public List<DeliveryModel> DeliveryModels { get; set; }
-    }
+    public string LegalEntityName { get; set; }
+    public DeliveryModel DeliveryModel { get; set; }
+    public List<DeliveryModel> DeliveryModels { get; set; }
 }
