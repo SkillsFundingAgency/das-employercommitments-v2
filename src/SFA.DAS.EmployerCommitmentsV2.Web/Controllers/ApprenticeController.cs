@@ -677,7 +677,7 @@ public class ApprenticeController : Controller
     }
 
     [HttpGet]
-    [DasAuthorize(CommitmentOperation.AccessApprenticeship)]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
     public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, bool showPriceChangeRejected = false, bool showPriceChangeApproved = false, bool showChangeOfPriceRequestSent = false)        
     {
