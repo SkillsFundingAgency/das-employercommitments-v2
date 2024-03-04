@@ -10,7 +10,7 @@
 
         @(await Html.PartialAsync("_ApprenticeshipRequestsHeaderPartial", Model.ApprenticeshipRequestsHeaderViewModel))
 
-        @if (Model.Cohorts.Count() > 0)
+        @if (Model.Cohorts.Any())
         {
             <table class="govuk-table das-table--responsive">
                 <thead class="govuk-table__head">

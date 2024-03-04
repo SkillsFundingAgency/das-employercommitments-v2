@@ -1,126 +1,120 @@
-﻿using AutoFixture;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
+
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice;
+
+public class WhatIsTheNewPriceViewModelMapperTests
 {
-    public class WhatIsTheNewPriceViewModelMapperTests
+    private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+
+    private ChangeOfProviderRequest _request;
+    private GetApprenticeshipResponse _apprenticeshipResponse;
+
+    private WhatIsTheNewPriceViewModelMapper _mapper;
+
+    [SetUp]
+    public void Arrange()
     {
-        private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+        var _autoFixture = new Fixture();
 
-        private ChangeOfProviderRequest _request;
-        private GetApprenticeshipResponse _apprenticeshipResponse;
+        var test = DateTime.UtcNow.Year;
 
-        private WhatIsTheNewPriceViewModelMapper _mapper;
+        _request = _autoFixture.Create<ChangeOfProviderRequest>();
+        _request.NewStartYear = DateTime.UtcNow.Year;
+        _request.NewStartMonth = DateTime.UtcNow.Month;
+        _request.NewEndYear = DateTime.UtcNow.AddYears(1).Year;
+        _request.NewEndMonth = DateTime.UtcNow.AddYears(1).Month;
+        _apprenticeshipResponse = _autoFixture.Create<GetApprenticeshipResponse>();
 
-        [SetUp]
-        public void Arrange()
-        {
-            var _autoFixture = new Fixture();
+        _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        _mockCommitmentsApiClient.Setup(m => m.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_apprenticeshipResponse);
 
-            var test = DateTime.UtcNow.Year;
+        _mapper = new WhatIsTheNewPriceViewModelMapper(_mockCommitmentsApiClient.Object);
+    }
 
-            _request = _autoFixture.Create<ChangeOfProviderRequest>();
-            _request.NewStartYear = DateTime.UtcNow.Year;
-            _request.NewStartMonth = DateTime.UtcNow.Month;
-            _request.NewEndYear = DateTime.UtcNow.AddYears(1).Year;
-            _request.NewEndMonth = DateTime.UtcNow.AddYears(1).Month;
-            _apprenticeshipResponse = _autoFixture.Create<GetApprenticeshipResponse>();
+    [Test]
+    public async Task ApprenticeshipHashedId_IsMapped()
+    {
+        //Act
+        var result = await _mapper.Map(_request);
 
-            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockCommitmentsApiClient.Setup(m => m.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_apprenticeshipResponse);
+        //Assert
+        Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(_request.ApprenticeshipHashedId));
+    }
 
-            _mapper = new WhatIsTheNewPriceViewModelMapper(_mockCommitmentsApiClient.Object);
-        }
+    [Test]
+    public async Task AccountHashedId_IsMapped()
+    {
+        //Act
+        var result = await _mapper.Map(_request);
 
-        [Test]
-        public async Task ApprenticeshipHashedId_IsMapped()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
+        //Assert
+        Assert.That(result.AccountHashedId, Is.EqualTo(_request.AccountHashedId));
+    }
 
-            //Assert
-            Assert.AreEqual(_request.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
-        }
+    [Test]
+    public async Task ProviderId_IsMapped()
+    {
+        //Act
+        var result = await _mapper.Map(_request);
 
-        [Test]
-        public async Task AccountHashedId_IsMapped()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
+        //Assert
+        Assert.That(result.ProviderId, Is.EqualTo(_request.ProviderId));
+    }
+    [Test]
+    public async Task WhenRequestingTheWhatIsTheNewStartDatePage_ThenTheGetApprenticeshipIsCalled()
+    {
+        //Act
+        var result = await _mapper.Map(_request);
 
-            //Assert
-            Assert.AreEqual(_request.AccountHashedId, result.AccountHashedId);
-        }
+        //Assert
+        _mockCommitmentsApiClient.Verify(m => m.GetApprenticeship(_request.ApprenticeshipId.Value, It.IsAny<CancellationToken>()), Times.Once());
+    }
 
-        [Test]
-        public async Task ProviderId_IsMapped()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
+    [Test]
+    public async Task StopDate_IsMapped()
+    {
+        //Act
+        var result = await _mapper.Map(_request);
 
-            //Assert
-            Assert.AreEqual(_request.ProviderId, result.ProviderId);
-        }
-        [Test]
-        public async Task WhenRequestingTheWhatIsTheNewStartDatePage_ThenTheGetApprenticeshipIsCalled()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
+        //Assert
+        Assert.That(result.StopDate, Is.EqualTo(_apprenticeshipResponse.StopDate));
+    }
 
-            //Assert
-            _mockCommitmentsApiClient.Verify(m => m.GetApprenticeship(_request.ApprenticeshipId.Value, It.IsAny<CancellationToken>()), Times.Once());
-        }
+    [Test]
+    public async Task ProviderName_IsMapped()
+    {
+        //Act
+        var result = await _mapper.Map(_request);
 
-        [Test]
-        public async Task StopDate_IsMapped()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
+        //Assert
+        Assert.That(result.ProviderName, Is.EqualTo(_request.ProviderName));
+    }
 
-            //Assert
-            Assert.AreEqual(_apprenticeshipResponse.StopDate, result.StopDate);
-        }
+    [Test]
+    public async Task NewPrice_IsMapped()
+    {
+        //Act
+        var result = await _mapper.Map(_request);
 
-        [Test]
-        public async Task ProviderName_IsMapped()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
+        //Assert
+        Assert.That(result.NewPrice, Is.EqualTo(_request.NewPrice));
+    }
 
-            //Assert
-            Assert.AreEqual(_request.ProviderName, result.ProviderName);
-        }
+    [TestCase(true, true)]
+    [TestCase(null, false)]
+    public async Task EditFlag_IsMapped(bool? edit, bool expectedResult)
+    {
+        //Arrange
+        _request.Edit = edit;
 
-        [Test]
-        public async Task NewPrice_IsMapped()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
+        //Act
+        var result = await _mapper.Map(_request);
 
-            //Assert
-            Assert.AreEqual(_request.NewPrice, result.NewPrice);
-        }
-
-        [TestCase(true, true)]
-        [TestCase(null, false)]
-        public async Task EditFlag_IsMapped(bool? edit, bool expectedResult)
-        {
-            //Arrange
-            _request.Edit = edit;
-
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            Assert.AreEqual(expectedResult, result.Edit);
-        }
+        //Assert
+        Assert.That(result.Edit, Is.EqualTo(expectedResult));
     }
 }

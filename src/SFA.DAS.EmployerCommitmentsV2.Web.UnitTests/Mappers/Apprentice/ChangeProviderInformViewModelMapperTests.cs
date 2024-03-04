@@ -1,86 +1,80 @@
-﻿using AutoFixture;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
 using SFA.DAS.Testing.AutoFixture;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice;
+
+public class ChangeProviderInformViewModelMapperTests
 {
-    public class ChangeProviderInformViewModelMapperTests
+    private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+    private Mock<IEncodingService> _mockEncodingService;
+    private GetApprenticeshipResponse _apprenticeshipResponse;
+
+    private ChangeProviderInformViewModelMapper _mapper;
+
+    private const long ApprenticeshipId = 10000000;
+
+    [SetUp]
+    public void Arrange()
     {
-        private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
-        private Mock<IEncodingService> _mockEncodingService;
-        private GetApprenticeshipResponse _apprenticeshipResponse;
+        var autoFixture = new Fixture();
 
-        private ChangeProviderInformViewModelMapper _mapper;
+        _apprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>()
+            .With(a => a.Status, ApprenticeshipStatus.Stopped)
+            .Create();
 
-        private const long ApprenticeshipId = 10000000;
+        _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        _mockCommitmentsApiClient.Setup(a => a.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_apprenticeshipResponse);
 
-        [SetUp]
-        public void Arrange()
-        {
-            var autoFixture = new Fixture();
+        _mockEncodingService = new Mock<IEncodingService>();
+        _mockEncodingService.Setup(d => d.Decode(It.IsAny<string>(), EncodingType.ApprenticeshipId))
+            .Returns(ApprenticeshipId);
 
-            _apprenticeshipResponse = autoFixture.Build<GetApprenticeshipResponse>()
-                                        .With(a => a.Status, ApprenticeshipStatus.Stopped)
-                                        .Create();
+        _mapper = new ChangeProviderInformViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object);
+    }
 
-            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockCommitmentsApiClient.Setup(a => a.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_apprenticeshipResponse);
+    [Test, MoqAutoData]
+    public async Task ApprenticeshipHashedId_IsMapped(ChangeProviderInformRequest request)
+    {
+        var result = await _mapper.Map(request);
 
-            _mockEncodingService = new Mock<IEncodingService>();
-            _mockEncodingService.Setup(d => d.Decode(It.IsAny<string>(), EncodingType.ApprenticeshipId))
-                .Returns(ApprenticeshipId);
+        Assert.That(result.ApprenticeshipHashedId, Is.EqualTo(request.ApprenticeshipHashedId));
+    }
 
-            _mapper = new ChangeProviderInformViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object);
-        }
+    [Test, MoqAutoData]
+    public async Task AccountHashedId_IsMapped(ChangeProviderInformRequest request)
+    {
+        var result = await _mapper.Map(request);
 
-        [Test, MoqAutoData]
-        public async Task ApprenticeshipHashedId_IsMapped(ChangeProviderInformRequest request)
-        {
-            var result = await _mapper.Map(request);
+        Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
+    }
 
-            Assert.AreEqual(request.ApprenticeshipHashedId, result.ApprenticeshipHashedId);
-        }
+    [Test, MoqAutoData]
+    public async Task ApprenticeshipStatus_IsMapped(ChangeProviderInformRequest request)
+    {
+        var result = await _mapper.Map(request);
 
-        [Test, MoqAutoData]
-        public async Task AccountHashedId_IsMapped(ChangeProviderInformRequest request)
-        {
-            var result = await _mapper.Map(request);
+        Assert.That(result.ApprenticeshipStatus, Is.EqualTo(ApprenticeshipStatus.Stopped));
+    }
 
-            Assert.AreEqual(request.AccountHashedId, result.AccountHashedId);
-        }
+    [Test, MoqAutoData]
+    public async Task WhenRequestingChangeProviderInformPage_ThenHashedApprenticeshipIdIsDecoded(ChangeProviderInformRequest request)
+    {
+        var result = await _mapper.Map(request);
 
-        [Test, MoqAutoData]
-        public async Task ApprenticeshipStatus_IsMapped(ChangeProviderInformRequest request)
-        {
-            var result = await _mapper.Map(request);
+        _mockEncodingService.Verify(a => a.Decode(request.ApprenticeshipHashedId, EncodingType.ApprenticeshipId), Times.Once);
+    }
 
-            Assert.AreEqual(ApprenticeshipStatus.Stopped, result.ApprenticeshipStatus);
-        }
+    [Test, MoqAutoData]
+    public async Task WhenRequestingChangeProviderInformPage_ThenGetApprenticeshipIsCalled(ChangeProviderInformRequest request)
+    {
+        var result = await _mapper.Map(request);
 
-        [Test, MoqAutoData]
-        public async Task WhenRequestingChangeProviderInformPage_ThenHashedApprenticeshipIdIsDecoded(ChangeProviderInformRequest request)
-        {
-            var result = await _mapper.Map(request);
-
-            _mockEncodingService.Verify(a => a.Decode(request.ApprenticeshipHashedId, EncodingType.ApprenticeshipId), Times.Once);
-        }
-
-        [Test, MoqAutoData]
-        public async Task WhenRequestingChangeProviderInformPage_ThenGetApprenticeshipIsCalled(ChangeProviderInformRequest request)
-        {
-            var result = await _mapper.Map(request);
-
-            _mockCommitmentsApiClient.Verify(a => a.GetApprenticeship(ApprenticeshipId, It.IsAny<CancellationToken>()), Times.Once);
-        }
+        _mockCommitmentsApiClient.Verify(a => a.GetApprenticeship(ApprenticeshipId, It.IsAny<CancellationToken>()), Times.Once);
     }
 }

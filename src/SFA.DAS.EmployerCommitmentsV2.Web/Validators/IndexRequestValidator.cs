@@ -1,14 +1,12 @@
-﻿using FluentValidation;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
+
+public class IndexRequestValidator : AbstractValidator<IndexRequest>
 {
-    public class IndexRequestValidator : AbstractValidator<IndexRequest>
+    public IndexRequestValidator()
     {
-        public IndexRequestValidator()
-        {
-            RuleFor(x => x.AccountHashedId).NotEmpty();
-            RuleFor(x => x.AccountLegalEntityHashedId).NotEmpty();
-        }
+        RuleFor(x => x.AccountHashedId).NotEmpty();
+        RuleFor(x => x.AccountLegalEntityHashedId).NotEmpty();
     }
 }

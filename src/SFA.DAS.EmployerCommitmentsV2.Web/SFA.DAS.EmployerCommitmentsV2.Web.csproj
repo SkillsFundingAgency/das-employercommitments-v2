@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <LangVersion>latest</LangVersion>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
-  </PropertyGroup>
+    <PropertyGroup>
+        <LangVersion>latestmajor</LangVersion>
+        <TargetFramework>net6.0</TargetFramework>
+        <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+    </PropertyGroup>
 
   <ItemGroup>
     <Content Update="nlog.config">
@@ -18,48 +18,48 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </Content>
+    <Content Update="Views\Apprentice\DetailsPartials\_PriceChangeRejectedBanner.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AspNetCore.IServiceCollection.AddIUrlHelper" Version="1.1.0" />
-    <PackageReference Include="AsyncEnumerator" Version="4.0.2" />
-    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.21" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.1.32" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="2.2.5" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.25.0" />
-    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24" />
-    <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.49" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
-    <PackageReference Include="NLog.Schema" Version="4.5.11" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="4.14.0" />
-    <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="6.0.97" />
-    <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84" />
-    <PackageReference Include="SFA.DAS.Employer.Shared.UI" Version="17.1.64" />
-    <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />
-    <PackageReference Include="SFA.DAS.NLog.Targets.Redis" Version="1.2.1" />
-    <PackageReference Include="SFA.DAS.Validation.Mvc" Version="6.0.15" />
-    <PackageReference Include="StackExchange.Redis" Version="2.6.116" />
-    <PackageReference Include="StructureMap.AspNetCore" Version="2.0.0" />
-    <PackageReference Include="WebEssentials.AspNetCore.CdnTagHelpers" Version="1.0.21" />
-    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AspNetCore.IServiceCollection.AddIUrlHelper" Version="1.1.0"/>
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0"/>
+        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.27"/>
+        <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.2.0"/>
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.2.0"/>
+        <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24"/>
+        <PackageReference Include="Scrutor" Version="4.2.2"/>
+        <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.80"/>
+        <PackageReference Include="NLog.Schema" Version="5.2.8"/>
+        <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.8"/>
+        <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84"/>
+        <PackageReference Include="SFA.DAS.Employer.Shared.UI" Version="17.1.86" />
+        <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43"/>
+        <PackageReference Include="SFA.DAS.NLog.Targets.Redis" Version="1.2.1"/>
+        <PackageReference Include="SFA.DAS.Validation.Mvc" Version="6.0.30"/>
+        <PackageReference Include="StackExchange.Redis" Version="2.7.17"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0"/>
+        <PackageReference Include="WebEssentials.AspNetCore.CdnTagHelpers" Version="1.0.21"/>
+        <PackageReference Include="WindowsAzure.Storage" Version="9.3.3"/>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.EmployerCommitmentsV2\SFA.DAS.EmployerCommitmentsV2.csproj" />
-  </ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.27"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.27"/>
 
-  <ItemGroup>
-    <Folder Include="Models\Apprentice\DataLock\" />
-  </ItemGroup>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="SFA.DAS.CommitmentsV2.Shared" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\.editorconfig" Link=".editorconfig" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\SFA.DAS.EmployerCommitmentsV2\SFA.DAS.EmployerCommitmentsV2.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="SFA.DAS.CommitmentsV2.Shared"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="..\.editorconfig" Link=".editorconfig"/>
+    </ItemGroup>
 
 </Project>

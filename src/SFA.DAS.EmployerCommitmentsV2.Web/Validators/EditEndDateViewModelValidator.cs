@@ -1,14 +1,12 @@
-﻿using FluentValidation;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
+
+public class EditEndDateRequestValidator : AbstractValidator<EditEndDateRequest>
 {
-    public class EditEndDateRequestValidator : AbstractValidator<EditEndDateRequest>
+    public EditEndDateRequestValidator()
     {
-        public EditEndDateRequestValidator()
-        {
-            RuleFor(r => r.AccountHashedId).NotEmpty();
-            RuleFor(r => r.ApprenticeshipHashedId).NotEmpty();
-        }
+        RuleFor(r => r.AccountHashedId).NotEmpty();
+        RuleFor(r => r.ApprenticeshipHashedId).NotEmpty();
     }
 }

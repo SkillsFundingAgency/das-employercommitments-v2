@@ -3,6 +3,7 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort

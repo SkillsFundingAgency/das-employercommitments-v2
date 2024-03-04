@@ -1,100 +1,106 @@
-﻿using AutoFixture;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenPostingReviewApprenticeshipUpdatesTests
 {
-    public class WhenPostingReviewApprenticeshipUpdatesTests
+    private WhenPostingReviewApprenticeshipUpdatesTestsFixture _fixture;
+
+    [SetUp]
+    public void Arrange()
     {
-        private WhenPostingReviewApprenticeshipUpdatesTestsFixture _fixture;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new WhenPostingReviewApprenticeshipUpdatesTestsFixture();
-        }   
-
-        [Test]
-        public async Task Verify_AcceptApprenticeshipUpdates_IsCalled_When_UserSelectsTo_ApproveChanges()
-        {
-            _fixture.ViewModel.ApproveChanges = true;
-             await _fixture.ReviewApprenticeshipUpdates();
-            _fixture.VerifyAcceptApprenticeshipUpdatesApiIsCalled();
-        }
-
-        [Test]
-        public async Task Verify_RejectApprenticeshipUpdates_IsCalled_When_UserSelectsTo_ApproveChanges()
-        {
-            _fixture.ViewModel.ApproveChanges = false;
-            await _fixture.ReviewApprenticeshipUpdates();
-            _fixture.VerifyRejectApprenticeshipUpdatesApiIsCalled();
-        }
-
-        [Test]
-        public async Task VerifyIsRedirectedToApprenticeshipDetails()
-        {
-            _fixture.ViewModel.ApproveChanges = false;
-            var response = await _fixture.ReviewApprenticeshipUpdates() as RedirectToActionResult;
-            Assert.AreEqual("ApprenticeshipDetails", response.ActionName);  
-        }
+        _fixture = new WhenPostingReviewApprenticeshipUpdatesTestsFixture();
     }
 
-    public class WhenPostingReviewApprenticeshipUpdatesTestsFixture : ApprenticeControllerTestFixtureBase
+    [Test]
+    public async Task Verify_AcceptApprenticeshipUpdates_IsCalled_When_UserSelectsTo_ApproveChanges()
     {
-        public const string FlashMessageBodyTempDataKey = "FlashMessageBody";
-        public const string FlashMessageLevelTempDataKey = "FlashMessageLevel";
-        public const string FlashMessageTitleTempDataKey = "FlashMessageTitle";
-        private const string ChangesApprovedMessage = "Changes approved";
-        private const string ChangesRejectedMessage = "Changes rejected";
+        _fixture.ViewModel.ApproveChanges = true;
+        await _fixture.ReviewApprenticeshipUpdates();
+        _fixture.VerifyAcceptApprenticeshipUpdatesApiIsCalled();
+    }
 
-        public ReviewApprenticeshipUpdatesViewModel ViewModel { get; set; }
+    [Test]
+    public async Task Verify_RejectApprenticeshipUpdates_IsCalled_When_UserSelectsTo_ApproveChanges()
+    {
+        _fixture.ViewModel.ApproveChanges = false;
+        await _fixture.ReviewApprenticeshipUpdates();
+        _fixture.VerifyRejectApprenticeshipUpdatesApiIsCalled();
+    }
 
-        public UserInfo UserInfo;
-        public Mock<IAuthenticationService> AuthenticationService { get; }
-         
-        public WhenPostingReviewApprenticeshipUpdatesTestsFixture() : base () 
+    [Test]
+    public async Task VerifyIsRedirectedToApprenticeshipDetails()
+    {
+        _fixture.ViewModel.ApproveChanges = false;
+        var response = await _fixture.ReviewApprenticeshipUpdates() as RedirectToActionResult;
+        Assert.That(response.ActionName, Is.EqualTo("ApprenticeshipDetails"));
+    }
+}
+
+public class WhenPostingReviewApprenticeshipUpdatesTestsFixture : ApprenticeControllerTestFixtureBase
+{
+    private const string FlashMessageBodyTempDataKey = "FlashMessageBody";
+    private const string FlashMessageLevelTempDataKey = "FlashMessageLevel";
+    private const string FlashMessageTitleTempDataKey = "FlashMessageTitle";
+    private const string ChangesApprovedMessage = "Changes approved";
+    private const string ChangesRejectedMessage = "Changes rejected";
+
+    public ReviewApprenticeshipUpdatesViewModel ViewModel { get; set; }
+
+    private Mock<IAuthenticationService> AuthenticationService { get; }
+
+    public WhenPostingReviewApprenticeshipUpdatesTestsFixture()
+    {
+        ViewModel = new ReviewApprenticeshipUpdatesViewModel { ApprenticeshipId = 1, AccountId = 1 };
+        Controller.TempData = new TempDataDictionary(Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
+
+        var autoFixture = new Fixture();
+        var userInfo = autoFixture.Create<UserInfo>();
+        AuthenticationService = new Mock<IAuthenticationService>();
+        AuthenticationService.Setup(x => x.UserInfo).Returns(userInfo);
+    }
+
+    public async Task<IActionResult> ReviewApprenticeshipUpdates()
+    {
+        return await Controller.ReviewApprenticeshipUpdates(AuthenticationService.Object, ViewModel);
+    }
+
+    internal void VerifyAcceptApprenticeshipUpdatesApiIsCalled()
+    {
+        Assert.Multiple(() =>
         {
-            ViewModel = new ReviewApprenticeshipUpdatesViewModel { ApprenticeshipId = 1, AccountId = 1 };
-            _controller.TempData = new TempDataDictionary( Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
+            MockCommitmentsApiClient
+                .Verify(
+                    x => x.AcceptApprenticeshipUpdates(ViewModel.ApprenticeshipId,
+                        It.Is<AcceptApprenticeshipUpdatesRequest>(o => o.UserInfo != null),
+                        It.IsAny<CancellationToken>()),
+                    Times.Once());
 
-            var autoFixture = new Fixture();
-            UserInfo = autoFixture.Create<UserInfo>();
-            AuthenticationService = new Mock<IAuthenticationService>();
-            AuthenticationService.Setup(x => x.UserInfo).Returns(UserInfo);
-        }
+            Assert.That(Controller.TempData.Values.Contains(ChangesApprovedMessage), Is.True);
+            Assert.That(Controller.TempData.ContainsKey(FlashMessageBodyTempDataKey), Is.True);
+            Assert.That(Controller.TempData.ContainsKey(FlashMessageLevelTempDataKey), Is.True);
+            Assert.That(Controller.TempData.ContainsKey(FlashMessageTitleTempDataKey), Is.True);
+        });
+    }
 
-        public async Task<IActionResult> ReviewApprenticeshipUpdates()
+    internal void VerifyRejectApprenticeshipUpdatesApiIsCalled()
+    {
+        Assert.Multiple(() =>
         {
-            return await _controller.ReviewApprenticeshipUpdates(AuthenticationService.Object, ViewModel);
-        }     
-
-        internal void VerifyAcceptApprenticeshipUpdatesApiIsCalled()
-        {
-            _mockCommitmentsApiClient
-                .Verify(x => x.AcceptApprenticeshipUpdates(ViewModel.ApprenticeshipId, It.Is<AcceptApprenticeshipUpdatesRequest>(o => o.UserInfo != null), It.IsAny<CancellationToken>()), Times.Once());
-           
-            Assert.IsTrue(_controller.TempData.Values.Contains(ChangesApprovedMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageBodyTempDataKey));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevelTempDataKey));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageTitleTempDataKey));
-        }
-
-        internal void VerifyRejectApprenticeshipUpdatesApiIsCalled()
-        {
-            _mockCommitmentsApiClient.Verify(x => x.RejectApprenticeshipUpdates(ViewModel.ApprenticeshipId, It.Is<RejectApprenticeshipUpdatesRequest>(o => o.UserInfo != null), It.IsAny<CancellationToken>()), Times.Once());
-            Assert.IsTrue(_controller.TempData.Values.Contains(ChangesRejectedMessage));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageBodyTempDataKey));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageLevelTempDataKey));
-            Assert.IsTrue(_controller.TempData.ContainsKey(FlashMessageTitleTempDataKey));
-        }
+            MockCommitmentsApiClient.Verify(
+                x => x.RejectApprenticeshipUpdates(ViewModel.ApprenticeshipId,
+                    It.Is<RejectApprenticeshipUpdatesRequest>(o => o.UserInfo != null), It.IsAny<CancellationToken>()),
+                Times.Once());
+            Assert.That(Controller.TempData.Values.Contains(ChangesRejectedMessage), Is.True);
+            Assert.That(Controller.TempData.ContainsKey(FlashMessageBodyTempDataKey), Is.True);
+            Assert.That(Controller.TempData.ContainsKey(FlashMessageLevelTempDataKey), Is.True);
+            Assert.That(Controller.TempData.ContainsKey(FlashMessageTitleTempDataKey), Is.True);
+        });
     }
 }
