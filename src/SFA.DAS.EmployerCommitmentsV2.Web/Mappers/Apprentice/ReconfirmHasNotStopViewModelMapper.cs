@@ -1,33 +1,29 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using System;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
+
+public class ReconfirmHasNotStopViewModelMapper : IMapper<ReConfirmHasNotStopRequest, ReconfirmHasNotStopViewModel>
 {
-    public class ReconfirmHasNotStopViewModelMapper : IMapper<ReConfirmHasNotStopRequest, ReconfirmHasNotStopViewModel>
+    private readonly ICommitmentsApiClient _client;
+
+    public ReconfirmHasNotStopViewModelMapper(ICommitmentsApiClient client)
     {
-        private readonly ICommitmentsApiClient _client;
+        _client = client;
+    }
 
-        public ReconfirmHasNotStopViewModelMapper(ICommitmentsApiClient client)
+    public async Task<ReconfirmHasNotStopViewModel> Map(ReConfirmHasNotStopRequest source)
+    {
+        var apprenticeship = await _client.GetApprenticeship(source.ApprenticeshipId);
+
+        return new ReconfirmHasNotStopViewModel
         {
-            _client = client;
-        }
-
-        public async Task<ReconfirmHasNotStopViewModel> Map(ReConfirmHasNotStopRequest source)
-        {
-            var apprenticeship = await _client.GetApprenticeship(source.ApprenticeshipId);
-
-            return new ReconfirmHasNotStopViewModel
-            {
-                AccountHashedId = source.AccountHashedId,
-                ApprenticeshipHashedId = source.ApprenticeshipHashedId,
-                ApprenticeName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
-                ULN = apprenticeship.Uln,
-                Course = apprenticeship.CourseName
-            };
-        }
+            AccountHashedId = source.AccountHashedId,
+            ApprenticeshipHashedId = source.ApprenticeshipHashedId,
+            ApprenticeName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
+            ULN = apprenticeship.Uln,
+            Course = apprenticeship.CourseName
+        };
     }
 }

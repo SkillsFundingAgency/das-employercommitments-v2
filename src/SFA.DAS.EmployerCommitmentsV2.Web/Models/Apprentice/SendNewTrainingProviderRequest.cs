@@ -1,14 +1,13 @@
-﻿using SFA.DAS.Authorization.ModelBinding;
+﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+
+public class SendNewTrainingProviderRequest : IAuthorizationContextModel
 {
-    public class SendNewTrainingProviderRequest : IAuthorizationContextModel
-    {
-        public string AccountHashedId { get; set; }
-        public long AccountId { get; set; }
-        public string ApprenticeshipHashedId { get; set; }
-        public long ApprenticeshipId { get; set; }
-        public long ProviderId { get; set; }
-        public bool? StoppedDuringCoP { get; set; }
-    }
+    public string AccountHashedId { get; set; }
+    public long AccountId { get; set; }
+    public string ApprenticeshipHashedId { get; set; }
+    public long ApprenticeshipId { get; set; }
+    public long ProviderId { get; set; }
+    public bool? StoppedDuringCoP { get; set; }
 }

@@ -1,81 +1,72 @@
-﻿using AutoFixture;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.Authorization.Services;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
-using System.Threading.Tasks;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests;
+
+public class WhenGettingReadyForReview
 {
-    public class WhenGettingReadyForReview
+    private WhenGettingReadyForReviewFixture _fixture;
+
+    [SetUp]
+    public void Arrange()
     {
-        private WhenGettingReadyForReviewFixture _fixture;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new WhenGettingReadyForReviewFixture();
-        }
-
-        [Test]
-        public async Task ThenViewModelShouldBeMappedFromRequest()
-        {
-            await _fixture.GetReviews();
-            _fixture.VerifyViewModelIsMappedFromRequest();
-        }
+        _fixture = new WhenGettingReadyForReviewFixture();
     }
 
-    public class WhenGettingReadyForReviewFixture
+    [Test]
+    public async Task ThenViewModelShouldBeMappedFromRequest()
     {
-        private readonly CohortsByAccountRequest _request;
-        private readonly ReviewViewModel _viewModel;
-        private IActionResult _result;
+        await _fixture.GetReviews();
+        _fixture.VerifyViewModelIsMappedFromRequest();
+    }
+}
 
-        public WhenGettingReadyForReviewFixture()
-        {
-            var autoFixture = new Fixture();
+public class WhenGettingReadyForReviewFixture
+{
+    private readonly CohortsByAccountRequest _request;
+    private readonly ReviewViewModel _viewModel;
+    private IActionResult _result;
 
-            _request = autoFixture.Create<CohortsByAccountRequest>();
-            _viewModel = autoFixture.Create<ReviewViewModel>();
+    public WhenGettingReadyForReviewFixture()
+    {
+        var autoFixture = new Fixture();
 
-            var modelMapper = new Mock<IModelMapper>();
-            modelMapper.Setup(x => x.Map<ReviewViewModel>(It.Is<CohortsByAccountRequest>(r => r == _request)))
-                .ReturnsAsync(_viewModel);
+        _request = autoFixture.Create<CohortsByAccountRequest>();
+        _viewModel = autoFixture.Create<ReviewViewModel>();
 
-            CohortController = new CohortController(Mock.Of<ICommitmentsApiClient>(),
-                Mock.Of<ILogger<CohortController>>(),
-                Mock.Of<ILinkGenerator>(),
-                modelMapper.Object,
-                Mock.Of<IAuthorizationService>(),
-                Mock.Of<IEncodingService>(),
-                Mock.Of<IApprovalsApiClient>());
-        }
+        var modelMapper = new Mock<IModelMapper>();
+        modelMapper.Setup(x => x.Map<ReviewViewModel>(It.Is<CohortsByAccountRequest>(r => r == _request)))
+            .ReturnsAsync(_viewModel);
 
-        public CohortController CohortController { get; set; }
+        CohortController = new CohortController(Mock.Of<ICommitmentsApiClient>(),
+            Mock.Of<ILogger<CohortController>>(),
+            Mock.Of<ILinkGenerator>(),
+            modelMapper.Object,
+            Mock.Of<IEncodingService>(),
+            Mock.Of<IApprovalsApiClient>());
+    }
 
+    public CohortController CohortController { get; set; }
 
-        public async Task GetReviews()
-        {
-            _result = await CohortController.Review(_request);
-        }
+    public async Task GetReviews()
+    {
+        _result = await CohortController.Review(_request);
+    }
 
-        public void VerifyViewModelIsMappedFromRequest()
-        {
-            var viewResult = (ViewResult)_result;
-            var viewModel = viewResult.Model;
+    public void VerifyViewModelIsMappedFromRequest()
+    {
+        var viewResult = (ViewResult)_result;
+        var viewModel = viewResult.Model;
 
-            Assert.IsInstanceOf<ReviewViewModel>(viewModel);
-            var reviewViewModel = (ReviewViewModel)viewModel;
+        Assert.That(viewModel, Is.InstanceOf<ReviewViewModel>());
+        var reviewViewModel = (ReviewViewModel)viewModel;
 
-            Assert.AreEqual(_viewModel, reviewViewModel);
-        }
+        Assert.That(reviewViewModel, Is.EqualTo(_viewModel));
     }
 }

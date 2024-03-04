@@ -1,25 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <IsPackable>false</IsPackable>
-    <LangVersion>latest</LangVersion>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="AutoFixture.NUnit3" Version="4.17.0" />
-    <PackageReference Include="FluentAssertions" Version="6.8.0" />
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
-    <PackageReference Include="Moq" Version="4.18.2" />
-    <PackageReference Include="NUnit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
-    <PackageReference Include="SFA.DAS.Testing" Version="3.0.169" />
-  </ItemGroup>
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+        <LangVersion>latest</LangVersion>
+        <TargetFramework>net6.0</TargetFramework>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.EmployerCommitmentsV2\SFA.DAS.EmployerCommitmentsV2.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+
+        <PackageReference Include="AutoFixture.NUnit3" Version="4.18.1" />
+        <PackageReference Include="FluentAssertions" Version="6.12.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+        <PackageReference Include="Moq" Version="4.20.70" />
+        <PackageReference Include="NUnit" Version="3.14.0" />
+        <PackageReference Include="NUnit.Analyzers" Version="4.0.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\SFA.DAS.EmployerCommitmentsV2\SFA.DAS.EmployerCommitmentsV2.csproj"/>
+    </ItemGroup>
 
 </Project>

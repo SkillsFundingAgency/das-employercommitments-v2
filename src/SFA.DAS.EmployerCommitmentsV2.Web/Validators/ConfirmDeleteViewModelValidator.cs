@@ -1,13 +1,11 @@
-﻿using FluentValidation;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
+
+public class ConfirmDeleteViewModelValidator : AbstractValidator<ConfirmDeleteViewModel>
 {
-    public class ConfirmDeleteViewModelValidator : AbstractValidator<ConfirmDeleteViewModel>
+    public ConfirmDeleteViewModelValidator()
     {
-        public ConfirmDeleteViewModelValidator()
-        {
-            RuleFor(x => x.ConfirmDeletion).NotNull().WithMessage("Confirm deletion");
-        }
+        RuleFor(x => x.ConfirmDeletion).NotNull().WithMessage("Confirm deletion");
     }
 }

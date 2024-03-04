@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+﻿using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Models.UserAccounts;
 

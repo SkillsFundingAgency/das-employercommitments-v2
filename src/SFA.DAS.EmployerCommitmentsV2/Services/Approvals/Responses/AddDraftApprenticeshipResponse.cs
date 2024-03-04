@@ -1,7 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+
+public class AddDraftApprenticeshipResponse
 {
-    public class AddDraftApprenticeshipResponse
-    {
-        public long DraftApprenticeshipId { get; set; }
-    }
+    public long DraftApprenticeshipId { get; set; }
 }

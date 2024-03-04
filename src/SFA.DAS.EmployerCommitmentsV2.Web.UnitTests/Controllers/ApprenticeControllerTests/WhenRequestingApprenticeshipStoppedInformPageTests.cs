@@ -1,42 +1,49 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using NUnit.Framework;
+﻿using FluentAssertions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenRequestingApprenticeshipStoppedInformPageTests
 {
-    public class WhenRequestingApprenticeshipStoppedInformPageTests
+    private WhenRequestingApprenticeshipStoppedInformPageTestsFixture _fixture;
+
+    [SetUp]
+    public void Arrange()
     {
-        private WhenRequestingApprenticeshipStoppedInformPageTestsFixture _fixture;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new WhenRequestingApprenticeshipStoppedInformPageTestsFixture();
-        }
-
-        [Test]
-        public void ThenCorrectViewIsReturned()
-        {
-            var actionResult = _fixture.ApprenticeshipStoppedInform();
-
-            _fixture.VerifyView(actionResult);
-        }
+        _fixture = new WhenRequestingApprenticeshipStoppedInformPageTestsFixture();
     }
 
-    public class WhenRequestingApprenticeshipStoppedInformPageTestsFixture : ApprenticeControllerTestFixtureBase
+    [Test]
+    public void ThenCorrectViewIsReturned()
     {
-        public WhenRequestingApprenticeshipStoppedInformPageTestsFixture() 
-            : base(){}
+        var actionResult = _fixture.ApprenticeshipStoppedInform();
 
-        public IActionResult ApprenticeshipStoppedInform()
+        WhenRequestingApprenticeshipStoppedInformPageTestsFixture.VerifyView(actionResult);
+    }
+}
+
+public class WhenRequestingApprenticeshipStoppedInformPageTestsFixture : ApprenticeControllerTestFixtureBase
+{
+    private const string AccountHashedId = "SDSDKJE£WF";
+    private const string ApprenticeshipHashedId = "df4kjss89HG£WF";
+    
+    public IActionResult ApprenticeshipStoppedInform()
+    {
+        return Controller.ApprenticeshipStoppedInform(new ApprenticeshipStopInformRequest
         {
-            return _controller.ApprenticeshipStoppedInform();
-        }
+            AccountHashedId = AccountHashedId,
+            ApprenticeshipHashedId = ApprenticeshipHashedId
+        });
+    }
 
-        public void VerifyView(IActionResult actionResult)
-        {
-            var viewResult = actionResult as ViewResult;
+    public static void VerifyView(IActionResult actionResult)
+    {
+        var viewResult = actionResult as ViewResult;
 
-            Assert.IsNotNull(viewResult);
-        }
+        viewResult.Should().NotBeNull();
+        
+        var viewModel = viewResult.Model as ApprenticeshipStopInformViewModel;
+        viewModel.AccountHashedId.Should().Be(AccountHashedId);
+        viewModel.ApprenticeshipHashedId.Should().Be(ApprenticeshipHashedId);
     }
 }

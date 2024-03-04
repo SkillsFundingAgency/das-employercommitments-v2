@@ -1,132 +1,125 @@
-﻿using AutoFixture;
-using FluentAssertions;
-using Moq;
-using NUnit.Framework;
+﻿using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using static SFA.DAS.CommitmentsV2.Api.Types.Responses.GetPriceEpisodesResponse;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice;
+
+public class ChangeVersionToEditAprenticeshipRequestViewModelMapperTests
 {
-    public class ChangeVersionToEditAprenticeshipRequestViewModelMapperTests
+    private Fixture _fixture;
+    private ChangeVersionViewModel _viewModel;
+
+    private GetApprenticeshipResponse _getApprenticeshipResponse;
+    private GetPriceEpisodesResponse _getPriceEpisodesResponse;
+    private GetTrainingProgrammeResponse _getVersionResponse;
+
+    private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+
+    private ChangeVersionViewModelToEditApprenticehipRequestViewModelMapper _mapper;
+
+    [SetUp]
+    public void Arrange()
     {
-        private Fixture _fixture;
-        private ChangeVersionViewModel _viewModel;
+        _fixture = new Fixture();
 
-        private GetApprenticeshipResponse _getApprenticeshipResponse;
-        private GetPriceEpisodesResponse _getPriceEpisodesResponse;
-        private GetTrainingProgrammeResponse _getVersionResponse;
+        _viewModel = _fixture.Create<ChangeVersionViewModel>();
+        _getApprenticeshipResponse = _fixture.Create<GetApprenticeshipResponse>();
 
-        private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
+        var priceEpisode = _fixture.Build<PriceEpisode>()
+            .With(x => x.ApprenticeshipId, _getApprenticeshipResponse.Id)
+            .With(x => x.FromDate, _getApprenticeshipResponse.StartDate.Value.AddDays(-1))
+            .Without(x => x.ToDate)
+            .Create();
 
-        private ChangeVersionViewModelToEditApprenticehipRequestViewModelMapper _mapper;
+        _getPriceEpisodesResponse = _fixture.Build<GetPriceEpisodesResponse>()
+            .With(x => x.PriceEpisodes, new List<PriceEpisode> { priceEpisode })
+            .Create();
 
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new Fixture();
+        var trainingProgramme = _fixture.Build<TrainingProgramme>().With(x => x.Name, _getApprenticeshipResponse.CourseName).Create();
 
-            _viewModel = _fixture.Create<ChangeVersionViewModel>();
-            _getApprenticeshipResponse = _fixture.Create<GetApprenticeshipResponse>();
+        _getVersionResponse = new GetTrainingProgrammeResponse { TrainingProgramme = trainingProgramme };
 
-            var priceEpisode = _fixture.Build<PriceEpisode>()
-                .With(x => x.ApprenticeshipId, _getApprenticeshipResponse.Id)
-                .With(x => x.FromDate, _getApprenticeshipResponse.StartDate.Value.AddDays(-1))
-                .Without(x => x.ToDate)
-                .Create();
+        _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
 
-            _getPriceEpisodesResponse = _fixture.Build<GetPriceEpisodesResponse>()
-                .With(x => x.PriceEpisodes, new List<PriceEpisode> { priceEpisode })
-                .Create();
+        _mockCommitmentsApiClient.Setup(c => c.GetApprenticeship(_viewModel.ApprenticeshipId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_getApprenticeshipResponse);
 
-            var trainingProgramme = _fixture.Build<TrainingProgramme>().With(x => x.Name, _getApprenticeshipResponse.CourseName).Create();
+        _mockCommitmentsApiClient.Setup(c => c.GetPriceEpisodes(_viewModel.ApprenticeshipId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_getPriceEpisodesResponse);
 
-            _getVersionResponse = new GetTrainingProgrammeResponse { TrainingProgramme = trainingProgramme };
+        _mockCommitmentsApiClient.Setup(c => c.GetTrainingProgrammeVersionByCourseCodeAndVersion(_getApprenticeshipResponse.CourseCode, _viewModel.SelectedVersion, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_getVersionResponse);
 
-            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        _mapper = new ChangeVersionViewModelToEditApprenticehipRequestViewModelMapper(_mockCommitmentsApiClient.Object);
+    }
 
-            _mockCommitmentsApiClient.Setup(c => c.GetApprenticeship(_viewModel.ApprenticeshipId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_getApprenticeshipResponse);
+    [Test]
+    public async Task When_TheNewVersionHasAnUpdatedName_Then_MapTheNewName()
+    {
+        _getVersionResponse.TrainingProgramme.Name = _fixture.Create<string>();
 
-            _mockCommitmentsApiClient.Setup(c => c.GetPriceEpisodes(_viewModel.ApprenticeshipId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_getPriceEpisodesResponse);
+        var result = await _mapper.Map(_viewModel);
 
-            _mockCommitmentsApiClient.Setup(c => c.GetTrainingProgrammeVersionByCourseCodeAndVersion(_getApprenticeshipResponse.CourseCode, _viewModel.SelectedVersion, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_getVersionResponse);
+        result.TrainingName.Should().Be(_getVersionResponse.TrainingProgramme.Name);
+    }
 
-            _mapper = new ChangeVersionViewModelToEditApprenticehipRequestViewModelMapper(_mockCommitmentsApiClient.Object);
-        }
+    [Test]
+    public async Task When_TheNewVersionHasTheSameName_Then_MapNull()
+    {
+        var result = await _mapper.Map(_viewModel);
 
-        [Test]
-        public async Task When_TheNewVersionHasAnUpdatedName_Then_MapTheNewName()
-        {
-            _getVersionResponse.TrainingProgramme.Name = _fixture.Create<string>();
+        result.TrainingName.Should().BeNull();
+    }
 
-            var result = await _mapper.Map(_viewModel);
-
-            result.TrainingName.Should().Be(_getVersionResponse.TrainingProgramme.Name);
-        }
-
-        [Test]
-        public async Task When_TheNewVersionHasTheSameName_Then_MapNull()
-        {
-            var result = await _mapper.Map(_viewModel);
-
-            result.TrainingName.Should().BeNull();
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public async Task Then_HasOptionsIsMappedCorrectly(bool hasOptions)
-        {
-            if (hasOptions == false)
-                _getVersionResponse.TrainingProgramme.Options = new List<string>();
+    [TestCase(true)]
+    [TestCase(false)]
+    public async Task Then_HasOptionsIsMappedCorrectly(bool hasOptions)
+    {
+        if (hasOptions == false)
+            _getVersionResponse.TrainingProgramme.Options = new List<string>();
             
-            var result = await _mapper.Map(_viewModel);
+        var result = await _mapper.Map(_viewModel);
 
-            result.HasOptions.Should().Be(hasOptions);
-        }
+        result.HasOptions.Should().Be(hasOptions);
+    }
 
-        [Test]
-        public async Task VerifyGetApprenticeship()
-        {
-            var result = await _mapper.Map(_viewModel);
+    [Test]
+    public async Task VerifyGetApprenticeship()
+    {
+        var result = await _mapper.Map(_viewModel);
 
-            _mockCommitmentsApiClient.Verify(c => c.GetApprenticeship(_viewModel.ApprenticeshipId, It.IsAny<CancellationToken>()), Times.Once());
-        }
+        _mockCommitmentsApiClient.Verify(c => c.GetApprenticeship(_viewModel.ApprenticeshipId, It.IsAny<CancellationToken>()), Times.Once());
+    }
 
-        [Test]
-        public async Task VerifyGetPriceEpisodes()
-        {
-            var result = await _mapper.Map(_viewModel);
+    [Test]
+    public async Task VerifyGetPriceEpisodes()
+    {
+        var result = await _mapper.Map(_viewModel);
 
-            _mockCommitmentsApiClient.Verify(c => c.GetPriceEpisodes(_viewModel.ApprenticeshipId, It.IsAny<CancellationToken>()), Times.Once());
-        }
+        _mockCommitmentsApiClient.Verify(c => c.GetPriceEpisodes(_viewModel.ApprenticeshipId, It.IsAny<CancellationToken>()), Times.Once());
+    }
 
-        [Test]
-        public async Task VerifyViewModelIsMapped()
-        {
-            var result = await _mapper.Map(_viewModel);
+    [Test]
+    public async Task VerifyViewModelIsMapped()
+    {
+        var result = await _mapper.Map(_viewModel);
 
-            result.Version.Should().Be(_viewModel.SelectedVersion);
-            result.AccountHashedId.Should().Be(_viewModel.AccountHashedId);
-            result.HashedApprenticeshipId.Should().Be(_viewModel.ApprenticeshipHashedId);
+        result.Version.Should().Be(_viewModel.SelectedVersion);
+        result.AccountHashedId.Should().Be(_viewModel.AccountHashedId);
+        result.HashedApprenticeshipId.Should().Be(_viewModel.ApprenticeshipHashedId);
 
-            result.ULN.Should().Be(_getApprenticeshipResponse.Uln);
-            result.FirstName.Should().Be(_getApprenticeshipResponse.FirstName);
-            result.LastName.Should().Be(_getApprenticeshipResponse.LastName);
-            result.Email.Should().Be(_getApprenticeshipResponse.Email);
-            result.CourseCode.Should().Be(_getApprenticeshipResponse.CourseCode);
-            result.EmployerReference.Should().Be(_getApprenticeshipResponse.EmployerReference);
+        result.ULN.Should().Be(_getApprenticeshipResponse.Uln);
+        result.FirstName.Should().Be(_getApprenticeshipResponse.FirstName);
+        result.LastName.Should().Be(_getApprenticeshipResponse.LastName);
+        result.Email.Should().Be(_getApprenticeshipResponse.Email);
+        result.CourseCode.Should().Be(_getApprenticeshipResponse.CourseCode);
+        result.EmployerReference.Should().Be(_getApprenticeshipResponse.EmployerReference);
 
-            result.Cost.Should().Be(_getPriceEpisodesResponse.PriceEpisodes.GetPrice());
-        }
+        result.Cost.Should().Be(_getPriceEpisodesResponse.PriceEpisodes.GetPrice());
     }
 }

@@ -83,7 +83,7 @@
 
                     <td class="govuk-table__cell das-table-cell-width-40">
                         <strong class="govuk-tag @Model.ApprenticeshipStatus.GetDisplayClass()">
-                            @Model.ApprenticeshipStatus.GetDescription()
+                            @Model.ApprenticeshipStatus.GetDescription().ToUpper()
                         </strong>
                     </td>
 
@@ -107,7 +107,7 @@
                     </tr>
                 }
 
-                @if (@Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
+                @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
                 {
                     <tr>
                         <th scope="row" class="govuk-table__header">Completion payment month</th>
