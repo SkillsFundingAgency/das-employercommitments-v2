@@ -414,7 +414,15 @@
                     </tr>
                     </tbody>
                 </table>
-                <a id="linkViewPendingPrice" href="@Model.PendingPriceChangeUrl" class="govuk-link">Review price change</a>
+                @if (Model.PendingPriceChange.GetPriceChangeInitiatedBy() == InitiatedBy.Provider)
+                {
+                    <a id="linkViewPendingPrice" href="@Model.PendingPriceChangeUrl" class="govuk-link">Review price change</a>
+                }
+                else
+                {
+                    <a id="linkViewPendingPrice" href="@Model.PendingPriceChangeUrl" class="govuk-link">View change request link</a>
+                }
+
             </div>
             <br/><br />
         }
