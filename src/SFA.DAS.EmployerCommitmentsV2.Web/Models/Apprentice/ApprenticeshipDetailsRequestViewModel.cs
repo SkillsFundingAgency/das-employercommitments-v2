@@ -181,3 +181,27 @@ public class PendingPriceChange
     public DateTime? ProviderApprovedDate { get; set; }
     public DateTime? EmployerApprovedDate { get; set; }
 }
+
+public enum InitiatedBy
+{
+    Provider,
+    Employer
+}
+
+public static class PendingPriceChangeExtensions
+{
+    public static InitiatedBy GetPriceChangeInitiatedBy(this PendingPriceChange pendingPriceChange)
+    {
+        if (pendingPriceChange.ProviderApprovedDate.HasValue && !pendingPriceChange.EmployerApprovedDate.HasValue)
+        {
+            return InitiatedBy.Provider;
+        }
+
+        if (!pendingPriceChange.ProviderApprovedDate.HasValue && pendingPriceChange.EmployerApprovedDate.HasValue)
+        {
+            return InitiatedBy.Employer;
+        }
+
+        throw new ArgumentOutOfRangeException("Could not resolve PriceChange Initiator, expected at least one approval date to be populated");
+    }
+}
