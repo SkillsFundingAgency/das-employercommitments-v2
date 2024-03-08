@@ -11,7 +11,6 @@
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "apprentices-detail";
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/apprentice-details";
-    var showPriceChangeCancelled = (Context.Request.Query["showPriceChangeCancelled"] == "true");
 }
 
 <div class="govuk-grid-row">
@@ -20,7 +19,7 @@
         <partial name="DetailsPartials/_ActionRequiredBanner" />
         <partial name="DetailsPartials/_ChangesToThisApprenticeshipBanner" />
 
-        @if (showPriceChangeCancelled)
+        @if (Model.ShowPriceChangeCancelled)
         {
             <partial name="DetailsPartials/_CancelledPriceChangeBanner" />
         }
