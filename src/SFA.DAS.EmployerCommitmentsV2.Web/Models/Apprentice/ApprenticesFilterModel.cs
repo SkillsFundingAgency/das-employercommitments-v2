@@ -6,6 +6,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 public class ApprenticesFilterModel
 {
+    public string AccountHashedId { get; set; }
     public int PageNumber { get; set; } = 1;
     public string SearchTerm { get; set; }
     public string SelectedProvider { get; set; }
@@ -110,7 +111,7 @@ public class ApprenticesFilterModel
 
     private Dictionary<string, string> BuildRouteData()
     {
-        var routeData = new Dictionary<string, string>();
+        var routeData = new Dictionary<string, string> { { nameof(AccountHashedId), AccountHashedId } };
 
         if (!string.IsNullOrWhiteSpace(SearchTerm))
         {
@@ -146,7 +147,7 @@ public class ApprenticesFilterModel
         {
             routeData.Add(nameof(SelectedApprenticeConfirmation), SelectedApprenticeConfirmation.Value.ToString());
         }
-
+        
         return routeData;
     }
         
