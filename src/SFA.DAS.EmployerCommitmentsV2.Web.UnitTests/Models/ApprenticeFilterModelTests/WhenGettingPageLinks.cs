@@ -15,7 +15,7 @@ public class WhenGettingPageLinks
             SelectedProvider = "asdsad",
             SelectedCourse = "iknjso",
             SelectedStatus = ApprenticeshipStatus.WaitingToStart,
-            SelectedAlert  = Alerts.ChangesForReview,
+            SelectedAlert = Alerts.ChangesForReview,
             SelectedEndDate = DateTime.Today,
             TotalNumberOfApprenticeshipsFound = Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage * 3,
             SortField = "gsd",
@@ -32,15 +32,16 @@ public class WhenGettingPageLinks
             pageLinks[i].AriaLabel.Should().Be($"Page {i + 1}");
             pageLinks[i].RouteData.Should().BeEquivalentTo(new Dictionary<string, string>
             {
-                {nameof(filterModel.SearchTerm), filterModel.SearchTerm },
-                {nameof(filterModel.SelectedProvider), filterModel.SelectedProvider},
-                {nameof(filterModel.SelectedCourse), filterModel.SelectedCourse},
-                {nameof(filterModel.SelectedStatus), filterModel.SelectedStatus.ToString()},
-                {nameof(filterModel.SelectedAlert), filterModel.SelectedAlert.ToString()},
-                {nameof(filterModel.SelectedEndDate), filterModel.SelectedEndDate.Value.ToString("yyyy-MM-dd")},
-                {nameof(filterModel.SortField), filterModel.SortField},
-                {nameof(filterModel.ReverseSort), filterModel.ReverseSort.ToString()},
-                {nameof(filterModel.PageNumber), (i+1).ToString() }
+                { nameof(filterModel.AccountHashedId), filterModel.AccountHashedId },
+                { nameof(filterModel.SearchTerm), filterModel.SearchTerm },
+                { nameof(filterModel.SelectedProvider), filterModel.SelectedProvider },
+                { nameof(filterModel.SelectedCourse), filterModel.SelectedCourse },
+                { nameof(filterModel.SelectedStatus), filterModel.SelectedStatus.ToString() },
+                { nameof(filterModel.SelectedAlert), filterModel.SelectedAlert.ToString() },
+                { nameof(filterModel.SelectedEndDate), filterModel.SelectedEndDate.Value.ToString("yyyy-MM-dd") },
+                { nameof(filterModel.SortField), filterModel.SortField },
+                { nameof(filterModel.ReverseSort), filterModel.ReverseSort.ToString() },
+                { nameof(filterModel.PageNumber), (i + 1).ToString() }
             });
         }
     }
@@ -54,8 +55,8 @@ public class WhenGettingPageLinks
             TotalNumberOfApprenticeshipsFound = Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage * 3
         };
 
-        var pageLinks = filterModel.PageLinks.Where(link => 
-            link.Label.ToUpper() != "PREVIOUS" 
+        var pageLinks = filterModel.PageLinks.Where(link =>
+            link.Label.ToUpper() != "PREVIOUS"
             && link.Label.ToUpper() != "NEXT").ToList();
 
         pageLinks[0].IsCurrent.Should().BeTrue();
@@ -72,8 +73,8 @@ public class WhenGettingPageLinks
             TotalNumberOfApprenticeshipsFound = Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage * 3
         };
 
-        var pageLinks = filterModel.PageLinks.Where(link => 
-            link.Label.ToUpper() != "PREVIOUS" 
+        var pageLinks = filterModel.PageLinks.Where(link =>
+            link.Label.ToUpper() != "PREVIOUS"
             && link.Label.ToUpper() != "NEXT").ToList();
 
         pageLinks[0].IsCurrent.Should().BeNull();
@@ -90,8 +91,8 @@ public class WhenGettingPageLinks
             TotalNumberOfApprenticeshipsFound = Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage * 7
         };
 
-        var pageLinks = filterModel.PageLinks.Where(link => 
-            link.Label.ToUpper() != "PREVIOUS" 
+        var pageLinks = filterModel.PageLinks.Where(link =>
+            link.Label.ToUpper() != "PREVIOUS"
             && link.Label.ToUpper() != "NEXT").ToList();
 
         pageLinks[0].IsCurrent.Should().BeNull();
@@ -110,8 +111,8 @@ public class WhenGettingPageLinks
             TotalNumberOfApprenticeshipsFound = Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage * 3
         };
 
-        filterModel.PageLinks.Count(link => 
-                link.Label.ToUpper() != "PREVIOUS" 
+        filterModel.PageLinks.Count(link =>
+                link.Label.ToUpper() != "PREVIOUS"
                 && link.Label.ToUpper() != "NEXT")
             .Should().Be(3);
     }
@@ -125,8 +126,8 @@ public class WhenGettingPageLinks
             TotalNumberOfApprenticeshipsFound = Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage * 10
         };
 
-        filterModel.PageLinks.Count(link => 
-                link.Label.ToUpper() != "PREVIOUS" 
+        filterModel.PageLinks.Count(link =>
+                link.Label.ToUpper() != "PREVIOUS"
                 && link.Label.ToUpper() != "NEXT")
             .Should().Be(5);
     }
@@ -201,7 +202,7 @@ public class WhenGettingPageLinks
         };
 
         var pageLinks = filterModel.PageLinks.ToList();
-            
+
         pageLinks.Any(link => link.Label.ToUpper() == "PREVIOUS").Should().BeFalse();
         pageLinks.Any(link => link.Label.ToUpper() == "NEXT").Should().BeFalse();
     }
@@ -220,7 +221,7 @@ public class WhenGettingPageLinks
         pageLinks.Last().Label.Should().Be("Next");
         pageLinks.Last().AriaLabel.Should().Be("Next page");
         pageLinks.Last().RouteData.Should()
-            .BeEquivalentTo(pageLinks.Single(link => 
+            .BeEquivalentTo(pageLinks.Single(link =>
                 link.Label == (filterModel.PageNumber + 1).ToString()).RouteData);
     }
 
@@ -252,7 +253,7 @@ public class WhenGettingPageLinks
         pageLinks.First().Label.Should().Be("Previous");
         pageLinks.First().AriaLabel.Should().Be("Previous page");
         pageLinks.First().RouteData.Should()
-            .BeEquivalentTo(pageLinks.Single(link => 
+            .BeEquivalentTo(pageLinks.Single(link =>
                 link.Label == "1").RouteData);
     }
 
