@@ -62,6 +62,7 @@ public class IndexViewModelMapper : IMapper<IndexRequest, IndexViewModel>
 
         var filterModel = new ApprenticesFilterModel
         {
+            AccountHashedId = source.AccountHashedId,
             TotalNumberOfApprenticeships = response.TotalApprenticeships,
             TotalNumberOfApprenticeshipsFound = response.TotalApprenticeshipsFound,
             TotalNumberOfApprenticeshipsWithAlertsFound = response.TotalApprenticeshipsWithAlertsFound,
