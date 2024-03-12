@@ -1,9 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using SFA.DAS.CommitmentsV2.Api.Types.Http;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.Http;
+using System.Net.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
@@ -15,12 +17,14 @@ public class OuterApiClient : IOuterApiClient
     private readonly HttpClient _httpClient;
     private readonly ApprovalsApiClientConfiguration _config;
     private readonly ILogger<OuterApiClient> _logger;
-   
-    public OuterApiClient(HttpClient httpClient, ApprovalsApiClientConfiguration config, ILogger<OuterApiClient> logger)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public OuterApiClient(HttpClient httpClient, ApprovalsApiClientConfiguration config, ILogger<OuterApiClient> logger, IHttpContextAccessor httpContextAccessor)
     {
         _httpClient = httpClient;
         _config = config;
         _logger = logger;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<TResponse> Get<TResponse>(string url)
@@ -49,6 +53,11 @@ public class OuterApiClient : IOuterApiClient
     
     private void AddRequestHeaders(HttpRequestMessage request)
     {
+        if (_httpContextAccessor.HttpContext.TryGetBearerToken(out var bearerToken))
+        {
+            request.Headers.Add("Authorization", $"Bearer {bearerToken}");
+        }
+
         request.Headers.Add(SubscriptionKeyRequestHeaderKey, _config.SubscriptionKey);
         request.Headers.Add(VersionRequestHeaderKey, "1");
     }

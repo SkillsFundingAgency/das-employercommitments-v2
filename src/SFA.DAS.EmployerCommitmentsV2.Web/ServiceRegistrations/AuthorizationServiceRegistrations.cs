@@ -4,6 +4,7 @@ using SFA.DAS.EmployerCommitmentsV2.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
+using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
@@ -15,6 +16,8 @@ public static class AuthorizationServiceRegistrations
 {
     public static IServiceCollection AddAuthorizationServices(this IServiceCollection services, IConfiguration configuration)
     {
+        BearerTokenProvider.SetSigningKey(configuration["SFA.DAS.EmployerCommitmentsV2:UserBearerTokenSigningKey"]);
+
         services.AddSingleton<CommitmentsAuthorisationHandler>();
         services.AddSingleton<ICommitmentsAuthorisationHandler, CommitmentsAuthorisationHandler>();
         services.AddTransient<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactory>();
