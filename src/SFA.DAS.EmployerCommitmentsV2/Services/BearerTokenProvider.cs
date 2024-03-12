@@ -17,7 +17,11 @@ public static class BearerTokenProvider
     {
         if (string.IsNullOrEmpty(signingKey))
         {
+#if !DEBUG
             throw new BearerTokenException("Signing key cannot be null or empty");
+#else
+            return;
+#endif
         }
 
         const int minimumKeySize = 128;
@@ -34,7 +38,12 @@ public static class BearerTokenProvider
     {
         if (string.IsNullOrEmpty(_signingKey))
         {
+            #if !DEBUG
             throw new BearerTokenException("Signing key must be set before a token can be retrieved. This should ideally be done in startup");
+#else
+            bearerToken = string.Empty;
+            return false;
+#endif
         }
 
         var user = httpContext.User;
