@@ -850,9 +850,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             Assert.IsNotNull(result.PendingPriceChange);
-            Assert.That(GetManageApprenticeshipDetailsResponse.PendingPriceChange.Cost, Is.EqualTo(result.PendingPriceChange.Cost));
-            Assert.That(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EndPointAssessmentPrice, Is.EqualTo(result.PendingPriceChange.EndPointAssessmentPrice));
-            Assert.That(GetManageApprenticeshipDetailsResponse.PendingPriceChange.TrainingPrice, Is.EqualTo(result.PendingPriceChange.TrainingPrice));
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.Cost, result.PendingPriceChange.Cost);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EndPointAssessmentPrice, result.PendingPriceChange.EndPointAssessmentPrice);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.TrainingPrice, result.PendingPriceChange.TrainingPrice);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.ProviderApprovedDate, result.PendingPriceChange.ProviderApprovedDate);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EmployerApprovedDate, result.PendingPriceChange.EmployerApprovedDate);
         }
 
         private static UrlBuilder GetMockUrlBuilder()

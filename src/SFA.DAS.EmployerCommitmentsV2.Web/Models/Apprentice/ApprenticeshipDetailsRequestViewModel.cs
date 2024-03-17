@@ -85,9 +85,13 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
 
     public PendingPriceChange PendingPriceChange { get; set; }
     public bool HasPendingPriceChange => PendingPriceChange != null;
+    public bool HasPendingProviderInitiatedPriceChange => PendingPriceChange?.ProviderApprovedDate != null;
+    public string PriceChangeUrl { get; set; }
     public string PendingPriceChangeUrl { get; set; }
     public bool ShowPriceChangeRejected { get; set; }
     public bool ShowPriceChangeApproved { get; set; }
+    public bool ShowPriceChangeRequestSent { get; set; }
+    public bool ShowPriceChangeCancelled { get; set; }
 
     public ActionRequiredBanner GetActionRequiredBanners()
     {
@@ -175,4 +179,30 @@ public class PendingPriceChange
     public decimal Cost { get; set; }
     public decimal? TrainingPrice { get; set; }
     public decimal? EndPointAssessmentPrice { get; set; }
+    public DateTime? ProviderApprovedDate { get; set; }
+    public DateTime? EmployerApprovedDate { get; set; }
+}
+
+public enum InitiatedBy
+{
+    Provider,
+    Employer
+}
+
+public static class PendingPriceChangeExtensions
+{
+    public static InitiatedBy GetPriceChangeInitiatedBy(this PendingPriceChange pendingPriceChange)
+    {
+        if (pendingPriceChange.ProviderApprovedDate.HasValue && !pendingPriceChange.EmployerApprovedDate.HasValue)
+        {
+            return InitiatedBy.Provider;
+        }
+
+        if (!pendingPriceChange.ProviderApprovedDate.HasValue && pendingPriceChange.EmployerApprovedDate.HasValue)
+        {
+            return InitiatedBy.Employer;
+        }
+
+        throw new ArgumentOutOfRangeException("Could not resolve PriceChange Initiator, expected at least one approval date to be populated");
+    }
 }

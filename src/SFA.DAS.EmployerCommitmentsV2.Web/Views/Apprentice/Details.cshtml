@@ -1,7 +1,6 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.CommitmentsV2.Types
-@using SFA.DAS.Employer.Shared.UI
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 
@@ -20,6 +19,11 @@
         <partial name="DetailsPartials/_ActionRequiredBanner" />
         <partial name="DetailsPartials/_ChangesToThisApprenticeshipBanner" />
 
+        @if (Model.ShowPriceChangeCancelled)
+        {
+            <partial name="DetailsPartials/_CancelledPriceChangeBanner" />
+        }
+
         @if (Model.ShowPriceChangeRejected)
         {
             <partial name="DetailsPartials/_PriceChangeRejectedBanner" />
@@ -30,9 +34,14 @@
             <partial name="DetailsPartials/_PriceChangeApprovedBanner" />
         }
         
-        @if (Model.HasPendingPriceChange)
+        @if (Model.HasPendingProviderInitiatedPriceChange)
         {
             <partial name="DetailsPartials/_PendingPriceChangeBanner" />
+        }
+    
+        @if (Model.ShowPriceChangeRequestSent)
+        {
+            <partial name="DetailsPartials/_ChangeOfPriceRequestSentBanner" />
         }
 
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
@@ -374,7 +383,10 @@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Total agreed apprenticeship price</th>
                         <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost()</td>
-                        <td class="govuk-table__cell"></td>
+                        @if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
+                        {
+                            <td class="govuk-table__cell"><a id="linkChangeApprenticeshipPrice" href="@Model.PriceChangeUrl" class="govuk-link">Change</a></td>
+                        }
                     </tr>
                 }
                 <tr class="govuk-table__row">
@@ -409,7 +421,14 @@
                     </tr>
                     </tbody>
                 </table>
-                <a id="linkViewPendingPrice" href="@Model.PendingPriceChangeUrl" class="govuk-link">Review price change</a>
+                @if (Model.PendingPriceChange.GetPriceChangeInitiatedBy() == InitiatedBy.Provider)
+                {
+                    <a id="linkViewPendingPrice" href="@Model.PendingPriceChangeUrl" class="govuk-link">Review price change</a>
+                }
+                else
+                {
+                    <a id="linkViewPendingPrice" href="@Model.PendingPriceChangeUrl" class="govuk-link">View change request</a>
+                }
             </div>
             <br/><br />
         }
