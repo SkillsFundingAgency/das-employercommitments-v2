@@ -1,10 +1,5 @@
-﻿using AutoFixture;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
@@ -13,55 +8,53 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Testing.AutoFixture;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+[TestFixture]
+public class WhenPostingReconfirmHasNotStopChangesTests : ApprenticeControllerTestBase
 {
-    [TestFixture]
-    public class WhenPostingReconfirmHasNotStopChangesTests : ApprenticeControllerTestBase
+    [SetUp]
+    public void Arrange()
     {
-        private string ApprenticeHasNotStoppedConrimedMessage;
+        var fixture = new Fixture();
+        MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        MockModelMapper = new Mock<IModelMapper>();
 
-        [SetUp]
-        public void Arrange()
+        Controller = new ApprenticeController(MockModelMapper.Object,
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
+            MockCommitmentsApiClient.Object,
+            Mock.Of<ILogger<ApprenticeController>>());
+
+        Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
+    }
+
+    [Test, MoqAutoData]
+    public async Task AndTheApprenticeship_IsNotStoppedIsConfirmed_ThenRedirectToApprenticeshipDetails(ReconfirmHasNotStopViewModel viewModel)
+    {
+        var result = await Controller.ReconfirmHasNotStopChangesAsync(viewModel);
+
+        var redirect = result.VerifyReturnsRedirectToActionResult();
+
+        Assert.Multiple(() =>
         {
-            var fixture = new Fixture();
-            _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            _mockModelMapper = new Mock<IModelMapper>();
+            Assert.That(Controller.TempData.Values.Contains($"Apprenticeship confirmed"), Is.True);
+            Assert.That(redirect.ActionName, Is.EqualTo("ApprenticeshipDetails"));
+            Assert.That(viewModel.AccountHashedId, Is.EqualTo(redirect.RouteValues["AccountHashedId"]));
+            Assert.That(viewModel.ApprenticeshipHashedId, Is.EqualTo(redirect.RouteValues["ApprenticeshipHashedId"]));
+        });
+    }
 
-            _controller = new ApprenticeController(_mockModelMapper.Object,
-                Mock.Of<ICookieStorageService<IndexRequest>>(),
-                _mockCommitmentsApiClient.Object,
-                Mock.Of<ILogger<ApprenticeController>>());
+    [Test, MoqAutoData]
+    public async Task AndTheApprenticeship_IsNotStoppedIsConfirmed_CommitmentApi_IsCalled(ReconfirmHasNotStopViewModel viewModel)
+    {
+        //Arrange
+        viewModel.StopConfirmed = true;
 
-            _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
-        }
+        //Act
+        await Controller.ReconfirmHasNotStopChangesAsync(viewModel);
 
-        [Test, MoqAutoData]
-        public async Task AndTheApprenticeship_IsNotStoppedIsConfirmed_ThenRedirectToApprenticeshipDetails(ReconfirmHasNotStopViewModel viewModel)
-        {
-            var result = await _controller.ReconfirmHasNotStopChangesAsync(viewModel);
-
-            var redirect = result.VerifyReturnsRedirectToActionResult();
-
-            Assert.IsTrue(_controller.TempData.Values.Contains($"Apprenticeship confirmed"));
-            Assert.AreEqual(redirect.ActionName, "ApprenticeshipDetails");
-            Assert.AreEqual(redirect.RouteValues["AccountHashedId"], viewModel.AccountHashedId);
-            Assert.AreEqual(redirect.RouteValues["ApprenticeshipHashedId"], viewModel.ApprenticeshipHashedId);
-        }
-
-        [Test, MoqAutoData]
-        public async Task AndTheApprenticeship_IsNotStoppedIsConfirmed_CommitmentApi_IsCalled(ReconfirmHasNotStopViewModel viewModel)
-        {
-            //Arrange
-            viewModel.StopConfirmed = true;
-
-            //Act
-            var result = await _controller.ReconfirmHasNotStopChangesAsync(viewModel) as RedirectToActionResult;
-
-            //Assert
-            _mockCommitmentsApiClient.Verify(x => x.ResolveOverlappingTrainingDateRequest(It.IsAny<ResolveApprenticeshipOverlappingTrainingDateRequest>(), CancellationToken.None), Times.Once);
-        }
+        //Assert
+        MockCommitmentsApiClient.Verify(x => x.ResolveOverlappingTrainingDateRequest(It.IsAny<ResolveApprenticeshipOverlappingTrainingDateRequest>(), CancellationToken.None), Times.Once);
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Configuration
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Configuration;
+
+public class EmployerCommitmentsV2Settings
 {
-    public class EmployerCommitmentsV2Settings
-    {
-        public string RedisConnectionString { get; set; }
-        public string DataProtectionKeysDatabase { get; set; }
-    }
+    public string RedisConnectionString { get; set; }
+    public string DataProtectionKeysDatabase { get; set; }
 }

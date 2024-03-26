@@ -1,11 +1,8 @@
-﻿using SFA.DAS.CommitmentsV2.Types;
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.TransferRequest
+public sealed class TransferRequestForSenderViewModel : TransferRequestViewModel
 {
-    public sealed class TransferRequestForSenderViewModel : TransferRequestViewModel
-    {
-        public string TransferSenderHashedAccountId { get; set; }
-        public string TransferReceiverPublicHashedAccountId { get; set; }
-        public string TransferReceiverName { get; set; }
-    }
+    public string TransferSenderHashedAccountId { get; set; }
+    public string TransferReceiverPublicHashedAccountId { get; set; }
+    public string TransferReceiverName { get; set; }
 }

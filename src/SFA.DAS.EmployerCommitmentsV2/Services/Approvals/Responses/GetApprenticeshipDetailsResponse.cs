@@ -1,7 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+
+public class GetApprenticeshipDetailsResponse
 {
-    public class GetApprenticeshipDetailsResponse
-    {
-        public bool HasMultipleDeliveryModelOptions { get; set; }
-    }
+    public bool HasMultipleDeliveryModelOptions { get; set; }
 }

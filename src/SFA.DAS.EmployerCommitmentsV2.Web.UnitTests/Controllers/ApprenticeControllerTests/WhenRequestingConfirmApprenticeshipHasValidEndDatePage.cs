@@ -1,55 +1,49 @@
-﻿using System.Threading.Tasks;
-using AutoFixture;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenRequestingConfirmApprenticeshipHasValidEndDatePage
 {
-    public class WhenRequestingConfirmApprenticeshipHasValidEndDatePage
+    private WhenRequestingConfirmApprenticeshipHasValidEndDatePageFixture _fixture;
+
+    [SetUp]
+    public void Arrange()
     {
-        private WhenRequestingConfirmApprenticeshipHasValidEndDatePageFixture _fixture;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new WhenRequestingConfirmApprenticeshipHasValidEndDatePageFixture();
-        }
-
-        [Test]
-        public async Task WhenRequesting_ConfirmApprenticeshipHasValidEndDate_ThenConfirmHasValidEndDateRequestViewModelIsPassedToTheView()
-        {
-            var actionResult = await _fixture.ConfirmHasValidEndDate();
-
-            _fixture.VerifyViewModel(actionResult as ViewResult);
-        }
+        _fixture = new WhenRequestingConfirmApprenticeshipHasValidEndDatePageFixture();
     }
-    public class WhenRequestingConfirmApprenticeshipHasValidEndDatePageFixture : ApprenticeControllerTestFixtureBase
+
+    [Test]
+    public async Task WhenRequesting_ConfirmApprenticeshipHasValidEndDate_ThenConfirmHasValidEndDateRequestViewModelIsPassedToTheView()
     {
-        private readonly ConfirmHasValidEndDateRequest _request;
-        private readonly ConfirmHasValidEndDateViewModel _viewModel;
-        public WhenRequestingConfirmApprenticeshipHasValidEndDatePageFixture() : base()
-        {
-            _request = _autoFixture.Create<ConfirmHasValidEndDateRequest>();
-            _viewModel = _autoFixture.Create<ConfirmHasValidEndDateViewModel>();
+        var actionResult = await _fixture.ConfirmHasValidEndDate();
+
+        _fixture.VerifyViewModel(actionResult as ViewResult);
+    }
+}
+public class WhenRequestingConfirmApprenticeshipHasValidEndDatePageFixture : ApprenticeControllerTestFixtureBase
+{
+    private readonly ConfirmHasValidEndDateRequest _request;
+    private readonly ConfirmHasValidEndDateViewModel _viewModel;
+    public WhenRequestingConfirmApprenticeshipHasValidEndDatePageFixture() : base()
+    {
+        _request = AutoFixture.Create<ConfirmHasValidEndDateRequest>();
+        _viewModel = AutoFixture.Create<ConfirmHasValidEndDateViewModel>();
 
 
-            _mockMapper.Setup(m => m.Map<ConfirmHasValidEndDateViewModel>(_request))
-                .ReturnsAsync(_viewModel);
-        }
+        MockMapper.Setup(m => m.Map<ConfirmHasValidEndDateViewModel>(_request))
+            .ReturnsAsync(_viewModel);
+    }
 
-        public async Task<IActionResult> ConfirmHasValidEndDate()
-        {
-            return await _controller.ConfirmHasValidEndDate(_request);
-        }
+    public async Task<IActionResult> ConfirmHasValidEndDate()
+    {
+        return await Controller.ConfirmHasValidEndDate(_request);
+    }
 
-        public void VerifyViewModel(ViewResult viewResult)
-        {
-            var viewModel = viewResult.Model as ConfirmHasValidEndDateViewModel;
+    public void VerifyViewModel(ViewResult viewResult)
+    {
+        var viewModel = viewResult.Model as ConfirmHasValidEndDateViewModel;
 
-            Assert.IsInstanceOf<ConfirmHasValidEndDateViewModel>(viewModel);
-            Assert.AreEqual(_viewModel, viewModel);
-        }
+        Assert.That(viewModel, Is.InstanceOf<ConfirmHasValidEndDateViewModel>());
+        Assert.That(viewModel, Is.EqualTo(_viewModel));
     }
 }

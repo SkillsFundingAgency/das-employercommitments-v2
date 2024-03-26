@@ -1,18 +1,19 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+
+public static class PriceExtensions
 {
-    public static class PriceExtensions
+    public static string FormatCost(this decimal? cost)
     {
-        public static string FormatCost(this decimal? cost)
-        {
-            if (!cost.HasValue) return string.Empty;
-            return $"£{cost.Value:n0}";
-        }
+        return !cost.HasValue ? string.Empty : FormatCost(cost.Value);
+    }
 
-        public static string FormatCost(this int? cost)
-        {
-            if (!cost.HasValue) return string.Empty;
-            return $"£{cost.Value:n0}";
-        }
+    public static string FormatCost(this decimal cost)
+    {
+        return $"£{cost:n0}";
+    }
 
+    public static string FormatCost(this int? cost)
+    {
+        return !cost.HasValue ? string.Empty : $"£{cost.Value:n0}";
     }
 }

@@ -1,61 +1,56 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests
+namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
+
+public class WhenRequestingReviewApprenticeshipUpdatesTests
 {
-    public class WhenRequestingReviewApprenticeshipUpdatesTests
+    private WhenRequestingReviewApprenticeshipUpdatesTestsixture _fixture;
+
+    [SetUp]
+    public void Arrange()
     {
-        private WhenRequestingReviewApprenticeshipUpdatesTestsixture _fixture;
+        _fixture = new WhenRequestingReviewApprenticeshipUpdatesTestsixture();
+    }   
 
-        [SetUp]
-        public void Arrange()
-        {
-            _fixture = new WhenRequestingReviewApprenticeshipUpdatesTestsixture();
-        }   
-
-        [Test]
-        public async Task VerifyViewModelMapperIsCalled()
-        {
-             await _fixture.ReviewApprenticeshipUpdates();
-            _fixture.VerifyViewModelMapperIsCalled();
-        }
-
-        [Test]
-        public async Task VerifyViewIsReturned()
-        {
-           var result =  await _fixture.ReviewApprenticeshipUpdates();
-            _fixture.VerifyViewResultIsReturned(result);
-        }
+    [Test]
+    public async Task VerifyViewModelMapperIsCalled()
+    {
+        await _fixture.ReviewApprenticeshipUpdates();
+        _fixture.VerifyViewModelMapperIsCalled();
     }
 
-    public class WhenRequestingReviewApprenticeshipUpdatesTestsixture : ApprenticeControllerTestFixtureBase
+    [Test]
+    public async Task VerifyViewIsReturned()
     {
-        public ReviewApprenticeshipUpdatesRequest Request { get; set; }
-        public WhenRequestingReviewApprenticeshipUpdatesTestsixture() : base () 
-        {
-            Request = new ReviewApprenticeshipUpdatesRequest { ApprenticeshipId = 1, AccountId = 1 };
-            _controller.TempData = new TempDataDictionary( Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
-        }
+        var result =  await _fixture.ReviewApprenticeshipUpdates();
+        WhenRequestingReviewApprenticeshipUpdatesTestsixture.VerifyViewResultIsReturned(result);
+    }
+}
 
-        public async Task<IActionResult> ReviewApprenticeshipUpdates()
-        {
-            return await _controller.ReviewApprenticeshipUpdates(Request);
-        }     
+public class WhenRequestingReviewApprenticeshipUpdatesTestsixture : ApprenticeControllerTestFixtureBase
+{
+    public ReviewApprenticeshipUpdatesRequest Request { get; set; }
+    public WhenRequestingReviewApprenticeshipUpdatesTestsixture() : base () 
+    {
+        Request = new ReviewApprenticeshipUpdatesRequest { ApprenticeshipId = 1, AccountId = 1 };
+        Controller.TempData = new TempDataDictionary( Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
+    }
 
-        internal void VerifyViewModelMapperIsCalled()
-        {
-            _mockMapper.Verify(x => x.Map<ReviewApprenticeshipUpdatesViewModel>(It.IsAny<ReviewApprenticeshipUpdatesRequest>()), Times.Once());
-        }
+    public async Task<IActionResult> ReviewApprenticeshipUpdates()
+    {
+        return await Controller.ReviewApprenticeshipUpdates(Request);
+    }     
 
-        internal void VerifyViewResultIsReturned(IActionResult result)
-        {
-            Assert.IsInstanceOf<ViewResult>(result);
-        }
+    internal void VerifyViewModelMapperIsCalled()
+    {
+        MockMapper.Verify(x => x.Map<ReviewApprenticeshipUpdatesViewModel>(It.IsAny<ReviewApprenticeshipUpdatesRequest>()), Times.Once());
+    }
+
+    internal static void VerifyViewResultIsReturned(IActionResult result)
+    {
+        Assert.That(result, Is.InstanceOf<ViewResult>());
     }
 }

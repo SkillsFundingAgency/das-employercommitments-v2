@@ -1,38 +1,37 @@
 ﻿using System;
 using WireMock.Server;
 
-namespace SFA.DAS.EmployerCommitmentsV2.Api.FakeServers
+namespace SFA.DAS.EmployerCommitmentsV2.Api.FakeServers;
+
+public class MockApi : IDisposable
 {
-    public class MockApi : IDisposable
+    private readonly WireMockServer _server;
+
+    private bool _isDisposed;
+
+    public MockApi(WireMockServer server)
     {
-        private readonly WireMockServer _server;
+        _server = server;
+    }
 
-        private bool _isDisposed;
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        public MockApi(WireMockServer server)
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_isDisposed) return;
+
+        if (disposing)
         {
-            _server = server;
+            if (_server != null && _server.IsStarted)
+                _server.Stop();
+
+            _server?.Dispose();
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_isDisposed) return;
-
-            if (disposing)
-            {
-                if (_server != null && _server.IsStarted)
-                    _server.Stop();
-
-                _server?.Dispose();
-            }
-
-            _isDisposed = true;
-        }
+        _isDisposed = true;
     }
 }

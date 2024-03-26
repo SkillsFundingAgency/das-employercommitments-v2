@@ -143,8 +143,6 @@
                 <input type="hidden" asp-for="TransferReceiverPublicHashedAccountId" />
                 <input type="hidden" asp-for="TransferReceiverName" />
 
-                @Html.AntiForgeryToken()
-
                 <h2 class="govuk-heading-m">Do you want to accept or reject the request?</h2>
 
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApprovalConfirmed,  "govuk-form-group--error")">
