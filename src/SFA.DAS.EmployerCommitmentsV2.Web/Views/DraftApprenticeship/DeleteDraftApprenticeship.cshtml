@@ -4,82 +4,83 @@
 @{
     ViewData["Title"] = "Apprenticeships";
     var backButtonUrl = (Model.Origin == DeleteDraftApprenticeshipOrigin.CohortDetails)
-        ? Url.Action("Details", "Cohort", new { Model.AccountHashedId, Model.CohortReference })
-        : Url.Action("Details", new { Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId });
-    
+    ? Url.Action("Details", "Cohort", new { Model.AccountHashedId, Model.CohortReference })
+    : Url.Action("Details", new { Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId });
+
     ViewBag.GaData.Vpv = "/unapproved/cohort/apprentices/apprentice/delete";
     ViewBag.GaData.Org = Model.LegalEntityName;
 }
 
 @*<input class="govuk-radios__input" id="ConfirmDelete" name="confirmDelete" type="radio" value="true">*@
-<div class="govuk-width-container">
 
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-    <main class="govuk-main-wrapper">
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
 
-                <partial name="_ValidationSummary" />
+        <h1 class="govuk-heading-xl">Delete the apprentice @Model.FullName?</h1>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.AccountHashedId)
+            @Html.HiddenFor(x => x.DraftApprenticeshipHashedId)
+            @Html.HiddenFor(x => x.CohortReference)
+            @Html.HiddenFor(x => x.Origin)
 
-                <h1 class="govuk-heading-xl">Delete the apprentice @Model.FullName?</h1>
-                <form method="post">
-                    @Html.AntiForgeryToken()
-                    @Html.HiddenFor(x => x.AccountHashedId)
-                    @Html.HiddenFor(x => x.DraftApprenticeshipHashedId)
-                    @Html.HiddenFor(x => x.CohortReference)
-                    @Html.HiddenFor(x => x.Origin)
+            <div class="govuk-form-group @(ViewContext.ModelState.IsValid ? "" : "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    @if (Model.IsLastApprenticeshipInCohort)
+                    {
+                        <div class="govuk-warning-text">
+                            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                            <strong class="govuk-warning-text__text">
+                                <span class="govuk-warning-text__assistive">Warning</span>
+                                Deleting this apprentice will completely remove all the details associated with them,
+                                including their reference.
+                            </strong>
+                        </div>
+                    }
+                    @if (!ViewData.ModelState.IsValid &&
+                    ViewData.ModelState.ContainsKey(nameof(DeleteDraftApprenticeshipViewModel.ConfirmDelete)))
+                    {
+                        <span id="error-message-@nameof(DeleteDraftApprenticeshipViewModel.ConfirmDelete)"
+                            class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span>
+                            @ViewData.ModelState[nameof(DeleteDraftApprenticeshipViewModel.ConfirmDelete)].Errors.First().ErrorMessage
+                        </span>
+                    }
 
-                    <div class="govuk-form-group @(ViewContext.ModelState.IsValid ? "" : "govuk-form-group--error")">
-                        <fieldset class="govuk-fieldset">
-                            @if (Model.IsLastApprenticeshipInCohort)
-                            {
-                                <div class="govuk-warning-text">
-                                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                                    <strong class="govuk-warning-text__text">
-                                        <span class="govuk-warning-text__assistive">Warning</span>
-                                        Deleting this apprentice will completely remove all the details associated with them, including their reference.
-                                    </strong>
-                                </div>
-                            }
-                            @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(nameof(DeleteDraftApprenticeshipViewModel.ConfirmDelete)))
-                            {
-                                <span id="error-message-@nameof(DeleteDraftApprenticeshipViewModel.ConfirmDelete)" class="govuk-error-message">
-                                    <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(DeleteDraftApprenticeshipViewModel.ConfirmDelete)].Errors.First().ErrorMessage
-                                </span>
-                            }
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input asp-for="ConfirmDelete" value="true" type="radio" class="govuk-radios__input"
+                                id="confirmDelete-true" />
+                            <label class="govuk-label govuk-radios__label" for="confirmDelete-true">
+                                Yes, delete
+                            </label>
 
-                            <div class="govuk-radios">
-                                <div class="govuk-radios__item">
-                                    <input asp-for="ConfirmDelete" value="true" type="radio" class="govuk-radios__input" id="confirmDelete-true"/>
-                                    <label class="govuk-label govuk-radios__label" for="confirmDelete-true">
-                                        Yes, delete
-                                    </label>
+                        </div>
 
-                                </div>
+                        <div class="govuk-radios__item">
 
-                                <div class="govuk-radios__item">
+                            <input asp-for="ConfirmDelete" value="false" type="radio" class="govuk-radios__input"
+                                id="confirmDelete-false" />
+                            <label class="govuk-label govuk-radios__label" for="confirmDelete-false">
+                                No, don't delete
+                            </label>
 
-                                    <input asp-for="ConfirmDelete" value="false" type="radio" class="govuk-radios__input" id="confirmDelete-false"/>
-                                    <label class="govuk-label govuk-radios__label" for="confirmDelete-false">
-                                        No, don't delete
-                                    </label>
+                        </div>
 
-                                </div>
-
-                            </div>
-                        </fieldset>
                     </div>
-
-                    <button class="govuk-button" type="submit" id="continue-button" data-module="govuk-button">
-                        Save and continue
-                    </button>
-                </form>
-
+                </fieldset>
             </div>
-        </div>
 
-    </main>
+            <button class="govuk-button" type="submit" id="continue-button" data-module="govuk-button">
+                Save and continue
+            </button>
+        </form>
+
+    </div>
 </div>
+
 
 @section Back
 {
