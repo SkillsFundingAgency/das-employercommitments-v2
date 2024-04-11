@@ -84,8 +84,9 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public bool? IsOnFlexiPaymentPilot { get; set; }
 
     public PendingPriceChange PendingPriceChange { get; set; }
-    public PendingStartDateChange PendingStartDateChange { get; set; }
     public bool HasPendingPriceChange => PendingPriceChange != null;
+    public PendingStartDateChange PendingStartDateChange { get; set; }
+    public bool HasPendingStartDateChange => PendingStartDateChange != null;
     public bool HasPendingProviderInitiatedPriceChange => PendingPriceChange?.ProviderApprovedDate != null;
     public bool HasPendingProviderInitiatedStartDateChange => PendingStartDateChange != null;
     public string PriceChangeUrl { get; set; }
