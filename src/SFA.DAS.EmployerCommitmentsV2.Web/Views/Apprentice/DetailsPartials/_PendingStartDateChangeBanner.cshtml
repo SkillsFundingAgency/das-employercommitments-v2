@@ -1,0 +1,22 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+<div id="price-change-pending-banner" class="govuk-notification-banner govuk-notification-banner">
+    <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+            Important
+        </h2>
+    </div>
+    <div class="govuk-notification-banner__content">
+        <h3 class="govuk-notification-banner__heading">
+            The training provider has requested a change. You need to review and approve the request.
+        </h3>
+        <p class="govuk-body">
+            <ul>
+                <li>A change to the actual training start date has been requested.</li>
+            </ul>
+        </p>
+        <p class="govuk-body">
+            <a id="linkViewPendingStartDateBanner" href="@Model.PendingStartDateChangeUrl" class="govuk-link">View request</a>
+        </p>
+    </div>
+</div>

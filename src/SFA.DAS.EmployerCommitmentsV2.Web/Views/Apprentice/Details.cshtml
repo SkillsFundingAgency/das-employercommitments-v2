@@ -44,6 +44,11 @@
             <partial name="DetailsPartials/_ChangeOfPriceRequestSentBanner" />
         }
 
+        @if (Model.HasPendingProviderInitiatedStartDateChange)
+        {
+            <partial name="DetailsPartials/_PendingStartDateChangeBanner" />
+        }
+
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
 
         @if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())

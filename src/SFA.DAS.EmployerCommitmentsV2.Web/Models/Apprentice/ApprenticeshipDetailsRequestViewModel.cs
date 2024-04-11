@@ -84,10 +84,13 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public bool? IsOnFlexiPaymentPilot { get; set; }
 
     public PendingPriceChange PendingPriceChange { get; set; }
+    public PendingStartDateChange PendingStartDateChange { get; set; }
     public bool HasPendingPriceChange => PendingPriceChange != null;
     public bool HasPendingProviderInitiatedPriceChange => PendingPriceChange?.ProviderApprovedDate != null;
+    public bool HasPendingProviderInitiatedStartDateChange => PendingStartDateChange != null;
     public string PriceChangeUrl { get; set; }
     public string PendingPriceChangeUrl { get; set; }
+    public string PendingStartDateChangeUrl { get; set; }
     public bool ShowPriceChangeRejected { get; set; }
     public bool ShowPriceChangeApproved { get; set; }
     public bool ShowPriceChangeRequestSent { get; set; }
@@ -179,6 +182,14 @@ public class PendingPriceChange
     public decimal Cost { get; set; }
     public decimal? TrainingPrice { get; set; }
     public decimal? EndPointAssessmentPrice { get; set; }
+    public DateTime? ProviderApprovedDate { get; set; }
+    public DateTime? EmployerApprovedDate { get; set; }
+}
+
+public class PendingStartDateChange
+{
+    public DateTime PendingActualStartDate { get; set; }
+    public string Initiator { get; set; }
     public DateTime? ProviderApprovedDate { get; set; }
     public DateTime? EmployerApprovedDate { get; set; }
 }
