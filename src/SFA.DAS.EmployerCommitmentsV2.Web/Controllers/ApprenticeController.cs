@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
 [Route("{accountHashedId}/apprentices")]
 [SetNavigationSection(NavigationSection.ApprenticesHome)]
-//[Authorize(Policy = nameof(PolicyNames.HasEmployerTransactorOwnerAccount))]
+[Authorize(Policy = nameof(PolicyNames.HasEmployerTransactorOwnerAccount))]
 public class ApprenticeController : Controller
 {
     private readonly IModelMapper _modelMapper;
@@ -677,7 +677,7 @@ public class ApprenticeController : Controller
     }
 
     [HttpGet]
-    //[Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
     public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, bool showPriceChangeRejected = false, bool showPriceChangeApproved = false, bool showChangeOfPriceRequestSent = false, bool showPriceChangeCancelled = false)        
     {
