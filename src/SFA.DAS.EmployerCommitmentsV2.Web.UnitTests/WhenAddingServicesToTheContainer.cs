@@ -192,6 +192,8 @@ public class WhenAddingServicesToTheContainer
                 new($"{ConfigurationKeys.GovUkSignInConfiguration}:GovUkOidcConfiguration:BaseUrl", "https://internal.test/"),
                 new($"{ConfigurationKeys.GovUkSignInConfiguration}:GovUkOidcConfiguration:ClientId", "test"),
                 new($"{ConfigurationKeys.GovUkSignInConfiguration}:GovUkOidcConfiguration:KeyVaultIdentifier", "test"),
+
+                new($"{ConfigurationKeys.UserBearerTokenSigningKeyConfiguration}", "a-string-of-at-least-32-characters")
             }
         };
 
