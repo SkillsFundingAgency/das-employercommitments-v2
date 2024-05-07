@@ -679,7 +679,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
-    public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, bool showPriceChangeRejected = false, bool showPriceChangeApproved = false, bool showChangeOfPriceRequestSent = false, bool showPriceChangeCancelled = false, bool showStartDateChangeApproved = false)        
+    public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, bool showPriceChangeRejected = false, bool showPriceChangeApproved = false, bool showChangeOfPriceRequestSent = false, bool showPriceChangeCancelled = false, bool showStartDateChangeApproved = false, bool showStartDateChangeRejected = false)        
     {
         var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
         viewModel.ShowPriceChangeRejected = showPriceChangeRejected;
@@ -687,6 +687,8 @@ public class ApprenticeController : Controller
         viewModel.ShowPriceChangeRequestSent = showChangeOfPriceRequestSent;
         viewModel.ShowPriceChangeCancelled = showPriceChangeCancelled;
         viewModel.ShowChangeApprovedBanner = showStartDateChangeApproved;
+        viewModel.ShowStartDateChangeApprovedBanner = showStartDateChangeApproved;
+        viewModel.ShowStartDateChangeRejected = showStartDateChangeRejected;
         return View("details", viewModel);
     }
 
