@@ -19,6 +19,11 @@
         <partial name="DetailsPartials/_ActionRequiredBanner" />
         <partial name="DetailsPartials/_ChangesToThisApprenticeshipBanner" />
 
+        @if (Model.ShowChangeApprovedBanner)
+        {
+            <partial name="DetailsPartials/_ChangeApprovedBanner" />
+        }
+
         @if (Model.ShowPriceChangeCancelled)
         {
             <partial name="DetailsPartials/_CancelledPriceChangeBanner" />
