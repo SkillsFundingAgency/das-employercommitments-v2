@@ -124,6 +124,8 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 PendingPriceChange = Map(response.PendingPriceChange),
                 PriceChangeUrl = _urlBuilder.ApprenticeshipsLink("CreatePriceChange", source.AccountHashedId, source.ApprenticeshipHashedId),
                 PendingPriceChangeUrl = response.PendingPriceChange != null ? _urlBuilder.ApprenticeshipsLink("ViewPendingPriceChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
+                PendingStartDateChange = Map(response.PendingStartDateChange),
+                PendingStartDateChangeUrl = response.PendingStartDateChange != null ? _urlBuilder.ApprenticeshipsLink("ViewPendingStartDateChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
             };
 		
             return result;
@@ -149,6 +151,22 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
             TrainingPrice = priceChangeDetails.TrainingPrice,
             ProviderApprovedDate = priceChangeDetails.ProviderApprovedDate,
             EmployerApprovedDate = priceChangeDetails.EmployerApprovedDate
+        };
+    }
+
+    private static PendingStartDateChange Map(GetManageApprenticeshipDetailsResponse.PendingStartDateChangeDetails startDateChangeDetails)
+    {
+        if (startDateChangeDetails == null)
+        {
+            return null;
+        }
+
+        return new PendingStartDateChange
+        {
+            Initiator = startDateChangeDetails.Initiator,
+            EmployerApprovedDate = startDateChangeDetails.EmployerApprovedDate,
+            PendingActualStartDate = startDateChangeDetails.PendingActualStartDate,
+            ProviderApprovedDate = startDateChangeDetails.ProviderApprovedDate
         };
     }
 
