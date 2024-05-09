@@ -289,7 +289,7 @@
                         @if (Model.EnableEdit && Model.HasNewerVersions && !Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
                         {
                             <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion)">Change</a>
+                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion, new { Model.AccountHashedId, apprenticeshipHashedId = Model.HashedApprenticeshipId})">Change</a>
                             </td>
                         }
                         else
