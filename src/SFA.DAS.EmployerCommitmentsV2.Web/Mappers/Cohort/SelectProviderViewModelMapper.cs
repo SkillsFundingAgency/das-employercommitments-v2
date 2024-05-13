@@ -15,7 +15,13 @@ public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, Sele
 
     public async Task<SelectProviderViewModel> Map(SelectProviderRequest source)
     {
-        var accountLegalEntity = await _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
+        var providersResponseTask = _commitmentsApiClient.GetAllProviders();
+        var accountLegalEntityTask = _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
+
+        await Task.WhenAll(providersResponseTask, accountLegalEntityTask);
+
+        var providersResponse = providersResponseTask.Result;
+        var accountLegalEntity = accountLegalEntityTask.Result;
 
         return new SelectProviderViewModel
         {
@@ -27,7 +33,8 @@ public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, Sele
             ReservationId = source.ReservationId,
             TransferSenderId = source.TransferSenderId,
             Origin = DetermineOrigin(source),
-            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
+            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
+            Providers = providersResponse.Providers
         };
 
     }
@@ -40,7 +47,7 @@ public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, Sele
         }
 
         return !string.IsNullOrWhiteSpace(source.EncodedPledgeApplicationId)
-            ? Origin.LevyTransferMatching 
+            ? Origin.LevyTransferMatching
             : Origin.Apprentices;
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+﻿using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 public class SelectProviderViewModel
 {
@@ -14,4 +16,6 @@ public class SelectProviderViewModel
     public string TransferSenderId { get; set; }
     public Origin Origin { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
+    public List<Provider> Providers { get; set; }
+
 }

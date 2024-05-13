@@ -2,7 +2,6 @@
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
@@ -11,7 +10,8 @@ public class WhenMappingSelectProviderRequestToViewModel
 {
     private SelectProviderRequest _request;
     private Mock<ICommitmentsApiClient> _commitmentsApiClientMock;
-    private AccountLegalEntityResponse _commitmentsApiClientResponse;
+    private AccountLegalEntityResponse _accountLegalEntityResponse;
+    private GetAllProvidersResponse _providersResponse;
     private SelectProviderViewModelMapper _mapper;
 
     [SetUp]
@@ -19,12 +19,17 @@ public class WhenMappingSelectProviderRequestToViewModel
     {
         var autoFixture = new Fixture();
         _request = autoFixture.Create<SelectProviderRequest>();
-        _commitmentsApiClientResponse = autoFixture.Create<AccountLegalEntityResponse>();
+        _accountLegalEntityResponse = autoFixture.Create<AccountLegalEntityResponse>();
+        _providersResponse = autoFixture.Create<GetAllProvidersResponse>();
 
         _commitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
         _commitmentsApiClientMock
             .Setup(x => x.GetAccountLegalEntity(_request.AccountLegalEntityId, CancellationToken.None))
-            .ReturnsAsync(_commitmentsApiClientResponse);
+            .ReturnsAsync(_accountLegalEntityResponse);
+
+        _commitmentsApiClientMock
+            .Setup(x => x.GetAllProviders(CancellationToken.None))
+            .ReturnsAsync(_providersResponse);
 
         _mapper = new SelectProviderViewModelMapper(_commitmentsApiClientMock.Object);
     }
@@ -50,7 +55,15 @@ public class WhenMappingSelectProviderRequestToViewModel
     {
         var result = await _mapper.Map(_request);
 
-        Assert.That(result.LegalEntityName, Is.EqualTo(_commitmentsApiClientResponse.LegalEntityName));
+        Assert.That(result.LegalEntityName, Is.EqualTo(_accountLegalEntityResponse.LegalEntityName));
+    }
+
+    [Test]
+    public async Task ThenMapsProviders()
+    {
+        var result = await _mapper.Map(_request);
+
+        Assert.That(result.Providers, Is.EqualTo(_providersResponse.Providers));
     }
 
     [Test]
