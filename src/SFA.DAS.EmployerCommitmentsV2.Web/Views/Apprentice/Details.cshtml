@@ -289,7 +289,7 @@
                         @if (Model.EnableEdit && Model.HasNewerVersions && !Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
                         {
                             <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion)">Change</a>
+                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion, new { Model.AccountHashedId, apprenticeshipHashedId = Model.HashedApprenticeshipId})">Change</a>
                             </td>
                         }
                         else
@@ -306,7 +306,7 @@
                         @if (Model.EnableEdit && !Model.OnlySingleOption)
                         {
                             <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <a id="change-option-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeOption)">Change<span class="govuk-visually-hidden"> option</span></a>
+                                <a id="change-option-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeOption, new { apprenticeshipHashedId = Model.HashedApprenticeshipId, Model.AccountHashedId })">Change<span class="govuk-visually-hidden"> option</span></a>
                             </td>
                         }
                         else
