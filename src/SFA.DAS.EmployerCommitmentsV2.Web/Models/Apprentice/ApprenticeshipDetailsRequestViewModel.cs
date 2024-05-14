@@ -97,8 +97,10 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public bool ShowPriceChangeRequestSent { get; set; }
     public bool ShowPriceChangeCancelled { get; set; }
     public bool ShowChangeApprovedBanner { get; set; }
+    public bool ShowStartDateChangeApprovedBanner { get; set; }
+    public bool ShowStartDateChangeRejected { get; set; }
 
-    public ActionRequiredBanner GetActionRequiredBanners()
+	public ActionRequiredBanner GetActionRequiredBanners()
     {
         var actionRequiredBanner = ActionRequiredBanner.None;
 
