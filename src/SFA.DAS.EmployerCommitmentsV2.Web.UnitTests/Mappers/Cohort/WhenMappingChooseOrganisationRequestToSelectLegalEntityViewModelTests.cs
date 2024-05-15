@@ -1,26 +1,39 @@
-﻿using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
+﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerCommitmentsV2.Web.Services;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
 public class WhenMappingChooseOrganisationRequestToSelectLegalEntityViewModelTests
 {       
-    private Mock<IEmployerAccountsService> _employerAccountsService;
+    private Mock<IApprovalsApiClient> _apiClient;
     private SelectLegalEntityRequestToSelectLegalEntityViewModelMapper _mapper;
     private SelectLegalEntityRequest _chooseOrganisationRequest;
+    private Mock<IEncodingService> _encodingService;
+    private const long AccountId = 998829;
 
     [SetUp]
     public void Arrange()
     {
         var autoFixture = new Fixture();
-        _employerAccountsService = new Mock<IEmployerAccountsService>();
-        _chooseOrganisationRequest = autoFixture.Create<SelectLegalEntityRequest>();          
-        var legalEntity = autoFixture.Create<LegalEntity>();
-        _employerAccountsService.Setup(x => x.GetLegalEntitiesForAccount(_chooseOrganisationRequest.AccountHashedId))
-            .ReturnsAsync(new List<LegalEntity> { legalEntity });
+        _apiClient = new Mock<IApprovalsApiClient>();
+        _encodingService = new Mock<IEncodingService>();
+        _chooseOrganisationRequest = autoFixture.Create<SelectLegalEntityRequest>();
+        _encodingService.Setup(x => x.Decode(_chooseOrganisationRequest.AccountHashedId, EncodingType.AccountId))
+            .Returns(AccountId);
+        var legalEntity = autoFixture.Create<AccountLegalEntity>();
+        _apiClient.Setup(x => x.GetLegalEntitiesForAccount(_chooseOrganisationRequest.cohortRef, AccountId))
+            .ReturnsAsync(new GetLegalEntitiesForAccountResponse
+            {
+                AccountLegalEntities = new List<AccountLegalEntity>
+                {
+                    legalEntity
+                }
+            });
             
-        _mapper = new SelectLegalEntityRequestToSelectLegalEntityViewModelMapper(_employerAccountsService.Object);
+        _mapper = new SelectLegalEntityRequestToSelectLegalEntityViewModelMapper(_apiClient.Object, _encodingService.Object);
     }
 
     [Test]
@@ -61,7 +74,7 @@ public class WhenMappingChooseOrganisationRequestToSelectLegalEntityViewModelTes
         var result = await _mapper.Map(_chooseOrganisationRequest);
 
         //Assert
-        _employerAccountsService.Verify(x => x.GetLegalEntitiesForAccount(_chooseOrganisationRequest.AccountHashedId),
+        _apiClient.Verify(x => x.GetLegalEntitiesForAccount(_chooseOrganisationRequest.cohortRef, AccountId),
             Times.Once);
     }
 }
