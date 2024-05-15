@@ -14,14 +14,17 @@ public class SelectLegalEntityRequestToSelectLegalEntityViewModelMapper(
 {
     public async Task<SelectLegalEntityViewModel> Map(SelectLegalEntityRequest source)
     {
+        var cohortRef = string.IsNullOrWhiteSpace(source.cohortRef)
+            ? Guid.NewGuid().ToString().ToUpper()
+            : source.cohortRef;
         var accountId = encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
-        var legalEntities = await apiClient.GetLegalEntitiesForAccount(source.cohortRef, accountId);
+        var legalEntities = await apiClient.GetLegalEntitiesForAccount(cohortRef, accountId);
 
         return new SelectLegalEntityViewModel {
             AccountHashedId = source.AccountHashedId,
             TransferConnectionCode = source.transferConnectionCode,
             LegalEntities = legalEntities.AccountLegalEntities.ConvertAll(MapToLegalEntityVm),
-            CohortRef = string.IsNullOrWhiteSpace(source.cohortRef) ? Guid.NewGuid().ToString().ToUpper() : source.cohortRef,
+            CohortRef = cohortRef,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
         };
     }
