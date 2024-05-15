@@ -88,4 +88,9 @@ public class ApprovalsApiClient : IApprovalsApiClient
     {
         return await _client.Get<GetManageApprenticeshipDetailsResponse>($"employer/{accountId}/apprenticeships/{apprenticeshipId}/details");
     }
+
+    public async Task<GetLegalEntitiesForAccountResponse> GetLegalEntitiesForAccount(string cohortId, long accountId)
+    {
+        return await _client.Get<GetLegalEntitiesForAccountResponse>($"{accountId}/cohorts/{cohortId}/unapproved/add/legal-entity");
+    }
 }
