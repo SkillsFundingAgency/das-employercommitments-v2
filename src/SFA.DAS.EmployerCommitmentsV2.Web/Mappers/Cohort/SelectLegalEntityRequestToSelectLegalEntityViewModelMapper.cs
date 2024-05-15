@@ -5,6 +5,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
 using Agreement = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.Agreement;
 using AgreementModel = SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.Agreement;
+using LegalEntity = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.LegalEntity;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
@@ -23,15 +24,15 @@ public class SelectLegalEntityRequestToSelectLegalEntityViewModelMapper(
         return new SelectLegalEntityViewModel {
             AccountHashedId = source.AccountHashedId,
             TransferConnectionCode = source.transferConnectionCode,
-            LegalEntities = legalEntities.AccountLegalEntities.ConvertAll(MapToLegalEntityVm),
+            LegalEntities = legalEntities.LegalEntities.ConvertAll(MapToLegalEntityVm),
             CohortRef = cohortRef,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
         };
     }
 
-    private LegalEntity MapToLegalEntityVm(AccountLegalEntity input)
+    private Models.Cohort.LegalEntity MapToLegalEntityVm(LegalEntity input)
     {
-        return new LegalEntity
+        return new Models.Cohort.LegalEntity
         {
             Name = input.Name,
             RegisteredAddress = input.Address,

@@ -3,6 +3,7 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
+using LegalEntity = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.LegalEntity;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
@@ -23,11 +24,11 @@ public class WhenMappingChooseOrganisationRequestToSelectLegalEntityViewModelTes
         _chooseOrganisationRequest = autoFixture.Create<SelectLegalEntityRequest>();
         _encodingService.Setup(x => x.Decode(_chooseOrganisationRequest.AccountHashedId, EncodingType.AccountId))
             .Returns(AccountId);
-        var legalEntity = autoFixture.Create<AccountLegalEntity>();
+        var legalEntity = autoFixture.Create<LegalEntity>();
         _apiClient.Setup(x => x.GetLegalEntitiesForAccount(_chooseOrganisationRequest.cohortRef, AccountId))
             .ReturnsAsync(new GetLegalEntitiesForAccountResponse
             {
-                AccountLegalEntities = new List<AccountLegalEntity>
+                LegalEntities = new List<LegalEntity>
                 {
                     legalEntity
                 }

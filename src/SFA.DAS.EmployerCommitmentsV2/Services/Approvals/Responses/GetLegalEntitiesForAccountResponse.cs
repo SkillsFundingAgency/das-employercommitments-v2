@@ -4,10 +4,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 public class GetLegalEntitiesForAccountResponse
 {
-    public List<AccountLegalEntity> AccountLegalEntities { get; set; }
+    public List<LegalEntity> LegalEntities { get; set; }
 }
     
-public class AccountLegalEntity
+public class LegalEntity
 {
     public bool HasLegalAgreement { get; set; }
     public string AccountLegalEntityPublicHashedId { get; set; }
