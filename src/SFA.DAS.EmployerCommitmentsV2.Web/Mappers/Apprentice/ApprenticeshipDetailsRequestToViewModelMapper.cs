@@ -166,6 +166,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
             Initiator = startDateChangeDetails.Initiator,
             EmployerApprovedDate = startDateChangeDetails.EmployerApprovedDate,
             PendingActualStartDate = startDateChangeDetails.PendingActualStartDate,
+            PendingEndDate = startDateChangeDetails.PendingPlannedEndDate,
             ProviderApprovedDate = startDateChangeDetails.ProviderApprovedDate
         };
     }

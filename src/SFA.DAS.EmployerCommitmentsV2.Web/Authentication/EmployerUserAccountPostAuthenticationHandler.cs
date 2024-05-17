@@ -52,6 +52,7 @@ public class EmployerAccountPostAuthenticationClaimsHandler : ICustomClaims
         var associatedAccountsClaim = new Claim(EmployeeClaims.AccountsClaimsTypeIdentifier, accountsAsJson, JsonClaimValueTypes.Json);
         claims.Add(associatedAccountsClaim);
 
+
         if (!_employerCommitmentsConfiguration.UseGovSignIn)
         {
             return claims;
@@ -69,6 +70,9 @@ public class EmployerAccountPostAuthenticationClaimsHandler : ICustomClaims
             claims.Add(new Claim(EmployeeClaims.IdamsUserDisplayNameClaimTypeIdentifier, result.FirstName + " " + result.LastName));
         }
 
+        result.EmployerAccounts
+            .Where(c => c.Role.Equals("owner", StringComparison.CurrentCultureIgnoreCase) || c.Role.Equals("transactor", StringComparison.CurrentCultureIgnoreCase))
+            .ToList().ForEach(u => claims.Add(new Claim("http://das/employer/identity/claims/account", u.AccountId)));
 
         return claims;
     }

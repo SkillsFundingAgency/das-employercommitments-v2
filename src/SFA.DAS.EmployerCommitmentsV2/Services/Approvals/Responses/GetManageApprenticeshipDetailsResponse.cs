@@ -192,6 +192,7 @@ public class GetManageApprenticeshipDetailsResponse
     public class PendingStartDateChangeDetails
     {
         public DateTime PendingActualStartDate { get; set; }
+        public DateTime PendingPlannedEndDate { get; set; }
         public string Initiator { get; set; }
         public DateTime? ProviderApprovedDate { get; set; }
         public DateTime? EmployerApprovedDate { get; set; }
