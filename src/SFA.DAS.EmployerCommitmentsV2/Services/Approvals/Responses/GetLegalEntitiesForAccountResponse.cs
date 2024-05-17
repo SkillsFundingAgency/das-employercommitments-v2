@@ -23,4 +23,10 @@ public class Agreement
 {
     public long Id { get; set; }
     public EmployerAgreementStatus Status { get; set; }
+    public int AgreementType { get; set; }
+    public int TemplateVersionNumber { get; set; }
+    public long? SignedById { get; set; }
+    public string SignedByName { get; set; }
+    public DateTime? SignedDate { get; set; }
+    public string SignedByEmail { get; set; }
 }
