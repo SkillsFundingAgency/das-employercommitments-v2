@@ -346,10 +346,7 @@
                     var endDate = string.Empty;
                     if (Model.EndDate.HasValue)
                     {
-                        if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
-                        {
-                            endDate = Model.IsOnFlexiPaymentPilot.GetValueOrDefault() ? Model.EndDate.Value.ToGdsFormat() : Model.EndDate.Value.ToGdsFormatWithoutDay();
-                        }
+                        endDate = Model.IsOnFlexiPaymentPilot.GetValueOrDefault() ? Model.EndDate.Value.ToGdsFormat() : Model.EndDate.Value.ToGdsFormatWithoutDay();
                     }
                 }
                 @if (!Model.HasPendingStartDateChange)
