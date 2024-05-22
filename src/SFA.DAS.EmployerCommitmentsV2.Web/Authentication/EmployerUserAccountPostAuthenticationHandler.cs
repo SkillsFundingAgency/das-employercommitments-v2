@@ -72,7 +72,7 @@ public class EmployerAccountPostAuthenticationClaimsHandler : ICustomClaims
 
         result.EmployerAccounts
             .Where(c => c.Role.Equals("owner", StringComparison.CurrentCultureIgnoreCase) || c.Role.Equals("transactor", StringComparison.CurrentCultureIgnoreCase))
-            .ToList().ForEach(u => claims.Add(new Claim("http://das/employer/identity/claims/account", u.AccountId)));
+            .ToList().ForEach(u => claims.Add(new Claim(EmployeeClaims.AccountIdClaimTypeIdentifier, u.AccountId)));
 
         return claims;
     }
