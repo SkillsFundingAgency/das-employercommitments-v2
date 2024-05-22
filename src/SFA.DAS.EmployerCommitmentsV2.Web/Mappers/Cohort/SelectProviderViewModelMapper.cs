@@ -1,27 +1,28 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
 public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, SelectProviderViewModel>
 {
-    private readonly ICommitmentsApiClient _commitmentsApiClient;
+    private readonly IApprovalsApiClient _outerApiClient;
 
-    public SelectProviderViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
+    public SelectProviderViewModelMapper(IApprovalsApiClient outerApiClient)
     {
-        _commitmentsApiClient = commitmentsApiClient;
+        _outerApiClient = outerApiClient;
     }
 
     public async Task<SelectProviderViewModel> Map(SelectProviderRequest source)
     {
-        var providersResponseTask = _commitmentsApiClient.GetAllProviders();
-        var accountLegalEntityTask = _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
+        var providersResponseTask = _outerApiClient.GetAllProviders();
+        var accountLegalEntityTask = _outerApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
 
         await Task.WhenAll(providersResponseTask, accountLegalEntityTask);
 
-        var providersResponse = providersResponseTask.Result;
-        var accountLegalEntity = accountLegalEntityTask.Result;
+        var providersResponse = await providersResponseTask;
+        var accountLegalEntity = await accountLegalEntityTask;
 
         return new SelectProviderViewModel
         {
@@ -34,9 +35,8 @@ public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, Sele
             TransferSenderId = source.TransferSenderId,
             Origin = DetermineOrigin(source),
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
-            Providers = providersResponse.Providers
+            Providers = providersResponse.Providers.ToList()
         };
-
     }
 
     private static Origin DetermineOrigin(SelectProviderRequest source)

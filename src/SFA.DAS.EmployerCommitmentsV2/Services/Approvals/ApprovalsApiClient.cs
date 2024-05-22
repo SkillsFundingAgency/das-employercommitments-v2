@@ -2,6 +2,8 @@ using System.Web;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+using AddDraftApprenticeshipResponse = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.AddDraftApprenticeshipResponse;
+using CreateCohortResponse = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.CreateCohortResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
@@ -87,5 +89,15 @@ public class ApprovalsApiClient : IApprovalsApiClient
     public async Task<GetManageApprenticeshipDetailsResponse> GetManageApprenticeshipDetails(long accountId, long apprenticeshipId, CancellationToken cancellationToken = default)
     {
         return await _client.Get<GetManageApprenticeshipDetailsResponse>($"employer/{accountId}/apprenticeships/{apprenticeshipId}/details");
+    }
+
+    public Task<GetProvidersListResponse> GetAllProviders(CancellationToken cancellationToken = default)
+    {
+        return _client.Get<GetProvidersListResponse>($"providers");
+    }
+
+    public Task<GetAccountLegalEntityResponse> GetAccountLegalEntity(long accountLegalEntityId, CancellationToken cancellationToken = default)
+    {
+        return _client.Get<GetAccountLegalEntityResponse>($"accountlegalentity/{accountLegalEntityId}");
     }
 }

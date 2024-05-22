@@ -25,4 +25,32 @@ public class ApprovalsApiClientTests
         
         actual.Should().BeEquivalentTo(response);
     }
+
+    [Test, AutoData]
+    public async Task When_Calling_GetAllProviders_Then_The_Data_Is_Returned(GetProvidersListResponse response)
+    {
+        var outerApiClient = new Mock<IOuterApiClient>();
+        var expectedUrl = $"providers";
+        outerApiClient.Setup(x => x.Get<GetProvidersListResponse>(expectedUrl)).ReturnsAsync(response);
+        var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
+
+        var actual = await approvalsApiClient.GetAllProviders();
+
+        actual.Should().BeEquivalentTo(response);
+    }
+
+    [Test, AutoData]
+    public async Task When_Calling_GetAccountLegalEntity_Then_The_Data_Is_Returned(long id, GetAccountLegalEntityResponse response)
+    {
+        var outerApiClient = new Mock<IOuterApiClient>();
+        var expectedUrl = $"accountlegalentity/{id}";
+        outerApiClient.Setup(x => x.Get<GetAccountLegalEntityResponse>(expectedUrl)).ReturnsAsync(response);
+        var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
+
+        var actual = await approvalsApiClient.GetAccountLegalEntity(id);
+
+        actual.Should().BeEquivalentTo(response);
+    }
+
+
 }

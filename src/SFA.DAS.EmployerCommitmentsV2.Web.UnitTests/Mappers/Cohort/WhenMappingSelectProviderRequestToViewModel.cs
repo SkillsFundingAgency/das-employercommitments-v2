@@ -1,5 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
@@ -9,9 +9,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 public class WhenMappingSelectProviderRequestToViewModel
 {
     private SelectProviderRequest _request;
-    private Mock<ICommitmentsApiClient> _commitmentsApiClientMock;
-    private AccountLegalEntityResponse _accountLegalEntityResponse;
-    private GetAllProvidersResponse _providersResponse;
+    private Mock<IApprovalsApiClient> _approvalsApiClientMock;
+    private GetAccountLegalEntityResponse _accountLegalEntityResponse;
+    private GetProvidersListResponse _providersResponse;
     private SelectProviderViewModelMapper _mapper;
 
     [SetUp]
@@ -19,19 +19,19 @@ public class WhenMappingSelectProviderRequestToViewModel
     {
         var autoFixture = new Fixture();
         _request = autoFixture.Create<SelectProviderRequest>();
-        _accountLegalEntityResponse = autoFixture.Create<AccountLegalEntityResponse>();
-        _providersResponse = autoFixture.Create<GetAllProvidersResponse>();
+        _accountLegalEntityResponse = autoFixture.Create<GetAccountLegalEntityResponse>();
+        _providersResponse = autoFixture.Create<GetProvidersListResponse>();
 
-        _commitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
-        _commitmentsApiClientMock
+        _approvalsApiClientMock = new Mock<IApprovalsApiClient>();
+        _approvalsApiClientMock
             .Setup(x => x.GetAccountLegalEntity(_request.AccountLegalEntityId, CancellationToken.None))
             .ReturnsAsync(_accountLegalEntityResponse);
 
-        _commitmentsApiClientMock
+        _approvalsApiClientMock
             .Setup(x => x.GetAllProviders(CancellationToken.None))
             .ReturnsAsync(_providersResponse);
 
-        _mapper = new SelectProviderViewModelMapper(_commitmentsApiClientMock.Object);
+        _mapper = new SelectProviderViewModelMapper(_approvalsApiClientMock.Object);
     }
 
     [Test]
