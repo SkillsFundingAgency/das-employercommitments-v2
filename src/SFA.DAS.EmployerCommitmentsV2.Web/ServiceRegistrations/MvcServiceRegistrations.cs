@@ -27,7 +27,6 @@ public static class MvcServiceRegistrations
                 options.Filters.Add(new GoogleAnalyticsFilter());
                 options.ModelBinderProviders.Insert(0, new AuthorizationModelBinderProvider());
                 options.ModelBinderProviders.Insert(1, new SuppressArgumentExceptionModelBinderProvider());
-                options.AddStringModelBinderProvider();
             })
             .AddControllersAsServices()
             .SetDefaultNavigationSection(NavigationSection.ApprenticesHome);
