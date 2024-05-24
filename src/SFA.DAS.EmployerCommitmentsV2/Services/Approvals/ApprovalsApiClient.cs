@@ -91,13 +91,13 @@ public class ApprovalsApiClient : IApprovalsApiClient
         return await _client.Get<GetManageApprenticeshipDetailsResponse>($"employer/{accountId}/apprenticeships/{apprenticeshipId}/details");
     }
 
-    public Task<GetProvidersListResponse> GetAllProviders(CancellationToken cancellationToken = default)
-    {
-        return _client.Get<GetProvidersListResponse>($"providers");
-    }
-
     public Task<GetAccountLegalEntityResponse> GetAccountLegalEntity(long accountLegalEntityId, CancellationToken cancellationToken = default)
     {
         return _client.Get<GetAccountLegalEntityResponse>($"accountlegalentity/{accountLegalEntityId}");
+    }
+
+    public Task<GetSelectProviderDetailsResponse> GetSelectProviderDetails(long accountLegalEntityId, CancellationToken cancellationToken = default)
+    {
+        return _client.Get<GetSelectProviderDetailsResponse>($"selectprovider?accountLegalEntityId={accountLegalEntityId}");
     }
 }

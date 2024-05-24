@@ -17,6 +17,6 @@ public class SelectProviderViewModel
     public string TransferSenderId { get; set; }
     public Origin Origin { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
-    public List<GetProviderResponse> Providers { get; set; }
+    public List<Provider> Providers { get; set; }
 
 }

@@ -10,8 +10,7 @@ public class WhenMappingSelectProviderRequestToViewModel
 {
     private SelectProviderRequest _request;
     private Mock<IApprovalsApiClient> _approvalsApiClientMock;
-    private GetAccountLegalEntityResponse _accountLegalEntityResponse;
-    private GetProvidersListResponse _providersResponse;
+    private GetSelectProviderDetailsResponse _selectProvidersResponse;
     private SelectProviderViewModelMapper _mapper;
 
     [SetUp]
@@ -19,17 +18,12 @@ public class WhenMappingSelectProviderRequestToViewModel
     {
         var autoFixture = new Fixture();
         _request = autoFixture.Create<SelectProviderRequest>();
-        _accountLegalEntityResponse = autoFixture.Create<GetAccountLegalEntityResponse>();
-        _providersResponse = autoFixture.Create<GetProvidersListResponse>();
+        _selectProvidersResponse = autoFixture.Create<GetSelectProviderDetailsResponse>();
 
         _approvalsApiClientMock = new Mock<IApprovalsApiClient>();
         _approvalsApiClientMock
-            .Setup(x => x.GetAccountLegalEntity(_request.AccountLegalEntityId, CancellationToken.None))
-            .ReturnsAsync(_accountLegalEntityResponse);
-
-        _approvalsApiClientMock
-            .Setup(x => x.GetAllProviders(CancellationToken.None))
-            .ReturnsAsync(_providersResponse);
+            .Setup(x => x.GetSelectProviderDetails(_request.AccountLegalEntityId, CancellationToken.None))
+            .ReturnsAsync(_selectProvidersResponse);
 
         _mapper = new SelectProviderViewModelMapper(_approvalsApiClientMock.Object);
     }
@@ -55,7 +49,7 @@ public class WhenMappingSelectProviderRequestToViewModel
     {
         var result = await _mapper.Map(_request);
 
-        Assert.That(result.LegalEntityName, Is.EqualTo(_accountLegalEntityResponse.LegalEntityName));
+        Assert.That(result.LegalEntityName, Is.EqualTo(_selectProvidersResponse.AccountLegalEntity.LegalEntityName));
     }
 
     [Test]
@@ -63,7 +57,7 @@ public class WhenMappingSelectProviderRequestToViewModel
     {
         var result = await _mapper.Map(_request);
 
-        Assert.That(result.Providers, Is.EqualTo(_providersResponse.Providers));
+        Assert.That(result.Providers, Is.EqualTo(_selectProvidersResponse.Providers));
     }
 
     [Test]
