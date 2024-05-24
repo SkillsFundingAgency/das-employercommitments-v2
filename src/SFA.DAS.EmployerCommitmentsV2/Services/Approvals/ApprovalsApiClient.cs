@@ -96,8 +96,8 @@ public class ApprovalsApiClient : IApprovalsApiClient
         return _client.Get<GetAccountLegalEntityResponse>($"accountlegalentity/{accountLegalEntityId}");
     }
 
-    public Task<GetSelectProviderDetailsResponse> GetSelectProviderDetails(long accountLegalEntityId, CancellationToken cancellationToken = default)
+    public Task<GetSelectProviderDetailsResponse> GetSelectProviderDetails(long accountId, long accountLegalEntityId, CancellationToken cancellationToken = default)
     {
-        return _client.Get<GetSelectProviderDetailsResponse>($"selectprovider?accountLegalEntityId={accountLegalEntityId}");
+        return _client.Get<GetSelectProviderDetailsResponse>($"{accountId}/unapproved/add/select-provider?accountLegalEntityId={accountLegalEntityId}");
     }
 }

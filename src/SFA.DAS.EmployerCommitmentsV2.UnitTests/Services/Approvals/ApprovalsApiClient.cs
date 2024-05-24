@@ -40,14 +40,14 @@ public class ApprovalsApiClientTests
     }
 
     [Test, AutoData]
-    public async Task When_Calling_GetSelectProviderDetails_Then_The_Data_Is_Returned(long id, GetSelectProviderDetailsResponse response)
+    public async Task When_Calling_GetSelectProviderDetails_Then_The_Data_Is_Returned(long accountId, long accountLegalEntityid, GetSelectProviderDetailsResponse response)
     {
         var outerApiClient = new Mock<IOuterApiClient>();
-        var expectedUrl = $"selectprovider?accountLegalEntityId={id}";
+        var expectedUrl = $"{accountId}/unapproved/add/select-provider?accountLegalEntityId={accountLegalEntityid}";
         outerApiClient.Setup(x => x.Get<GetSelectProviderDetailsResponse>(expectedUrl)).ReturnsAsync(response);
         var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
 
-        var actual = await approvalsApiClient.GetSelectProviderDetails(id);
+        var actual = await approvalsApiClient.GetSelectProviderDetails(accountId, accountLegalEntityid);
 
         actual.Should().BeSameAs(response);
     }

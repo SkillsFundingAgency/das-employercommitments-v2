@@ -15,7 +15,7 @@ public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, Sele
 
     public async Task<SelectProviderViewModel> Map(SelectProviderRequest source)
     {
-        var selectProviderDetails = await _outerApiClient.GetSelectProviderDetails(source.AccountLegalEntityId);
+        var selectProviderDetails = await _outerApiClient.GetSelectProviderDetails(source.AccountId, source.AccountLegalEntityId);
 
         var providers = selectProviderDetails.Providers.ToList();
         var accountLegalEntity = selectProviderDetails.AccountLegalEntity;

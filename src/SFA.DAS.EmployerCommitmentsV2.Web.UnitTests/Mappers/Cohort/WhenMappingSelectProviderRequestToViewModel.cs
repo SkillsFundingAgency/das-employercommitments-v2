@@ -22,7 +22,7 @@ public class WhenMappingSelectProviderRequestToViewModel
 
         _approvalsApiClientMock = new Mock<IApprovalsApiClient>();
         _approvalsApiClientMock
-            .Setup(x => x.GetSelectProviderDetails(_request.AccountLegalEntityId, CancellationToken.None))
+            .Setup(x => x.GetSelectProviderDetails(_request.AccountId, _request.AccountLegalEntityId, CancellationToken.None))
             .ReturnsAsync(_selectProvidersResponse);
 
         _mapper = new SelectProviderViewModelMapper(_approvalsApiClientMock.Object);
