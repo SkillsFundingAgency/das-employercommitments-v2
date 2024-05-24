@@ -65,6 +65,6 @@
     }
     else
     {
-        <a href="@Url.Action("Inform", "Cohort")" id="back-link" class="govuk-back-link">Back</a>
+        <a href="@Url.Action("Inform", "Cohort", new { Model.AccountHashedId})" id="back-link" class="govuk-back-link">Back</a>
     }
 }
