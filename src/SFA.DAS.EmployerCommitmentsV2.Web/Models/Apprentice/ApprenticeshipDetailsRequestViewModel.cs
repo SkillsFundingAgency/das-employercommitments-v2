@@ -82,7 +82,7 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
 
     public bool HasMultipleDeliveryModelOptions { get; set; }
     public bool? IsOnFlexiPaymentPilot { get; set; }
-
+    public string PaymentStatus { get; set; }
     public PendingPriceChange PendingPriceChange { get; set; }
     public bool HasPendingPriceChange => PendingPriceChange != null;
     public PendingStartDateChange PendingStartDateChange { get; set; }
