@@ -171,6 +171,18 @@
                         @Model.ConfirmationStatus.ToDisplayString()
                     </td>
                 </tr>
+
+                @if(Model.IsOnFlexiPaymentPilot == true)
+                {
+                    <tr>
+                        <th scope="row" class="govuk-table__header">Provider payments status</th>
+                        <td id="provider-payments-status" class="govuk-table__cell" colspan="2">
+                            <strong class="govuk-tag govuk-tag--blue">@Model.PaymentStatus</strong>
+                        </td>
+                    </tr>
+                }
+
+
                 <tr>
                     <th scope="row" class="govuk-table__header">Training provider</th>
                     <td class="govuk-table__cell">@Model.ProviderName</td>

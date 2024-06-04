@@ -14,6 +14,7 @@ public class GetManageApprenticeshipDetailsResponse
     public bool HasMultipleDeliveryModelOptions { get; set; }
     public PendingPriceChangeDetails PendingPriceChange { get; set; }
     public PendingStartDateChangeDetails PendingStartDateChange { get; set; }
+    public bool? PaymentsFrozen { get; set; }
 
     public class GetApprenticeshipResponse
     {
