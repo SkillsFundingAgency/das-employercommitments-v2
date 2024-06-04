@@ -19,6 +19,11 @@
         <partial name="DetailsPartials/_ActionRequiredBanner" />
         <partial name="DetailsPartials/_ChangesToThisApprenticeshipBanner" />
 
+        @if (Model.ShowChangeApprovedBanner)
+        {
+            <partial name="DetailsPartials/_ChangeApprovedBanner" />
+        }
+
         @if (Model.ShowPriceChangeCancelled)
         {
             <partial name="DetailsPartials/_CancelledPriceChangeBanner" />
@@ -47,6 +52,11 @@
         @if (Model.HasPendingProviderInitiatedStartDateChange)
         {
             <partial name="DetailsPartials/_PendingStartDateChangeBanner" />
+        }
+        
+        @if (Model.ShowStartDateChangeRejected)
+        {
+            <partial name="DetailsPartials/_StartDateChangeRejectedBanner" />
         }
 
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
