@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Newtonsoft.Json;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -50,12 +47,14 @@ public class CohortController : Controller
     public async Task<IActionResult> Details(DetailsRequest request)
     {
         var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
-        
+
         StoreViewEmployerAgreementModelState(
-            new ViewEmployerAgreementModel {
-                AccountHashedId = viewModel.AccountHashedId, 
-                CohortId = viewModel.CohortId });
-        
+            new ViewEmployerAgreementModel
+            {
+                AccountHashedId = viewModel.AccountHashedId,
+                CohortId = viewModel.CohortId
+            });
+
         return View(viewModel);
     }
 
@@ -69,20 +68,20 @@ public class CohortController : Controller
         {
             case CohortDetailsOptions.Send:
             case CohortDetailsOptions.Approve:
-            {
-                var request = await _modelMapper.Map<AcknowledgementRequest>(viewModel);
-                var acknowledgementAction = viewModel.Selection == CohortDetailsOptions.Approve ? "Approved" : "Sent";
-                return RedirectToAction(acknowledgementAction, request);
-            }
+                {
+                    var request = await _modelMapper.Map<AcknowledgementRequest>(viewModel);
+                    var acknowledgementAction = viewModel.Selection == CohortDetailsOptions.Approve ? "Approved" : "Sent";
+                    return RedirectToAction(acknowledgementAction, request);
+                }
             case CohortDetailsOptions.ViewEmployerAgreement:
-            {
-                var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
-                return ViewEmployeeAgreementRedirect(request);                      
-            }
+                {
+                    var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
+                    return ViewEmployeeAgreementRedirect(request);
+                }
             case CohortDetailsOptions.Homepage:
-            {
-                return Redirect(_linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
-            }
+                {
+                    return Redirect(_linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
+                }
             default:
                 throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
         }
@@ -92,12 +91,14 @@ public class CohortController : Controller
     [Route("viewAgreement", Name = "ViewAgreement")]
     public async Task<IActionResult> ViewAgreement(string hashedAccountId)
     {
-        var tempData = GetViewEmployerAgreementModelState();          
+        var tempData = GetViewEmployerAgreementModelState();
 
         var request = tempData == null
             ? new ViewEmployerAgreementRequest { AccountHashedId = hashedAccountId }
-            : await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel {
-                AccountHashedId = tempData.AccountHashedId, CohortId = tempData.CohortId
+            : await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel
+            {
+                AccountHashedId = tempData.AccountHashedId,
+                CohortId = tempData.CohortId
             });
 
         return ViewEmployeeAgreementRedirect(request);
@@ -449,7 +450,7 @@ public class CohortController : Controller
     }
 
     [HttpGet]
-    [Route("Inform")]
+    [Route("Inform", Name = "Inform")]
     public async Task<ActionResult> Inform(InformRequest request)
     {
         var viewModel = await _modelMapper.Map<InformViewModel>(request);
@@ -507,7 +508,7 @@ public class CohortController : Controller
                 EncodedPledgeApplicationId = request.EncodedPledgeApplicationId
             });
         }
-            
+
         var model = new LegalEntitySignedAgreementViewModel
         {
             AccountHashedId = request.AccountHashedId,
@@ -534,10 +535,10 @@ public class CohortController : Controller
             return RedirectToAction("SelectProvider", new SelectProviderRequest
             {
                 AccountHashedId = selectedLegalEntity.AccountHashedId,
-                TransferSenderId = selectedLegalEntity.TransferConnectionCode,                    
+                TransferSenderId = selectedLegalEntity.TransferConnectionCode,
                 AccountLegalEntityHashedId = response.AccountLegalEntityHashedId,
                 EncodedPledgeApplicationId = selectedLegalEntity.EncodedPledgeApplicationId
-            });               
+            });
         }
 
         var model = new LegalEntitySignedAgreementViewModel
