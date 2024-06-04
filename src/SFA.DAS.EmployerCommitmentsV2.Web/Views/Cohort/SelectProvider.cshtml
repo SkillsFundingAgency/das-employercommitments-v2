@@ -27,9 +27,7 @@
                     </p>
 
                     @Html.ValidationMessageFor(m => m.ProviderId, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ProviderId) })
-                    <label class="govuk-label" for="Ukprn">Select training provider</label>
                     <select id="Ukprn" name="ProviderId" asp-for="ProviderId" class="govuk-select das-autocomplete @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-select--error")">
-                        <option class="das-js-hide" value="">Select training provider</option>
                         @foreach (var provider in Model.Providers)
                         {
                             <option value="@provider.Ukprn"> @provider.Name @provider.Ukprn</option>
