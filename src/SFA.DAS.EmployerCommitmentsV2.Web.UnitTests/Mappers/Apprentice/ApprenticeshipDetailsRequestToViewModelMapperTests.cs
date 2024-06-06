@@ -867,7 +867,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.That(result.PaymentStatus, Is.EqualTo(expectedStatus));
+            result.PaymentStatus.Should().Be(expectedStatus);
         }
 
         [Test]
@@ -877,7 +877,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.That(result.PaymentStatusChangeUrl, Is.EqualTo($"https://apprenticeshipdetails.{MockUrlBuilderEnvironment}-eas.apprenticeships.education.gov.uk/employer/{_request.AccountHashedId}/PaymentsFreeze/{_request.ApprenticeshipHashedId}"));
+            result.PaymentStatusChangeUrl.Should()
+                .Be($"https://apprenticeshipdetails.{MockUrlBuilderEnvironment}-eas.apprenticeships.education.gov.uk/employer/{_request.AccountHashedId}/PaymentsFreeze/{_request.ApprenticeshipHashedId}");
         }
 
         private static UrlBuilder GetMockUrlBuilder()
