@@ -13,7 +13,7 @@
 
         <partial name="_ValidationSummary" />
         <form method="post">
-            @Html.AntiForgeryToken()          
+            @Html.AntiForgeryToken()
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
@@ -23,11 +23,18 @@
                     </legend>
 
                     <p class="govuk-body">
-                        A UKPRN is the unique, 8-digit number we use to identify a training provider. Ask your training provider if you do not know it.
+                        A UKPRN is the unique, 8-digit number we use to identify a training provider. Ask your training
+                        provider if you do not know it.
                     </p>
 
-                    @Html.ValidationMessageFor(m => m.ProviderId, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ProviderId) })
-                    <select id="Ukprn" name="ProviderId" asp-for="ProviderId" class="govuk-select das-autocomplete @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-select--error")">
+                    @Html.ValidationMessageFor(m => m.ProviderId, null, new
+                        {
+                            @class = "govuk-error-message",
+                            id =
+                             "error-message-" + Html.IdFor(m => m.ProviderId)
+                        })
+                    <select id="Ukprn" name="ProviderId" asp-for="ProviderId"
+                        class="govuk-select das-autocomplete-search @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-select--error")">
                         <option class="das-js-hide" value="">Select training provider</option>
                         @foreach (var provider in Model.Providers)
                         {
@@ -50,20 +57,21 @@
     @if (Model.Origin == Origin.Reservations)
     {
         @Html.ActionLink("Back", "Index", "Cohort", new
-        {
-            Model.AccountHashedId,
-            Model.AccountLegalEntityHashedId,
-            Model.ReservationId,
-            Model.CourseCode,
-            Model.StartMonthYear
-        }, new { @class = "govuk-back-link", id = "back-link" })
+            {
+                Model.AccountHashedId,
+                Model.AccountLegalEntityHashedId,
+                Model.ReservationId,
+                Model.CourseCode,
+                Model.StartMonthYear
+            }, new { @class = "govuk-back-link", id = "back-link" })
     }
     else if (Model.Origin == Origin.LevyTransferMatching)
     {
-        <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications/{Model.EncodedPledgeApplicationId}")" id="back-link" class="govuk-back-link">Back</a>
+        <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications/{Model.EncodedPledgeApplicationId}")"
+    id="back-link" class="govuk-back-link">Back</a>
     }
     else
     {
         <a href="@Url.Action("Inform", "Cohort", new { Model.AccountHashedId})" id="back-link" class="govuk-back-link">Back</a>
     }
-}
+    }
