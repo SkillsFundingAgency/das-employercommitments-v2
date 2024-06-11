@@ -64,6 +64,11 @@
             <partial name="DetailsPartials/_ProviderPaymentsInactiveBanner" />
         }
 
+        @if (Model.ShowProviderPaymentsActive)
+        {
+            <partial name="DetailsPartials/_ProviderPaymentsActivatedBanner" />
+        }
+
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
 
         @if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
@@ -183,8 +188,8 @@
                         <th scope="row" class="govuk-table__header">Provider payments status</th>
                         <td id="provider-payments-status" class="govuk-table__cell" colspan="2">
                             <strong class="govuk-tag govuk-tag--blue">@Model.PaymentStatus</strong>
-                        <td class="govuk-table__cell"><a id="linkChangePaymentStatus" href="@Model.PaymentStatusChangeUrl" class="govuk-link">Change</a></td>
                         </td>
+                        <td class="govuk-table__cell"><a id="linkChangePaymentStatus" href="@Model.PaymentStatusChangeUrl" class="govuk-link">Change</a></td>
                     </tr>
                 }
 
