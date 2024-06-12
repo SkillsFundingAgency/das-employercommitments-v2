@@ -126,6 +126,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 PendingPriceChangeUrl = response.PendingPriceChange != null ? _urlBuilder.ApprenticeshipsLink("ViewPendingPriceChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
                 PendingStartDateChange = Map(response.PendingStartDateChange),
                 PendingStartDateChangeUrl = response.PendingStartDateChange != null ? _urlBuilder.ApprenticeshipsLink("ViewPendingStartDateChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
+                PaymentStatus = response.PaymentsFrozen == true ? "Inactive" : "Active"
             };
 		
             return result;
@@ -166,6 +167,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
             Initiator = startDateChangeDetails.Initiator,
             EmployerApprovedDate = startDateChangeDetails.EmployerApprovedDate,
             PendingActualStartDate = startDateChangeDetails.PendingActualStartDate,
+            PendingEndDate = startDateChangeDetails.PendingPlannedEndDate,
             ProviderApprovedDate = startDateChangeDetails.ProviderApprovedDate
         };
     }
