@@ -48,8 +48,10 @@ jobs:
             TargetFileName: '*.schema.json'
             TableName: Configuration
             ConfigurationSecrets:
-              DefaultSessionRedisConnectionString: $(DefaultSessionRedisConnectionString)
+              SharedRedisConnectionString: $(SharedRedisConnectionString)
               ApprovalsApimSubscriptionKey: $(ApprovalsApimSubscriptionKey)
+              AuthenticationConfiguration:ClientSecret: $(AuthenticationConfiguration:ClientSecret)
+              UserBearerTokenSigningKey: $(UserBearerTokenSigningKey)
         - template: azure-pipelines-templates/deploy/step/app-role-assignments.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.AppRoleAssignmentsServiceConnection }}
