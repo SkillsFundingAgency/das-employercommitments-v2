@@ -37,3 +37,9 @@
 {
     <partial name="DetailsPartials/_ChangeOfPriceRequestSentBanner" />
 }
+
+@if (Model.ShowBannersFlags.HasFlag(ApprenticeDetailsBanners.ProviderPaymentsInactive))
+{
+    var providerPaymentsInactiveBannerModel = new SuccessBannerModel("provider-payments-inactive-banner", "Provider payments have been set to Inactive", "The training provider has been informed of this update.");
+    <partial name="DetailsPartials/_SuccessBanner" model="providerPaymentsInactiveBannerModel" />
+}

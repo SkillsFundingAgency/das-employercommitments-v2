@@ -95,7 +95,6 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public string PendingStartDateChangeUrl { get; set; }
     public string PaymentStatusChangeUrl { get; set; }
     public ApprenticeDetailsBanners ShowBannersFlags { get; set; }
-    public bool ShowProviderPaymentsInactive { get; set; }
 
     public ActionRequiredBanner GetActionRequiredBanners()
     {

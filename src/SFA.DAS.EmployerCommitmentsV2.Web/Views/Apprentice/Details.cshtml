@@ -31,11 +31,6 @@
             <partial name="DetailsPartials/_PendingStartDateChangeBanner" />
         }
 
-        @if (Model.ShowProviderPaymentsInactive)
-        {
-            <partial name="DetailsPartials/_ProviderPaymentsInactiveBanner" />
-        }
-
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
 
         @if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
