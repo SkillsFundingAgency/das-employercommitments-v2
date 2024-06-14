@@ -6,6 +6,7 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
+using SFA.DAS.Employer.Shared.UI.Models.Flags;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
@@ -21,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
 [Route("{accountHashedId}/apprentices")]
 [SetNavigationSection(NavigationSection.ApprenticesHome)]
-[Authorize(Policy = nameof(PolicyNames.HasEmployerTransactorOwnerAccount))]
+//[Authorize(Policy = nameof(PolicyNames.HasEmployerTransactorOwnerAccount))]
 public class ApprenticeController : Controller
 {
     private readonly IModelMapper _modelMapper;
@@ -701,16 +702,10 @@ public class ApprenticeController : Controller
     [HttpGet]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
-    public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, bool showPriceChangeRejected = false, bool showPriceChangeApproved = false, bool showChangeOfPriceRequestSent = false, bool showPriceChangeCancelled = false, bool showStartDateChangeApproved = false, bool showStartDateChangeRejected = false)        
+    public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, ApprenticeDetailsBanners banners = 0)        
     {
         var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
-        viewModel.ShowPriceChangeRejected = showPriceChangeRejected;
-        viewModel.ShowPriceChangeApproved = showPriceChangeApproved;
-        viewModel.ShowPriceChangeRequestSent = showChangeOfPriceRequestSent;
-        viewModel.ShowPriceChangeCancelled = showPriceChangeCancelled;
-        viewModel.ShowChangeApprovedBanner = showStartDateChangeApproved;
-        viewModel.ShowStartDateChangeApprovedBanner = showStartDateChangeApproved;
-        viewModel.ShowStartDateChangeRejected = showStartDateChangeRejected;
+        viewModel.ShowBannersFlags = banners;
         return View("details", viewModel);
     }
 

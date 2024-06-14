@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SFA.DAS.Employer.Shared.UI.Models.Flags
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+@if (Model.ShowBannersFlags.IsFlagSet(ApprenticeDetailsBanners.ChangeOfStartDateApproved))
+{
+    var changeOfStartDateApprovedBannerModel = new SuccessBannerModel("change-approved-banner", "Changes approved", "The Training Provider has been notified of the approval.");
+    <partial name="DetailsPartials/_SuccessBanner" model="changeOfStartDateApprovedBannerModel" />
+}
+
+@if (Model.ShowBannersFlags.IsFlagSet(ApprenticeDetailsBanners.ChangeOfPriceCancelled))
+{
+    var changeOfPriceCancelledBannerModel = new SuccessBannerModel("cancelled-price-change-banner", "Your request to change the price has been cancelled", "");
+    <partial name="DetailsPartials/_SuccessBanner" model="changeOfPriceCancelledBannerModel" />
+}
+
+@if (Model.ShowBannersFlags.IsFlagSet(ApprenticeDetailsBanners.ChangeOfPriceRejected))
+{
+    var changeOfPriceRejectedBannerModel = new SuccessBannerModel("price-change-rejected-banner", "Changes rejected", "The training provider has been notified that you have rejected their change of price request.");
+    <partial name="DetailsPartials/_SuccessBanner" model="changeOfPriceRejectedBannerModel" />
+}
+    
+@if (Model.ShowBannersFlags.IsFlagSet(ApprenticeDetailsBanners.ChangeOfPriceApproved))
+{
+    var changeOfPriceApprovedBannerModel = new SuccessBannerModel("price-change-approved-banner", "Price change approved", "");
+    <partial name="DetailsPartials/_SuccessBanner" model="changeOfPriceApprovedBannerModel" />
+}
+        
+@if (Model.ShowBannersFlags.IsFlagSet(ApprenticeDetailsBanners.ChangeOfStartDateRejected))
+{
+    var changeOfStartDateRejectedBannerModel = new SuccessBannerModel("startdate-change-rejected-banner", "Changes rejected", "The training provider has been notified that you have rejected their request to change the training start date.");
+    <partial name="DetailsPartials/_SuccessBanner" model="changeOfStartDateRejectedBannerModel" />
+}
+        
+@if (Model.ShowBannersFlags.IsFlagSet(ApprenticeDetailsBanners.ChangeOfPriceRequestSent))
+{
+    <partial name="DetailsPartials/_ChangeOfPriceRequestSentBanner" />
+}

@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
+using SFA.DAS.Employer.Shared.UI.Models.Flags;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -92,15 +93,9 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public string PriceChangeUrl { get; set; }
     public string PendingPriceChangeUrl { get; set; }
     public string PendingStartDateChangeUrl { get; set; }
-    public bool ShowPriceChangeRejected { get; set; }
-    public bool ShowPriceChangeApproved { get; set; }
-    public bool ShowPriceChangeRequestSent { get; set; }
-    public bool ShowPriceChangeCancelled { get; set; }
-    public bool ShowChangeApprovedBanner { get; set; }
-    public bool ShowStartDateChangeApprovedBanner { get; set; }
-    public bool ShowStartDateChangeRejected { get; set; }
+    public ApprenticeDetailsBanners ShowBannersFlags { get; set; }
 
-	public ActionRequiredBanner GetActionRequiredBanners()
+    public ActionRequiredBanner GetActionRequiredBanners()
     {
         var actionRequiredBanner = ActionRequiredBanner.None;
 

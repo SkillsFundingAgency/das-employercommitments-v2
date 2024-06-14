@@ -1,4 +1,6 @@
-﻿<div id="change-approved-banner" class="govuk-notification-banner govuk-notification-banner--success">
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared.SuccessBannerModel
+
+<div id="@Model.Id" class="govuk-notification-banner govuk-notification-banner--success">
     <div class="govuk-notification-banner__header">
         <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
             Success
@@ -6,10 +8,10 @@
     </div>
     <div class="govuk-notification-banner__content">
         <h3 class="govuk-notification-banner__heading">
-            Changes approved
+            @Model.Heading
         </h3>
         <p class="govuk-body">
-            The Training Provider has been notified of the approval.
+            @Model.Body
         </p>
     </div>
 </div>
