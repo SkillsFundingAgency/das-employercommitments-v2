@@ -93,7 +93,9 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public string PriceChangeUrl { get; set; }
     public string PendingPriceChangeUrl { get; set; }
     public string PendingStartDateChangeUrl { get; set; }
+    public string PaymentStatusChangeUrl { get; set; }
     public ApprenticeDetailsBanners ShowBannersFlags { get; set; }
+    public bool ShowProviderPaymentsInactive { get; set; }
 
     public ActionRequiredBanner GetActionRequiredBanners()
     {
