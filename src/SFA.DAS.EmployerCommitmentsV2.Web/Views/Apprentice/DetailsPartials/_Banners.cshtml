@@ -3,6 +3,9 @@
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
 
+<partial name="DetailsPartials/_ActionRequiredBanner" />
+<partial name="DetailsPartials/_ChangesToThisApprenticeshipBanner" />
+
 @if (Model.ShowBannersFlags.IsFlagSet(ApprenticeDetailsBanners.ChangeOfStartDateApproved))
 {
     var changeOfStartDateApprovedBannerModel = new SuccessBannerModel("change-approved-banner", "Changes approved", "The Training Provider has been notified of the approval.");
@@ -42,4 +45,14 @@
 {
     var providerPaymentsInactiveBannerModel = new SuccessBannerModel("provider-payments-inactive-banner", "Provider payments have been set to Inactive", "The training provider has been informed of this update.");
     <partial name="DetailsPartials/_SuccessBanner" model="providerPaymentsInactiveBannerModel" />
+}
+
+@if (Model.HasPendingProviderInitiatedPriceChange)
+{
+    <partial name="DetailsPartials/_PendingPriceChangeBanner" />
+}
+
+@if (Model.HasPendingProviderInitiatedStartDateChange)
+{
+    <partial name="DetailsPartials/_PendingStartDateChangeBanner" />
 }

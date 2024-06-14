@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
 [Route("{accountHashedId}/apprentices")]
 [SetNavigationSection(NavigationSection.ApprenticesHome)]
-//[Authorize(Policy = nameof(PolicyNames.HasEmployerTransactorOwnerAccount))]
+[Authorize(Policy = nameof(PolicyNames.HasEmployerTransactorOwnerAccount))]
 public class ApprenticeController : Controller
 {
     private readonly IModelMapper _modelMapper;

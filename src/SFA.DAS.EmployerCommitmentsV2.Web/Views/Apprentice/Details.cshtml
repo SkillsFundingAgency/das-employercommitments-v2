@@ -17,19 +17,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <partial name="DetailsPartials/_ActionRequiredBanner" />
-        <partial name="DetailsPartials/_ChangesToThisApprenticeshipBanner" />
-        <partial name="DetailsPartials/_ConditionalBanners" />
-        
-        @if (Model.HasPendingProviderInitiatedPriceChange)
-        {
-            <partial name="DetailsPartials/_PendingPriceChangeBanner" />
-        }
-
-        @if (Model.HasPendingProviderInitiatedStartDateChange)
-        {
-            <partial name="DetailsPartials/_PendingStartDateChangeBanner" />
-        }
+        <partial name="DetailsPartials/_Banners" />
 
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
 
