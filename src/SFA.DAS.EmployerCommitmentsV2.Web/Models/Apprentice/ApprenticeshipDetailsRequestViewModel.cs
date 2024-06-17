@@ -1,6 +1,5 @@
 ﻿using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
-using SFA.DAS.Employer.Shared.UI.Models.Flags;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
