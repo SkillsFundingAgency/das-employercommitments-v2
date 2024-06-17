@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -91,8 +92,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         {
             var viewModel = viewResult.Model as ApprenticeshipDetailsRequestViewModel;
 
-            Assert.IsInstanceOf<ApprenticeshipDetailsRequestViewModel>(viewModel);
-            Assert.That(_viewModel.ShowBannersFlags, Is.EqualTo(expectedBanners));
+            viewModel.Should().BeAssignableTo<ApprenticeshipDetailsRequestViewModel>();
+            viewModel.ShowBannersFlags.Should().Be(expectedBanners);
         }
     }
 }
