@@ -135,17 +135,17 @@ stages:
 #       ServiceConnection: SFA-ASM-ModelOffice-ARM
 #       AppRoleAssignmentsServiceConnection: das-app-role-assignments-FCS
 
-# - stage: Deploy_DEMO
-#   dependsOn: Build
-#   displayName: Deploy to DEMO
-#   variables:
-#   - group: DevTest Management Resources
-#   - group: DEMO DevTest Shared Resources
-#   - group: DEMO das-employercommitments-v2
-#   jobs:
-#   - template: pipeline-templates/job/deploy.yml
-#     parameters:
-#       Environment: DEMO
-#       SolutionBaseName: $(SolutionBaseName)
-#       ServiceConnection: SFA-DAS-DevTest-ARM
-#       AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
+- stage: Deploy_DEMO
+  dependsOn: Build
+  displayName: Deploy to DEMO
+  variables:
+  - group: DevTest Management Resources
+  - group: DEMO DevTest Shared Resources
+  - group: DEMO das-employercommitments-v2
+  jobs:
+  - template: pipeline-templates/job/deploy.yml
+    parameters:
+      Environment: DEMO
+      SolutionBaseName: $(SolutionBaseName)
+      ServiceConnection: SFA-DAS-DevTest-ARM
+      AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
