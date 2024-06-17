@@ -60,20 +60,20 @@ stages:
       ServiceConnection: SFA-DAS-DevTest-ARM
       AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
 
-# - stage: Deploy_TEST
-#   dependsOn: Build
-#   displayName: Deploy to TEST
-#   variables:
-#   - group: DevTest Management Resources
-#   - group: TEST DevTest Shared Resources
-#   - group: TEST das-employercommitments-v2
-#   jobs:
-#   - template: pipeline-templates/job/deploy.yml
-#     parameters:
-#       Environment: TEST
-#       SolutionBaseName: $(SolutionBaseName)
-#       ServiceConnection: SFA-DAS-DevTest-ARM
-#       AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
+- stage: Deploy_TEST
+  dependsOn: Build
+  displayName: Deploy to TEST
+  variables:
+  - group: DevTest Management Resources
+  - group: TEST DevTest Shared Resources
+  - group: TEST das-employercommitments-v2
+  jobs:
+  - template: pipeline-templates/job/deploy.yml
+    parameters:
+      Environment: TEST
+      SolutionBaseName: $(SolutionBaseName)
+      ServiceConnection: SFA-DAS-DevTest-ARM
+      AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
 
 - stage: Deploy_TEST2
   dependsOn: Build
