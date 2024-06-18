@@ -82,7 +82,7 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
 
     public bool HasMultipleDeliveryModelOptions { get; set; }
     public bool? IsOnFlexiPaymentPilot { get; set; }
-
+    public string PaymentStatus { get; set; }
     public PendingPriceChange PendingPriceChange { get; set; }
     public bool HasPendingPriceChange => PendingPriceChange != null;
     public PendingStartDateChange PendingStartDateChange { get; set; }
@@ -193,6 +193,7 @@ public class PendingPriceChange
 public class PendingStartDateChange
 {
     public DateTime PendingActualStartDate { get; set; }
+    public DateTime PendingEndDate { get; set; }
     public string Initiator { get; set; }
     public DateTime? ProviderApprovedDate { get; set; }
     public DateTime? EmployerApprovedDate { get; set; }
