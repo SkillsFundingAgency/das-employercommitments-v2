@@ -127,8 +127,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 PendingStartDateChange = Map(response.PendingStartDateChange),
                 PendingStartDateChangeUrl = response.PendingStartDateChange != null ? _urlBuilder.ApprenticeshipsLink("ViewPendingStartDateChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
                 PaymentStatus = response.PaymentsStatus.PaymentsFrozen ? "Inactive" : "Active",
-                PaymentStatusChangeUrl = _urlBuilder.ApprenticeshipsLink("PaymentsFreeze", source.AccountHashedId, source.ApprenticeshipHashedId)
-
+                PaymentStatusChangeUrl = _urlBuilder.ApprenticeshipsLink(response.PaymentsStatus.PaymentsFrozen ? "PaymentsUnfreeze" : "PaymentsFreeze", source.AccountHashedId, source.ApprenticeshipHashedId)
             };
 		
             return result;

@@ -870,15 +870,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             result.PaymentStatus.Should().Be(expectedStatus);
         }
 
-        [Test]
-        public async Task PaymentStatusChangeUrl_IsMapped()
+        [TestCase(true, "/unfreeze")]
+        [TestCase(false, "")]
+        public async Task PaymentStatusChangeUrl_IsMapped(bool paymentsFrozen, string expectedUrlSegment)
         {
             //Act
+            GetManageApprenticeshipDetailsResponse.PaymentsStatus.PaymentsFrozen = paymentsFrozen;
             var result = await _mapper.Map(_request);
 
             //Assert
             result.PaymentStatusChangeUrl.Should()
-                .Be($"https://apprenticeshipdetails.{MockUrlBuilderEnvironment}-eas.apprenticeships.education.gov.uk/employer/{_request.AccountHashedId}/PaymentsFreeze/{_request.ApprenticeshipHashedId}");
+                .Be($"https://apprenticeshipdetails.{MockUrlBuilderEnvironment}-eas.apprenticeships.education.gov.uk/employer/{_request.AccountHashedId}/PaymentsFreeze/{_request.ApprenticeshipHashedId}{expectedUrlSegment}");
         }
 
         private static UrlBuilder GetMockUrlBuilder()
