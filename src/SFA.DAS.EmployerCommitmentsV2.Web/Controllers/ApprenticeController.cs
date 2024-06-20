@@ -106,7 +106,8 @@ public class ApprenticeController : Controller
         return RedirectToAction(nameof(ApprenticeshipDetails),
             new ApprenticeshipDetailsRequest
             {
-                AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+                AccountHashedId = viewModel.AccountHashedId,
+                ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
             });
     }
 
@@ -234,6 +235,8 @@ public class ApprenticeController : Controller
             ViewBag.BackUrl = Url.Link(RouteNames.WhoWillEnterTheDetails,
                 new
                 {
+                    request.AccountHashedId,
+                    request.ApprenticeshipHashedId,
                     request.EmployerWillAdd,
                     request.ProviderName,
                     request.ProviderId
@@ -271,6 +274,8 @@ public class ApprenticeController : Controller
             ViewBag.BackUrl = Url.Link(RouteNames.WhatIsTheNewStartDate,
                 new
                 {
+                    request.AccountHashedId,
+                    request.ApprenticeshipHashedId,
                     request.EmployerWillAdd,
                     request.ProviderId,
                     request.ProviderName,
@@ -310,6 +315,8 @@ public class ApprenticeController : Controller
             ViewBag.BackUrl = Url.Link(RouteNames.WhatIsTheNewEndDate,
                 new
                 {
+                    request.AccountHashedId,
+                    request.ApprenticeshipHashedId,
                     request.EmployerWillAdd,
                     request.ProviderId,
                     request.ProviderName,
@@ -412,8 +419,11 @@ public class ApprenticeController : Controller
                 return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation,
                     new
                     {
-                        request.AccountHashedId, request.ApprenticeshipHashedId, request.ProviderId,
-                        request.StoppedDuringCoP, ProviderAddDetails = true
+                        request.AccountHashedId,
+                        request.ApprenticeshipHashedId,
+                        request.ProviderId,
+                        request.StoppedDuringCoP,
+                        ProviderAddDetails = true
                     });
             }
             catch (Exception ex)
@@ -428,7 +438,7 @@ public class ApprenticeController : Controller
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
             new ApprenticeshipDetailsRequest
-                { AccountHashedId = request.AccountHashedId, ApprenticeshipHashedId = request.ApprenticeshipHashedId });
+            { AccountHashedId = request.AccountHashedId, ApprenticeshipHashedId = request.ApprenticeshipHashedId });
     }
 
     [HttpGet]
@@ -467,8 +477,11 @@ public class ApprenticeController : Controller
         return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant),
             new
             {
-                viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney,
-                viewModel.StopMonth, viewModel.StopYear
+                viewModel.AccountHashedId,
+                viewModel.ApprenticeshipHashedId,
+                viewModel.IsCoPJourney,
+                viewModel.StopMonth,
+                viewModel.StopYear
             });
     }
 
@@ -488,8 +501,12 @@ public class ApprenticeController : Controller
         return RedirectToAction(nameof(ConfirmStop),
             new
             {
-                viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney,
-                viewModel.StopMonth, viewModel.StopYear, viewModel.MadeRedundant
+                viewModel.AccountHashedId,
+                viewModel.ApprenticeshipHashedId,
+                viewModel.IsCoPJourney,
+                viewModel.StopMonth,
+                viewModel.StopYear,
+                viewModel.MadeRedundant
             });
     }
 
@@ -556,8 +573,11 @@ public class ApprenticeController : Controller
         return RedirectToAction(nameof(HasTheApprenticeBeenMadeRedundant),
             new
             {
-                viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId, viewModel.IsCoPJourney,
-                viewModel.StopMonth, viewModel.StopYear
+                viewModel.AccountHashedId,
+                viewModel.ApprenticeshipHashedId,
+                viewModel.IsCoPJourney,
+                viewModel.StopMonth,
+                viewModel.StopYear
             });
     }
 
@@ -605,7 +625,8 @@ public class ApprenticeController : Controller
         return RedirectToAction(nameof(ApprenticeshipDetails),
             new ApprenticeshipDetailsRequest
             {
-                AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+                AccountHashedId = viewModel.AccountHashedId,
+                ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
             });
     }
 
@@ -619,7 +640,7 @@ public class ApprenticeController : Controller
             ApprenticeshipHashedId = request.ApprenticeshipHashedId,
             AccountHashedId = request.AccountHashedId
         };
-        
+
         return View(viewModel);
     }
 
@@ -647,7 +668,8 @@ public class ApprenticeController : Controller
         return RedirectToAction(nameof(ApprenticeshipDetails),
             new ApprenticeshipDetailsRequest
             {
-                AccountHashedId = viewModel.AccountHashedId, ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+                AccountHashedId = viewModel.AccountHashedId,
+                ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
             });
     }
 
@@ -679,17 +701,10 @@ public class ApprenticeController : Controller
     [HttpGet]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
-    public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, bool showPriceChangeRejected = false, bool showPriceChangeApproved = false, bool showChangeOfPriceRequestSent = false, bool showPriceChangeCancelled = false, bool showStartDateChangeApproved = false, bool showStartDateChangeRejected = false, bool showProviderPaymentsInactive = false, bool showProviderPaymentsActive = false)        
+    public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, ApprenticeDetailsBanners banners = 0)        
     {
         var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
-        viewModel.ShowPriceChangeRejected = showPriceChangeRejected;
-        viewModel.ShowPriceChangeApproved = showPriceChangeApproved;
-        viewModel.ShowPriceChangeRequestSent = showChangeOfPriceRequestSent;
-        viewModel.ShowPriceChangeCancelled = showPriceChangeCancelled;
-        viewModel.ShowChangeApprovedBanner = showStartDateChangeApproved;
-        viewModel.ShowStartDateChangeApprovedBanner = showStartDateChangeApproved;
-        viewModel.ShowStartDateChangeRejected = showStartDateChangeRejected;
-        viewModel.ShowProviderPaymentsInactive = showProviderPaymentsInactive;
+        viewModel.ShowBannersFlags = banners;
         viewModel.ShowProviderPaymentsActive = showProviderPaymentsActive;
         return View("details", viewModel);
     }
@@ -905,7 +920,8 @@ public class ApprenticeController : Controller
         return RedirectToAction("ConfirmEditApprenticeship",
             new
             {
-                apprenticeshipHashedId = viewModel.ApprenticeshipHashedId, accountHashedId = viewModel.AccountHashedId
+                apprenticeshipHashedId = viewModel.ApprenticeshipHashedId,
+                accountHashedId = viewModel.AccountHashedId
             });
     }
 
@@ -1102,7 +1118,8 @@ public class ApprenticeController : Controller
 
         return RedirectToAction(nameof(ApprenticeshipDetails), new
         {
-            request.AccountHashedId, request.ApprenticeshipHashedId
+            request.AccountHashedId,
+            request.ApprenticeshipHashedId
         });
     }
 
@@ -1197,7 +1214,8 @@ public class ApprenticeController : Controller
 
         return RedirectToAction(nameof(ApprenticeshipDetails), new
         {
-            viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId
+            viewModel.AccountHashedId,
+            viewModel.ApprenticeshipHashedId
         });
     }
 
@@ -1229,13 +1247,15 @@ public class ApprenticeController : Controller
 
             return RedirectToAction(nameof(ApprenticeshipDetails), new
             {
-                viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId
+                viewModel.AccountHashedId,
+                viewModel.ApprenticeshipHashedId
             });
         }
 
         return RedirectToAction(nameof(EditStopDate), new
         {
-            viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId
+            viewModel.AccountHashedId,
+            viewModel.ApprenticeshipHashedId
         });
     }
 }

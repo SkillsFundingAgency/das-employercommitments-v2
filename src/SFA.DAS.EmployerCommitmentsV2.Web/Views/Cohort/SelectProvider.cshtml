@@ -1,4 +1,5 @@
-﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @using SFA.DAS.EmployerUrlHelper.Mvc
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.SelectProviderViewModel
 @{
@@ -11,40 +12,40 @@
     <div class="govuk-grid-column-two-thirds">
 
         <partial name="_ValidationSummary" />
-
-        <h1 class="govuk-heading-xl">Add training provider details</h1>
-
         <form method="post">
+            @Html.AntiForgeryToken()
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                        <h1 class="govuk-fieldset__heading">
+                            Enter your training provider's name or reference number (UKPRN)
+                        </h1>
+                    </legend>
 
-            <partial name="_SelectProviderHiddenPartial" />
+                    <p class="govuk-body">
+                        A UKPRN is the unique, 8-digit number we use to identify a training provider. Ask your training
+                        provider if you do not know it.
+                    </p>
 
-            <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
-                <label class="govuk-heading-s " for="error-message-ProviderId">
-                    UK Provider Reference Number
-                </label>
+                    @Html.ValidationMessageFor(m => m.ProviderId, null, new
+                        {
+                            @class = "govuk-error-message",
+                            id =
+                             "error-message-" + Html.IdFor(m => m.ProviderId)
+                        })
+                    <select id="Ukprn" name="ProviderId" asp-for="ProviderId"
+                        class="govuk-select das-autocomplete-search @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-select--error")">
+                        <option class="das-js-hide" value="">Select training provider</option>
+                        @foreach (var provider in Model.Providers)
+                        {
+                            <option value="@provider.Ukprn"> @provider.Name @provider.Ukprn</option>
+                        }
+                    </select>
 
-                @if (!ViewData.ModelState.IsValid)
-                {
-                    <span id="provider-search-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> Number not recognised. Check the number you've entered is correct or contact your training provider for help.
-                    </span>
-                }
-                <input asp-for="ProviderId" class="govuk-input @(ViewData.ModelState.IsValid ? "" : "govuk-input--error")" id="error-message-ProviderId" />
+                </fieldset>
             </div>
 
-            <details class="govuk-details">
-                <summary class="govuk-details__summary">
-                    <span class="govuk-details__summary-text">
-                        What is a UK Provider Reference Number?
-                    </span>
-                </summary>
-                <div class="govuk-details__text">
-                    A UK Provider Reference Number (UKPRN) is a unique, 8-digit number that identifies a training provider. Your training provider can tell you their UKPRN.
-                </div>
-            </details>
-            <button id="continue-button" type="submit" class="govuk-button">
-                Continue
-            </button>
+            <button class="govuk-button" id="Ukprn-button" type="submit"> Continue </button>
         </form>
 
 
@@ -56,20 +57,21 @@
     @if (Model.Origin == Origin.Reservations)
     {
         @Html.ActionLink("Back", "Index", "Cohort", new
-        {
-            Model.AccountHashedId,
-            Model.AccountLegalEntityHashedId,
-            Model.ReservationId,
-            Model.CourseCode,
-            Model.StartMonthYear
-        }, new { @class = "govuk-back-link", id = "back-link" })
+            {
+                Model.AccountHashedId,
+                Model.AccountLegalEntityHashedId,
+                Model.ReservationId,
+                Model.CourseCode,
+                Model.StartMonthYear
+            }, new { @class = "govuk-back-link", id = "back-link" })
     }
     else if (Model.Origin == Origin.LevyTransferMatching)
     {
-        <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications/{Model.EncodedPledgeApplicationId}")" id="back-link" class="govuk-back-link">Back</a>
+        <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications/{Model.EncodedPledgeApplicationId}")"
+    id="back-link" class="govuk-back-link">Back</a>
     }
     else
     {
-        <a href="@Url.Action("Inform", "Cohort")" id="back-link" class="govuk-back-link">Back</a>
+        <a href="@Url.Action("Inform", "Cohort", new { Model.AccountHashedId})" id="back-link" class="govuk-back-link">Back</a>
     }
-}
+    }

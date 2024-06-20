@@ -16,53 +16,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <partial name="DetailsPartials/_ActionRequiredBanner" />
-        <partial name="DetailsPartials/_ChangesToThisApprenticeshipBanner" />
-
-        @if (Model.ShowChangeApprovedBanner)
-        {
-            <partial name="DetailsPartials/_ChangeApprovedBanner" />
-        }
-
-        @if (Model.ShowPriceChangeCancelled)
-        {
-            <partial name="DetailsPartials/_CancelledPriceChangeBanner" />
-        }
-
-        @if (Model.ShowPriceChangeRejected)
-        {
-            <partial name="DetailsPartials/_PriceChangeRejectedBanner" />
-        }
-    
-        @if (Model.ShowPriceChangeApproved)
-        {
-            <partial name="DetailsPartials/_PriceChangeApprovedBanner" />
-        }
-        
-        @if (Model.HasPendingProviderInitiatedPriceChange)
-        {
-            <partial name="DetailsPartials/_PendingPriceChangeBanner" />
-        }
-    
-        @if (Model.ShowPriceChangeRequestSent)
-        {
-            <partial name="DetailsPartials/_ChangeOfPriceRequestSentBanner" />
-        }
-
-        @if (Model.HasPendingProviderInitiatedStartDateChange)
-        {
-            <partial name="DetailsPartials/_PendingStartDateChangeBanner" />
-        }
-        
-        @if (Model.ShowStartDateChangeRejected)
-        {
-            <partial name="DetailsPartials/_StartDateChangeRejectedBanner" />
-        }
-
-        @if (Model.ShowProviderPaymentsInactive)
-        {
-            <partial name="DetailsPartials/_ProviderPaymentsInactiveBanner" />
-        }
+        <partial name="DetailsPartials/_Banners" />
 
         @if (Model.ShowProviderPaymentsActive)
         {
@@ -322,7 +276,7 @@
                         @if (Model.EnableEdit && Model.HasNewerVersions && !Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
                         {
                             <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion, new { Model.AccountHashedId, apprenticeshipHashedId = Model.HashedApprenticeshipId})">Change</a>
+                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion, new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change</a>
                             </td>
                         }
                         else
@@ -339,7 +293,7 @@
                         @if (Model.EnableEdit && !Model.OnlySingleOption)
                         {
                             <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <a id="change-option-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeOption, new { apprenticeshipHashedId = Model.HashedApprenticeshipId, Model.AccountHashedId })">Change<span class="govuk-visually-hidden"> option</span></a>
+                                <a id="change-option-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeOption, new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change<span class="govuk-visually-hidden"> option</span></a>
                             </td>
                         }
                         else
