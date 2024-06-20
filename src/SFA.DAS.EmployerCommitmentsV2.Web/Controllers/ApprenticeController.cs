@@ -705,7 +705,6 @@ public class ApprenticeController : Controller
     {
         var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
         viewModel.ShowBannersFlags = banners;
-        viewModel.ShowProviderPaymentsActive = showProviderPaymentsActive;
         return View("details", viewModel);
     }
 

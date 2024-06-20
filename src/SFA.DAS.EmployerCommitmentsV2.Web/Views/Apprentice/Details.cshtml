@@ -18,11 +18,6 @@
 
         <partial name="DetailsPartials/_Banners" />
 
-        @if (Model.ShowProviderPaymentsActive)
-        {
-            <partial name="DetailsPartials/_ProviderPaymentsActivatedBanner" />
-        }
-
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
 
         @if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())

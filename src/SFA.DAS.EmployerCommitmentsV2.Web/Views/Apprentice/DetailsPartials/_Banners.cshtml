@@ -56,3 +56,9 @@
 {
     <partial name="DetailsPartials/_PendingStartDateChangeBanner" />
 }
+
+@if (Model.ShowBannersFlags.HasFlag(ApprenticeDetailsBanners.ProviderPaymentsActive))
+{
+    var providerPaymentsActiveBannerModel = new SuccessBannerModel("provider-payments-active-banner", "Provider payments have been set to \"Active\"", "The training provider has been informed of this update.");
+    <partial name="DetailsPartials/_SuccessBanner" model="providerPaymentsActiveBannerModel" />
+}

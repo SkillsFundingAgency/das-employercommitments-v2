@@ -13,6 +13,7 @@
         ChangeOfPriceCancelled = 1 << 3,
         ChangeOfStartDateApproved = 1 << 4,
         ChangeOfStartDateRejected = 1 << 5,
-        ProviderPaymentsInactive = 1 << 6
+        ProviderPaymentsInactive = 1 << 6,
+        ProviderPaymentsActive = 1 << 7
     }
 }
