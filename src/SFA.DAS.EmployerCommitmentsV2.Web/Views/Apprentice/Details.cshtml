@@ -16,53 +16,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <partial name="DetailsPartials/_ActionRequiredBanner" />
-        <partial name="DetailsPartials/_ChangesToThisApprenticeshipBanner" />
-
-        @if (Model.ShowChangeApprovedBanner)
-        {
-            <partial name="DetailsPartials/_ChangeApprovedBanner" />
-        }
-
-        @if (Model.ShowPriceChangeCancelled)
-        {
-            <partial name="DetailsPartials/_CancelledPriceChangeBanner" />
-        }
-
-        @if (Model.ShowPriceChangeRejected)
-        {
-            <partial name="DetailsPartials/_PriceChangeRejectedBanner" />
-        }
-    
-        @if (Model.ShowPriceChangeApproved)
-        {
-            <partial name="DetailsPartials/_PriceChangeApprovedBanner" />
-        }
-        
-        @if (Model.HasPendingProviderInitiatedPriceChange)
-        {
-            <partial name="DetailsPartials/_PendingPriceChangeBanner" />
-        }
-    
-        @if (Model.ShowPriceChangeRequestSent)
-        {
-            <partial name="DetailsPartials/_ChangeOfPriceRequestSentBanner" />
-        }
-
-        @if (Model.HasPendingProviderInitiatedStartDateChange)
-        {
-            <partial name="DetailsPartials/_PendingStartDateChangeBanner" />
-        }
-        
-        @if (Model.ShowStartDateChangeRejected)
-        {
-            <partial name="DetailsPartials/_StartDateChangeRejectedBanner" />
-        }
-
-        @if (Model.ShowProviderPaymentsInactive)
-        {
-            <partial name="DetailsPartials/_ProviderPaymentsInactiveBanner" />
-        }
+        <partial name="DetailsPartials/_Banners" />
 
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
 
