@@ -1,11 +1,16 @@
+.autocomplete__input--show-all-values {
+  z-index: 1;
+}
+
 .autocomplete__dropdown-arrow-down-wrapper {
-    position: absolute;
-    top: 5px;
-    right: 10px;
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  display: inline-block;
 }
 
 /* Overwrite max width on govuk banner content */
 
 .govuk-notification-banner__content > * {
-    max-width: none;
+  max-width: none;
 }
