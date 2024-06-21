@@ -19,6 +19,11 @@
         <partial name="DetailsPartials/_ActionRequiredBanner" />
         <partial name="DetailsPartials/_ChangesToThisApprenticeshipBanner" />
 
+        @if (Model.ShowChangeApprovedBanner)
+        {
+            <partial name="DetailsPartials/_ChangeApprovedBanner" />
+        }
+
         @if (Model.ShowPriceChangeCancelled)
         {
             <partial name="DetailsPartials/_CancelledPriceChangeBanner" />
@@ -47,6 +52,11 @@
         @if (Model.HasPendingProviderInitiatedStartDateChange)
         {
             <partial name="DetailsPartials/_PendingStartDateChangeBanner" />
+        }
+        
+        @if (Model.ShowStartDateChangeRejected)
+        {
+            <partial name="DetailsPartials/_StartDateChangeRejectedBanner" />
         }
 
         <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
@@ -161,6 +171,18 @@
                         @Model.ConfirmationStatus.ToDisplayString()
                     </td>
                 </tr>
+
+                @if(Model.IsOnFlexiPaymentPilot == true)
+                {
+                    <tr>
+                        <th scope="row" class="govuk-table__header">Provider payments status</th>
+                        <td id="provider-payments-status" class="govuk-table__cell" colspan="2">
+                            <strong class="govuk-tag govuk-tag--blue">@Model.PaymentStatus</strong>
+                        </td>
+                    </tr>
+                }
+
+
                 <tr>
                     <th scope="row" class="govuk-table__header">Training provider</th>
                     <td class="govuk-table__cell">@Model.ProviderName</td>
@@ -289,7 +311,7 @@
                         @if (Model.EnableEdit && Model.HasNewerVersions && !Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
                         {
                             <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion, new { Model.AccountHashedId, apprenticeshipHashedId = Model.HashedApprenticeshipId})">Change</a>
+                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion, new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change</a>
                             </td>
                         }
                         else
@@ -306,7 +328,7 @@
                         @if (Model.EnableEdit && !Model.OnlySingleOption)
                         {
                             <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <a id="change-option-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeOption, new { apprenticeshipHashedId = Model.HashedApprenticeshipId, Model.AccountHashedId })">Change<span class="govuk-visually-hidden"> option</span></a>
+                                <a id="change-option-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeOption, new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change<span class="govuk-visually-hidden"> option</span></a>
                             </td>
                         }
                         else
@@ -317,7 +339,7 @@
                 }
 
                 @{
-                    // StartDate
+                    // Start and End Date
                     var startDateLabel = "Planned training start date";
                     var startDate = string.Empty;
                     if (Model.ActualStartDate.HasValue)
@@ -332,17 +354,39 @@
                             startDate = Model.StartDate.Value.ToGdsFormatWithoutDay();
                         }
                     }
+
+                    var endDate = string.Empty;
+                    if (Model.EndDate.HasValue)
+                    {
+                        endDate = Model.IsOnFlexiPaymentPilot.GetValueOrDefault() ? Model.EndDate.Value.ToGdsFormat() : Model.EndDate.Value.ToGdsFormatWithoutDay();
+                    }
                 }
                 @if (!Model.HasPendingStartDateChange)
                 {
+                    @* Start Date *@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">@startDateLabel</th>
                         <td id="start-date" class="govuk-table__cell" colspan="2">@startDate</td>
                         <td class="govuk-table__cell"></td>
                     </tr>
+                    @* Planned End Date *@
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Planned training end date</th>
+                        <td id="end-date" class="govuk-table__cell" colspan="2">@endDate</td>
+                        @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
+                        {
+                            <td class="govuk-table__cell">
+                                @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
+                                {
+                                    <a id="edit-end-date-link" class="govuk-link" href="@Url.Action("EditEndDate", new EditEndDateRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit<span class="govuk-visually-hidden"> end date</span></a>
+                                }
+                            </td>
+                        }
+                    </tr>
                 }
                 else
                 {
+                    @* Pending Start Date Change*@
                     <tr>
                         <td colspan="3">
                             <div id="change-of-start-date" class="" style="border-left: 5px solid #1d70b8; padding:10px;">
@@ -363,6 +407,11 @@
 									        <td class="govuk-table__cell">@startDate</td>
                                             <td class="govuk-table__cell">@Model.PendingStartDateChange.PendingActualStartDate.ToGdsFormat()</td>
 								        </tr>
+                                        <tr class="govuk-table__row">
+                                            <th scope="row" class="govuk-table__header">Planned training end date</th>
+                                            <td class="govuk-table__cell">@endDate</td>
+                                            <td class="govuk-table__cell">@Model.PendingStartDateChange.PendingEndDate.ToGdsFormat()</td>
+                                        </tr>
 							        </tbody>
 						        </table>
                                     <a class="govuk-link" href="@Model.PendingStartDateChangeUrl">
@@ -373,32 +422,6 @@
                     </tr>
                 }
 
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">Planned training end date</th>
-                    <td id="end-date" class="govuk-table__cell" colspan="2">
-                        @if (Model.EndDate.HasValue)
-                        {
-                            if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
-                            {
-                                @Model.EndDate.Value.ToGdsFormat()
-                            }
-                            else
-                            {
-                                @Model.EndDate.Value.ToGdsFormatWithoutDay()
-                            }
-                        }
-                    </td>
-                    @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
-                    {
-                        <td class="govuk-table__cell">
-                            <a id="edit-end-date-link" class="govuk-link" href="@Url.Action("EditEndDate", new EditEndDateRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit<span class="govuk-visually-hidden"> end date</span></a>
-                        </td>
-                    }
-                    else
-                    {
-                        <td class="govuk-table__cell"></td>
-                    }
-                </tr>
 
                 @if (Model.DeliveryModel.Equals(DeliveryModel.PortableFlexiJob))
                 {

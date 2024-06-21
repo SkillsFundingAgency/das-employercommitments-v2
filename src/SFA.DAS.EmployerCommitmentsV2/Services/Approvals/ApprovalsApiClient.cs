@@ -2,6 +2,8 @@ using System.Web;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+using AddDraftApprenticeshipResponse = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.AddDraftApprenticeshipResponse;
+using CreateCohortResponse = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.CreateCohortResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
@@ -92,5 +94,15 @@ public class ApprovalsApiClient : IApprovalsApiClient
     public async Task<GetLegalEntitiesForAccountResponse> GetLegalEntitiesForAccount(string cohortId, long accountId)
     {
         return await _client.Get<GetLegalEntitiesForAccountResponse>($"{accountId}/cohorts/{cohortId}/unapproved/add/legal-entity");
+    }
+
+    public Task<GetAccountLegalEntityResponse> GetAccountLegalEntity(long accountLegalEntityId, CancellationToken cancellationToken = default)
+    {
+        return _client.Get<GetAccountLegalEntityResponse>($"accountlegalentity/{accountLegalEntityId}");
+    }
+
+    public Task<GetSelectProviderDetailsResponse> GetSelectProviderDetails(long accountId, long accountLegalEntityId, CancellationToken cancellationToken = default)
+    {
+        return _client.Get<GetSelectProviderDetailsResponse>($"{accountId}/unapproved/add/select-provider?accountLegalEntityId={accountLegalEntityId}");
     }
 }

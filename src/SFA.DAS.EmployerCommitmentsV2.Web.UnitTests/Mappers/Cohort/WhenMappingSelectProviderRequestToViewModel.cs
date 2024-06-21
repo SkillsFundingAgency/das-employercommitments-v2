@@ -1,8 +1,7 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
@@ -10,8 +9,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 public class WhenMappingSelectProviderRequestToViewModel
 {
     private SelectProviderRequest _request;
-    private Mock<ICommitmentsApiClient> _commitmentsApiClientMock;
-    private AccountLegalEntityResponse _commitmentsApiClientResponse;
+    private Mock<IApprovalsApiClient> _approvalsApiClientMock;
+    private GetSelectProviderDetailsResponse _selectProvidersResponse;
     private SelectProviderViewModelMapper _mapper;
 
     [SetUp]
@@ -19,14 +18,14 @@ public class WhenMappingSelectProviderRequestToViewModel
     {
         var autoFixture = new Fixture();
         _request = autoFixture.Create<SelectProviderRequest>();
-        _commitmentsApiClientResponse = autoFixture.Create<AccountLegalEntityResponse>();
+        _selectProvidersResponse = autoFixture.Create<GetSelectProviderDetailsResponse>();
 
-        _commitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
-        _commitmentsApiClientMock
-            .Setup(x => x.GetAccountLegalEntity(_request.AccountLegalEntityId, CancellationToken.None))
-            .ReturnsAsync(_commitmentsApiClientResponse);
+        _approvalsApiClientMock = new Mock<IApprovalsApiClient>();
+        _approvalsApiClientMock
+            .Setup(x => x.GetSelectProviderDetails(_request.AccountId, _request.AccountLegalEntityId, CancellationToken.None))
+            .ReturnsAsync(_selectProvidersResponse);
 
-        _mapper = new SelectProviderViewModelMapper(_commitmentsApiClientMock.Object);
+        _mapper = new SelectProviderViewModelMapper(_approvalsApiClientMock.Object);
     }
 
     [Test]
@@ -50,7 +49,15 @@ public class WhenMappingSelectProviderRequestToViewModel
     {
         var result = await _mapper.Map(_request);
 
-        Assert.That(result.LegalEntityName, Is.EqualTo(_commitmentsApiClientResponse.LegalEntityName));
+        Assert.That(result.LegalEntityName, Is.EqualTo(_selectProvidersResponse.AccountLegalEntity.LegalEntityName));
+    }
+
+    [Test]
+    public async Task ThenMapsProviders()
+    {
+        var result = await _mapper.Map(_request);
+
+        Assert.That(result.Providers, Is.EqualTo(_selectProvidersResponse.Providers));
     }
 
     [Test]

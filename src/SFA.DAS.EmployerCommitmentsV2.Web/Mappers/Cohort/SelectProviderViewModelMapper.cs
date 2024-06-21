@@ -1,21 +1,24 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
 public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, SelectProviderViewModel>
 {
-    private readonly ICommitmentsApiClient _commitmentsApiClient;
+    private readonly IApprovalsApiClient _outerApiClient;
 
-    public SelectProviderViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
+    public SelectProviderViewModelMapper(IApprovalsApiClient outerApiClient)
     {
-        _commitmentsApiClient = commitmentsApiClient;
+        _outerApiClient = outerApiClient;
     }
 
     public async Task<SelectProviderViewModel> Map(SelectProviderRequest source)
     {
-        var accountLegalEntity = await _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
+        var selectProviderDetails = await _outerApiClient.GetSelectProviderDetails(source.AccountId, source.AccountLegalEntityId);
+
+        var providers = selectProviderDetails.Providers.ToList();
+        var accountLegalEntity = selectProviderDetails.AccountLegalEntity;
 
         return new SelectProviderViewModel
         {
@@ -27,9 +30,9 @@ public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, Sele
             ReservationId = source.ReservationId,
             TransferSenderId = source.TransferSenderId,
             Origin = DetermineOrigin(source),
-            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
+            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
+            Providers = providers
         };
-
     }
 
     private static Origin DetermineOrigin(SelectProviderRequest source)
@@ -40,7 +43,7 @@ public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, Sele
         }
 
         return !string.IsNullOrWhiteSpace(source.EncodedPledgeApplicationId)
-            ? Origin.LevyTransferMatching 
+            ? Origin.LevyTransferMatching
             : Origin.Apprentices;
     }
 }
