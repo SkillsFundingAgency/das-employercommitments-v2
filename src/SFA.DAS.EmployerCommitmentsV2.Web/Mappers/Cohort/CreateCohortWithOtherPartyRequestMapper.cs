@@ -13,7 +13,7 @@ public class CreateCohortWithOtherPartyRequestMapper : IMapper<AssignViewModel, 
             AccountId = source.AccountId,
             AccountLegalEntityId = source.AccountLegalEntityId,
             ProviderId = source.ProviderId,
-            Message = source.SendMessage,
+            Message = source.Message,
             TransferSenderId = source.DecodedTransferSenderId,
             PledgeApplicationId = (int?) source.PledgeApplicationId
         });

@@ -23,7 +23,7 @@ public class AssignViewModel : IAuthorizationContextModel
 
     [Required(ErrorMessage = "Select whether to add apprentices yourself or not")]
     public WhoIsAddingApprentices? WhoIsAddingApprentices { get; set; }
-    public string SendMessage { get; set; }
+    public string Message { get; set; }
 }
 
 public enum WhoIsAddingApprentices
