@@ -5,10 +5,10 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
 [TestFixture]
-public class MessageViewModelToCreateCohortWithOtherPartyRequestMapperTests
+public class AssignViewModelToCreateCohortWithOtherPartyRequestMapperTests
 {
     private CreateCohortWithOtherPartyRequestMapper _mapper;
-    private MessageViewModel _source;
+    private AssignViewModel _source;
     private CreateCohortWithOtherPartyRequest _result;
 
     [SetUp]
@@ -18,7 +18,7 @@ public class MessageViewModelToCreateCohortWithOtherPartyRequestMapperTests
 
         _mapper = new CreateCohortWithOtherPartyRequestMapper();
 
-        _source = fixture.Build<MessageViewModel>().Create();
+        _source = fixture.Build<AssignViewModel>().Create();
 
         _result = await _mapper.Map(TestHelper.Clone(_source));
     }
@@ -38,7 +38,7 @@ public class MessageViewModelToCreateCohortWithOtherPartyRequestMapperTests
     [Test]
     public void ThenMessageIsMappedCorrectly()
     {
-        Assert.That(_result.Message, Is.EqualTo(_source.Message));
+        Assert.That(_result.Message, Is.EqualTo(_source.SendMessage));
     }
 
     [Test]

@@ -228,7 +228,7 @@ public class CohortController : Controller
 
     [Route("add/assign")]
     [HttpPost]
-    public IActionResult Assign(AssignViewModel model)
+    public async Task<IActionResult> Assign(AssignViewModel model)
     {
         if (!model.ReservationId.HasValue && model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
         {
@@ -237,26 +237,26 @@ public class CohortController : Controller
             return Redirect(url);
         }
 
-        var routeValues = new
-        {
-            model.AccountHashedId,
-            model.AccountLegalEntityHashedId,
-            model.ReservationId,
-            model.StartMonthYear,
-            model.CourseCode,
-            model.ProviderId,
-            model.TransferSenderId,
-            model.EncodedPledgeApplicationId,
-            Origin = DetermineOrigin(model)
-        };
-
         switch (model.WhoIsAddingApprentices)
         {
             case WhoIsAddingApprentices.Employer:
+                var routeValues = new
+                {
+                    model.AccountHashedId,
+                    model.AccountLegalEntityHashedId,
+                    model.ReservationId,
+                    model.StartMonthYear,
+                    model.CourseCode,
+                    model.ProviderId,
+                    model.TransferSenderId,
+                    model.EncodedPledgeApplicationId,
+                    Origin = DetermineOrigin(model)
+                };
                 return RedirectToAction("Apprentice", "Cohort", routeValues);
             case WhoIsAddingApprentices.Provider:
-                TempData[nameof(model.LegalEntityName)] = model.LegalEntityName;
-                return RedirectToAction("Message", routeValues);
+                var request = await _modelMapper.Map<CreateCohortWithOtherPartyRequest>(model);
+                var response = await _commitmentsApiClient.CreateCohort(request);
+                return RedirectToAction("Finished", new { model.AccountHashedId, response.CohortReference });
             default:
                 return RedirectToAction("Error", "Error");
         }
@@ -380,23 +380,6 @@ public class CohortController : Controller
         }
 
         return RedirectToAction("Details", new { model.AccountHashedId, newCohort.CohortReference });
-    }
-
-    [Route("add/message")]
-    public async Task<IActionResult> Message(MessageRequest request)
-    {
-        request.LegalEntityName = TempData[nameof(request.LegalEntityName)] as string;
-        var model = await _modelMapper.Map<MessageViewModel>(request);
-        return View(model);
-    }
-
-    [HttpPost]
-    [Route("add/message")]
-    public async Task<IActionResult> Message(MessageViewModel model)
-    {
-        var request = await _modelMapper.Map<CreateCohortWithOtherPartyRequest>(model);
-        var response = await _commitmentsApiClient.CreateCohort(request);
-        return RedirectToAction("Finished", new { model.AccountHashedId, response.CohortReference });
     }
 
     [Authorize(Policy = nameof(PolicyNames.AccessCohort))]

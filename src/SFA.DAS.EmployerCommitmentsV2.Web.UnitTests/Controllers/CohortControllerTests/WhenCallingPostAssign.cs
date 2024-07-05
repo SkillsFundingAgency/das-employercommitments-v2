@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.Design;
-using FluentAssertions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Routing;
+using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
@@ -13,7 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 public class WhenCallingPostAssign
 {
     [Test, MoqAutoData]
-    public void And_Employer_Adding_Apprentices_Then_Redirect_To_Add_Apprentice(
+    public async Task And_Employer_Adding_Apprentices_Then_Redirect_To_Add_Apprentice(
         AssignViewModel viewModel,
         [Greedy] CohortController controller)
     {
@@ -31,7 +32,7 @@ public class WhenCallingPostAssign
         });
         viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Employer;
 
-        var result = controller.Assign(viewModel) as RedirectToActionResult;
+        var result = await controller.Assign(viewModel) as RedirectToActionResult;
 
         result.Should().NotBeNull();
         result.ActionName.Should().Be("Apprentice");
@@ -40,69 +41,33 @@ public class WhenCallingPostAssign
     }
 
     [Test, MoqAutoData]
-    public void And_Provider_Adding_Apprentices_Then_Redirect_To_Message(
+    public async Task And_Provider_Adding_Apprentices_Then_Redirect_To_Finish(
         AssignViewModel viewModel,
-        [Frozen] Mock<ITempDataProvider> tempDataProvider,
+        CreateCohortWithOtherPartyRequest createCohortRequest,
+        CreateCohortResponse createCohortResponse,
+        [Frozen] Mock<IModelMapper> modelMapper,
+        [Frozen] Mock<ICommitmentsApiClient> apiClient,
         [Greedy] CohortController controller)
     {
-        var tempdata = new TempDataDictionary(new DefaultHttpContext(), tempDataProvider.Object);
-        controller.TempData = tempdata;
-
-        var expectedRouteValues = new RouteValueDictionary(new
-        {
-            viewModel.AccountHashedId,
-            viewModel.AccountLegalEntityHashedId,
-            viewModel.ReservationId,
-            viewModel.StartMonthYear,
-            viewModel.CourseCode,
-            viewModel.ProviderId,
-            viewModel.TransferSenderId,
-            viewModel.EncodedPledgeApplicationId,
-            Origin = viewModel.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
-        });
         viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Provider;
-
-        var result = controller.Assign(viewModel) as RedirectToActionResult;
+        modelMapper.Setup(x => x.Map<CreateCohortWithOtherPartyRequest>(viewModel)).ReturnsAsync(createCohortRequest);
+        apiClient.Setup(x => x.CreateCohort(It.IsAny<CreateCohortWithOtherPartyRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(createCohortResponse);
+        var result = await controller.Assign(viewModel) as RedirectToActionResult;
 
         result.Should().NotBeNull();
-        result.ActionName.Should().Be("Message");
-        result.RouteValues.Should().BeEquivalentTo(expectedRouteValues);
+        result.ActionName.Should().Be("Finished");
+
+        apiClient.Verify(x=>x.CreateCohort(createCohortRequest, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Test, MoqAutoData]
-    public void And_Provider_Adding_Apprentices_Then_Legal_Entity_Name_Stored_In_TempData(
-        [Frozen] AssignViewModel viewModel,
-        [Frozen] Mock<ITempDataProvider> tempDataProvider,
-        [Frozen, Greedy] CohortController controller)
-    {
-        var tempdata = new TempDataDictionary(new DefaultHttpContext(), tempDataProvider.Object);
-        controller.TempData = tempdata;
-        var expectedRouteValues = new RouteValueDictionary(new
-        {
-            viewModel.AccountHashedId,
-            viewModel.AccountLegalEntityHashedId,
-            viewModel.ReservationId,
-            viewModel.StartMonthYear,
-            viewModel.CourseCode,
-            viewModel.ProviderId,
-            viewModel.TransferSenderId,
-            Origin = viewModel.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
-        });
-        viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Provider;
-
-        controller.Assign(viewModel);
-
-        Assert.That(controller.TempData.Contains(new KeyValuePair<string, object>(nameof(viewModel.LegalEntityName), viewModel.LegalEntityName)), Is.True);
-    }
-
-    [Test, MoqAutoData]
-    public void And_Unknown_Adding_Apprentices_Then_Redirect_To_Error(
+    public async Task And_Unknown_Adding_Apprentices_Then_Redirect_To_Error(
         AssignViewModel viewModel,
         [Greedy] CohortController controller)
     {
         viewModel.WhoIsAddingApprentices = (WhoIsAddingApprentices)55;
 
-        var result = controller.Assign(viewModel) as RedirectToActionResult;
+        var result = await controller.Assign(viewModel) as RedirectToActionResult;
 
         result.Should().NotBeNull();
         result.ActionName.Should().Be("Error");
@@ -110,7 +75,7 @@ public class WhenCallingPostAssign
     }
 
     [Test, MoqAutoData]
-    public void And_Employer_Adding_Apprentices_And_No_Reservation_Then_Redirect_To_Reservation_Selection(
+    public async Task And_Employer_Adding_Apprentices_And_No_Reservation_Then_Redirect_To_Reservation_Selection(
         [Frozen] Mock<ILinkGenerator> linkGenerator,
         AssignViewModel viewModel,
         [Greedy] CohortController controller)
@@ -120,7 +85,7 @@ public class WhenCallingPostAssign
         viewModel.ReservationId = null;
         viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Employer;
 
-        var result = controller.Assign(viewModel) as RedirectResult;
+        var result = await controller.Assign(viewModel) as RedirectResult;
 
         result.Url.Should().Be(reservationsUrl);
     }
