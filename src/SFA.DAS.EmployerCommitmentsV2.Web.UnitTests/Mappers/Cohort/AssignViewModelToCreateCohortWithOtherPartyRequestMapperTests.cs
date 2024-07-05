@@ -38,7 +38,7 @@ public class AssignViewModelToCreateCohortWithOtherPartyRequestMapperTests
     [Test]
     public void ThenMessageIsMappedCorrectly()
     {
-        Assert.That(_result.Message, Is.EqualTo(_source.SendMessage));
+        Assert.That(_result.Message, Is.EqualTo(_source.Message));
     }
 
     [Test]
