@@ -17,8 +17,7 @@ public class AssignViewModel : IAuthorizationContextModel
     public string TransferSenderId { get; set; }
     public long? DecodedTransferSenderId { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
-    public long? PledgeApplicationId { get; set; }
-
+    public int? PledgeApplicationId { get; set; }
 
 
     [Required(ErrorMessage = "Select whether to add apprentices yourself or not")]

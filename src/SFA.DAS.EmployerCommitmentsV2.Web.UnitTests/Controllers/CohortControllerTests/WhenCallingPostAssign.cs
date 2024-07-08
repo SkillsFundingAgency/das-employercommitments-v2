@@ -51,13 +51,13 @@ public class WhenCallingPostAssign
     {
         viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Provider;
         modelMapper.Setup(x => x.Map<CreateCohortWithOtherPartyRequest>(viewModel)).ReturnsAsync(createCohortRequest);
-        apiClient.Setup(x => x.CreateCohort(It.IsAny<CreateCohortWithOtherPartyRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(createCohortResponse);
+        apiClient.Setup(x => x.CreateCohort(createCohortRequest, It.IsAny<CancellationToken>())).ReturnsAsync(createCohortResponse).Verifiable();
         var result = await controller.Assign(viewModel) as RedirectToActionResult;
 
         result.Should().NotBeNull();
         result.ActionName.Should().Be("Finished");
 
-        apiClient.Verify(x=>x.CreateCohort(createCohortRequest, It.IsAny<CancellationToken>()), Times.Once);
+        apiClient.Verify();
     }
 
     [Test, MoqAutoData]
