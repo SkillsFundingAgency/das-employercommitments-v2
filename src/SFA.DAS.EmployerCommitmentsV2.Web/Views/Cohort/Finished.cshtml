@@ -1,4 +1,6 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.FinishedViewModel
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.FinishedViewModel
 
 @{
     ViewData["Title"] = "Instructions sent";
@@ -9,28 +11,28 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <div class="govuk-panel govuk-panel--confirmation">
-            <h1 class="govuk-panel__title">Cohort sent to your training provider</h1>
+            <h1 class="govuk-panel__title">Add apprentice request sent to training provider</h1>
         </div>
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Cohort reference</dt>
+                <dt class="govuk-summary-list__key">Reference</dt>
                 <dd class="govuk-summary-list__value">@Model.CohortReference</dd>
             </div>
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Sent to</dt>
+                <dt class="govuk-summary-list__key">Training provider</dt>
                 <dd class="govuk-summary-list__value">@Model.ProviderName</dd>
             </div>
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">On behalf of</dt>
-                <dd class="govuk-summary-list__value">@Model.LegalEntityName</dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Message</dt>
+                <dt class="govuk-summary-list__key">Message for training provider</dt>
                 <dd class="govuk-summary-list__value">@Model.Message</dd>
             </div>
         </dl>
         <h2 class="govuk-heading-m">What happens next?</h2>
-        <p class="govuk-body">Your training provider will review your request and contact you as soon as possible - either with questions or to ask you to review the apprentice details they've added.</p>
+        <p class="govuk-body">Your training provider will add the apprentice’s details. Then you'll get another email asking you review and approve the apprentice’s details as soon as possible.</p>
+        <p class="govuk-body">Once you have approved the apprentice details sent by the training provider, you will see their details in the 
+            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", "Apprentice", new { Model.AccountHashedId })" id="manage-apprentices">Manage apprentices</a>
+            section of the homepage.
+        </p>
         <div class="govuk-inset-text das-inset-text--filled">
             <h3 class="govuk-heading-m govuk-!-margin-bottom-2">Help us improve this section</h3>
             <p class="govuk-body">Take a 3 minute survey about adding apprentices so that we can improve the service.</p>
