@@ -20,7 +20,7 @@ public class AssignViewModel : IAuthorizationContextModel
     public int? PledgeApplicationId { get; set; }
 
 
-    [Required(ErrorMessage = "Select whether to add apprentices yourself or not")]
+    [Required(ErrorMessage = "Select who will add apprentices")]
     public WhoIsAddingApprentices? WhoIsAddingApprentices { get; set; }
     public string Message { get; set; }
 }
