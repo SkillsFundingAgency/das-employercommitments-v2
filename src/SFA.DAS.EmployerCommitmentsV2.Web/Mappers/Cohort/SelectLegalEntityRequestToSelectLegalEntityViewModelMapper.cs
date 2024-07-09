@@ -47,7 +47,8 @@ public class SelectLegalEntityRequestToSelectLegalEntityViewModelMapper(
         return new AgreementModel
         {
             Id = input.Id,
-            Status = input.Status
+            Status = input.Status,
+            TemplateVersionNumber = input.TemplateVersionNumber
         };
     }
 }
