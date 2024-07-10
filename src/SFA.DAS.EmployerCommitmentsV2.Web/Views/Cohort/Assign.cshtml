@@ -11,7 +11,7 @@
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary"/>
 
-        <h1 class="govuk-heading-xl">Start adding apprentices</h1>
+        <h1 class="govuk-heading-l">Start adding apprentices</h1>
         
         <p class="govuk-body-l">You can start adding details of your apprentices or ask your training provider to add them for you.</p>
         <p class="govuk-body-l">If you ask your training provider to add them, you need to check and agree the details before any payments are made.</p>
@@ -31,7 +31,7 @@
                         <div class="govuk-radios__item">
                             <input asp-for="WhoIsAddingApprentices" class="govuk-radios__input" id="WhoIsAddingApprentices-Provider" name="WhoIsAddingApprentices" type="radio" value="@WhoIsAddingApprentices.Provider" data-aria-controls="conditional-send">
                             <label class="govuk-label govuk-radios__label" for="WhoIsAddingApprentices-Provider">
-                                I would like my provider to add apprentices
+                                I would like my training provider to add apprentices
                                 @if (Model.ReservationId != null)
                                 {
                                     <span id="WhoIsAddingApprentices-Provider-hint" class="govuk-hint">
@@ -42,7 +42,7 @@
                         </div>
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-send">
                             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Message, "govuk-form-group--error")">
-                                <label class="govuk-label" for="send-details">
+                                <label class="govuk-label das-!-color-dark-grey" for="send-details">
                                     Add a message for your training provider below (optional)
                                 </label>
                                 @Html.ValidationMessageFor(m => m.Message, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Message)})
