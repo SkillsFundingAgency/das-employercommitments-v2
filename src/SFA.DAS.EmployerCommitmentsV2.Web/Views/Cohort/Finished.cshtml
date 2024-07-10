@@ -22,7 +22,7 @@
             </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Message for training provider</dt>
-                <dd class="govuk-summary-list__value">@Model.Message</dd>
+                <dd class="govuk-summary-list__value">@(string.IsNullOrEmpty(Model.Message) ? "No message" : Model.Message)</dd>
             </div>
         </dl>
         <h2 class="govuk-heading-m">What happens next?</h2>
