@@ -9,7 +9,6 @@ using SFA.DAS.EmployerCommitmentsV2.Models.UserAccounts;
 using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
-using JsonClaimValueTypes = Microsoft.IdentityModel.JsonWebTokens.JsonClaimValueTypes;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
 
@@ -19,6 +18,9 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
     private readonly IUserAccountService _accountsService;
     private readonly ILogger<EmployerAccountAuthorisationHandler> _logger;
     private readonly EmployerCommitmentsV2Configuration _configuration;
+    
+    // To allow unit testing
+    public int MaxPermittedNumberOfAccountsOnClaim { get; set; } = WebConstants.MaxNumberOfEmployerAccountsAllowedOnClaim;
 
     public EmployerAccountAuthorisationHandler(
         IHttpContextAccessor httpContextAccessor,
@@ -33,9 +35,6 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
         _configuration = configuration;
     }
     
-    // To allow unit testing
-    public int MaxPermittedNumberOfAccountsOnClaim { get; set; } = WebConstants.MaxNumberOfEmployerAccountsAllowedOnClaim;
-
     public async Task<bool> IsEmployerAuthorised(AuthorizationHandlerContext context, EmployerUserRole minimumAllowedRole)
     {
         if (!_httpContextAccessor.HttpContext.Request.RouteValues.ContainsKey(RouteValueKeys.AccountHashedId))

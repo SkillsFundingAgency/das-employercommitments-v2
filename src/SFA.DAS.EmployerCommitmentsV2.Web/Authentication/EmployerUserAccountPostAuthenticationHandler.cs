@@ -18,7 +18,7 @@ public class EmployerAccountPostAuthenticationClaimsHandler(
         var claims = new List<Claim>();
 
         string userId;
-        var email = string.Empty;
+        string email;
 
         if (employerAccountsConfiguration.UseGovSignIn)
         {
