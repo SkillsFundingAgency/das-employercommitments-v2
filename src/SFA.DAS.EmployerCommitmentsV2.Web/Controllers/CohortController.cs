@@ -236,6 +236,11 @@ public class CohortController : Controller
                 $"accounts/{model.AccountHashedId}/reservations/{model.AccountLegalEntityHashedId}/select?providerId={model.ProviderId}&transferSenderId={model.TransferSenderId}&encodedPledgeApplicationId={model.EncodedPledgeApplicationId}");
             return Redirect(url);
         }
+        
+        if (model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
+        {
+            model.Message = string.Empty;
+        }
 
         switch (model.WhoIsAddingApprentices)
         {

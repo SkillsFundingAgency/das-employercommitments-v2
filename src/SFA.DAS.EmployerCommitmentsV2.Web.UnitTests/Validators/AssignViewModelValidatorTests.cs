@@ -16,7 +16,7 @@ public class AssignViewModelValidatorTests : ValidatorTestBase<AssignViewModel, 
     [TestCase("|", false)]
     public void ThenAccountHashedIdIsValidated(string message, bool expectedValid)
     {
-        var request = new AssignViewModel {Message = message };
+        var request = new AssignViewModel {Message = message, WhoIsAddingApprentices = WhoIsAddingApprentices.Provider };
         AssertValidationResult(x => x.Message, request, expectedValid);
     }
 }

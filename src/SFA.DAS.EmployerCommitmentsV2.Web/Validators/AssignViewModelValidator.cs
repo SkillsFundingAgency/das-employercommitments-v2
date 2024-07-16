@@ -7,7 +7,10 @@ public class AssignViewModelValidator : AbstractValidator<AssignViewModel>
 {
     public AssignViewModelValidator()
     {
-        When(r => !string.IsNullOrEmpty(r.Message), () =>
+        When(r =>
+        r.WhoIsAddingApprentices.HasValue
+        && r.WhoIsAddingApprentices.Value == WhoIsAddingApprentices.Provider
+        && !string.IsNullOrEmpty(r.Message), () =>
         {
             RuleFor(x => x.Message).ValidFreeTextCharacters().WithErrorCode("Text");
         });
