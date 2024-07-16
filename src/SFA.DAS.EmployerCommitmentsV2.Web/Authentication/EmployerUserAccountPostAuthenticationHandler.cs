@@ -6,16 +6,13 @@ using SFA.DAS.GovUK.Auth.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 
-public class EmployerAccountPostAuthenticationClaimsHandler : ICustomClaims
+public class EmployerAccountPostAuthenticationClaimsHandler(
+    IUserAccountService userAccountService, 
+    EmployerCommitmentsV2Configuration employerAccountsConfiguration) : ICustomClaims
 {
-    private readonly IUserAccountService _userAccountService;
-    private readonly EmployerCommitmentsV2Configuration _employerCommitmentsConfiguration;
+    // To allow unit testing
+    public int MaxPermittedNumberOfAccountsOnClaim { get; set; } = WebConstants.MaxNumberOfEmployerAccountsAllowedOnClaim;
 
-    public EmployerAccountPostAuthenticationClaimsHandler(IUserAccountService userAccountService, EmployerCommitmentsV2Configuration employerAccountsConfiguration)
-    {
-        _userAccountService = userAccountService;
-        _employerCommitmentsConfiguration = employerAccountsConfiguration;
-    }
     public async Task<IEnumerable<Claim>> GetClaims(TokenValidatedContext tokenValidatedContext)
     {
         var claims = new List<Claim>();
@@ -23,7 +20,7 @@ public class EmployerAccountPostAuthenticationClaimsHandler : ICustomClaims
         string userId;
         var email = string.Empty;
 
-        if (_employerCommitmentsConfiguration.UseGovSignIn)
+        if (employerAccountsConfiguration.UseGovSignIn)
         {
             userId = tokenValidatedContext.Principal.Claims
                 .First(c => c.Type.Equals(ClaimTypes.NameIdentifier))
@@ -46,14 +43,17 @@ public class EmployerAccountPostAuthenticationClaimsHandler : ICustomClaims
             claims.Add(new Claim(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, userId));
         }
 
-        var result = await _userAccountService.GetUserAccounts(userId, email);
+        var result = await userAccountService.GetUserAccounts(userId, email);
 
-        var accountsAsJson = JsonConvert.SerializeObject(result.EmployerAccounts.ToDictionary(k => k.AccountId));
-        var associatedAccountsClaim = new Claim(EmployeeClaims.AccountsClaimsTypeIdentifier, accountsAsJson, JsonClaimValueTypes.Json);
-        claims.Add(associatedAccountsClaim);
-
-
-        if (!_employerCommitmentsConfiguration.UseGovSignIn)
+        // Some users have 100's of employer accounts. The claims cannot handle that volume of data.
+        if (result.EmployerAccounts.Count() <= MaxPermittedNumberOfAccountsOnClaim)
+        {
+            var accountsAsJson = JsonConvert.SerializeObject(result.EmployerAccounts.ToDictionary(k => k.AccountId));
+            var associatedAccountsClaim = new Claim(EmployeeClaims.AccountsClaimsTypeIdentifier, accountsAsJson, JsonClaimValueTypes.Json);
+            claims.Add(associatedAccountsClaim);    
+        }
+        
+        if (!employerAccountsConfiguration.UseGovSignIn)
         {
             return claims;
         }

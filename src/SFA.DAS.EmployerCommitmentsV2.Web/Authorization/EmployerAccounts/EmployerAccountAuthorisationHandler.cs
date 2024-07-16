@@ -32,6 +32,9 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
         _configuration = configuration;
         _configuration = configuration;
     }
+    
+    // To allow unit testing
+    public int MaxPermittedNumberOfAccountsOnClaim { get; set; } = WebConstants.MaxNumberOfEmployerAccountsAllowedOnClaim;
 
     public async Task<bool> IsEmployerAuthorised(AuthorizationHandlerContext context, EmployerUserRole minimumAllowedRole)
     {
@@ -41,21 +44,21 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
         }
 
         var accountIdFromUrl = _httpContextAccessor.HttpContext.Request.RouteValues[RouteValueKeys.AccountHashedId].ToString().ToUpper();
-        var employerAccountClaim = context.User.FindFirst(c => c.Type.Equals(EmployeeClaims.AccountsClaimsTypeIdentifier));
+        var employerAccountsClaim = context.User.FindFirst(c => c.Type.Equals(EmployeeClaims.AccountsClaimsTypeIdentifier));
 
-        if (employerAccountClaim?.Value == null)
-            return false;
+        Dictionary<string, EmployerUserAccountItem> employerAccounts = null;
 
-        Dictionary<string, EmployerUserAccountItem> employerAccounts;
-
-        try
+        if (employerAccountsClaim != null)
         {
-            employerAccounts = JsonConvert.DeserializeObject<Dictionary<string, EmployerUserAccountItem>>(employerAccountClaim.Value);
-        }
-        catch (JsonSerializationException e)
-        {
-            _logger.LogError(e, "Could not deserialize employer account claim for user");
-            return false;
+            try
+            {
+                employerAccounts = JsonConvert.DeserializeObject<Dictionary<string, EmployerUserAccountItem>>(employerAccountsClaim.Value);
+            }
+            catch (JsonSerializationException e)
+            {
+                _logger.LogError(e, "Could not deserialize employer account claim for user");
+                return false;
+            }
         }
 
         EmployerUserAccountItem employerIdentifier = null;
@@ -82,17 +85,19 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
                 .First(c => c.Type.Equals(requiredIdClaim));
 
             var email = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Email))?.Value;
-
             var userId = userClaim.Value;
 
             var result = await _accountsService.GetUserAccounts(userId, email);
 
             var accountsAsJson = JsonConvert.SerializeObject(result.EmployerAccounts.ToDictionary(k => k.AccountId));
             var associatedAccountsClaim = new Claim(EmployeeClaims.AccountsClaimsTypeIdentifier, accountsAsJson, JsonClaimValueTypes.Json);
-
             var updatedEmployerAccounts = JsonConvert.DeserializeObject<Dictionary<string, EmployerUserAccountItem>>(associatedAccountsClaim.Value);
 
-            userClaim.Subject.AddClaim(associatedAccountsClaim);
+            // Some users have 100's of employer accounts. The claims cannot handle that volume of data.
+            if (updatedEmployerAccounts.Count <= MaxPermittedNumberOfAccountsOnClaim)
+            {
+                userClaim.Subject.AddClaim(associatedAccountsClaim);
+            }
 
             if (!updatedEmployerAccounts.ContainsKey(accountIdFromUrl))
             {
