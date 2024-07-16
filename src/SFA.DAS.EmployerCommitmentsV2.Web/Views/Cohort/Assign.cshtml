@@ -19,7 +19,7 @@
         <form method="post">
             <partial name="_AssignHiddenPartial" model="@Model" />
 
-            <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.WhoIsAddingApprentices, "govuk-form-group--error")">
+            <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.WhoIsAddingApprentices, "govuk-form-group--error") @Html.AddClassIfPropertyInError(x => x.Message, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
                     <div class="govuk-radios govuk-radios--conditional" data-module="radios">
                         @Html.ValidationMessageFor(m => m.WhoIsAddingApprentices, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.WhoIsAddingApprentices)})
@@ -41,7 +41,7 @@
                             </label>
                         </div>
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-send">
-                            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Message, "govuk-form-group--error")">
+                            <div class="govuk-form-group">
                                 <label class="govuk-label das-!-color-dark-grey" for="send-details">
                                     Add a message for your training provider below (optional)
                                 </label>
