@@ -1,14 +1,15 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+﻿using FluentAssertions;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
 [TestFixture]
-public class MessageViewModelToCreateCohortWithOtherPartyRequestMapperTests
+public class AssignViewModelToCreateCohortWithOtherPartyRequestMapperTests
 {
     private CreateCohortWithOtherPartyRequestMapper _mapper;
-    private MessageViewModel _source;
+    private AssignViewModel _source;
     private CreateCohortWithOtherPartyRequest _result;
 
     [SetUp]
@@ -18,7 +19,7 @@ public class MessageViewModelToCreateCohortWithOtherPartyRequestMapperTests
 
         _mapper = new CreateCohortWithOtherPartyRequestMapper();
 
-        _source = fixture.Build<MessageViewModel>().Create();
+        _source = fixture.Build<AssignViewModel>().Create();
 
         _result = await _mapper.Map(TestHelper.Clone(_source));
     }
@@ -26,37 +27,37 @@ public class MessageViewModelToCreateCohortWithOtherPartyRequestMapperTests
     [Test]
     public void ThenAccountLegalEntityIsMappedCorrectly()
     {
-        Assert.That(_result.AccountLegalEntityId, Is.EqualTo(_source.AccountLegalEntityId));
+        _result.AccountLegalEntityId.Should().Be(_source.AccountLegalEntityId);
     }
 
     [Test]
     public void ThenProviderIdIsMappedCorrectly()
     {
-        Assert.That(_result.ProviderId, Is.EqualTo(_source.ProviderId));
+        _result.ProviderId.Should().Be(_source.ProviderId);
     }
 
     [Test]
     public void ThenMessageIsMappedCorrectly()
     {
-        Assert.That(_result.Message, Is.EqualTo(_source.Message));
+        _result.Message.Should().Be(_source.Message);
     }
 
     [Test]
     public void ThenAccountIdIsMappedCorrectly()
     {
-        Assert.That(_result.AccountId, Is.EqualTo(_source.AccountId));
+        _result.AccountId.Should().Be(_source.AccountId);
     }
 
 
     [Test]
     public void ThenTransferSenderIdIsMappedCorrectly()
     {
-        Assert.That(_result.TransferSenderId, Is.EqualTo(_source.DecodedTransferSenderId));
+        _result.TransferSenderId.Should().Be(_source.DecodedTransferSenderId);
     }
 
     [Test]
     public void ThenPledgeApplicationIdIsMappedCorrectly()
     {
-        Assert.That(_result.PledgeApplicationId, Is.EqualTo(_source.PledgeApplicationId));
+        _result.PledgeApplicationId.Should().Be(_source.PledgeApplicationId);
     }
 }
