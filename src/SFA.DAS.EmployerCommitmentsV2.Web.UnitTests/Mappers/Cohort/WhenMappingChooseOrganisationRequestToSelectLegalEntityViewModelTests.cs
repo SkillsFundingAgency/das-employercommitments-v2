@@ -1,26 +1,42 @@
-﻿using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
+﻿using FluentAssertions;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerCommitmentsV2.Web.Services;
+using SFA.DAS.Encoding;
+using LegalEntity = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.LegalEntity;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
 public class WhenMappingChooseOrganisationRequestToSelectLegalEntityViewModelTests
 {       
-    private Mock<IEmployerAccountsService> _employerAccountsService;
+    private Mock<IApprovalsApiClient> _apiClient;
     private SelectLegalEntityRequestToSelectLegalEntityViewModelMapper _mapper;
     private SelectLegalEntityRequest _chooseOrganisationRequest;
+    private Mock<IEncodingService> _encodingService;
+    private LegalEntity _legalEntity;
+    private const long AccountId = 998829;
 
     [SetUp]
     public void Arrange()
     {
         var autoFixture = new Fixture();
-        _employerAccountsService = new Mock<IEmployerAccountsService>();
-        _chooseOrganisationRequest = autoFixture.Create<SelectLegalEntityRequest>();          
-        var legalEntity = autoFixture.Create<LegalEntity>();
-        _employerAccountsService.Setup(x => x.GetLegalEntitiesForAccount(_chooseOrganisationRequest.AccountHashedId))
-            .ReturnsAsync(new List<LegalEntity> { legalEntity });
+        _apiClient = new Mock<IApprovalsApiClient>();
+        _encodingService = new Mock<IEncodingService>();
+        _chooseOrganisationRequest = autoFixture.Create<SelectLegalEntityRequest>();
+        _encodingService.Setup(x => x.Decode(_chooseOrganisationRequest.AccountHashedId, EncodingType.AccountId))
+            .Returns(AccountId);
+        _legalEntity = autoFixture.Create<LegalEntity>();
+        _apiClient.Setup(x => x.GetLegalEntitiesForAccount(_chooseOrganisationRequest.cohortRef, AccountId))
+            .ReturnsAsync(new GetLegalEntitiesForAccountResponse
+            {
+                LegalEntities = new List<LegalEntity>
+                {
+                    _legalEntity
+                }
+            });
             
-        _mapper = new SelectLegalEntityRequestToSelectLegalEntityViewModelMapper(_employerAccountsService.Object);
+        _mapper = new SelectLegalEntityRequestToSelectLegalEntityViewModelMapper(_apiClient.Object, _encodingService.Object);
     }
 
     [Test]
@@ -29,8 +45,8 @@ public class WhenMappingChooseOrganisationRequestToSelectLegalEntityViewModelTes
         //Act
         var result = await _mapper.Map(_chooseOrganisationRequest);
 
-        //Assert           
-        Assert.That(result.TransferConnectionCode, Is.EqualTo(_chooseOrganisationRequest.transferConnectionCode));
+        //Assert          
+        result.TransferConnectionCode.Should().Be(_chooseOrganisationRequest.transferConnectionCode);
     }
 
     [Test]
@@ -40,18 +56,18 @@ public class WhenMappingChooseOrganisationRequestToSelectLegalEntityViewModelTes
         var result = await _mapper.Map(_chooseOrganisationRequest);
 
         //Assert           
-        Assert.That(result.CohortRef, Is.EqualTo(_chooseOrganisationRequest.cohortRef));
+        result.CohortRef.Should().Be(_chooseOrganisationRequest.cohortRef);
     }
 
 
     [Test]
-    public async Task Then_LegalEntitiy_Is_Mapped()
+    public async Task Then_LegalEntity_Is_Mapped()
     {
         //Act
         var result = await _mapper.Map(_chooseOrganisationRequest);
 
-        //Assert           
-        Assert.That(result.LegalEntities.Count(), Is.EqualTo(1));
+        //Assert     
+        result.LegalEntities.Should().HaveCount(1);
     }
 
     [Test]
@@ -61,7 +77,17 @@ public class WhenMappingChooseOrganisationRequestToSelectLegalEntityViewModelTes
         var result = await _mapper.Map(_chooseOrganisationRequest);
 
         //Assert
-        _employerAccountsService.Verify(x => x.GetLegalEntitiesForAccount(_chooseOrganisationRequest.AccountHashedId),
+        _apiClient.Verify(x => x.GetLegalEntitiesForAccount(_chooseOrganisationRequest.cohortRef, AccountId),
             Times.Once);
+    }
+    
+    [Test]
+    public async Task Then_LegalEntity_Agreement_TemplateVersion_IsMapped()
+    {
+        //Act
+        var result = await _mapper.Map(_chooseOrganisationRequest);
+
+        //Assert
+        result.LegalEntities.First().Agreements[0].TemplateVersionNumber.Should().Be(_legalEntity.Agreements.First().TemplateVersionNumber);
     }
 }
