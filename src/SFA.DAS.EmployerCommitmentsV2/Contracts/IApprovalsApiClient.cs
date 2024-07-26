@@ -20,6 +20,7 @@ public interface IApprovalsApiClient
     Task<AddDraftApprenticeshipResponse> AddDraftApprenticeship(long cohortId, AddDraftApprenticeshipApimRequest request, CancellationToken cancellationToken = default);
     Task<CreateCohortResponse> CreateCohort(CreateCohortApimRequest request, CancellationToken cancellationToken = default);
     Task<GetManageApprenticeshipDetailsResponse> GetManageApprenticeshipDetails(long accountId, long apprenticeshipId, CancellationToken cancellationToken = default);
+    Task<GetLegalEntitiesForAccountResponse> GetLegalEntitiesForAccount(string cohortId, long accountId);
     Task<GetAccountLegalEntityResponse> GetAccountLegalEntity(long accountLegalEntityId, CancellationToken cancellationToken = default);
     Task<GetSelectProviderDetailsResponse> GetSelectProviderDetails(long accountId, long accountLegalEntityId, CancellationToken cancellationToken = default);
 }
