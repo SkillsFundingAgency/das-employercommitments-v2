@@ -102,6 +102,57 @@ public class WhenPopulatingAccountClaims
     }
 
     [Test, MoqAutoData]
+    public async Task Then_The_Associated_Account_Claims_Are_Populated_When_Accounts_Count_Within_Limit(
+        string nameIdentifier,
+        string idamsIdentifier,
+        string emailAddress,
+        EmployerUserAccounts accountData,
+        [Frozen] Mock<IUserAccountService> accountService,
+        [Frozen] Mock<EmployerCommitmentsV2Configuration> commitmentsConfiguration,
+        EmployerAccountPostAuthenticationClaimsHandler handler)
+    {
+        accountData.IsSuspended = true;
+        commitmentsConfiguration.Object.UseGovSignIn = true;
+        var tokenValidatedContext = ArrangeTokenValidatedContext(nameIdentifier, idamsIdentifier, emailAddress);
+        accountService.Setup(x => x.GetUserAccounts(nameIdentifier, emailAddress)).ReturnsAsync(accountData);
+
+        handler.MaxPermittedNumberOfAccountsOnClaim = accountData.EmployerAccounts.Count();
+
+        var actual = await handler.GetClaims(tokenValidatedContext);
+
+        accountService.Verify(x => x.GetUserAccounts(nameIdentifier, emailAddress), Times.Once);
+        accountService.Verify(x => x.GetUserAccounts(idamsIdentifier, emailAddress), Times.Never);
+        actual.Should().ContainSingle(c => c.Type.Equals(EmployeeClaims.AccountsClaimsTypeIdentifier));
+
+        var actualClaimValue = actual.First(c => c.Type.Equals(EmployeeClaims.AccountsClaimsTypeIdentifier)).Value;
+        JsonConvert.SerializeObject(accountData.EmployerAccounts.ToDictionary(k => k.AccountId)).Should().Be(actualClaimValue);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Then_The_Associated_Account_Claims_Are_Populated_When_Accounts_Count_Above_Limit(
+        string nameIdentifier,
+        string idamsIdentifier,
+        string emailAddress,
+        EmployerUserAccounts accountData,
+        [Frozen] Mock<IUserAccountService> accountService,
+        [Frozen] Mock<EmployerCommitmentsV2Configuration> commitmentsConfiguration,
+        EmployerAccountPostAuthenticationClaimsHandler handler)
+    {
+        accountData.IsSuspended = true;
+        commitmentsConfiguration.Object.UseGovSignIn = true;
+        var tokenValidatedContext = ArrangeTokenValidatedContext(nameIdentifier, idamsIdentifier, emailAddress);
+        accountService.Setup(x => x.GetUserAccounts(nameIdentifier, emailAddress)).ReturnsAsync(accountData);
+
+        handler.MaxPermittedNumberOfAccountsOnClaim = accountData.EmployerAccounts.Count() - 1;
+
+        var actual = await handler.GetClaims(tokenValidatedContext);
+
+        accountService.Verify(x => x.GetUserAccounts(nameIdentifier, emailAddress), Times.Once);
+        accountService.Verify(x => x.GetUserAccounts(idamsIdentifier, emailAddress), Times.Never);
+        actual.Should().NotContain(c => c.Type.Equals(EmployeeClaims.AccountsClaimsTypeIdentifier));
+    }
+
+    [Test, MoqAutoData]
     public async Task Then_The_Claims_Are_Populated_For_EmployerUsers_User(
         string nameIdentifier,
         string idamsIdentifier,
