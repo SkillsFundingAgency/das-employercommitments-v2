@@ -17,7 +17,7 @@
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
 
-                    <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
+                    <span id="course-name-hint" class="govuk-hint">Start typing the name of the course and select from the suggestions</span>
 
                     @Html.ValidationMessageFor(m => m.CourseCode, null, new
                         {
