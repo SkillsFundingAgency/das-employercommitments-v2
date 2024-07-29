@@ -22,6 +22,8 @@ public class WhenMappingInformRequestToInformViewModelTests
         _informRequest = autoFixture.Create<InformRequest>();
         _accountResponse = autoFixture.Create<AccountResponse>();
         _commitmentsClient = new Mock<ICommitmentsApiClient>();
+        _commitmentsClient.Setup(x => x.GetAccount(_informRequest.AccountId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_accountResponse);
         _mapper = new InformRequestToInformViewModelMapper(_commitmentsClient.Object);
     }
 
@@ -40,8 +42,6 @@ public class WhenMappingInformRequestToInformViewModelTests
     public async Task Then_LevyStatus_Is_Mapped(ApprenticeshipEmployerType levyStatus, bool expectedIsLevy)
     {
         _accountResponse.LevyStatus = levyStatus;
-        _commitmentsClient.Setup(x => x.GetAccount(_informRequest.AccountId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_accountResponse);
         
         //Act
         var result = await _mapper.Map(_informRequest);
