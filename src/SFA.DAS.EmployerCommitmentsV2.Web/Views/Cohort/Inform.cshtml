@@ -9,19 +9,28 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl">Add an apprentice</h1>
+        <h1 class="govuk-heading-l">Add an apprentice</h1>
 
         <p class="govuk-body">Add details of one or more apprentices to your account, and authorise payments to their training provider.</p>
+        
+        @if (!Model.LevyFunded)
+        {
+            <h2 class="govuk-heading-m">Funding</h2>
+            <p class="govuk-body">
+                If you have not reserved funds for this apprenticeship yet, adding a new apprentice will reserve funds for you. 
+                If you have reserved funds or have transfer funds available, you can select one whilst adding a new apprentice.
+            </p>
+        }
 
-        <h2 class="govuk-heading-l">Before you start</h2>
+        <h2 class="govuk-heading-m">Before you start</h2>
 
         <p class="govuk-body">You must:</p>
         <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
-            <li>know the names of your apprentices </li>
-            <li>know a unique email address for each of your apprentices</li>
-            <li>know your training provider's UK Provider Reference Number (UKPRN) - your training provider can tell you this</li>
-            <li>make sure the organisation that's named on the contract you have with your training provider is in your account - <a href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)" class="govuk-link">view organisations in this account</a> </li>
-            <li>make sure the PAYE scheme that each apprentice is paid through is in your account - <a href="@LinkGenerator.PayeSchemes(Model.AccountHashedId)" class="govuk-link">view PAYE schemes in this account</a></li>
+            <li>have a <b>training provider</b></li>
+            <li>know the <b>legal name</b> and <b>email address</b> of your apprentice</li>
+            <li>know the <b>course name</b> and <b>start date</b></li>
+            <li>have <b>authority to act</b> for the organisation that's named on the contract you have with your training provider (<a href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)" class="govuk-link">view your organisations</a>)</li>
+            <li>make sure the <b>PAYE scheme</b> that the apprentices will be paid through is added to your account (<a href="@LinkGenerator.PayeSchemes(Model.AccountHashedId)" class="govuk-link">view your PAYE schemes</a>)</li>
         </ul>
         
         <a asp-action="SelectTransferConnection" id="continue-button" asp-route-accountHashedId="@Model.AccountHashedId" role="button" draggable="false" class="govuk-button govuk-button--start">
