@@ -351,6 +351,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.That(statusText, Is.EqualTo(result.ApprenticeshipStatus.GetDescription()));
         }
 
+        [TestCase(LearnerStatus.WaitingToStart, "Waiting to start")]
+        [TestCase(LearnerStatus.InLearning, "In learning")]
+        [TestCase(LearnerStatus.BreakInLearning, "Break in learning")]
+        [TestCase(LearnerStatus.Withdrawn, "Withdrawn")]
+        [TestCase(LearnerStatus.Completed, "Completed")]
+        public async Task LearnerStatus_IsMapped(LearnerStatus status, string statusText)
+        {
+            //Arrange
+            GetManageApprenticeshipDetailsResponse.LearnerStatus = status;
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.That(result.LearnerStatus.GetDescription(), Is.EqualTo(statusText));
+        }
+
         [Test]
         public async Task ProviderName_IsMapped()
         {
