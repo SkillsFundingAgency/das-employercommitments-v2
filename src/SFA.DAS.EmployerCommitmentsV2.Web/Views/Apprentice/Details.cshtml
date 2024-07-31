@@ -56,74 +56,9 @@
 
         <table id="app-status" class="govuk-table govuk-!-margin-bottom-8">
             <tbody>
-                <tr>
-                    <th scope="row" class="govuk-table__header das-table-cell-width-45">Status</th>
 
-                    <td class="govuk-table__cell das-table-cell-width-40">
-                        <strong class="govuk-tag @Model.ApprenticeshipStatus.GetDisplayClass()">
-                            @Model.ApprenticeshipStatus.GetDescription()
-                        </strong>
-                    </td>
+                <partial name="DetailsPartials/_LearnerStatus" />
 
-                    <td id="editStatusLink" class="govuk-table__cell das-table-cell-width-15 govuk-table__cell--numeric">
-                        @if (Model.CanEditStatus && !Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
-                        {
-                            <a id="edit-status-link" href="@Url.Action("ChangeStatus", new ChangeStatusRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link">Edit status</a>
-                        }
-                    </td>
-                </tr>
-                @if (@Model.ApprenticeshipStatus == ApprenticeshipStatus.Paused)
-                {
-                    <tr>
-                        <th scope="row" class="govuk-table__header">Apprenticeship pause date</th>
-                        <td id="pauseDate" class="govuk-table__cell" colspan="2">
-                            @if (Model.PauseDate.HasValue)
-                            {
-                                @Model.PauseDate.Value.ToGdsFormat()
-                            }
-                        </td>
-                    </tr>
-                }
-
-                @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
-                {
-                    <tr>
-                        <th scope="row" class="govuk-table__header">Completion payment month</th>
-                        <td id="completionDate" class="govuk-table__cell" colspan="2">
-                            @if (Model.CompletionDate.HasValue)
-                            {
-                                @Model.CompletionDate.Value.ToGdsFormatLongMonthNameWithoutDay()
-                                ;
-                            }
-                        </td>
-                    </tr>
-                }
-
-                @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Stopped)
-                {
-                    <tr>
-                        <th scope="row" class="govuk-table__header">Stopped date</th>
-                        <td id="stopDate" class="govuk-table__cell">
-                            @if (Model.StopDate.HasValue)
-                            {
-                                @Model.StopDate.Value.ToGdsFormatLongMonthWithoutDay()
-                            }
-                        </td>
-                        <td id="editStopDateLink" class="govuk-table__cell govuk-table__cell--numeric">
-                            <a id="edit-stopped-link" class="govuk-link" href="@Url.Action("EditStopDate", new EditStopDateRequest {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Edit</a>
-                        </td>
-                    </tr>
-
-                    @if (Model.MadeRedundant.HasValue)
-                    {
-                        <tr>
-                            <th scope="row" class="govuk-table__header">Made redundant</th>
-                            <td id="madeRedundant" class="govuk-table__cell" colspan="2">
-                                @(Model.MadeRedundant.Value ? "Yes" : "No")
-                            </td>
-                        </tr>
-                    }
-                }
                 <tr>
                     <th scope="row" class="govuk-table__header">Apprentice confirmation</th>
                     <td id="confirationStatus" class="govuk-table__cell" colspan="2">
