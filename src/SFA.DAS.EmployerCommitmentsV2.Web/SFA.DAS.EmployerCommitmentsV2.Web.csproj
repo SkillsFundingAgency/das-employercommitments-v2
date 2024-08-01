@@ -23,12 +23,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AspNetCore.IServiceCollection.AddIUrlHelper" Version="1.1.0" />
+    <PackageReference Include="Azure.Core" Version="1.41.0" />
+    <PackageReference Include="Azure.Storage.Common" Version="12.20.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.32" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.2.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.2.0" />
-    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24" />
     <PackageReference Include="Scrutor" Version="4.2.2" />
     <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.80" />
     <PackageReference Include="NLog.Schema" Version="5.3.2" />
@@ -42,7 +43,6 @@
     <PackageReference Include="WebEssentials.AspNetCore.CdnTagHelpers" Version="1.0.21" />
     <PackageReference Include="SFA.DAS.Validation.Mvc" Version="6.0.30" />
     <PackageReference Include="StackExchange.Redis" Version="2.8.0" />
-    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.32" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.32" />
   </ItemGroup>
