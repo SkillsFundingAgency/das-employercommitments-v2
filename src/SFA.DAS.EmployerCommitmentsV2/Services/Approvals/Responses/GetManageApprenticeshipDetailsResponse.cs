@@ -1,5 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Types;
-using System.ComponentModel;
+﻿using SFA.DAS.Apprenticeships.Types;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
@@ -207,25 +207,4 @@ public class GetManageApprenticeshipDetailsResponse
         public string ReasonFrozen { get; set; }
         public DateTime? FrozenOn { get; set; }
     }
-}
-
-//PR DISCUSSION POINT: should we put this somewhere else?
-public enum LearnerStatus
-{
-    None,
-
-    [Description("Waiting to start")]
-    WaitingToStart,
-
-    [Description("In learning")]
-    InLearning,
-
-    [Description("Break in learning")]
-    BreakInLearning,
-
-    [Description("Withdrawn")]
-    Withdrawn,
-
-    [Description("Completed")]
-    Completed
 }
