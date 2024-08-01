@@ -366,7 +366,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.That(result.LearnerStatus.GetDescription(), Is.EqualTo(statusText));
+            var learnerStatus = result.LearnerStatus.GetDescription();
+            learnerStatus.Should().Be(statusText);
         }
 
         [Test]
