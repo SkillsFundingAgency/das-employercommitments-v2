@@ -34,7 +34,7 @@
 
 @section Back
 {
-    <div class="das-js-back-link"></div>
+    @Html.ActionLink("Return to group of apprentices", "Details", "Cohort", new { @Model.AccountHashedId, @Model.CohortReference }, new { @class = "govuk-back-link", id = "back-link" })
 }
 
 

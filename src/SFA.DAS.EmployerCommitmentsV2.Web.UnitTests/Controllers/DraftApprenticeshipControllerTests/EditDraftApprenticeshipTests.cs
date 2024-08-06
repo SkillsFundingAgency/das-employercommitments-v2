@@ -3,7 +3,6 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
@@ -27,7 +26,7 @@ public class EditDraftApprenticeshipTests
     [Test]
     public async Task WhenGettingEditDraftApprenticeshipDisplay()
     {
-        var result = await _testFixture.GetEditDraftApprenticeshipDisplay(_testFixture._editDraftApprenticeshipViewModel);
+        var result = await _testFixture.GetEditDraftApprenticeshipDisplay(_testFixture._editDetailsRequest);
 
         Assert.That(result, Is.Not.Null);
         Assert.Multiple(() =>
@@ -143,6 +142,7 @@ public class EditDraftApprenticeshipTestsFixture
 
     public UpdateDraftApprenticeshipApimRequest _updateDraftApprenticeshipRequest;
     public EditDraftApprenticeshipViewModel _editDraftApprenticeshipViewModel;
+    public EditDetailsRequest _editDetailsRequest;
     public AddDraftApprenticeshipRequest _addDraftApprenticeshipRequest;
     public SelectDeliveryModelForEditViewModel _selectDeliveryModelViewModel_WithDeliveryModels;
     public SelectDeliveryModelForEditViewModel _selectDeliveryModelViewModel_WithOutDeliveryModels;
@@ -176,6 +176,10 @@ public class EditDraftApprenticeshipTestsFixture
             .Without(x => x.Courses)
             .Create();
 
+        _editDetailsRequest = _autoFixture.Build<EditDetailsRequest>()
+            .With(x => x.DeliveryModel, DeliveryModel.PortableFlexiJob)
+            .With(x => x.CourseCode, _autoFixture.Create<int>().ToString())
+            .Create();
 
         _updateDraftApprenticeshipRequest = _autoFixture.Build<UpdateDraftApprenticeshipApimRequest>().Create();
         _addDraftApprenticeshipRequest = _autoFixture.Build<AddDraftApprenticeshipRequest>().Create();
@@ -211,7 +215,9 @@ public class EditDraftApprenticeshipTestsFixture
             .ReturnsAsync(_addDraftApprenticeshipRequest);
         _modelMapper.Setup(m => m.Map<EditDraftApprenticeshipViewModel>(It.IsAny<AddDraftApprenticeshipRequest>()))
             .ReturnsAsync(_editDraftApprenticeshipViewModel);
-        _modelMapper.Setup(m => m.Map<EditDraftApprenticeshipViewModel>(It.IsAny<SelectDeliveryModelViewModel>()))
+        _modelMapper.Setup(m => m.Map<EditDetailsRequest>(It.IsAny<SelectDeliveryModelViewModel>()))
+            .ReturnsAsync(_editDetailsRequest);
+        _modelMapper.Setup(m => m.Map<IDraftApprenticeshipViewModel>(It.IsAny<EditDetailsRequest>()))
             .ReturnsAsync(_editDraftApprenticeshipViewModel);
 
         _controller = new DraftApprenticeshipController(
@@ -224,9 +230,9 @@ public class EditDraftApprenticeshipTestsFixture
         _controller.TempData = _tempData.Object;
     }
 
-    public async Task<IActionResult> GetEditDraftApprenticeshipDisplay(EditDraftApprenticeshipViewModel model)
+    public async Task<IActionResult> GetEditDraftApprenticeshipDisplay(EditDetailsRequest request)
     {
-        return await Task.Run(() => _controller.EditDraftApprenticeshipDisplay(model));
+        return await Task.Run(() => _controller.EditDraftApprenticeshipDisplay(request));
     }
 
     public async Task<IActionResult> PostEditDraftApprenticeship(string changeCourse, string changeDeliveryModel, EditDraftApprenticeshipViewModel model)
@@ -248,15 +254,15 @@ public class EditDraftApprenticeshipTestsFixture
     {
         if (hasDeliveryModels)
         {
-            _modelMapper.Setup(m => m.Map<SelectDeliveryModelForEditViewModel>(It.IsAny<EditDraftApprenticeshipViewModel>()))
+            _modelMapper.Setup(m => m.Map<SelectDeliveryModelForEditViewModel>(It.IsAny<EditDetailsRequest>()))
                 .ReturnsAsync(_selectDeliveryModelViewModel_WithDeliveryModels);
 
             _modelMapper.Setup(x => x.Map<IDraftApprenticeshipViewModel>(It.IsAny<EditDraftApprenticeshipRequest>()))
                 .ReturnsAsync(new EditDraftApprenticeshipViewModel());
         }
         else
-        { 
-            _modelMapper.Setup(m => m.Map<SelectDeliveryModelForEditViewModel>(It.IsAny<EditDraftApprenticeshipViewModel>()))
+        {
+            _modelMapper.Setup(m => m.Map<SelectDeliveryModelForEditViewModel>(It.IsAny<EditDetailsRequest>()))
                 .ReturnsAsync(_selectDeliveryModelViewModel_WithOutDeliveryModels);
         }
 
@@ -268,8 +274,7 @@ public class EditDraftApprenticeshipTestsFixture
             _selectDeliveryModelViewModel_WithOutDeliveryModels.HasUnavailableFlexiJobAgencyDeliveryModel = true;
         }
 
-
-        return await _controller.SelectDeliveryModelForEdit(_editDraftApprenticeshipViewModel);
+        return await _controller.SelectDeliveryModelForEdit(_editDetailsRequest);
     }
 
     public IActionResult PostSetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
