@@ -1,6 +1,5 @@
 ﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using DeliveryModel = SFA.DAS.CommitmentsV2.Types.DeliveryModel;
@@ -18,7 +17,8 @@ public class SelectDeliveryModelForEditViewModelMapper : IMapper<EditDraftAppren
 
     public async Task<SelectDeliveryModelForEditViewModel> Map(EditDraftApprenticeshipViewModel source)
     {
-        var apiResponse = await _apiClient.GetEditDraftApprenticeshipSelectDeliveryModel(source.ProviderId, (long)source.CohortId, source.DraftApprenticeshipId, source.CourseCode);
+        var cohortDetails = await _apiClient.GetCohortDetails(source.AccountId, source.CohortId.Value);
+        var apiResponse = await _apiClient.GetEditDraftApprenticeshipSelectDeliveryModel(cohortDetails.ProviderId, (long)source.CohortId, source.DraftApprenticeshipId, source.CourseCode);
 
         return new SelectDeliveryModelForEditViewModel
         {

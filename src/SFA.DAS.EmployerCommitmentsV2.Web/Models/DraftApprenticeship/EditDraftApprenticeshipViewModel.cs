@@ -14,6 +14,7 @@ public class EditDraftApprenticeshipViewModel : DraftApprenticeshipViewModel, IA
     }
 
     public string AccountHashedId { get; set; }
+    public long AccountId { get; set; }
     public string DraftApprenticeshipHashedId { get; set; }
     public long DraftApprenticeshipId { get; set; }
     public string LegalEntityName { get; set; }

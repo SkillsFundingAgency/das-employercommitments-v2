@@ -1,0 +1,39 @@
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
+using SFA.DAS.Encoding;
+
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
+
+public class SelectDeliveryModelViewModelToEditDraftApprenticeshipRequestMapper : IMapper<SelectDeliveryModelViewModel, EditDraftApprenticeshipRequest>
+{
+    private readonly ICommitmentsApiClient _commitmentsApiClient;
+    private readonly IEncodingService _encodingService;
+
+    public SelectDeliveryModelViewModelToEditDraftApprenticeshipRequestMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
+    {
+        _commitmentsApiClient = commitmentsApiClient;
+        _encodingService = encodingService;
+    }
+
+    public async Task<EditDraftApprenticeshipRequest> Map(SelectDeliveryModelViewModel source)
+    {
+        var cohortId = _encodingService.Decode(source.CohortReference, EncodingType.CohortReference);
+        var cohort = await _commitmentsApiClient.GetCohort(cohortId);
+
+        return new EditDraftApprenticeshipRequest
+        {
+            AccountHashedId = source.AccountHashedId,
+            //AccountLegalEntityId = source.AccountLegalEntityId,
+            AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
+            CohortId = source.CohortId,
+            CohortReference = source.CohortReference,
+            CourseCode = source.CourseCode,
+            DeliveryModel = source.DeliveryModel,
+            //ProviderId = cohort.ProviderId.Value,
+            //ReservationId = source.ReservationId.HasValue ? source.ReservationId.Value : System.Guid.Empty,
+            //StartMonthYear = source.StartMonthYear
+        };
+    }
+}

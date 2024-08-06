@@ -13,6 +13,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.Encoding;
 using SFA.DAS.Http;
+using StructureMap.Query;
 using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -148,6 +149,16 @@ public class DraftApprenticeshipController : Controller
     [Route("{DraftApprenticeshipHashedId}/edit", Name="Details-Edit")]
     public async Task<IActionResult> Details(DetailsRequest request)
     {
+        //var localModel = GetStoredEditDraftApprenticeshipState();
+
+        //if (localModel != null)
+        //{
+        //    localModel.CourseCode = model.CourseCode;
+        //    localModel.DeliveryModel = model.DeliveryModel;
+        //    return View("Edit", localModel);
+        //}
+
+
         var viewModel = await _modelMapper.Map<IDraftApprenticeshipViewModel>(request);
         var viewName = viewModel is EditDraftApprenticeshipViewModel ? "Edit" : "View";
         return View(viewName, viewModel);
@@ -187,7 +198,7 @@ public class DraftApprenticeshipController : Controller
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
             StoreEditDraftApprenticeshipState(model);
-            var req = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
+            var req = await _modelMapper.Map<EditDraftApprenticeshipRequest>(model);
 
             return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), req.CloneBaseValues());
         }
@@ -201,7 +212,7 @@ public class DraftApprenticeshipController : Controller
 
     [HttpGet]
     [Route("{DraftApprenticeshipHashedId}/edit/select-course")]
-    public async Task<IActionResult> SelectCourseForEdit(AddDraftApprenticeshipRequest request)
+    public async Task<IActionResult> SelectCourseForEdit(EditDraftApprenticeshipRequest request)
     {
         var selectCourseViewModel = await _modelMapper.Map<SelectCourseViewModel>(request);
         return View("SelectCourse", selectCourseViewModel);
@@ -217,14 +228,16 @@ public class DraftApprenticeshipController : Controller
                 {new(nameof(model.CourseCode), "You must select a training course")});
         }
 
-        var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
+        //var oldrequest = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
+        var request = await _modelMapper.Map<EditDraftApprenticeshipRequest>(model);
 
+        //return RedirectToAction(nameof(SelectDeliveryModelForEdit), oldrequest.CloneBaseValues());
         return RedirectToAction(nameof(SelectDeliveryModelForEdit), request.CloneBaseValues());
     }
 
     [HttpGet]
     [Route("{DraftApprenticeshipHashedId}/edit/select-delivery-model")]
-    public async Task<IActionResult> SelectDeliveryModelForEdit(EditDraftApprenticeshipViewModel request)
+    public async Task<IActionResult> SelectDeliveryModelForEdit(EditDraftApprenticeshipRequest request)
     {
         var model = await _modelMapper.Map<SelectDeliveryModelForEditViewModel>(request);
 
