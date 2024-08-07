@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
-using FluentAssertions;
+﻿using FluentAssertions;
+using SFA.DAS.Apprenticeships.Types;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
@@ -10,6 +10,7 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
+using System.Text.RegularExpressions;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetPriceEpisodeResponse;
@@ -349,6 +350,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.That(statusText, Is.EqualTo(result.ApprenticeshipStatus.GetDescription()));
+        }
+
+        [TestCase(LearnerStatus.WaitingToStart, "Waiting to start")]
+        [TestCase(LearnerStatus.InLearning, "In learning")]
+        [TestCase(LearnerStatus.BreakInLearning, "Break in learning")]
+        [TestCase(LearnerStatus.Withdrawn, "Withdrawn")]
+        [TestCase(LearnerStatus.Completed, "Completed")]
+        public async Task LearnerStatus_IsMapped(LearnerStatus status, string statusText)
+        {
+            //Arrange
+            GetManageApprenticeshipDetailsResponse.LearnerStatus = status;
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            var learnerStatus = result.LearnerStatus.GetDescription();
+            learnerStatus.Should().Be(statusText);
         }
 
         [Test]

@@ -1,4 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Types;
+﻿using SFA.DAS.Apprenticeships.Types;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
@@ -15,6 +16,7 @@ public class GetManageApprenticeshipDetailsResponse
     public PendingPriceChangeDetails PendingPriceChange { get; set; }
     public PendingStartDateChangeDetails PendingStartDateChange { get; set; }
     public PaymentsStatusDetails PaymentsStatus { get; set; }
+    public LearnerStatus LearnerStatus { get; set; }
 
     public class GetApprenticeshipResponse
     {
