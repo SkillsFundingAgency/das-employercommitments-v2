@@ -8,7 +8,7 @@ public class SelectProviderViewModelValidator : AbstractValidator<SelectProvider
     {
         RuleFor(x => x.ProviderId)
             .Must(BeALongGreaterThanZero)
-            .WithMessage("Check UK Provider Reference Number");
+            .WithMessage("Select a training provider");
 
         RuleFor(x => x.AccountLegalEntityHashedId)
             .NotNull()
