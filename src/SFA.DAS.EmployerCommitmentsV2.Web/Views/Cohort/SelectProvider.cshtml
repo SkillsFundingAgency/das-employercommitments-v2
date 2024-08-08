@@ -14,7 +14,7 @@
         <partial name="_ValidationSummary" />
         <form method="post">
             @Html.AntiForgeryToken()
-            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-form-group--error")">
+            <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                         <h1 class="govuk-heading-l">
@@ -25,25 +25,25 @@
                     <p class="govuk-body">
                         Before you can add your apprentice, you need to add the training provider for this apprenticeship.
                     </p>
+                    <div class=" @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-form-group--error")">
+                        <span id="provider-hint" class="govuk-hint">Start typing your training provider’s name or UKPRN, and select from the suggestions</span>
 
-                    <span id="provider-hint" class="govuk-hint">Start typing your training provider’s name or UKPRN, and select from the suggestions</span>
+                        @Html.ValidationMessageFor(m => m.ProviderId, null, new
+                            {
+                                @class = "govuk-error-message",
+                                id =
+                                 "error-message-" + Html.IdFor(m => m.ProviderId)
+                            })
 
-                    @Html.ValidationMessageFor(m => m.ProviderId, null, new
-                        {
-                            @class = "govuk-error-message",
-                            id =
-                             "error-message-" + Html.IdFor(m => m.ProviderId)
-                        })
-
-                    <select id="Ukprn" name="ProviderId" asp-for="ProviderId"
-                        class="govuk-select das-autocomplete-search @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-select--error")">
-                        <option class="das-js-hide" value="">Select training provider</option>
-                        @foreach (var provider in Model.Providers)
-                        {
-                            <option value="@provider.Ukprn"> @provider.Name @provider.Ukprn</option>
-                        }
-                    </select>
-
+                        <select id="Ukprn" name="ProviderId" asp-for="ProviderId"
+                            class="govuk-select das-autocomplete-search @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-select--error")">
+                            <option class="das-js-hide" value="">Select training provider</option>
+                            @foreach (var provider in Model.Providers)
+                            {
+                                <option value="@provider.Ukprn"> @provider.Name @provider.Ukprn</option>
+                            }
+                        </select>
+                    </div>
                 </fieldset>
             </div>
 
