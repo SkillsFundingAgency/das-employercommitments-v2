@@ -11,14 +11,37 @@
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
 
-        <h1 class="govuk-heading-xl">Confirm training provider</h1>
-
-        <p class="govuk-body-l">UK Provider Reference Number <strong>'@Model.ProviderId'</strong> matches:</p>
-
-        <h2 class="govuk-heading-l govuk-!-margin-bottom-0">@Model.ProviderName</h2>
-        <dl class="das-definition-list das-definition-list--inline  das-definition-list--muted govuk-!-margin-bottom-7">
-            <dt class="das-definition-list__title">UKPRN</dt>
-            <dd class="das-definition-list__definition">@Model.ProviderId</dd>
+        <h1 class="govuk-heading-l">Confirm training provider</h1>
+        
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Training provider
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.ProviderName
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    @Html.ActionLink("Change", "SelectProvider", "Cohort", new
+                    {
+                        Model.AccountHashedId,
+                        Model.AccountLegalEntityHashedId,
+                        Model.CourseCode,
+                        Model.ReservationId,
+                        Model.TransferSenderId,
+                        Model.StartMonthYear,
+                        Model.EncodedPledgeApplicationId
+                    }, new { @class = "govuk-link", id = "change-training-provider-link" })
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    UK Provider Reference (UKPRN)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.ProviderId
+                </dd>
+            </div>
         </dl>
 
         <form method="post">
@@ -41,13 +64,13 @@
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="UseThisProvider" name="UseThisProvider" type="radio" value="true">
                             <label class="govuk-label govuk-radios__label" for="UseThisProvider">
-                                Yes, use @Model.ProviderName
+                                Yes, it's @Model.ProviderName
                             </label>
                         </div>
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="UseThisProvider-no" name="UseThisProvider" type="radio" value="false">
                             <label class="govuk-label govuk-radios__label" for="UseThisProvider-no">
-                                No, change UK Provider Reference Number
+                                No, I'd like to change the training provider
                             </label>
                         </div>
                     </div>
