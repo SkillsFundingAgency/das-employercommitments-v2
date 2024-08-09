@@ -8,19 +8,25 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.DraftApprenticeship;
 
 [TestFixture]
-public class SelectDeliveryModelForEditViewModelMapperTests
+public class EditDetailsRequestToSelectDeliveryModelForEditViewModelMapperTests
 {
-    private SelectDeliveryModelForEditViewModelMapper _mapper;
+    private EditDetailsRequestToSelectDeliveryModelForEditViewModelMapper _mapper;
     private Mock<IApprovalsApiClient> _approvalsApiClient;
     private GetEditDraftApprenticeshipSelectDeliveryModelResponse _response;
-    private EditDraftApprenticeshipViewModel _source;
+    private EditDetailsRequest _source;
+    private GetCohortDetailsResponse _cohortDetail;
 
     [SetUp]
     public void Setup()
     {
-        _source = new EditDraftApprenticeshipViewModel
+        _source = new EditDetailsRequest
         {
             CohortId = 1
+        };
+
+        _cohortDetail = new GetCohortDetailsResponse
+        {
+            ProviderId = 1060
         };
 
         _response = new GetEditDraftApprenticeshipSelectDeliveryModelResponse
@@ -32,11 +38,13 @@ public class SelectDeliveryModelForEditViewModelMapperTests
         };
 
         _approvalsApiClient = new Mock<IApprovalsApiClient>();
-        _approvalsApiClient.Setup(x => x.GetEditDraftApprenticeshipSelectDeliveryModel(It.IsAny<long>(),
-                It.IsAny<long>(), It.IsAny<long>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+        _approvalsApiClient.Setup(x => x.GetEditDraftApprenticeshipSelectDeliveryModel(_cohortDetail.ProviderId,
+                _source.CohortId, It.IsAny<long>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_response);
+        _approvalsApiClient.Setup(x => x.GetCohortDetails(It.IsAny<long>(), _source.CohortId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_cohortDetail);
 
-        _mapper = new SelectDeliveryModelForEditViewModelMapper(_approvalsApiClient.Object);
+        _mapper = new EditDetailsRequestToSelectDeliveryModelForEditViewModelMapper(_approvalsApiClient.Object);
     }
 
 

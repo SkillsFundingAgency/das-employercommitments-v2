@@ -164,18 +164,20 @@ public class DraftApprenticeshipController : Controller
 
     [HttpGet]
     [Route("{DraftApprenticeshipHashedId}/edit-display", Name="EditDraftApprenticeshipDisplay")]
-    public IActionResult EditDraftApprenticeshipDisplay(EditDraftApprenticeshipViewModel model)
+    public async Task<IActionResult> EditDraftApprenticeshipDisplay(EditDetailsRequest request)
     {
         var localModel = GetStoredEditDraftApprenticeshipState();
 
         if (localModel != null)
         {
-            localModel.CourseCode = model.CourseCode;
-            localModel.DeliveryModel = model.DeliveryModel;
+            localModel.CourseCode = request.CourseCode;
+            localModel.DeliveryModel = request.DeliveryModel;
             return View("Edit", localModel);
         }
 
-        return View("Edit", model);
+        var model = await _modelMapper.Map<IDraftApprenticeshipViewModel>(request);
+
+        return View("Edit", model as EditDraftApprenticeshipViewModel);
     }
 
     [HttpPost]
@@ -224,7 +226,7 @@ public class DraftApprenticeshipController : Controller
 
     [HttpGet]
     [Route("{DraftApprenticeshipHashedId}/edit/select-delivery-model")]
-    public async Task<IActionResult> SelectDeliveryModelForEdit(EditDraftApprenticeshipViewModel request)
+    public async Task<IActionResult> SelectDeliveryModelForEdit(EditDetailsRequest request)
     {
         var model = await _modelMapper.Map<SelectDeliveryModelForEditViewModel>(request);
 
@@ -240,7 +242,7 @@ public class DraftApprenticeshipController : Controller
             request.DeliveryModel = (CommitmentsV2.Types.DeliveryModel) model.DeliveryModels.FirstOrDefault();
         }
 
-        return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), request.CloneBaseValues());
+        return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), new { request.AccountHashedId, request.CohortReference, request.DraftApprenticeshipHashedId, request.DeliveryModel, request.CourseCode });
     }
 
     [HttpPost]
@@ -258,29 +260,23 @@ public class DraftApprenticeshipController : Controller
                 draft.CourseCode = model.CourseCode;
             };
             StoreEditDraftApprenticeshipState(draft);
-
-            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), draft);
+            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), new { model.AccountHashedId, draft.CohortReference, draft.DraftApprenticeshipHashedId, model.DeliveryModel, model.CourseCode });
         }
-
         if (model.DeliveryModel == null)
         {
             throw new CommitmentsApiModelException(new List<ErrorDetail> {new("DeliveryModel", "You must select the apprenticeship delivery model")});
         }
-
         return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), model);
     }
-
     [HttpGet]
     [Route("{DraftApprenticeshipHashedId}/select-option")]
     public async Task<IActionResult> SelectOption(SelectOptionRequest request)
     {
         var model = await _modelMapper.Map<SelectOptionViewModel>(request);
-
         if (model == null)
         {
             return RedirectToAction("Details", "Cohort", new { request.AccountHashedId, request.CohortReference });
         }
-
         return View(model);
     }
 
