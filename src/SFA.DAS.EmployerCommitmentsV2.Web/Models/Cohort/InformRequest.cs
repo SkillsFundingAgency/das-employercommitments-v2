@@ -6,4 +6,5 @@ public class InformRequest :  IAuthorizationContextModel
 {
     [FromRoute]
     public string AccountHashedId { get; set; }
+    public long AccountId { get; set; }
 }
