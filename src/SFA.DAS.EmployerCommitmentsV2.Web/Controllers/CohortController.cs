@@ -182,7 +182,7 @@ public class CohortController : Controller
         {
             if (ex.StatusCode == HttpStatusCode.NotFound)
             {
-                ModelState.AddModelError(nameof(request.ProviderId), "Check UK Provider Reference Number");
+                ModelState.AddModelError(nameof(request.ProviderId), "Select a training provider");
                 var returnModel = await _modelMapper.Map<SelectProviderRequest>(request);
                 return RedirectToAction("SelectProvider", returnModel.CloneBaseValues());
             }
