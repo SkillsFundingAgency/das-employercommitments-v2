@@ -41,6 +41,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private const long ApprenticeshipIdMiddle = 356;
         private const long ApprenticeshipIdLast = 256;
         private const string ApprenticeshipEmail = "a@a.com";
+        private const string MockUrlBuilderEnvironment = "unit-tests";
 
         private GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse _apprenticeshipDetailsResponse;
 
@@ -857,9 +858,34 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EmployerApprovedDate, result.PendingPriceChange.EmployerApprovedDate);
         }
 
+        [TestCase(true, "Inactive")]
+        [TestCase(false, "Active")]
+        public async Task PaymentStatus_IsMapped(bool paymentsFrozen, string expectedStatus)
+        {
+            //Act
+            GetManageApprenticeshipDetailsResponse.PaymentsStatus.PaymentsFrozen = paymentsFrozen;
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            result.PaymentStatus.Should().Be(expectedStatus);
+        }
+
+        [TestCase(true, "/unfreeze")]
+        [TestCase(false, "")]
+        public async Task PaymentStatusChangeUrl_IsMapped(bool paymentsFrozen, string expectedUrlSegment)
+        {
+            //Act
+            GetManageApprenticeshipDetailsResponse.PaymentsStatus.PaymentsFrozen = paymentsFrozen;
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            result.PaymentStatusChangeUrl.Should()
+                .Be($"https://apprenticeshipdetails.{MockUrlBuilderEnvironment}-eas.apprenticeships.education.gov.uk/employer/{_request.AccountHashedId}/PaymentsFreeze/{_request.ApprenticeshipHashedId}{expectedUrlSegment}");
+        }
+
         private static UrlBuilder GetMockUrlBuilder()
         {
-            return new UrlBuilder("unit tests");
+            return new UrlBuilder(MockUrlBuilderEnvironment);
         }
     }
 }

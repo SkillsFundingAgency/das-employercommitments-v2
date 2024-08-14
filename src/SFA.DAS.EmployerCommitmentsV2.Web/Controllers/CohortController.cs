@@ -182,7 +182,7 @@ public class CohortController : Controller
         {
             if (ex.StatusCode == HttpStatusCode.NotFound)
             {
-                ModelState.AddModelError(nameof(request.ProviderId), "Check UK Provider Reference Number");
+                ModelState.AddModelError(nameof(request.ProviderId), "Select a training provider");
                 var returnModel = await _modelMapper.Map<SelectProviderRequest>(request);
                 return RedirectToAction("SelectProvider", returnModel.CloneBaseValues());
             }
@@ -236,7 +236,7 @@ public class CohortController : Controller
                 $"accounts/{model.AccountHashedId}/reservations/{model.AccountLegalEntityHashedId}/select?providerId={model.ProviderId}&transferSenderId={model.TransferSenderId}&encodedPledgeApplicationId={model.EncodedPledgeApplicationId}");
             return Redirect(url);
         }
-        
+
         if (model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
         {
             model.Message = string.Empty;
@@ -296,12 +296,6 @@ public class CohortController : Controller
     [Route("add/select-course")]
     public async Task<IActionResult> SelectCourse(SelectCourseViewModel model)
     {
-        if (string.IsNullOrEmpty(model.CourseCode))
-        {
-            throw new CommitmentsApiModelException(new List<ErrorDetail>
-                {new ErrorDetail(nameof(model.CourseCode), "You must select a training course")});
-        }
-
         var request = await _modelMapper.Map<ApprenticeRequest>(model);
         return RedirectToAction(nameof(SelectDeliveryModel), request.CloneBaseValues());
     }
