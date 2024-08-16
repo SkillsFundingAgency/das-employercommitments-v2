@@ -879,9 +879,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         [TestCase(true, "Inactive")]
         [TestCase(false, "Active")]
-        public async Task PaymentStatus_IsMapped(bool paymentsFrozen, string expectedStatus)
+        public async Task AndApprenticeshipIsActive_ThenPaymentStatusIsMappedCorrectly(bool paymentsFrozen, string expectedStatus)
         {
             //Act
+            GetManageApprenticeshipDetailsResponse.LearnerStatus = LearnerStatus.InLearning;
+            GetManageApprenticeshipDetailsResponse.PaymentsStatus.PaymentsFrozen = paymentsFrozen;
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            result.PaymentStatus.Should().Be(expectedStatus);
+        }
+
+        [TestCase(true, "Inactive")]
+        [TestCase(false, "Inactive")]
+        public async Task AndApprenticeshipNotStarted_ThenPaymentStatusIsInactive(bool paymentsFrozen, string expectedStatus)
+        {
+            //Act
+            GetManageApprenticeshipDetailsResponse.LearnerStatus = LearnerStatus.WaitingToStart;
             GetManageApprenticeshipDetailsResponse.PaymentsStatus.PaymentsFrozen = paymentsFrozen;
             var result = await _mapper.Map(_request);
 

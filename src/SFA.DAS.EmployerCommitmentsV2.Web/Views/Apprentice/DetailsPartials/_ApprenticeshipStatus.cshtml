@@ -2,10 +2,31 @@
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
-@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+@using SFA.DAS.Apprenticeships.Types
 
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
 
+@{
+    var learnerStatusTagClass = Model.LearnerStatus switch
+    {
+        LearnerStatus.WaitingToStart => "govuk-tag--green",
+        LearnerStatus.InLearning => "govuk-tag--blue",
+        LearnerStatus.Completed => "govuk-tag--blue",
+        LearnerStatus.BreakInLearning => "govuk-tag--red",
+        LearnerStatus.Withdrawn => "govuk-tag--red",
+        LearnerStatus.None => "govuk-tag--blue",
+        _ => "govuk-tag--blue" // default
+        };
+}
+
+@{
+    var paymentStatusTagClass = Model.PaymentStatus switch
+    {
+        "Inactive" => "govuk-tag--red",
+        "Active" => "govuk-tag--blue",
+        _ => "govuk-tag--blue" // default
+    };
+}
 
 @if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
 {
@@ -13,7 +34,7 @@
         <th scope="row" class="govuk-table__header das-table-cell-width-45">Learner Status</th>
 
         <td class="govuk-table__cell das-table-cell-width-40">
-                @Model.LearnerStatus.GetDescription()
+            <strong class="govuk-tag @learnerStatusTagClass">@Model.LearnerStatus.GetDescription()</strong>
         </td>
     </tr>
 }
@@ -85,4 +106,25 @@ else{
             </tr>
         }
     }
+}
+
+<tr>
+    <th scope="row" class="govuk-table__header">Apprentice confirmation</th>
+    <td id="confirationStatus" class="govuk-table__cell" colspan="2">
+        @Model.ConfirmationStatus.ToDisplayString()
+    </td>
+</tr>
+
+@if(Model.IsOnFlexiPaymentPilot == true)
+{
+    <tr>
+        <th scope="row" class="govuk-table__header">Provider payments status</th>
+        <td id="provider-payments-status" class="govuk-table__cell" colspan="2">
+            <strong class="govuk-tag @paymentStatusTagClass">@Model.PaymentStatus</strong>
+        </td>
+        @if(Model.LearnerStatus != LearnerStatus.WaitingToStart)
+        {
+            <td class="govuk-table__cell"><a id="linkChangePaymentStatus" href="@Model.PaymentStatusChangeUrl" class="govuk-link">Change</a></td>
+        }
+    </tr>
 }
