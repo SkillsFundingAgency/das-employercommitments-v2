@@ -14,36 +14,49 @@
         <partial name="_ValidationSummary" />
         <form method="post">
             @Html.AntiForgeryToken()
-            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-form-group--error")">
+            <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-                        <h1 class="govuk-fieldset__heading">
-                            Enter your training provider's name or reference number (UKPRN)
+                        <h1 class="govuk-heading-l">
+                            Select your training provider
                         </h1>
                     </legend>
 
                     <p class="govuk-body">
-                        A UKPRN is the unique, 8-digit number we use to identify a training provider. Ask your training
-                        provider if you do not know it.
+                        Before you can add your apprentice, you need to add the training provider for this apprenticeship.
                     </p>
+                    <div class=" @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-form-group--error")">
+                        <span id="provider-hint" class="govuk-hint">Start typing your training provider’s name or UKPRN, and select from the suggestions</span>
 
-                    @Html.ValidationMessageFor(m => m.ProviderId, null, new
-                        {
-                            @class = "govuk-error-message",
-                            id =
-                             "error-message-" + Html.IdFor(m => m.ProviderId)
-                        })
-                    <select id="Ukprn" name="ProviderId" asp-for="ProviderId"
-                        class="govuk-select das-autocomplete-search @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-select--error")">
-                        <option class="das-js-hide" value="">Select training provider</option>
-                        @foreach (var provider in Model.Providers)
-                        {
-                            <option value="@provider.Ukprn"> @provider.Name @provider.Ukprn</option>
-                        }
-                    </select>
+                        @Html.ValidationMessageFor(m => m.ProviderId, null, new
+                            {
+                                @class = "govuk-error-message",
+                                id =
+                                 "error-message-" + Html.IdFor(m => m.ProviderId)
+                            })
 
+                        <select id="Ukprn" name="ProviderId" asp-for="ProviderId"
+                            class="govuk-select das-autocomplete-search @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-select--error")">
+                            <option class="das-js-hide" value="">Select training provider</option>
+                            @foreach (var provider in Model.Providers)
+                            {
+                                <option value="@provider.Ukprn"> @provider.Name @provider.Ukprn</option>
+                            }
+                        </select>
+                    </div>
                 </fieldset>
             </div>
+
+             <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        Help with training provider
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p>If you don’t have a training provider, you can search <a href="https://www.gov.uk/employers-find-apprenticeship-training" target="_blank" title="Opens in a new window" rel="noreferrer noopener" id="fat-link" class="govuk-link">Find apprenticeship training</a>.</p>
+                </div>
+            </details>
 
             <button class="govuk-button" id="Ukprn-button" type="submit"> Continue </button>
         </form>

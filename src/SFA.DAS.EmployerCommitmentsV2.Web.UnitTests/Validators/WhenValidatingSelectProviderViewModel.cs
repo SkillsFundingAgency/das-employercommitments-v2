@@ -51,7 +51,7 @@ public class WhenValidatingSelectProviderViewModel : ValidatorTestBase<SelectPro
     [Test, MoqAutoData]
     public void AndProviderIdIsInvalid_ThenCorrectValidationMessageShown(SelectProviderViewModel viewModel, string invalidId)
     {
-        var expectedMessage = "Check UK Provider Reference Number";
+        var expectedMessage = "Select a training provider";
         viewModel.ProviderId = invalidId;
 
         AssertValidationResult(x => x.ProviderId, viewModel, false, expectedMessage);
