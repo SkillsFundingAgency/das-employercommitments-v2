@@ -2,7 +2,6 @@
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
@@ -20,6 +19,13 @@ public class UpdateDraftApprenticeshipRequestMapper : IMapper<EditDraftApprentic
 
     public async Task<UpdateDraftApprenticeshipApimRequest> Map(EditDraftApprenticeshipViewModel source)
     {
+        DateTime? startDate = source.StartDate?.Date;
+
+        if (source.IsContinuation && source.OriginalStartDate.HasValue)
+        {
+            startDate = source.OriginalStartDate.Value;
+        }
+
         var draftApprenticeship = await _commitmentsApiClient.GetDraftApprenticeship(source.CohortId.Value, source.DraftApprenticeshipId);
 
         return new UpdateDraftApprenticeshipApimRequest
@@ -35,7 +41,7 @@ public class UpdateDraftApprenticeshipRequestMapper : IMapper<EditDraftApprentic
             CourseOption = draftApprenticeship.TrainingCourseOption,
             Cost = source.Cost,
             EmploymentPrice = source.EmploymentPrice,
-            StartDate = source.StartDate.Date,
+            StartDate = startDate,
             EndDate = (source.IsOnFlexiPaymentPilot ?? false) ? source.ActualEndDate : source.EndDate.Date,
             EmploymentEndDate = source.EmploymentEndDate.Date,
             Reference = source.Reference,

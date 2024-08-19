@@ -131,7 +131,8 @@ public class BaseDraftApprenticeshipViewModel
     // If you remove these two properties it will break the routing of some actions
     public string AccountHashedId { get; set; }
     public string DraftApprenticeshipHashedId { get; set; }
-    public bool IsContinuation { get; set; }     
+    public bool IsContinuation { get; set; }
+    public DateTime? OriginalStartDate { get; set; }
     public string AccountLegalEntityHashedId { get; set; }
     public bool? HasMultipleDeliveryModelOptions { get; set; }
     public bool? IsOnFlexiPaymentPilot { get; set; }

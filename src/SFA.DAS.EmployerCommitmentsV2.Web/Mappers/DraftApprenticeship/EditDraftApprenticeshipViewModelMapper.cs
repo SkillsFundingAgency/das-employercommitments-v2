@@ -61,6 +61,7 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
             ProviderName = cohort.ProviderName,
             LegalEntityName = source.Cohort.LegalEntityName,
             IsContinuation = draftApprenticeship.IsContinuation,
+            OriginalStartDate = draftApprenticeship.OriginalStartDate,
             Courses = courses,
             AccountLegalEntityId = cohort.AccountLegalEntityId,
             AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
