@@ -2,7 +2,6 @@
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
@@ -54,14 +53,14 @@ public class EditDraftApprenticeshipViewModelMapperTests
         _draftApprenticeshipResponse = autoFixture.Create<GetEditDraftApprenticeshipResponse>();
         _draftApprenticeshipResponse.IsContinuation = false;
         _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            
+
         _commitmentsApiClient
             .Setup(x => x.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse
             {
                 TrainingProgrammes = _standardTrainingProgrammes
             });
-            
+
         _commitmentsApiClient
             .Setup(x => x.GetAllTrainingProgrammes(It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetAllTrainingProgrammesResponse
@@ -269,6 +268,12 @@ public class EditDraftApprenticeshipViewModelMapperTests
         _draftApprenticeshipResponse.IsContinuation = isContinuation;
         _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
         Assert.That(_result.IsContinuation, Is.EqualTo(_draftApprenticeshipResponse.IsContinuation));
+    }
+
+    [Test]
+    public void OriginalStartDateIsMappedCorrectly()
+    {
+        Assert.That(_result.OriginalStartDate, Is.EqualTo(_draftApprenticeshipResponse.OriginalStartDate));
     }
 
     [Test]

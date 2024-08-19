@@ -3,7 +3,6 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
@@ -119,10 +118,22 @@ public class WhenIMapDraftApprenticeshipToUpdateRequest
     }
 
     [Test]
-    public async Task ThenStartDateIsMappedCorrectly()
+    public async Task ThenStartDateIsMappedCorrectlyIfNotContinuation()
     {
+        _source.IsContinuation = false;
         var result = await _act();
         Assert.That(result.StartDate, Is.EqualTo(_source.StartDate.Date));
+    }
+
+    [Test]
+    public async Task ThenStartDateIsMappedCorrectlyIfIsContinuation()
+    {
+        var originalStartDate = new DateTime(2020, 01, 01);
+        _source.IsContinuation = true;
+        _source.OriginalStartDate = originalStartDate;
+
+        var result = await _act();
+        Assert.That(result.StartDate, Is.EqualTo(originalStartDate));
     }
 
     [Test]
@@ -169,7 +180,7 @@ public class WhenIMapDraftApprenticeshipToUpdateRequest
         var result = await _act();
         Assert.That(result.ActualStartDate, Is.EqualTo(_source.ActualStartDate));
     }
-    
+
     [Test]
     public async Task ThenRequestingPartyIsNotMissing()
     {
