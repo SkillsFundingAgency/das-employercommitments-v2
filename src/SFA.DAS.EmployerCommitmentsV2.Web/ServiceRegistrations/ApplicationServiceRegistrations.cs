@@ -33,6 +33,7 @@ public static class ApplicationServiceRegistrations
         services.AddSingleton<ICurrentDateTime, CurrentDateTime>();
         services.AddSingleton<ICreateCsvService, CreateCsvService>();
         services.AddSingleton<IAcademicYearDateProvider, AcademicYearDateProvider>();
+        services.AddSingleton<IReservationsService, ReservationsService>();
         
         return services;
     }

@@ -105,4 +105,10 @@ public class ApprovalsApiClient : IApprovalsApiClient
     {
         return _client.Get<GetSelectProviderDetailsResponse>($"{accountId}/unapproved/add/select-provider?accountLegalEntityId={accountLegalEntityId}");
     }
+
+    public Task<GetAccountReservationsStatusResponse> GetAccountReservationsStatus(long accountId, long? transferSenderId,
+        CancellationToken cancellationToken = default)
+    {
+        return _client.Get<GetAccountReservationsStatusResponse>($"reservations/accounts/{accountId}/status?transferSenderId={transferSenderId}");
+    }
 }

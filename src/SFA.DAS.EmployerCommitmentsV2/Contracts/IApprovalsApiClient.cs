@@ -23,4 +23,5 @@ public interface IApprovalsApiClient
     Task<GetLegalEntitiesForAccountResponse> GetLegalEntitiesForAccount(string cohortId, long accountId);
     Task<GetAccountLegalEntityResponse> GetAccountLegalEntity(long accountLegalEntityId, CancellationToken cancellationToken = default);
     Task<GetSelectProviderDetailsResponse> GetSelectProviderDetails(long accountId, long accountLegalEntityId, CancellationToken cancellationToken = default);
+    Task<GetAccountReservationsStatusResponse> GetAccountReservationsStatus(long accountId, long? transferSenderId, CancellationToken cancellationToken = default);
 }

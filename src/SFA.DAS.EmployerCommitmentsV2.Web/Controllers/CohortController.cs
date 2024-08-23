@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
@@ -228,13 +229,24 @@ public class CohortController : Controller
 
     [Route("add/assign")]
     [HttpPost]
-    public async Task<IActionResult> Assign(AssignViewModel model)
+    public async Task<IActionResult> Assign(AssignViewModel model, [FromServices] IReservationsService reservationsService)
     {
+
         if (!model.ReservationId.HasValue && model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
         {
-            var url = _linkGenerator.ReservationsLink(
-                $"accounts/{model.AccountHashedId}/reservations/{model.AccountLegalEntityHashedId}/select?providerId={model.ProviderId}&transferSenderId={model.TransferSenderId}&encodedPledgeApplicationId={model.EncodedPledgeApplicationId}");
-            return Redirect(url);
+            var accountReservationStatus = await reservationsService.GetAccountReservationsStatus(model.AccountId, model.DecodedTransferSenderId);
+
+            if (accountReservationStatus.UnallocatedPendingReservations > 0 || accountReservationStatus.CanAutoCreateReservations)
+            {
+                var url = _linkGenerator.ReservationsLink(
+                    $"accounts/{model.AccountHashedId}/reservations/{model.AccountLegalEntityHashedId}/select?providerId={model.ProviderId}&transferSenderId={model.TransferSenderId}&encodedPledgeApplicationId={model.EncodedPledgeApplicationId}");
+                return Redirect(url);
+            }
+            
+            if (accountReservationStatus.HasReachedReservationsLimit)
+            {
+                Redirect("All reservations Used Page");
+            }
         }
 
         if (model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
