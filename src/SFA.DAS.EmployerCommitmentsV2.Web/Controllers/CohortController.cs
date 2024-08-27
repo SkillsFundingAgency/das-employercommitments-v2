@@ -248,7 +248,7 @@ public class CohortController : Controller
             
             if (accountReservationStatus.HasReachedReservationsLimit)
             {
-                RedirectToAction("ReservationLimitReached", model.AccountHashedId);
+                return RedirectToAction("ReservationLimitReached", "Cohort",new { model.AccountHashedId });
             }
         }
 
