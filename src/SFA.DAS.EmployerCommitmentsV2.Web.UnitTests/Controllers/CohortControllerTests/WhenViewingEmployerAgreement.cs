@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
@@ -43,7 +44,8 @@ public class WhenViewingEmployerAgreement
             _linkGenerator.Object,
             _modelMapper.Object,
             Mock.Of<IEncodingService>(),
-            Mock.Of<IApprovalsApiClient>());
+            Mock.Of<IApprovalsApiClient>(), 
+            Mock.Of<IReservationsService>());
 
         _controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
     }

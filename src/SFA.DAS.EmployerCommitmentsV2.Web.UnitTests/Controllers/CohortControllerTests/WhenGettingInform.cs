@@ -6,6 +6,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests;
 
@@ -33,7 +34,8 @@ public class WhenGettingInform
             Mock.Of<ILinkGenerator>(),
             _modelMapper.Object,
             Mock.Of<IEncodingService>(),
-            Mock.Of<IApprovalsApiClient>());
+            Mock.Of<IApprovalsApiClient>(),
+            Mock.Of<IReservationsService>());
     }
 
     [TearDown]

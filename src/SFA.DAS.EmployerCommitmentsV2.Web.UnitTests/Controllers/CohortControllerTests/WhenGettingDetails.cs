@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -68,7 +69,8 @@ public class WhenGettingDetails
                 Mock.Of<ILinkGenerator>(),
                 modelMapper.Object,
                 Mock.Of<IEncodingService>(),
-                Mock.Of<IApprovalsApiClient>());
+                Mock.Of<IApprovalsApiClient>(), 
+                Mock.Of<IReservationsService>());
             CohortController.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
 
         }

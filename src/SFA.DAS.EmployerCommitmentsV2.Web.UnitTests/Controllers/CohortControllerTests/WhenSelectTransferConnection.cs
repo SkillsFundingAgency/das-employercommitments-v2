@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -35,7 +36,8 @@ public class WhenSelectTransferConnection
             _linkGenerator.Object,
             _modelMapper.Object,
             Mock.Of<IEncodingService>(),
-            Mock.Of<IApprovalsApiClient>());
+            Mock.Of<IApprovalsApiClient>(), 
+            Mock.Of<IReservationsService>());
     }
       
     [TearDown]

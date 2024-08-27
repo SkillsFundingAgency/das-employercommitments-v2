@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -46,7 +47,8 @@ public class WhenPostingAddDraftApprenticeshipOrRoute
             Mock.Of<ILinkGenerator>(),
             mockMapper.Object,
             Mock.Of<IEncodingService>(),
-            approvalsApiClient.Object);
+            approvalsApiClient.Object,
+            Mock.Of<IReservationsService>());
 
         var result = await controller.AddDraftApprenticeshipOrRoute("", "", viewModel) as RedirectToActionResult;
 

@@ -26,13 +26,16 @@ public class CohortController : Controller
     private readonly IModelMapper _modelMapper;
     private readonly IEncodingService _encodingService;
     private readonly IApprovalsApiClient _approvalsApiClient;
+    private readonly IReservationsService _reservationsService;
 
     public CohortController(
         ICommitmentsApiClient commitmentsApiClient,
         ILogger<CohortController> logger,
         ILinkGenerator linkGenerator,
         IModelMapper modelMapper,
-        IEncodingService encodingService, IApprovalsApiClient approvalsApiClient)
+        IEncodingService encodingService, 
+        IApprovalsApiClient approvalsApiClient,
+        IReservationsService reservationsService)
     {
         _commitmentsApiClient = commitmentsApiClient;
         _logger = logger;
@@ -40,6 +43,7 @@ public class CohortController : Controller
         _modelMapper = modelMapper;
         _encodingService = encodingService;
         _approvalsApiClient = approvalsApiClient;
+        _reservationsService = reservationsService;
     }
 
     [Route("{cohortReference}")]
@@ -229,11 +233,11 @@ public class CohortController : Controller
 
     [Route("add/assign")]
     [HttpPost]
-    public async Task<IActionResult> Assign(AssignViewModel model, [FromServices] IReservationsService reservationsService)
+    public async Task<IActionResult> Assign(AssignViewModel model)
     {
         if (!model.ReservationId.HasValue && model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
         {
-            var accountReservationStatus = await reservationsService.GetAccountReservationsStatus(model.AccountId, model.DecodedTransferSenderId);
+            var accountReservationStatus = await _reservationsService.GetAccountReservationsStatus(model.AccountId, model.DecodedTransferSenderId);
 
             if (accountReservationStatus.UnallocatedPendingReservations > 0 || accountReservationStatus.CanAutoCreateReservations)
             {
