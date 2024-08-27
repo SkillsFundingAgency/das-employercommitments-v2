@@ -231,7 +231,6 @@ public class CohortController : Controller
     [HttpPost]
     public async Task<IActionResult> Assign(AssignViewModel model, [FromServices] IReservationsService reservationsService)
     {
-
         if (!model.ReservationId.HasValue && model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
         {
             var accountReservationStatus = await reservationsService.GetAccountReservationsStatus(model.AccountId, model.DecodedTransferSenderId);
@@ -245,7 +244,7 @@ public class CohortController : Controller
             
             if (accountReservationStatus.HasReachedReservationsLimit)
             {
-                Redirect("All reservations Used Page");
+                RedirectToAction("ReservationLimitReached", model.AccountHashedId);
             }
         }
 
@@ -277,6 +276,13 @@ public class CohortController : Controller
             default:
                 return RedirectToAction("Error", "Error");
         }
+    }
+
+    [HttpGet]
+    [Route("add/reservation-limit-reached")]
+    public IActionResult ReservationLimitReached(string accountHashedId)
+    {
+        return View("ReservationLimitReached", accountHashedId);
     }
 
     private static Origin DetermineOrigin(AssignViewModel source)

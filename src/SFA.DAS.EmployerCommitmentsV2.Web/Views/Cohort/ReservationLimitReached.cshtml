@@ -1,0 +1,25 @@
+﻿@model string
+
+@{
+    ViewData["Title"] = "Reservation limit reached";
+    ViewBag.GaData.Vpv = "/apprentices/add/reservation-limit-reached";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">You cannot create another funding reservation</h1>
+
+        <p class="govuk-body">You've reached the maximum funding reservations you can make.</p>
+        <p class="govuk-body">You can delete any draft apprentices using a reservation in 
+            @Html.ActionLink("Apprentice requests", "Review", "Cohort", new
+            {
+                AccountHashedId = Model
+            }, new { @class = "govuk-link", id = "apprentice-requests-link" })
+            .</p>
+    </div>
+</div>
+
+@section Back
+{
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new { AccountHashedId = Model})">Back</a>
+}
