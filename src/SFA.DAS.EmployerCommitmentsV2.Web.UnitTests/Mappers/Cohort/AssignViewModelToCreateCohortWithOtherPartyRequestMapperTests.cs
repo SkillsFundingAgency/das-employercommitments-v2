@@ -58,6 +58,6 @@ public class AssignViewModelToCreateCohortWithOtherPartyRequestMapperTests
     [Test]
     public void ThenPledgeApplicationIdIsMappedCorrectly()
     {
-        _result.PledgeApplicationId.Should().Be(_source.PledgeApplicationId);
+        _result.PledgeApplicationId.Should().Be((int?)_source.PledgeApplicationId);
     }
 }

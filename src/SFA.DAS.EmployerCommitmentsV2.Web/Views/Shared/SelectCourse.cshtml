@@ -8,24 +8,47 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
-        <h1 class="govuk-heading-xl">Select standard</h1>
+        <h1 class="govuk-heading-l">What is the apprenticeship course?</h1>
         <input type="hidden" asp-for="AccountHashedId" />
         <input type="hidden" asp-for="CohortReference" />
         <input type="hidden" asp-for="DraftApprenticeshipHashedId" />
 
-        <form id="addApprenticeship" novalidate method="post">
+        <form id="addApprenticeship" method="post">
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">
-                <label asp-for="CourseCode" class="govuk-label govuk-!-font-weight-bold">Apprenticeship training course</label>
-                <span id="course-name-hint" class="govuk-hint">Start typing the name of the course or choose an option from the list </span>
-                @Html.ValidationMessageFor(m => m.CourseCode, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.CourseCode) })
-                <select class="govuk-select govuk-!-width-three-quarters" asp-for="CourseCode" asp-items="@(new SelectList(Model.Courses, "CourseCode", "Name"))" aria-describedby="course-name-hint">
-                    <option value="">Please select an option</option>
-                </select>
+                <fieldset class="govuk-fieldset">
+
+                    <span id="course-name-hint" class="govuk-hint">Start typing the name of the course and select from the suggestions</span>
+
+                    @Html.ValidationMessageFor(m => m.CourseCode, null, new
+                        {
+                            @class = "govuk-error-message",
+                            id =
+                             "error-message-" + Html.IdFor(m => m.CourseCode)
+                        })
+                    <select title="Select apprenticeship course" id="CourseCode" name="CourseCode" asp-for="CourseCode"
+                            class="govuk-select das-autocomplete-search @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-select--error")">
+                        <option class="das-js-hide" value="">Select apprenticeship course</option>
+                        @foreach (var course in Model.Courses)
+                        {
+                            <option value="@course.CourseCode"> @course.Name</option>
+                        }
+                    </select>
+
+                </fieldset>
             </div>
 
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        Help with the apprenticeship training course
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p>If you don't know which apprenticeship training course is suitable for your apprentice, you can search <a href="https://www.gov.uk/employers-find-apprenticeship-training" target="_blank" title="Opens in a new window" rel="noreferrer noopener" id="fat-link" class="govuk-link">Find apprenticeship training</a> or speak to your training provider.</p>
+                </div>
+            </details>
             <button type="submit" id="continue-button" class="govuk-button">Continue</button>
-
-        </form>
+        </form>    
     </div>
 </div>
 
