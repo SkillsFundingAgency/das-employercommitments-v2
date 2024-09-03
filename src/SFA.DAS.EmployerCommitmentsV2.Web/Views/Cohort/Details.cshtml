@@ -39,7 +39,8 @@
             </div>
         }
 
-        @if ((!Model.IsAgreementSigned || !Model.IsCompleteForEmployer || Model.HasOverlappingUln || Model.HasEmailOverlaps) && !Model.ShowRofjaaRemovalBanner)
+        @if ((!Model.IsAgreementSigned || !Model.IsCompleteForEmployer || Model.HasOverlappingUln ||
+        Model.HasEmailOverlaps) && !Model.ShowRofjaaRemovalBanner)
         {
             <div class="govuk-notification-banner">
                 <div class="govuk-notification-banner__header">
@@ -54,7 +55,9 @@
                     <ul>
                         @if (!Model.IsAgreementSigned)
                         {
-                            <li>you have accepted your <a href="@Url.Action("ViewAgreement", "Cohort", new {Model.AccountHashedId})" class="govuk-link">employer agreement</a></li>
+                            <li>you have accepted your <a
+                                    href="@Url.Action("ViewAgreement", "Cohort", new {Model.AccountHashedId})"
+                                    class="govuk-link">employer agreement</a></li>
                         }
                         @if (Model.HasOverlappingUln)
                         {
@@ -134,7 +137,7 @@
                     <div class="govuk-inset-text das-inset-text--highlight">
                         <h3 class="govuk-heading-s">Apprentice record incomplete</h3>
                         <p>
-                            You must complete the apprentice record to be able to approve
+                            You must complete the apprentice record to be able to approve.
                         </p>
                     </div>
                     course.ErrorIsCompletedDisplayed = true;
@@ -145,7 +148,9 @@
                         <h3 class="govuk-heading-s">@course.FundingBandExcess.FundingBandCapExcessHeader</h3>
                         <p>
                             @course.FundingBandExcess.FundingBandCapExcessLabel
-                            <text><a target="_blank" href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band maximum</a>@course.FundingBandExcess.DisplaySingleFundingBandCap</text>
+                            <text><a target="_blank"
+                                    href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">funding band
+                                    maximum</a>@course.FundingBandExcess.DisplaySingleFundingBandCap</text>
                             You'll need to pay the difference directly to the training provider.
                         </p>
                     </div>
@@ -158,9 +163,12 @@
                         <th scope="col" class="govuk-table__header">Name</th>
                         <th scope="col" class="govuk-table__header">Date of birth</th>
                         <th scope="col" class="govuk-table__header">Training dates</th>
-                        <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Employment end date</th>
-                        <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Training price for this employment</th>
-                        <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Total training price</th>
+                        <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Employment end
+                            date</th>
+                        <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Training price for
+                            this employment</th>
+                        <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Total training
+                            price</th>
                         <th scope="col" class="govuk-table__header">Price</th>
                         <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Action</span></th>
                     </tr>
@@ -180,7 +188,8 @@
                                     <span class="das-breakable">@draftApprenticeship.DisplayName</span>
                                 }
                             </td>
-                            <td class="govuk-table__cell" data-label="Date of birth">@draftApprenticeship.DisplayDateOfBirth</td>
+                            <td class="govuk-table__cell" data-label="Date of birth">@draftApprenticeship.DisplayDateOfBirth
+                            </td>
                             <td class="govuk-table__cell" data-label="Training dates">
                                 @if (draftApprenticeship.HasOverlappingUln)
                                 {
@@ -193,10 +202,12 @@
                                     @draftApprenticeship.DisplayTrainingDates
                                 }
                             </td>
-                            <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell" data-label="Employment end date">
+                            <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell"
+                                data-label="Employment end date">
                                 @draftApprenticeship.DisplayEmploymentDates
                             </td>
-                            <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell" data-label="Training price for this employment">
+                            <td asp-show="@course.IsPortableFlexiJob" class="govuk-table__cell"
+                                data-label="Training price for this employment">
                                 @draftApprenticeship.DisplayEmploymentPrice
                             </td>
                             <td class="govuk-table__cell" data-label="Price">
@@ -212,14 +223,16 @@
                                 }
                             </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <a class="govuk-link edit-apprentice" href="@Url.RouteUrl("Details", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">
+                                <a class="govuk-link edit-apprentice"
+                                    href="@Url.RouteUrl("Details", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">
                                     @(Model.IsReadOnly ? "View" : "Edit")
                                     <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
                                 </a>
-                                <br/><br/>
+                                <br /><br />
                                 @if (!Model.IsReadOnly)
                                 {
-                                    <a class="govuk-link delete-apprentice" href="@Url.RouteUrl("DeleteDraftApprenticeship", new { draftApprenticeship.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = DeleteDraftApprenticeshipOrigin.CohortDetails })">
+                                    <a class="govuk-link delete-apprentice"
+                                        href="@Url.RouteUrl("DeleteDraftApprenticeship", new { draftApprenticeship.DraftApprenticeshipHashedId, Model.CohortReference, Model.AccountHashedId, Origin = DeleteDraftApprenticeshipOrigin.CohortDetails })">
                                         Delete <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
                                     </a>
                                 }
@@ -233,8 +246,10 @@
         <table class="govuk-table">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header das-table-cell-width-80" scope="row">Total apprenticeship training price <br>(excluding VAT)</th>
-                    <td class="govuk-table__cell govuk-table__header--numeric das-table-cell-width-10"><strong>@Model.DisplayTotalCost</strong></td>
+                    <th class="govuk-table__header das-table-cell-width-80" scope="row">Total apprenticeship training
+                        price <br>(excluding VAT)</th>
+                    <td class="govuk-table__cell govuk-table__header--numeric das-table-cell-width-10">
+                        <strong>@Model.DisplayTotalCost</strong></td>
                     <td class="govuk-table__cell das-table-cell-width-10" aria-hidden="true"></td>
                 </tr>
             </tbody>
@@ -245,9 +260,12 @@
             <p>
                 @if (Model.ShowAddAnotherApprenticeOption)
                 {
-                    <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}&encodedPledgeApplicationId={Model.EncodedPledgeApplicationId}")" class="govuk-link add-apprentice">Add another apprentice</a>
+                    <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}&encodedPledgeApplicationId={Model.EncodedPledgeApplicationId}")"
+                        class="govuk-link add-apprentice">Add another apprentice</a>
                 }
-                <a asp-action="ConfirmDelete" asp-route-AccountHashedId="@Model.AccountHashedId" asp-route-CohortReference="@Model.CohortReference" class="govuk-link das-float-right">Delete this group</a>
+                <a asp-action="ConfirmDelete" asp-route-AccountHashedId="@Model.AccountHashedId"
+                    asp-route-CohortReference="@Model.CohortReference" class="govuk-link das-float-right">Delete this
+                    group</a>
             </p>
 
             <hr class="govuk-section-break govuk-section-break--l">
@@ -259,13 +277,20 @@
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                             <h3 class="govuk-fieldset__heading">@Model.OptionsTitle</h3>
                         </legend>
-                        @Html.ValidationMessageFor(m => m.Selection, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Selection) })
+                        @Html.ValidationMessageFor(m => m.Selection, null, new
+                            {
+                                @class = "govuk-error-message",
+                                id =
+                                 "error-message-" + Html.IdFor(m => m.Selection)
+                            })
                         <div class="govuk-radios govuk-radios--conditional" data-module="radios">
 
                             @if (Model.ShowViewAgreementOption)
                             {
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="radio-view" name="selection" type="radio" value="@CohortDetailsOptions.ViewEmployerAgreement" data-aria-controls="conditional-view">
+                                    <input class="govuk-radios__input" id="radio-view" name="selection" type="radio"
+                                        value="@CohortDetailsOptions.ViewEmployerAgreement"
+                                        data-aria-controls="conditional-view">
                                     <label class="govuk-label govuk-radios__label" for="radio-view">
                                         View employer agreement
                                     </label>
@@ -275,7 +300,8 @@
                             @if (Model.EmployerCanApprove)
                             {
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio" value="@CohortDetailsOptions.Approve" data-aria-controls="conditional-approve">
+                                    <input class="govuk-radios__input" id="radio-approve" name="selection" type="radio"
+                                        value="@CohortDetailsOptions.Approve" data-aria-controls="conditional-approve">
                                     <label class="govuk-label govuk-radios__label" for="radio-approve">
                                         Yes, approve and notify training provider
                                     </label>
@@ -283,17 +309,20 @@
                             }
                             @if (Model.ShowApprovalOptionMessage)
                             {
-                                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-approve">
+                                <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                                    id="conditional-approve">
                                     <div class="govuk-form-group">
                                         <label class="govuk-label" for="approve-details">
                                             Leave @Model.ProviderName a message (optional)
                                         </label>
-                                        <textarea class="govuk-textarea" id="approve-details" name="approvemessage" rows="5"></textarea>
+                                        <textarea class="govuk-textarea" id="approve-details" name="approvemessage"
+                                            rows="5"></textarea>
                                     </div>
                                 </div>
                             }
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="radio-send" name="selection" type="radio" value="@CohortDetailsOptions.Send" data-aria-controls="conditional-send">
+                                <input class="govuk-radios__input" id="radio-send" name="selection" type="radio"
+                                    value="@CohortDetailsOptions.Send" data-aria-controls="conditional-send">
                                 <label class="govuk-label govuk-radios__label" for="radio-send">
                                     @Model.SendBackToProviderOptionMessage
                                 </label>
@@ -303,14 +332,16 @@
                                     <label class="govuk-label" for="send-details">
                                         Leave @Model.ProviderName a message (optional)
                                     </label>
-                                    <textarea class="govuk-textarea" id="send-details" name="sendmessage" rows="5"></textarea>
+                                    <textarea class="govuk-textarea" id="send-details" name="sendmessage"
+                                        rows="5"></textarea>
                                 </div>
                             </div>
 
                             @if (Model.ShowGotoHomePageOption)
                             {
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="radio-home" name="selection" type="radio" value="@CohortDetailsOptions.Homepage">
+                                    <input class="govuk-radios__input" id="radio-home" name="selection" type="radio"
+                                        value="@CohortDetailsOptions.Homepage">
                                     <label class="govuk-label govuk-radios__label" for="radio-home">
                                         Go to homepage
                                     </label>
@@ -334,6 +365,6 @@
 </div>
 
 @section Back
-    {
+{
     <div class="das-js-back-link"></div>
 }
