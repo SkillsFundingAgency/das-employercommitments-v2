@@ -2,7 +2,7 @@
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 
 @{
-    ViewData["Title"] = "Apprenticeships";
+    ViewData["Title"] = "Delete the apprentice @Model.FullName?";
     var backButtonUrl = (Model.Origin == DeleteDraftApprenticeshipOrigin.CohortDetails)
     ? Url.Action("Details", "Cohort", new { Model.AccountHashedId, Model.CohortReference })
     : Url.Action("Details", new { Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId });

@@ -73,7 +73,8 @@
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link"
                             href="@Url.RouteUrl(RouteNames.EnterNewTrainingProvider, queryData)"
-                            id="change-training-provider-link"> Change </a> </td>
+                            id="change-training-provider-link"> Change<span class="govuk-visually-hidden"> Training
+                                provider</span> </a> </td>
                 </tr>
 
                 <tr class="govuk-table__row" id="start-date-table-row">
@@ -83,7 +84,8 @@
                              ViewChangesCell<DateTime?>(Model.CurrentStartDate, Model.NewStartDate))
                     <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link"
                             href="@Url.RouteUrl(RouteNames.WhatIsTheNewStartDate, queryData)"
-                            id="change-start-date-link"> Change </a> </td>
+                            id="change-start-date-link"> Change<span class="govuk-visually-hidden"> Training start
+                                date</span> </a> </td>
                 </tr>
 
                 <tr class="govuk-table__row" id="end-date-table-row">
@@ -93,7 +95,7 @@
                              ViewChangesCell<DateTime?>(Model.CurrentEndDate, Model.NewEndDate))
                     <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link"
                             href="@Url.RouteUrl(RouteNames.WhatIsTheNewEndDate, queryData)" id="change-end-date-link">
-                            Change </a> </td>
+                            Change<span class="govuk-visually-hidden"> Training end date</span> </a> </td>
                 </tr>
 
                 <tr class="govuk-table__row" id="price-table-row">
@@ -102,7 +104,8 @@
                     @await Html.PartialAsync("_ViewChangesPriceCell", new ViewChangesCell<int?>(Model.CurrentPrice,
                              Model.NewPrice))
                     <td class="govuk-table__cell govuk-table__cell--numeric"> <a class="govuk-link"
-                            href="@Url.RouteUrl(RouteNames.WhatIsTheNewPrice, queryData)" id="change-price-link"> Change
+                            href="@Url.RouteUrl(RouteNames.WhatIsTheNewPrice, queryData)" id="change-price-link">
+                            Change<span class="govuk-visually-hidden"> Price</span>
                         </a> </td>
                 </tr>
             </tbody>
