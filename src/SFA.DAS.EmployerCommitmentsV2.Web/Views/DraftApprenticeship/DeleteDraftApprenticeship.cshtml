@@ -17,8 +17,6 @@
     <div class="govuk-grid-column-two-thirds">
 
         <partial name="_ValidationSummary" />
-
-        <h1 class="govuk-heading-xl">Delete the apprentice @Model.FullName?</h1>
         <form method="post">
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.AccountHashedId)
@@ -28,6 +26,11 @@
 
             <div class="govuk-form-group @(ViewContext.ModelState.IsValid ? "" : "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                        <h1 class="govuk-fieldset__heading">
+                            Delete the apprentice @Model.FullName?
+                        </h1>
+                    </legend>
                     @if (Model.IsLastApprenticeshipInCohort)
                     {
                         <div class="govuk-warning-text">
