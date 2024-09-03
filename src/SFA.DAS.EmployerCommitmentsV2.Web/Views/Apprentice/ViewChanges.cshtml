@@ -4,7 +4,8 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ViewChangesViewModel
 @{
     ViewData["Title"] = "View changes - Apprenticeship service - GOV.UK";
-    var apprenticeDisplayName = Model.ApprenticeName.EndsWith("s") ? Model.ApprenticeName + "'" : Model.ApprenticeName + "'s";
+    var apprenticeDisplayName = Model.ApprenticeName.EndsWith("s") ? Model.ApprenticeName + "'" : Model.ApprenticeName +
+    "'s";
 }
 
 <div class="govuk-grid-row">
@@ -15,14 +16,19 @@
         @if (Model.CurrentParty == Party.Employer)
         {
             <p class="govuk-body">
-                @Model.NewProviderName requested further changes. <a class="govuk-link" asp-controller="Cohort" asp-action="Details" asp-route-accountHashedId="@Model.AccountHashedId" asp-route-cohortReference="@Model.CohortReference" id="review-requested-changes-link">Review the apprentice details to update</a>.
+                @Model.NewProviderName requested further changes. <a class="govuk-link" asp-controller="Cohort"
+                    asp-action="Details" asp-route-accountHashedId="@Model.AccountHashedId"
+                    asp-route-cohortReference="@Model.CohortReference" id="review-requested-changes-link">Review the
+                    apprentice details to update</a>.
             </p>
         }
 
         @if (Model.CurrentParty == Party.Provider)
         {
             <p class="govuk-body">
-                @Model.NewProviderName are <a class="govuk-link" asp-controller="Cohort" asp-action="Details" asp-route-accountHashedId="@Model.AccountHashedId" asp-route-cohortReference="@Model.CohortReference" id="review-cohort-link">reviewing the request</a>.
+                @Model.NewProviderName are <a class="govuk-link" asp-controller="Cohort" asp-action="Details"
+                    asp-route-accountHashedId="@Model.AccountHashedId" asp-route-cohortReference="@Model.CohortReference"
+                    id="review-cohort-link">reviewing the request</a>.
             </p>
         }
 
@@ -34,7 +40,7 @@
 
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-            <th class="govuk-table__header"></th>
+            <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Field</span></th>
             <th scope="col" class="govuk-table__header "> Current details</th>
             <th scope="col" class="govuk-table__header "> Requested changes</th>
         </tr>
@@ -48,22 +54,27 @@
         <tr class="govuk-table__row">
             <th scope="row" class="govuk-table__header"> Training start date</th>
             <td class="govuk-table__cell"> @Model.CurrentStartDate.ToString("MMMM yyyy")</td>
-            @await Html.PartialAsync("_ViewChangesDateCell", new ViewChangesCell<DateTime?>(Model.CurrentStartDate, Model.NewStartDate))
+            @await Html.PartialAsync("_ViewChangesDateCell", new ViewChangesCell<DateTime?>(Model.CurrentStartDate,
+                     Model.NewStartDate))
 
         </tr>
         <tr class="govuk-table__row">
             <th scope="row" class="govuk-table__header"> Training end date</th>
             <td class="govuk-table__cell"> @Model.CurrentEndDate.ToString("MMMM yyyy")</td>
-            @await Html.PartialAsync("_ViewChangesDateCell", new ViewChangesCell<DateTime?>(Model.CurrentEndDate, Model.NewEndDate))
+            @await Html.PartialAsync("_ViewChangesDateCell", new ViewChangesCell<DateTime?>(Model.CurrentEndDate,
+                     Model.NewEndDate))
         </tr>
         <tr class="govuk-table__row">
             <th scope="row" class="govuk-table__header"> Price </th>
             <td class="govuk-table__cell"> @Model.CurrentPrice.ToGdsCostFormat() </td>
-            @await Html.PartialAsync("_ViewChangesPriceCell", new ViewChangesCell<int?>(Model.CurrentPrice, Model.NewPrice))
+            @await Html.PartialAsync("_ViewChangesPriceCell", new ViewChangesCell<int?>(Model.CurrentPrice,
+                     Model.NewPrice))
         </tr>
     </tbody>
 </table>
 
 @section back {
-    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">Back to apprentice's record</a>
+    <a id="back-link" class="govuk-back-link"
+        href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">Back
+        to apprentice's record</a>
 }
