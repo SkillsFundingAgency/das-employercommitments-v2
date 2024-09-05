@@ -1,14 +1,12 @@
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Newtonsoft.Json;
-using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.GovUK.Auth.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 
 public class EmployerAccountPostAuthenticationClaimsHandler(
-    IUserAccountService userAccountService, 
-    EmployerCommitmentsV2Configuration employerAccountsConfiguration) : ICustomClaims
+    IUserAccountService userAccountService) : ICustomClaims
 {
     // To allow unit testing
     public int MaxPermittedNumberOfAccountsOnClaim { get; set; } = WebConstants.MaxNumberOfEmployerAccountsAllowedOnClaim;
@@ -17,31 +15,14 @@ public class EmployerAccountPostAuthenticationClaimsHandler(
     {
         var claims = new List<Claim>();
 
-        string userId;
-        string email;
+        var userId = tokenValidatedContext.Principal.Claims
+            .First(c => c.Type.Equals(ClaimTypes.NameIdentifier))
+            .Value;
+        var email = tokenValidatedContext.Principal.Claims
+            .First(c => c.Type.Equals(ClaimTypes.Email))
+            .Value;
+        claims.Add(new Claim(EmployeeClaims.IdamsUserEmailClaimTypeIdentifier, email));
 
-        if (employerAccountsConfiguration.UseGovSignIn)
-        {
-            userId = tokenValidatedContext.Principal.Claims
-                .First(c => c.Type.Equals(ClaimTypes.NameIdentifier))
-                .Value;
-            email = tokenValidatedContext.Principal.Claims
-                .First(c => c.Type.Equals(ClaimTypes.Email))
-                .Value;
-            claims.Add(new Claim(EmployeeClaims.IdamsUserEmailClaimTypeIdentifier, email));
-        }
-        else
-        {
-            userId = tokenValidatedContext.Principal.Claims
-                .First(c => c.Type.Equals(EmployeeClaims.IdamsUserIdClaimTypeIdentifier))
-                .Value;
-
-            email = tokenValidatedContext.Principal.Claims
-                .First(c => c.Type.Equals(EmployeeClaims.IdamsUserEmailClaimTypeIdentifier)).Value;
-
-            claims.AddRange(tokenValidatedContext.Principal.Claims);
-            claims.Add(new Claim(EmployeeClaims.IdamsUserIdClaimTypeIdentifier, userId));
-        }
 
         var result = await userAccountService.GetUserAccounts(userId, email);
 
@@ -53,11 +34,6 @@ public class EmployerAccountPostAuthenticationClaimsHandler(
             claims.Add(associatedAccountsClaim);    
         }
         
-        if (!employerAccountsConfiguration.UseGovSignIn)
-        {
-            return claims;
-        }
-
         if (result.IsSuspended)
         {
             claims.Add(new Claim(ClaimTypes.AuthorizationDecision, "Suspended"));

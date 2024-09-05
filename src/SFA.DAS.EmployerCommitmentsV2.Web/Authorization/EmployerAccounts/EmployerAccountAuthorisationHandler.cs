@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerCommitmentsV2.Authorization;
-using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
 using SFA.DAS.EmployerCommitmentsV2.Models.UserAccounts;
@@ -17,7 +16,6 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IUserAccountService _accountsService;
     private readonly ILogger<EmployerAccountAuthorisationHandler> _logger;
-    private readonly EmployerCommitmentsV2Configuration _configuration;
     
     // To allow unit testing
     public int MaxPermittedNumberOfAccountsOnClaim { get; set; } = WebConstants.MaxNumberOfEmployerAccountsAllowedOnClaim;
@@ -25,14 +23,11 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
     public EmployerAccountAuthorisationHandler(
         IHttpContextAccessor httpContextAccessor,
         IUserAccountService accountsService,
-        ILogger<EmployerAccountAuthorisationHandler> logger,
-        EmployerCommitmentsV2Configuration configuration)
+        ILogger<EmployerAccountAuthorisationHandler> logger)
     {
         _httpContextAccessor = httpContextAccessor;
         _accountsService = accountsService;
         _logger = logger;
-        _configuration = configuration;
-        _configuration = configuration;
     }
     
     public async Task<bool> IsEmployerAuthorised(AuthorizationHandlerContext context, EmployerUserRole minimumAllowedRole)
@@ -71,17 +66,13 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
 
         if (employerAccounts == null || !employerAccounts.ContainsKey(accountIdFromUrl))
         {
-            var requiredIdClaim = _configuration.UseGovSignIn
-                ? ClaimTypes.NameIdentifier
-                : EmployeeClaims.IdamsUserIdClaimTypeIdentifier;
-
-            if (!context.User.HasClaim(c => c.Type.Equals(requiredIdClaim)))
+            if (!context.User.HasClaim(c => c.Type.Equals(ClaimTypes.NameIdentifier)))
             {
                 return false;
             }
 
             var userClaim = context.User.Claims
-                .First(c => c.Type.Equals(requiredIdClaim));
+                .First(c => c.Type.Equals(ClaimTypes.NameIdentifier));
 
             var email = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Email))?.Value;
             var userId = userClaim.Value;
@@ -114,23 +105,6 @@ public class EmployerAccountAuthorisationHandler : IEmployerAccountAuthorisation
         return CheckUserRoleForAccess(employerIdentifier, minimumAllowedRole);
     }
 
-    public Task<bool> IsOutsideAccount(AuthorizationHandlerContext context)
-    {
-        if (_httpContextAccessor.HttpContext.Request.RouteValues.ContainsKey(RouteValueKeys.AccountHashedId))
-        {
-            return Task.FromResult(false);
-        }
-
-        var requiredIdClaim = _configuration.UseGovSignIn ? ClaimTypes.NameIdentifier : EmployeeClaims.IdamsUserIdClaimTypeIdentifier;
-
-        if (!context.User.HasClaim(c => c.Type.Equals(requiredIdClaim)))
-        {
-            return Task.FromResult(false);
-        }
-
-        return Task.FromResult(true);
-    }
-    
     private static bool CheckUserRoleForAccess(EmployerUserAccountItem employerIdentifier, EmployerUserRole minimumAllowedRole)
     {
         var tryParse = Enum.TryParse<EmployerUserRole>(employerIdentifier.Role, true, out var userRole);

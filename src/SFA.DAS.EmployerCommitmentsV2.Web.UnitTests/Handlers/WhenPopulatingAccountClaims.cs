@@ -25,7 +25,6 @@ public class WhenPopulatingAccountClaims
         EmployerAccountPostAuthenticationClaimsHandler handler)
     {
         accountData.IsSuspended = true;
-        commitmentsConfiguration.Object.UseGovSignIn = true;
         var tokenValidatedContext = ArrangeTokenValidatedContext(nameIdentifier, idamsIdentifier, emailAddress);
         accountService.Setup(x => x.GetUserAccounts(nameIdentifier, emailAddress)).ReturnsAsync(accountData);
 
@@ -56,7 +55,6 @@ public class WhenPopulatingAccountClaims
         accountData.EmployerAccounts = new List<EmployerUserAccountItem>();
         accountData.FirstName = null;
         accountData.LastName = null;
-        commitmentsConfiguration.Object.UseGovSignIn = true;
         var tokenValidatedContext = ArrangeTokenValidatedContext(nameIdentifier, idamsIdentifier, emailAddress);
         accountService.Setup(x => x.GetUserAccounts(nameIdentifier, emailAddress)).ReturnsAsync(accountData);
 
@@ -84,7 +82,6 @@ public class WhenPopulatingAccountClaims
         EmployerAccountPostAuthenticationClaimsHandler handler)
     {
         accountData.IsSuspended = false;
-        commitmentsConfiguration.Object.UseGovSignIn = true;
         var tokenValidatedContext = ArrangeTokenValidatedContext(nameIdentifier, idamsIdentifier, emailAddress);
         accountService.Setup(x => x.GetUserAccounts(nameIdentifier, emailAddress)).ReturnsAsync(accountData);
 
@@ -112,7 +109,6 @@ public class WhenPopulatingAccountClaims
         EmployerAccountPostAuthenticationClaimsHandler handler)
     {
         accountData.IsSuspended = true;
-        commitmentsConfiguration.Object.UseGovSignIn = true;
         var tokenValidatedContext = ArrangeTokenValidatedContext(nameIdentifier, idamsIdentifier, emailAddress);
         accountService.Setup(x => x.GetUserAccounts(nameIdentifier, emailAddress)).ReturnsAsync(accountData);
 
@@ -139,7 +135,6 @@ public class WhenPopulatingAccountClaims
         EmployerAccountPostAuthenticationClaimsHandler handler)
     {
         accountData.IsSuspended = true;
-        commitmentsConfiguration.Object.UseGovSignIn = true;
         var tokenValidatedContext = ArrangeTokenValidatedContext(nameIdentifier, idamsIdentifier, emailAddress);
         accountService.Setup(x => x.GetUserAccounts(nameIdentifier, emailAddress)).ReturnsAsync(accountData);
 
@@ -150,30 +145,6 @@ public class WhenPopulatingAccountClaims
         accountService.Verify(x => x.GetUserAccounts(nameIdentifier, emailAddress), Times.Once);
         accountService.Verify(x => x.GetUserAccounts(idamsIdentifier, emailAddress), Times.Never);
         actual.Should().NotContain(c => c.Type.Equals(EmployeeClaims.AccountsClaimsTypeIdentifier));
-    }
-
-    [Test, MoqAutoData]
-    public async Task Then_The_Claims_Are_Populated_For_EmployerUsers_User(
-        string nameIdentifier,
-        string idamsIdentifier,
-        EmployerUserAccounts accountData,
-        [Frozen] Mock<IUserAccountService> accountService,
-        [Frozen] EmployerCommitmentsV2Configuration commitmentsConfiguration,
-        EmployerAccountPostAuthenticationClaimsHandler handler)
-    {
-        var tokenValidatedContext = ArrangeTokenValidatedContext(nameIdentifier, idamsIdentifier, string.Empty);
-        accountService.Setup(x => x.GetUserAccounts(idamsIdentifier, "")).ReturnsAsync(accountData);
-        commitmentsConfiguration.UseGovSignIn = false;
-
-        var actual = await handler.GetClaims(tokenValidatedContext);
-
-        accountService.Verify(x => x.GetUserAccounts(nameIdentifier, string.Empty), Times.Never);
-        accountService.Verify(x => x.GetUserAccounts(idamsIdentifier, string.Empty), Times.Once);
-        actual.Should().ContainSingle(c => c.Type.Equals(EmployeeClaims.AccountsClaimsTypeIdentifier));
-        var actualClaimValue = actual.First(c => c.Type.Equals(EmployeeClaims.AccountsClaimsTypeIdentifier)).Value;
-        JsonConvert.SerializeObject(accountData.EmployerAccounts.ToDictionary(k => k.AccountId)).Should().Be(actualClaimValue);
-        actual.FirstOrDefault(c => c.Type.Equals(EmployeeClaims.IdamsUserIdClaimTypeIdentifier)).Should().NotBeNull();
-        actual.FirstOrDefault(c => c.Type.Equals(EmployeeClaims.IdamsUserDisplayNameClaimTypeIdentifier)).Should().BeNull();
     }
 
     private static TokenValidatedContext ArrangeTokenValidatedContext(string nameIdentifier, string idamsIdentifier, string emailAddress)

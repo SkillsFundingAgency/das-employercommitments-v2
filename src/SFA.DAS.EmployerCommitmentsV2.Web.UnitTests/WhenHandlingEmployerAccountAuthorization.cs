@@ -28,13 +28,11 @@ public class WhenHandlingEmployerAccountAuthorization
         EmployerTransactorOwnerAccountRequirement transactorOwnerRolesRequirement,
         [Frozen] Mock<IHttpContextAccessor> httpContextAccessor,
         Mock<ILogger<EmployerAccountAuthorisationHandler>> logger,
-        EmployerCommitmentsV2Configuration configuration,
         Mock<IUserAccountService> userAccountService,
         EmployerUserAccounts accountData
     )
     {
         //Arrange
-        configuration.UseGovSignIn = true;
         employerIdentifier.Role = "Viewer";
         employerIdentifier.AccountId = employerIdentifier.AccountId.ToUpper();
         
@@ -57,10 +55,10 @@ public class WhenHandlingEmployerAccountAuthorization
         var authorizationHandler = new EmployerAccountAuthorisationHandler(
             httpContextAccessor.Object,
             userAccountService.Object,
-            logger.Object,
-            configuration);
-
-        authorizationHandler.MaxPermittedNumberOfAccountsOnClaim = accountData.EmployerAccounts.Count();
+            logger.Object)
+        {
+            MaxPermittedNumberOfAccountsOnClaim = accountData.EmployerAccounts.Count()
+        };
 
         //Act
         await authorizationHandler.IsEmployerAuthorised(context, EmployerUserRole.Transactor);
@@ -81,14 +79,11 @@ public class WhenHandlingEmployerAccountAuthorization
         EmployerTransactorOwnerAccountRequirement transactorOwnerRolesRequirement,
         [Frozen] Mock<IHttpContextAccessor> httpContextAccessor,
         Mock<ILogger<EmployerAccountAuthorisationHandler>> logger,
-        EmployerCommitmentsV2Configuration configuration,
         Mock<IUserAccountService> userAccountService,
         EmployerUserAccounts accountData
     )
     {
         //Arrange
-        configuration.UseGovSignIn = true;
-
         employerIdentifier.Role = "Viewer";
         employerIdentifier.AccountId = employerIdentifier.AccountId.ToUpper();
         var claimsPrinciple = new ClaimsPrincipal(new[]
@@ -108,10 +103,10 @@ public class WhenHandlingEmployerAccountAuthorization
         var authorizationHandler = new EmployerAccountAuthorisationHandler(
             httpContextAccessor.Object,
             userAccountService.Object,
-            logger.Object,
-            configuration);
-
-        authorizationHandler.MaxPermittedNumberOfAccountsOnClaim = accountData.EmployerAccounts.Count() - 1;
+            logger.Object)
+        {
+            MaxPermittedNumberOfAccountsOnClaim = accountData.EmployerAccounts.Count() - 1
+        };
 
         //Act
         await authorizationHandler.IsEmployerAuthorised(context, EmployerUserRole.Transactor);
@@ -129,13 +124,11 @@ public class WhenHandlingEmployerAccountAuthorization
         EmployerTransactorOwnerAccountRequirement transactorOwnerRolesRequirement,
         [Frozen] Mock<IHttpContextAccessor> httpContextAccessor,
         Mock<ILogger<EmployerAccountAuthorisationHandler>> logger,
-        EmployerCommitmentsV2Configuration configuration,
         Mock<IUserAccountService> userAccountService,
         EmployerUserAccounts accountData
     )
     {
         //Arrange
-        configuration.UseGovSignIn = true;
         accountData.EmployerAccounts.First().AccountId = employerIdentifier.AccountId.ToUpper();
         employerIdentifier.Role = "Viewer";
         employerIdentifier.AccountId = employerIdentifier.AccountId.ToUpper();
@@ -157,8 +150,7 @@ public class WhenHandlingEmployerAccountAuthorization
         var authorizationHandler = new EmployerAccountAuthorisationHandler(
             httpContextAccessor.Object,
             userAccountService.Object,
-            logger.Object,
-            configuration);
+            logger.Object);
 
         //Act
         await authorizationHandler.IsEmployerAuthorised(context, EmployerUserRole.Transactor);
@@ -309,7 +301,6 @@ public class WhenHandlingEmployerAccountAuthorization
         EmployerAccountAuthorisationHandler authorizationHandler)
     {
         //Arrange
-        forecastingConfiguration.Object.Value.UseGovSignIn = true;
         employerIdentifier.Role = "Viewer-Owner-Transactor";
         employerIdentifier.AccountId = employerIdentifier.AccountId.ToUpper();
         var employerAccounts = new Dictionary<string, EmployerIdentifier> { { employerIdentifier.AccountId, employerIdentifier } };

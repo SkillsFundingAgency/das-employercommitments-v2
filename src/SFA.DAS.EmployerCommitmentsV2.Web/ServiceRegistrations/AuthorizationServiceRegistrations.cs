@@ -32,27 +32,22 @@ public static class AuthorizationServiceRegistrations
         services.AddTransient<IAuthorizationContext, AuthorizationContext>();
         services.AddSingleton<IAuthorizationContextProvider, AuthorizationContextProvider>();
 
-        var employerCommitmentsV2Configuration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
-            .Get<EmployerCommitmentsV2Configuration>();
-
-        AddAuthorizationPolicies(services, employerCommitmentsV2Configuration.UseGovSignIn);
+        AddAuthorizationPolicies(services);
 
         return services;
     }
     
-    private static void AddAuthorizationPolicies(IServiceCollection services, bool useGovSignIn)
+    private static void AddAuthorizationPolicies(IServiceCollection services)
     {
         services.AddAuthorization(options =>
         {
-            if (useGovSignIn)
+            
+            options.AddPolicy(PolicyNames.HasActiveAccount, policy =>
             {
-                options.AddPolicy(PolicyNames.HasActiveAccount, policy =>
-                {
-                    policy.Requirements.Add(new AccountActiveRequirement());
-                    policy.Requirements.Add(new UserIsInAccountRequirement());
-                    policy.RequireAuthenticatedUser();
-                });
-            }
+                policy.Requirements.Add(new AccountActiveRequirement());
+                policy.Requirements.Add(new UserIsInAccountRequirement());
+                policy.RequireAuthenticatedUser();
+            });
             
             options.AddPolicy(PolicyNames.HasEmployerTransactorOwnerAccount, policy =>
             {
