@@ -31,9 +31,8 @@
 @if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
 {
     <tr>
-        <th scope="row" class="govuk-table__header das-table-cell-width-45">Learner Status</th>
-
-        <td class="govuk-table__cell das-table-cell-width-40">
+        <th scope="row" class="govuk-table__header">Learner Status</th>
+        <td class="govuk-table__cell" colspan="2">
             <strong class="govuk-tag @learnerStatusTagClass">@Model.LearnerStatus.GetDescription()</strong>
         </td>
     </tr>
