@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
@@ -25,13 +26,16 @@ public class CohortController : Controller
     private readonly IModelMapper _modelMapper;
     private readonly IEncodingService _encodingService;
     private readonly IApprovalsApiClient _approvalsApiClient;
+    private readonly ICacheStorageService _cacheStorageService;
 
     public CohortController(
         ICommitmentsApiClient commitmentsApiClient,
         ILogger<CohortController> logger,
         ILinkGenerator linkGenerator,
         IModelMapper modelMapper,
-        IEncodingService encodingService, IApprovalsApiClient approvalsApiClient)
+        IEncodingService encodingService,
+        IApprovalsApiClient approvalsApiClient,
+        ICacheStorageService cacheStorageService)
     {
         _commitmentsApiClient = commitmentsApiClient;
         _logger = logger;
@@ -39,6 +43,7 @@ public class CohortController : Controller
         _modelMapper = modelMapper;
         _encodingService = encodingService;
         _approvalsApiClient = approvalsApiClient;
+        _cacheStorageService = cacheStorageService;
     }
 
     [Route("{cohortReference}")]
@@ -48,7 +53,7 @@ public class CohortController : Controller
     {
         var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
 
-        StoreViewEmployerAgreementModelState(
+        StoreViewEmployerAgreementModelInCache(
             new ViewEmployerAgreementModel
             {
                 AccountHashedId = viewModel.AccountHashedId,
@@ -91,14 +96,14 @@ public class CohortController : Controller
     [Route("viewAgreement", Name = "ViewAgreement")]
     public async Task<IActionResult> ViewAgreement(string hashedAccountId)
     {
-        var tempData = GetViewEmployerAgreementModelState();
+        var cachedModel = await GetViewEmployerAgreementModelFromCache();
 
-        var request = tempData == null
+        var request = cachedModel == null
             ? new ViewEmployerAgreementRequest { AccountHashedId = hashedAccountId }
             : await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel
             {
-                AccountHashedId = tempData.AccountHashedId,
-                CohortId = tempData.CohortId
+                AccountHashedId = cachedModel.AccountHashedId,
+                CohortId = cachedModel.CohortId
             });
 
         return ViewEmployeeAgreementRedirect(request);
@@ -334,7 +339,7 @@ public class CohortController : Controller
     [Route("add/apprenticeship")]
     public async Task<IActionResult> AddDraftApprenticeship(ApprenticeRequest request)
     {
-        var model = GetStoredDraftApprenticeshipState();
+        var model = await GetStoredApprenticeViewModelFromCache();
         if (model == null)
         {
             model = await _modelMapper.Map<ApprenticeViewModel>(request);
@@ -353,7 +358,7 @@ public class CohortController : Controller
     {
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
-            StoreDraftApprenticeshipState(model);
+            StoreApprenticeViewModelInCache(model);
             var request = await _modelMapper.Map<ApprenticeRequest>(model);
 
             return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request.CloneBaseValues());
@@ -545,23 +550,25 @@ public class CohortController : Controller
         return View(response);
     }
 
-    private void StoreDraftApprenticeshipState(ApprenticeViewModel model)
+    private async void StoreApprenticeViewModelInCache(ApprenticeViewModel model)
     {
-        TempData.Put(nameof(ApprenticeViewModel), model);
+        await _cacheStorageService.SaveToCache(nameof(ApprenticeViewModel), model, 1);
     }
 
-    private ApprenticeViewModel GetStoredDraftApprenticeshipState()
+    private async Task<ApprenticeViewModel> GetStoredApprenticeViewModelFromCache()
     {
-        return TempData.Get<ApprenticeViewModel>(nameof(ApprenticeViewModel));
+        return await _cacheStorageService.RetrieveFromCache<ApprenticeViewModel>(nameof(ApprenticeViewModel));
+
     }
 
-    private void StoreViewEmployerAgreementModelState(ViewEmployerAgreementModel model)
+    private async void StoreViewEmployerAgreementModelInCache(ViewEmployerAgreementModel model)
     {
-        TempData.Put(nameof(ViewEmployerAgreementModel), model);
+        await _cacheStorageService.SaveToCache(nameof(ViewEmployerAgreementModel), model, 1);
     }
 
-    private ViewEmployerAgreementModel GetViewEmployerAgreementModelState()
+    private async Task<ViewEmployerAgreementModel> GetViewEmployerAgreementModelFromCache()
     {
-        return TempData.Get<ViewEmployerAgreementModel>(nameof(ViewEmployerAgreementModel));
+        return await _cacheStorageService.RetrieveFromCache<ViewEmployerAgreementModel>(nameof(ViewEmployerAgreementModel));
+
     }
 }

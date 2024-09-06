@@ -23,6 +23,8 @@ public class WhenPostingEditStopDateTests : ApprenticeControllerTestBase
         MockModelMapper = new Mock<IModelMapper>();
         MockCookieStorageService = new Mock<Interfaces.ICookieStorageService<IndexRequest>>();
         MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        CacheStorageService = new Mock<Interfaces.ICacheStorageService>();
+
         _autoFixture = new Fixture();
         _autoFixture.Customize<EditStopDateViewModel>(c => c.Without(x => x.NewStopDate));
         _viewModel = _autoFixture.Create<EditStopDateViewModel>();
@@ -31,6 +33,7 @@ public class WhenPostingEditStopDateTests : ApprenticeControllerTestBase
         Controller = new ApprenticeController(MockModelMapper.Object,
             MockCookieStorageService.Object,
             MockCommitmentsApiClient.Object,
+            CacheStorageService.Object,
             Mock.Of<ILogger<ApprenticeController>>());
         Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
     }

@@ -5,6 +5,7 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
@@ -48,13 +49,13 @@ public class WhenSelectingCourseOnEditApprenticeship
     }
 
     [Test]
-    public void WhenSettingCourse_AndCourseSelected_ShouldRedirectToEditApprenticeship()
+    public async Task WhenSettingCourse_AndCourseSelected_ShouldRedirectToEditApprenticeship()
     {
         var fixture = new WhenSelectingCourseOnEditApprenticeshipFixture().WithTempViewModel();
 
         fixture.ViewModel.CourseCode = "123";
 
-        var result = fixture.Sut.SetCourseForEdit(fixture.ViewModel);
+        var result = await fixture.Sut.SetCourseForEdit(fixture.ViewModel);
         result.VerifyReturnsRedirectToActionResult().ActionName.Should().Be(nameof(ApprenticeController.SelectDeliveryModelForEdit));
         result.VerifyRouteValue("AccountHashedId", fixture.ViewModel.AccountHashedId);
         result.VerifyRouteValue("ApprenticeshipHashedId", fixture.ViewModel.ApprenticeshipHashedId);
@@ -72,7 +73,7 @@ public class WhenSelectingCourseOnEditApprenticeshipFixture
     public EditApprenticeshipRequestViewModel Apprenticeship;
     public GetCohortResponse Cohort;
     public Mock<ICommitmentsApiClient> CommitmentsApiClientMock;
-
+    public Mock<ICacheStorageService> CacheStorageServiceMock;
     public WhenSelectingCourseOnEditApprenticeshipFixture()
     {
         var fixture = new Fixture();
@@ -94,7 +95,14 @@ public class WhenSelectingCourseOnEditApprenticeshipFixture
         CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
         CommitmentsApiClientMock.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(Cohort);
 
-        Sut = new ApprenticeController(ModelMapperMock.Object, Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(), CommitmentsApiClientMock.Object, Mock.Of<ILogger<ApprenticeController>>());
+        CacheStorageServiceMock = new Mock<ICacheStorageService>();
+
+        Sut = new ApprenticeController(
+            ModelMapperMock.Object, 
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(), 
+            CommitmentsApiClientMock.Object, 
+            CacheStorageServiceMock.Object,
+            Mock.Of<ILogger<ApprenticeController>>());
         Sut.TempData = TempDataMock.Object;
     }
 

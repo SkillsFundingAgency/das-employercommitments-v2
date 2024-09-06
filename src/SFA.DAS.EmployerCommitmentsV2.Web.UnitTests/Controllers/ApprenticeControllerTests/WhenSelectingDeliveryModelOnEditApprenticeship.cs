@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -57,7 +58,7 @@ public class WhenSelectingDeliveryModelOnEditApprenticeship
     }
 
     [Test]
-    public void WhenSettingDeliveryModel_AndOptionSet_ShouldRedirectToAddDraftApprenticeship()
+    public async Task WhenSettingDeliveryModel_AndOptionSet_ShouldRedirectToAddDraftApprenticeship()
     {
         var fixture = new WhenSelectingDeliveryModelOnEditApprenticeshipFixture()
             .WithTempViewModel()
@@ -65,7 +66,7 @@ public class WhenSelectingDeliveryModelOnEditApprenticeship
 
         fixture.ViewModel.DeliveryModel = DeliveryModel.PortableFlexiJob;
 
-        var result = fixture.Sut.SetDeliveryModelForEdit(fixture.ViewModel) as RedirectToActionResult;
+        var result = await fixture.Sut.SetDeliveryModelForEdit(fixture.ViewModel) as RedirectToActionResult;
         result.ActionName.Should().Be("EditApprenticeship");
     }
 }
@@ -75,6 +76,7 @@ public class WhenSelectingDeliveryModelOnEditApprenticeshipFixture
     public ApprenticeController Sut { get; set; }
 
     public Mock<IModelMapper> ModelMapperMock;
+    private Mock<ICacheStorageService> CacheStorageServiceMock;
     public Mock<ITempDataDictionary> TempDataMock;
     public EditApprenticeshipDeliveryModelViewModel ViewModel;
     public EditApprenticeshipRequest Request;
@@ -93,8 +95,14 @@ public class WhenSelectingDeliveryModelOnEditApprenticeshipFixture
 
         ModelMapperMock = new Mock<IModelMapper>();
         TempDataMock = new Mock<ITempDataDictionary>();
+        CacheStorageServiceMock = new Mock<ICacheStorageService>();
 
-        Sut = new ApprenticeController(ModelMapperMock.Object, Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(), Mock.Of<ICommitmentsApiClient>(), Mock.Of<ILogger<ApprenticeController>>());
+        Sut = new ApprenticeController(
+            ModelMapperMock.Object, 
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(), 
+            Mock.Of<ICommitmentsApiClient>(), 
+            CacheStorageServiceMock.Object,
+            Mock.Of<ILogger<ApprenticeController>>());
         Sut.TempData = TempDataMock.Object;
     }
 

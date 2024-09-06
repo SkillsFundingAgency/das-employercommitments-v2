@@ -2,6 +2,7 @@
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -51,7 +52,12 @@ public class SelectOptionTests
         _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
         _mockOuterApiClient = new Mock<IApprovalsApiClient>();
 
-        _controller = new DraftApprenticeshipController(_mockModelMapper.Object, _mockCommitmentsApiClient.Object, Mock.Of<IEncodingService>(), _mockOuterApiClient.Object);
+        _controller = new DraftApprenticeshipController(
+            _mockModelMapper.Object, 
+            _mockCommitmentsApiClient.Object, 
+            Mock.Of<IEncodingService>(), 
+            _mockOuterApiClient.Object,
+            Mock.Of<ICacheStorageService>());
 
         _mockModelMapper.Setup(m => m.Map<UpdateDraftApprenticeshipApimRequest>(_viewModel))
             .ReturnsAsync(_updateRequest);

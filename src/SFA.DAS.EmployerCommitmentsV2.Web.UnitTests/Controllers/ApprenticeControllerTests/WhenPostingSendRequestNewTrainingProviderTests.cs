@@ -1,6 +1,8 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
@@ -85,6 +87,7 @@ public class WhenPostingSendRequestNewTrainingProviderTests
 public class WhenPostingSendRequestNewTrainingProviderTestsFixture
 {
     private readonly Mock<ICommitmentsApiClient> _commitmentsApiClient;
+    private readonly Mock<ICacheStorageService> _cacheStorageService;
     private ApprenticeController _controller;
     private SendNewTrainingProviderViewModel _viewModel;
 
@@ -94,10 +97,12 @@ public class WhenPostingSendRequestNewTrainingProviderTestsFixture
         _viewModel = autoFixture.Create<SendNewTrainingProviderViewModel>();
 
         _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        _cacheStorageService = new Mock<ICacheStorageService>();
 
         _controller = new ApprenticeController(Mock.Of<IModelMapper>(),
             Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             _commitmentsApiClient.Object,
+            _cacheStorageService.Object,
             Mock.Of<ILogger<ApprenticeController>>());
     }
 

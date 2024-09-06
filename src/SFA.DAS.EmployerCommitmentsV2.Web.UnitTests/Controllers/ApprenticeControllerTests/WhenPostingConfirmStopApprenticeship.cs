@@ -23,6 +23,8 @@ public class WhenPostingConfirmStopApprenticeship : ApprenticeControllerTestBase
         var fixture = new Fixture();
         MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
         MockModelMapper = new Mock<IModelMapper>();
+        CacheStorageService = new Mock<Interfaces.ICacheStorageService>();
+
         var stopApprenticeshipRequest = fixture.Create<StopApprenticeshipRequest>();
 
         MockModelMapper.Setup(m => m.Map<StopApprenticeshipRequest>(It.IsAny<ConfirmStopRequestViewModel>()))
@@ -31,6 +33,7 @@ public class WhenPostingConfirmStopApprenticeship : ApprenticeControllerTestBase
         Controller = new ApprenticeController(MockModelMapper.Object,
             Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             MockCommitmentsApiClient.Object,
+            CacheStorageService.Object,
             Mock.Of<ILogger<ApprenticeController>>());
         Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
     }

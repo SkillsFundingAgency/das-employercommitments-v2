@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
@@ -11,22 +12,20 @@ public class ChangeOptionViewModelMapper : IMapper<ChangeOptionRequest, ChangeOp
 {
     private readonly ICommitmentsApiClient _commitmentsApiClient;
     private readonly IHttpContextAccessor _httpContext;
-    private readonly ITempDataDictionaryFactory _tempDataDictionaryFactory;
+    private readonly ICacheStorageService _cacheStorageService;
 
-    public ChangeOptionViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IHttpContextAccessor httpContext, ITempDataDictionaryFactory tempDataDictionaryFactory)
+    public ChangeOptionViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IHttpContextAccessor httpContext, ICacheStorageService cacheStorageService)
     {
         _commitmentsApiClient = commitmentsApiClient;
         _httpContext = httpContext;
-        _tempDataDictionaryFactory = tempDataDictionaryFactory;;
+        _cacheStorageService = cacheStorageService;
     }
 
     public async Task<ChangeOptionViewModel> Map(ChangeOptionRequest source)
     {
         var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
 
-        var tempData = _tempDataDictionaryFactory.GetTempData(_httpContext.HttpContext);
-
-        var editViewModel = tempData.GetButDontRemove<EditApprenticeshipRequestViewModel>("EditApprenticeshipRequestViewModel");
+        var editViewModel = await  _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel));
 
         string selectedVersion;
         string selectedCourseCode;

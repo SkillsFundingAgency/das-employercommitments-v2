@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -104,6 +105,7 @@ public class CreateCohortWithDraftApprenticeshipControllerTestFixtures
 
     public Mock<IModelMapper> ModelMapperMock { get; set; }
     public IModelMapper ModelMapper => ModelMapperMock.Object;
+
     public Mock<IEncodingService> EncodingServiceMock { get; set; }
     public IEncodingService EncodingService => EncodingServiceMock.Object;
     public ApprenticeRequest GetRequest { get; private set; }
@@ -183,7 +185,8 @@ public class CreateCohortWithDraftApprenticeshipControllerTestFixtures
             LinkGenerator,
             ModelMapper,
             Mock.Of<IEncodingService>(),
-            ApprovalsApiClient
+            ApprovalsApiClient,
+            Mock.Of<ICacheStorageService>()
         );
         controller.TempData = TempData.Object;
         return controller;
