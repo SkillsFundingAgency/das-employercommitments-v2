@@ -108,7 +108,7 @@ public class DraftApprenticeshipController : Controller
     {
         try
         {
-            var model = await GetStoredDraftApprenticeshipFromCache();
+            var model = await GetStoredAddDraftApprenticeshipFromCache();
             if (model == null)
             {
                 model = await _modelMapper.Map<AddDraftApprenticeshipViewModel>(request);
@@ -133,7 +133,7 @@ public class DraftApprenticeshipController : Controller
     {
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
-            StoreDraftApprenticeshipInCache(model);
+            StoreAddDraftApprenticeshipInCache(model);
             var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
             return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request.CloneBaseValues());
         }
@@ -141,6 +141,8 @@ public class DraftApprenticeshipController : Controller
         var addDraftApprenticeshipRequest = await _modelMapper.Map<AddDraftApprenticeshipApimRequest>(model);
 
         var response = await _outerApi.AddDraftApprenticeship(model.CohortId.Value, addDraftApprenticeshipRequest);
+
+        RemoveAddDraftApprenticeshipFromCache();
 
         var draftApprenticeshipHashedId = _encodingService.Encode(response.DraftApprenticeshipId, EncodingType.ApprenticeshipId);
 
@@ -201,6 +203,8 @@ public class DraftApprenticeshipController : Controller
         var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipApimRequest>(model);
 
         await _outerApi.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
+
+        RemoveEditDraftApprenticeshipFromCache();
 
         return RedirectToAction("SelectOption", "DraftApprenticeship", new { model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId });
     }
@@ -367,12 +371,17 @@ public class DraftApprenticeshipController : Controller
         return RedirectToAction("Details", "Cohort", new { accountHashedId, cohortReference });
     }
 
-    private async void StoreDraftApprenticeshipInCache(AddDraftApprenticeshipViewModel model)
+    private async void StoreAddDraftApprenticeshipInCache(AddDraftApprenticeshipViewModel model)
     {
         await _cacheStorageService.SaveToCache(nameof(AddDraftApprenticeshipViewModel), model, 1);
     }
 
-    private async Task<AddDraftApprenticeshipViewModel> GetStoredDraftApprenticeshipFromCache()
+    private async void RemoveAddDraftApprenticeshipFromCache()
+    {
+        await _cacheStorageService.DeleteFromCache(nameof(AddDraftApprenticeshipViewModel));
+    }
+
+    private async Task<AddDraftApprenticeshipViewModel> GetStoredAddDraftApprenticeshipFromCache()
     {
         return await _cacheStorageService.RetrieveFromCache<AddDraftApprenticeshipViewModel>(nameof(AddDraftApprenticeshipViewModel));
     }
@@ -380,6 +389,11 @@ public class DraftApprenticeshipController : Controller
     private async void StoreEditDraftApprenticeshipInCache(EditDraftApprenticeshipViewModel model)
     {
         await _cacheStorageService.SaveToCache(nameof(EditDraftApprenticeshipViewModel), model, 1);
+    }
+
+    private async void RemoveEditDraftApprenticeshipFromCache()
+    {
+        await _cacheStorageService.DeleteFromCache(nameof(EditDraftApprenticeshipViewModel));
     }
 
     private async Task<EditDraftApprenticeshipViewModel> GetStoredEditDraftApprenticeshipFromCache()
