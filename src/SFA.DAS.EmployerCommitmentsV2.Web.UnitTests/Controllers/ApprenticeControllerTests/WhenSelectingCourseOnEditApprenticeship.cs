@@ -108,7 +108,7 @@ public class WhenSelectingCourseOnEditApprenticeshipFixture
     public WhenSelectingCourseOnEditApprenticeshipFixture WithCachedModel()
     {
         CacheStorageServiceMock
-            .Setup(x => x.SafeRetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<string>()))
+            .Setup(x => x.RetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<string>()))
             .ReturnsAsync(Apprenticeship);
         return this;
     }

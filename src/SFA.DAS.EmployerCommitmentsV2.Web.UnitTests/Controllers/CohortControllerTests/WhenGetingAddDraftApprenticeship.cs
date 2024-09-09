@@ -19,7 +19,7 @@ public class WhenGetingAddDraftApprenticeship
         var viewModel = new ApprenticeViewModel();
 
         cacheStorageService
-            .Setup(x => x.SafeRetrieveFromCache<ApprenticeViewModel>(nameof(ApprenticeViewModel)))
+            .Setup(x => x.RetrieveFromCache<ApprenticeViewModel>(nameof(ApprenticeViewModel)))
             .ReturnsAsync((ApprenticeViewModel)null);
 
         mockMapper
@@ -48,7 +48,7 @@ public class WhenGetingAddDraftApprenticeship
         };
 
         cacheStorageService
-            .Setup(x => x.SafeRetrieveFromCache<ApprenticeViewModel>(nameof(ApprenticeViewModel)))
+            .Setup(x => x.RetrieveFromCache<ApprenticeViewModel>(nameof(ApprenticeViewModel)))
             .ReturnsAsync(cacheItem);
 
         mockMapper

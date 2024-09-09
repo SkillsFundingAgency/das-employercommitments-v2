@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
-using SFA.DAS.EmployerCommitmentsV2.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Infrastructure
@@ -39,34 +38,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Infrastructure
             return SaveToCache(item.CacheKey.ToString(), item, expirationInHours);
         }
 
-        /// <summary>
-        /// Returns NULL instead of throwing exception if cached item not found.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public async Task<T> SafeRetrieveFromCache<T>(string key)
-        {
-            var json = await _distributedCache.GetStringAsync(key);
-
-            return json == null ? default : JsonConvert.DeserializeObject<T>(json);
-        }
-
         public async Task<T> RetrieveFromCache<T>(string key)
         {
             var json = await _distributedCache.GetStringAsync(key);
 
-            if (json == null)
-            {
-                throw new CacheItemNotFoundException<T>($"Cache item {key} of type {typeof(T).Name} not found");
-            }
-
-            return JsonConvert.DeserializeObject<T>(json);
-        }
-
-        public Task<T> RetrieveFromCache<T>(Guid key)
-        {
-            return RetrieveFromCache<T>(key.ToString());
+            return json == null ? default : JsonConvert.DeserializeObject<T>(json);
         }
 
         public async Task DeleteFromCache(string key)

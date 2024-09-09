@@ -383,7 +383,7 @@ public class DraftApprenticeshipController : Controller
 
     private async Task<AddDraftApprenticeshipViewModel> GetStoredAddDraftApprenticeshipFromCache()
     {
-        return await _cacheStorageService.SafeRetrieveFromCache<AddDraftApprenticeshipViewModel>(nameof(AddDraftApprenticeshipViewModel));
+        return await _cacheStorageService.RetrieveFromCache<AddDraftApprenticeshipViewModel>(nameof(AddDraftApprenticeshipViewModel));
     }
 
     private async Task StoreEditDraftApprenticeshipInCache(EditDraftApprenticeshipViewModel model)
@@ -398,6 +398,6 @@ public class DraftApprenticeshipController : Controller
 
     private async Task<EditDraftApprenticeshipViewModel> GetStoredEditDraftApprenticeshipFromCache()
     {
-        return await _cacheStorageService.SafeRetrieveFromCache<EditDraftApprenticeshipViewModel>(nameof(EditDraftApprenticeshipViewModel));
+        return await _cacheStorageService.RetrieveFromCache<EditDraftApprenticeshipViewModel>(nameof(EditDraftApprenticeshipViewModel));
     }
 }

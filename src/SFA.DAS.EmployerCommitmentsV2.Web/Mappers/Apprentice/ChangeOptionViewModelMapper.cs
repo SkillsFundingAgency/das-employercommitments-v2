@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
@@ -11,13 +8,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 public class ChangeOptionViewModelMapper : IMapper<ChangeOptionRequest, ChangeOptionViewModel>
 {
     private readonly ICommitmentsApiClient _commitmentsApiClient;
-    private readonly IHttpContextAccessor _httpContext;
     private readonly ICacheStorageService _cacheStorageService;
 
-    public ChangeOptionViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IHttpContextAccessor httpContext, ICacheStorageService cacheStorageService)
+    public ChangeOptionViewModelMapper(ICommitmentsApiClient commitmentsApiClient, ICacheStorageService cacheStorageService)
     {
         _commitmentsApiClient = commitmentsApiClient;
-        _httpContext = httpContext;
         _cacheStorageService = cacheStorageService;
     }
 
@@ -25,7 +20,7 @@ public class ChangeOptionViewModelMapper : IMapper<ChangeOptionRequest, ChangeOp
     {
         var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
 
-        var editViewModel = await  _cacheStorageService.SafeRetrieveFromCache<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel));
+        var editViewModel = await _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel));
 
         string selectedVersion;
         string selectedCourseCode;
@@ -42,7 +37,7 @@ public class ChangeOptionViewModelMapper : IMapper<ChangeOptionRequest, ChangeOp
 
             if (selectedCourseCode != apprenticeship.CourseCode || editViewModel.StartDate.Date.Value != apprenticeship.StartDate?.Date)
             {
-                returnToEdit = true; 
+                returnToEdit = true;
             }
             else if (selectedVersion != apprenticeship.Version)
             {
@@ -57,7 +52,7 @@ public class ChangeOptionViewModelMapper : IMapper<ChangeOptionRequest, ChangeOp
         }
 
         var standardVersion = await _commitmentsApiClient.GetTrainingProgrammeVersionByCourseCodeAndVersion(selectedCourseCode, selectedVersion);
-            
+
         return new ChangeOptionViewModel
         {
             AccountHashedId = source.AccountHashedId,

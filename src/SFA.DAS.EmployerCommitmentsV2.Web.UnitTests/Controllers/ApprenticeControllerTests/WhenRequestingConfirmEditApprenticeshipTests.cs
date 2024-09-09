@@ -40,7 +40,7 @@ public class WhenRequestingConfirmEditApprenticeshipFixture : ApprenticeControll
             .Without(x => x.EmploymentEndDate).Without(x => x.EmploymentEndMonth).Without(x => x.EmploymentEndYear)
             .Create();
 
-        _cacheStorageService.Setup(x => x.SafeRetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<string>()))
+        _cacheStorageService.Setup(x => x.RetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<string>()))
             .ReturnsAsync(_viewModel);
     }
 

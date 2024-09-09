@@ -51,6 +51,7 @@ public class WhenGettingDetails
             _request = autoFixture.Create<DetailsRequest>();
             _viewModel = autoFixture.Create<DetailsViewModel>();
             _viewModel.WithParty = Party.Employer;
+            _viewEmployerAgreementModel = autoFixture.Create<ViewEmployerAgreementModel>();
 
             var modelMapper = new Mock<IModelMapper>();
             modelMapper.Setup(x => x.Map<DetailsViewModel>(It.Is<DetailsRequest>(r => r == _request)))
@@ -59,7 +60,7 @@ public class WhenGettingDetails
             _cacheStorageService = new Mock<ICacheStorageService>();
 
             _cacheStorageService.Setup(x =>
-                x.SafeRetrieveFromCache<ViewEmployerAgreementModel>(It.IsAny<string>()))
+                x.RetrieveFromCache<ViewEmployerAgreementModel>(It.IsAny<string>()))
                 .ReturnsAsync(_viewEmployerAgreementModel);
 
             CohortController = new CohortController(Mock.Of<ICommitmentsApiClient>(),

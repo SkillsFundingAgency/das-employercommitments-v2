@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Http;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
@@ -65,7 +64,6 @@ public class ChangeOptionViewModelMapperTests
         _mockCacheStorageService = new Mock<ICacheStorageService>();
 
         _mapper = new ChangeOptionViewModelMapper(_mockCommitmentsApiClient.Object,
-           Mock.Of<IHttpContextAccessor>(),
            _mockCacheStorageService.Object);
     }
 
@@ -184,7 +182,7 @@ public class ChangeOptionViewModelMapperTests
     private void SetUpCacheData()
     {
         _mockCacheStorageService
-          .Setup(d => d.SafeRetrieveFromCache<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel)))
+          .Setup(d => d.RetrieveFromCache<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel)))
           .ReturnsAsync(_editViewModel);
     }
 }

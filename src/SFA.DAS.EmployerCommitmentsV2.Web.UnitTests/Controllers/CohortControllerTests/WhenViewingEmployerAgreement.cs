@@ -89,7 +89,7 @@ public class WhenViewingEmployerAgreement
     private void SetUpCacheData()
     {
         _cacheStorageService
-            .Setup(d => d.SafeRetrieveFromCache<ViewEmployerAgreementModel>(nameof(ViewEmployerAgreementModel)))
+            .Setup(d => d.RetrieveFromCache<ViewEmployerAgreementModel>(nameof(ViewEmployerAgreementModel)))
             .ReturnsAsync(_viewEmployerAgreementModel);
     }
 }

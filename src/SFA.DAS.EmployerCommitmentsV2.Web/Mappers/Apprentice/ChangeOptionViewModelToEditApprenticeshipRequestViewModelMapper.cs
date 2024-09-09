@@ -26,7 +26,7 @@ public class ChangeOptionViewModelToEditApprenticeshipRequestViewModelMapper : I
     {
         var httpContext = _httpContext.HttpContext;
 
-        var editViewModel = await _cacheStorageService.SafeRetrieveFromCache<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel));
+        var editViewModel = await _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel));
 
         if (editViewModel == null)
         {
