@@ -929,9 +929,9 @@ public class ApprenticeController : Controller
     [HttpGet]
     [Route("{apprenticeshipHashedId}/cancel-change-of-circumstance",
         Name = RouteNames.CancelInProgressChangeOfCircumstance)]
-    public IActionResult CancelChangeOfCircumstance(CancelChangeOfCircumstanceRequest request)
+    public async Task<IActionResult> CancelChangeOfCircumstance(CancelChangeOfCircumstanceRequest request)
     {
-        DeleteEditApprenticeshipRequestViewModelInCache(nameof(EditApprenticeshipRequestViewModel));
+        await DeleteEditApprenticeshipRequestViewModelInCache(nameof(EditApprenticeshipRequestViewModel));
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
             new { request.AccountHashedId, request.ApprenticeshipHashedId });
@@ -970,7 +970,7 @@ public class ApprenticeController : Controller
             }
         }
 
-        DeleteEditApprenticeshipRequestViewModelInCache(nameof(EditApprenticeshipRequestViewModel));
+        await DeleteEditApprenticeshipRequestViewModelInCache(nameof(EditApprenticeshipRequestViewModel));
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
             new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
@@ -1270,7 +1270,7 @@ public class ApprenticeController : Controller
 
     }
 
-    private async void DeleteEditApprenticeshipRequestViewModelInCache(string key)
+    private async Task DeleteEditApprenticeshipRequestViewModelInCache(string key)
     {
         await _cacheStorageService.DeleteFromCache(key);
     }

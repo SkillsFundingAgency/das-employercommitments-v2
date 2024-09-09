@@ -53,7 +53,7 @@ public class CohortController : Controller
     {
         var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
 
-        StoreViewEmployerAgreementModelInCache(
+        await StoreViewEmployerAgreementModelInCache(
             new ViewEmployerAgreementModel
             {
                 AccountHashedId = viewModel.AccountHashedId,
@@ -358,7 +358,7 @@ public class CohortController : Controller
     {
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
-            StoreApprenticeViewModelInCache(model);
+            await StoreApprenticeViewModelInCache(model);
             var request = await _modelMapper.Map<ApprenticeRequest>(model);
 
             return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request.CloneBaseValues());
@@ -550,7 +550,7 @@ public class CohortController : Controller
         return View(response);
     }
 
-    private async void StoreApprenticeViewModelInCache(ApprenticeViewModel model)
+    private async Task StoreApprenticeViewModelInCache(ApprenticeViewModel model)
     {
         await _cacheStorageService.SaveToCache(nameof(ApprenticeViewModel), model, 1);
     }
@@ -561,7 +561,7 @@ public class CohortController : Controller
 
     }
 
-    private async void StoreViewEmployerAgreementModelInCache(ViewEmployerAgreementModel model)
+    private async Task StoreViewEmployerAgreementModelInCache(ViewEmployerAgreementModel model)
     {
         await _cacheStorageService.SaveToCache(nameof(ViewEmployerAgreementModel), model, 1);
     }

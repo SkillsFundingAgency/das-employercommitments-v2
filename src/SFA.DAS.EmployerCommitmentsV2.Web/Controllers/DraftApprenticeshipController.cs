@@ -133,7 +133,7 @@ public class DraftApprenticeshipController : Controller
     {
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
-            StoreAddDraftApprenticeshipInCache(model);
+            await StoreAddDraftApprenticeshipInCache(model);
             var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
             return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request.CloneBaseValues());
         }
@@ -142,7 +142,7 @@ public class DraftApprenticeshipController : Controller
 
         var response = await _outerApi.AddDraftApprenticeship(model.CohortId.Value, addDraftApprenticeshipRequest);
 
-        RemoveAddDraftApprenticeshipFromCache();
+        await RemoveAddDraftApprenticeshipFromCache();
 
         var draftApprenticeshipHashedId = _encodingService.Encode(response.DraftApprenticeshipId, EncodingType.ApprenticeshipId);
 
@@ -194,7 +194,7 @@ public class DraftApprenticeshipController : Controller
     {
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
-            StoreEditDraftApprenticeshipInCache(model);
+            await StoreEditDraftApprenticeshipInCache(model);
             var req = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
 
             return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), req.CloneBaseValues());
@@ -204,7 +204,7 @@ public class DraftApprenticeshipController : Controller
 
         await _outerApi.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
 
-        RemoveEditDraftApprenticeshipFromCache();
+        await RemoveEditDraftApprenticeshipFromCache();
 
         return RedirectToAction("SelectOption", "DraftApprenticeship", new { model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId });
     }
@@ -267,7 +267,7 @@ public class DraftApprenticeshipController : Controller
             {
                 draft.CourseCode = model.CourseCode;
             };
-            StoreEditDraftApprenticeshipInCache(draft);
+            await StoreEditDraftApprenticeshipInCache(draft);
             return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), new { model.AccountHashedId, draft.CohortReference, draft.DraftApprenticeshipHashedId, model.DeliveryModel, model.CourseCode });
         }
         if (model.DeliveryModel == null)
@@ -371,12 +371,12 @@ public class DraftApprenticeshipController : Controller
         return RedirectToAction("Details", "Cohort", new { accountHashedId, cohortReference });
     }
 
-    private async void StoreAddDraftApprenticeshipInCache(AddDraftApprenticeshipViewModel model)
+    private async Task StoreAddDraftApprenticeshipInCache(AddDraftApprenticeshipViewModel model)
     {
         await _cacheStorageService.SaveToCache(nameof(AddDraftApprenticeshipViewModel), model, 1);
     }
 
-    private async void RemoveAddDraftApprenticeshipFromCache()
+    private async Task RemoveAddDraftApprenticeshipFromCache()
     {
         await _cacheStorageService.DeleteFromCache(nameof(AddDraftApprenticeshipViewModel));
     }
@@ -386,12 +386,12 @@ public class DraftApprenticeshipController : Controller
         return await _cacheStorageService.SafeRetrieveFromCache<AddDraftApprenticeshipViewModel>(nameof(AddDraftApprenticeshipViewModel));
     }
 
-    private async void StoreEditDraftApprenticeshipInCache(EditDraftApprenticeshipViewModel model)
+    private async Task StoreEditDraftApprenticeshipInCache(EditDraftApprenticeshipViewModel model)
     {
         await _cacheStorageService.SaveToCache(nameof(EditDraftApprenticeshipViewModel), model, 1);
     }
 
-    private async void RemoveEditDraftApprenticeshipFromCache()
+    private async Task RemoveEditDraftApprenticeshipFromCache()
     {
         await _cacheStorageService.DeleteFromCache(nameof(EditDraftApprenticeshipViewModel));
     }
