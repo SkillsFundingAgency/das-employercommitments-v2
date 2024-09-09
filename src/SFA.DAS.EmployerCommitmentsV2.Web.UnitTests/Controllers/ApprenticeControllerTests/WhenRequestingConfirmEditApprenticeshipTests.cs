@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
 
@@ -13,7 +10,7 @@ public class WhenRequestingConfirmEditApprenticeshipTests
     public void Arrange()
     {
         _fixture = new WhenRequestingConfirmEditApprenticeshipFixture();
-    }   
+    }
 
     [Test]
     public async Task VerifyViewModelMapperIsCalled()
@@ -25,23 +22,33 @@ public class WhenRequestingConfirmEditApprenticeshipTests
     [Test]
     public async Task VerifyViewIsReturned()
     {
-        var result =  await _fixture.ConfirmEditApprenticeship();
+        var result = await _fixture.ConfirmEditApprenticeship();
         WhenRequestingConfirmEditApprenticeshipFixture.VerifyViewResultIsReturned(result);
     }
 }
 
 public class WhenRequestingConfirmEditApprenticeshipFixture : ApprenticeControllerTestFixtureBase
 {
-    public WhenRequestingConfirmEditApprenticeshipFixture() : base () 
+    private readonly EditApprenticeshipRequestViewModel _viewModel;
+
+    public WhenRequestingConfirmEditApprenticeshipFixture() : base()
     {
-        Controller.TempData = new TempDataDictionary( Mock.Of<HttpContext>(), Mock.Of<ITempDataProvider>());
+        var fixture = new Fixture();
+        _viewModel = fixture.Build<EditApprenticeshipRequestViewModel>().Without(x => x.BirthDay).Without(x => x.BirthMonth).Without(x => x.BirthYear)
+            .Without(x => x.StartMonth).Without(x => x.StartYear).Without(x => x.StartDate)
+            .Without(x => x.EndDate).Without(x => x.EndMonth).Without(x => x.EndYear)
+            .Without(x => x.EmploymentEndDate).Without(x => x.EmploymentEndMonth).Without(x => x.EmploymentEndYear)
+            .Create();
+
+        _cacheStorageService.Setup(x => x.RetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<string>()))
+            .ReturnsAsync(_viewModel);
     }
 
     public async Task<IActionResult> ConfirmEditApprenticeship()
     {
         return await Controller.ConfirmEditApprenticeship();
-    }     
-    
+    }
+
     internal void VerifyViewModelMapperIsCalled()
     {
         MockMapper.Verify(x => x.Map<ConfirmEditApprenticeshipViewModel>(It.IsAny<EditApprenticeshipRequestViewModel>()), Times.Once());

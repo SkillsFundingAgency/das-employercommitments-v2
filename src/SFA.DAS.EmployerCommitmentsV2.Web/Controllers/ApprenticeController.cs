@@ -805,7 +805,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> SelectCourseForEdit(EditApprenticeshipRequest request)
     {
-        var draft = GetStoredEditApprenticeshipRequestViewModelFromCache(ViewModelForEdit);
+        var draft = await GetStoredEditApprenticeshipRequestViewModelFromCache(ViewModelForEdit);
         var model = await _modelMapper.Map<SelectCourseViewModel>(draft);
         return View("SelectCourse", model);
     }
@@ -942,7 +942,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/edit/confirm")]
     public async Task<IActionResult> ConfirmEditApprenticeship()
     {
-        var editApprenticeshipRequestViewModel = GetStoredEditApprenticeshipRequestViewModelFromCache(nameof(EditApprenticeshipRequestViewModel));
+        var editApprenticeshipRequestViewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(nameof(EditApprenticeshipRequestViewModel));
 
         var viewModel = await _modelMapper.Map<ConfirmEditApprenticeshipViewModel>(editApprenticeshipRequestViewModel);
 

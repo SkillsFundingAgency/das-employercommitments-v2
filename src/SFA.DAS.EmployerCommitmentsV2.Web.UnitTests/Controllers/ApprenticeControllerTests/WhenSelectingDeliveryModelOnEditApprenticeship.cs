@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Newtonsoft.Json;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
@@ -19,7 +18,7 @@ public class WhenSelectingDeliveryModelOnEditApprenticeship
     public async Task GettingDeliveryModel_ForProviderAndCourse_WithOnlyOneOption_ShouldRedirectToEditDraftApprenticeship()
     {
         var fixture = new WhenSelectingDeliveryModelOnEditApprenticeshipFixture()
-            .WithTempViewModel()
+            .WithCachedModel()
             .WithDeliveryModels([DeliveryModel.Regular]);
 
         var result = await fixture.Sut.SelectDeliveryModelForEdit(fixture.Request) as RedirectToActionResult;
@@ -30,7 +29,7 @@ public class WhenSelectingDeliveryModelOnEditApprenticeship
     public async Task GettingDeliveryModel_ForProviderAndCourse_WithMultipleOptions_ShouldRedirectToSelectDeliveryModel()
     {
         var fixture = new WhenSelectingDeliveryModelOnEditApprenticeshipFixture()
-            .WithTempViewModel()
+            .WithCachedModel()
             .WithDeliveryModels([DeliveryModel.Regular, DeliveryModel.PortableFlexiJob]);
 
         var result = await fixture.Sut.SelectDeliveryModelForEdit(fixture.Request) as ViewResult;
@@ -38,7 +37,7 @@ public class WhenSelectingDeliveryModelOnEditApprenticeship
     }
 
     [Test]
-    public void WhenSettingDeliveryModel_AndNoOptionSet_ShouldThrowException()
+    public async Task WhenSettingDeliveryModel_AndNoOptionSet_ShouldThrowException()
     {
         var fixture = new WhenSelectingDeliveryModelOnEditApprenticeshipFixture
         {
@@ -47,7 +46,7 @@ public class WhenSelectingDeliveryModelOnEditApprenticeship
 
         try
         {
-            fixture.Sut.SetDeliveryModelForEdit(fixture.ViewModel);
+            await fixture.Sut.SetDeliveryModelForEdit(fixture.ViewModel);
             Assert.Fail("Should have had exception thrown");
         }
         catch (CommitmentsApiModelException e)
@@ -61,7 +60,7 @@ public class WhenSelectingDeliveryModelOnEditApprenticeship
     public async Task WhenSettingDeliveryModel_AndOptionSet_ShouldRedirectToAddDraftApprenticeship()
     {
         var fixture = new WhenSelectingDeliveryModelOnEditApprenticeshipFixture()
-            .WithTempViewModel()
+            .WithCachedModel()
             .WithDeliveryModels([DeliveryModel.Regular, DeliveryModel.PortableFlexiJob]);
 
         fixture.ViewModel.DeliveryModel = DeliveryModel.PortableFlexiJob;
@@ -98,12 +97,11 @@ public class WhenSelectingDeliveryModelOnEditApprenticeshipFixture
         CacheStorageServiceMock = new Mock<ICacheStorageService>();
 
         Sut = new ApprenticeController(
-            ModelMapperMock.Object, 
-            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(), 
-            Mock.Of<ICommitmentsApiClient>(), 
+            ModelMapperMock.Object,
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
+            Mock.Of<ICommitmentsApiClient>(),
             CacheStorageServiceMock.Object,
             Mock.Of<ILogger<ApprenticeController>>());
-        Sut.TempData = TempDataMock.Object;
     }
 
     public WhenSelectingDeliveryModelOnEditApprenticeshipFixture WithDeliveryModels(List<EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel> list)
@@ -113,10 +111,11 @@ public class WhenSelectingDeliveryModelOnEditApprenticeshipFixture
         return this;
     }
 
-    public WhenSelectingDeliveryModelOnEditApprenticeshipFixture WithTempViewModel()
+    public WhenSelectingDeliveryModelOnEditApprenticeshipFixture WithCachedModel()
     {
-        object asString = JsonConvert.SerializeObject(Apprenticeship);
-        TempDataMock.Setup(x => x.Peek(It.IsAny<string>())).Returns(asString);
+        CacheStorageServiceMock
+            .Setup(x => x.RetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<string>()))
+            .ReturnsAsync(Apprenticeship);
         return this;
     }
 }

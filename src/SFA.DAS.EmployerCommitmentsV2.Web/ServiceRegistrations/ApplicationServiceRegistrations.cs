@@ -4,6 +4,8 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Services;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Services;
@@ -33,6 +35,8 @@ public static class ApplicationServiceRegistrations
         services.AddSingleton<ICurrentDateTime, CurrentDateTime>();
         services.AddSingleton<ICreateCsvService, CreateCsvService>();
         services.AddSingleton<IAcademicYearDateProvider, AcademicYearDateProvider>();
+        services.AddSingleton<ICacheStorageService, CacheStorageService>();
+
         
         return services;
     }

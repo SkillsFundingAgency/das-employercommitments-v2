@@ -1,10 +1,9 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Newtonsoft.Json;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
@@ -21,9 +20,7 @@ public class ChangeOptionViewModelMapperTests
     private EditApprenticeshipRequestViewModel _editViewModel;
 
     private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
-    private Mock<ITempDataDictionaryFactory> _mockTempDataFactory;
-    private Mock<ITempDataDictionary> _mockTempDataDictionary;
-
+    private Mock<ICacheStorageService> _mockCacheStorageService;
     private ChangeOptionViewModelMapper _mapper;
 
     [SetUp]
@@ -65,15 +62,11 @@ public class ChangeOptionViewModelMapperTests
             .Setup(c => c.GetApprenticeship(_request.ApprenticeshipId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(_getApprenticeshipResponse);
 
-        _mockTempDataDictionary = new Mock<ITempDataDictionary>();
+        _mockCacheStorageService = new Mock<ICacheStorageService>();
 
-        _mockTempDataFactory = new Mock<ITempDataDictionaryFactory>();
-        _mockTempDataFactory.Setup(f => f.GetTempData(It.IsAny<HttpContext>()))
-            .Returns(_mockTempDataDictionary.Object);
-
-        _mapper = new ChangeOptionViewModelMapper(_mockCommitmentsApiClient.Object, 
-            Mock.Of<IHttpContextAccessor>(),
-            _mockTempDataFactory.Object);
+        _mapper = new ChangeOptionViewModelMapper(_mockCommitmentsApiClient.Object,
+           Mock.Of<IHttpContextAccessor>(),
+           _mockCacheStorageService.Object);
     }
 
     [Test]
@@ -145,8 +138,8 @@ public class ChangeOptionViewModelMapperTests
     [Test]
     public async Task When_CourseCodeHasChanged_Then_SetReturnToEditTrue()
     {
-        _editViewModel.CourseCode = "1"; 
-        SetupTempDataDictionary();
+        _editViewModel.CourseCode = "1";
+        SetUpCacheData();
 
         var viewModel = await _mapper.Map(_request);
 
@@ -157,7 +150,7 @@ public class ChangeOptionViewModelMapperTests
     public async Task When_StartDateHasChanged_Then_SetReturnToEditTrue()
     {
         _editViewModel.StartDate.Month = _editViewModel.StartDate.Date.Value.AddMonths(1).Month;
-        SetupTempDataDictionary();
+        SetUpCacheData();
 
         var viewModel = await _mapper.Map(_request);
 
@@ -168,7 +161,7 @@ public class ChangeOptionViewModelMapperTests
     public async Task When_VersionHasChanged_Then_SetReturnToChangeVersionTrue()
     {
         _editViewModel.Version = "1.1";
-        SetupTempDataDictionary();
+        SetUpCacheData();
 
         var viewModel = await _mapper.Map(_request);
 
@@ -180,7 +173,7 @@ public class ChangeOptionViewModelMapperTests
     {
         _editViewModel.Version = "1.1";
         _editViewModel.Option = "New Option";
-        SetupTempDataDictionary();
+        SetUpCacheData();
 
         var viewModel = await _mapper.Map(_request);
 
@@ -188,11 +181,10 @@ public class ChangeOptionViewModelMapperTests
         viewModel.SelectedOption.Should().Be(_editViewModel.Option);
     }
 
-    private void SetupTempDataDictionary()
+    private void SetUpCacheData()
     {
-        object viewModel = JsonConvert.SerializeObject(_editViewModel);
-
-        _mockTempDataDictionary.Setup(d => d.Peek("EditApprenticeshipRequestViewModel"))
-            .Returns(viewModel);
+        _mockCacheStorageService
+          .Setup(d => d.RetrieveFromCache<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel)))
+          .ReturnsAsync(_editViewModel);
     }
 }

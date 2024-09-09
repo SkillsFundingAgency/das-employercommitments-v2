@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Newtonsoft.Json;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
@@ -19,7 +18,7 @@ public class WhenSelectingCourseOnEditApprenticeship
     public async Task GettingCourses_ShouldShowViewWithCourseSetAndCoursesListed()
     {
         var fixture = new WhenSelectingCourseOnEditApprenticeshipFixture()
-            .WithTempViewModel();
+            .WithCachedModel();
 
         var result = await fixture.Sut.SelectCourseForEdit(fixture.Request);
         result.VerifyReturnsViewModel().ViewName.Should().Be("SelectCourse");
@@ -29,7 +28,7 @@ public class WhenSelectingCourseOnEditApprenticeship
     }
 
     [Test]
-    public void WhenSettingCourse_AndNoCourseSelected_ShouldThrowException()
+    public async Task WhenSettingCourse_AndNoCourseSelected_ShouldThrowException()
     {
         var fixture = new WhenSelectingCourseOnEditApprenticeshipFixture
         {
@@ -38,7 +37,7 @@ public class WhenSelectingCourseOnEditApprenticeship
 
         try
         {
-            var result = fixture.Sut.SetCourseForEdit(fixture.ViewModel);
+            var result = await fixture.Sut.SetCourseForEdit(fixture.ViewModel);
             Assert.Fail("Should have had exception thrown");
         }
         catch (CommitmentsApiModelException exception)
@@ -51,7 +50,7 @@ public class WhenSelectingCourseOnEditApprenticeship
     [Test]
     public async Task WhenSettingCourse_AndCourseSelected_ShouldRedirectToEditApprenticeship()
     {
-        var fixture = new WhenSelectingCourseOnEditApprenticeshipFixture().WithTempViewModel();
+        var fixture = new WhenSelectingCourseOnEditApprenticeshipFixture().WithCachedModel();
 
         fixture.ViewModel.CourseCode = "123";
 
@@ -98,18 +97,19 @@ public class WhenSelectingCourseOnEditApprenticeshipFixture
         CacheStorageServiceMock = new Mock<ICacheStorageService>();
 
         Sut = new ApprenticeController(
-            ModelMapperMock.Object, 
-            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(), 
-            CommitmentsApiClientMock.Object, 
+            ModelMapperMock.Object,
+            Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
+            CommitmentsApiClientMock.Object,
             CacheStorageServiceMock.Object,
             Mock.Of<ILogger<ApprenticeController>>());
         Sut.TempData = TempDataMock.Object;
     }
 
-    public WhenSelectingCourseOnEditApprenticeshipFixture WithTempViewModel()
+    public WhenSelectingCourseOnEditApprenticeshipFixture WithCachedModel()
     {
-        object asString = JsonConvert.SerializeObject(Apprenticeship);
-        TempDataMock.Setup(x => x.Peek(It.IsAny<string>())).Returns(asString);
+        CacheStorageServiceMock
+            .Setup(x => x.RetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<string>()))
+            .ReturnsAsync(Apprenticeship);
         return this;
     }
 }
