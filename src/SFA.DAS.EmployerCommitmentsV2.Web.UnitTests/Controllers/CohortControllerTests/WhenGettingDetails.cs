@@ -59,7 +59,7 @@ public class WhenGettingDetails
             _cacheStorageService = new Mock<ICacheStorageService>();
 
             _cacheStorageService.Setup(x =>
-                x.RetrieveFromCache<ViewEmployerAgreementModel>(It.IsAny<string>()))
+                x.SafeRetrieveFromCache<ViewEmployerAgreementModel>(It.IsAny<string>()))
                 .ReturnsAsync(_viewEmployerAgreementModel);
 
             CohortController = new CohortController(Mock.Of<ICommitmentsApiClient>(),

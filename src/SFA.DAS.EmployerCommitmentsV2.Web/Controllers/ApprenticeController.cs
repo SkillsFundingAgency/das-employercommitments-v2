@@ -1266,7 +1266,7 @@ public class ApprenticeController : Controller
 
     private async Task<EditApprenticeshipRequestViewModel> GetStoredEditApprenticeshipRequestViewModelFromCache(string key)
     {
-        return await _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>(key);
+        return await _cacheStorageService.SafeRetrieveFromCache<EditApprenticeshipRequestViewModel>(key);
 
     }
 

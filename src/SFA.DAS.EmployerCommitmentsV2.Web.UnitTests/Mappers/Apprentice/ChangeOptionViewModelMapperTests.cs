@@ -184,7 +184,7 @@ public class ChangeOptionViewModelMapperTests
     private void SetUpCacheData()
     {
         _mockCacheStorageService
-          .Setup(d => d.RetrieveFromCache<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel)))
+          .Setup(d => d.SafeRetrieveFromCache<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel)))
           .ReturnsAsync(_editViewModel);
     }
 }

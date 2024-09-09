@@ -557,7 +557,7 @@ public class CohortController : Controller
 
     private async Task<ApprenticeViewModel> GetStoredApprenticeViewModelFromCache()
     {
-        return await _cacheStorageService.RetrieveFromCache<ApprenticeViewModel>(nameof(ApprenticeViewModel));
+        return await _cacheStorageService.SafeRetrieveFromCache<ApprenticeViewModel>(nameof(ApprenticeViewModel));
 
     }
 
@@ -568,7 +568,7 @@ public class CohortController : Controller
 
     private async Task<ViewEmployerAgreementModel> GetViewEmployerAgreementModelFromCache()
     {
-        return await _cacheStorageService.RetrieveFromCache<ViewEmployerAgreementModel>(nameof(ViewEmployerAgreementModel));
+        return await _cacheStorageService.SafeRetrieveFromCache<ViewEmployerAgreementModel>(nameof(ViewEmployerAgreementModel));
 
     }
 }

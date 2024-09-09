@@ -54,7 +54,7 @@ public class WhenCallingChangeVersionTestsFixture : ApprenticeControllerTestFixt
         };
 
         _cacheStorageService
-            .Setup(x => x.RetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<string>()))
+            .Setup(x => x.SafeRetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<string>()))
             .ReturnsAsync(editApprenticeViewModel);
     }
 
