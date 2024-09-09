@@ -752,7 +752,7 @@ public class ApprenticeController : Controller
     {
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
-            StoreEditApprenticeshipRequestViewModelInCache(viewModel, ViewModelForEdit);
+            await StoreEditApprenticeshipRequestViewModelInCache(viewModel, ViewModelForEdit);
             return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit),
                 new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, viewModel.AccountHashedId });
         }
@@ -792,7 +792,7 @@ public class ApprenticeController : Controller
             viewModel.Option = null;
         }
 
-        StoreEditApprenticeshipRequestViewModelInCache(viewModel, nameof(EditApprenticeshipRequestViewModel));
+        await StoreEditApprenticeshipRequestViewModelInCache(viewModel, nameof(EditApprenticeshipRequestViewModel));
 
         return RedirectToAction(viewModel.HasOptions
                 ? nameof(ChangeOption)
@@ -824,7 +824,7 @@ public class ApprenticeController : Controller
         var draft = await GetStoredEditApprenticeshipRequestViewModelFromCache(ViewModelForEdit);
         draft.CourseCode = model.CourseCode;
 
-        StoreEditApprenticeshipRequestViewModelInCache(draft, ViewModelForEdit);
+        await StoreEditApprenticeshipRequestViewModelInCache(draft, ViewModelForEdit);
 
         return RedirectToAction(nameof(SelectDeliveryModelForEdit), new { model.ApprenticeshipHashedId, model.AccountHashedId });
     }
@@ -843,7 +843,7 @@ public class ApprenticeController : Controller
         }
 
         draft.DeliveryModel = (DeliveryModel)model.DeliveryModels.FirstOrDefault();
-        StoreEditApprenticeshipRequestViewModelInCache(draft, ViewModelForEdit);
+        await StoreEditApprenticeshipRequestViewModelInCache(draft, ViewModelForEdit);
 
         return RedirectToAction("EditApprenticeship", new { request.AccountHashedId, request.ApprenticeshipHashedId });
     }
@@ -861,7 +861,7 @@ public class ApprenticeController : Controller
         var draft = await GetStoredEditApprenticeshipRequestViewModelFromCache(ViewModelForEdit);
         draft.DeliveryModel = (DeliveryModel)model.DeliveryModel.Value;
 
-        StoreEditApprenticeshipRequestViewModelInCache(draft, ViewModelForEdit);
+        await StoreEditApprenticeshipRequestViewModelInCache(draft, ViewModelForEdit);
 
         return RedirectToAction(nameof(EditApprenticeship), new { apprenticeshipHashedId = draft.HashedApprenticeshipId, draft.AccountHashedId });
     }
@@ -889,7 +889,7 @@ public class ApprenticeController : Controller
     {
         var editRequestViewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(changeVersionViewModel);
 
-        StoreEditApprenticeshipRequestViewModelInCache(editRequestViewModel, nameof(EditApprenticeshipRequestViewModel));
+        await StoreEditApprenticeshipRequestViewModelInCache(editRequestViewModel, nameof(EditApprenticeshipRequestViewModel));
 
         return RedirectToAction(editRequestViewModel.HasOptions
                 ? nameof(ChangeOption)
@@ -916,7 +916,7 @@ public class ApprenticeController : Controller
     {
         var editViewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(viewModel);
 
-        StoreEditApprenticeshipRequestViewModelInCache(editViewModel, nameof(EditApprenticeshipRequestViewModel));
+        await StoreEditApprenticeshipRequestViewModelInCache(editViewModel, nameof(EditApprenticeshipRequestViewModel));
 
         return RedirectToAction("ConfirmEditApprenticeship",
             new
@@ -1259,7 +1259,7 @@ public class ApprenticeController : Controller
         });
     }
 
-    private async void StoreEditApprenticeshipRequestViewModelInCache(EditApprenticeshipRequestViewModel model, string key)
+    private async Task StoreEditApprenticeshipRequestViewModelInCache(EditApprenticeshipRequestViewModel model, string key)
     {
         await _cacheStorageService.SaveToCache(key, model, 1);
     }
@@ -1267,7 +1267,6 @@ public class ApprenticeController : Controller
     private async Task<EditApprenticeshipRequestViewModel> GetStoredEditApprenticeshipRequestViewModelFromCache(string key)
     {
         return await _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>(key);
-
     }
 
     private async Task DeleteEditApprenticeshipRequestViewModelInCache(string key)

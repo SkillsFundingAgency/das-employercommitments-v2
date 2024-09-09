@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Http;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
@@ -85,7 +84,6 @@ public class ChangeOptionViewModelToEditApprenticeshipRequestViewModelMapperTest
 
         _mapper = new ChangeOptionViewModelToEditApprenticeshipRequestViewModelMapper(
             _mockCommitmentsApiClient.Object,
-            Mock.Of<IHttpContextAccessor>(),
             _mockCacheStorageService.Object);
     }
 
