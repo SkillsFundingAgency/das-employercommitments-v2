@@ -1,6 +1,7 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.Apprenticeships.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 
@@ -58,25 +59,6 @@
             <tbody>
 
                 <partial name="DetailsPartials/_ApprenticeshipStatus" />
-
-                <tr>
-                    <th scope="row" class="govuk-table__header">Apprentice confirmation</th>
-                    <td id="confirationStatus" class="govuk-table__cell" colspan="2">
-                        @Model.ConfirmationStatus.ToDisplayString()
-                    </td>
-                </tr>
-
-                @if(Model.IsOnFlexiPaymentPilot == true)
-                {
-                    <tr>
-                        <th scope="row" class="govuk-table__header">Provider payments status</th>
-                        <td id="provider-payments-status" class="govuk-table__cell" colspan="2">
-                            <strong class="govuk-tag govuk-tag--blue">@Model.PaymentStatus</strong>
-                        </td>
-                        <td class="govuk-table__cell"><a id="linkChangePaymentStatus" href="@Model.PaymentStatusChangeUrl" class="govuk-link">Change</a></td>
-                    </tr>
-                }
-
 
                 <tr>
                     <th scope="row" class="govuk-table__header">Training provider</th>

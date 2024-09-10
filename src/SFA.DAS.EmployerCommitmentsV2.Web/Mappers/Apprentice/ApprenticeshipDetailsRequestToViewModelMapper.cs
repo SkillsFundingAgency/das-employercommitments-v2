@@ -1,4 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.Apprenticeships.Types;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Employer.Shared.UI;
@@ -126,7 +127,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 PendingPriceChangeUrl = response.PendingPriceChange != null ? _urlBuilder.ApprenticeshipsLink("ViewPendingPriceChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
                 PendingStartDateChange = Map(response.PendingStartDateChange),
                 PendingStartDateChangeUrl = response.PendingStartDateChange != null ? _urlBuilder.ApprenticeshipsLink("ViewPendingStartDateChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
-                PaymentStatus = response.PaymentsStatus.PaymentsFrozen ? "Inactive" : "Active",
+                PaymentStatus = response.LearnerStatus == LearnerStatus.WaitingToStart || response.PaymentsStatus.PaymentsFrozen ? "Inactive" : "Active",
                 PaymentStatusChangeUrl = _urlBuilder.ApprenticeshipsLink(response.PaymentsStatus.PaymentsFrozen ? "PaymentsUnfreeze" : "PaymentsFreeze", source.AccountHashedId, source.ApprenticeshipHashedId),
                 LearnerStatus = response.LearnerStatus
             };
