@@ -13,4 +13,5 @@ public class ChangeVersionViewModel : IAuthorizationContextModel
     public string CurrentVersion { get; set; }
     public string SelectedVersion { get; set; }
     public IEnumerable<string> NewerVersions { get; set; }
+    public Guid CacheKey { get; set; }
 }

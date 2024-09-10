@@ -138,6 +138,8 @@ public class ConfirmEditApprenticeshipRequestToConfirmEditViewModelMapper : IMap
             vm.ReturnToChangeVersion = !string.IsNullOrEmpty(vm.Version) && string.IsNullOrEmpty(vm.CourseCode) && !vm.StartDate.HasValue;
         }
 
+        vm.CacheKey = source.CacheKey;
+
         return vm;
     }
 }

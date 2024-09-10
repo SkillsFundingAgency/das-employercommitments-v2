@@ -9,4 +9,5 @@ public class CancelChangeOfCircumstanceRequest : IAuthorizationContextModel
 
     [FromRoute]
     public string ApprenticeshipHashedId { get; set; }
+    public Guid CacheKey { get; set; }
 }

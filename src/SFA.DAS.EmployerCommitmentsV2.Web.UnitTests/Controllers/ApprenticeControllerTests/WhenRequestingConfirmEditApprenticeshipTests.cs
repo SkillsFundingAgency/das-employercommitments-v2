@@ -30,23 +30,26 @@ public class WhenRequestingConfirmEditApprenticeshipTests
 public class WhenRequestingConfirmEditApprenticeshipFixture : ApprenticeControllerTestFixtureBase
 {
     private readonly EditApprenticeshipRequestViewModel _viewModel;
+    private readonly ConfirmEditApprenticeshipRequest _request;
 
     public WhenRequestingConfirmEditApprenticeshipFixture() : base()
     {
         var fixture = new Fixture();
+        _request = fixture.Create<ConfirmEditApprenticeshipRequest>();
+
         _viewModel = fixture.Build<EditApprenticeshipRequestViewModel>().Without(x => x.BirthDay).Without(x => x.BirthMonth).Without(x => x.BirthYear)
             .Without(x => x.StartMonth).Without(x => x.StartYear).Without(x => x.StartDate)
             .Without(x => x.EndDate).Without(x => x.EndMonth).Without(x => x.EndYear)
             .Without(x => x.EmploymentEndDate).Without(x => x.EmploymentEndMonth).Without(x => x.EmploymentEndYear)
             .Create();
 
-        _cacheStorageService.Setup(x => x.RetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<string>()))
+        _cacheStorageService.Setup(x => x.RetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<Guid>()))
             .ReturnsAsync(_viewModel);
     }
 
     public async Task<IActionResult> ConfirmEditApprenticeship()
     {
-        return await Controller.ConfirmEditApprenticeship();
+        return await Controller.ConfirmEditApprenticeship(_request);
     }
 
     internal void VerifyViewModelMapperIsCalled()

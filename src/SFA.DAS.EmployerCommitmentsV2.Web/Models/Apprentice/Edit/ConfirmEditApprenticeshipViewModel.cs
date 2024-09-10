@@ -9,4 +9,5 @@ public class ConfirmEditApprenticeshipViewModel : BaseEdit
 
     public bool ReturnToChangeOption { get; set; }
     public bool ReturnToChangeVersion { get; set; }
+    public Guid CacheKey { get; set; }
 }

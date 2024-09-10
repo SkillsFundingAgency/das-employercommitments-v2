@@ -114,7 +114,7 @@ public class WhenSelectingDeliveryModelOnEditApprenticeshipFixture
     public WhenSelectingDeliveryModelOnEditApprenticeshipFixture WithCachedModel()
     {
         CacheStorageServiceMock
-            .Setup(x => x.RetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<string>()))
+            .Setup(x => x.RetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<Guid>()))
             .ReturnsAsync(Apprenticeship);
         return this;
     }

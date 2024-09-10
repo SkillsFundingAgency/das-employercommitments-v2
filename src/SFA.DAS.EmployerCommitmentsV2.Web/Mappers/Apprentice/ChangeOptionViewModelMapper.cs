@@ -64,7 +64,8 @@ public class ChangeOptionViewModelMapper : IMapper<ChangeOptionRequest, ChangeOp
             SelectedVersionUrl = standardVersion.TrainingProgramme.StandardPageUrl,
             Options = standardVersion.TrainingProgramme.Options,
             ReturnToChangeVersion = returnToChangeVersion,
-            ReturnToEdit = returnToEdit
+            ReturnToEdit = returnToEdit,
+            CacheKey = source.CacheKey
         };
     }
 }
