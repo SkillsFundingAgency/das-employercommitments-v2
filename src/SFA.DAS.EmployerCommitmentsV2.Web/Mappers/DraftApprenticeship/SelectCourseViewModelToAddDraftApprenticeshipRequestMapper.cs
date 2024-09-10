@@ -20,7 +20,8 @@ public class SelectCourseViewModelToAddDraftApprenticeshipRequestMapper : IMappe
             DraftApprenticeshipHashedId = source.DraftApprenticeshipHashedId,
             ProviderId = source.ProviderId,
             ReservationId = source.ReservationId.HasValue ? source.ReservationId.Value : System.Guid.Empty,
-            StartMonthYear = source.StartMonthYear
+            StartMonthYear = source.StartMonthYear,
+            CacheKey = source.CacheKey
         });
     }
 }

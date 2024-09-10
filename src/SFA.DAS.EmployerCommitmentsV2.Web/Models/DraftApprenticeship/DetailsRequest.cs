@@ -11,6 +11,7 @@ public class DetailsRequest : IAuthorizationContextModel
     public string CohortReference { get; set; }
     public long DraftApprenticeshipId { get; set; }
     public string DraftApprenticeshipHashedId { get; set; }
+    public Guid CacheKey { get; set; }
 }
 
 public class EditDetailsRequest : DetailsRequest

@@ -29,7 +29,8 @@ public class EditDetailsRequestToSelectDeliveryModelForEditViewModelMapper : IMa
             HasUnavailableFlexiJobAgencyDeliveryModel = apiResponse.HasUnavailableDeliveryModel && source.DeliveryModel == DeliveryModel.FlexiJobAgency,
             ShowFlexiJobAgencyDeliveryModelConfirmation = apiResponse.HasUnavailableDeliveryModel &&
                                                           source.DeliveryModel == DeliveryModel.FlexiJobAgency &&
-                                                          apiResponse.DeliveryModels.Count == 1
+                                                          apiResponse.DeliveryModels.Count == 1,
+            CacheKey = source.CacheKey
         };
     }
 }

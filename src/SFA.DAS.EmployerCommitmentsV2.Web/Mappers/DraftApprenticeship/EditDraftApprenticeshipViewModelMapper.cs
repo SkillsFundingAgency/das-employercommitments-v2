@@ -75,7 +75,8 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
             TrainingTotalHours = draftApprenticeship.TrainingTotalHours,
             DurationReducedByHours = draftApprenticeship.DurationReducedByHours,
             DurationReducedBy = draftApprenticeship.DurationReducedBy,
-            PriceReducedBy = draftApprenticeship.PriceReducedBy
+            PriceReducedBy = draftApprenticeship.PriceReducedBy,
+            CacheKey = source.Request.CacheKey
         };
     }
 }

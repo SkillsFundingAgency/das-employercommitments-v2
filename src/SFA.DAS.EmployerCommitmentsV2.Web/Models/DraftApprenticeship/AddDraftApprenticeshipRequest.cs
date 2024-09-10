@@ -8,6 +8,7 @@ public class AddDraftApprenticeshipRequest : BaseAddDraftApprenticeshipRequest, 
 {
     public long CohortId { get; set; }        
     public long AccountLegalEntityId { get; set; }
+    public Guid CacheKey { get; set; }
 }
 
 public class BaseAddDraftApprenticeshipRequest
