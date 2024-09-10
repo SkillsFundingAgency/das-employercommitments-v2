@@ -343,7 +343,7 @@ public class CohortController : Controller
     [Route("add/apprenticeship")]
     public async Task<IActionResult> AddDraftApprenticeship(ApprenticeRequest request)
     {
-        var model = await GetStoredApprenticeViewModelFromCache();
+        var model = await GetStoredApprenticeViewModelFromCache(request.CacheKey);
         if (model == null)
         {
             model = await _modelMapper.Map<ApprenticeViewModel>(request);
@@ -362,7 +362,7 @@ public class CohortController : Controller
     {
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
-            await StoreApprenticeViewModelInCache(model);
+            await StoreApprenticeViewModelInCache(model, model.CacheKey);
             var request = await _modelMapper.Map<ApprenticeRequest>(model);
 
             return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request.CloneBaseValues());
@@ -554,14 +554,14 @@ public class CohortController : Controller
         return View(response);
     }
 
-    private async Task StoreApprenticeViewModelInCache(ApprenticeViewModel model)
+    private async Task StoreApprenticeViewModelInCache(ApprenticeViewModel model, Guid key)
     {
-        await _cacheStorageService.SaveToCache(nameof(ApprenticeViewModel), model, 1);
+        await _cacheStorageService.SaveToCache(key, model, 1);
     }
 
-    private async Task<ApprenticeViewModel> GetStoredApprenticeViewModelFromCache()
+    private async Task<ApprenticeViewModel> GetStoredApprenticeViewModelFromCache(Guid key)
     {
-        return await _cacheStorageService.RetrieveFromCache<ApprenticeViewModel>(nameof(ApprenticeViewModel));
+        return await _cacheStorageService.RetrieveFromCache<ApprenticeViewModel>(key);
 
     }
 

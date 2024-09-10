@@ -19,7 +19,7 @@ public class WhenGetingAddDraftApprenticeship
         var viewModel = new ApprenticeViewModel();
 
         cacheStorageService
-            .Setup(x => x.RetrieveFromCache<ApprenticeViewModel>(nameof(ApprenticeViewModel)))
+            .Setup(x => x.RetrieveFromCache<ApprenticeViewModel>(It.IsAny<Guid>()))
             .ReturnsAsync((ApprenticeViewModel)null);
 
         mockMapper
@@ -44,11 +44,12 @@ public class WhenGetingAddDraftApprenticeship
         var cacheItem = new ApprenticeViewModel
         {
             DeliveryModel = CommitmentsV2.Types.DeliveryModel.Regular,
-            CourseCode = "CourseCode"
+            CourseCode = "CourseCode",
+            CacheKey = request.CacheKey            
         };
 
         cacheStorageService
-            .Setup(x => x.RetrieveFromCache<ApprenticeViewModel>(nameof(ApprenticeViewModel)))
+            .Setup(x => x.RetrieveFromCache<ApprenticeViewModel>(cacheItem.CacheKey))
             .ReturnsAsync(cacheItem);
 
         mockMapper
@@ -64,6 +65,5 @@ public class WhenGetingAddDraftApprenticeship
         resultObject.Should().NotBeNull();
         resultObject.DeliveryModel.Should().Be(cacheItem.DeliveryModel);
         resultObject.CourseCode.Should().Be(cacheItem.CourseCode);
-
     }
 }

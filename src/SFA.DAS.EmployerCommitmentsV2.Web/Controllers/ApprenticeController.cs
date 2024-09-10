@@ -746,7 +746,6 @@ public class ApprenticeController : Controller
         {
             viewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey)
                         ?? await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
-            viewModel.CacheKey = request.CacheKey;
         }
         else
         {
