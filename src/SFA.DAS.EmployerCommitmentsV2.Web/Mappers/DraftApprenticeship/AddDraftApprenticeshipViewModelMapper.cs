@@ -43,7 +43,8 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<AddDraftApprentices
             TransferSenderHashedId = cohort.IsFundedByTransfer ? _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId) : string.Empty,
             AutoCreatedReservation = source.AutoCreated,
             DeliveryModel = source.DeliveryModel,
-            IsOnFlexiPaymentPilot = false
+            IsOnFlexiPaymentPilot = false,
+            CacheKey = source.CacheKey != Guid.Empty ? source.CacheKey : Guid.NewGuid()
         };
 
         return result;

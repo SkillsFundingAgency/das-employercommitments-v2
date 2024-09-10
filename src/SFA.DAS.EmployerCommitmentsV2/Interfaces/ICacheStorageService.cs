@@ -9,6 +9,5 @@
         Task SaveToCache<T>(Guid key, T item, int expirationInHours);
         Task SaveToCache<T>(T item, int expirationInHours) where T : ICacheModel;
         Task DeleteFromCache(Guid key);
-        Task DeleteFromCache(string key);
     }
 }

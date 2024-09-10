@@ -38,7 +38,7 @@ public class ApprenticeViewModelMapper : IMapper<ApprenticeRequest, ApprenticeVi
             AutoCreatedReservation = source.AutoCreated,
             DeliveryModel = source.DeliveryModel,
             IsOnFlexiPaymentPilot = false,
-            CacheKey = source.CacheKey == Guid.Empty ? Guid.NewGuid() : source.CacheKey
+            CacheKey = source.CacheKey != Guid.Empty ? source.CacheKey : Guid.NewGuid()
         };
 
         return result;

@@ -10,4 +10,5 @@ public class AddDraftApprenticeshipViewModel : DraftApprenticeshipViewModel, IAu
     public string LegalEntityName { get; set; }
     public string TransferSenderHashedId { get; set; }
     public bool AutoCreatedReservation { get; set; }
+    public Guid CacheKey { get; set; }
 }

@@ -108,7 +108,7 @@ public class DraftApprenticeshipController : Controller
     {
         try
         {
-            var model = await GetStoredAddDraftApprenticeshipFromCache();
+            var model = await GetStoredAddDraftApprenticeshipFromCache(request.CacheKey);
             if (model == null)
             {
                 model = await _modelMapper.Map<AddDraftApprenticeshipViewModel>(request);
@@ -133,7 +133,7 @@ public class DraftApprenticeshipController : Controller
     {
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
-            await StoreAddDraftApprenticeshipInCache(model);
+            await StoreAddDraftApprenticeshipInCache(model, model.CacheKey);
             var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
             return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request.CloneBaseValues());
         }
@@ -142,7 +142,7 @@ public class DraftApprenticeshipController : Controller
 
         var response = await _outerApi.AddDraftApprenticeship(model.CohortId.Value, addDraftApprenticeshipRequest);
 
-        await RemoveAddDraftApprenticeshipFromCache();
+        await RemoveAddDraftApprenticeshipFromCache(model.CacheKey);
 
         var draftApprenticeshipHashedId = _encodingService.Encode(response.DraftApprenticeshipId, EncodingType.ApprenticeshipId);
 
@@ -371,19 +371,19 @@ public class DraftApprenticeshipController : Controller
         return RedirectToAction("Details", "Cohort", new { accountHashedId, cohortReference });
     }
 
-    private async Task StoreAddDraftApprenticeshipInCache(AddDraftApprenticeshipViewModel model)
+    private async Task StoreAddDraftApprenticeshipInCache(AddDraftApprenticeshipViewModel model, Guid key)
     {
-        await _cacheStorageService.SaveToCache(nameof(AddDraftApprenticeshipViewModel), model, 1);
+        await _cacheStorageService.SaveToCache(key, model, 1);
     }
 
-    private async Task RemoveAddDraftApprenticeshipFromCache()
+    private async Task RemoveAddDraftApprenticeshipFromCache(Guid key)
     {
-        await _cacheStorageService.DeleteFromCache(nameof(AddDraftApprenticeshipViewModel));
+        await _cacheStorageService.DeleteFromCache(key);
     }
 
-    private async Task<AddDraftApprenticeshipViewModel> GetStoredAddDraftApprenticeshipFromCache()
+    private async Task<AddDraftApprenticeshipViewModel> GetStoredAddDraftApprenticeshipFromCache(Guid key)
     {
-        return await _cacheStorageService.RetrieveFromCache<AddDraftApprenticeshipViewModel>(nameof(AddDraftApprenticeshipViewModel));
+        return await _cacheStorageService.RetrieveFromCache<AddDraftApprenticeshipViewModel>(key);
     }
 
     private async Task StoreEditDraftApprenticeshipInCache(EditDraftApprenticeshipViewModel model, Guid key)

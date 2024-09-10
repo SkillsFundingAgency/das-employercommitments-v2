@@ -22,6 +22,7 @@ public class AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMappe
             EmploymentPrice = source.EmploymentPrice,
             EmploymentEndDate = source.EmploymentEndDate.Date,
             ReservationId = source.ReservationId.HasValue ? source.ReservationId.Value : System.Guid.Empty,
+            CacheKey = source.CacheKey
         });
     }
 }
