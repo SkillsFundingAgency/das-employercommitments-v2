@@ -16,7 +16,7 @@ public class BaseAddDraftApprenticeshipRequest
     public string CohortReference { get; set; }
     public string AccountLegalEntityHashedId { get; set; }
     public string DraftApprenticeshipHashedId { get; set; }
-    public Guid ReservationId { get; set; }
+    public Guid? ReservationId { get; set; }
     public string StartMonthYear { get; set; }
     public string CourseCode { get; set; }
     public bool AutoCreated { get; set; }
