@@ -19,7 +19,6 @@ public class BaseAddDraftApprenticeshipRequest
     public Guid? ReservationId { get; set; }
     public string StartMonthYear { get; set; }
     public string CourseCode { get; set; }
-    public bool AutoCreated { get; set; }
     public long ProviderId { get; set; }
     public DeliveryModel? DeliveryModel { get; set; }
     public int? Cost { get; set; }
