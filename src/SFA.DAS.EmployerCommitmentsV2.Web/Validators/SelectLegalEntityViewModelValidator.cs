@@ -6,6 +6,6 @@ public class SelectLegalEntityViewModelValidator : AbstractValidator<SelectLegal
 {
     public SelectLegalEntityViewModelValidator()
     {            
-        RuleFor(x => x.LegalEntityId).NotEmpty().WithMessage("Choose organisation");
+        RuleFor(x => x.LegalEntityId).NotEmpty().WithMessage("Select which organisation is named on the contract with the training provider");
     }
 }
