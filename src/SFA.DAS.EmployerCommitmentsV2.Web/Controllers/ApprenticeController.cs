@@ -945,7 +945,7 @@ public class ApprenticeController : Controller
         Name = RouteNames.CancelInProgressChangeOfCircumstance)]
     public async Task<IActionResult> CancelChangeOfCircumstance(CancelChangeOfCircumstanceRequest request)
     {
-        await DeleteEditApprenticeshipRequestViewModelInCache(request.CacheKey); //todo check the request route params
+        await DeleteEditApprenticeshipRequestViewModelInCache(request.CacheKey);
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
             new { request.AccountHashedId, request.ApprenticeshipHashedId });

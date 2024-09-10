@@ -54,7 +54,7 @@
                     <ul>
                         @if (!Model.IsAgreementSigned)
                         {
-                            <li>you have accepted your <a href="@Url.Action("ViewAgreement", "Cohort", new {Model.AccountHashedId})" class="govuk-link">employer agreement</a></li>
+                            <li>you have accepted your <a href="@Url.Action("ViewAgreement", "Cohort", new {Model.AccountHashedId, Model.CacheKey})" class="govuk-link">employer agreement</a></li>
                         }
                         @if (Model.HasOverlappingUln)
                         {
@@ -253,6 +253,7 @@
             <hr class="govuk-section-break govuk-section-break--l">
 
             <form id="submitCohort" novalidate method="post">
+                <input type="hidden" asp-for="CacheKey" />
                 <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.Selection, "govuk-form-group--error")">
 
                     <fieldset class="govuk-fieldset">

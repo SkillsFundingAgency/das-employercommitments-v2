@@ -53,12 +53,16 @@ public class CohortController : Controller
     {
         var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
 
+        var cacheKey = Guid.NewGuid();
+        viewModel.CacheKey = cacheKey;
+
         await StoreViewEmployerAgreementModelInCache(
             new ViewEmployerAgreementModel
             {
                 AccountHashedId = viewModel.AccountHashedId,
-                CohortId = viewModel.CohortId
-            });
+                CohortId = viewModel.CohortId,
+                CacheKey = cacheKey
+            }, cacheKey);
 
         return View(viewModel);
     }
@@ -94,9 +98,9 @@ public class CohortController : Controller
 
     [HttpGet]
     [Route("viewAgreement", Name = "ViewAgreement")]
-    public async Task<IActionResult> ViewAgreement(string hashedAccountId)
+    public async Task<IActionResult> ViewAgreement(string hashedAccountId, Guid cacheKey)
     {
-        var cachedModel = await GetViewEmployerAgreementModelFromCache();
+        var cachedModel = await GetViewEmployerAgreementModelFromCache(cacheKey);
 
         var request = cachedModel == null
             ? new ViewEmployerAgreementRequest { AccountHashedId = hashedAccountId }
@@ -561,14 +565,14 @@ public class CohortController : Controller
 
     }
 
-    private async Task StoreViewEmployerAgreementModelInCache(ViewEmployerAgreementModel model)
+    private async Task StoreViewEmployerAgreementModelInCache(ViewEmployerAgreementModel model, Guid key)
     {
-        await _cacheStorageService.SaveToCache(nameof(ViewEmployerAgreementModel), model, 1);
+        await _cacheStorageService.SaveToCache(key, model, 1);
     }
 
-    private async Task<ViewEmployerAgreementModel> GetViewEmployerAgreementModelFromCache()
+    private async Task<ViewEmployerAgreementModel> GetViewEmployerAgreementModelFromCache(Guid key)
     {
-        return await _cacheStorageService.RetrieveFromCache<ViewEmployerAgreementModel>(nameof(ViewEmployerAgreementModel));
+        return await _cacheStorageService.RetrieveFromCache<ViewEmployerAgreementModel>(key);
 
     }
 }

@@ -61,7 +61,7 @@ public class WhenViewingEmployerAgreement
             .Returns(_organisationAgreementsUrl);
 
         //Act
-        var result = await _controller.ViewAgreement(_viewEmployerAgreementRequest.AccountHashedId) as RedirectResult;
+        var result = await _controller.ViewAgreement(_viewEmployerAgreementRequest.AccountHashedId, _viewEmployerAgreementModel.CacheKey) as RedirectResult;
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -79,7 +79,7 @@ public class WhenViewingEmployerAgreement
             .Returns(_agreementUrl);
 
         //Act
-        var result = await _controller.ViewAgreement(_viewEmployerAgreementModel.AccountHashedId) as RedirectResult;
+        var result = await _controller.ViewAgreement(_viewEmployerAgreementModel.AccountHashedId, _viewEmployerAgreementModel.CacheKey) as RedirectResult;
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -89,7 +89,7 @@ public class WhenViewingEmployerAgreement
     private void SetUpCacheData()
     {
         _cacheStorageService
-            .Setup(d => d.RetrieveFromCache<ViewEmployerAgreementModel>(nameof(ViewEmployerAgreementModel)))
+            .Setup(d => d.RetrieveFromCache<ViewEmployerAgreementModel>(_viewEmployerAgreementModel.CacheKey))
             .ReturnsAsync(_viewEmployerAgreementModel);
     }
 }
