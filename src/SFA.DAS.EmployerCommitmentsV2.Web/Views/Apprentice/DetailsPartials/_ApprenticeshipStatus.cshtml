@@ -123,7 +123,7 @@ else{
         </td>
         @if(Model.LearnerStatus != LearnerStatus.WaitingToStart)
         {
-            <td class="govuk-table__cell"><a id="linkChangePaymentStatus" href="@Model.PaymentStatusChangeUrl" class="govuk-link">Change</a></td>
+            <td class="govuk-table__cell"><a id="linkChangePaymentStatus" href="@Model.PaymentStatusChangeUrl" class="govuk-link">Change<span class="govuk-visually-hidden"> Provider payments status</span></a></td>
         }
     </tr>
 }

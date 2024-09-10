@@ -12,7 +12,8 @@
     pageId = "apprentice-paused";
     pageHeading = "Pause apprenticeship";
 
-    string financeDataLink = LinkGenerator.FinanceLink($"accounts/{Model.AccountHashedId}/finance/{DateTime.Now.Year}/{DateTime.Now.Month}");
+    string financeDataLink =
+    LinkGenerator.FinanceLink($"accounts/{Model.AccountHashedId}/finance/{DateTime.Now.Year}/{DateTime.Now.Month}");
 
     ViewBag.Title = pageTitle;
     ViewBag.PageId = pageId;
@@ -32,11 +33,13 @@
             <h1 class="govuk-heading-xl">@pageHeading</h1>
 
             <p class="govuk-body">
-                You’re about to pause this apprenticeship and all payments to the training provider. Any payments previously made to the training provider are unaffected.
+                You’re about to pause this apprenticeship and all payments to the training provider. Any payments
+                previously made to the training provider are unaffected.
             </p>
 
             <p class="govuk-body">
-                <a class="govuk-link" target="_blank" href="@financeDataLink" id="view-transactions-link">View your transactions</a> to confirm all payments are up-to-date before pausing.
+                <a class="govuk-link" target="_blank" href="@financeDataLink" id="view-transactions-link">View your
+                    transactions</a> to confirm all payments are up-to-date before pausing.
             </p>
 
             <p class="govuk-body">You can return and resume the apprenticeship at any time.</p>
@@ -61,22 +64,27 @@
 
             </dl>
 
-            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.PauseConfirmed,  "govuk-form-group--error")">
+            <div
+                class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.PauseConfirmed,  "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
+                    <legend class="govuk-visually-hidden">Confirm if you want to pause this apprenticeship</legend>
                     @if (!ViewData.ModelState.IsValid)
                     {
                         <span id="error-message-@nameof(PauseRequestViewModel.PauseConfirmed)" class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(PauseRequestViewModel.PauseConfirmed)].Errors.First().ErrorMessage
+                            <span class="govuk-visually-hidden">Error:</span>
+                            @ViewData.ModelState[nameof(PauseRequestViewModel.PauseConfirmed)].Errors.First().ErrorMessage
                         </span>
                     } <div class="govuk-radios">
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="PauseConfirmed" name="PauseConfirmed" type="radio" value="true">
+                            <input class="govuk-radios__input" id="PauseConfirmed" name="PauseConfirmed" type="radio"
+                                value="true">
                             <label class="govuk-label govuk-radios__label" for="PauseConfirmed">
                                 Yes, pause this apprenticeship
                             </label>
                         </div>
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="PauseConfirmed-no" name="PauseConfirmed" type="radio" value="false">
+                            <input class="govuk-radios__input" id="PauseConfirmed-no" name="PauseConfirmed" type="radio"
+                                value="false">
                             <label class="govuk-label govuk-radios__label" for="PauseConfirmed-no">
                                 No, go back to apprentice details
                             </label>
@@ -92,5 +100,7 @@
 </div>
 
 @section back {
-    <a id="back-link" class="govuk-back-link" asp-controller="Apprentice" asp-action="ChangeStatus" asp-route-accountHashedId="@Model.AccountHashedId" asp-route-apprenticeshipHashedId="@Model.ApprenticeshipHashedId">Back</a>
+    <a id="back-link" class="govuk-back-link" asp-controller="Apprentice" asp-action="ChangeStatus"
+        asp-route-accountHashedId="@Model.AccountHashedId"
+        asp-route-apprenticeshipHashedId="@Model.ApprenticeshipHashedId">Back</a>
 }
