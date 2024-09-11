@@ -846,8 +846,8 @@ public class ApprenticeController : Controller
     public async Task<IActionResult> SelectDeliveryModelForEdit(EditApprenticeshipRequest request)
     {
         var draft = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
-        var model = await _modelMapper.Map<EditApprenticeshipDeliveryModelViewModel>(draft);
-
+        var model = await _modelMapper.Map<EditApprenticeshipDeliveryModelViewModel>(draft); 
+        
         if (model.DeliveryModels.Count > 1)
         {
             return View("SelectDeliveryModel", model);
