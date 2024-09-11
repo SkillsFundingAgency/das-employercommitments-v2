@@ -9,33 +9,48 @@
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <partial name="_ValidationSummary"/>
+        <partial name="_ValidationSummary" />
 
         <h1 class="govuk-heading-l">Start adding apprentices</h1>
-        
-        <p class="govuk-body-l">You can start adding details of your apprentices or ask your training provider to add them for you.</p>
-        <p class="govuk-body-l">If you ask your training provider to add them, you need to check and agree the details before any payments are made.</p>
+
+        <p class="govuk-body-l">You can start adding details of your apprentices or ask your training provider to add
+            them for you.</p>
+        <p class="govuk-body-l">If you ask your training provider to add them, you need to check and agree the details
+            before any payments are made.</p>
 
         <form method="post">
             <partial name="_AssignHiddenPartial" model="@Model" />
 
-            <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.WhoIsAddingApprentices, "govuk-form-group--error") @Html.AddClassIfPropertyInError(x => x.Message, "govuk-form-group--error")">
+            <div
+                class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.WhoIsAddingApprentices, "govuk-form-group--error") @Html.AddClassIfPropertyInError(x => x.Message, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
+                    <legend class="govuk-visually-hidden">Will you or your provider add apprentices?</legend>
                     <div class="govuk-radios govuk-radios--conditional" data-module="radios">
-                        @Html.ValidationMessageFor(m => m.WhoIsAddingApprentices, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.WhoIsAddingApprentices)})
+                        @Html.ValidationMessageFor(m => m.WhoIsAddingApprentices, null, new
+                            {
+                                @class =
+                                 "govuk-error-message",
+                                id = "error-message-" + Html.IdFor(m => m.WhoIsAddingApprentices)
+                            })
                         <div class="govuk-radios__item">
-                            <input asp-for="WhoIsAddingApprentices" class="govuk-radios__input" id="WhoIsAddingApprentices" name="WhoIsAddingApprentices" type="radio" value="@WhoIsAddingApprentices.Employer">
+                            <input asp-for="WhoIsAddingApprentices" class="govuk-radios__input"
+                                id="WhoIsAddingApprentices" name="WhoIsAddingApprentices" type="radio"
+                                value="@WhoIsAddingApprentices.Employer">
                             <label class="govuk-label govuk-radios__label" for="WhoIsAddingApprentices">
                                 I will add apprentices
-                            </label> </div>
+                            </label>
+                        </div>
                         <div class="govuk-radios__item">
-                            <input asp-for="WhoIsAddingApprentices" class="govuk-radios__input" id="WhoIsAddingApprentices-Provider" name="WhoIsAddingApprentices" type="radio" value="@WhoIsAddingApprentices.Provider" data-aria-controls="conditional-send">
+                            <input asp-for="WhoIsAddingApprentices" class="govuk-radios__input"
+                                id="WhoIsAddingApprentices-Provider" name="WhoIsAddingApprentices" type="radio"
+                                value="@WhoIsAddingApprentices.Provider" data-aria-controls="conditional-send">
                             <label class="govuk-label govuk-radios__label" for="WhoIsAddingApprentices-Provider">
                                 I would like my training provider to add apprentices
                                 @if (Model.ReservationId != null)
                                 {
                                     <span id="WhoIsAddingApprentices-Provider-hint" class="govuk-hint">
-                                        Your provider will have to select or make a new funding reservation on your behalf if you choose this option
+                                        Your provider will have to select or make a new funding reservation on your behalf
+                                        if you choose this option
                                     </span>
                                 }
                             </label>
@@ -45,8 +60,14 @@
                                 <label class="govuk-label das-!-color-dark-grey" for="send-details">
                                     Add a message for your training provider below (optional)
                                 </label>
-                                @Html.ValidationMessageFor(m => m.Message, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Message)})
-                                <textarea asp-for="Message" class="govuk-textarea" id="send-details" name="message" rows="5"></textarea>
+                                @Html.ValidationMessageFor(m => m.Message, null, new
+                                    {
+                                        @class = "govuk-error-message",
+                                        id
+                                         = "error-message-" + Html.IdFor(m => m.Message)
+                                    })
+                                <textarea asp-for="Message" class="govuk-textarea" id="send-details" name="message"
+                                    rows="5"></textarea>
                             </div>
                         </div>
                     </div>
@@ -61,14 +82,14 @@
 @section Back
 {
     @Html.ActionLink("Back", "ConfirmProvider", "Cohort", new
-    {
-        Model.AccountHashedId,
-        Model.AccountLegalEntityHashedId,
-        Model.CourseCode,
-        Model.ProviderId,
-        Model.ReservationId,
-        Model.TransferSenderId,
-        Model.StartMonthYear,
-        Model.EncodedPledgeApplicationId
-    }, new { @class = "govuk-back-link", id = "back-link" })
+        {
+            Model.AccountHashedId,
+            Model.AccountLegalEntityHashedId,
+            Model.CourseCode,
+            Model.ProviderId,
+            Model.ReservationId,
+            Model.TransferSenderId,
+            Model.StartMonthYear,
+            Model.EncodedPledgeApplicationId
+        }, new { @class = "govuk-back-link", id = "back-link" })
 }
