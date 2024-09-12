@@ -4,49 +4,52 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
 [TestFixture]
 public class WhenMappingInformRequestToInformViewModelTests
 {
-    private InformRequest _informRequest;
-    private AccountResponse _accountResponse;
-    private InformRequestToInformViewModelMapper _mapper;
-    private Mock<ICommitmentsApiClient> _commitmentsClient;
-
-    [SetUp]
-    public void Arrange()
+    [Test, MoqAutoData]
+    public async Task Then_AccountHashedId_Is_Mapped(
+        AccountResponse accountResponse,
+        InformRequest informRequest,
+        [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
+        InformRequestToInformViewModelMapper mapper)
     {
-        var autoFixture = new Fixture();            
-        _informRequest = autoFixture.Create<InformRequest>();
-        _accountResponse = autoFixture.Create<AccountResponse>();
-        _commitmentsClient = new Mock<ICommitmentsApiClient>();
-        _commitmentsClient.Setup(x => x.GetAccount(_informRequest.AccountId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_accountResponse);
-        _mapper = new InformRequestToInformViewModelMapper(_commitmentsClient.Object);
-    }
-
-    [Test]
-    public async Task Then_AccountHashedId_Is_Mapped()
-    {
-        //Act
-        var result = await _mapper.Map(_informRequest);
-
-        //Assert           
-        result.AccountHashedId.Should().Be(_informRequest.AccountHashedId);
-    }
-
-    [TestCase(ApprenticeshipEmployerType.Levy, true)]
-    [TestCase(ApprenticeshipEmployerType.NonLevy, false)]
-    public async Task Then_LevyStatus_Is_Mapped(ApprenticeshipEmployerType levyStatus, bool expectedIsLevy)
-    {
-        _accountResponse.LevyStatus = levyStatus;
+        // Arrange
+        commitmentsApiClient
+            .Setup(x => x.GetAccount(informRequest.AccountId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(accountResponse);
         
         //Act
-        var result = await _mapper.Map(_informRequest);
+        var result = await mapper.Map(informRequest);
 
         //Assert           
-        result.LevyFunded.Should().Be(expectedIsLevy);
+        result.AccountHashedId.Should().Be(informRequest.AccountHashedId);
+    }
+
+    [MoqInlineAutoData(ApprenticeshipEmployerType.Levy, true)]
+    [MoqInlineAutoData(ApprenticeshipEmployerType.NonLevy, false)]
+    public async Task Then_LevyStatus_Is_Mapped(
+        ApprenticeshipEmployerType levyStatus,
+        bool expectedIsLevy,
+        [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
+        AccountResponse accountResponse,
+        InformRequest indexRequest,
+        InformRequestToInformViewModelMapper mapper)
+    {
+        // Arrange
+        accountResponse.LevyStatus = levyStatus;
+        commitmentsApiClient
+            .Setup(x => x.GetAccount(indexRequest.AccountId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(accountResponse);
+        
+        //Act
+        var result = await mapper.Map(indexRequest);
+
+        //Assert           
+        result.IsLevyFunded.Should().Be(expectedIsLevy);
     }
 }
