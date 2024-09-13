@@ -21,7 +21,7 @@ public class InformRequestToInformViewModelMapper : IMapper<InformRequest, Infor
         return new InformViewModel
         {
             AccountHashedId = source.AccountHashedId,
-            LevyFunded = account.LevyStatus == ApprenticeshipEmployerType.Levy
+            IsLevyFunded = account.LevyStatus == ApprenticeshipEmployerType.Levy
         };
     }
 }
