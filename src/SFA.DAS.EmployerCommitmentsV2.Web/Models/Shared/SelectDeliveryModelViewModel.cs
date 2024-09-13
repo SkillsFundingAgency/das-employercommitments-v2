@@ -19,5 +19,5 @@ public class SelectDeliveryModelViewModel
     public DeliveryModel[] DeliveryModels { get; set; }
     public string TransferSenderId { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
-    public Guid CacheKey { get; set; }
+    public Guid? CacheKey { get; set; }
 }

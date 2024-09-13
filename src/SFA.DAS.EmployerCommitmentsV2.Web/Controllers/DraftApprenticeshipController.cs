@@ -371,33 +371,53 @@ public class DraftApprenticeshipController : Controller
         return RedirectToAction("Details", "Cohort", new { accountHashedId, cohortReference });
     }
 
-    private async Task StoreAddDraftApprenticeshipInCache(AddDraftApprenticeshipViewModel model, Guid key)
+    private async Task StoreAddDraftApprenticeshipInCache(AddDraftApprenticeshipViewModel model, Guid? key)
     {
-        await _cacheStorageService.SaveToCache(key, model, 1);
+        if (key.IsNotNullOrEmpty())
+        {
+            await _cacheStorageService.SaveToCache(key.Value, model, 1);
+        }
     }
 
-    private async Task RemoveAddDraftApprenticeshipFromCache(Guid key)
+    private async Task RemoveAddDraftApprenticeshipFromCache(Guid? key)
     {
-        await _cacheStorageService.DeleteFromCache(key);
+        if (key.IsNotNullOrEmpty())
+        {
+            await _cacheStorageService.DeleteFromCache(key.Value);
+        }
     }
 
-    private async Task<AddDraftApprenticeshipViewModel> GetStoredAddDraftApprenticeshipFromCache(Guid key)
+    private async Task<AddDraftApprenticeshipViewModel> GetStoredAddDraftApprenticeshipFromCache(Guid? key)
     {
-        return await _cacheStorageService.RetrieveFromCache<AddDraftApprenticeshipViewModel>(key);
+        if (key.IsNotNullOrEmpty())
+        {
+            return await _cacheStorageService.RetrieveFromCache<AddDraftApprenticeshipViewModel>(key.Value);
+        }
+        return null;
     }
 
-    private async Task StoreEditDraftApprenticeshipInCache(EditDraftApprenticeshipViewModel model, Guid key)
+    private async Task StoreEditDraftApprenticeshipInCache(EditDraftApprenticeshipViewModel model, Guid? key)
     {
-        await _cacheStorageService.SaveToCache(key, model, 1);
+        if (key.IsNotNullOrEmpty())
+        {
+            await _cacheStorageService.SaveToCache(key.Value, model, 1);
+        }
     }
 
-    private async Task RemoveEditDraftApprenticeshipFromCache(Guid key)
+    private async Task RemoveEditDraftApprenticeshipFromCache(Guid? key)
     {
-        await _cacheStorageService.DeleteFromCache(key);
+        if (key.IsNotNullOrEmpty())
+        {
+            await _cacheStorageService.DeleteFromCache(key.Value);
+        }
     }
 
-    private async Task<EditDraftApprenticeshipViewModel> GetStoredEditDraftApprenticeshipFromCache(Guid key)
+    private async Task<EditDraftApprenticeshipViewModel> GetStoredEditDraftApprenticeshipFromCache(Guid? key)
     {
-        return await _cacheStorageService.RetrieveFromCache<EditDraftApprenticeshipViewModel>(key);
+        if (key.IsNotNullOrEmpty())
+        {
+            return await _cacheStorageService.RetrieveFromCache<EditDraftApprenticeshipViewModel>(key.Value);
+        }
+        return null;
     }
 }

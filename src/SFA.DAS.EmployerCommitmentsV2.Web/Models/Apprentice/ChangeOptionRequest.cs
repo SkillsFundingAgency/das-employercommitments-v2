@@ -11,5 +11,5 @@ public class ChangeOptionRequest : IAuthorizationContextModel
     public string ApprenticeshipHashedId { get; set; }
 
     public long ApprenticeshipId { get; set; }
-    public Guid CacheKey { get; set; }
+    public Guid? CacheKey { get; set; }
 }

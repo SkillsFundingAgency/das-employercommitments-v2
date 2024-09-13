@@ -1,4 +1,6 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
@@ -25,6 +27,13 @@ public class WhenGettingDetails
     {
         await _fixture.GetDetails();
         _fixture.VerifyViewModelIsMappedFromRequest();
+    }
+
+    [Test]
+    public async Task ThenViewModelShouldBeStoredInTempData()
+    {
+        await _fixture.GetDetails();
+        _fixture.VerifyViewEmployerAgreementModelIsStoredInTempData();
     }
 
     [TestCase(Party.Provider)]
@@ -59,10 +68,6 @@ public class WhenGettingDetails
 
             _cacheStorageService = new Mock<ICacheStorageService>();
 
-            _cacheStorageService.Setup(x =>
-                x.RetrieveFromCache<ViewEmployerAgreementModel>(It.IsAny<string>()))
-                .ReturnsAsync(_viewEmployerAgreementModel);
-
             CohortController = new CohortController(Mock.Of<ICommitmentsApiClient>(),
                 Mock.Of<ILogger<CohortController>>(),
                 Mock.Of<ILinkGenerator>(),
@@ -70,6 +75,8 @@ public class WhenGettingDetails
                 Mock.Of<IEncodingService>(),
                 Mock.Of<IApprovalsApiClient>(),
                 _cacheStorageService.Object);
+
+            CohortController.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
         }
 
         public CohortController CohortController { get; set; }
@@ -97,6 +104,11 @@ public class WhenGettingDetails
 
             var expectedTotalCost = _viewModel.Courses?.Sum(g => g.DraftApprenticeships.Sum(a => a.Cost ?? 0)) ?? 0;
             Assert.That(_viewModel.TotalCost, Is.EqualTo(expectedTotalCost), "The total cost stored in the model is incorrect");
+        }
+
+        public void VerifyViewEmployerAgreementModelIsStoredInTempData()
+        {
+            Assert.That(CohortController.TempData.ContainsKey(nameof(ViewEmployerAgreementModel)), Is.True);
         }
 
         public bool IsViewModelReadOnly()

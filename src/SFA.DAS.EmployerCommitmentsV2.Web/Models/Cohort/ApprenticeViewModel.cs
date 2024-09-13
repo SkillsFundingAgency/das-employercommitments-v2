@@ -13,5 +13,5 @@ public class ApprenticeViewModel : DraftApprenticeshipViewModel
     public bool AutoCreatedReservation { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
     public long? PledgeApplicationId { get; set; }
-    public Guid CacheKey { get; set; }
+    public Guid? CacheKey { get; set; }
 }

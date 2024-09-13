@@ -41,7 +41,6 @@ public class ApprenticeController : Controller
     private const string AlertDetailsWhenApproved = "An alert has been sent to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service.";
     private const string ChangesRejectedMessage = "Changes rejected";
     private const string ChangesUndoneMessage = "Changes undone";
-    private const string ViewModelForEdit = "ViewModelForEdit";
     private const string ApprenticeEndDateConfirmed = "Current planned end date confirmed ";
 
     public ApprenticeController(IModelMapper modelMapper, Interfaces.ICookieStorageService<IndexRequest> cookieStorage,
@@ -846,8 +845,8 @@ public class ApprenticeController : Controller
     public async Task<IActionResult> SelectDeliveryModelForEdit(EditApprenticeshipRequest request)
     {
         var draft = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
-        var model = await _modelMapper.Map<EditApprenticeshipDeliveryModelViewModel>(draft); 
-        
+        var model = await _modelMapper.Map<EditApprenticeshipDeliveryModelViewModel>(draft);
+
         if (model.DeliveryModels.Count > 1)
         {
             return View("SelectDeliveryModel", model);
@@ -1272,18 +1271,28 @@ public class ApprenticeController : Controller
         });
     }
 
-    private async Task StoreEditApprenticeshipRequestViewModelInCache(EditApprenticeshipRequestViewModel model, Guid key)
+    private async Task StoreEditApprenticeshipRequestViewModelInCache(EditApprenticeshipRequestViewModel model, Guid? key)
     {
-        await _cacheStorageService.SaveToCache(key, model, 1);
+        if (key.IsNotNullOrEmpty())
+        {
+            await _cacheStorageService.SaveToCache(key.Value, model, 1);
+        }
     }
 
-    private async Task<EditApprenticeshipRequestViewModel> GetStoredEditApprenticeshipRequestViewModelFromCache(Guid key)
+    private async Task<EditApprenticeshipRequestViewModel> GetStoredEditApprenticeshipRequestViewModelFromCache(Guid? key)
     {
-        return await _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>(key);
+        if (key.IsNotNullOrEmpty())
+        {
+            return await _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>(key.Value);
+        }
+        return null;
     }
 
-    private async Task DeleteEditApprenticeshipRequestViewModelInCache(Guid key)
+    private async Task DeleteEditApprenticeshipRequestViewModelInCache(Guid? key)
     {
-        await _cacheStorageService.DeleteFromCache(key);
+        if (key.IsNotNullOrEmpty())
+        {
+            await _cacheStorageService.DeleteFromCache(key.Value);
+        }
     }
 }

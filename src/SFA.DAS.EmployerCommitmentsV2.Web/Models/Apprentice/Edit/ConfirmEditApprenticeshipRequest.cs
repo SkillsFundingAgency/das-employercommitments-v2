@@ -4,5 +4,5 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 public class ConfirmEditApprenticeshipRequest : BaseEdit
 {    
-    public Guid CacheKey { get; set; }
+    public Guid? CacheKey { get; set; }
 }

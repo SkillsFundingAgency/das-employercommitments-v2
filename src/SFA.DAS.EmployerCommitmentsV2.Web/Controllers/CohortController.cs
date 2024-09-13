@@ -53,16 +53,12 @@ public class CohortController : Controller
     {
         var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
 
-        var cacheKey = Guid.NewGuid();
-        viewModel.CacheKey = cacheKey;
-
-        await StoreViewEmployerAgreementModelInCache(
+        StoreViewEmployerAgreementModelState(
             new ViewEmployerAgreementModel
             {
                 AccountHashedId = viewModel.AccountHashedId,
-                CohortId = viewModel.CohortId,
-                CacheKey = cacheKey
-            }, cacheKey);
+                CohortId = viewModel.CohortId
+            });
 
         return View(viewModel);
     }
@@ -98,16 +94,16 @@ public class CohortController : Controller
 
     [HttpGet]
     [Route("viewAgreement", Name = "ViewAgreement")]
-    public async Task<IActionResult> ViewAgreement(string hashedAccountId, Guid cacheKey)
+    public async Task<IActionResult> ViewAgreement(string hashedAccountId)
     {
-        var cachedModel = await GetViewEmployerAgreementModelFromCache(cacheKey);
+        var tempData = GetViewEmployerAgreementModelState();
 
-        var request = cachedModel == null
+        var request = tempData == null
             ? new ViewEmployerAgreementRequest { AccountHashedId = hashedAccountId }
             : await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel
             {
-                AccountHashedId = cachedModel.AccountHashedId,
-                CohortId = cachedModel.CohortId
+                AccountHashedId = tempData.AccountHashedId,
+                CohortId = tempData.CohortId
             });
 
         return ViewEmployeeAgreementRedirect(request);
@@ -554,25 +550,30 @@ public class CohortController : Controller
         return View(response);
     }
 
-    private async Task StoreApprenticeViewModelInCache(ApprenticeViewModel model, Guid key)
+    private async Task StoreApprenticeViewModelInCache(ApprenticeViewModel model, Guid? key)
     {
-        await _cacheStorageService.SaveToCache(key, model, 1);
+        if (key.IsNotNullOrEmpty())
+        {
+            await _cacheStorageService.SaveToCache(key.Value, model, 1);
+        }
     }
 
-    private async Task<ApprenticeViewModel> GetStoredApprenticeViewModelFromCache(Guid key)
+    private async Task<ApprenticeViewModel> GetStoredApprenticeViewModelFromCache(Guid? key)
     {
-        return await _cacheStorageService.RetrieveFromCache<ApprenticeViewModel>(key);
-
+        if (key.IsNotNullOrEmpty())
+        {
+            return await _cacheStorageService.RetrieveFromCache<ApprenticeViewModel>(key.Value);
+        }
+        return null;
     }
 
-    private async Task StoreViewEmployerAgreementModelInCache(ViewEmployerAgreementModel model, Guid key)
+    private void StoreViewEmployerAgreementModelState(ViewEmployerAgreementModel model)
     {
-        await _cacheStorageService.SaveToCache(key, model, 1);
+        TempData.Put(nameof(ViewEmployerAgreementModel), model);
     }
 
-    private async Task<ViewEmployerAgreementModel> GetViewEmployerAgreementModelFromCache(Guid key)
+    private ViewEmployerAgreementModel GetViewEmployerAgreementModelState()
     {
-        return await _cacheStorageService.RetrieveFromCache<ViewEmployerAgreementModel>(key);
-
+        return TempData.Get<ViewEmployerAgreementModel>(nameof(ViewEmployerAgreementModel));
     }
 }

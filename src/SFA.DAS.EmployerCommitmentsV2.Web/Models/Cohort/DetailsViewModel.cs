@@ -6,7 +6,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 public class DetailsViewModel : IAuthorizationContextModel
 {
-    public Guid CacheKey { get; set; }
+    public Guid? CacheKey { get; set; }
     public string AccountHashedId { get; set; }
     public long AccountId { get; set; }
     public Party WithParty { get; set; }

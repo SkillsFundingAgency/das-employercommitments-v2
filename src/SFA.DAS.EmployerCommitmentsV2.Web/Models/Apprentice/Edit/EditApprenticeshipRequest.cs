@@ -14,5 +14,5 @@ public class EditApprenticeshipRequest : IAuthorizationContextModel
 
     public long ApprenticeshipId { get; set; }
     
-    public Guid CacheKey { get; set; }
+    public Guid? CacheKey { get; set; }
 }

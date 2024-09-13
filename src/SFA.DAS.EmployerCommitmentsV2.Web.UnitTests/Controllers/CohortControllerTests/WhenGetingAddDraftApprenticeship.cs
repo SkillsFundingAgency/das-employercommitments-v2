@@ -49,7 +49,7 @@ public class WhenGetingAddDraftApprenticeship
         };
 
         cacheStorageService
-            .Setup(x => x.RetrieveFromCache<ApprenticeViewModel>(cacheItem.CacheKey))
+            .Setup(x => x.RetrieveFromCache<ApprenticeViewModel>(cacheItem.CacheKey.Value))
             .ReturnsAsync(cacheItem);
 
         mockMapper

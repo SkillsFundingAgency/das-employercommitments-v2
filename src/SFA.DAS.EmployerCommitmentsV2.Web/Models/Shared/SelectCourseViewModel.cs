@@ -21,5 +21,5 @@ public class SelectCourseViewModel : IAuthorizationContextModel
     public DeliveryModel? DeliveryModel { get; set; }
     public string TransferSenderId { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
-    public Guid CacheKey { get; set; }
+    public Guid? CacheKey { get; set; }
 }

@@ -2,7 +2,7 @@
 
 public class SelectDeliveryModelForEditViewModel : IDeliveryModelSelection
 {
-    public Guid CacheKey { get; set; }
+    public Guid? CacheKey { get; set; }
     public string AccountHashedId { get; set; }
     public List<EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel> DeliveryModels { get; set; }
     public EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel? DeliveryModel { get; set; }

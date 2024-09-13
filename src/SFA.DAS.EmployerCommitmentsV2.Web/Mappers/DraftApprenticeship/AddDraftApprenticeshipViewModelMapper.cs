@@ -3,6 +3,7 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Exceptions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.Encoding;
 
@@ -44,7 +45,7 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<AddDraftApprentices
             AutoCreatedReservation = source.AutoCreated,
             DeliveryModel = source.DeliveryModel,
             IsOnFlexiPaymentPilot = false,
-            CacheKey = source.CacheKey != Guid.Empty ? source.CacheKey : Guid.NewGuid()
+            CacheKey = source.CacheKey.IsNotNullOrEmpty() ? source.CacheKey : Guid.NewGuid()
         };
 
         return result;

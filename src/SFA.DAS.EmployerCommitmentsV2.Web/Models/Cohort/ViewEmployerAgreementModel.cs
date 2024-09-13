@@ -8,5 +8,4 @@ public class ViewEmployerAgreementModel :  IAuthorizationContextModel
     public string AccountHashedId { get; set; }
 
     public long CohortId { get; set; }
-    public Guid CacheKey { get; set; }
 }

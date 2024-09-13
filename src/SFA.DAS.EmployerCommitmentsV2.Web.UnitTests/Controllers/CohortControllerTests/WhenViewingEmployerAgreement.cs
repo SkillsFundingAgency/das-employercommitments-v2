@@ -5,6 +5,7 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
@@ -54,14 +55,14 @@ public class WhenViewingEmployerAgreement
     public void TearDown() => _controller?.Dispose();
 
     [Test]
-    public async Task Then_User_Is_Redirected_To_View_Organisations_Agreements_When_NoCacheData()
+    public async Task Then_User_Is_Redirected_To_View_Organisations_Agreements_When_NoTempData()
     {
         // Arrange
         _linkGenerator.Setup(linkGen => linkGen.AccountsLink(_organisationAgreementsUrl))
             .Returns(_organisationAgreementsUrl);
 
         //Act
-        var result = await _controller.ViewAgreement(_viewEmployerAgreementRequest.AccountHashedId, _viewEmployerAgreementModel.CacheKey) as RedirectResult;
+        var result = await _controller.ViewAgreement(_viewEmployerAgreementRequest.AccountHashedId) as RedirectResult;
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -69,27 +70,20 @@ public class WhenViewingEmployerAgreement
     }
 
     [Test]
-    public async Task Then_User_Is_Redirected_To_View_Agreement_If_AgreementID_In_Cache()
+    public async Task Then_User_Is_Redirected_To_View_Agreement_If_AgreementID_In_TempData()
     {
         // Arrange         
-        SetUpCacheData();
+        _controller.TempData.Put(nameof(ViewEmployerAgreementModel), _viewEmployerAgreementModel);
 
         _linkGenerator.Setup(linkGen =>
                 linkGen.AccountsLink(_agreementUrl))
             .Returns(_agreementUrl);
 
         //Act
-        var result = await _controller.ViewAgreement(_viewEmployerAgreementModel.AccountHashedId, _viewEmployerAgreementModel.CacheKey) as RedirectResult;
+        var result = await _controller.ViewAgreement(_viewEmployerAgreementModel.AccountHashedId) as RedirectResult;
 
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Url, Is.EqualTo(_agreementUrl));
-    }
-
-    private void SetUpCacheData()
-    {
-        _cacheStorageService
-            .Setup(d => d.RetrieveFromCache<ViewEmployerAgreementModel>(_viewEmployerAgreementModel.CacheKey))
-            .ReturnsAsync(_viewEmployerAgreementModel);
     }
 }
