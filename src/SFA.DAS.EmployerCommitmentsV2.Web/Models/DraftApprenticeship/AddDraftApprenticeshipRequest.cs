@@ -8,11 +8,11 @@ public class AddDraftApprenticeshipRequest : BaseAddDraftApprenticeshipRequest, 
 {
     public long CohortId { get; set; }        
     public long AccountLegalEntityId { get; set; }
-    public Guid? CacheKey { get; set; }
 }
 
 public class BaseAddDraftApprenticeshipRequest
 {
+    public Guid? CacheKey { get; set; }
     public string AccountHashedId { get; set; }
     public string CohortReference { get; set; }
     public string AccountLegalEntityHashedId { get; set; }

@@ -7,11 +7,11 @@ public class ApprenticeRequest : BaseApprenticeRequest
 {
     public long AccountLegalEntityId { get; set; }
     public long AccountId { get; set; }
-    public Guid? CacheKey { get; set; }
 }
 
 public class BaseApprenticeRequest : IndexRequest
 {
+    public Guid? CacheKey { get; set; }
     public long ProviderId { get; set; }
     public string LegalEntityName { get; set; }
     public string TransferSenderId { get; set; }
