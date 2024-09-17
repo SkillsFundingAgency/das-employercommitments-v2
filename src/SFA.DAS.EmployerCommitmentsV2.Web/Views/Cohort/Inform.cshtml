@@ -13,7 +13,7 @@
 
         <p class="govuk-body">Add details of one or more apprentices to your account, and authorise payments to your training provider.</p>
         
-        @if (!Model.LevyFunded)
+        @if (!Model.IsLevyFunded)
         {
             <h2 class="govuk-heading-m">Funding</h2>
             <p class="govuk-body">
