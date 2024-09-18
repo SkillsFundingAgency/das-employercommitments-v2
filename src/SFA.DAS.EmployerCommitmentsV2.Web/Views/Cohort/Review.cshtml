@@ -17,9 +17,11 @@
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header das-table-cell-width-25">Training provider</th>
                         <th scope="col" class="govuk-table__header das-table-cell-width-10">Reference</th>
-                        <th scope="col" class="govuk-table__header das-table-cell-width-25 govuk-table__header--numeric">Number of apprentices</th>
+                        <th scope="col" class="govuk-table__header das-table-cell-width-25 govuk-table__header--numeric">
+                            Number of apprentices</th>
                         <th scope="col" class="govuk-table__header das-table-cell-width-25">Last Message</th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-15"></th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-15">
+                        </th>
                     </tr>
                 </thead>
 
@@ -31,10 +33,13 @@
                         <tr class="govuk-table__row" data-cohort="@cohort.CohortReference">
                             <td class="govuk-table__cell" data-label="Training provider">@cohort.ProviderName</td>
                             <td class="govuk-table__cell" data-label="Reference">@cohort.CohortReference</td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfApprentices</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">
+                                @cohort.NumberOfApprentices</td>
                             <td class="govuk-table__cell" data-label="Last Message">@cohort.LastMessage</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" data-label="">
-                                @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohort.CohortReference }, new { @class = "govuk-link cohort-details-link" })
+                                <a href="@Url.Action("Details", "Cohort", new { Model.AccountHashedId, cohort.CohortReference })"
+                                    class="govuk-link cohort-details-link">Details
+                                    <span class="govuk-visually-hidden"> about apprentice @cohort.CohortReference</span></a>
                             </td>
                         </tr>
                     }
@@ -51,5 +56,8 @@
 
 @section Back
 {
-    @Html.ActionLink("Back to apprentices", "Index", "Home", new { @Model.AccountHashedId}, new { @class = "govuk-back-link" })
+    @Html.ActionLink("Back to apprentices", "Index", "Home", new { @Model.AccountHashedId }, new
+        {
+            @class = "govuk-back-link"
+        })
 }

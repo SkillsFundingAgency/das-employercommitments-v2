@@ -18,7 +18,7 @@
 
         <partial name="DetailsPartials/_Banners" />
 
-        <h1 class="govuk-heading-xl" id="learnerName">@Model.ApprenticeName</h1>
+        <h1 class="govuk-heading-xl" id="learnerName"><span class="das-breakable">@Model.ApprenticeName</span></h1>
 
         @if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
         {
@@ -138,7 +138,7 @@
                         <td id="provider-payments-status" class="govuk-table__cell" colspan="2">
                             <strong class="govuk-tag govuk-tag--blue">@Model.PaymentStatus</strong>
                         </td>
-                        <td class="govuk-table__cell"><a id="linkChangePaymentStatus" href="@Model.PaymentStatusChangeUrl" class="govuk-link">Change</a></td>
+                        <td class="govuk-table__cell"><a id="linkChangePaymentStatus" href="@Model.PaymentStatusChangeUrl" class="govuk-link">Change<span class="govuk-visually-hidden"> Provider payments status</span></a></td>
                     </tr>
                 }
 
@@ -271,7 +271,7 @@
                         @if (Model.EnableEdit && Model.HasNewerVersions && !Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
                         {
                             <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion, new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change</a>
+                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion, new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change<span class="govuk-visually-hidden"> version</span></a>
                             </td>
                         }
                         else
@@ -407,7 +407,7 @@
                         <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost()</td>
                         @if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
                         {
-                            <td class="govuk-table__cell"><a id="linkChangeApprenticeshipPrice" href="@Model.PriceChangeUrl" class="govuk-link">Change</a></td>
+                            <td class="govuk-table__cell"><a id="linkChangeApprenticeshipPrice" href="@Model.PriceChangeUrl" class="govuk-link">Change<span class="govuk-visually-hidden"> total agreed apprenticeship price</span></a></td>
                         }
                     </tr>
                 }

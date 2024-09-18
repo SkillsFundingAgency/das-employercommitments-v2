@@ -8,6 +8,8 @@ public class IndexViewModel
     public string StartMonthYear { get; set; }
     public string CourseCode { get; set; }
     public Origin Origin { get; set; }
+    public bool IsLevyFunded { get; set; }
+
     public virtual Dictionary<string, string> ToDictionary()
     {
         var dictionary = new Dictionary<string, string>
