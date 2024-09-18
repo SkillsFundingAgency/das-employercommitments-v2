@@ -19,7 +19,8 @@ public class SelectDeliveryModelViewModelToApprenticeRequestMapper : IMapper<Sel
             ReservationId = source.ReservationId,
             StartMonthYear = source.StartMonthYear,
             TransferSenderId = source.TransferSenderId,
-            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
+            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
+            CacheKey = source.CacheKey
         });
     }
 }

@@ -12,6 +12,7 @@ public class AddDraftApprenticeshipRequest : BaseAddDraftApprenticeshipRequest, 
 
 public class BaseAddDraftApprenticeshipRequest
 {
+    public Guid? CacheKey { get; set; }
     public string AccountHashedId { get; set; }
     public string CohortReference { get; set; }
     public string AccountLegalEntityHashedId { get; set; }

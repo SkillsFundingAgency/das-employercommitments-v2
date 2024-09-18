@@ -32,6 +32,7 @@ public class EditDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapp
             Cost = source.Cost,
             EmploymentPrice = source.EmploymentPrice,
             EmploymentEndDate = source.EmploymentEndDate.Date,
+            CacheKey = source.CacheKey
         };
     }
 }

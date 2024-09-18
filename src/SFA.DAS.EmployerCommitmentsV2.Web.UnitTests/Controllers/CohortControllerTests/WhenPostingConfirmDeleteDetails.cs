@@ -2,6 +2,7 @@
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -61,7 +62,8 @@ public class WhenPostingConfirmDeleteDetails
                 Mock.Of<ILinkGenerator>(),
                 Mock.Of<IModelMapper>(),
                 Mock.Of<IEncodingService>(),
-                Mock.Of<IApprovalsApiClient>());
+                Mock.Of<IApprovalsApiClient>(),
+                Mock.Of<ICacheStorageService>());
         }
 
         public WhenPostingConfirmDeleteDetailsTestFixture SetConfirmDelete(bool confirmDeletion)

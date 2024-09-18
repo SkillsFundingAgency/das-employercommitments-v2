@@ -1,7 +1,5 @@
-﻿using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using FluentAssertions;
-using Newtonsoft.Json;
-using SFA.DAS.CommitmentsV2.Types;
+﻿using FluentAssertions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
 
@@ -24,10 +22,10 @@ public class WhenCallingEditApprenticeshipTests
     }
 
     [Test]
-    public async Task AndWeHaveAnExistingEditViewModel_ThenTheTempModelIsPassedToTheView()
+    public async Task AndWeHaveAnExistingEditViewModel_ThenTheCachedModelIsPassedToTheView()
     {
-        var result = await _fixture.WithTempModel().EditApprenticeship();
-        _fixture.VerifyViewModelIsEquivalentToTempViewModel(result as ViewResult);
+        var result = await _fixture.WithCachedModel().EditApprenticeship();
+        _fixture.VerifyViewModelIsEquivalentToCachedViewModel(result as ViewResult);
     }
 }
 
@@ -35,8 +33,6 @@ public class WhenCallingEditApprenticeshipTestsFixture : ApprenticeControllerTes
 {
     private readonly EditApprenticeshipRequest _request;
     private readonly EditApprenticeshipRequestViewModel _viewModel;
-    private readonly EditApprenticeshipRequestViewModel _tempViewModel;
-    private object _tempViewModelAsString;
 
 
     public WhenCallingEditApprenticeshipTestsFixture() : base()
@@ -48,13 +44,6 @@ public class WhenCallingEditApprenticeshipTestsFixture : ApprenticeControllerTes
             .Without(x => x.EmploymentEndDate).Without(x => x.EmploymentEndMonth).Without(x => x.EmploymentEndYear)
             .Create();
 
-        _tempViewModel = AutoFixture.Build<EditApprenticeshipRequestViewModel>()
-            .Without(x => x.StartDate).Without(x => x.StartMonth).Without(x => x.StartYear)
-            .Without(x => x.EndDate).Without(x => x.EndMonth).Without(x => x.EndYear)
-            .Without(x => x.EmploymentEndDate).Without(x => x.EmploymentEndMonth).Without(x => x.EmploymentEndYear)
-            .Create(); ;
-        _tempViewModelAsString = JsonConvert.SerializeObject(_tempViewModel);
-
         MockMapper.Setup(m => m.Map<EditApprenticeshipRequestViewModel>(_request))
             .ReturnsAsync(_viewModel);
     }
@@ -64,10 +53,11 @@ public class WhenCallingEditApprenticeshipTestsFixture : ApprenticeControllerTes
         return await Controller.EditApprenticeship(_request);
     }
 
-    public WhenCallingEditApprenticeshipTestsFixture WithTempModel()
+    public WhenCallingEditApprenticeshipTestsFixture WithCachedModel()
     {
-        TempDataDictionary.Setup(x => x.TryGetValue("ViewModelForEdit", out _tempViewModelAsString));
-        _viewModel.DeliveryModel = DeliveryModel.PortableFlexiJob;
+        _cacheStorageService
+            .Setup(x => x.RetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<string>()))
+            .ReturnsAsync(_viewModel);
         return this;
     }
 
@@ -79,11 +69,11 @@ public class WhenCallingEditApprenticeshipTestsFixture : ApprenticeControllerTes
         Assert.That(viewModel, Is.EqualTo(_viewModel));
     }
 
-    public void VerifyViewModelIsEquivalentToTempViewModel(ViewResult viewResult)
+    public void VerifyViewModelIsEquivalentToCachedViewModel(ViewResult viewResult)
     {
         var viewModel = viewResult.Model as EditApprenticeshipRequestViewModel;
 
         Assert.That(viewModel, Is.InstanceOf<EditApprenticeshipRequestViewModel>());
-        _tempViewModel.Should().BeEquivalentTo(viewModel);
+        _viewModel.Should().BeEquivalentTo(viewModel);
     }
 }

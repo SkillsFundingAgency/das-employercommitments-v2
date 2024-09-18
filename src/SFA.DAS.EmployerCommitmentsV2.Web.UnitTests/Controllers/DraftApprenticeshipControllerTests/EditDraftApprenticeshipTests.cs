@@ -3,6 +3,7 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
@@ -118,9 +119,9 @@ public class EditDraftApprenticeshipTests
     }
 
     [Test]
-    public void WhenPostingSetDeliveryModelForEdit()
+    public async Task WhenPostingSetDeliveryModelForEdit()
     {
-        var result = _testFixture.PostSetDeliveryModelForEdit(_testFixture._selectDeliveryModelViewModel_WithDeliveryModels);
+        var result = await _testFixture.PostSetDeliveryModelForEdit(_testFixture._selectDeliveryModelViewModel_WithDeliveryModels);
 
         Assert.That(result, Is.Not.Null);
         Assert.Multiple(() =>
@@ -224,7 +225,8 @@ public class EditDraftApprenticeshipTestsFixture
             _modelMapper.Object,
             _commitmentsApiClient.Object,
             Mock.Of<IEncodingService>(),
-            _outerApiClient.Object
+            _outerApiClient.Object,
+            Mock.Of<ICacheStorageService>()
         );
 
         _controller.TempData = _tempData.Object;
@@ -277,8 +279,8 @@ public class EditDraftApprenticeshipTestsFixture
         return await _controller.SelectDeliveryModelForEdit(_editDetailsRequest);
     }
 
-    public IActionResult PostSetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
+    public async Task<IActionResult> PostSetDeliveryModelForEdit(SelectDeliveryModelForEditViewModel model)
     {
-        return _controller.SetDeliveryModelForEdit(model);
+        return await _controller.SetDeliveryModelForEdit(model);
     }
 }

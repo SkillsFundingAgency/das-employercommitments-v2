@@ -12,6 +12,7 @@
         <input type="hidden" asp-for="AccountHashedId" />
         <input type="hidden" asp-for="CohortReference" />
         <input type="hidden" asp-for="DraftApprenticeshipHashedId" />
+        <input type="hidden" asp-for="CacheKey" />
 
         <form id="addApprenticeship" method="post">
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.CourseCode, "govuk-form-group--error")">

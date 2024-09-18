@@ -19,7 +19,8 @@ public class ApprenticeViewModelToApprenticeRequestMapper : IMapper<ApprenticeVi
             TransferSenderId = source.TransferSenderId,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
             Origin = source.Origin,
-            DeliveryModel = source.DeliveryModel
+            DeliveryModel = source.DeliveryModel,
+            CacheKey = source.CacheKey
         });
     }
 }

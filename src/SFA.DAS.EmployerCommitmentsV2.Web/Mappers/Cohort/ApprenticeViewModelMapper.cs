@@ -2,6 +2,7 @@
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
@@ -37,7 +38,8 @@ public class ApprenticeViewModelMapper : IMapper<ApprenticeRequest, ApprenticeVi
             Origin = source.Origin,
             AutoCreatedReservation = source.AutoCreated,
             DeliveryModel = source.DeliveryModel,
-            IsOnFlexiPaymentPilot = false
+            IsOnFlexiPaymentPilot = false,
+            CacheKey = source.CacheKey.IsNotNullOrEmpty() ? source.CacheKey : Guid.NewGuid()
         };
 
         return result;

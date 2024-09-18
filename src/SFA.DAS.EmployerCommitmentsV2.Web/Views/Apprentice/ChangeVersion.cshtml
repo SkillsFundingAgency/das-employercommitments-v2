@@ -55,7 +55,7 @@
             Save and continue
         </button>
 
-        <a class="govuk-link govuk-link--no-visited-state" href="@Url.RouteUrl(RouteNames.CancelInProgressChangeOfCircumstance)" id="cancel-button">Cancel and return</a>
+        <a class="govuk-link govuk-link--no-visited-state" href="@Url.RouteUrl(RouteNames.CancelInProgressChangeOfCircumstance, new { Model.AccountHashedId, Model.ApprenticeshipHashedId, Model.CacheKey })" id="cancel-button">Cancel and return</a>
     </div>
 </form>
 

@@ -19,7 +19,8 @@ public class SelectCourseViewModelToApprenticeRequestMapper : IMapper<SelectCour
             ReservationId = source.ReservationId,
             StartMonthYear = source.StartMonthYear,
             TransferSenderId = source.TransferSenderId,
-            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
+            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
+            CacheKey = source.CacheKey
         });
     }
 }

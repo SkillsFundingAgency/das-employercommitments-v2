@@ -16,4 +16,5 @@ public class ChangeOptionViewModel : IAuthorizationContextModel
     public string SelectedOption { get; set; }
     public bool ReturnToChangeVersion { get; set; }
     public bool ReturnToEdit { get; set; }
+    public Guid? CacheKey { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
@@ -29,13 +30,14 @@ public class WhenCallingTheViewChangesPageTestsFixture
     private readonly ViewChangesRequest _request;
     private readonly ViewChangesViewModel _viewModel;
     private readonly ApprenticeController _controller;
+    private readonly Mock<ICacheStorageService> _cacheStorageService;
 
     public WhenCallingTheViewChangesPageTestsFixture()
     {
         var autoFixture = new Fixture();
         _request = autoFixture.Create<ViewChangesRequest>();
         _viewModel = autoFixture.Create<ViewChangesViewModel>();
-
+        _cacheStorageService = new Mock<ICacheStorageService>();
         var mockMapper = new Mock<IModelMapper>();
         mockMapper.Setup(m => m.Map<ViewChangesViewModel>(_request))
             .ReturnsAsync(_viewModel);
@@ -43,6 +45,7 @@ public class WhenCallingTheViewChangesPageTestsFixture
         _controller = new ApprenticeController(mockMapper.Object,
             Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             Mock.Of<ICommitmentsApiClient>(),
+            _cacheStorageService.Object,
             Mock.Of<ILogger<ApprenticeController>>());
     }
 

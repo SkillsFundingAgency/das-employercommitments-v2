@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -127,7 +128,8 @@ public class DetailsTestFixture
             ModelMapperMock.Object,
             CommitmentsApiClientMock.Object,
             Mock.Of<IEncodingService>(),
-            OuterApiClientMock.Object);
+            OuterApiClientMock.Object,
+            Mock.Of<ICacheStorageService>());
     }
 
     private Mock<IModelMapper> ModelMapperMock { get; }

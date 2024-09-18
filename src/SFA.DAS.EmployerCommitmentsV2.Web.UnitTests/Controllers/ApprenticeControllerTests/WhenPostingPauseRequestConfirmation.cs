@@ -23,10 +23,12 @@ public class WhenPostingPauseRequestConfirmation : ApprenticeControllerTestBase
         MockModelMapper = new Mock<IModelMapper>();
         MockCookieStorageService = new Mock<Interfaces.ICookieStorageService<IndexRequest>>();
         MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        CacheStorageService = new Mock<Interfaces.ICacheStorageService>();
 
         Controller = new ApprenticeController(MockModelMapper.Object,
             MockCookieStorageService.Object,
             MockCommitmentsApiClient.Object,
+            CacheStorageService.Object,
             Mock.Of<ILogger<ApprenticeController>>());
         Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
     }

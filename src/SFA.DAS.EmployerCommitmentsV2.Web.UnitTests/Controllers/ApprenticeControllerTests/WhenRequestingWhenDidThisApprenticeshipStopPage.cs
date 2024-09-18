@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
@@ -13,10 +14,12 @@ public class WhenRequestingWhenDidThisApprenticeshipStopPage : ApprenticeControl
         MockModelMapper = new Mock<IModelMapper>();
         MockCookieStorageService = new Mock<Interfaces.ICookieStorageService<IndexRequest>>();
         MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
+        CacheStorageService = new Mock<ICacheStorageService>();
 
         Controller = new ApprenticeController(MockModelMapper.Object,
             MockCookieStorageService.Object,
             MockCommitmentsApiClient.Object,
+            CacheStorageService.Object,
             Mock.Of<ILogger<ApprenticeController>>());
     }
 

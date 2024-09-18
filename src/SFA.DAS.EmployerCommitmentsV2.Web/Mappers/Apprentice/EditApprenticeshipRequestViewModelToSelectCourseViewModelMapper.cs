@@ -26,6 +26,7 @@ public class EditApprenticeshipRequestViewModelToSelectCourseViewModelMapper : I
         {
             CourseCode = source.CourseCode,
             Courses = courses.ToArray(),
+            CacheKey = source.CacheKey
         };
     }
 }

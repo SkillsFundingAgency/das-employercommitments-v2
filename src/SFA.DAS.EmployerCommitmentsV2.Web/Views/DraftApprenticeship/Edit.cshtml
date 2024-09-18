@@ -12,7 +12,7 @@
         <partial name="_ValidationSummary" />
         <form id="addApprenticeship" novalidate method="post">
             @Html.AntiForgeryToken()
-
+            <input type="hidden" asp-for="CacheKey" />
             <button type="submit" id="defaultButton" aria-hidden="true" class="govuk-visually-hidden" tabindex="-1"></button>
 
             <partial name="_DraftApprenticeship" for="@Model" />

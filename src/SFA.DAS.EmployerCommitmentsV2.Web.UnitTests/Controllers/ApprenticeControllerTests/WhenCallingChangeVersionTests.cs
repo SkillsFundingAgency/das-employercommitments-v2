@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
@@ -54,8 +53,9 @@ public class WhenCallingChangeVersionTestsFixture : ApprenticeControllerTestFixt
             Version = version
         };
 
-        object serializedModel = JsonConvert.SerializeObject(editApprenticeViewModel);
-        TempDataDictionary.Setup(s => s.Peek("EditApprenticeshipRequestViewModel")).Returns(serializedModel);
+        _cacheStorageService
+            .Setup(x => x.RetrieveFromCache<EditApprenticeshipRequestViewModel>(It.IsAny<Guid>()))
+            .ReturnsAsync(editApprenticeViewModel);
     }
 
     public async Task<IActionResult> ChangeVersion()
