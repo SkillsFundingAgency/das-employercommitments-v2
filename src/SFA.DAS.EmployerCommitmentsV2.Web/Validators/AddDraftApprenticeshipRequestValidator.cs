@@ -12,7 +12,6 @@ public class AddDraftApprenticeshipRequestValidator : AbstractValidator<AddDraft
         RuleFor(r => r.CohortId).GreaterThanOrEqualTo(1);
         RuleFor(r => r.AccountLegalEntityHashedId).NotEmpty();
         RuleFor(r => r.AccountLegalEntityId).GreaterThanOrEqualTo(1);
-        RuleFor(r => r.ReservationId).NotEmpty();
             
         RuleFor(r => r.StartMonthYear)
             .Must(s => DateTime.TryParseExact(s, "MMyyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
