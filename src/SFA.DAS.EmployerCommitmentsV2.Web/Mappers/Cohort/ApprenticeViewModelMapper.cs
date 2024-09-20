@@ -35,7 +35,6 @@ public class ApprenticeViewModelMapper : IMapper<ApprenticeRequest, ApprenticeVi
             TransferSenderId = source.TransferSenderId,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
             Origin = source.Origin,
-            AutoCreatedReservation = source.AutoCreated,
             DeliveryModel = source.DeliveryModel,
             IsOnFlexiPaymentPilot = false
         };

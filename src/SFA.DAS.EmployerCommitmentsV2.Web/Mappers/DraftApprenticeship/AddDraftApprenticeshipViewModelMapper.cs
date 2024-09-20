@@ -41,7 +41,6 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<AddDraftApprentices
             ProviderName = cohort.ProviderName,
             Courses = null,
             TransferSenderHashedId = cohort.IsFundedByTransfer ? _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId) : string.Empty,
-            AutoCreatedReservation = source.AutoCreated,
             DeliveryModel = source.DeliveryModel,
             IsOnFlexiPaymentPilot = false
         };
