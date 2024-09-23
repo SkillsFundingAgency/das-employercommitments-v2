@@ -125,10 +125,4 @@ public class ApprenticeViewModelMapperTests
     {
         Assert.That(_result.Origin, Is.EqualTo(_source.Origin));
     }
-
-    [Test]
-    public void AutoCreatedReservationIsMappedCorrectly()
-    {
-        Assert.That(_result.AutoCreatedReservation, Is.EqualTo(_source.AutoCreated));
-    }
 }

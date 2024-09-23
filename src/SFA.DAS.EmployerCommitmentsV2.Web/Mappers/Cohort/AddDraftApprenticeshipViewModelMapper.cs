@@ -35,8 +35,7 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<ApprenticeRequest, 
             CourseCode = source.CourseCode,
             ProviderId = (int)source.ProviderId,
             ProviderName = provider.Name,
-            Courses =  courses,
-            AutoCreatedReservation = source.AutoCreated
+            Courses =  courses
         };
 
         return result;
