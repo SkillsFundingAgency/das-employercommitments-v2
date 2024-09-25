@@ -114,6 +114,7 @@ else
 
 <div class="govuk-form-group">
     <fieldset class="govuk-fieldset">
+        <legend class="govuk-visually-hidden">Apprentice details</legend>
         <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.FirstName, "govuk-form-group--error")">
             <label asp-for="FirstName" class="govuk-label govuk-!-font-weight-bold">First name</label>
             @Html.ValidationMessageFor(m => m.FirstName, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.FirstName)})

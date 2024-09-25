@@ -15,7 +15,6 @@ public class BaseApprenticeRequest : IndexRequest
     public string LegalEntityName { get; set; }
     public string TransferSenderId { get; set; }
     public Origin Origin { get; set; }
-    public bool AutoCreated { get; set; }
     public DeliveryModel? DeliveryModel { get; set; }
 
     [FromQuery]

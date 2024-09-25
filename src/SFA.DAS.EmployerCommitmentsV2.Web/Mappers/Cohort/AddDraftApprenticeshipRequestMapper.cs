@@ -8,14 +8,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 public class AddDraftApprenticeshipRequestMapper : IMapper<AddDraftApprenticeshipViewModel, AddDraftApprenticeshipApimRequest>
 {
     private readonly IAuthenticationService _authenticationService;
+    private readonly ILogger<AddDraftApprenticeshipRequestMapper> _logger;
 
-    public AddDraftApprenticeshipRequestMapper(IAuthenticationService authenticationService)
+    public AddDraftApprenticeshipRequestMapper(IAuthenticationService authenticationService, ILogger<AddDraftApprenticeshipRequestMapper> logger)
     {
         _authenticationService = authenticationService;
+        _logger = logger;
     }
 
     public Task<AddDraftApprenticeshipApimRequest> Map(AddDraftApprenticeshipViewModel source)
     {
+        _logger.LogInformation("Mapping AddDraftApprenticeshipViewModel to AddDraftApprenticeshipApimRequest : Course Code = {0}", source.CourseCode);
+
         return Task.FromResult(new AddDraftApprenticeshipApimRequest
         {
             UserId = _authenticationService.UserId,

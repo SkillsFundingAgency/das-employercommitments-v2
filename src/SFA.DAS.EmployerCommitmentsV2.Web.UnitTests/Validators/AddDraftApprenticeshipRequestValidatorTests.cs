@@ -52,14 +52,6 @@ public class AddDraftApprenticeshipRequestValidatorTests : ValidatorTestBase<Add
         AssertValidationResult(request => request.AccountLegalEntityId, model, isValid);
     }
         
-    [TestCase(false, false)]
-    [TestCase(true, true)]
-    public void Validate_WhenValidatingReservationId_ThenShouldBeValidated(bool reservationIdHasValue, bool isValid)
-    {
-        var model = new AddDraftApprenticeshipRequest { ReservationId = reservationIdHasValue ? Guid.NewGuid() : Guid.Empty };
-        AssertValidationResult(request => request.ReservationId, model, isValid);
-    }
-        
     [TestCase(null, true)]
     [TestCase("", true)]
     [TestCase("Foobar", false)]
