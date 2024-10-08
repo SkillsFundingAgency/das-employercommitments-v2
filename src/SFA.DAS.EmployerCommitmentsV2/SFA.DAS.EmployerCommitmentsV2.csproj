@@ -13,7 +13,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="SFA.DAS.Apprenticeships.Types" Version="6.8.5-prerelease-73" />
+    <PackageReference Include="SFA.DAS.Apprenticeships.Types" Version="6.8.7" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="100.0.43" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.76" />
