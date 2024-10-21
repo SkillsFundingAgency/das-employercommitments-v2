@@ -741,7 +741,7 @@ public class ApprenticeController : Controller
     {
         EditApprenticeshipRequestViewModel viewModel;
 
-        if (request.CacheKey != Guid.Empty)
+        if (request.CacheKey != null && request.CacheKey != Guid.Empty)
         {
             viewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey)
                         ?? await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
