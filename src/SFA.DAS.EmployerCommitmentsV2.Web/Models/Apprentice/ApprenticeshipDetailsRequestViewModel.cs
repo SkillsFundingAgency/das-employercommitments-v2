@@ -1,5 +1,6 @@
-﻿using SFA.DAS.CommitmentsV2.Types;
+﻿using SFA.DAS.Apprenticeships.Types;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -94,6 +95,7 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public string PendingStartDateChangeUrl { get; set; }
     public string PaymentStatusChangeUrl { get; set; }
     public ApprenticeDetailsBanners ShowBannersFlags { get; set; }
+    public LearnerStatus LearnerStatus { get; set; }
 
     public ActionRequiredBanner GetActionRequiredBanners()
     {

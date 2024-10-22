@@ -114,12 +114,6 @@ public class AddDraftApprenticeshipViewModelMapperTests
     }
 
     [Test]
-    public void AutoCreatedReservationIsMappedCorrectly()
-    {
-        Assert.That(_result.AutoCreatedReservation, Is.EqualTo(_source.AutoCreated));
-    }
-
-    [Test]
     public void TransferSenderHashedIdIsMappedCorrectly()
     {
         Assert.That(_result.TransferSenderHashedId, Is.EqualTo(_encodedTransferSenderId));

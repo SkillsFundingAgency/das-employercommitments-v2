@@ -1,0 +1,129 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.Apprenticeships.Types
+
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+@{
+    var learnerStatusTagClass = Model.LearnerStatus switch
+    {
+        LearnerStatus.WaitingToStart => "govuk-tag--green",
+        LearnerStatus.InLearning => "govuk-tag--blue",
+        LearnerStatus.Completed => "govuk-tag--blue",
+        LearnerStatus.BreakInLearning => "govuk-tag--red",
+        LearnerStatus.Withdrawn => "govuk-tag--red",
+        LearnerStatus.None => "govuk-tag--blue",
+        _ => "govuk-tag--blue" // default
+        };
+}
+
+@{
+    var paymentStatusTagClass = Model.PaymentStatus switch
+    {
+        "Inactive" => "govuk-tag--red",
+        "Active" => "govuk-tag--blue",
+        _ => "govuk-tag--blue" // default
+    };
+}
+
+@if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
+{
+    <tr>
+        <th scope="row" class="govuk-table__header">Learner Status</th>
+        <td class="govuk-table__cell" colspan="2">
+            <strong class="govuk-tag @learnerStatusTagClass">@Model.LearnerStatus.GetDescription()</strong>
+        </td>
+    </tr>
+}
+else{
+    <tr>
+        <th scope="row" class="govuk-table__header das-table-cell-width-45">Status</th>
+
+        <td class="govuk-table__cell das-table-cell-width-40">
+            <strong class="govuk-tag @Model.ApprenticeshipStatus.GetDisplayClass()">
+                @Model.ApprenticeshipStatus.GetDescription()
+            </strong>
+        </td>
+
+        <td id="editStatusLink" class="govuk-table__cell das-table-cell-width-15 govuk-table__cell--numeric">
+            @if (Model.CanEditStatus && !Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
+            {
+                <a id="edit-status-link" href="@Url.Action("ChangeStatus", new ChangeStatusRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link">Edit status</a>
+            }
+        </td>
+    </tr>
+    @if (@Model.ApprenticeshipStatus == ApprenticeshipStatus.Paused)
+    {
+        <tr>
+            <th scope="row" class="govuk-table__header">Apprenticeship pause date</th>
+            <td id="pauseDate" class="govuk-table__cell" colspan="2">
+                @if (Model.PauseDate.HasValue)
+                {
+                    @Model.PauseDate.Value.ToGdsFormat()
+                }
+            </td>
+        </tr>
+    }
+
+    @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
+    {
+        <tr>
+            <th scope="row" class="govuk-table__header">Completion payment month</th>
+            <td id="completionDate" class="govuk-table__cell" colspan="2">
+                @if (Model.CompletionDate.HasValue)
+                {
+                    @Model.CompletionDate.Value.ToGdsFormatLongMonthNameWithoutDay()
+                }
+            </td>
+        </tr>
+    }
+
+    @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Stopped)
+    {
+        <tr>
+            <th scope="row" class="govuk-table__header">Stopped date</th>
+            <td id="stopDate" class="govuk-table__cell">
+                @if (Model.StopDate.HasValue)
+                {
+                    @Model.StopDate.Value.ToGdsFormatLongMonthWithoutDay()
+                }
+            </td>
+            <td id="editStopDateLink" class="govuk-table__cell govuk-table__cell--numeric">
+                <a id="edit-stopped-link" class="govuk-link" href="@Url.Action("EditStopDate", new EditStopDateRequest {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Edit</a>
+            </td>
+        </tr>
+
+        @if (Model.MadeRedundant.HasValue)
+        {
+            <tr>
+                <th scope="row" class="govuk-table__header">Made redundant</th>
+                <td id="madeRedundant" class="govuk-table__cell" colspan="2">
+                    @(Model.MadeRedundant.Value ? "Yes" : "No")
+                </td>
+            </tr>
+        }
+    }
+}
+
+<tr>
+    <th scope="row" class="govuk-table__header">Apprentice confirmation</th>
+    <td id="confirationStatus" class="govuk-table__cell" colspan="2">
+        @Model.ConfirmationStatus.ToDisplayString()
+    </td>
+</tr>
+
+@if(Model.IsOnFlexiPaymentPilot == true)
+{
+    <tr>
+        <th scope="row" class="govuk-table__header">Provider payments status</th>
+        <td id="provider-payments-status" class="govuk-table__cell" colspan="2">
+            <strong class="govuk-tag @paymentStatusTagClass">@Model.PaymentStatus</strong>
+        </td>
+        @if(Model.LearnerStatus != LearnerStatus.WaitingToStart)
+        {
+            <td class="govuk-table__cell"><a id="linkChangePaymentStatus" href="@Model.PaymentStatusChangeUrl" class="govuk-link">Change<span class="govuk-visually-hidden"> Provider payments status</span></a></td>
+        }
+    </tr>
+}

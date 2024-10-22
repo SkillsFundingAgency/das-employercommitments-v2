@@ -36,7 +36,6 @@ public class ApprenticeViewModelMapper : IMapper<ApprenticeRequest, ApprenticeVi
             TransferSenderId = source.TransferSenderId,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
             Origin = source.Origin,
-            AutoCreatedReservation = source.AutoCreated,
             DeliveryModel = source.DeliveryModel,
             IsOnFlexiPaymentPilot = false,
             CacheKey = source.CacheKey.IsNotNullOrEmpty() ? source.CacheKey : Guid.NewGuid()
