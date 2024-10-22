@@ -51,6 +51,7 @@ public class Startup
             .AddUrlHelper()
             .AddEmployerUrlHelper()
             .AddMemoryCache()
+            .AddCache(_environment, _configuration)
             .AddApplicationInsightsTelemetry()
             .AddDasDataProtection(_configuration, _environment);
     }

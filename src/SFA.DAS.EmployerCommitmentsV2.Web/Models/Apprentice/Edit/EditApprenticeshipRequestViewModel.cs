@@ -102,4 +102,5 @@ public class EditApprenticeshipRequestViewModel : IAuthorizationContextModel
     public long ProviderId { get; set; }
     public string AccountLegalEntityHashedId { get; set; }
     public bool HasMultipleDeliveryModelOptions { get; set; }
+    public Guid? CacheKey { get; set; }
 }

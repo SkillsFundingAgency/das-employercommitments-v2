@@ -43,7 +43,8 @@ public class ChangeVersionViewModelToEditApprenticehipRequestViewModelMapper : I
             Version = source.SelectedVersion,
             TrainingName = apprenticeship.CourseName != newStandardVersion.Name ? newStandardVersion.Name : null,
             EmployerReference = apprenticeship.EmployerReference,
-            HasOptions = newStandardVersion.Options.Any()
+            HasOptions = newStandardVersion.Options.Any(),
+            CacheKey = source.CacheKey
         };
 
         return editRequestViewModel;

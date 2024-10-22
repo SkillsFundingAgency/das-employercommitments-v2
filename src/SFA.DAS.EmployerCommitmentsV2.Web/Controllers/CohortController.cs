@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
@@ -25,13 +26,16 @@ public class CohortController : Controller
     private readonly IModelMapper _modelMapper;
     private readonly IEncodingService _encodingService;
     private readonly IApprovalsApiClient _approvalsApiClient;
+    private readonly ICacheStorageService _cacheStorageService;
 
     public CohortController(
         ICommitmentsApiClient commitmentsApiClient,
         ILogger<CohortController> logger,
         ILinkGenerator linkGenerator,
         IModelMapper modelMapper,
-        IEncodingService encodingService, IApprovalsApiClient approvalsApiClient)
+        IEncodingService encodingService,
+        IApprovalsApiClient approvalsApiClient,
+        ICacheStorageService cacheStorageService)
     {
         _commitmentsApiClient = commitmentsApiClient;
         _logger = logger;
@@ -39,6 +43,7 @@ public class CohortController : Controller
         _modelMapper = modelMapper;
         _encodingService = encodingService;
         _approvalsApiClient = approvalsApiClient;
+        _cacheStorageService = cacheStorageService;
     }
 
     [Route("{cohortReference}")]
@@ -334,7 +339,7 @@ public class CohortController : Controller
     [Route("add/apprenticeship")]
     public async Task<IActionResult> AddDraftApprenticeship(ApprenticeRequest request)
     {
-        var model = GetStoredDraftApprenticeshipState();
+        var model = await GetStoredApprenticeViewModelFromCache(request.CacheKey);
         if (model == null)
         {
             model = await _modelMapper.Map<ApprenticeViewModel>(request);
@@ -353,7 +358,7 @@ public class CohortController : Controller
     {
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
-            StoreDraftApprenticeshipState(model);
+            await StoreApprenticeViewModelInCache(model, model.CacheKey);
             var request = await _modelMapper.Map<ApprenticeRequest>(model);
 
             return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request.CloneBaseValues());
@@ -545,14 +550,21 @@ public class CohortController : Controller
         return View(response);
     }
 
-    private void StoreDraftApprenticeshipState(ApprenticeViewModel model)
+    private async Task StoreApprenticeViewModelInCache(ApprenticeViewModel model, Guid? key)
     {
-        TempData.Put(nameof(ApprenticeViewModel), model);
+        if (key.IsNotNullOrEmpty())
+        {
+            await _cacheStorageService.SaveToCache(key.Value, model, 1);
+        }
     }
 
-    private ApprenticeViewModel GetStoredDraftApprenticeshipState()
+    private async Task<ApprenticeViewModel> GetStoredApprenticeViewModelFromCache(Guid? key)
     {
-        return TempData.Get<ApprenticeViewModel>(nameof(ApprenticeViewModel));
+        if (key.IsNotNullOrEmpty())
+        {
+            return await _cacheStorageService.RetrieveFromCache<ApprenticeViewModel>(key.Value);
+        }
+        return null;
     }
 
     private void StoreViewEmployerAgreementModelState(ViewEmployerAgreementModel model)

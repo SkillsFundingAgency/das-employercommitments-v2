@@ -26,7 +26,8 @@ public class ChangeVersionViewModelMapper : IMapper<ChangeVersionRequest, Change
             CurrentVersion = apprenticeship.Version,
             StandardTitle = currentVersion.TrainingProgramme.Name,
             StandardUrl = currentVersion.TrainingProgramme.StandardPageUrl,
-            NewerVersions = newerVersions.NewerVersions.Select(x => x.Version)
+            NewerVersions = newerVersions.NewerVersions.Select(x => x.Version),
+            CacheKey = source.CacheKey
         };
     }
 }

@@ -14,6 +14,7 @@ using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.DraftApprenticeshipControllerTests;
 
@@ -134,7 +135,8 @@ public class AddDraftApprenticeshipTestsFixture
             ModelMapper.Object,
             CommitmentsApiClient.Object,
             Mock.Of<IEncodingService>(),
-            OuterApiClient.Object);
+            OuterApiClient.Object,
+            Mock.Of<ICacheStorageService>());
 
         Controller.TempData = TempData.Object;
 

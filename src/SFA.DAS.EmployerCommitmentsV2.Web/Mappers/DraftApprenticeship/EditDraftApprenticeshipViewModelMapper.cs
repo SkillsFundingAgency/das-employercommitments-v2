@@ -2,7 +2,7 @@
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.Encoding;
 
@@ -75,7 +75,8 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
             TrainingTotalHours = draftApprenticeship.TrainingTotalHours,
             DurationReducedByHours = draftApprenticeship.DurationReducedByHours,
             DurationReducedBy = draftApprenticeship.DurationReducedBy,
-            PriceReducedBy = draftApprenticeship.PriceReducedBy
+            PriceReducedBy = draftApprenticeship.PriceReducedBy,
+            CacheKey = source.Request.CacheKey.IsNotNullOrEmpty() ? source.Request.CacheKey : Guid.NewGuid()
         };
     }
 }

@@ -12,4 +12,5 @@ public class ApprenticeViewModel : DraftApprenticeshipViewModel
     public Origin Origin { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
     public long? PledgeApplicationId { get; set; }
+    public Guid? CacheKey { get; set; }
 }
