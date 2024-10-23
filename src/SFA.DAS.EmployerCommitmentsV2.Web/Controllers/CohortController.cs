@@ -53,13 +53,6 @@ public class CohortController : Controller
     {
         var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
 
-        StoreViewEmployerAgreementModelState(
-            new ViewEmployerAgreementModel
-            {
-                AccountHashedId = viewModel.AccountHashedId,
-                CohortId = viewModel.CohortId
-            });
-
         return View(viewModel);
     }
 
@@ -94,16 +87,14 @@ public class CohortController : Controller
 
     [HttpGet]
     [Route("viewAgreement", Name = "ViewAgreement")]
-    public async Task<IActionResult> ViewAgreement(string hashedAccountId)
+    public async Task<IActionResult> ViewAgreement(string hashedAccountId, int? cohortId)
     {
-        var tempData = GetViewEmployerAgreementModelState();
-
-        var request = tempData == null
+        var request = !cohortId.HasValue
             ? new ViewEmployerAgreementRequest { AccountHashedId = hashedAccountId }
             : await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel
             {
-                AccountHashedId = tempData.AccountHashedId,
-                CohortId = tempData.CohortId
+                AccountHashedId = hashedAccountId,
+                CohortId = cohortId.Value
             });
 
         return ViewEmployeeAgreementRedirect(request);
@@ -565,15 +556,5 @@ public class CohortController : Controller
             return await _cacheStorageService.RetrieveFromCache<ApprenticeViewModel>(key.Value);
         }
         return null;
-    }
-
-    private void StoreViewEmployerAgreementModelState(ViewEmployerAgreementModel model)
-    {
-        TempData.Put(nameof(ViewEmployerAgreementModel), model);
-    }
-
-    private ViewEmployerAgreementModel GetViewEmployerAgreementModelState()
-    {
-        return TempData.Get<ViewEmployerAgreementModel>(nameof(ViewEmployerAgreementModel));
     }
 }

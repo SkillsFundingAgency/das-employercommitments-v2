@@ -23,6 +23,7 @@ public class WhenViewingEmployerAgreement
     private Mock<ICacheStorageService> _cacheStorageService;
     private string _organisationAgreementsUrl;
     private string _agreementUrl;
+    private int? cohortId = 123;
 
     [SetUp]
     public void Arrange()
@@ -55,14 +56,14 @@ public class WhenViewingEmployerAgreement
     public void TearDown() => _controller?.Dispose();
 
     [Test]
-    public async Task Then_User_Is_Redirected_To_View_Organisations_Agreements_When_NoTempData()
+    public async Task Then_User_Is_Redirected_To_View_Organisations_Agreements_When_CohortId_IsNull()
     {
         // Arrange
         _linkGenerator.Setup(linkGen => linkGen.AccountsLink(_organisationAgreementsUrl))
             .Returns(_organisationAgreementsUrl);
-
+        cohortId = null;
         //Act
-        var result = await _controller.ViewAgreement(_viewEmployerAgreementRequest.AccountHashedId) as RedirectResult;
+        var result = await _controller.ViewAgreement(_viewEmployerAgreementRequest.AccountHashedId, cohortId) as RedirectResult;
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -70,7 +71,7 @@ public class WhenViewingEmployerAgreement
     }
 
     [Test]
-    public async Task Then_User_Is_Redirected_To_View_Agreement_If_AgreementID_In_TempData()
+    public async Task Then_User_Is_Redirected_To_View_Agreement_If_CohortId_IsNotNull()
     {
         // Arrange         
         _controller.TempData.Put(nameof(ViewEmployerAgreementModel), _viewEmployerAgreementModel);
@@ -80,7 +81,7 @@ public class WhenViewingEmployerAgreement
             .Returns(_agreementUrl);
 
         //Act
-        var result = await _controller.ViewAgreement(_viewEmployerAgreementModel.AccountHashedId) as RedirectResult;
+        var result = await _controller.ViewAgreement(_viewEmployerAgreementModel.AccountHashedId, cohortId) as RedirectResult;
 
         // Assert
         Assert.That(result, Is.Not.Null);
