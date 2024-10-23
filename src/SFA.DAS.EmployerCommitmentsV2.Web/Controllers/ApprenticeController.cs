@@ -7,6 +7,7 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
@@ -28,6 +29,7 @@ public class ApprenticeController : Controller
     private readonly Interfaces.ICookieStorageService<IndexRequest> _cookieStorage;
     private readonly ICommitmentsApiClient _commitmentsApiClient;
     private readonly ILogger<ApprenticeController> _logger;
+    private readonly ICacheStorageService _cacheStorageService;
 
     private const string ApprenticePausedMessage = "Apprenticeship paused";
     private const string ApprenticeResumeMessage = "Apprenticeship resumed";
@@ -39,15 +41,15 @@ public class ApprenticeController : Controller
     private const string AlertDetailsWhenApproved = "An alert has been sent to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service.";
     private const string ChangesRejectedMessage = "Changes rejected";
     private const string ChangesUndoneMessage = "Changes undone";
-    private const string ViewModelForEdit = "ViewModelForEdit";
     private const string ApprenticeEndDateConfirmed = "Current planned end date confirmed ";
 
     public ApprenticeController(IModelMapper modelMapper, Interfaces.ICookieStorageService<IndexRequest> cookieStorage,
-        ICommitmentsApiClient commitmentsApiClient, ILogger<ApprenticeController> logger)
+        ICommitmentsApiClient commitmentsApiClient, ICacheStorageService cacheStorageService, ILogger<ApprenticeController> logger)
     {
         _modelMapper = modelMapper;
         _cookieStorage = cookieStorage;
         _commitmentsApiClient = commitmentsApiClient;
+        _cacheStorageService = cacheStorageService;
         _logger = logger;
     }
 
@@ -701,7 +703,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
-    public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, ApprenticeDetailsBanners banners = 0)        
+    public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, ApprenticeDetailsBanners banners = 0)
     {
         var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
         viewModel.ShowBannersFlags = banners;
@@ -737,8 +739,19 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/edit")]
     public async Task<IActionResult> EditApprenticeship(EditApprenticeshipRequest request)
     {
-        var viewModel = TempData.Get<EditApprenticeshipRequestViewModel>(ViewModelForEdit) ??
-                        await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
+        EditApprenticeshipRequestViewModel viewModel;
+
+        if (request.CacheKey != null && request.CacheKey != Guid.Empty)
+        {
+            viewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey)
+                        ?? await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
+        }
+        else
+        {
+            viewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
+            viewModel.CacheKey = Guid.NewGuid();
+        }
+
         return View(viewModel);
     }
 
@@ -749,9 +762,9 @@ public class ApprenticeController : Controller
     {
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
-            TempData.Put(ViewModelForEdit, viewModel);
+            await StoreEditApprenticeshipRequestViewModelInCache(viewModel, viewModel.CacheKey);
             return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit),
-                new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, viewModel.AccountHashedId });
+                new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, viewModel.AccountHashedId, viewModel.CacheKey });
         }
 
         var apprenticeship = await _commitmentsApiClient.GetApprenticeship(viewModel.ApprenticeshipId);
@@ -789,12 +802,12 @@ public class ApprenticeController : Controller
             viewModel.Option = null;
         }
 
-        TempData.Put("EditApprenticeshipRequestViewModel", viewModel);
+        await StoreEditApprenticeshipRequestViewModelInCache(viewModel, viewModel.CacheKey);
 
         return RedirectToAction(viewModel.HasOptions
                 ? nameof(ChangeOption)
                 : nameof(ConfirmEditApprenticeship)
-            , new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, accountHashedId = viewModel.AccountHashedId });
+            , new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, accountHashedId = viewModel.AccountHashedId, cacheKey = viewModel.CacheKey });
     }
 
     [HttpGet]
@@ -802,7 +815,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> SelectCourseForEdit(EditApprenticeshipRequest request)
     {
-        var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
+        var draft = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
         var model = await _modelMapper.Map<SelectCourseViewModel>(draft);
         return View("SelectCourse", model);
     }
@@ -810,7 +823,7 @@ public class ApprenticeController : Controller
     [HttpPost]
     [Route("{apprenticeshipHashedId}/edit/select-course")]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
-    public IActionResult SetCourseForEdit(SelectCourseViewModel model)
+    public async Task<IActionResult> SetCourseForEdit(SelectCourseViewModel model)
     {
         if (string.IsNullOrEmpty(model.CourseCode))
         {
@@ -818,12 +831,12 @@ public class ApprenticeController : Controller
                 { new(nameof(model.CourseCode), "You must select a training course") });
         }
 
-        var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
+        var draft = await GetStoredEditApprenticeshipRequestViewModelFromCache(model.CacheKey);
         draft.CourseCode = model.CourseCode;
 
-        TempData.Put(ViewModelForEdit, draft);
+        await StoreEditApprenticeshipRequestViewModelInCache(draft, model.CacheKey);
 
-        return RedirectToAction(nameof(SelectDeliveryModelForEdit), new { model.ApprenticeshipHashedId, model.AccountHashedId });
+        return RedirectToAction(nameof(SelectDeliveryModelForEdit), new { model.ApprenticeshipHashedId, model.AccountHashedId, model.CacheKey });
     }
 
     [HttpGet]
@@ -831,7 +844,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> SelectDeliveryModelForEdit(EditApprenticeshipRequest request)
     {
-        var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
+        var draft = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
         var model = await _modelMapper.Map<EditApprenticeshipDeliveryModelViewModel>(draft);
 
         if (model.DeliveryModels.Count > 1)
@@ -840,27 +853,27 @@ public class ApprenticeController : Controller
         }
 
         draft.DeliveryModel = (DeliveryModel)model.DeliveryModels.FirstOrDefault();
-        TempData.Put(ViewModelForEdit, draft);
+        await StoreEditApprenticeshipRequestViewModelInCache(draft, request.CacheKey);
 
-        return RedirectToAction("EditApprenticeship", new { request.AccountHashedId, request.ApprenticeshipHashedId });
+        return RedirectToAction("EditApprenticeship", new { request.AccountHashedId, request.ApprenticeshipHashedId, request.CacheKey });
     }
 
     [HttpPost]
     [Route("{ApprenticeshipHashedId}/edit/select-delivery-model")]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
-    public IActionResult SetDeliveryModelForEdit(EditApprenticeshipDeliveryModelViewModel model)
+    public async Task<IActionResult> SetDeliveryModelForEdit(EditApprenticeshipDeliveryModelViewModel model)
     {
         if (model.DeliveryModel == null)
         {
             throw new CommitmentsApiModelException(new List<ErrorDetail> { new("DeliveryModel", "You must select the apprenticeship delivery model") });
         }
 
-        var draft = TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(ViewModelForEdit);
+        var draft = await GetStoredEditApprenticeshipRequestViewModelFromCache(model.CacheKey);
         draft.DeliveryModel = (DeliveryModel)model.DeliveryModel.Value;
 
-        TempData.Put(ViewModelForEdit, draft);
+        await StoreEditApprenticeshipRequestViewModelInCache(draft, draft.CacheKey);
 
-        return RedirectToAction(nameof(EditApprenticeship), new { apprenticeshipHashedId = draft.HashedApprenticeshipId, draft.AccountHashedId });
+        return RedirectToAction(nameof(EditApprenticeship), new { apprenticeshipHashedId = draft.HashedApprenticeshipId, draft.AccountHashedId, draft.CacheKey });
     }
 
     [HttpGet]
@@ -870,8 +883,7 @@ public class ApprenticeController : Controller
         var viewModel = await _modelMapper.Map<ChangeVersionViewModel>(request);
 
         // Get Edit Model if it exists to pre-select version if navigating back
-        var editApprenticeViewModel =
-            TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>("EditApprenticeshipRequestViewModel");
+        var editApprenticeViewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
 
         if (editApprenticeViewModel != null && !string.IsNullOrWhiteSpace(editApprenticeViewModel.Version))
         {
@@ -887,7 +899,7 @@ public class ApprenticeController : Controller
     {
         var editRequestViewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(changeVersionViewModel);
 
-        TempData.Put("EditApprenticeshipRequestViewModel", editRequestViewModel);
+        await StoreEditApprenticeshipRequestViewModelInCache(editRequestViewModel, changeVersionViewModel.CacheKey);
 
         return RedirectToAction(editRequestViewModel.HasOptions
                 ? nameof(ChangeOption)
@@ -895,7 +907,8 @@ public class ApprenticeController : Controller
             , new
             {
                 apprenticeshipHashedId = changeVersionViewModel.ApprenticeshipHashedId,
-                accountHashedId = changeVersionViewModel.AccountHashedId
+                accountHashedId = changeVersionViewModel.AccountHashedId,
+                cacheKey = changeVersionViewModel.CacheKey
             });
     }
 
@@ -914,22 +927,23 @@ public class ApprenticeController : Controller
     {
         var editViewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(viewModel);
 
-        TempData.Put(nameof(EditApprenticeshipRequestViewModel), editViewModel);
+        await StoreEditApprenticeshipRequestViewModelInCache(editViewModel, viewModel.CacheKey);
 
         return RedirectToAction("ConfirmEditApprenticeship",
             new
             {
                 apprenticeshipHashedId = viewModel.ApprenticeshipHashedId,
-                accountHashedId = viewModel.AccountHashedId
+                accountHashedId = viewModel.AccountHashedId,
+                cacheKey = viewModel.CacheKey
             });
     }
 
     [HttpGet]
     [Route("{apprenticeshipHashedId}/cancel-change-of-circumstance",
         Name = RouteNames.CancelInProgressChangeOfCircumstance)]
-    public IActionResult CancelChangeOfCircumstance(CancelChangeOfCircumstanceRequest request)
+    public async Task<IActionResult> CancelChangeOfCircumstance(CancelChangeOfCircumstanceRequest request)
     {
-        TempData.Remove(nameof(EditApprenticeshipRequestViewModel));
+        await DeleteEditApprenticeshipRequestViewModelInCache(request.CacheKey);
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
             new { request.AccountHashedId, request.ApprenticeshipHashedId });
@@ -938,10 +952,9 @@ public class ApprenticeController : Controller
     [HttpGet]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/edit/confirm")]
-    public async Task<IActionResult> ConfirmEditApprenticeship()
+    public async Task<IActionResult> ConfirmEditApprenticeship(ConfirmEditApprenticeshipRequest request)
     {
-        var editApprenticeshipRequestViewModel =
-            TempData.GetButDontRemove<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel));
+        var editApprenticeshipRequestViewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
 
         var viewModel = await _modelMapper.Map<ConfirmEditApprenticeshipViewModel>(editApprenticeshipRequestViewModel);
 
@@ -969,7 +982,7 @@ public class ApprenticeController : Controller
             }
         }
 
-        TempData.Remove(nameof(EditApprenticeshipRequestViewModel));
+        await DeleteEditApprenticeshipRequestViewModelInCache(viewModel.CacheKey);
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
             new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
@@ -1256,5 +1269,30 @@ public class ApprenticeController : Controller
             viewModel.AccountHashedId,
             viewModel.ApprenticeshipHashedId
         });
+    }
+
+    private async Task StoreEditApprenticeshipRequestViewModelInCache(EditApprenticeshipRequestViewModel model, Guid? key)
+    {
+        if (key.IsNotNullOrEmpty())
+        {
+            await _cacheStorageService.SaveToCache(key.Value, model, 1);
+        }
+    }
+
+    private async Task<EditApprenticeshipRequestViewModel> GetStoredEditApprenticeshipRequestViewModelFromCache(Guid? key)
+    {
+        if (key.IsNotNullOrEmpty())
+        {
+            return await _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>(key.Value);
+        }
+        return null;
+    }
+
+    private async Task DeleteEditApprenticeshipRequestViewModelInCache(Guid? key)
+    {
+        if (key.IsNotNullOrEmpty())
+        {
+            await _cacheStorageService.DeleteFromCache(key.Value);
+        }
     }
 }

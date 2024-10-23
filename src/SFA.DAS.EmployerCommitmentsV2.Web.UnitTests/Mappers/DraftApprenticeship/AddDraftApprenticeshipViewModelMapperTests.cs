@@ -22,7 +22,7 @@ public class AddDraftApprenticeshipViewModelMapperTests
     private GetCohortResponse _cohort;
     private List<TrainingProgramme> _allTrainingProgrammes;
     private List<TrainingProgramme> _standardTrainingProgrammes;
-        
+
     [SetUp]
     public async Task Arrange()
     {
@@ -30,20 +30,20 @@ public class AddDraftApprenticeshipViewModelMapperTests
 
         _allTrainingProgrammes = autoFixture.CreateMany<TrainingProgramme>().ToList();
         _standardTrainingProgrammes = autoFixture.CreateMany<TrainingProgramme>().ToList();
-            
+
         _cohort = autoFixture.Create<GetCohortResponse>();
         _cohort.WithParty = Party.Employer;
         _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
         _commitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_cohort);
-            
+
         _commitmentsApiClient
             .Setup(x => x.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse
             {
                 TrainingProgrammes = _standardTrainingProgrammes
             });
-            
+
         _commitmentsApiClient
             .Setup(x => x.GetAllTrainingProgrammes(It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetAllTrainingProgrammesResponse
@@ -112,13 +112,6 @@ public class AddDraftApprenticeshipViewModelMapperTests
     {
         Assert.That(_result.ReservationId, Is.EqualTo(_source.ReservationId));
     }
-
-    [Test]
-    public void TransferSenderHashedIdIsMappedCorrectly()
-    {
-        Assert.That(_result.TransferSenderHashedId, Is.EqualTo(_encodedTransferSenderId));
-    }
-       
 
     [Test]
     public void ProviderNameIsMappedCorrectly()

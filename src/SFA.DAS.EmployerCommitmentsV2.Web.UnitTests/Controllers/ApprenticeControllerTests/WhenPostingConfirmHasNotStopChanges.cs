@@ -17,10 +17,12 @@ public class WhenPostingConfirmHasNotStopChanges : ApprenticeControllerTestBase
     {
         MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
         MockModelMapper = new Mock<IModelMapper>();
+        CacheStorageService = new Mock<Interfaces.ICacheStorageService>();
 
         Controller = new ApprenticeController(MockModelMapper.Object,
             Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             MockCommitmentsApiClient.Object,
+            CacheStorageService.Object,
             Mock.Of<ILogger<ApprenticeController>>());
 
         Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);

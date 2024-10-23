@@ -28,7 +28,8 @@ public class ApprenticeRequestToSelectDeliveryModelViewModelMapper : IMapper<App
             ProviderId = source.ProviderId,
             ReservationId = source.ReservationId,
             StartMonthYear = source.StartMonthYear,
-            TransferSenderId = source.TransferSenderId
+            TransferSenderId = source.TransferSenderId,
+            CacheKey = source.CacheKey
         };
     }
 }

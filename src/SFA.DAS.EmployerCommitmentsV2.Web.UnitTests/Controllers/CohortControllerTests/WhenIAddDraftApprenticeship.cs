@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -80,7 +79,7 @@ public class CreateCohortWithDraftApprenticeshipControllerTests
             .WithTrainingProvider();
 
         await fixtures.CheckPost();
-            
+
         fixtures.ApprovalsApiClientMock.Verify(cs => cs.CreateCohort(It.IsAny<CreateCohortApimRequest>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }
@@ -95,7 +94,6 @@ public class CreateCohortWithDraftApprenticeshipControllerTestFixtures
         ModelMapperMock.Setup(x => x.Map<ApprenticeViewModel>(It.IsAny<ApprenticeRequest>()))
             .ReturnsAsync(new ApprenticeViewModel());
         EncodingServiceMock = new Mock<IEncodingService>();
-        TempData = new Mock<ITempDataDictionary>();
         ApprovalsApiClientMock = new Mock<IApprovalsApiClient>();
     }
 
@@ -104,12 +102,11 @@ public class CreateCohortWithDraftApprenticeshipControllerTestFixtures
 
     public Mock<IModelMapper> ModelMapperMock { get; set; }
     public IModelMapper ModelMapper => ModelMapperMock.Object;
+
     public Mock<IEncodingService> EncodingServiceMock { get; set; }
     public IEncodingService EncodingService => EncodingServiceMock.Object;
     public ApprenticeRequest GetRequest { get; private set; }
     public ApprenticeViewModel PostRequest { get; private set; }
-
-    public Mock<ITempDataDictionary> TempData;
 
     public Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }
     public Mock<IApprovalsApiClient> ApprovalsApiClientMock { get; }
@@ -118,7 +115,7 @@ public class CreateCohortWithDraftApprenticeshipControllerTestFixtures
 
     public CreateCohortWithDraftApprenticeshipControllerTestFixtures ForGetRequest()
     {
-        GetRequest = new ApprenticeRequest {ProviderId = 1};
+        GetRequest = new ApprenticeRequest { ProviderId = 1 };
         return this;
     }
 
@@ -128,18 +125,18 @@ public class CreateCohortWithDraftApprenticeshipControllerTestFixtures
         return this;
     }
 
-    public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithCreatedCohort(string cohortReference, long  cohortId)
+    public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithCreatedCohort(string cohortReference, long cohortId)
     {
         ApprovalsApiClientMock
             .Setup(cs => cs.CreateCohort(It.IsAny<CreateCohortApimRequest>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new CreateCohortResponse { CohortReference = cohortReference, CohortId = cohortId});
+            .ReturnsAsync(new CreateCohortResponse { CohortReference = cohortReference, CohortId = cohortId });
 
         return this;
     }
 
     public CreateCohortWithDraftApprenticeshipControllerTestFixtures WithTrainingProvider()
     {
-        var response = new GetProviderResponse {Name = "Name", ProviderId = 1};
+        var response = new GetProviderResponse { Name = "Name", ProviderId = 1 };
 
         CommitmentsApiClientMock.Setup(p => p.GetProvider(1, CancellationToken.None))
             .ReturnsAsync(response);
@@ -183,9 +180,9 @@ public class CreateCohortWithDraftApprenticeshipControllerTestFixtures
             LinkGenerator,
             ModelMapper,
             Mock.Of<IEncodingService>(),
-            ApprovalsApiClient
+            ApprovalsApiClient,
+            Mock.Of<ICacheStorageService>()
         );
-        controller.TempData = TempData.Object;
         return controller;
     }
 

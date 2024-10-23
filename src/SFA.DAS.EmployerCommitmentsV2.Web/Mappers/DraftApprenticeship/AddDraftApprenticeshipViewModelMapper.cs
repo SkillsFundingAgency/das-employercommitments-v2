@@ -3,6 +3,7 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Exceptions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.Encoding;
 
@@ -42,7 +43,8 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<AddDraftApprentices
             Courses = null,
             TransferSenderHashedId = cohort.IsFundedByTransfer ? _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId) : string.Empty,
             DeliveryModel = source.DeliveryModel,
-            IsOnFlexiPaymentPilot = false
+            IsOnFlexiPaymentPilot = false,
+            CacheKey = source.CacheKey.IsNotNullOrEmpty() ? source.CacheKey : Guid.NewGuid()
         };
 
         return result;

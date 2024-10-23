@@ -38,6 +38,7 @@
     @Html.HiddenFor(x => x.CurrentOption)
     @Html.HiddenFor(x => x.ReturnToEdit)
     @Html.HiddenFor(x => x.ReturnToChangeVersion)
+    @Html.HiddenFor(x => x.CacheKey)
 
     <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.SelectedOption, "govuk-form-group--error")">
         <div id="select-a-version-hint" class="govuk-hint">
@@ -75,7 +76,7 @@
         </button>
 
         <a class="govuk-link govuk-link--no-visited-state"
-           href="@Url.RouteUrl(RouteNames.CancelInProgressChangeOfCircumstance,new { Model.AccountHashedId, Model.ApprenticeshipHashedId })" id="cancel-button">
+           href="@Url.RouteUrl(RouteNames.CancelInProgressChangeOfCircumstance,new { Model.AccountHashedId, Model.ApprenticeshipHashedId, Model.CacheKey })" id="cancel-button">
             Cancel and return
         </a>
     </div>
@@ -84,11 +85,11 @@
 @section back {
     @if (Model.ReturnToEdit)
     {
-        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.EditApprenticeship, new { Model.AccountHashedId, Model.ApprenticeshipHashedId })">Back</a>
+        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.EditApprenticeship, new { Model.AccountHashedId, Model.ApprenticeshipHashedId, Model.CacheKey })">Back</a>
     }
     else if (Model.ReturnToChangeVersion)
     {
-        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ChangeVersion,new { Model.AccountHashedId, Model.ApprenticeshipHashedId })">Back</a>
+        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ChangeVersion ,new { Model.AccountHashedId, Model.ApprenticeshipHashedId, Model.CacheKey })">Back</a>
     }
     else
     {

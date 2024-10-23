@@ -33,7 +33,8 @@ public class SelectDeliveryModelViewModelToAddDraftApprenticeshipRequestMapper :
             DeliveryModel = source.DeliveryModel,
             ProviderId = cohort.ProviderId.Value,
             ReservationId = source.ReservationId.HasValue ? source.ReservationId.Value : System.Guid.Empty,
-            StartMonthYear = source.StartMonthYear
+            StartMonthYear = source.StartMonthYear,
+            CacheKey = source.CacheKey
         };
     }
 }
