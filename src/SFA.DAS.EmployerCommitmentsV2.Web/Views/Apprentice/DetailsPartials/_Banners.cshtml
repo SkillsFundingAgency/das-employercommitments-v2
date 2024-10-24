@@ -43,7 +43,7 @@
 
 @if (Model.ShowBannersFlags.HasFlag(ApprenticeDetailsBanners.ProviderPaymentsInactive))
 {
-    var providerPaymentsInactiveBannerModel = new SuccessBannerModel("provider-payments-inactive-banner", "Provider payments have been set to Withheld", "The training provider has been informed of this update.");
+    var providerPaymentsInactiveBannerModel = new SuccessBannerModel("provider-payments-inactive-banner", "Provider payments have been set to \"Withheld\"", "The training provider has been informed of this update.");
     <partial name="DetailsPartials/_SuccessBanner" model="providerPaymentsInactiveBannerModel" />
 }
 
