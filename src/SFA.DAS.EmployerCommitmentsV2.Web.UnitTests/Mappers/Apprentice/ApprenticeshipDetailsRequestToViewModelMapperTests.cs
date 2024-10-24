@@ -877,25 +877,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EmployerApprovedDate, result.PendingPriceChange.EmployerApprovedDate);
         }
 
-        [TestCase(true, "Inactive")]
-        [TestCase(false, "Active")]
-        public async Task AndApprenticeshipIsActive_ThenPaymentStatusIsMappedCorrectly(bool paymentsFrozen, string expectedStatus)
+        [TestCase(false, true, "Inactive")]
+        [TestCase(true, false, "Withheld")]
+        [TestCase(false, false, "Active")]
+        [TestCase(true, true, "Withheld")]
+        public async Task ThenPaymentStatusIsMappedCorrectly(bool paymentsFrozen, bool waitingToStart, string expectedStatus)
         {
             //Act
-            GetManageApprenticeshipDetailsResponse.LearnerStatus = LearnerStatus.InLearning;
-            GetManageApprenticeshipDetailsResponse.PaymentsStatus.PaymentsFrozen = paymentsFrozen;
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            result.PaymentStatus.Should().Be(expectedStatus);
-        }
-
-        [TestCase(true, "Inactive")]
-        [TestCase(false, "Inactive")]
-        public async Task AndApprenticeshipNotStarted_ThenPaymentStatusIsInactive(bool paymentsFrozen, string expectedStatus)
-        {
-            //Act
-            GetManageApprenticeshipDetailsResponse.LearnerStatus = LearnerStatus.WaitingToStart;
+            GetManageApprenticeshipDetailsResponse.LearnerStatus = waitingToStart ? LearnerStatus.WaitingToStart : LearnerStatus.InLearning;
             GetManageApprenticeshipDetailsResponse.PaymentsStatus.PaymentsFrozen = paymentsFrozen;
             var result = await _mapper.Map(_request);
 
