@@ -22,8 +22,9 @@
 @{
     var paymentStatusTagClass = Model.PaymentStatus switch
     {
-        "Inactive" => "govuk-tag--red",
+        "Inactive" => "govuk-tag--grey",
         "Active" => "govuk-tag--blue",
+        "Withheld" => "govuk-tag--red",
         _ => "govuk-tag--blue" // default
     };
 }
