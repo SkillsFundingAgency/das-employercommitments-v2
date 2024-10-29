@@ -17,9 +17,7 @@ public class ApprenticeRequestToSelectCourseViewModelMapper : IMapper<Apprentice
     {
         var ale = await _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
 
-        var courses = !string.IsNullOrWhiteSpace(source.TransferSenderId) || ale.LevyStatus == ApprenticeshipEmployerType.NonLevy
-            ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
-            : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes;
+        var courses = (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes;
 
         return new SelectCourseViewModel
         {

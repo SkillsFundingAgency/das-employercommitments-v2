@@ -21,9 +21,7 @@ public class AddDraftApprenticeshipRequestToSelectCourseViewModelMapper : IMappe
         if (cohort.WithParty != Party.Employer)
             throw new CohortEmployerUpdateDeniedException($"Cohort {cohort} is not with the Employer");
 
-        var courses = cohort.IsFundedByTransfer || cohort.LevyStatus == ApprenticeshipEmployerType.NonLevy
-            ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
-            : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes;
+        var courses = (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes;
 
         return new SelectCourseViewModel
         {
