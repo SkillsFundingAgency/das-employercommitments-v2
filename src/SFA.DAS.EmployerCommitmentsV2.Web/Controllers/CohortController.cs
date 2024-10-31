@@ -87,13 +87,13 @@ public class CohortController : Controller
 
     [HttpGet]
     [Route("viewAgreement", Name = "ViewAgreement")]
-    public async Task<IActionResult> ViewAgreement(string hashedAccountId, int? cohortId)
+    public async Task<IActionResult> ViewAgreement(string accountHashedId, int? cohortId)
     {
         var request = !cohortId.HasValue
-            ? new ViewEmployerAgreementRequest { AccountHashedId = hashedAccountId }
+            ? new ViewEmployerAgreementRequest { AccountHashedId = accountHashedId }
             : await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel
             {
-                AccountHashedId = hashedAccountId,
+                AccountHashedId = accountHashedId,
                 CohortId = cohortId.Value
             });
 
