@@ -220,8 +220,8 @@
                                     "value": "[parameters('configurationStorageConnectionString')]"
                                 },
                                 {
-                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[reference(concat(variables('appServiceName'), '-app-insights-', parameters('utcValue'))).outputs.InstrumentationKey.value]"
+                                    "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                                    "value": "[reference(concat(variables('appServiceName'), '-app-insights-', parameters('utcValue'))).outputs.ConnectionString.value]"
                                 },
                                 {
                                     "name": "ASPNETCORE_ENVIRONMENT",
