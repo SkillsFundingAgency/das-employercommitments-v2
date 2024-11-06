@@ -15,6 +15,10 @@ public static class AddOpenTelemetryExtensions
                 .AddOpenTelemetry()
                 .UseAzureMonitor(options => options.ConnectionString = connectionString);
         }
+        else
+        {
+            throw new NullReferenceException(nameof(connectionString));
+        }
 
         return services;
     }
