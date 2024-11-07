@@ -25,6 +25,7 @@ public class Startup
     {
         services.AddSingleton(_configuration);
         services.AddHttpClient();
+        
         services.AddLogging(builder =>
         {
             builder.AddFilter<OpenTelemetryLoggerProvider>(string.Empty, LogLevel.Information);
