@@ -39,12 +39,6 @@
                 "description": "The DNS hostname for the service."
             }
         },
-        "loggingRedisConnectionString": {
-            "type": "securestring",
-            "metadata": {
-                "description": "The connection string for the Redis logging cache."
-            }
-        },
         "frontEndAccessRestrictions": {
             "type": "array",
             "metadata": {
@@ -226,10 +220,6 @@
                                 {
                                     "name": "ASPNETCORE_ENVIRONMENT",
                                     "value": "[toUpper(parameters('environmentName'))]"
-                                },
-                                {
-                                    "name": "LoggingRedisConnectionString",
-                                    "value": "[parameters('loggingRedisConnectionString')]"
                                 },
                                 {
                                     "name": "Cdn:Url",
