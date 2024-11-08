@@ -55,8 +55,7 @@
                     <ul>
                         @if (!Model.IsAgreementSigned)
                         {
-                            <li>you have accepted your <a
-                                    href="@Url.Action("ViewAgreement", "Cohort", new {Model.AccountHashedId})"
+                            <li>you have accepted your <a href="@Url.Action("ViewAgreement", "Cohort", new {Model.AccountHashedId, Model.CohortId})"
                                     class="govuk-link">employer agreement</a></li>
                         }
                         @if (Model.HasOverlappingUln)
