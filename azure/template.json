@@ -39,12 +39,6 @@
                 "description": "The DNS hostname for the service."
             }
         },
-        "loggingRedisConnectionString": {
-            "type": "securestring",
-            "metadata": {
-                "description": "The connection string for the Redis logging cache."
-            }
-        },
         "frontEndAccessRestrictions": {
             "type": "array",
             "metadata": {
@@ -220,16 +214,12 @@
                                     "value": "[parameters('configurationStorageConnectionString')]"
                                 },
                                 {
-                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[reference(concat(variables('appServiceName'), '-app-insights-', parameters('utcValue'))).outputs.InstrumentationKey.value]"
+                                    "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                                    "value": "[reference(concat(variables('appServiceName'), '-app-insights-', parameters('utcValue'))).outputs.ConnectionString.value]"
                                 },
                                 {
                                     "name": "ASPNETCORE_ENVIRONMENT",
                                     "value": "[toUpper(parameters('environmentName'))]"
-                                },
-                                {
-                                    "name": "LoggingRedisConnectionString",
-                                    "value": "[parameters('loggingRedisConnectionString')]"
                                 },
                                 {
                                     "name": "Cdn:Url",
