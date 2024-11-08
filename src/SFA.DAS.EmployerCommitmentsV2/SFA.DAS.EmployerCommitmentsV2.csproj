@@ -7,19 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Identity" Version="1.12.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.8" />
+    <PackageReference Include="Azure.Identity" Version="1.13.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.1.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.7.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SFA.DAS.Apprenticeships.Types" Version="6.8.7" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="100.0.43" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.76" />
-    <PackageReference Include="System.Drawing.Common" Version="8.0.8" />
     <PackageReference Include="System.Formats.Asn1" Version="8.0.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.7.1" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.1" />
     <PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" />

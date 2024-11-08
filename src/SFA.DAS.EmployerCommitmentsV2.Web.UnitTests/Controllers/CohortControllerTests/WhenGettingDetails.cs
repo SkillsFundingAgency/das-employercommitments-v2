@@ -29,13 +29,6 @@ public class WhenGettingDetails
         _fixture.VerifyViewModelIsMappedFromRequest();
     }
 
-    [Test]
-    public async Task ThenViewModelShouldBeStoredInTempData()
-    {
-        await _fixture.GetDetails();
-        _fixture.VerifyViewEmployerAgreementModelIsStoredInTempData();
-    }
-
     [TestCase(Party.Provider)]
     [TestCase(Party.TransferSender)]
     public async Task ThenViewModelIsReadOnlyIfCohortIsNotWithEmployer(Party withParty)
@@ -104,11 +97,6 @@ public class WhenGettingDetails
 
             var expectedTotalCost = _viewModel.Courses?.Sum(g => g.DraftApprenticeships.Sum(a => a.Cost ?? 0)) ?? 0;
             Assert.That(_viewModel.TotalCost, Is.EqualTo(expectedTotalCost), "The total cost stored in the model is incorrect");
-        }
-
-        public void VerifyViewEmployerAgreementModelIsStoredInTempData()
-        {
-            Assert.That(CohortController.TempData.ContainsKey(nameof(ViewEmployerAgreementModel)), Is.True);
         }
 
         public bool IsViewModelReadOnly()

@@ -15,7 +15,6 @@ public class AddDraftApprenticeshipRequestToSelectCourseViewModelMapperTests
     private Mock<ICommitmentsApiClient> _commitmentsApiClient;
     private GetCohortResponse _getCohortResponse;
     private List<TrainingProgramme> _standardTrainingProgrammes;
-    private List<TrainingProgramme> _allTrainingProgrammes;
     private SelectCourseViewModel _result;
 
     [SetUp]
@@ -24,7 +23,6 @@ public class AddDraftApprenticeshipRequestToSelectCourseViewModelMapperTests
         var autoFixture = new Fixture();
 
         _standardTrainingProgrammes = autoFixture.CreateMany<TrainingProgramme>().ToList();
-        _allTrainingProgrammes = autoFixture.CreateMany<TrainingProgramme>().ToList();
         _getCohortResponse = autoFixture.Build<GetCohortResponse>()
             .With(x => x.LevyStatus, ApprenticeshipEmployerType.Levy)
             .With(x => x.WithParty, Party.Employer)
@@ -46,12 +44,6 @@ public class AddDraftApprenticeshipRequestToSelectCourseViewModelMapperTests
             .ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse()
             {
                 TrainingProgrammes = _standardTrainingProgrammes
-            });
-        _commitmentsApiClient
-            .Setup(x => x.GetAllTrainingProgrammes(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GetAllTrainingProgrammesResponse
-            {
-                TrainingProgrammes = _allTrainingProgrammes
             });
 
         _mapper = new AddDraftApprenticeshipRequestToSelectCourseViewModelMapper(_commitmentsApiClient.Object);
@@ -93,12 +85,6 @@ public class AddDraftApprenticeshipRequestToSelectCourseViewModelMapperTests
     public void CourseCodeIsMappedCorrectly()
     {
         Assert.That(_result.CourseCode, Is.EqualTo(_source.CourseCode));
-    }
-
-    [Test]
-    public void CoursesAreMappedCorrectly()
-    {
-        Assert.That(_result.Courses, Is.EqualTo(_allTrainingProgrammes));
     }
 
     [Test]
