@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
-using FluentAssertions;
+﻿using FluentAssertions;
+using SFA.DAS.Apprenticeships.Types;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
@@ -10,6 +10,7 @@ using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
+using System.Text.RegularExpressions;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetPriceEpisodeResponse;
@@ -41,6 +42,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private const long ApprenticeshipIdMiddle = 356;
         private const long ApprenticeshipIdLast = 256;
         private const string ApprenticeshipEmail = "a@a.com";
+        private const string MockUrlBuilderEnvironment = "unit-tests";
 
         private GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse _apprenticeshipDetailsResponse;
 
@@ -348,6 +350,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.That(statusText, Is.EqualTo(result.ApprenticeshipStatus.GetDescription()));
+        }
+
+        [TestCase(LearnerStatus.WaitingToStart, "Waiting to start")]
+        [TestCase(LearnerStatus.InLearning, "In learning")]
+        [TestCase(LearnerStatus.BreakInLearning, "Break in learning")]
+        [TestCase(LearnerStatus.Withdrawn, "Withdrawn")]
+        [TestCase(LearnerStatus.Completed, "Completed")]
+        public async Task LearnerStatus_IsMapped(LearnerStatus status, string statusText)
+        {
+            //Arrange
+            GetManageApprenticeshipDetailsResponse.LearnerStatus = status;
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            var learnerStatus = result.LearnerStatus.GetDescription();
+            learnerStatus.Should().Be(statusText);
         }
 
         [Test]
@@ -850,14 +870,55 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             Assert.IsNotNull(result.PendingPriceChange);
-            Assert.That(GetManageApprenticeshipDetailsResponse.PendingPriceChange.Cost, Is.EqualTo(result.PendingPriceChange.Cost));
-            Assert.That(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EndPointAssessmentPrice, Is.EqualTo(result.PendingPriceChange.EndPointAssessmentPrice));
-            Assert.That(GetManageApprenticeshipDetailsResponse.PendingPriceChange.TrainingPrice, Is.EqualTo(result.PendingPriceChange.TrainingPrice));
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.Cost, result.PendingPriceChange.Cost);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EndPointAssessmentPrice, result.PendingPriceChange.EndPointAssessmentPrice);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.TrainingPrice, result.PendingPriceChange.TrainingPrice);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.ProviderApprovedDate, result.PendingPriceChange.ProviderApprovedDate);
+            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EmployerApprovedDate, result.PendingPriceChange.EmployerApprovedDate);
+        }
+
+        [TestCase(true, "Inactive")]
+        [TestCase(false, "Active")]
+        public async Task AndApprenticeshipIsActive_ThenPaymentStatusIsMappedCorrectly(bool paymentsFrozen, string expectedStatus)
+        {
+            //Act
+            GetManageApprenticeshipDetailsResponse.LearnerStatus = LearnerStatus.InLearning;
+            GetManageApprenticeshipDetailsResponse.PaymentsStatus.PaymentsFrozen = paymentsFrozen;
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            result.PaymentStatus.Should().Be(expectedStatus);
+        }
+
+        [TestCase(true, "Inactive")]
+        [TestCase(false, "Inactive")]
+        public async Task AndApprenticeshipNotStarted_ThenPaymentStatusIsInactive(bool paymentsFrozen, string expectedStatus)
+        {
+            //Act
+            GetManageApprenticeshipDetailsResponse.LearnerStatus = LearnerStatus.WaitingToStart;
+            GetManageApprenticeshipDetailsResponse.PaymentsStatus.PaymentsFrozen = paymentsFrozen;
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            result.PaymentStatus.Should().Be(expectedStatus);
+        }
+
+        [TestCase(true, "/unfreeze")]
+        [TestCase(false, "")]
+        public async Task PaymentStatusChangeUrl_IsMapped(bool paymentsFrozen, string expectedUrlSegment)
+        {
+            //Act
+            GetManageApprenticeshipDetailsResponse.PaymentsStatus.PaymentsFrozen = paymentsFrozen;
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            result.PaymentStatusChangeUrl.Should()
+                .Be($"https://apprenticeshipdetails.{MockUrlBuilderEnvironment}-eas.apprenticeships.education.gov.uk/employer/{_request.AccountHashedId}/PaymentsFreeze/{_request.ApprenticeshipHashedId}{expectedUrlSegment}");
         }
 
         private static UrlBuilder GetMockUrlBuilder()
         {
-            return new UrlBuilder("unit tests");
+            return new UrlBuilder(MockUrlBuilderEnvironment);
         }
     }
 }

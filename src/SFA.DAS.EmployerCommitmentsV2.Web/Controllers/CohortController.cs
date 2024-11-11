@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Newtonsoft.Json;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -28,13 +26,16 @@ public class CohortController : Controller
     private readonly IModelMapper _modelMapper;
     private readonly IEncodingService _encodingService;
     private readonly IApprovalsApiClient _approvalsApiClient;
+    private readonly ICacheStorageService _cacheStorageService;
 
     public CohortController(
         ICommitmentsApiClient commitmentsApiClient,
         ILogger<CohortController> logger,
         ILinkGenerator linkGenerator,
         IModelMapper modelMapper,
-        IEncodingService encodingService, IApprovalsApiClient approvalsApiClient)
+        IEncodingService encodingService,
+        IApprovalsApiClient approvalsApiClient,
+        ICacheStorageService cacheStorageService)
     {
         _commitmentsApiClient = commitmentsApiClient;
         _logger = logger;
@@ -42,6 +43,7 @@ public class CohortController : Controller
         _modelMapper = modelMapper;
         _encodingService = encodingService;
         _approvalsApiClient = approvalsApiClient;
+        _cacheStorageService = cacheStorageService;
     }
 
     [Route("{cohortReference}")]
@@ -50,12 +52,7 @@ public class CohortController : Controller
     public async Task<IActionResult> Details(DetailsRequest request)
     {
         var viewModel = await _modelMapper.Map<DetailsViewModel>(request);
-        
-        StoreViewEmployerAgreementModelState(
-            new ViewEmployerAgreementModel {
-                AccountHashedId = viewModel.AccountHashedId, 
-                CohortId = viewModel.CohortId });
-        
+
         return View(viewModel);
     }
 
@@ -69,20 +66,20 @@ public class CohortController : Controller
         {
             case CohortDetailsOptions.Send:
             case CohortDetailsOptions.Approve:
-            {
-                var request = await _modelMapper.Map<AcknowledgementRequest>(viewModel);
-                var acknowledgementAction = viewModel.Selection == CohortDetailsOptions.Approve ? "Approved" : "Sent";
-                return RedirectToAction(acknowledgementAction, request);
-            }
+                {
+                    var request = await _modelMapper.Map<AcknowledgementRequest>(viewModel);
+                    var acknowledgementAction = viewModel.Selection == CohortDetailsOptions.Approve ? "Approved" : "Sent";
+                    return RedirectToAction(acknowledgementAction, request);
+                }
             case CohortDetailsOptions.ViewEmployerAgreement:
-            {
-                var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
-                return ViewEmployeeAgreementRedirect(request);                      
-            }
+                {
+                    var request = await _modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
+                    return ViewEmployeeAgreementRedirect(request);
+                }
             case CohortDetailsOptions.Homepage:
-            {
-                return Redirect(_linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
-            }
+                {
+                    return Redirect(_linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
+                }
             default:
                 throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
         }
@@ -90,14 +87,14 @@ public class CohortController : Controller
 
     [HttpGet]
     [Route("viewAgreement", Name = "ViewAgreement")]
-    public async Task<IActionResult> ViewAgreement(string hashedAccountId)
+    public async Task<IActionResult> ViewAgreement(string accountHashedId, int? cohortId)
     {
-        var tempData = GetViewEmployerAgreementModelState();          
-
-        var request = tempData == null
-            ? new ViewEmployerAgreementRequest { AccountHashedId = hashedAccountId }
-            : await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel {
-                AccountHashedId = tempData.AccountHashedId, CohortId = tempData.CohortId
+        var request = !cohortId.HasValue
+            ? new ViewEmployerAgreementRequest { AccountHashedId = accountHashedId }
+            : await _modelMapper.Map<ViewEmployerAgreementRequest>(new DetailsViewModel
+            {
+                AccountHashedId = accountHashedId,
+                CohortId = cohortId.Value
             });
 
         return ViewEmployeeAgreementRedirect(request);
@@ -181,7 +178,7 @@ public class CohortController : Controller
         {
             if (ex.StatusCode == HttpStatusCode.NotFound)
             {
-                ModelState.AddModelError(nameof(request.ProviderId), "Check UK Provider Reference Number");
+                ModelState.AddModelError(nameof(request.ProviderId), "Select a training provider");
                 var returnModel = await _modelMapper.Map<SelectProviderRequest>(request);
                 return RedirectToAction("SelectProvider", returnModel.CloneBaseValues());
             }
@@ -227,7 +224,7 @@ public class CohortController : Controller
 
     [Route("add/assign")]
     [HttpPost]
-    public IActionResult Assign(AssignViewModel model)
+    public async Task<IActionResult> Assign(AssignViewModel model)
     {
         if (!model.ReservationId.HasValue && model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
         {
@@ -236,26 +233,31 @@ public class CohortController : Controller
             return Redirect(url);
         }
 
-        var routeValues = new
+        if (model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
         {
-            model.AccountHashedId,
-            model.AccountLegalEntityHashedId,
-            model.ReservationId,
-            model.StartMonthYear,
-            model.CourseCode,
-            model.ProviderId,
-            model.TransferSenderId,
-            model.EncodedPledgeApplicationId,
-            Origin = DetermineOrigin(model)
-        };
+            model.Message = string.Empty;
+        }
 
         switch (model.WhoIsAddingApprentices)
         {
             case WhoIsAddingApprentices.Employer:
+                var routeValues = new
+                {
+                    model.AccountHashedId,
+                    model.AccountLegalEntityHashedId,
+                    model.ReservationId,
+                    model.StartMonthYear,
+                    model.CourseCode,
+                    model.ProviderId,
+                    model.TransferSenderId,
+                    model.EncodedPledgeApplicationId,
+                    Origin = DetermineOrigin(model)
+                };
                 return RedirectToAction("Apprentice", "Cohort", routeValues);
             case WhoIsAddingApprentices.Provider:
-                TempData[nameof(model.LegalEntityName)] = model.LegalEntityName;
-                return RedirectToAction("Message", routeValues);
+                var request = await _modelMapper.Map<CreateCohortWithOtherPartyRequest>(model);
+                var response = await _commitmentsApiClient.CreateCohort(request);
+                return RedirectToAction("Finished", new { model.AccountHashedId, response.CohortReference });
             default:
                 return RedirectToAction("Error", "Error");
         }
@@ -290,12 +292,6 @@ public class CohortController : Controller
     [Route("add/select-course")]
     public async Task<IActionResult> SelectCourse(SelectCourseViewModel model)
     {
-        if (string.IsNullOrEmpty(model.CourseCode))
-        {
-            throw new CommitmentsApiModelException(new List<ErrorDetail>
-                {new ErrorDetail(nameof(model.CourseCode), "You must select a training course")});
-        }
-
         var request = await _modelMapper.Map<ApprenticeRequest>(model);
         return RedirectToAction(nameof(SelectDeliveryModel), request.CloneBaseValues());
     }
@@ -334,7 +330,7 @@ public class CohortController : Controller
     [Route("add/apprenticeship")]
     public async Task<IActionResult> AddDraftApprenticeship(ApprenticeRequest request)
     {
-        var model = GetStoredDraftApprenticeshipState();
+        var model = await GetStoredApprenticeViewModelFromCache(request.CacheKey);
         if (model == null)
         {
             model = await _modelMapper.Map<ApprenticeViewModel>(request);
@@ -353,7 +349,7 @@ public class CohortController : Controller
     {
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
-            StoreDraftApprenticeshipState(model);
+            await StoreApprenticeViewModelInCache(model, model.CacheKey);
             var request = await _modelMapper.Map<ApprenticeRequest>(model);
 
             return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request.CloneBaseValues());
@@ -379,23 +375,6 @@ public class CohortController : Controller
         }
 
         return RedirectToAction("Details", new { model.AccountHashedId, newCohort.CohortReference });
-    }
-
-    [Route("add/message")]
-    public async Task<IActionResult> Message(MessageRequest request)
-    {
-        request.LegalEntityName = TempData[nameof(request.LegalEntityName)] as string;
-        var model = await _modelMapper.Map<MessageViewModel>(request);
-        return View(model);
-    }
-
-    [HttpPost]
-    [Route("add/message")]
-    public async Task<IActionResult> Message(MessageViewModel model)
-    {
-        var request = await _modelMapper.Map<CreateCohortWithOtherPartyRequest>(model);
-        var response = await _commitmentsApiClient.CreateCohort(request);
-        return RedirectToAction("Finished", new { model.AccountHashedId, response.CohortReference });
     }
 
     [Authorize(Policy = nameof(PolicyNames.AccessCohort))]
@@ -449,7 +428,7 @@ public class CohortController : Controller
     }
 
     [HttpGet]
-    [Route("Inform")]
+    [Route("Inform", Name = "Inform")]
     public async Task<ActionResult> Inform(InformRequest request)
     {
         var viewModel = await _modelMapper.Map<InformViewModel>(request);
@@ -507,7 +486,7 @@ public class CohortController : Controller
                 EncodedPledgeApplicationId = request.EncodedPledgeApplicationId
             });
         }
-            
+
         var model = new LegalEntitySignedAgreementViewModel
         {
             AccountHashedId = request.AccountHashedId,
@@ -534,10 +513,10 @@ public class CohortController : Controller
             return RedirectToAction("SelectProvider", new SelectProviderRequest
             {
                 AccountHashedId = selectedLegalEntity.AccountHashedId,
-                TransferSenderId = selectedLegalEntity.TransferConnectionCode,                    
+                TransferSenderId = selectedLegalEntity.TransferConnectionCode,
                 AccountLegalEntityHashedId = response.AccountLegalEntityHashedId,
                 EncodedPledgeApplicationId = selectedLegalEntity.EncodedPledgeApplicationId
-            });               
+            });
         }
 
         var model = new LegalEntitySignedAgreementViewModel
@@ -562,23 +541,20 @@ public class CohortController : Controller
         return View(response);
     }
 
-    private void StoreDraftApprenticeshipState(ApprenticeViewModel model)
+    private async Task StoreApprenticeViewModelInCache(ApprenticeViewModel model, Guid? key)
     {
-        TempData.Put(nameof(ApprenticeViewModel), model);
+        if (key.IsNotNullOrEmpty())
+        {
+            await _cacheStorageService.SaveToCache(key.Value, model, 1);
+        }
     }
 
-    private ApprenticeViewModel GetStoredDraftApprenticeshipState()
+    private async Task<ApprenticeViewModel> GetStoredApprenticeViewModelFromCache(Guid? key)
     {
-        return TempData.Get<ApprenticeViewModel>(nameof(ApprenticeViewModel));
-    }
-
-    private void StoreViewEmployerAgreementModelState(ViewEmployerAgreementModel model)
-    {
-        TempData.Put(nameof(ViewEmployerAgreementModel), model);
-    }
-
-    private ViewEmployerAgreementModel GetViewEmployerAgreementModelState()
-    {
-        return TempData.Get<ViewEmployerAgreementModel>(nameof(ViewEmployerAgreementModel));
+        if (key.IsNotNullOrEmpty())
+        {
+            return await _cacheStorageService.RetrieveFromCache<ApprenticeViewModel>(key.Value);
+        }
+        return null;
     }
 }

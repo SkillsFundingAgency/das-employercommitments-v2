@@ -42,7 +42,7 @@
         <div class="govuk-radios">
             @foreach (var version in Model.NewerVersions)
             {
-                <div class="govuk-radios__item" id="radio-item-yes">
+                <div class="govuk-radios__item">
                     <input class="govuk-radios__input" type="radio" id="version-@version" name="SelectedVersion" value="@version" @(version == Model.SelectedVersion ? "checked" : "") >
                     <label class="govuk-label govuk-radios__label" for="version-@version">Version @version</label>
                 </div>
@@ -55,7 +55,7 @@
             Save and continue
         </button>
 
-        <a class="govuk-link govuk-link--no-visited-state" href="@Url.RouteUrl(RouteNames.CancelInProgressChangeOfCircumstance)" id="cancel-button">Cancel and return</a>
+        <a class="govuk-link govuk-link--no-visited-state" href="@Url.RouteUrl(RouteNames.CancelInProgressChangeOfCircumstance, new { Model.AccountHashedId, Model.ApprenticeshipHashedId, Model.CacheKey })" id="cancel-button">Cancel and return</a>
     </div>
 </form>
 

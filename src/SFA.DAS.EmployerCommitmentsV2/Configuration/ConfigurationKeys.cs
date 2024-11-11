@@ -15,5 +15,6 @@ public static class ConfigurationKeys
     public const string ZenDeskConfiguration = $"{EmployerCommitmentsV2}:ZenDesk";
     public const string ConnectionStrings = $"{EmployerCommitmentsV2}:ConnectionStrings";
     public const string ApprovalsApiClientConfiguration = $"{EmployerCommitmentsV2}:ApprovalsApiClientConfiguration";
+    public const string UserBearerTokenSigningKeyConfiguration = $"{EmployerCommitmentsV2}:UserBearerTokenSigningKey";
   
 }

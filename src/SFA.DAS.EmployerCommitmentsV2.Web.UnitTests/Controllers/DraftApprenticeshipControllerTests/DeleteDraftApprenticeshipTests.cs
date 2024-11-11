@@ -5,6 +5,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Exceptions;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
@@ -182,7 +183,8 @@ public class DeleteDraftApprenticeshipTestsFixture
             ModelMapperMock.Object,
             CommitmentApiClient.Object,
             Mock.Of<IEncodingService>(),
-            OuterApiClientMock.Object);
+            OuterApiClientMock.Object,
+            Mock.Of<ICacheStorageService>());
             
         Sut.TempData = new Mock<ITempDataDictionary>().Object;
     }

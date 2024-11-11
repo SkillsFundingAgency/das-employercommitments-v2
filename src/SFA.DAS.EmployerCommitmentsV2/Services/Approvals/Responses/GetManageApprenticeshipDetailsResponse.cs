@@ -1,4 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Types;
+﻿using SFA.DAS.Apprenticeships.Types;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
@@ -13,6 +14,9 @@ public class GetManageApprenticeshipDetailsResponse
     public IReadOnlyCollection<GetApprenticeshipOverlappingTrainingDateResponse.ApprenticeshipOverlappingTrainingDate> OverlappingTrainingDateRequest { get; set; }
     public bool HasMultipleDeliveryModelOptions { get; set; }
     public PendingPriceChangeDetails PendingPriceChange { get; set; }
+    public PendingStartDateChangeDetails PendingStartDateChange { get; set; }
+    public PaymentsStatusDetails PaymentsStatus { get; set; }
+    public LearnerStatus LearnerStatus { get; set; }
 
     public class GetApprenticeshipResponse
     {
@@ -184,5 +188,23 @@ public class GetManageApprenticeshipDetailsResponse
         public decimal Cost { get; set; }
         public decimal? TrainingPrice { get; set; }
         public decimal? EndPointAssessmentPrice { get; set; }
+        public DateTime? ProviderApprovedDate { get; set; }
+        public DateTime? EmployerApprovedDate { get; set; }
+    }
+
+    public class PendingStartDateChangeDetails
+    {
+        public DateTime PendingActualStartDate { get; set; }
+        public DateTime PendingPlannedEndDate { get; set; }
+        public string Initiator { get; set; }
+        public DateTime? ProviderApprovedDate { get; set; }
+        public DateTime? EmployerApprovedDate { get; set; }
+    }
+
+    public class PaymentsStatusDetails
+    {
+        public bool PaymentsFrozen { get; set; }
+        public string ReasonFrozen { get; set; }
+        public DateTime? FrozenOn { get; set; }
     }
 }

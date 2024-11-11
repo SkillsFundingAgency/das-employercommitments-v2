@@ -4,6 +4,7 @@ using SFA.DAS.EmployerCommitmentsV2.Client;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
+using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.Commitments;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
@@ -15,6 +16,8 @@ public static class AuthorizationServiceRegistrations
 {
     public static IServiceCollection AddAuthorizationServices(this IServiceCollection services, IConfiguration configuration)
     {
+        BearerTokenProvider.SetSigningKey(configuration["SFA.DAS.EmployerCommitmentsV2:UserBearerTokenSigningKey"]);
+
         services.AddSingleton<CommitmentsAuthorisationHandler>();
         services.AddSingleton<ICommitmentsAuthorisationHandler, CommitmentsAuthorisationHandler>();
         services.AddTransient<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactory>();
@@ -29,27 +32,22 @@ public static class AuthorizationServiceRegistrations
         services.AddTransient<IAuthorizationContext, AuthorizationContext>();
         services.AddSingleton<IAuthorizationContextProvider, AuthorizationContextProvider>();
 
-        var employerCommitmentsV2Configuration = configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2)
-            .Get<EmployerCommitmentsV2Configuration>();
-
-        AddAuthorizationPolicies(services, employerCommitmentsV2Configuration.UseGovSignIn);
+        AddAuthorizationPolicies(services);
 
         return services;
     }
     
-    private static void AddAuthorizationPolicies(IServiceCollection services, bool useGovSignIn)
+    private static void AddAuthorizationPolicies(IServiceCollection services)
     {
         services.AddAuthorization(options =>
         {
-            if (useGovSignIn)
+            
+            options.AddPolicy(PolicyNames.HasActiveAccount, policy =>
             {
-                options.AddPolicy(PolicyNames.HasActiveAccount, policy =>
-                {
-                    policy.Requirements.Add(new AccountActiveRequirement());
-                    policy.Requirements.Add(new UserIsInAccountRequirement());
-                    policy.RequireAuthenticatedUser();
-                });
-            }
+                policy.Requirements.Add(new AccountActiveRequirement());
+                policy.Requirements.Add(new UserIsInAccountRequirement());
+                policy.RequireAuthenticatedUser();
+            });
             
             options.AddPolicy(PolicyNames.HasEmployerTransactorOwnerAccount, policy =>
             {

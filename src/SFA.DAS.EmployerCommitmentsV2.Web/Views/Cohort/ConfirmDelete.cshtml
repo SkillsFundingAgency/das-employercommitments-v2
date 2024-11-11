@@ -2,6 +2,7 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.ConfirmDeleteViewModel
 
 @{
+    ViewBag.Title = "Confirm deletion";
     ViewBag.GaData.Vpv = "/unapproved/delete";
     ViewBag.GaData.Org = Model.LegalEntityName;
 }
@@ -43,12 +44,15 @@
                     <dd class="govuk-summary-list__value">
                         @foreach (var course in Model.Courses)
                         {
-                            <text>@course.NumberOfDraftApprenticeships x @course.DisplayCourseName</text><br />
+                            <text>@course.NumberOfDraftApprenticeships x @course.DisplayCourseName</text>
+
+                            <br />
                         }
                     </dd>
                 </div>
             </dl>
-            <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.ConfirmDeletion, "govuk-form-group--error")">
+            <div
+                class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.ConfirmDeletion, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                         <h2 class="govuk-fieldset__heading govuk-!-margin-bottom-3">
@@ -56,15 +60,21 @@
                         </h2>
                     </legend>
                     <div class="govuk-radios">
-                        @Html.ValidationMessageFor(m => m.ConfirmDeletion, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ConfirmDeletion) })
+                        @Html.ValidationMessageFor(m => m.ConfirmDeletion, null, new
+                            {
+                                @class = "govuk-error-message",
+                                id = "error-message-" + Html.IdFor(m => m.ConfirmDeletion)
+                            })
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="confirm-yes" name="ConfirmDeletion" type="radio" value="true">
+                            <input class="govuk-radios__input" id="confirm-yes" name="ConfirmDeletion" type="radio"
+                                value="true">
                             <label class="govuk-label govuk-radios__label" for="confirm-yes">
                                 Yes, delete all apprentice details
                             </label>
                         </div>
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="confirm-no" name="ConfirmDeletion" type="radio" value="false">
+                            <input class="govuk-radios__input" id="confirm-no" name="ConfirmDeletion" type="radio"
+                                value="false">
                             <label class="govuk-label govuk-radios__label" for="confirm-no">
                                 No, don't delete all apprentice details
                             </label>

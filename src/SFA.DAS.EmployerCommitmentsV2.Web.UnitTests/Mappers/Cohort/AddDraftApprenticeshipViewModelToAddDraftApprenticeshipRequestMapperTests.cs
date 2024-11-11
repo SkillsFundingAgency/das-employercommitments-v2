@@ -62,7 +62,7 @@ public class AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMappe
             ReservationId = Guid.NewGuid()
         };
 
-        Mapper = new AddDraftApprenticeshipRequestMapper(Mock.Of<IAuthenticationService>());
+        Mapper = new AddDraftApprenticeshipRequestMapper(Mock.Of<IAuthenticationService>(), Mock.Of<ILogger<AddDraftApprenticeshipRequestMapper>>());
     }
 
     public AddDraftApprenticeshipApimRequest Map()

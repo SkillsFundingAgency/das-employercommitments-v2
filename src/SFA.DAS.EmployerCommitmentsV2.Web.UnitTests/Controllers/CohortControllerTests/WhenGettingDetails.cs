@@ -4,7 +4,7 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
@@ -29,13 +29,6 @@ public class WhenGettingDetails
         _fixture.VerifyViewModelIsMappedFromRequest();
     }
 
-    [Test]
-    public async Task ThenViewModelShouldBeStoredInTempData()
-    {
-        await _fixture.GetDetails();
-        _fixture.VerifyViewEmployerAgreementModelIsStoredInTempData();
-    }
-
     [TestCase(Party.Provider)]
     [TestCase(Party.TransferSender)]
     public async Task ThenViewModelIsReadOnlyIfCohortIsNotWithEmployer(Party withParty)
@@ -49,7 +42,9 @@ public class WhenGettingDetails
     {
         private readonly DetailsRequest _request;
         private readonly DetailsViewModel _viewModel;
+        private readonly ViewEmployerAgreementModel _viewEmployerAgreementModel;
         private IActionResult _result;
+        private Mock<ICacheStorageService> _cacheStorageService;
 
         public WhenGettingDetailsTestFixture()
         {
@@ -58,19 +53,23 @@ public class WhenGettingDetails
             _request = autoFixture.Create<DetailsRequest>();
             _viewModel = autoFixture.Create<DetailsViewModel>();
             _viewModel.WithParty = Party.Employer;
+            _viewEmployerAgreementModel = autoFixture.Create<ViewEmployerAgreementModel>();
 
             var modelMapper = new Mock<IModelMapper>();
             modelMapper.Setup(x => x.Map<DetailsViewModel>(It.Is<DetailsRequest>(r => r == _request)))
                 .ReturnsAsync(_viewModel);
+
+            _cacheStorageService = new Mock<ICacheStorageService>();
 
             CohortController = new CohortController(Mock.Of<ICommitmentsApiClient>(),
                 Mock.Of<ILogger<CohortController>>(),
                 Mock.Of<ILinkGenerator>(),
                 modelMapper.Object,
                 Mock.Of<IEncodingService>(),
-                Mock.Of<IApprovalsApiClient>());
-            CohortController.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
+                Mock.Of<IApprovalsApiClient>(),
+                _cacheStorageService.Object);
 
+            CohortController.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
         }
 
         public CohortController CohortController { get; set; }
@@ -92,17 +91,12 @@ public class WhenGettingDetails
             var viewModel = viewResult.Model;
 
             Assert.That(viewModel, Is.InstanceOf<DetailsViewModel>());
-            var detailsViewModel = (DetailsViewModel) viewModel;
+            var detailsViewModel = (DetailsViewModel)viewModel;
 
             Assert.That(detailsViewModel, Is.EqualTo(_viewModel));
 
             var expectedTotalCost = _viewModel.Courses?.Sum(g => g.DraftApprenticeships.Sum(a => a.Cost ?? 0)) ?? 0;
             Assert.That(_viewModel.TotalCost, Is.EqualTo(expectedTotalCost), "The total cost stored in the model is incorrect");
-        }
-
-        public void VerifyViewEmployerAgreementModelIsStoredInTempData()
-        {
-            Assert.That(CohortController.TempData.ContainsKey(nameof(ViewEmployerAgreementModel)), Is.True);
         }
 
         public bool IsViewModelReadOnly()

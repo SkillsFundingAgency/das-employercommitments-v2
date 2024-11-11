@@ -12,14 +12,14 @@ public class AddDraftApprenticeshipRequest : BaseAddDraftApprenticeshipRequest, 
 
 public class BaseAddDraftApprenticeshipRequest
 {
+    public Guid? CacheKey { get; set; }
     public string AccountHashedId { get; set; }
     public string CohortReference { get; set; }
     public string AccountLegalEntityHashedId { get; set; }
     public string DraftApprenticeshipHashedId { get; set; }
-    public Guid ReservationId { get; set; }
+    public Guid? ReservationId { get; set; }
     public string StartMonthYear { get; set; }
     public string CourseCode { get; set; }
-    public bool AutoCreated { get; set; }
     public long ProviderId { get; set; }
     public DeliveryModel? DeliveryModel { get; set; }
     public int? Cost { get; set; }

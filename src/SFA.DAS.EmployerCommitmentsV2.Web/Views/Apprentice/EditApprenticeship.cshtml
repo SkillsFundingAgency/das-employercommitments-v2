@@ -36,6 +36,7 @@
             @Html.HiddenFor(x => x.IsUpdateLockedForStartDateAndCourse)
             @Html.HiddenFor(x => x.IsContinuation)
             @Html.HiddenFor(x => x.TrainingName)
+            @Html.HiddenFor(x => x.CacheKey)
 
             <button type="submit" id="defaultButton" aria-hidden="true" class="govuk-visually-hidden" tabindex="-1"></button>
 
@@ -336,11 +337,11 @@
             <div class="govuk-form-group">
                 <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="20">
                     <div class="govuk-form-group">
-                        <h1 class="govuk-label-wrapper">
+                        <div class="govuk-label-wrapper">
                             <label class="govuk-label govuk-!-font-weight-bold" for="with-hint">
                                 Reference (optional)
                             </label>
-                        </h1>
+                        </div>
                         <div id="with-hint-hint" class="govuk-hint">
                             Add a reference, such as employee number or location - this won't be seen by the training provider
                         </div>
@@ -358,7 +359,7 @@
 
 
                 <div class="das-highlight">
-                    <h3 class="govuk-heading-s">End-point assessments</h3>
+                    <h2 class="govuk-heading-s">End-point assessments</h2>
                     <p class="govuk-!-margin-bottom-0">We'll ask you to confirm the <a href="https://www.gov.uk/government/publications/using-the-register-of-apprentice-assessment-organisations" target="_blank" title="Opens in a new window" rel="external" id="assessmentOrg-link" class="govuk-link">apprentice assessment organisation</a> for this apprentice. We'll do this before the end of the apprenticeship.</p>
                 </div>
             </div>

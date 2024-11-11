@@ -1,5 +1,6 @@
-﻿using SFA.DAS.CommitmentsV2.Types;
+﻿using SFA.DAS.Apprenticeships.Types;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -82,12 +83,19 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
 
     public bool HasMultipleDeliveryModelOptions { get; set; }
     public bool? IsOnFlexiPaymentPilot { get; set; }
-
+    public string PaymentStatus { get; set; }
     public PendingPriceChange PendingPriceChange { get; set; }
     public bool HasPendingPriceChange => PendingPriceChange != null;
+    public PendingStartDateChange PendingStartDateChange { get; set; }
+    public bool HasPendingStartDateChange => PendingStartDateChange != null;
+    public bool HasPendingProviderInitiatedPriceChange => PendingPriceChange?.ProviderApprovedDate != null;
+    public bool HasPendingProviderInitiatedStartDateChange => PendingStartDateChange != null;
+    public string PriceChangeUrl { get; set; }
     public string PendingPriceChangeUrl { get; set; }
-    public bool ShowPriceChangeRejected { get; set; }
-    public bool ShowPriceChangeApproved { get; set; }
+    public string PendingStartDateChangeUrl { get; set; }
+    public string PaymentStatusChangeUrl { get; set; }
+    public ApprenticeDetailsBanners ShowBannersFlags { get; set; }
+    public LearnerStatus LearnerStatus { get; set; }
 
     public ActionRequiredBanner GetActionRequiredBanners()
     {
@@ -175,4 +183,39 @@ public class PendingPriceChange
     public decimal Cost { get; set; }
     public decimal? TrainingPrice { get; set; }
     public decimal? EndPointAssessmentPrice { get; set; }
+    public DateTime? ProviderApprovedDate { get; set; }
+    public DateTime? EmployerApprovedDate { get; set; }
+}
+
+public class PendingStartDateChange
+{
+    public DateTime PendingActualStartDate { get; set; }
+    public DateTime PendingEndDate { get; set; }
+    public string Initiator { get; set; }
+    public DateTime? ProviderApprovedDate { get; set; }
+    public DateTime? EmployerApprovedDate { get; set; }
+}
+
+public enum InitiatedBy
+{
+    Provider,
+    Employer
+}
+
+public static class PendingPriceChangeExtensions
+{
+    public static InitiatedBy GetPriceChangeInitiatedBy(this PendingPriceChange pendingPriceChange)
+    {
+        if (pendingPriceChange.ProviderApprovedDate.HasValue && !pendingPriceChange.EmployerApprovedDate.HasValue)
+        {
+            return InitiatedBy.Provider;
+        }
+
+        if (!pendingPriceChange.ProviderApprovedDate.HasValue && pendingPriceChange.EmployerApprovedDate.HasValue)
+        {
+            return InitiatedBy.Employer;
+        }
+
+        throw new ArgumentOutOfRangeException("Could not resolve PriceChange Initiator, expected at least one approval date to be populated");
+    }
 }

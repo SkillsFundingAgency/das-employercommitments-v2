@@ -1,4 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.Apprenticeships.Types;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Employer.Shared.UI;
@@ -40,25 +41,27 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
         {
             var apprenticeshipId = _encodingService.Decode(source.ApprenticeshipHashedId, EncodingType.ApprenticeshipId);
             var accountId = _encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
-
+		
             var response = await _approvalsApiClient.GetManageApprenticeshipDetails(accountId, apprenticeshipId, cancellationToken: CancellationToken.None);
-
+		
             var currentTrainingProgramme = await GetTrainingProgramme(response.Apprenticeship.CourseCode, response.Apprenticeship.StandardUId);
-
+		
             var pendingChange = GetPendingChanges(response.ApprenticeshipUpdates);
-
+		
             var dataLockCourseTriaged = response.DataLocks.HasDataLockCourseTriaged();
             var dataLockCourseChangedTraiged = response.DataLocks.HasDataLockCourseChangeTriaged();
             var dataLockPriceTriaged = response.DataLocks.HasDataLockPriceTriaged();
-
+		
             var pendingChangeOfProviderRequest = response.ChangeOfPartyRequests?
                 .Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
-
+		
             var hasPendingoverlappingTrainingDateRequest = response.OverlappingTrainingDateRequest != null &&
-                                                           response?.OverlappingTrainingDateRequest?.Any(x => x.Status == OverlappingTrainingDateRequestStatus.Pending) == true;
-
+                response?.OverlappingTrainingDateRequest?.Any(x => x.Status == OverlappingTrainingDateRequestStatus.Pending) == true;
+		
             var enableEdit = EnableEdit(response.Apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged, hasPendingoverlappingTrainingDateRequest);
-
+		
+            var apprenticeshipDetails = await _approvalsApiClient.GetApprenticeshipDetails(response.Apprenticeship.ProviderId, apprenticeshipId, CancellationToken.None);
+		
             var result = new ApprenticeshipDetailsRequestViewModel
             {
                 HashedApprenticeshipId = source.ApprenticeshipHashedId,
@@ -98,7 +101,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                         ShowLink = response.Apprenticeship.Id != copc.ApprenticeshipId
                     })
                     .ToList(),
-
+		
                 PendingDataLockChange = dataLockPriceTriaged || dataLockCourseChangedTraiged,
                 PendingDataLockRestart = dataLockCourseTriaged,
                 ConfirmationStatus = response.Apprenticeship.ConfirmationStatus,
@@ -120,9 +123,15 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 HasMultipleDeliveryModelOptions = response.HasMultipleDeliveryModelOptions,
                 IsOnFlexiPaymentPilot = response.Apprenticeship.IsOnFlexiPaymentPilot,
                 PendingPriceChange = Map(response.PendingPriceChange),
+                PriceChangeUrl = _urlBuilder.ApprenticeshipsLink("CreatePriceChange", source.AccountHashedId, source.ApprenticeshipHashedId),
                 PendingPriceChangeUrl = response.PendingPriceChange != null ? _urlBuilder.ApprenticeshipsLink("ViewPendingPriceChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
+                PendingStartDateChange = Map(response.PendingStartDateChange),
+                PendingStartDateChangeUrl = response.PendingStartDateChange != null ? _urlBuilder.ApprenticeshipsLink("ViewPendingStartDateChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
+                PaymentStatus = response.LearnerStatus == LearnerStatus.WaitingToStart || response.PaymentsStatus.PaymentsFrozen ? "Inactive" : "Active",
+                PaymentStatusChangeUrl = _urlBuilder.ApprenticeshipsLink(response.PaymentsStatus.PaymentsFrozen ? "PaymentsUnfreeze" : "PaymentsFreeze", source.AccountHashedId, source.ApprenticeshipHashedId),
+                LearnerStatus = response.LearnerStatus
             };
-
+		
             return result;
         }
         catch (Exception e)
@@ -143,7 +152,26 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
         {
             Cost = priceChangeDetails.Cost,
             EndPointAssessmentPrice = priceChangeDetails.EndPointAssessmentPrice,
-            TrainingPrice = priceChangeDetails.TrainingPrice
+            TrainingPrice = priceChangeDetails.TrainingPrice,
+            ProviderApprovedDate = priceChangeDetails.ProviderApprovedDate,
+            EmployerApprovedDate = priceChangeDetails.EmployerApprovedDate
+        };
+    }
+
+    private static PendingStartDateChange Map(GetManageApprenticeshipDetailsResponse.PendingStartDateChangeDetails startDateChangeDetails)
+    {
+        if (startDateChangeDetails == null)
+        {
+            return null;
+        }
+
+        return new PendingStartDateChange
+        {
+            Initiator = startDateChangeDetails.Initiator,
+            EmployerApprovedDate = startDateChangeDetails.EmployerApprovedDate,
+            PendingActualStartDate = startDateChangeDetails.PendingActualStartDate,
+            PendingEndDate = startDateChangeDetails.PendingPlannedEndDate,
+            ProviderApprovedDate = startDateChangeDetails.ProviderApprovedDate
         };
     }
 

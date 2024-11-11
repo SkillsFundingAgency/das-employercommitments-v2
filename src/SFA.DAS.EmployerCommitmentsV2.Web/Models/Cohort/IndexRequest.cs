@@ -6,6 +6,7 @@ public class IndexRequest : IAuthorizationContextModel
 {
     [FromRoute]
     public string AccountHashedId { get; set; }
+    public long AccountId { get; set; }
     public Guid? ReservationId { get; set; }
     public string AccountLegalEntityHashedId { get; set; }
     public string StartMonthYear { get; set; }

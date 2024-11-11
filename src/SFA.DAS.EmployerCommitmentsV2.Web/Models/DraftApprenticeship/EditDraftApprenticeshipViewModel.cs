@@ -13,6 +13,7 @@ public class EditDraftApprenticeshipViewModel : DraftApprenticeshipViewModel, IA
     {
     }
 
+    public Guid? CacheKey { get; set; }
     public string AccountHashedId { get; set; }
     public string DraftApprenticeshipHashedId { get; set; }
     public long DraftApprenticeshipId { get; set; }

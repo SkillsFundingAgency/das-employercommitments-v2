@@ -3,7 +3,7 @@
 @using SFA.DAS.EmployerUrlHelper.Mvc
 
 @{
-    ViewBag.Title = "Choose organisation";
+    ViewBag.Title = "Select organisation";
     ViewBag.GaData.Vpv = "/unapproved/legalEntity/create/choose-organisation";
 }
 
@@ -15,19 +15,17 @@
         
         <partial name="_ValidationSummary" />
 
-        <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
+        <h1 class="govuk-heading-l">@ViewBag.Title</h1>
 
         <form method="POST">
 
         @Html.AntiForgeryToken()
 
         <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.LegalEntityId,  "govuk-form-group--error")">
+            <div class="govuk-hint">
+                Select which organisation is named on the contract with the training provider
+            </div>
             <fieldset class="govuk-fieldset">
-
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                    Which organisation is named on the contract with the training provider for the apprentices you’d like to add?
-                </legend>
-
                 @if (!ViewData.ModelState.IsValid)
                 {
                     <span id="error-message-@nameof(SelectLegalEntityViewModel.LegalEntityId)" class="govuk-error-message">

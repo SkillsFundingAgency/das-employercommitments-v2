@@ -12,7 +12,7 @@
         <partial name="_ValidationSummary" />
         <form id="addApprenticeship" novalidate method="post">
             @Html.AntiForgeryToken()
-
+            <input type="hidden" asp-for="CacheKey" />
             <button type="submit" id="defaultButton" aria-hidden="true" class="govuk-visually-hidden" tabindex="-1"></button>
 
             <partial name="_DraftApprenticeship" for="@Model" />
@@ -27,17 +27,12 @@
     </div>
 </div>
 
-
-
 @Html.ActionLink("Return to group of apprentices", "Details", "Cohort", new { @Model.AccountHashedId, @Model.CohortReference }, new { @class = "govuk-link", id = "return-link" })
-
 
 @section Back
 {
-    <div class="das-js-back-link"></div>
+    @Html.ActionLink("Back", "Details", "Cohort", new { @Model.AccountHashedId, @Model.CohortReference }, new { @class = "govuk-back-link", id = "back-link" })
 }
-
-
 
 @*
     @section  Scripts

@@ -1,4 +1,5 @@
-﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @using SFA.DAS.EmployerUrlHelper.Mvc
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.SelectProviderViewModel
 @{
@@ -11,40 +12,55 @@
     <div class="govuk-grid-column-two-thirds">
 
         <partial name="_ValidationSummary" />
-
-        <h1 class="govuk-heading-xl">Add training provider details</h1>
-
         <form method="post">
+            @Html.AntiForgeryToken()
+            <div class="govuk-form-group">
+                <h1 class="govuk-label-wrapper">
+                    <label class="govuk-label govuk-label--xl" for="Ukprn">
+                        Select your training provider
+                    </label>
+                </h1>
+                <p class="govuk-body">
+                    Before you can add your apprentice, you need to add the training provider for this apprenticeship.
+                </p>
+                <div class=" @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-form-group--error")">
+                    <span id="provider-hint" class="govuk-hint">Start typing your training provider’s name or UKPRN, and
+                        select from the suggestions</span>
 
-            <partial name="_SelectProviderHiddenPartial" />
+                    @Html.ValidationMessageFor(m => m.ProviderId, null, new
+                        {
+                            @class = "govuk-error-message",
+                            id =
+                             "error-message-" + Html.IdFor(m => m.ProviderId)
+                        })
 
-            <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
-                <label class="govuk-heading-s " for="error-message-ProviderId">
-                    UK Provider Reference Number
-                </label>
+                    <select id="Ukprn" name="ProviderId" asp-for="ProviderId"
+                        class="govuk-select das-autocomplete-search @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-select--error")">
+                        <option class="das-js-hide" value="">Select training provider</option>
+                        @foreach (var provider in Model.Providers)
+                        {
+                            <option value="@provider.Ukprn"> @provider.Name @provider.Ukprn</option>
+                        }
+                    </select>
+                </div>
 
-                @if (!ViewData.ModelState.IsValid)
-                {
-                    <span id="provider-search-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> Number not recognised. Check the number you've entered is correct or contact your training provider for help.
-                    </span>
-                }
-                <input asp-for="ProviderId" class="govuk-input @(ViewData.ModelState.IsValid ? "" : "govuk-input--error")" id="error-message-ProviderId" />
             </div>
 
-            <details class="govuk-details">
+            <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
-                        What is a UK Provider Reference Number?
+                        Help with training provider
                     </span>
                 </summary>
                 <div class="govuk-details__text">
-                    A UK Provider Reference Number (UKPRN) is a unique, 8-digit number that identifies a training provider. Your training provider can tell you their UKPRN.
+                    <p>If you don’t have a training provider, you can search <a
+                            href="https://www.gov.uk/employers-find-apprenticeship-training" target="_blank"
+                            title="Opens in a new window" rel="noreferrer noopener" id="fat-link"
+                            class="govuk-link">Find apprenticeship training</a>.</p>
                 </div>
             </details>
-            <button id="continue-button" type="submit" class="govuk-button">
-                Continue
-            </button>
+
+            <button class="govuk-button" id="Ukprn-button" type="submit"> Continue </button>
         </form>
 
 
@@ -56,20 +72,21 @@
     @if (Model.Origin == Origin.Reservations)
     {
         @Html.ActionLink("Back", "Index", "Cohort", new
-        {
-            Model.AccountHashedId,
-            Model.AccountLegalEntityHashedId,
-            Model.ReservationId,
-            Model.CourseCode,
-            Model.StartMonthYear
-        }, new { @class = "govuk-back-link", id = "back-link" })
+            {
+                Model.AccountHashedId,
+                Model.AccountLegalEntityHashedId,
+                Model.ReservationId,
+                Model.CourseCode,
+                Model.StartMonthYear
+            }, new { @class = "govuk-back-link", id = "back-link" })
     }
     else if (Model.Origin == Origin.LevyTransferMatching)
     {
-        <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications/{Model.EncodedPledgeApplicationId}")" id="back-link" class="govuk-back-link">Back</a>
+        <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications/{Model.EncodedPledgeApplicationId}")"
+    id="back-link" class="govuk-back-link">Back</a>
     }
     else
     {
-        <a href="@Url.Action("Inform", "Cohort")" id="back-link" class="govuk-back-link">Back</a>
+        <a href="@Url.Action("Inform", "Cohort", new { Model.AccountHashedId})" id="back-link" class="govuk-back-link">Back</a>
     }
-}
+    }

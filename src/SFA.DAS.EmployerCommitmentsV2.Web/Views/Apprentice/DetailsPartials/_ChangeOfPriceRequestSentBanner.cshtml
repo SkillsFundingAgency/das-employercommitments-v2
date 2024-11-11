@@ -1,0 +1,18 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+<div id="change-of-price-request-sent-banner" class="govuk-notification-banner govuk-notification-banner--success">
+    <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+            Success
+        </h2>
+    </div>
+    <div class="govuk-notification-banner__content">
+        <h3 class="govuk-notification-banner__heading">
+            Request to change the price sent to training provider
+        </h3>
+        <p class="govuk-body">The training provider now needs to approve the change.</p>
+        <p class="govuk-body">
+            <a id="linkViewPendingPriceBanner" href="@Model.PendingPriceChangeUrl" class="govuk-link">View the price change you've requested</a>
+        </p>
+    </div>
+</div>

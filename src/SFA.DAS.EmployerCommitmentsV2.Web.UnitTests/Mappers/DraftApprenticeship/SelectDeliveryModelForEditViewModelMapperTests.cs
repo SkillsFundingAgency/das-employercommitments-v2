@@ -1,5 +1,5 @@
-﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+﻿using FluentAssertions;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
@@ -56,6 +56,6 @@ public class SelectDeliveryModelForEditViewModelMapperTests
 
         var result = await _mapper.Map(_source);
 
-        Assert.That(result.ShowFlexiJobAgencyDeliveryModelConfirmation, Is.EqualTo(expectShowConfirmation));
+        result.ShowFlexiJobAgencyDeliveryModelConfirmation.Should().Be(expectShowConfirmation);
     }
 }

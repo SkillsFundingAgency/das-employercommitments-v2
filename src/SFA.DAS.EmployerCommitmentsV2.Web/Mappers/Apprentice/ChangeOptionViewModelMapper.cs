@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
@@ -10,23 +8,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 public class ChangeOptionViewModelMapper : IMapper<ChangeOptionRequest, ChangeOptionViewModel>
 {
     private readonly ICommitmentsApiClient _commitmentsApiClient;
-    private readonly IHttpContextAccessor _httpContext;
-    private readonly ITempDataDictionaryFactory _tempDataDictionaryFactory;
+    private readonly ICacheStorageService _cacheStorageService;
 
-    public ChangeOptionViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IHttpContextAccessor httpContext, ITempDataDictionaryFactory tempDataDictionaryFactory)
+    public ChangeOptionViewModelMapper(ICommitmentsApiClient commitmentsApiClient, ICacheStorageService cacheStorageService)
     {
         _commitmentsApiClient = commitmentsApiClient;
-        _httpContext = httpContext;
-        _tempDataDictionaryFactory = tempDataDictionaryFactory;;
+        _cacheStorageService = cacheStorageService;
     }
 
     public async Task<ChangeOptionViewModel> Map(ChangeOptionRequest source)
     {
         var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
 
-        var tempData = _tempDataDictionaryFactory.GetTempData(_httpContext.HttpContext);
-
-        var editViewModel = tempData.GetButDontRemove<EditApprenticeshipRequestViewModel>("EditApprenticeshipRequestViewModel");
+        var editViewModel = await _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel));
 
         string selectedVersion;
         string selectedCourseCode;
@@ -43,7 +37,7 @@ public class ChangeOptionViewModelMapper : IMapper<ChangeOptionRequest, ChangeOp
 
             if (selectedCourseCode != apprenticeship.CourseCode || editViewModel.StartDate.Date.Value != apprenticeship.StartDate?.Date)
             {
-                returnToEdit = true; 
+                returnToEdit = true;
             }
             else if (selectedVersion != apprenticeship.Version)
             {
@@ -58,7 +52,7 @@ public class ChangeOptionViewModelMapper : IMapper<ChangeOptionRequest, ChangeOp
         }
 
         var standardVersion = await _commitmentsApiClient.GetTrainingProgrammeVersionByCourseCodeAndVersion(selectedCourseCode, selectedVersion);
-            
+
         return new ChangeOptionViewModel
         {
             AccountHashedId = source.AccountHashedId,
@@ -70,7 +64,8 @@ public class ChangeOptionViewModelMapper : IMapper<ChangeOptionRequest, ChangeOp
             SelectedVersionUrl = standardVersion.TrainingProgramme.StandardPageUrl,
             Options = standardVersion.TrainingProgramme.Options,
             ReturnToChangeVersion = returnToChangeVersion,
-            ReturnToEdit = returnToEdit
+            ReturnToEdit = returnToEdit,
+            CacheKey = source.CacheKey
         };
     }
 }

@@ -4,9 +4,9 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class CreateCohortWithOtherPartyRequestMapper : IMapper<MessageViewModel, CreateCohortWithOtherPartyRequest>
+public class CreateCohortWithOtherPartyRequestMapper : IMapper<AssignViewModel, CreateCohortWithOtherPartyRequest>
 {
-    public Task<CreateCohortWithOtherPartyRequest> Map(MessageViewModel source)
+    public Task<CreateCohortWithOtherPartyRequest> Map(AssignViewModel source)
     {
         return Task.FromResult(new CreateCohortWithOtherPartyRequest
         {

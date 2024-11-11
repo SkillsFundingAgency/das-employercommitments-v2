@@ -44,6 +44,7 @@
             @Html.HiddenFor(x => x.Option)
             @Html.HiddenFor(x => x.EmployerReference)
             @Html.HiddenFor(x => x.ProviderName)
+            @Html.HiddenFor(x => x.CacheKey)
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
@@ -76,7 +77,7 @@
                     <table class="govuk-table">
                         <thead class="govuk-table__head">
                             <tr class="govuk-table__row">
-                                <th class="govuk-table__header"></th>
+                                <th class="govuk-table__header"><span class="govuk-visually-hidden">Field</span></th>
                                 <th scope="col" class="govuk-table__header ">Current</th>
                                 <th scope="col" class="govuk-table__header ">Changed to</th>
                             </tr>
@@ -282,14 +283,14 @@
 @section back {
     @if (Model.ReturnToChangeOption)
     {
-        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ChangeOption)">Back</a>
+        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ChangeOption, new { Model.CacheKey })">Back</a>
     }
     else if (Model.ReturnToChangeVersion)
     {
-        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ChangeVersion)">Back</a>
+        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ChangeVersion, new { Model.CacheKey })">Back</a>
     }
     else
     {
-        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.EditApprenticeship)">Back</a>
+        <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.EditApprenticeship, new { Model.CacheKey })">Back</a>
     }
 }
