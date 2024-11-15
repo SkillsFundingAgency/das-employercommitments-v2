@@ -31,7 +31,6 @@ public class ApprenticeRequestToSelectDeliveryModelViewModelMapperTests
 
         _source = autoFixture.Build<ApprenticeRequest>()
             .With(x => x.StartMonthYear, "062020")
-            .With(x => x.AccountId, 12345)
             .With(x => x.CourseCode, "Course1")
             .With(x => x.ProviderId, _providerId)
             .With(x => x.AccountLegalEntityId, _accountLegalEntityId)

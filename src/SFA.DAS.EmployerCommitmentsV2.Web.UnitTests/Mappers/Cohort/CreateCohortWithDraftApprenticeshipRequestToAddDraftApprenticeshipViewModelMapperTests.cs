@@ -33,7 +33,6 @@ public class CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipV
 
         _source = autoFixture.Build<ApprenticeRequest>()
             .With(x=>x.StartMonthYear, "062020")
-            .With(x=>x.AccountId, 12345)
             .Without(x=>x.TransferSenderId).Create();
 
         _commitmentsApiClient = new Mock<ICommitmentsApiClient>();

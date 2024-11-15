@@ -33,7 +33,6 @@ public class ApprenticeViewModelMapperTests
         _source = autoFixture.Create<ApprenticeRequest>();
         _source.StartMonthYear = "062020";
         _source.TransferSenderId = string.Empty;
-        _source.AccountId = 12345;
 
         _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
         _commitmentsApiClient.Setup(x => x.GetProvider(It.IsAny<long>(), It.IsAny<CancellationToken>()))
