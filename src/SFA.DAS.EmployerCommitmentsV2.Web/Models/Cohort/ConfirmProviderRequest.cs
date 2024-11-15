@@ -7,7 +7,7 @@ public class ConfirmProviderRequest : BaseConfirmProviderRequest
     public long AccountLegalEntityId { get; set; }
 }
 
-public class BaseConfirmProviderRequest : IndexRequest
+public class BaseConfirmProviderRequest : BaseIndexRequest
 {
     public long ProviderId { get; set; }
     public string LegalEntityName { get; set; }

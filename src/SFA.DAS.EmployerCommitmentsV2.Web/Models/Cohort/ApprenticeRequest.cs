@@ -6,10 +6,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 public class ApprenticeRequest : BaseApprenticeRequest
 {
     public long AccountLegalEntityId { get; set; }
-    public long AccountId { get; set; }
 }
 
-public class BaseApprenticeRequest : IndexRequest
+public class BaseApprenticeRequest : BaseIndexRequest
 {
     public Guid? CacheKey { get; set; }
     public long ProviderId { get; set; }

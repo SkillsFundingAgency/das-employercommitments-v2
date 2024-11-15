@@ -27,7 +27,6 @@ public class ApprenticeRequestToSelectCourseViewModelMapperTests
 
         _source = autoFixture.Build<ApprenticeRequest>()
             .With(x => x.StartMonthYear, "062020")
-            .With(x => x.AccountId, 12345)
             .With(x => x.CourseCode, "Course1")
             .With(x => x.DeliveryModel, DeliveryModel.PortableFlexiJob)
             .Without(x => x.TransferSenderId).Create();

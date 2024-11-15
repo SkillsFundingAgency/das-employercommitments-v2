@@ -7,7 +7,7 @@ public class AssignRequest : BaseAssignRequest
     public long AccountLegalEntityId { get; set; }
 }
 
-public class BaseAssignRequest : IndexRequest
+public class BaseAssignRequest : BaseIndexRequest
 {
     public long ProviderId { get; set; }
     public string LegalEntityName { get; set; }

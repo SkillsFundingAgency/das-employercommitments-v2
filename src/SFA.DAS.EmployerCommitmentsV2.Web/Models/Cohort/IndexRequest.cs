@@ -2,11 +2,15 @@
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
-public class IndexRequest : IAuthorizationContextModel
+public class IndexRequest : BaseIndexRequest
+{
+    public long AccountId { get; set; }
+}
+
+public class BaseIndexRequest : IAuthorizationContextModel
 {
     [FromRoute]
     public string AccountHashedId { get; set; }
-    public long AccountId { get; set; }
     public Guid? ReservationId { get; set; }
     public string AccountLegalEntityHashedId { get; set; }
     public string StartMonthYear { get; set; }
