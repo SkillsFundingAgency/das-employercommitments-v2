@@ -22,5 +22,5 @@ public interface IApprovalsApiClient
     Task<GetManageApprenticeshipDetailsResponse> GetManageApprenticeshipDetails(long accountId, long apprenticeshipId, CancellationToken cancellationToken = default);
     Task<GetLegalEntitiesForAccountResponse> GetLegalEntitiesForAccount(string cohortId, long accountId);
     Task<GetAccountLegalEntityResponse> GetAccountLegalEntity(long accountLegalEntityId, CancellationToken cancellationToken = default);
-    Task<GetSelectProviderDetailsResponse> GetSelectProviderDetails(long accountId, long accountLegalEntityId, CancellationToken cancellationToken = default);
+    Task<GetSelectProviderDetailsResponse> GetSelectProviderDetails(string accountHashedId, long accountLegalEntityId, CancellationToken cancellationToken = default);
 }

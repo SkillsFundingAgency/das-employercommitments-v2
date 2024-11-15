@@ -7,7 +7,7 @@ public class SelectProviderRequest : BaseSelectProviderRequest
     public long AccountLegalEntityId { get; set; }
 }
 
-public class BaseSelectProviderRequest : IndexRequest
+public class BaseSelectProviderRequest : BaseIndexRequest
 {
     public string TransferSenderId { get; set; }
     public Origin Origin { get; set; }
