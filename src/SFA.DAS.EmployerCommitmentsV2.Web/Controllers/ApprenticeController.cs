@@ -897,6 +897,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/change-version")]
     public async Task<IActionResult> ChangeVersion(ChangeVersionViewModel changeVersionViewModel)
     {
+        changeVersionViewModel.CacheKey ??= Guid.NewGuid();
         var editRequestViewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(changeVersionViewModel);
 
         await StoreEditApprenticeshipRequestViewModelInCache(editRequestViewModel, changeVersionViewModel.CacheKey);
@@ -1285,6 +1286,7 @@ public class ApprenticeController : Controller
         {
             return await _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>(key.Value);
         }
+        
         return null;
     }
 
