@@ -60,7 +60,7 @@ public class WhenPostingChangeVersionTests : ApprenticeControllerTestBase
     }
     
     [Test]
-    public async Task Then_NewCacheKeyIsASsigned()
+    public async Task Then_NewCacheKeyIsAssigned()
     {
         _viewModel.CacheKey = null;
 
@@ -77,8 +77,6 @@ public class WhenPostingChangeVersionTests : ApprenticeControllerTestBase
         var isGuid = Guid.TryParse(cacheKey, out _);
         isGuid.Should().BeTrue();
     }
-
-
 
     [Test]
     public async Task And_VersionHasOptions_Then_VerifyRedirectToChangeOption()
