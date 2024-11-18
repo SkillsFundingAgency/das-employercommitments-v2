@@ -9,6 +9,7 @@ public class ConfirmProviderViewModel : IndexViewModel
     public bool? UseThisProvider { get; set; }
     public string TransferSenderId { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
+    public FundingType? FundingType { get; set; }
 
     public override Dictionary<string, string> ToDictionary()
     {
