@@ -277,7 +277,7 @@ public class CohortController : Controller
     [Route("add/apprentice")]
     public IActionResult Apprentice(ApprenticeRequest request)
     {
-        return RedirectToAction(nameof(SelectCourse), request.CloneBaseValues());
+        return RedirectToAction(nameof(SelectCourse), GetApprenticeRequestRouteValues(request));
     }
 
     [HttpGet]
@@ -293,7 +293,7 @@ public class CohortController : Controller
     public async Task<IActionResult> SelectCourse(SelectCourseViewModel model)
     {
         var request = await _modelMapper.Map<ApprenticeRequest>(model);
-        return RedirectToAction(nameof(SelectDeliveryModel), request.CloneBaseValues());
+        return RedirectToAction(nameof(SelectDeliveryModel), GetApprenticeRequestRouteValues(request));
     }
 
     [HttpGet]
@@ -309,7 +309,8 @@ public class CohortController : Controller
         }
 
         request.DeliveryModel = model.DeliveryModels.FirstOrDefault();
-        return RedirectToAction(nameof(AddDraftApprenticeship), request.CloneBaseValues());
+
+        return RedirectToAction(nameof(AddDraftApprenticeship), GetApprenticeRequestRouteValues(request));
     }
 
     [HttpPost]
@@ -323,7 +324,8 @@ public class CohortController : Controller
         }
 
         var request = await _modelMapper.Map<ApprenticeRequest>(model);
-        return RedirectToAction(nameof(AddDraftApprenticeship), request.CloneBaseValues());
+
+        return RedirectToAction(nameof(AddDraftApprenticeship), GetApprenticeRequestRouteValues(request));
     }
 
     [HttpGet]
@@ -556,5 +558,24 @@ public class CohortController : Controller
             return await _cacheStorageService.RetrieveFromCache<ApprenticeViewModel>(key.Value);
         }
         return null;
+    }
+
+    private static object GetApprenticeRequestRouteValues(ApprenticeRequest request)
+    {
+        return new
+        {
+            request.AccountHashedId,
+            request.ReservationId,
+            request.AccountLegalEntityHashedId,
+            request.StartMonthYear,
+            request.CourseCode,
+            request.CacheKey,
+            request.ProviderId,
+            request.LegalEntityName,
+            request.TransferSenderId,
+            request.Origin,
+            request.DeliveryModel,
+            request.EncodedPledgeApplicationId
+        };
     }
 }
