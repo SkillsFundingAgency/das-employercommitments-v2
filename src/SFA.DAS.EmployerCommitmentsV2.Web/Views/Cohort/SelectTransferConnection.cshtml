@@ -30,9 +30,9 @@
                         @foreach (var entity in Model.TransferConnections)
                         {
                             <div class="govuk-radios__item" id="radio-item-transfer-connection">
-                                <input class="govuk-radios__input" id="TransferConnection-@entity.TransferConnectionCode" name="TransferConnectionCode" type="radio" value="@entity.TransferConnectionCode">
-                                <label class="govuk-label govuk-radios__label" for="TransferConnection-@entity.TransferConnectionCode">
-                                    Yes, I will use transfer funds from @entity.TransferConnectionName
+                                <input class="govuk-radios__input" id="TransferConnection-@entity.FundingEmployerPublicHashedAccountId" name="TransferConnectionCode" type="radio" value="@entity.FundingEmployerPublicHashedAccountId">
+                                <label class="govuk-label govuk-radios__label" for="TransferConnection-@entity.FundingEmployerPublicHashedAccountId">
+                                    Yes, I will use transfer funds from @entity.FundingEmployerAccountName
                                 </label>
                             </div>
                             <hr />

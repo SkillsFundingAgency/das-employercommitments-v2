@@ -84,5 +84,5 @@
 
 @section Back
 {
-    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new {Model.AccountHashedId})">Back to Apprentices</a>
+    <a href="@Url.Action("Inform", "Cohort", new { Model.AccountHashedId})" id="back-link" class="govuk-back-link">Back</a>
 }

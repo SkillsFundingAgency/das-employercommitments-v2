@@ -4,16 +4,16 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class InformRequestToSelectTransferConnectionViewModelMapper : IMapper<InformRequest, SelectTransferConnectionViewModel>
+public class BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper : IMapper<BaseSelectProviderRequest, SelectTransferConnectionViewModel>
 {
     private readonly IApprovalsApiClient _approvalsApiClient;
 
-    public InformRequestToSelectTransferConnectionViewModelMapper(IApprovalsApiClient approvalsApiClient)
+    public BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper(IApprovalsApiClient approvalsApiClient)
     {
         _approvalsApiClient = approvalsApiClient;
     }
 
-    public async Task<SelectTransferConnectionViewModel> Map(InformRequest source)
+    public async Task<SelectTransferConnectionViewModel> Map(BaseSelectProviderRequest source)
     {
         var result = await _approvalsApiClient.GetSelectDirectTransferConnection(source.AccountId);
 

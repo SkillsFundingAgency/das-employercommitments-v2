@@ -110,4 +110,8 @@ public class ApprovalsApiClient : IApprovalsApiClient
         return _client.Get<GetSelectFundingOptionsResponse>($"{accountId}/unapproved/add/select-funding");
     }
 
+    public Task<GetSelectDirectTransferConnectionResponse> GetSelectDirectTransferConnection(long accountId, CancellationToken cancellationToken = default)
+    {
+        return _client.Get<GetSelectDirectTransferConnectionResponse>($"{accountId}/unapproved/add/select-funding/select-direct-connection");
+    }
 }

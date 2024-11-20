@@ -453,7 +453,7 @@ public class CohortController : Controller
     {
         var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(request);
 
-        if (viewModel.TransferConnections.Any())
+        if (viewModel.IsLevyAccount && viewModel.TransferConnections.Any())
         {
             return View(viewModel);
         }
@@ -581,26 +581,23 @@ public class CohortController : Controller
     [Route("add/select-funding")]
     public async Task<ActionResult> SetFundingType(SelectFundingViewModel selectedFunding)
     {
-        if (selectedFunding.FundingType == FundingType.DirectTransfers)
-        {
-            return RedirectToAction("SelectFundingTransferConnection",
-                new {AccountHashedId = selectedFunding.AccountHashedId});
-        }
-
-        return RedirectToAction("SelectProvider", new BaseSelectProviderRequest
+        var redirectRequest = new BaseSelectProviderRequest
         {
             AccountHashedId = selectedFunding.AccountHashedId,
-            TransferSenderId = selectedFunding.TransferSenderId,
             AccountLegalEntityHashedId = selectedFunding.AccountLegalEntityHashedId,
-            FundingType = selectedFunding.FundingType,
-            EncodedPledgeApplicationId = selectedFunding.EncodedPledgeApplicationId
-        });
+            FundingType = selectedFunding.FundingType
+        };
+
+        if (selectedFunding.FundingType == FundingType.DirectTransfers)
+        {
+            return RedirectToAction("SelectDirectTransferConnection", redirectRequest);
+        }
+        return RedirectToAction("SelectProvider", redirectRequest);
     }
 
-
     [HttpGet]
-    [Route("add/select-funding/select-connection")]
-    public async Task<IActionResult> SelectFundingTransferConnection(InformRequest request)
+    [Route("add/select-funding/select-direct-connection")]
+    public async Task<IActionResult> SelectDirectTransferConnection(BaseSelectProviderRequest request)
     {
         var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(request);
 
@@ -608,14 +605,18 @@ public class CohortController : Controller
     }
 
     [HttpPost]
-    [Route("add/select-funding/select-connection")]
-    public ActionResult SetTransferConnectionViaSelectFunding(SelectTransferConnectionViewModel selectedTransferConnection)
+    [Route("add/select-funding/select-direct-connection")]
+    public ActionResult SelectDirectTransferConnection(SelectTransferConnectionViewModel selectedTransferConnection)
     {
         var transferConnectionCode = selectedTransferConnection.TransferConnectionCode;
 
-        return RedirectToAction("SelectProvider", new SelectLegalEntityRequest { AccountHashedId = selectedTransferConnection.AccountHashedId, transferConnectionCode = transferConnectionCode });
+        return RedirectToAction("SelectProvider", new BaseSelectProviderRequest
+        {
+            AccountHashedId = selectedTransferConnection.AccountHashedId,
+            TransferSenderId = transferConnectionCode,
+            AccountLegalEntityHashedId = selectedTransferConnection.AccountLegalEntityHashedId,
+        });
     }
-
 
     [HttpGet]
     [Route("AgreementNotSigned")]
