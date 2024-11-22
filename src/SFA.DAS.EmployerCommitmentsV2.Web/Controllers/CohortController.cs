@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
@@ -450,30 +449,6 @@ public class CohortController : Controller
     }
 
     [HttpGet]
-    [Route("transferConnection/create")]
-    public async Task<IActionResult> SelectTransferConnection(InformRequest request)
-    {
-        var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(request);
-
-        if (viewModel.IsLevyAccount && viewModel.TransferConnections.Any())
-        {
-            return View(viewModel);
-        }
-
-        return RedirectToAction("SelectLegalEntity", new SelectLegalEntityRequest { AccountHashedId = request.AccountHashedId, transferConnectionCode = string.Empty });
-    }
-
-    [HttpPost]
-    [Route("transferConnection/create")]
-    public ActionResult SetTransferConnection(SelectTransferConnectionViewModel selectedTransferConnection)
-    {
-        var transferConnectionCode = selectedTransferConnection.TransferConnectionCode.Equals("None", StringComparison.InvariantCultureIgnoreCase)
-            ? null : selectedTransferConnection.TransferConnectionCode;
-
-        return RedirectToAction("SelectLegalEntity", new SelectLegalEntityRequest { AccountHashedId = selectedTransferConnection.AccountHashedId, transferConnectionCode = transferConnectionCode });
-    }
-
-    [HttpGet]
     [Route("legalEntity/create")]
     [Route("add/legal-entity")]
     public async Task<IActionResult> SelectLegalEntity(SelectLegalEntityRequest request)
@@ -563,10 +538,9 @@ public class CohortController : Controller
 
         var viewModel = await _modelMapper.Map<SelectFundingViewModel>(request);
 
-        if (viewModel.IsLevyAccount || 
-            (viewModel.HasDirectTransfersAvailable == false &&
-            viewModel.HasAdditionalReservationFundsAvailable == false &&
-            viewModel.HasUnallocatedReservationsAvailable == false))
+        if (viewModel.HasDirectTransfersAvailable == false &&
+             viewModel.HasAdditionalReservationFundsAvailable == false &&
+             viewModel.HasUnallocatedReservationsAvailable == false)
         {
             return RedirectToAction("SelectProvider", new BaseSelectProviderRequest
             {
