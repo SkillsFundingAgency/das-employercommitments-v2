@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
@@ -55,7 +56,26 @@ public class WhenPostingChangeVersionTests : ApprenticeControllerTestBase
     {
         await Controller.ChangeVersion(_viewModel);
 
-        MockModelMapper.Verify(m => m.Map<EditApprenticeshipRequestViewModel>(It.IsAny<ChangeVersionViewModel>()), Times.Once());
+        MockModelMapper.Verify(m => m.Map<EditApprenticeshipRequestViewModel>(_viewModel), Times.Once());
+    }
+    
+    [Test]
+    public async Task Then_NewCacheKeyIsAssigned()
+    {
+        _viewModel.CacheKey = null;
+
+        MockModelMapper
+            .Setup(m => m.Map<EditApprenticeshipRequestViewModel>(
+                It.Is<ChangeVersionViewModel>(x => x.CacheKey != null)))
+            .ReturnsAsync(new EditApprenticeshipRequestViewModel());
+
+        var result = await Controller.ChangeVersion(_viewModel);
+
+        var redirectResult = result.Should().BeOfType<RedirectToActionResult>();
+        var cacheKey = redirectResult.Subject.RouteValues["cacheKey"].ToString();
+        cacheKey.Should().NotBeNull();
+        var isGuid = Guid.TryParse(cacheKey, out _);
+        isGuid.Should().BeTrue();
     }
 
     [Test]
