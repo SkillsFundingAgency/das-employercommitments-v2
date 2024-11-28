@@ -564,11 +564,12 @@ public class CohortController : Controller
             FundingType = selectedFunding.FundingType
         };
 
-        if (selectedFunding.FundingType == FundingType.DirectTransfers)
+        return selectedFunding.FundingType switch
         {
-            return RedirectToAction("SelectDirectTransferConnection", redirectRequest);
-        }
-        return RedirectToAction("SelectProvider", redirectRequest);
+            FundingType.DirectTransfers => RedirectToAction("SelectDirectTransferConnection", redirectRequest),
+            FundingType.LtmTransfers => RedirectToAction("SelectDirectTransferConnection", redirectRequest),
+            _ => RedirectToAction("SelectProvider", redirectRequest)
+        };
     }
 
     [HttpGet]

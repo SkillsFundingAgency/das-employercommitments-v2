@@ -1,6 +1,5 @@
 ﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
@@ -27,6 +26,7 @@ public class SelectFundingViewModelMapper : IMapper<SelectFundingRequest, Select
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
             IsLevyAccount = selectFundingDetails.IsLevyAccount,
             HasDirectTransfersAvailable = selectFundingDetails.HasDirectTransfersAvailable,
+            HasLtmTransfersAvailable = selectFundingDetails.HasLtmTransfersAvailable,
             HasUnallocatedReservationsAvailable = selectFundingDetails.HasUnallocatedReservationsAvailable,
             HasAdditionalReservationFundsAvailable = selectFundingDetails.HasAdditionalReservationFundsAvailable
         };
