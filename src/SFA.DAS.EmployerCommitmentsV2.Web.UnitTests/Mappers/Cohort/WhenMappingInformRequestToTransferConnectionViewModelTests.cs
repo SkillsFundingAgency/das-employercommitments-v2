@@ -25,7 +25,7 @@ public class WhenMappingInformRequestToTransferConnectionViewModelTests
         _approvalsApiClient.Setup(x => x.GetSelectDirectTransferConnection(_informRequest.AccountId, CancellationToken.None))
             .ReturnsAsync(_response);
 
-        _mapper = new InformRequestToSelectTransferConnectionViewModelMapper(_approvalsApiClient.Object);
+        _mapper = new InformRequestToSelectTransferConnectionViewModelMapper(_approvalsApiClient.Object, Mock.Of<ILogger<InformRequestToSelectTransferConnectionViewModelMapper>>());
     }
 
     [Test]
