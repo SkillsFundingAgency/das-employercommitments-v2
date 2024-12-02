@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
@@ -21,7 +22,7 @@ public class BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper 
         {
             AccountHashedId = source.AccountHashedId,
             IsLevyAccount = result.IsLevyAccount,
-            TransferConnections = result.TransferConnections.ToList()
+            TransferConnections = result.TransferConnections == null ? new List<TransferConnection>() : result.TransferConnections.ToList()
         };
     }
 }
