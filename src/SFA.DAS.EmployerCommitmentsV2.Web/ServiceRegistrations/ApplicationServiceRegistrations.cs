@@ -2,7 +2,6 @@
 using SFA.DAS.CommitmentsV2.Services.Shared;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Services;
-using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
@@ -15,8 +14,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 
 public static class ApplicationServiceRegistrations
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services,
-        EmployerCommitmentsV2Configuration configuration)
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddTransient<IModelMapper, ModelMapper>();
         
@@ -28,7 +26,6 @@ public static class ApplicationServiceRegistrations
         services.AddTransient<IEmployerAccountsService, EmployerAccountsService>();
         
         services.AddSingleton<ILinkGenerator, LinkGenerator>();
-        services.AddSingleton<IUserAccountService, UserAccountService>();
         services.AddSingleton<IAuthenticationService, AuthenticationService>();
         
         services.AddSingleton(typeof(Interfaces.ICookieStorageService<>), typeof(Infrastructure.CookieService.CookieStorageService<>));
@@ -36,7 +33,7 @@ public static class ApplicationServiceRegistrations
         services.AddSingleton<ICreateCsvService, CreateCsvService>();
         services.AddSingleton<IAcademicYearDateProvider, AcademicYearDateProvider>();
         services.AddSingleton<ICacheStorageService, CacheStorageService>();
-
+        services.AddTransient<IAssociatedAccountsService, AssociatedAccountsService>();
         
         return services;
     }

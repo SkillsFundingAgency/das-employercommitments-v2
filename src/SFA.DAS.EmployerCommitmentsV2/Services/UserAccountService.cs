@@ -1,26 +1,27 @@
 ﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Models.UserAccounts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.GovUK.Auth.Employer;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services;
 
-public interface IUserAccountService
+public class UserAccountService(IApprovalsApiClient outerApiClient) : IGovAuthEmployerAccountService
 {
-    Task<EmployerUserAccounts> GetUserAccounts(string userId, string email);
-}
-
-public class UserAccountService : IUserAccountService
-{
-    private readonly IApprovalsApiClient _outerApiClient;
-
-    public UserAccountService(IApprovalsApiClient outerApiClient)
+    async Task<EmployerUserAccounts> IGovAuthEmployerAccountService.GetUserAccounts(string userId, string email)
     {
-        _outerApiClient = outerApiClient;
-    }
-    public async Task<EmployerUserAccounts> GetUserAccounts(string userId, string email)
-    {
-        var actual = await _outerApiClient.GetEmployerUserAccounts(email, userId);
+        var result = await outerApiClient.GetEmployerUserAccounts(email, userId);
 
-        return actual;
+        return new EmployerUserAccounts
+        {
+            EmployerAccounts = result.UserAccounts != null? result.UserAccounts.Select(c => new EmployerUserAccountItem
+            {
+                Role = c.Role,
+                AccountId = c.AccountId,
+                ApprenticeshipEmployerType = Enum.Parse<ApprenticeshipEmployerType>(c.ApprenticeshipEmployerType.ToString()),
+                EmployerName = c.EmployerName,
+            }).ToList() : [],
+            FirstName = result.FirstName,
+            IsSuspended = result.IsSuspended,
+            LastName = result.LastName,
+            EmployerUserId = result.EmployerUserId,
+        };
     }
 }
