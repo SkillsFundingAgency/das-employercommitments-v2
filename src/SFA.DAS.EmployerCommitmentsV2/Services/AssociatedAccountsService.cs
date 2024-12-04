@@ -62,14 +62,11 @@ public class AssociatedAccountsService(IGovAuthEmployerAccountService accountsSe
     
     private void PersistToClaims(Dictionary<string, EmployerUserAccountItem> associatedAccounts, Claim employerAccountsClaim, Claim userClaim)
     {
-        var accountsAsJson = string.Empty;
-        
         // Some users have 100's of employer accounts. The claims cannot handle that volume of data.
-        if (associatedAccounts.Count <= MaxPermittedNumberOfAccountsOnClaim)
-        {
-            accountsAsJson = JsonConvert.SerializeObject(associatedAccounts); 
-        }
-        
+        var accountsAsJson = JsonConvert.SerializeObject(associatedAccounts.Count <= MaxPermittedNumberOfAccountsOnClaim
+            ? associatedAccounts
+            : new List<EmployerUserAccountItem>().ToDictionary(x => x.AccountId));
+
         var associatedAccountsClaim = new Claim(EmployerClaims.AccountsClaimsTypeIdentifier, accountsAsJson, JsonClaimValueTypes.Json);
 
         if (employerAccountsClaim != null)
