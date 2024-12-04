@@ -3,6 +3,7 @@ using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
@@ -10,6 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 public class WhenMappingBaseSelectProviderRequestToTransferConnectionViewModelTests
 {
     private Mock<IApprovalsApiClient> _approvalsApiClient;
+    private Mock<IEncodingService> _encodingService;
     private BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper _mapper;        
     private BaseSelectProviderRequest _request;
     private GetSelectDirectTransferConnectionResponse _response;
@@ -19,13 +21,16 @@ public class WhenMappingBaseSelectProviderRequestToTransferConnectionViewModelTe
     {
         var autoFixture = new Fixture();
         _approvalsApiClient = new Mock<IApprovalsApiClient>();
+        _encodingService = new Mock<IEncodingService>();
         _request = autoFixture.Create<BaseSelectProviderRequest>();
         _response = autoFixture.Create<GetSelectDirectTransferConnectionResponse>();
 
         _approvalsApiClient.Setup(x => x.GetSelectDirectTransferConnection(_request.AccountId, CancellationToken.None))
             .ReturnsAsync(_response);
+        _encodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.PublicAccountId)).Returns("PublicAccountHashId");
+        _encodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.AccountId)).Returns("AccountHashId");
 
-        _mapper = new BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper(_approvalsApiClient.Object);
+        _mapper = new BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper(_approvalsApiClient.Object, _encodingService.Object);
     }
 
     [Test]
@@ -45,7 +50,14 @@ public class WhenMappingBaseSelectProviderRequestToTransferConnectionViewModelTe
         var result = await _mapper.Map(_request);
 
         //Assert           
-        result.TransferConnections.Should().BeEquivalentTo(_response.TransferConnections);
+        result.TransferConnections.Should().BeEquivalentTo(_response.TransferConnections.Select(x=> new TransferConnection
+        {
+            FundingEmployerAccountId = x.FundingEmployerAccountId,
+            FundingEmployerPublicHashedAccountId = "PublicAccountHashId",
+            FundingEmployerHashedAccountId = "AccountHashId",
+            FundingEmployerAccountName = x.FundingEmployerAccountName,
+
+        }));
     }
 
     [Test]
