@@ -433,70 +433,94 @@ public class CohortController : Controller
     [Route("Inform", Name = "Inform")]
     public async Task<ActionResult> Inform(InformRequest request)
     {
+        var cacheModel = new OG_CacheModel
+        {
+            CacheKey = Guid.NewGuid(),
+            AccountHashedId = request.AccountHashedId,
+            AccountId = request.AccountId
+        };
+
+        await StoreOG_CacheModelInCache(cacheModel, cacheModel.CacheKey);
+
         var viewModel = await _modelMapper.Map<InformViewModel>(request);
+
+        viewModel.OG_CacheID = cacheModel.CacheKey;
+
         return View(viewModel);
     }
 
     [HttpGet]
     [Route("transferConnection/create")]
-    public async Task<IActionResult> SelectTransferConnection(InformRequest request)
+    public async Task<IActionResult> SelectTransferConnection(Guid cacheKey)
     {
-        var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(request);
+        var cacheModel = await GetOG_CacheModelFromCache(cacheKey);
 
-        if (viewModel.TransferConnections.Any())
+        var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(cacheModel);
+
+        if (viewModel.TransferConnections.Count == 0)
         {
             return View(viewModel);
         }
 
-        return RedirectToAction("SelectLegalEntity", new SelectLegalEntityRequest { AccountHashedId = request.AccountHashedId, transferConnectionCode = string.Empty });
+        cacheModel.TransferConnectionCode = string.Empty;
+        await StoreOG_CacheModelInCache(cacheModel, cacheModel.CacheKey);
+
+        return RedirectToAction("SelectLegalEntity", new { cacheModel.AccountHashedId, cacheModel.CacheKey });
     }
 
     [HttpPost]
     [Route("transferConnection/create")]
-    public ActionResult SetTransferConnection(SelectTransferConnectionViewModel selectedTransferConnection)
+    public async Task<ActionResult> SetTransferConnection(SelectTransferConnectionViewModel selectedTransferConnection)
     {
+        var cacheModel = await GetOG_CacheModelFromCache(selectedTransferConnection.OG_CacheKey);
+
         var transferConnectionCode = selectedTransferConnection.TransferConnectionCode.Equals("None", StringComparison.InvariantCultureIgnoreCase)
             ? null : selectedTransferConnection.TransferConnectionCode;
+        
+        cacheModel.TransferConnectionCode = transferConnectionCode;
+        await StoreOG_CacheModelInCache(cacheModel, cacheModel.CacheKey);
 
-        return RedirectToAction("SelectLegalEntity", new SelectLegalEntityRequest { AccountHashedId = selectedTransferConnection.AccountHashedId, transferConnectionCode = transferConnectionCode });
+        return RedirectToAction("SelectLegalEntity", new { selectedTransferConnection.AccountHashedId, cacheModel.CacheKey});
     }
 
     [HttpGet]
     [Route("legalEntity/create")]
     [Route("add/legal-entity")]
-    public async Task<IActionResult> SelectLegalEntity(SelectLegalEntityRequest request)
+    public async Task<IActionResult> SelectLegalEntity(Guid cacheKey, string encodedPledgeApplicationId = null)
     {
-        var response = await _modelMapper.Map<SelectLegalEntityViewModel>(request);
+        var cacheModel = await GetOG_CacheModelFromCache(cacheKey);
+
+        cacheModel.EncodedPledgeApplicationId = encodedPledgeApplicationId;
+
+        var response = await _modelMapper.Map<SelectLegalEntityViewModel>(cacheModel);
 
         if (response.LegalEntities == null || !response.LegalEntities.Any())
-            throw new Exception($"No legal entities associated with account {request.AccountHashedId}");
+            throw new Exception($"No legal entities associated with account {cacheModel.AccountHashedId}");
 
         if (response.LegalEntities.Count() > 1)
             return View(response);
 
         var autoSelectLegalEntity = response.LegalEntities.First();
 
-        var hasSignedMinimumRequiredAgreementVersion = autoSelectLegalEntity.HasSignedMinimumRequiredAgreementVersion(!string.IsNullOrWhiteSpace(request.transferConnectionCode));
+        var hasSignedMinimumRequiredAgreementVersion = autoSelectLegalEntity.HasSignedMinimumRequiredAgreementVersion(!string.IsNullOrWhiteSpace(cacheModel.TransferConnectionCode));
+
+        cacheModel.AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId;
+        await StoreOG_CacheModelInCache(cacheModel, cacheModel.CacheKey);
 
         if (hasSignedMinimumRequiredAgreementVersion)
         {
-            return RedirectToAction("SelectProvider", new BaseSelectProviderRequest
-            {
-                AccountHashedId = request.AccountHashedId,
-                TransferSenderId = request.transferConnectionCode,
-                AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId,
-                EncodedPledgeApplicationId = request.EncodedPledgeApplicationId
-            });
+            // WILLOG follow this request and replace with just GUID.
+            return RedirectToAction("SelectProvider", new { cacheModel.AccountHashedId, cacheModel.CacheKey });           
         }
 
         var model = new LegalEntitySignedAgreementViewModel
         {
-            AccountHashedId = request.AccountHashedId,
+            AccountHashedId = cacheModel.AccountHashedId,
             AccountLegalEntityId = autoSelectLegalEntity.Id,
-            CohortRef = request.cohortRef,
+            CohortRef = cacheModel.CohortRef,
             LegalEntityName = autoSelectLegalEntity.Name,
-            TransferConnectionCode = request.transferConnectionCode,
-            AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId
+            TransferConnectionCode = cacheModel.TransferConnectionCode,
+            AccountLegalEntityHashedId = cacheModel.AccountLegalEntityHashedId
         };
 
         return RedirectToAction("AgreementNotSigned", model.CloneBaseValues());
@@ -508,17 +532,20 @@ public class CohortController : Controller
     [Route("add/legal-entity")]
     public async Task<ActionResult> SetLegalEntity(SelectLegalEntityViewModel selectedLegalEntity)
     {
+
+        // add selected legal entity id to cache model
+        var cacheModel = await GetOG_CacheModelFromCache(selectedLegalEntity.OG_CacheKey);
+
         var response = await _modelMapper.Map<LegalEntitySignedAgreementViewModel>(selectedLegalEntity);
+
+        cacheModel.AccountLegalEntityId = response.AccountLegalEntityId;
+        cacheModel.AccountLegalEntityHashedId = response.AccountLegalEntityHashedId;
+        await StoreOG_CacheModelInCache(cacheModel, cacheModel.CacheKey);
 
         if (response.HasSignedMinimumRequiredAgreementVersion)
         {
-            return RedirectToAction("SelectProvider", new SelectProviderRequest
-            {
-                AccountHashedId = selectedLegalEntity.AccountHashedId,
-                TransferSenderId = selectedLegalEntity.TransferConnectionCode,
-                AccountLegalEntityHashedId = response.AccountLegalEntityHashedId,
-                EncodedPledgeApplicationId = selectedLegalEntity.EncodedPledgeApplicationId
-            });
+            //WILLOG also do the same here just send GUID
+            return RedirectToAction("SelectProvider", new {cacheModel.AccountHashedId, cacheModel.CacheKey});
         }
 
         var model = new LegalEntitySignedAgreementViewModel
@@ -556,6 +583,23 @@ public class CohortController : Controller
         if (key.IsNotNullOrEmpty())
         {
             return await _cacheStorageService.RetrieveFromCache<ApprenticeViewModel>(key.Value);
+        }
+        return null;
+    }
+    
+    private async Task StoreOG_CacheModelInCache(OG_CacheModel model, Guid? key)
+    {
+        if (key.IsNotNullOrEmpty())
+        {
+            await _cacheStorageService.SaveToCache(key.Value, model, 1);
+        }
+    }
+
+    private async Task<OG_CacheModel> GetOG_CacheModelFromCache(Guid? key)
+    {
+        if (key.IsNotNullOrEmpty())
+        {
+            return await _cacheStorageService.RetrieveFromCache<OG_CacheModel>(key.Value);
         }
         return null;
     }

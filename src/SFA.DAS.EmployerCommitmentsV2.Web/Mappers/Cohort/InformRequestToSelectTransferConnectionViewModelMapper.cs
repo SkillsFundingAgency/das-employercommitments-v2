@@ -5,25 +5,26 @@ using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class InformRequestToSelectTransferConnectionViewModelMapper : IMapper<InformRequest, SelectTransferConnectionViewModel>
+public class OG_CacheModelToSelectTransferConnectionViewModelMapper : IMapper<OG_CacheModel, SelectTransferConnectionViewModel>
 {
     private readonly IAccountApiClient _accountsApiClient;
     private readonly IEncodingService _encodingService;
 
-    public InformRequestToSelectTransferConnectionViewModelMapper(IAccountApiClient accountApiClient, IEncodingService encodingService)
+    public OG_CacheModelToSelectTransferConnectionViewModelMapper(IAccountApiClient accountApiClient, IEncodingService encodingService)
     {
         _accountsApiClient = accountApiClient;
         _encodingService = encodingService;
     }
 
-    public async Task<SelectTransferConnectionViewModel> Map(InformRequest source)
+    public async Task<SelectTransferConnectionViewModel> Map(OG_CacheModel source)
     {
         var result = await GetTransferConnectionsForAccount(source.AccountHashedId);
 
         return new SelectTransferConnectionViewModel
         {
             AccountHashedId = source.AccountHashedId,
-            TransferConnections = result
+            TransferConnections = result,
+            OG_CacheKey = source.CacheKey
         };
     }
 

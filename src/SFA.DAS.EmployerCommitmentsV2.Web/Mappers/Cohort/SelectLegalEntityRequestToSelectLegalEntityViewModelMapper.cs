@@ -11,22 +11,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
 public class SelectLegalEntityRequestToSelectLegalEntityViewModelMapper(
     IApprovalsApiClient apiClient,
-    IEncodingService encodingService) : IMapper<SelectLegalEntityRequest, SelectLegalEntityViewModel>
+    IEncodingService encodingService) : IMapper<OG_CacheModel, SelectLegalEntityViewModel>
 {
-    public async Task<SelectLegalEntityViewModel> Map(SelectLegalEntityRequest source)
+    public async Task<SelectLegalEntityViewModel> Map(OG_CacheModel source)
     {
-        var cohortRef = string.IsNullOrWhiteSpace(source.cohortRef)
+        var cohortRef = string.IsNullOrWhiteSpace(source.CohortRef)
             ? Guid.NewGuid().ToString().ToUpper()
-            : source.cohortRef;
+            : source.CohortRef;
         var accountId = encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
         var legalEntities = await apiClient.GetLegalEntitiesForAccount(cohortRef, accountId);
 
         return new SelectLegalEntityViewModel {
             AccountHashedId = source.AccountHashedId,
-            TransferConnectionCode = source.transferConnectionCode,
+            TransferConnectionCode = source.TransferConnectionCode,
             LegalEntities = legalEntities.LegalEntities.ConvertAll(MapToLegalEntityVm),
             CohortRef = cohortRef,
-            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
+            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
+            OG_CacheKey = source.CacheKey
         };
     }
 
