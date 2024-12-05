@@ -25,7 +25,7 @@
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.2.1" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.2.1" />
     <PackageReference Include="Scrutor" Version="5.0.1" />
-    <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.121-prerelease-5" />
+    <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.121-prerelease-7" />
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84" />
     <PackageReference Include="SFA.DAS.Employer.Shared.UI" Version="17.1.109" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />

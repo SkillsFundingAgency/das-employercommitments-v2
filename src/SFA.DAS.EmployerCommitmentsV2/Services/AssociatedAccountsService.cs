@@ -65,7 +65,7 @@ public class AssociatedAccountsService(IGovAuthEmployerAccountService accountsSe
         // Some users have 100's of employer accounts. The claims cannot handle that volume of data.
         var accountsAsJson = JsonConvert.SerializeObject(associatedAccounts.Count <= MaxPermittedNumberOfAccountsOnClaim
             ? associatedAccounts
-            : new List<EmployerUserAccountItem>().ToDictionary(x => x.AccountId));
+            : new Dictionary<string, EmployerUserAccountItem>());
 
         var associatedAccountsClaim = new Claim(EmployerClaims.AccountsClaimsTypeIdentifier, accountsAsJson, JsonClaimValueTypes.Json);
 
