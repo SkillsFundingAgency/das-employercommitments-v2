@@ -25,8 +25,8 @@ public class BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper 
         {
             AccountHashedId = source.AccountHashedId,
             IsLevyAccount = result.IsLevyAccount,
-            TransferConnections = result.TransferConnections == null ? new List<TransferConnection>() : 
-                result.TransferConnections.Select(x=> new TransferConnection
+            TransferConnections = result.TransferConnections == null ? new List<TransferConnection>() :
+                result.TransferConnections.Select(x => new TransferConnection
                 {
                     FundingEmployerAccountId = x.FundingEmployerAccountId,
                     FundingEmployerPublicHashedAccountId = _encodingService.Encode(x.FundingEmployerAccountId, EncodingType.PublicAccountId),

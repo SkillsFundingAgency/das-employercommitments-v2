@@ -12,7 +12,7 @@ public class WhenMappingBaseSelectProviderRequestToTransferConnectionViewModelTe
 {
     private Mock<IApprovalsApiClient> _approvalsApiClient;
     private Mock<IEncodingService> _encodingService;
-    private BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper _mapper;        
+    private BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper _mapper;
     private BaseSelectProviderRequest _request;
     private GetSelectDirectTransferConnectionResponse _response;
 
@@ -40,17 +40,17 @@ public class WhenMappingBaseSelectProviderRequestToTransferConnectionViewModelTe
         var result = await _mapper.Map(_request);
 
         //Assert
-        _approvalsApiClient.Verify(x=>x.GetSelectDirectTransferConnection(_request.AccountId, CancellationToken.None));
+        _approvalsApiClient.Verify(x => x.GetSelectDirectTransferConnection(_request.AccountId, CancellationToken.None));
     }
 
     [Test]
     public async Task Then_List_Of_TransferConnections_Is_Mapped()
-    {   
+    {
         //Act
         var result = await _mapper.Map(_request);
 
         //Assert           
-        result.TransferConnections.Should().BeEquivalentTo(_response.TransferConnections.Select(x=> new TransferConnection
+        result.TransferConnections.Should().BeEquivalentTo(_response.TransferConnections.Select(x => new TransferConnection
         {
             FundingEmployerAccountId = x.FundingEmployerAccountId,
             FundingEmployerPublicHashedAccountId = "PublicAccountHashId",
