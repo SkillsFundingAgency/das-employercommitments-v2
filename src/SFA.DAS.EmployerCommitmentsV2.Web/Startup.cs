@@ -42,7 +42,7 @@ public class Startup
 
         services
             .AddDasEmployerAuthentication(_configuration)
-            .AddApplicationServices(employerCommitmentsV2Configuration)
+            .AddApplicationServices()
             .AddCommitmentsApiClient(_configuration)
             .AddAccountsApiClient(employerCommitmentsV2Configuration)
             .AddAuthorizationServices(_configuration)
