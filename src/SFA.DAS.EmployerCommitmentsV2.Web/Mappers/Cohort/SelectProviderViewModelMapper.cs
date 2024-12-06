@@ -4,7 +4,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, SelectProviderViewModel>
+public class SelectProviderViewModelMapper : IMapper<OG_CacheModel, SelectProviderViewModel>
 {
     private readonly IApprovalsApiClient _outerApiClient;
 
@@ -13,7 +13,7 @@ public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, Sele
         _outerApiClient = outerApiClient;
     }
 
-    public async Task<SelectProviderViewModel> Map(SelectProviderRequest source)
+    public async Task<SelectProviderViewModel> Map(OG_CacheModel source)
     {
         var selectProviderDetails = await _outerApiClient.GetSelectProviderDetails(source.AccountId, source.AccountLegalEntityId);
 
@@ -31,11 +31,12 @@ public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, Sele
             TransferSenderId = source.TransferSenderId,
             Origin = DetermineOrigin(source),
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
-            Providers = providers
+            Providers = providers,
+            OG_CacheKey = source.CacheKey
         };
     }
 
-    private static Origin DetermineOrigin(SelectProviderRequest source)
+    private static Origin DetermineOrigin(OG_CacheModel source)
     {
         if (source.ReservationId.HasValue)
         {

@@ -4,7 +4,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class AssignViewModelMapper : IMapper<AssignRequest, AssignViewModel>
+public class AssignViewModelMapper : IMapper<OG_CacheModel, AssignViewModel>
 {
     private readonly ICommitmentsApiClient _commitmentsApiClient;
 
@@ -13,7 +13,7 @@ public class AssignViewModelMapper : IMapper<AssignRequest, AssignViewModel>
         _commitmentsApiClient = commitmentsApiClient;
     }
 
-    public async Task<AssignViewModel> Map(AssignRequest request)
+    public async Task<AssignViewModel> Map(OG_CacheModel request)
     {
         var accountLegalEntity = await _commitmentsApiClient.GetAccountLegalEntity(request.AccountLegalEntityId);
 
@@ -27,7 +27,8 @@ public class AssignViewModelMapper : IMapper<AssignRequest, AssignViewModel>
             CourseCode = request.CourseCode,
             ProviderId = request.ProviderId,
             TransferSenderId = request.TransferSenderId,
-            EncodedPledgeApplicationId = request.EncodedPledgeApplicationId
+            EncodedPledgeApplicationId = request.EncodedPledgeApplicationId,
+            OG_CacheKey = request.CacheKey
         };
     }
 }

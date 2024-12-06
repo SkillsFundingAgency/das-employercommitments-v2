@@ -18,5 +18,6 @@ public class SelectProviderViewModel
     public Origin Origin { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
     public List<Provider> Providers { get; set; }
+    public Guid OG_CacheKey { get; set; }
 
 }

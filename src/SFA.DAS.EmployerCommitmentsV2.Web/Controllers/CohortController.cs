@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
@@ -157,9 +158,11 @@ public class CohortController : Controller
     }
 
     [Route("add/select-provider")]
-    public async Task<IActionResult> SelectProvider(SelectProviderRequest request)
+    public async Task<IActionResult> SelectProvider(Guid cacheKey)
     {
-        var viewModel = await _modelMapper.Map<SelectProviderViewModel>(request);
+        var cacheModel = await GetOG_CacheModelFromCache(cacheKey);
+
+        var viewModel = await _modelMapper.Map<SelectProviderViewModel>(cacheModel);
         return View(viewModel);
     }
 
@@ -171,16 +174,18 @@ public class CohortController : Controller
         {
             await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
 
-            var confirmProviderRequest = await _modelMapper.Map<ConfirmProviderRequest>(request);
-            return RedirectToAction("ConfirmProvider", confirmProviderRequest.CloneBaseValues());
+            var cacheModel = await GetOG_CacheModelFromCache(request.OG_CacheKey);
+            cacheModel.ProviderId = long.Parse(request.ProviderId);
+            await StoreOG_CacheModelInCache(cacheModel, cacheModel.CacheKey);
+
+            return RedirectToAction("ConfirmProvider", new { cacheModel.AccountHashedId, cacheModel.CacheKey });
         }
         catch (RestHttpClientException ex)
         {
             if (ex.StatusCode == HttpStatusCode.NotFound)
             {
                 ModelState.AddModelError(nameof(request.ProviderId), "Select a training provider");
-                var returnModel = await _modelMapper.Map<SelectProviderRequest>(request);
-                return RedirectToAction("SelectProvider", returnModel.CloneBaseValues());
+                return RedirectToAction("SelectProvider", new { request.AccountHashedId, request.OG_CacheKey });
             }
 
             _logger.LogError(ex, "Failed '{ControllerName)}.{ActionName}'", nameof(CohortController), nameof(SelectProvider));
@@ -195,30 +200,31 @@ public class CohortController : Controller
 
     [Route("add/confirm-provider")]
     [HttpGet]
-    public async Task<IActionResult> ConfirmProvider(ConfirmProviderRequest request)
+    public async Task<IActionResult> ConfirmProvider(Guid cacheKey)
     {
-        var model = await _modelMapper.Map<ConfirmProviderViewModel>(request);
+        var cacheModel = await GetOG_CacheModelFromCache(cacheKey);
+
+        var model = await _modelMapper.Map<ConfirmProviderViewModel>(cacheModel);
         return View(model);
     }
 
     [Route("add/confirm-provider")]
     [HttpPost]
-    public async Task<IActionResult> ConfirmProvider(ConfirmProviderViewModel model)
+    public IActionResult ConfirmProvider(ConfirmProviderViewModel model)
     {
         if (model.UseThisProvider.Value)
         {
-            var request = await _modelMapper.Map<AssignRequest>(model);
-            return RedirectToAction("assign", request.CloneBaseValues());
+            return RedirectToAction("assign", new { model.AccountHashedId, model.OG_CacheKey });
         }
 
-        var returnModel = await _modelMapper.Map<SelectProviderViewModel>(model);
-        return RedirectToAction("SelectProvider", returnModel);
+        return RedirectToAction("SelectProvider", new { model.AccountHashedId, model.OG_CacheKey });
     }
 
     [Route("add/assign")]
-    public async Task<IActionResult> Assign(AssignRequest request)
+    public async Task<IActionResult> Assign(Guid cacheKey)
     {
-        var viewModel = await _modelMapper.Map<AssignViewModel>(request);
+        var cacheModel = await GetOG_CacheModelFromCache(cacheKey);
+        var viewModel = await _modelMapper.Map<AssignViewModel>(cacheModel);
         return View(viewModel);
     }
 
