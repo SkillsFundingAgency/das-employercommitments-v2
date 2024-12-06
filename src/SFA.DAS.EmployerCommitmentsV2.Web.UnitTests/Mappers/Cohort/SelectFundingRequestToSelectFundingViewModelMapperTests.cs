@@ -21,7 +21,7 @@ public class SelectFundingRequestToSelectFundingViewModelMapperTests
         var autoFixture = new Fixture();
         _outerApiMock = new Mock<IApprovalsApiClient>();
         _fundingOptionsResponse = autoFixture.Create<GetSelectFundingOptionsResponse>();
-        _mapper = new SelectFundingViewModelMapper(_outerApiMock.Object);
+        _mapper = new SelectFundingViewModelMapper(_outerApiMock.Object, Mock.Of<ILogger<SelectFundingViewModelMapper>>());
         _source = autoFixture.Create<SelectFundingRequest>();
         _outerApiMock.Setup(x => x.GetSelectFundingOptions(_source.AccountId, CancellationToken.None)).ReturnsAsync(_fundingOptionsResponse);
         _result = await _mapper.Map(TestHelper.Clone(_source));
