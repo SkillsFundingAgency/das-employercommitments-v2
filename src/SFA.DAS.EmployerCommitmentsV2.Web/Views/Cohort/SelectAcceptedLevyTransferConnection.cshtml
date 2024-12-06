@@ -1,0 +1,62 @@
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+
+@{
+    ViewBag.Title = "Select transfer funds";
+    ViewBag.GaData.Vpv = "/unapproved/add/select-funding/select-accepted-levy-connection";
+}
+
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.SelectAcceptedLevyTransferConnectionViewModel
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <partial name="_ValidationSummary" />
+
+        <h1 class="govuk-heading-l"> @ViewBag.Title </h1>
+        
+        <p class="govuk-body">
+            These are your approved transfer funds.
+        </p>
+        
+        <p class="govuk-body">
+            if you cannot find the transfer you need, you can manage your transfers (opens in new tab)
+        </p>
+
+        <form method="post">
+
+            <h1 class="govuk-heading-m">Which transfer would you like to select?</h1>
+
+            @Html.AntiForgeryToken()
+
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" id="radio-lines">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <span id="error-message-@nameof(SelectAcceptedLevyTransferConnectionViewModel.ApplicationAndSenderHashedId)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(SelectAcceptedLevyTransferConnectionViewModel.ApplicationAndSenderHashedId)].Errors.First().ErrorMessage
+                        </span>
+                    }
+                    <div class="govuk-radios">
+                        @foreach (var entity in Model.Applications)
+                        {
+                            <div class="govuk-radios__item" id="radio-item-levytransfer-connection">
+                                <input class="govuk-radios__input" id="LevyTransferConnection-@entity.ApplicationAndSenderHashedId" name="ApplicationAndSenderHashedId" type="radio" value="@entity.ApplicationAndSenderHashedId">
+                                <label class="govuk-label govuk-radios__label" for="LevyTransferConnection-@entity.ApplicationAndSenderHashedId">
+                                    @entity.DisplayName
+                                </label>
+                            </div>
+                            <hr />
+                        }
+                    </div>
+                </fieldset>
+            </div>
+            <button type="submit" class="govuk-button" id="submit-levytransfer-connection">Continue</button>
+        </form>
+
+    </div>
+</div>
+
+@section Back
+{
+    <a href="@Url.Action("Inform", "Cohort", new { Model.AccountHashedId})" id="back-link" class="govuk-back-link">Back</a>
+}

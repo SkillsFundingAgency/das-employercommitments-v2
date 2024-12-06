@@ -567,7 +567,7 @@ public class CohortController : Controller
         return selectedFunding.FundingType switch
         {
             FundingType.DirectTransfers => RedirectToAction("SelectDirectTransferConnection", redirectRequest),
-            FundingType.LtmTransfers => RedirectToAction("SelectDirectTransferConnection", redirectRequest),
+            FundingType.LtmTransfers => RedirectToAction("SelectAcceptedLevyTransferConnection", redirectRequest),
             _ => RedirectToAction("SelectProvider", redirectRequest)
         };
     }
@@ -594,6 +594,31 @@ public class CohortController : Controller
             AccountLegalEntityHashedId = selectedTransferConnection.AccountLegalEntityHashedId,
         });
     }
+
+    [HttpGet]
+    [Route("add/select-funding/select-accepted-levy-connection")]
+    public async Task<IActionResult> SelectAcceptedLevyTransferConnection(BaseSelectProviderRequest request)
+    {
+        var viewModel = await _modelMapper.Map<SelectAcceptedLevyTransferConnectionViewModel>(request);
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route("add/select-funding/select-accepted-levy-connection")]
+    public ActionResult SelectAcceptedLevyTransferConnection(SelectAcceptedLevyTransferConnectionViewModel selectedLevyTransferConnection)
+    {
+        var ids = selectedLevyTransferConnection.ApplicationAndSenderHashedId.Split('|');
+
+        return RedirectToAction("SelectProvider", new BaseSelectProviderRequest
+        {
+            AccountHashedId = selectedLevyTransferConnection.AccountHashedId,
+            EncodedPledgeApplicationId = ids[0],
+            TransferSenderId = ids[1],
+            AccountLegalEntityHashedId = selectedLevyTransferConnection.AccountLegalEntityHashedId,
+        });
+    }
+
 
     [HttpGet]
     [Route("AgreementNotSigned")]

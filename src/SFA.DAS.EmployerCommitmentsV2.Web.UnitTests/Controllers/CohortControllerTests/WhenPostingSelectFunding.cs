@@ -69,7 +69,7 @@ public class WhenPostingSelectFunding
 
         //Assert
         var redirectToActionResult = result as RedirectToActionResult;
-        redirectToActionResult.ActionName.Should().Be("SelectDirectTransferConnection");
+        redirectToActionResult.ActionName.Should().Be("SelectAcceptedLevyTransferConnection");
     }
 
 }
