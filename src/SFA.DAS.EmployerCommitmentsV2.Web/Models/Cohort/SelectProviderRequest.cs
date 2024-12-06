@@ -11,6 +11,7 @@ public class SelectProviderRequest : BaseSelectProviderRequest
 public class BaseSelectProviderRequest : IndexRequest
 {
     public string TransferSenderId { get; set; }
+    public FundingType? FundingType { get; set; }
     public Origin Origin { get; set; }
 
     [FromQuery]

@@ -28,7 +28,8 @@ public class ConfirmProviderViewModelMapper : IMapper<ConfirmProviderRequest, Co
             ProviderId = source.ProviderId,
             ProviderName = providerResponse.Name,
             TransferSenderId = source.TransferSenderId,
-            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
+            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
+            FundingType = source.FundingType
         };
 
         return result;
