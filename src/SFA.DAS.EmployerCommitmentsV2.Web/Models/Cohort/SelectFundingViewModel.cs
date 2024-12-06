@@ -26,5 +26,6 @@ public enum FundingType : short
 {
     DirectTransfers = 1,
     UnallocatedReservations = 2,
-    AdditionalReservations = 3
+    AdditionalReservations = 3,
+    CurrentLevy = 4
 }
