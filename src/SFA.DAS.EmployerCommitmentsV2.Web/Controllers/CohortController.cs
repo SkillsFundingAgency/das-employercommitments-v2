@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
@@ -162,6 +161,11 @@ public class CohortController : Controller
     {
         var cacheModel = await GetOG_CacheModelFromCache(cacheKey);
 
+        _encodingService.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out var id);
+        cacheModel.AccountLegalEntityId = id;
+
+        await StoreOG_CacheModelInCache(cacheModel, cacheModel.CacheKey);
+
         var viewModel = await _modelMapper.Map<SelectProviderViewModel>(cacheModel);
         return View(viewModel);
     }
@@ -221,9 +225,9 @@ public class CohortController : Controller
     }
 
     [Route("add/assign")]
-    public async Task<IActionResult> Assign(Guid cacheKey)
+    public async Task<IActionResult> Assign(Guid OG_CacheKey)
     {
-        var cacheModel = await GetOG_CacheModelFromCache(cacheKey);
+        var cacheModel = await GetOG_CacheModelFromCache(OG_CacheKey);
         var viewModel = await _modelMapper.Map<AssignViewModel>(cacheModel);
         return View(viewModel);
     }
@@ -463,7 +467,7 @@ public class CohortController : Controller
 
         var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(cacheModel);
 
-        if (viewModel.TransferConnections.Count == 0)
+        if (viewModel.TransferConnections.Count > 0)
         {
             return View(viewModel);
         }
@@ -482,11 +486,11 @@ public class CohortController : Controller
 
         var transferConnectionCode = selectedTransferConnection.TransferConnectionCode.Equals("None", StringComparison.InvariantCultureIgnoreCase)
             ? null : selectedTransferConnection.TransferConnectionCode;
-        
+
         cacheModel.TransferConnectionCode = transferConnectionCode;
         await StoreOG_CacheModelInCache(cacheModel, cacheModel.CacheKey);
 
-        return RedirectToAction("SelectLegalEntity", new { selectedTransferConnection.AccountHashedId, cacheModel.CacheKey});
+        return RedirectToAction("SelectLegalEntity", new { selectedTransferConnection.AccountHashedId, cacheModel.CacheKey });
     }
 
     [HttpGet]
@@ -515,8 +519,7 @@ public class CohortController : Controller
 
         if (hasSignedMinimumRequiredAgreementVersion)
         {
-            // WILLOG follow this request and replace with just GUID.
-            return RedirectToAction("SelectProvider", new { cacheModel.AccountHashedId, cacheModel.CacheKey });           
+            return RedirectToAction("SelectProvider", new { cacheModel.AccountHashedId, cacheModel.CacheKey });
         }
 
         var model = new LegalEntitySignedAgreementViewModel
@@ -538,20 +541,16 @@ public class CohortController : Controller
     [Route("add/legal-entity")]
     public async Task<ActionResult> SetLegalEntity(SelectLegalEntityViewModel selectedLegalEntity)
     {
-
-        // add selected legal entity id to cache model
         var cacheModel = await GetOG_CacheModelFromCache(selectedLegalEntity.OG_CacheKey);
 
         var response = await _modelMapper.Map<LegalEntitySignedAgreementViewModel>(selectedLegalEntity);
 
-        cacheModel.AccountLegalEntityId = response.AccountLegalEntityId;
         cacheModel.AccountLegalEntityHashedId = response.AccountLegalEntityHashedId;
         await StoreOG_CacheModelInCache(cacheModel, cacheModel.CacheKey);
 
         if (response.HasSignedMinimumRequiredAgreementVersion)
         {
-            //WILLOG also do the same here just send GUID
-            return RedirectToAction("SelectProvider", new {cacheModel.AccountHashedId, cacheModel.CacheKey});
+            return RedirectToAction("SelectProvider", new { cacheModel.AccountHashedId, cacheModel.CacheKey });
         }
 
         var model = new LegalEntitySignedAgreementViewModel
@@ -592,7 +591,7 @@ public class CohortController : Controller
         }
         return null;
     }
-    
+
     private async Task StoreOG_CacheModelInCache(OG_CacheModel model, Guid? key)
     {
         if (key.IsNotNullOrEmpty())
