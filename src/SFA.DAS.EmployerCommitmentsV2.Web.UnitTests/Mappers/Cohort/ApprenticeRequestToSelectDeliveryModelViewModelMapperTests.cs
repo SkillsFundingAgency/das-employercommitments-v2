@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 [TestFixture]
 public class ApprenticeRequestToSelectDeliveryModelViewModelMapperTests
 {
-    private ApprenticeRequestToSelectDeliveryModelViewModelMapper _mapper;
+    private AddApprenticeshipCacheModelToSelectDeliveryModelViewModelMapper _mapper;
     private ApprenticeRequest _source;
     private Mock<IApprovalsApiClient> _approvalsApiClient;
     private ProviderCourseDeliveryModels _providerCourseDeliveryModels;
@@ -44,7 +44,7 @@ public class ApprenticeRequestToSelectDeliveryModelViewModelMapperTests
         _approvalsApiClient = new Mock<IApprovalsApiClient>();
         _approvalsApiClient.Setup(x => x.GetProviderCourseDeliveryModels(_providerId, _courseCode, _accountLegalEntityId, It.IsAny<CancellationToken>())).ReturnsAsync(_providerCourseDeliveryModels);
 
-        _mapper = new ApprenticeRequestToSelectDeliveryModelViewModelMapper(_approvalsApiClient.Object);
+        _mapper = new AddApprenticeshipCacheModelToSelectDeliveryModelViewModelMapper(_approvalsApiClient.Object);
         _result = await _mapper.Map(TestHelper.Clone(_source));
     }
 

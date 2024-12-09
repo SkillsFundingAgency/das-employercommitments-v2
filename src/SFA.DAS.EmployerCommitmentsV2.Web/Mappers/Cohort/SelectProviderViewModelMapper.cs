@@ -4,18 +4,11 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class SelectProviderViewModelMapper : IMapper<OG_CacheModel, SelectProviderViewModel>
+public class SelectProviderViewModelMapper(IApprovalsApiClient outerApiClient) : IMapper<AddApprenticeshipCacheModel, SelectProviderViewModel>
 {
-    private readonly IApprovalsApiClient _outerApiClient;
-
-    public SelectProviderViewModelMapper(IApprovalsApiClient outerApiClient)
+    public async Task<SelectProviderViewModel> Map(AddApprenticeshipCacheModel source)
     {
-        _outerApiClient = outerApiClient;
-    }
-
-    public async Task<SelectProviderViewModel> Map(OG_CacheModel source)
-    {
-        var selectProviderDetails = await _outerApiClient.GetSelectProviderDetails(source.AccountId, source.AccountLegalEntityId);
+        var selectProviderDetails = await outerApiClient.GetSelectProviderDetails(source.AccountId, source.AccountLegalEntityId);
 
         var providers = selectProviderDetails.Providers.ToList();
         var accountLegalEntity = selectProviderDetails.AccountLegalEntity;
@@ -32,11 +25,11 @@ public class SelectProviderViewModelMapper : IMapper<OG_CacheModel, SelectProvid
             Origin = DetermineOrigin(source),
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
             Providers = providers,
-            OG_CacheKey = source.CacheKey
+            AddApprenticeshipCacheKey = source.CacheKey
         };
     }
 
-    private static Origin DetermineOrigin(OG_CacheModel source)
+    private static Origin DetermineOrigin(AddApprenticeshipCacheModel source)
     {
         if (source.ReservationId.HasValue)
         {

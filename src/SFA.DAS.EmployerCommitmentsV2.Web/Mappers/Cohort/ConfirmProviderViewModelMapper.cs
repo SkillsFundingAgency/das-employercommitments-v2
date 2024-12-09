@@ -4,18 +4,11 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class ConfirmProviderViewModelMapper : IMapper<OG_CacheModel, ConfirmProviderViewModel>
+public class ConfirmProviderViewModelMapper(ICommitmentsApiClient commitmentsApiClient) : IMapper<AddApprenticeshipCacheModel, ConfirmProviderViewModel>
 {
-    private readonly ICommitmentsApiClient _commitmentsApiClient;
-
-    public ConfirmProviderViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
+    public async Task<ConfirmProviderViewModel> Map(AddApprenticeshipCacheModel source)
     {
-        _commitmentsApiClient = commitmentsApiClient;
-    }
-        
-    public async Task<ConfirmProviderViewModel> Map(OG_CacheModel source)
-    {
-        var providerResponse = await _commitmentsApiClient.GetProvider(source.ProviderId);
+        var providerResponse = await commitmentsApiClient.GetProvider(source.ProviderId);
 
         var result = new ConfirmProviderViewModel
         {
@@ -29,7 +22,7 @@ public class ConfirmProviderViewModelMapper : IMapper<OG_CacheModel, ConfirmProv
             ProviderName = providerResponse.Name,
             TransferSenderId = source.TransferSenderId,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
-            OG_CacheKey = source.CacheKey
+            AddApprenticeshipCacheKey = source.CacheKey
         };
 
         return result;

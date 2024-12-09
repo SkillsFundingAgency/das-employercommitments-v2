@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 [TestFixture]
 public class ApprenticeRequestToSelectCourseViewModelMapperTests
 {
-    private ApprenticeRequestToSelectCourseViewModelMapper _mapper;
+    private AddApprenticeshipCacheModelToSelectCourseViewModelMapper _mapper;
     private ApprenticeRequest _source;
     private Mock<ICommitmentsApiClient> _commitmentsApiClient;
     private AccountLegalEntityResponse _accountLegalEntityResponse;
@@ -42,7 +42,7 @@ public class ApprenticeRequestToSelectCourseViewModelMapperTests
                 TrainingProgrammes = _standardTrainingProgrammes
             });
 
-        _mapper = new ApprenticeRequestToSelectCourseViewModelMapper(_commitmentsApiClient.Object);
+        _mapper = new AddApprenticeshipCacheModelToSelectCourseViewModelMapper(_commitmentsApiClient.Object);
 
         _result = await _mapper.Map(TestHelper.Clone(_source));
     }

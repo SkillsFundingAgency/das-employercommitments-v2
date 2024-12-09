@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 public class WhenMappingChooseOrganisationRequestToSelectLegalEntityViewModelTests
 {       
     private Mock<IApprovalsApiClient> _apiClient;
-    private SelectLegalEntityRequestToSelectLegalEntityViewModelMapper _mapper;
+    private AddApprenticeshipCacheModelToSelectLegalEntityViewModelMapper _mapper;
     private SelectLegalEntityRequest _chooseOrganisationRequest;
     private Mock<IEncodingService> _encodingService;
     private LegalEntity _legalEntity;
@@ -36,7 +36,7 @@ public class WhenMappingChooseOrganisationRequestToSelectLegalEntityViewModelTes
                 }
             });
             
-        _mapper = new SelectLegalEntityRequestToSelectLegalEntityViewModelMapper(_apiClient.Object, _encodingService.Object);
+        _mapper = new AddApprenticeshipCacheModelToSelectLegalEntityViewModelMapper(_apiClient.Object, _encodingService.Object);
     }
 
     [Test]

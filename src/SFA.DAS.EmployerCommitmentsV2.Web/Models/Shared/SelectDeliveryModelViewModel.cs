@@ -20,4 +20,6 @@ public class SelectDeliveryModelViewModel
     public string TransferSenderId { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
     public Guid? CacheKey { get; set; }
+    public Guid? AddApprenticeshipCacheKey { get; set; }
+
 }

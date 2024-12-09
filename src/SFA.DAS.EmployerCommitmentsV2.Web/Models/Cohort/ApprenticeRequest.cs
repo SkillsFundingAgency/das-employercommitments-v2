@@ -11,11 +11,10 @@ public class ApprenticeRequest : BaseApprenticeRequest
 
 public class BaseApprenticeRequest : IndexRequest
 {
-    public Guid? CacheKey { get; set; }
+    public Guid? AddApprenticeshipCacheKey { get; set; }
     public long ProviderId { get; set; }
     public string LegalEntityName { get; set; }
     public string TransferSenderId { get; set; }
-    public Origin Origin { get; set; }
     public DeliveryModel? DeliveryModel { get; set; }
 
     [FromQuery]

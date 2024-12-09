@@ -119,10 +119,4 @@ public class ApprenticeViewModelMapperTests
     {
         Assert.That(_result.EncodedPledgeApplicationId, Is.EqualTo(_source.EncodedPledgeApplicationId));
     }
-
-    [Test]
-    public void OriginIsMappedCorrectly()
-    {
-        Assert.That(_result.Origin, Is.EqualTo(_source.Origin));
-    }
 }

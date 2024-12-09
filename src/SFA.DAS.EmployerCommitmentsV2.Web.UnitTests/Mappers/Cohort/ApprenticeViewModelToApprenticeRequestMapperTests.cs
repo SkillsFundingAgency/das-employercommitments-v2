@@ -95,12 +95,6 @@ public class ApprenticeViewModelToApprenticeRequestMapperTests
     }
 
     [Test]
-    public void OriginIsMappedCorrectly()
-    {
-        Assert.That(_result.Origin, Is.EqualTo(_source.Origin));
-    }
-
-    [Test]
     public void DeliveryModelIsMappedCorrectly()
     {
         Assert.That(_result.DeliveryModel, Is.EqualTo(_source.DeliveryModel));

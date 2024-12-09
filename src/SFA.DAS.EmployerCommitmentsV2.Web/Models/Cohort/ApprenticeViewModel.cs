@@ -9,8 +9,7 @@ public class ApprenticeViewModel : DraftApprenticeshipViewModel
     public string LegalEntityName { get; set; }
     public string TransferSenderId { get; set; }
     public long? DecodedTransferSenderId { get; set; }
-    public Origin Origin { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
     public long? PledgeApplicationId { get; set; }
-    public Guid? CacheKey { get; set; }
+    public Guid? AddApprenticeshipCacheKey { get; set; }
 }
