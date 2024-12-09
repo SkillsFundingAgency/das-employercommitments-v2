@@ -152,7 +152,22 @@ public class CohortController : Controller
     [Route("add")]
     public async Task<IActionResult> Index(IndexRequest request)
     {
+        var cacheModel = new AddApprenticeshipCacheModel
+        {
+            CacheKey = Guid.NewGuid(),
+            AccountHashedId = request.AccountHashedId,
+            AccountId = request.AccountId,
+            ReservationId = request.ReservationId,
+            AccountLegalEntityHashedId = request.AccountLegalEntityHashedId,
+            StartMonthYear = request.StartMonthYear,
+            CourseCode = request.CourseCode
+        };
+
+        await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.CacheKey);
+
         var viewModel = await _modelMapper.Map<IndexViewModel>(request);
+        viewModel.AddApprenticeshipCacheKey = cacheModel.CacheKey;
+
         return View(viewModel);
     }
 

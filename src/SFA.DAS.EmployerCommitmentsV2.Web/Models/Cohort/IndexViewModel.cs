@@ -9,6 +9,7 @@ public class IndexViewModel
     public string CourseCode { get; set; }
     public Origin Origin { get; set; }
     public bool IsLevyFunded { get; set; }
+    public Guid? AddApprenticeshipCacheKey { get; set; }
 
     public virtual Dictionary<string, string> ToDictionary()
     {
@@ -25,7 +26,9 @@ public class IndexViewModel
             dictionary.Add(nameof(StartMonthYear), StartMonthYear);
         if (!string.IsNullOrWhiteSpace(CourseCode))
             dictionary.Add(nameof(CourseCode), CourseCode);
-            
+        if (AddApprenticeshipCacheKey.HasValue)
+            dictionary.Add(nameof(AddApprenticeshipCacheKey), AddApprenticeshipCacheKey.ToString());
+
         return dictionary;
     }
 }
