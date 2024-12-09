@@ -16,7 +16,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
 
 public class EmployerAccountAuthorisationHandler(
     IHttpContextAccessor httpContextAccessor,
-    IAssociatedAccountsService associatedAccountsService,
+    IAccountClaimsService iAccountClaimsService,
     ILogger<EmployerAccountAuthorisationHandler> logger)
     : IEmployerAccountAuthorisationHandler
 {
@@ -31,7 +31,7 @@ public class EmployerAccountAuthorisationHandler(
 
         try
         {
-            employerAccounts = await associatedAccountsService.GetAccounts(forceRefresh: false);
+            employerAccounts = await iAccountClaimsService.GetAssociatedAccounts(forceRefresh: false);
         }
         catch (Exception e)
         {
@@ -57,7 +57,7 @@ public class EmployerAccountAuthorisationHandler(
                 return false;
             }
 
-            var updatedEmployerAccounts = await associatedAccountsService.GetAccounts(forceRefresh: true);
+            var updatedEmployerAccounts = await iAccountClaimsService.GetAssociatedAccounts(forceRefresh: true);
 
             if (!updatedEmployerAccounts.ContainsKey(accountIdFromUrl))
             {
