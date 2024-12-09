@@ -124,7 +124,7 @@ public class WhenAddingServicesToTheContainer
         services.AddConfigurationOptions(configuration);
         services.AddDistributedMemoryCache();
         services.AddModelMappings();
-        services.AddCommitmentPermissionsApiClient();
+        services.AddCommitmentPermissionsApiClient(configuration);
         services.AddApplicationServices(employerCommitmentsV2Configuration);
         services.AddModelMappings();
         services.AddDasMvc();
