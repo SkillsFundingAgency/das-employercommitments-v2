@@ -43,7 +43,7 @@ public class AccountClaimsService(IGovAuthEmployerAccountService accountsService
             }
             catch (JsonSerializationException e)
             {
-                logger.LogError(e, "Could not deserialize employer account claim for user");
+                logger.LogError(e, "Could not retrieve employer accounts for user");
                 throw;
             }
         }
