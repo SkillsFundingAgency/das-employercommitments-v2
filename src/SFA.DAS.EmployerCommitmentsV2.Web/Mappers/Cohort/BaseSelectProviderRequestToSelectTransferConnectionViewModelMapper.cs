@@ -32,6 +32,8 @@ public class BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper 
                     FundingEmployerPublicHashedAccountId = _encodingService.Encode(x.FundingEmployerAccountId, EncodingType.PublicAccountId),
                     FundingEmployerHashedAccountId = _encodingService.Encode(x.FundingEmployerAccountId, EncodingType.AccountId),
                     FundingEmployerAccountName = x.FundingEmployerAccountName,
+                    Status = x.Status,
+                    StatusAssignedOn = x.StatusAssignedOn
                 }).ToList()
         };
     }
