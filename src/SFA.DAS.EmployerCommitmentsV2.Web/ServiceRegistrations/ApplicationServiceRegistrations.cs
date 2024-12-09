@@ -34,7 +34,7 @@ public static class ApplicationServiceRegistrations
         services.AddSingleton<ICreateCsvService, CreateCsvService>();
         services.AddSingleton<IAcademicYearDateProvider, AcademicYearDateProvider>();
         services.AddSingleton<ICacheStorageService, CacheStorageService>();
-        services.AddTransient<IAssociatedAccountsService, AssociatedAccountsService>();
+        services.AddTransient<IAccountClaimsService, AccountClaimsService>();
         
         return services;
     }
