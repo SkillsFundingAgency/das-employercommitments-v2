@@ -1,8 +1,9 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using FluentAssertions;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
@@ -44,9 +45,10 @@ public class WhenSelectTransferConnection
     public void TearDown() => _controller?.Dispose();
 
     [Test]
-    public async Task Then_User_Is_Redirected_To_SelectLegalEntity_Page()
+    public async Task And_Transfers_List_Is_Empty_Then_User_Is_Redirected_To_SelectLegalEntity_Page()
     {
         //Arrange          
+        _informViewModel.IsLevyAccount = false;
         _informViewModel.TransferConnections = new List<TransferConnection>();
 
         //Act
@@ -54,7 +56,21 @@ public class WhenSelectTransferConnection
 
         //Assert
         var redirectToActionResult = result as RedirectToActionResult;
-        Assert.That(redirectToActionResult.ActionName, Is.EqualTo("SelectLegalEntity"));
+        redirectToActionResult.ActionName.Should().Be("SelectLegalEntity");
+    }
+
+    [Test]
+    public async Task And_Transfers_List_Is_Not_Empty_But_Is_Non_Levy_Then_User_Is_Redirected_To_SelectLegalEntity_Page()
+    {
+        //Arrange          
+        _informViewModel.IsLevyAccount = false;
+
+        //Act
+        var result = await _controller.SelectTransferConnection(_informRequest);
+
+        //Assert
+        var redirectToActionResult = result as RedirectToActionResult;
+        redirectToActionResult.ActionName.Should().Be("SelectLegalEntity");
     }
 
     [Test]
@@ -67,11 +83,8 @@ public class WhenSelectTransferConnection
         var viewResult = result as ViewResult;
         var viewModel = viewResult.Model;
         
-        Assert.Multiple(() =>
-        {
-            Assert.That(viewModel, Is.InstanceOf<SelectTransferConnectionViewModel>());
-            Assert.That((SelectTransferConnectionViewModel)viewModel, Is.EqualTo(_informViewModel));
-        });
+        viewModel.Should().BeOfType<SelectTransferConnectionViewModel>();
+        ((SelectTransferConnectionViewModel)viewModel).Should().Be(_informViewModel);
     }
 
     [Test]
@@ -82,6 +95,6 @@ public class WhenSelectTransferConnection
 
         //Assert
         var redirectToActionResult = result as RedirectToActionResult;
-        Assert.That(redirectToActionResult.ActionName, Is.EqualTo("SelectLegalEntity"));
+        redirectToActionResult.ActionName.Should().Be("SelectLegalEntity");
     }
 }

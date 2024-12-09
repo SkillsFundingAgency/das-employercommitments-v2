@@ -51,4 +51,31 @@ public class ApprovalsApiClientTests
 
         actual.Should().BeSameAs(response);
     }
+
+
+    [Test, AutoData]
+    public async Task When_Calling_GetSelectFundingOptions_Then_The_Data_Is_Returned(long accountId, GetSelectFundingOptionsResponse response)
+    {
+        var outerApiClient = new Mock<IOuterApiClient>();
+        var expectedUrl = $"{accountId}/unapproved/add/select-funding";
+        outerApiClient.Setup(x => x.Get<GetSelectFundingOptionsResponse>(expectedUrl)).ReturnsAsync(response);
+        var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
+
+        var actual = await approvalsApiClient.GetSelectFundingOptions(accountId);
+
+        actual.Should().BeSameAs(response);
+    }
+
+    [Test, AutoData]
+    public async Task When_Calling_GetSelectDirectTransferConnections_Then_The_Data_Is_Returned(long accountId, GetSelectDirectTransferConnectionResponse response)
+    {
+        var outerApiClient = new Mock<IOuterApiClient>();
+        var expectedUrl = $"{accountId}/unapproved/add/select-funding/select-direct-connection";
+        outerApiClient.Setup(x => x.Get<GetSelectDirectTransferConnectionResponse>(expectedUrl)).ReturnsAsync(response);
+        var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
+
+        var actual = await approvalsApiClient.GetSelectDirectTransferConnection(accountId);
+
+        actual.Should().BeSameAs(response);
+    }
 }

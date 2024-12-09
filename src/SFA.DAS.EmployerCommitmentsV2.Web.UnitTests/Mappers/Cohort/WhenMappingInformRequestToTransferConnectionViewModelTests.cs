@@ -1,90 +1,60 @@
-﻿using SFA.DAS.EAS.Account.Api.Client;
-using SFA.DAS.EAS.Account.Api.Types;
+﻿using FluentAssertions;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
 [TestFixture]
 public class WhenMappingInformRequestToTransferConnectionViewModelTests
 {
-    private Mock<IAccountApiClient> _accountApiClient;
-    private Mock<IEncodingService> _encodingService;
+    private Mock<IApprovalsApiClient> _approvalsApiClient;
     private InformRequestToSelectTransferConnectionViewModelMapper _mapper;        
     private InformRequest _informRequest;
+    private GetSelectDirectTransferConnectionResponse _response;
 
     [SetUp]
     public void Arrange()
     {
         var autoFixture = new Fixture();
-        _accountApiClient = new Mock<IAccountApiClient>();
-        _encodingService = new Mock<IEncodingService>();
-        _informRequest = autoFixture.Create<InformRequest>(); 
+        _approvalsApiClient = new Mock<IApprovalsApiClient>();
+        _informRequest = autoFixture.Create<InformRequest>();
+        _response = autoFixture.Create<GetSelectDirectTransferConnectionResponse>();
 
-        _accountApiClient.Setup(x => x.GetTransferConnections(_informRequest.AccountHashedId))
-            .ReturnsAsync(new List<TransferConnectionViewModel>
-            {
-                new()
-                {
-                    FundingEmployerAccountId = 1234,
-                    FundingEmployerAccountName = "FirstAccountName",
-                    FundingEmployerHashedAccountId = "FAN"
-                },
-                new()
-                {
-                    FundingEmployerAccountId = 1235,
-                    FundingEmployerAccountName = "SecondAccountName",
-                    FundingEmployerHashedAccountId = "SAN"
-                }
+        _approvalsApiClient.Setup(x => x.GetSelectDirectTransferConnection(_informRequest.AccountId, CancellationToken.None))
+            .ReturnsAsync(_response);
 
-            });
-
-        _mapper = new InformRequestToSelectTransferConnectionViewModelMapper(_accountApiClient.Object, _encodingService.Object);
+        _mapper = new InformRequestToSelectTransferConnectionViewModelMapper(_approvalsApiClient.Object, Mock.Of<ILogger<InformRequestToSelectTransferConnectionViewModelMapper>>());
     }
 
     [Test]
-    public async Task Then_AccountHashedId_Is_Mapped()
+    public async Task Then_AccountId_Is_Mapped()
     {
         //Act
         var result = await _mapper.Map(_informRequest);
 
-        //Assert           
-        Assert.That(result.AccountHashedId, Is.EqualTo(_informRequest.AccountHashedId));
+        //Assert
+        _approvalsApiClient.Verify(x=>x.GetSelectDirectTransferConnection(_informRequest.AccountId, CancellationToken.None));
     }
 
     [Test]
-    public async Task Then_Non_Empty_List_Of_TransferConnections_Is_Mapped()
+    public async Task Then_List_Of_TransferConnections_Is_Mapped()
     {   
         //Act
         var result = await _mapper.Map(_informRequest);
 
         //Assert           
-        Assert.That(result.TransferConnections, Has.Count.EqualTo(2));
+        result.TransferConnections.Should().BeEquivalentTo(_response.TransferConnections);
     }
 
     [Test]
-    public async Task Then_Empty_List_Of_TransferConnections_Is_Mapped()
+    public async Task Then_LevyStatus_Is_Mapped()
     {
-        //Arrange
-        _accountApiClient.Setup(x => x.GetTransferConnections(_informRequest.AccountHashedId))
-            .ReturnsAsync(new List<TransferConnectionViewModel>());
-
         //Act
         var result = await _mapper.Map(_informRequest);
 
         //Assert           
-        Assert.That(result.TransferConnections, Is.Empty);
-    }
-
-    [Test]
-    public async Task Then_GetTransferConnections_Is_Called()
-    {
-        //Act
-        await _mapper.Map(_informRequest);
-
-        //Assert
-        _accountApiClient.Verify(x => x.GetTransferConnections(It.Is<String>(c => c == _informRequest.AccountHashedId)),                   
-            Times.Once);
+        result.IsLevyAccount.Should().Be(_response.IsLevyAccount);
     }
 }

@@ -14,7 +14,8 @@ public class SelectProviderRequestMapper : IMapper<SelectProviderViewModel, Sele
             CourseCode = source.CourseCode,
             ReservationId = source.ReservationId,
             StartMonthYear = source.StartMonthYear,
-            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
+            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
+            FundingType = source.FundingType
         });
     }
 }
