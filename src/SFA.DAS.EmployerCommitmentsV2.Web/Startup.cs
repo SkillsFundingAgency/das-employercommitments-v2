@@ -5,7 +5,6 @@ using OpenTelemetry.Logs;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
-using SFA.DAS.EmployerCommitmentsV2.Web.Middleware;
 using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 using SFA.DAS.EmployerUrlHelper.DependencyResolution;
 
@@ -42,7 +41,7 @@ public class Startup
 
         services
             .AddDasEmployerAuthentication(_configuration)
-            .AddApplicationServices(employerCommitmentsV2Configuration)
+            .AddApplicationServices()
             .AddCommitmentsApiClient(_configuration)
             .AddAccountsApiClient(employerCommitmentsV2Configuration)
             .AddAuthorizationServices(_configuration)
@@ -68,7 +67,6 @@ public class Startup
             .UseAuthentication()
             .UseRouting()
             .UseAuthorization()
-            .UseMiddleware<MissingClaimsMiddleware>()
             .UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute()
             );
     }

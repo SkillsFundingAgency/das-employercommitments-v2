@@ -8,4 +8,9 @@ public static class Constants
         public const int NumberOfApprenticesRequiredForSearch = 10;
         public const int NumberOfApprenticesPerDownloadPage = 200;
     }
+    
+    public static class WebConstants
+    {
+        public const int MaxNumberOfEmployerAccountsAllowedOnClaim = 50;
+    }
 }
