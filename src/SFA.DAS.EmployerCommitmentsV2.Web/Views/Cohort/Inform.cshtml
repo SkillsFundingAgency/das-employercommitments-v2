@@ -8,17 +8,20 @@
 }
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-three-quarters">
+    <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-l">Add an apprentice</h1>
 
-        <p class="govuk-body">Add details of one or more apprentices to your account, and authorise payments to your training provider.</p>
-        
+        <p class="govuk-body">Add details of one or more apprentices to your account, and authorise payments to your
+            training provider.</p>
+
         @if (!Model.IsLevyFunded)
         {
             <h2 class="govuk-heading-m">Funding</h2>
             <p class="govuk-body">
-                If you have not reserved funds for this apprenticeship yet, adding a new apprentice will reserve funds for you. 
-                If you have reserved funds or have transfer funds available, you can select one whilst adding a new apprentice.
+                If you have not reserved funds for this apprenticeship yet, adding a new apprentice will reserve funds for
+                you.
+                If you have reserved funds or have transfer funds available, you can select one whilst adding a new
+                apprentice.
             </p>
         }
 
@@ -29,42 +32,61 @@
             <li>have a <b>training provider</b></li>
             <li>know the <b>legal name</b> and <b>email address</b> of your apprentice</li>
             <li>know the <b>course name</b> and <b>start date</b></li>
-            <li>have <b>authority to act</b> for the organisation that's named on the contract you have with your training provider (<a href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)" class="govuk-link">view your organisations</a>)</li>
-            <li>make sure the <b>PAYE scheme</b> that the apprentices will be paid through is added to your account (<a href="@LinkGenerator.PayeSchemes(Model.AccountHashedId)" class="govuk-link">view your PAYE schemes</a>)</li>
+            <li>have <b>authority to act</b> for the organisation that's named on the contract you have with your
+                training provider (<a href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)"
+                    class="govuk-link">view your organisations</a>)</li>
+            <li>make sure the <b>PAYE scheme</b> that the apprentices will be paid through is added to your account (<a
+                    href="@LinkGenerator.PayeSchemes(Model.AccountHashedId)" class="govuk-link">view your PAYE
+                    schemes</a>)</li>
         </ul>
-        
-        <a asp-action="SelectTransferConnection" id="continue-button" asp-route-accountHashedId="@Model.AccountHashedId" role="button" draggable="false" class="govuk-button govuk-button--start">
+
+        <a asp-action="SelectTransferConnection" id="continue-button" asp-route-accountHashedId="@Model.AccountHashedId"
+            role="button" draggable="false" class="govuk-button govuk-button--start">
             Start now
             <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19"
-                 viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+                viewBox="0 0 33 40" aria-hidden="true" focusable="false">
                 <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
             </svg>
         </a>
     </div>
-    <div class="govuk-grid-column-one-quarter">
-        <h1 class="govuk-heading-s">Useful links</h1>
-        <p class="govuk-body-s">
-            The following links open in a new tab:
-            <br/>
-            @if (!Model.IsLevyFunded)
-            {
-                <a class="govuk-link" href="https://www.gov.uk/employing-an-apprentice/get-funding" target="_blank">Get funding for apprenticeship training</a>
-                <br />
-                <a class="govuk-link" href="https://www.gov.uk/government/publications/apprenticeship-funding/apprenticeship-funding-for-employers-who-do-not-pay-the-apprenticeship-levy" target="_blank">Reserving funds for an apprentice</a>
-                <br />
-                <a class="govuk-link" href="https://www.gov.uk/guidance/receive-a-levy-transfer-from-another-business-to-fund-an-apprenticeship" target="_blank">Receiving a transfer to fund an apprentice</a>
-            }
-            else
-            {
-                <a class="govuk-link" href="https://www.gov.uk/government/publications/apprenticeship-funding/apprenticeship-funding" target="_blank">Apprenticeship funding</a>
-                <br/>
-                <a class="govuk-link" href="https://www.gov.uk/guidance/receive-a-levy-transfer-from-another-business-to-fund-an-apprenticeship" target="_blank">Receiving a transfer to fund an apprentice</a>
-            }
-        </p>
+    <div class="govuk-grid-column-one-third">
+        <div class="app-section">
+            <h2 class="govuk-heading-s">Useful links</h2>
+            <p class="govuk-body-s">
+                The following links open in a new tab:
+            </p>
+            <ul class="govuk-list govuk-list--spaced">
+                @if (!Model.IsLevyFunded)
+                {
+                    <li><a class="govuk-link" href="https://www.gov.uk/employing-an-apprentice/get-funding"
+                            target="_blank">Get
+                            funding for apprenticeship training</a></li>
+
+                    <li><a class="govuk-link"
+                            href="https://www.gov.uk/government/publications/apprenticeship-funding/apprenticeship-funding-for-employers-who-do-not-pay-the-apprenticeship-levy"
+                            target="_blank">Reserving funds for an apprentice</a></li>
+
+                    <li><a class="govuk-link"
+                            href="https://www.gov.uk/guidance/receive-a-levy-transfer-from-another-business-to-fund-an-apprenticeship"
+                            target="_blank">Receiving a transfer to fund an apprentice</a></li>
+                }
+                else
+                {
+                    <li><a class="govuk-link"
+                            href="https://www.gov.uk/government/publications/apprenticeship-funding/apprenticeship-funding"
+                            target="_blank">Apprenticeship funding</a></li>
+
+                    <li><a class="govuk-link"
+                            href="https://www.gov.uk/guidance/receive-a-levy-transfer-from-another-business-to-fund-an-apprenticeship"
+                            target="_blank">Receiving a transfer to fund an apprentice</a></li>
+                }
+            </ul>
+        </div>
     </div>
 </div>
 
 @section Back
 {
-    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new {Model.AccountHashedId})">Back to Apprentices</a>
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new {Model.AccountHashedId})">Back to
+        Apprentices</a>
 }
