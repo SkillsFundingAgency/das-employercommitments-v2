@@ -1,4 +1,6 @@
-﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+@using SFA.DAS.EmployerUrlHelper.Mvc
 
 @{
     ViewBag.Title = "Select a connection to transfer from";
@@ -28,7 +30,7 @@
         </p>
 
         <p class="govuk-body">
-            If you cannot find the transfer you need, you can manage your transfer connections (opens in new tab)
+            If you cannot find the transfer you need, you can <a href="@Url.FinanceLink($"accounts/{Model.AccountHashedId}/transfers")" id="back-link" target="_blank" class="govuk-back-link">manage your transfer connections (opens in new tab)</a>
         </p>
 
         <form method="post">
