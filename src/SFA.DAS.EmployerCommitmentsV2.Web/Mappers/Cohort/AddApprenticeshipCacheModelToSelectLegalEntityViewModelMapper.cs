@@ -23,7 +23,7 @@ public class AddApprenticeshipCacheModelToSelectLegalEntityViewModelMapper(
         return new SelectLegalEntityViewModel
         {
             AccountHashedId = source.AccountHashedId,
-            TransferConnectionCode = source.TransferConnectionCode,
+            TransferConnectionCode = source.TransferSenderId,
             LegalEntities = legalEntities.LegalEntities.ConvertAll(MapToLegalEntityVm),
             CohortRef = cohortRef,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,

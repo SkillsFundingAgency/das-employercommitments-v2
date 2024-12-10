@@ -8,7 +8,7 @@ public class AddApprenticeshipCacheModel : ICacheModel
     public Guid CacheKey { get; set; }
     public string AccountHashedId { get; set; }
     public long AccountId { get; set; }
-    public string TransferConnectionCode { get; set; }
+//    public string TransferConnectionCode { get; set; }
     public string CohortRef { get; set; }
     public string EncodedPledgeApplicationId { get; set; } = null;
     public string AccountLegalEntityHashedId { get; set; }
@@ -19,8 +19,8 @@ public class AddApprenticeshipCacheModel : ICacheModel
     public string StartMonthYear { get; set; }
     public string TransferSenderId { get; set; }
     public long ProviderId { get; set; }
-    public string ProviderName { get; set; }
-    public Origin Origin { get; set; }
+    // public string ProviderName { get; set; } 
+    //public Origin Origin { get; set; }
     public DeliveryModel? DeliveryModel { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }

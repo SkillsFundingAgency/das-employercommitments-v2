@@ -181,7 +181,7 @@ public class CohortController : Controller
 
         var viewModel = await _modelMapper.Map<SelectProviderViewModel>(cacheModel);
 
-        cacheModel.Origin = viewModel.Origin;
+        //cacheModel.Origin = viewModel.Origin;
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.CacheKey);
 
         return View(viewModel);
@@ -381,7 +381,7 @@ public class CohortController : Controller
         var model = await _modelMapper.Map<ApprenticeViewModel>(cacheModel);
 
         cacheModel.LegalEntityName = model.LegalEntityName;
-        cacheModel.ProviderName = model.ProviderName;
+        //cacheModel.ProviderName = model.ProviderName;
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.CacheKey);
 
         return View("Apprentice", model);
@@ -395,22 +395,7 @@ public class CohortController : Controller
         {
             var cacheModel = await GetAddApprenticeshipCacheModelFromCache(model.AddApprenticeshipCacheKey);
 
-            // refactor todo
-            cacheModel.FirstName = model.FirstName;
-            cacheModel.LastName = model.LastName;
-            cacheModel.Email = model.Email;
-            cacheModel.BirthDay = model.BirthDay;
-            cacheModel.BirthMonth = model.BirthMonth;
-            cacheModel.BirthYear = model.BirthYear;
-            cacheModel.StartMonth = model.StartMonth;
-            cacheModel.StartYear = model.StartYear;
-            cacheModel.EndMonth = model.EndMonth;
-            cacheModel.EndYear = model.EndYear;
-            cacheModel.EmploymentEndMonth = model.EmploymentEndMonth;
-            cacheModel.EmploymentEndYear = model.EmploymentEndYear;
-            cacheModel.Cost = model.Cost;
-            cacheModel.EmploymentPrice = model.EmploymentPrice;
-            cacheModel.Reference = model.Reference;
+            UpdateAddApprenticeshipCacheModelFromApprenticeViewModel(cacheModel, model);
 
             await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.CacheKey);
 
@@ -525,7 +510,7 @@ public class CohortController : Controller
             return View(viewModel);
         }
 
-        cacheModel.TransferConnectionCode = string.Empty;
+        cacheModel.TransferSenderId = string.Empty;
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.CacheKey);
 
         return RedirectToAction("SelectLegalEntity", new { cacheModel.AccountHashedId, cacheModel.CacheKey });
@@ -540,7 +525,7 @@ public class CohortController : Controller
         var transferConnectionCode = selectedTransferConnection.TransferConnectionCode.Equals("None", StringComparison.InvariantCultureIgnoreCase)
             ? null : selectedTransferConnection.TransferConnectionCode;
 
-        cacheModel.TransferConnectionCode = transferConnectionCode;
+        cacheModel.TransferSenderId = transferConnectionCode;
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.CacheKey);
 
         return RedirectToAction("SelectLegalEntity", new { selectedTransferConnection.AccountHashedId, cacheModel.CacheKey });
@@ -549,11 +534,18 @@ public class CohortController : Controller
     [HttpGet]
     [Route("legalEntity/create")]
     [Route("add/legal-entity")]
-    public async Task<IActionResult> SelectLegalEntity(Guid addApprenticeshipCacheKey, string encodedPledgeApplicationId = null)
+    public async Task<IActionResult> SelectLegalEntity([FromRoute] string accountHashedId, Guid? addApprenticeshipCacheKey, string encodedPledgeApplicationId = null, string transferConnectionCode = null)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(addApprenticeshipCacheKey);
 
-        cacheModel.EncodedPledgeApplicationId = encodedPledgeApplicationId;
+        cacheModel ??= new AddApprenticeshipCacheModel
+        {
+            CacheKey = Guid.NewGuid(),
+            AccountHashedId = accountHashedId,
+            AccountId = _encodingService.Decode(accountHashedId, EncodingType.ApprenticeshipId),
+            TransferSenderId = transferConnectionCode,
+            EncodedPledgeApplicationId = encodedPledgeApplicationId
+        };
 
         var response = await _modelMapper.Map<SelectLegalEntityViewModel>(cacheModel);
 
@@ -565,7 +557,7 @@ public class CohortController : Controller
 
         var autoSelectLegalEntity = response.LegalEntities.First();
 
-        var hasSignedMinimumRequiredAgreementVersion = autoSelectLegalEntity.HasSignedMinimumRequiredAgreementVersion(!string.IsNullOrWhiteSpace(cacheModel.TransferConnectionCode));
+        var hasSignedMinimumRequiredAgreementVersion = autoSelectLegalEntity.HasSignedMinimumRequiredAgreementVersion(!string.IsNullOrWhiteSpace(cacheModel.TransferSenderId));
 
         cacheModel.AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId;
 
@@ -582,7 +574,7 @@ public class CohortController : Controller
             AccountLegalEntityId = autoSelectLegalEntity.Id,
             CohortRef = cacheModel.CohortRef,
             LegalEntityName = autoSelectLegalEntity.Name,
-            TransferConnectionCode = cacheModel.TransferConnectionCode,
+            TransferConnectionCode = cacheModel.TransferSenderId,
             AccountLegalEntityHashedId = cacheModel.AccountLegalEntityHashedId
         };
 
@@ -652,5 +644,24 @@ public class CohortController : Controller
         {
             await _cacheStorageService.DeleteFromCache(key.Value);
         }
+    }
+
+    private static void UpdateAddApprenticeshipCacheModelFromApprenticeViewModel(AddApprenticeshipCacheModel cacheModel, ApprenticeViewModel model)
+    {
+        cacheModel.FirstName = model.FirstName;
+        cacheModel.LastName = model.LastName;
+        cacheModel.Email = model.Email;
+        cacheModel.BirthDay = model.BirthDay;
+        cacheModel.BirthMonth = model.BirthMonth;
+        cacheModel.BirthYear = model.BirthYear;
+        cacheModel.StartMonth = model.StartMonth;
+        cacheModel.StartYear = model.StartYear;
+        cacheModel.EndMonth = model.EndMonth;
+        cacheModel.EndYear = model.EndYear;
+        cacheModel.EmploymentEndMonth = model.EmploymentEndMonth;
+        cacheModel.EmploymentEndYear = model.EmploymentEndYear;
+        cacheModel.Cost = model.Cost;
+        cacheModel.EmploymentPrice = model.EmploymentPrice;
+        cacheModel.Reference = model.Reference;
     }
 }
