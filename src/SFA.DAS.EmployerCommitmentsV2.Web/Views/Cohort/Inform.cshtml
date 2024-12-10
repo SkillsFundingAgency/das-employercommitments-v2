@@ -8,7 +8,7 @@
 }
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-three-quarters">
         <h1 class="govuk-heading-l">Add an apprentice</h1>
 
         <p class="govuk-body">Add details of one or more apprentices to your account, and authorise payments to your training provider.</p>
@@ -22,7 +22,7 @@
             </p>
         }
 
-        <h2 class="govuk-heading-m">Before you start</h2>
+        <h2 class="govuk-heading-m">What you'll need</h2>
 
         <p class="govuk-body">You must:</p>
         <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
@@ -40,6 +40,27 @@
                 <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
             </svg>
         </a>
+    </div>
+    <div class="govuk-grid-column-one-quarter">
+        <h1 class="govuk-heading-s">Useful links</h1>
+        <p class="govuk-body-s">
+            The following links open in a new tab:
+            <br/>
+            @if (!Model.IsLevyFunded)
+            {
+                <a class="govuk-link" href="https://www.gov.uk/employing-an-apprentice/get-funding" target="_blank">Get funding for apprenticeship training</a>
+                <br />
+                <a class="govuk-link" href="https://www.gov.uk/government/publications/apprenticeship-funding/apprenticeship-funding-for-employers-who-do-not-pay-the-apprenticeship-levy" target="_blank">Reserving funds for an apprentice</a>
+                <br />
+                <a class="govuk-link" href="https://www.gov.uk/guidance/receive-a-levy-transfer-from-another-business-to-fund-an-apprenticeship" target="_blank">Receiving a transfer to fund an apprentice</a>
+            }
+            else
+            {
+                <a class="govuk-link" href="https://www.gov.uk/government/publications/apprenticeship-funding/apprenticeship-funding" target="_blank">Apprenticeship funding</a>
+                <br/>
+                <a class="govuk-link" href="https://www.gov.uk/guidance/receive-a-levy-transfer-from-another-business-to-fund-an-apprenticeship" target="_blank">Receiving a transfer to fund an apprentice</a>
+            }
+        </p>
     </div>
 </div>
 
