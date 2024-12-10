@@ -7,11 +7,11 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
-public class WhenMappingConfirmProviderRequestToViewModel
+public class WhenMappingAddApprenticeshipCacheModelToViewModel
 {
     [Test, MoqAutoData]
     public async Task Then_Maps_AccountHashedId(
-        ConfirmProviderRequest request,
+        AddApprenticeshipCacheModel request,
         [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
         ConfirmProviderViewModelMapper mapper)
     {
@@ -22,7 +22,7 @@ public class WhenMappingConfirmProviderRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_EmployerAccountLegalEntityPublicHashedId(
-        ConfirmProviderRequest request,
+        AddApprenticeshipCacheModel request,
         [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
         ConfirmProviderViewModelMapper mapper)
     {
@@ -33,7 +33,7 @@ public class WhenMappingConfirmProviderRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_LegalEntityName(
-        ConfirmProviderRequest request,
+        AddApprenticeshipCacheModel request,
         [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
         ConfirmProviderViewModelMapper mapper)
     {
@@ -44,7 +44,7 @@ public class WhenMappingConfirmProviderRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_ReservationId(
-        ConfirmProviderRequest request,
+        AddApprenticeshipCacheModel request,
         [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
         ConfirmProviderViewModelMapper mapper)
     {
@@ -55,7 +55,7 @@ public class WhenMappingConfirmProviderRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_StartMonthYear(
-        ConfirmProviderRequest request,
+        AddApprenticeshipCacheModel request,
         [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
         ConfirmProviderViewModelMapper mapper)
     {
@@ -66,7 +66,7 @@ public class WhenMappingConfirmProviderRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_CourseCode(
-        ConfirmProviderRequest request,
+        AddApprenticeshipCacheModel request,
         [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
         ConfirmProviderViewModelMapper mapper)
     {
@@ -77,7 +77,7 @@ public class WhenMappingConfirmProviderRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_ProviderId(
-        ConfirmProviderRequest request,
+        AddApprenticeshipCacheModel request,
         [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
         ConfirmProviderViewModelMapper mapper)
     {
@@ -88,7 +88,7 @@ public class WhenMappingConfirmProviderRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_ProviderName(
-        ConfirmProviderRequest request,
+        AddApprenticeshipCacheModel request,
         [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
         GetProviderResponse provider,
         ConfirmProviderViewModelMapper mapper)
@@ -100,7 +100,7 @@ public class WhenMappingConfirmProviderRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_TransferSenderId(
-        ConfirmProviderRequest request,
+        AddApprenticeshipCacheModel request,
         [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
         ConfirmProviderViewModelMapper mapper)
     {

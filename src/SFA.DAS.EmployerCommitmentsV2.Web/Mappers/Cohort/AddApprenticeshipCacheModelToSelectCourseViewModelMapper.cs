@@ -9,8 +9,6 @@ public class AddApprenticeshipCacheModelToSelectCourseViewModelMapper(ICommitmen
 {
     public async Task<SelectCourseViewModel> Map(AddApprenticeshipCacheModel source)
     {
-        var ale = await commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
-
         var courses = (await commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes;
 
         return new SelectCourseViewModel

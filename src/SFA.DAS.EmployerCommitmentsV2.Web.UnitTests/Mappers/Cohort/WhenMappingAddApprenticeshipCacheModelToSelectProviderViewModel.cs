@@ -6,9 +6,9 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
 [TestFixture]
-public class WhenMappingSelectProviderRequestToViewModel
+public class WhenMappingAddApprenticeshipCacheModelToSelectProviderViewModel
 {
-    private SelectProviderRequest _request;
+    private AddApprenticeshipCacheModel _request;
     private Mock<IApprovalsApiClient> _approvalsApiClientMock;
     private GetSelectProviderDetailsResponse _selectProvidersResponse;
     private SelectProviderViewModelMapper _mapper;
@@ -17,7 +17,7 @@ public class WhenMappingSelectProviderRequestToViewModel
     public void Setup()
     {
         var autoFixture = new Fixture();
-        _request = autoFixture.Create<SelectProviderRequest>();
+        _request = autoFixture.Create<AddApprenticeshipCacheModel>();
         _selectProvidersResponse = autoFixture.Create<GetSelectProviderDetailsResponse>();
 
         _approvalsApiClientMock = new Mock<IApprovalsApiClient>();

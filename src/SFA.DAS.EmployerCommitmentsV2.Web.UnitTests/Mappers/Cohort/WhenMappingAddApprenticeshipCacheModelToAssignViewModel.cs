@@ -7,11 +7,11 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
-public class WhenMappingAssignRequestToViewModel
+public class WhenMappingAddApprenticeshipCacheModelToAssignViewModel
 {
     [Test, MoqAutoData]
     public async Task Then_Maps_AccountHashedId(
-        AssignRequest request,
+        AddApprenticeshipCacheModel request,
         AssignViewModelMapper mapper)
     {
         var viewModel = await mapper.Map(request);
@@ -21,7 +21,7 @@ public class WhenMappingAssignRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_EmployerAccountLegalEntityPublicHashedId(
-        AssignRequest request,
+        AddApprenticeshipCacheModel request,
         AssignViewModelMapper mapper)
     {
         var viewModel = await mapper.Map(request);
@@ -31,7 +31,7 @@ public class WhenMappingAssignRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_LegalEntityName(
-        [Frozen] AssignRequest request,
+        [Frozen] AddApprenticeshipCacheModel request,
         [Frozen] AccountLegalEntityResponse response,
         [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClientMock,
         AssignViewModelMapper mapper)
@@ -47,7 +47,7 @@ public class WhenMappingAssignRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_ReservationId(
-        AssignRequest request,
+        AddApprenticeshipCacheModel request,
         AssignViewModelMapper mapper)
     {
         var viewModel = await mapper.Map(request);
@@ -57,7 +57,7 @@ public class WhenMappingAssignRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_StartMonthYear(
-        AssignRequest request,
+        AddApprenticeshipCacheModel request,
         AssignViewModelMapper mapper)
     {
         var viewModel = await mapper.Map(request);
@@ -67,7 +67,7 @@ public class WhenMappingAssignRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_CourseCode(
-        AssignRequest request,
+        AddApprenticeshipCacheModel request,
         AssignViewModelMapper mapper)
     {
         var viewModel = await mapper.Map(request);
@@ -77,7 +77,7 @@ public class WhenMappingAssignRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_UkPrn(
-        AssignRequest request,
+        AddApprenticeshipCacheModel request,
         AssignViewModelMapper mapper)
     {
         var viewModel = await mapper.Map(request);
@@ -87,7 +87,7 @@ public class WhenMappingAssignRequestToViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_TransferSenderId(
-        AssignRequest request,
+        AddApprenticeshipCacheModel request,
         AssignViewModelMapper mapper)
     {
         var viewModel = await mapper.Map(request);

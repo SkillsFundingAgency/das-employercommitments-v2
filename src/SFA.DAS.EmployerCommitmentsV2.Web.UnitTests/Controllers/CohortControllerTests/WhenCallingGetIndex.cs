@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests;
@@ -13,21 +13,17 @@ public class WhenCallingGetIndex
     public async Task Then_Returns_View_With_Correct_ViewModel(
         IndexRequest request,
         IndexViewModel viewModel,
-        string organisationsLink,
-        string schemesLink,
         [Frozen] Mock<IModelMapper> mockMapper,
-        [Frozen] Mock<ILinkGenerator> mockLinkGenerator,
+        [Frozen] Mock<ICacheStorageService> cacheStorageService,
         [Greedy] CohortController controller)
     {
+        cacheStorageService
+         .Setup(x => x.SaveToCache(It.IsAny<Guid>(), It.IsAny<AddApprenticeshipCacheModel>(), 1))
+         .Returns(Task.CompletedTask);
+
         mockMapper
-            .Setup(mapper => mapper.Map<IndexViewModel>(request))
+            .Setup(mapper => mapper.Map<IndexViewModel>(It.IsAny<AddApprenticeshipCacheModel>()))
             .ReturnsAsync(viewModel);
-        mockLinkGenerator
-            .Setup(generator => generator.AccountsLink($"accounts/{request.AccountHashedId}/agreements"))
-            .Returns(organisationsLink);
-        mockLinkGenerator
-            .Setup(generator => generator.AccountsLink($"accounts/{request.AccountHashedId}/schemes"))
-            .Returns(schemesLink);
 
         var result = await controller.Index(request) as ViewResult;
 

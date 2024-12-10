@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
@@ -193,9 +194,10 @@ public class CohortController : Controller
     {
         try
         {
+            var cacheModel = await GetAddApprenticeshipCacheModelFromCache(request.AddApprenticeshipCacheKey);
+
             await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
 
-            var cacheModel = await GetAddApprenticeshipCacheModelFromCache(request.AddApprenticeshipCacheKey);
             cacheModel.ProviderId = long.Parse(request.ProviderId);
             await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.CacheKey);
 
@@ -358,13 +360,14 @@ public class CohortController : Controller
     [Route("add/select-delivery-model")]
     public async Task<IActionResult> SetDeliveryModel(SelectDeliveryModelViewModel model)
     {
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(model.AddApprenticeshipCacheKey.Value);
+
         if (model.DeliveryModel == null)
         {
             throw new CommitmentsApiModelException(new List<ErrorDetail>
                 {new ErrorDetail("DeliveryModel", "You must select the apprenticeship delivery model")});
         }
 
-        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(model.AddApprenticeshipCacheKey.Value);
         cacheModel.DeliveryModel = model.DeliveryModel;
 
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.CacheKey);
@@ -518,7 +521,7 @@ public class CohortController : Controller
 
     [HttpPost]
     [Route("transferConnection/create")]
-    public async Task<ActionResult> SetTransferConnection(SelectTransferConnectionViewModel selectedTransferConnection)
+    public async Task<IActionResult> SetTransferConnection(SelectTransferConnectionViewModel selectedTransferConnection)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(selectedTransferConnection.AddApprenticeshipCacheKey);
 
@@ -631,11 +634,12 @@ public class CohortController : Controller
 
     private async Task<AddApprenticeshipCacheModel> GetAddApprenticeshipCacheModelFromCache(Guid? key)
     {
-        if (key.IsNotNullOrEmpty())
+        if (!key.HasValue)
         {
-            return await _cacheStorageService.RetrieveFromCache<AddApprenticeshipCacheModel>(key.Value);
+            throw new MissingAddApprenticeshipCacheKeyException();
         }
-        return null;
+
+        return await _cacheStorageService.RetrieveFromCache<AddApprenticeshipCacheModel>(key.Value);
     }
 
     private async Task RemoveAddApprenticeshipCacheModelFromCache(Guid? key)

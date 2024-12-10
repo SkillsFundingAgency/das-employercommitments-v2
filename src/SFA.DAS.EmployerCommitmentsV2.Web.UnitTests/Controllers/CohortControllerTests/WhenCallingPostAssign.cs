@@ -28,7 +28,7 @@ public class WhenCallingPostAssign
             viewModel.ProviderId,
             viewModel.TransferSenderId,
             viewModel.EncodedPledgeApplicationId,
-            Origin = viewModel.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
+            viewModel.AddApprenticeshipCacheKey
         });
         viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Employer;
 

@@ -14,7 +14,7 @@ public class ApprenticeViewModelMapperTests
     private Mock<ICommitmentsApiClient> _commitmentsApiClient;
     private GetProviderResponse _providerResponse;
     private AccountLegalEntityResponse _accountLegalEntityResponse;
-    private ApprenticeRequest _source;
+    private AddApprenticeshipCacheModel _source;
     private ApprenticeViewModel _result;
     private TrainingProgramme _courseStandard;
     private TrainingProgramme _course;
@@ -30,7 +30,7 @@ public class ApprenticeViewModelMapperTests
         _courseStandard = autoFixture.Create<TrainingProgramme>();
         _providerResponse = autoFixture.Create<GetProviderResponse>();
         _accountLegalEntityResponse = autoFixture.Build<AccountLegalEntityResponse>().With(x=>x.LevyStatus, ApprenticeshipEmployerType.Levy).Create();
-        _source = autoFixture.Create<ApprenticeRequest>();
+        _source = autoFixture.Create<AddApprenticeshipCacheModel>();
         _source.StartMonthYear = "062020";
         _source.TransferSenderId = string.Empty;
         _source.AccountId = 12345;

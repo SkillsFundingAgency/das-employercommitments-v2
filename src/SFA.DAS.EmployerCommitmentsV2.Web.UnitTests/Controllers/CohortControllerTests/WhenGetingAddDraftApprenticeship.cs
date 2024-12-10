@@ -11,6 +11,7 @@ public class WhenGetingAddDraftApprenticeship
 {
     [Test, MoqAutoData]
     public async Task ThenReturnsViewWhenNoModelInCache(
+        AddApprenticeshipCacheModel cacheModel,
         ApprenticeRequest request,
         [Frozen] Mock<IModelMapper> mockMapper,
         [Frozen] Mock<ICacheStorageService> cacheStorageService,

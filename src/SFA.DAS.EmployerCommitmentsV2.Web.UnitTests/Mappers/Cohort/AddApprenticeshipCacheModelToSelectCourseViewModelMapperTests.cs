@@ -8,12 +8,11 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
 [TestFixture]
-public class ApprenticeRequestToSelectCourseViewModelMapperTests
+public class AddApprenticeshipCacheModelToSelectCourseViewModelMapperTests
 {
     private AddApprenticeshipCacheModelToSelectCourseViewModelMapper _mapper;
-    private ApprenticeRequest _source;
+    private AddApprenticeshipCacheModel _source;
     private Mock<ICommitmentsApiClient> _commitmentsApiClient;
-    private AccountLegalEntityResponse _accountLegalEntityResponse;
     private List<TrainingProgramme> _standardTrainingProgrammes;
     private SelectCourseViewModel _result;
 
@@ -23,9 +22,8 @@ public class ApprenticeRequestToSelectCourseViewModelMapperTests
         var autoFixture = new Fixture();
 
         _standardTrainingProgrammes = autoFixture.CreateMany<TrainingProgramme>().ToList();
-        _accountLegalEntityResponse = autoFixture.Build<AccountLegalEntityResponse>().With(x => x.LevyStatus, ApprenticeshipEmployerType.Levy).Create();
 
-        _source = autoFixture.Build<ApprenticeRequest>()
+        _source = autoFixture.Build<AddApprenticeshipCacheModel>()
             .With(x => x.StartMonthYear, "062020")
             .With(x => x.AccountId, 12345)
             .With(x => x.CourseCode, "Course1")
@@ -33,8 +31,6 @@ public class ApprenticeRequestToSelectCourseViewModelMapperTests
             .Without(x => x.TransferSenderId).Create();
 
         _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-        _commitmentsApiClient.Setup(x => x.GetAccountLegalEntity(_source.AccountLegalEntityId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_accountLegalEntityResponse);
         _commitmentsApiClient
             .Setup(x => x.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse()
