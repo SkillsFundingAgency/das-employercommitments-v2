@@ -79,10 +79,10 @@
     else if (Model.Origin == Origin.LevyTransferMatching)
     {
         <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications/{Model.EncodedPledgeApplicationId}")"
-    id="back-link" class="govuk-back-link">Back</a>
+            id="back-link" class="govuk-back-link">Back</a>
     }
     else
     {
         <a href="@Url.Action("Inform", "Cohort", new { Model.AccountHashedId})" id="back-link" class="govuk-back-link">Back</a>
     }
-    }
+ }
