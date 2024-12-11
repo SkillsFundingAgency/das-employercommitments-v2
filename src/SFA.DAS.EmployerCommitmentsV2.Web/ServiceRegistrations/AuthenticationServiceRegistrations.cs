@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
+using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.GovUK.Auth.AppStart;
 using SFA.DAS.GovUK.Auth.Authentication;
 using SFA.DAS.GovUK.Auth.Configuration;
+using SFA.DAS.GovUK.Auth.Models;
 using SFA.DAS.GovUK.Auth.Services;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
@@ -25,13 +26,13 @@ public static class AuthenticationServiceRegistrations
         govConfig["ResourceEnvironmentName"] = configuration["ResourceEnvironmentName"];
         govConfig["StubAuth"] = configuration["StubAuth"];
 
-        services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
         services.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
         services.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();
 
-        services.AddAndConfigureGovUkAuthentication(govConfig,
-            typeof(EmployerAccountPostAuthenticationClaimsHandler),
-            "",
-            "/service/SignIn-Stub");
+        services.AddAndConfigureGovUkAuthentication(govConfig, new AuthRedirects
+        {
+            SignedOutRedirectUrl = "",
+            LocalStubLoginPath = "/service/SignIn-Stub"
+        }, null, typeof(UserAccountService));
     }
 }
