@@ -30,4 +30,15 @@ public static class RouteNames
     public const string WhyStopApprenticeship = "why-stop-apprenticeship";
     public const string ApprenticeshipNeverStarted = "apprenticeship-never-started";
     public const string ApprenticeshipHasNotEnded = "apprenticeship-not-ended";
+
+    public const string CohortSelectProvider = "SelectProvider";
+    public const string CohortConfirmProvider = "ConfirmProvider";
+    public const string CohortReview = "Review";
+    public const string CohortDetails = "Details";
+    public const string CohortAssign = "assign";
+    public const string CohortSelectCourse = "SelectCourse";
+    public const string CohortSelectDeliveryModel = "SelectDeliveryModel";
+    public const string CohortApprentice = "Apprentice";
+    public const string CohortSelectLegalEntity = "SelectLegalEntity";
+    public const string CohortAgreementNotSigned = "AgreementNotSigned";
 }
