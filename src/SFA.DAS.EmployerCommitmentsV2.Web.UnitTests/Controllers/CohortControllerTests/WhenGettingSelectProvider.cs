@@ -1,4 +1,6 @@
-﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using FluentAssertions;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
@@ -15,29 +17,34 @@ public class WhenGettingSelectProvider
         SelectProviderViewModel viewModel,
         [Frozen] Mock<IModelMapper> mockMapper,
         [Frozen] Mock<IEncodingService> mockEncodingService,
+        [Frozen] Mock<ICacheStorageService> cacheStorageService,
         [Greedy] CohortController controller)
     {
         long accountLegalEntityId = 123;
         mockEncodingService
             .Setup(x => x.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out accountLegalEntityId))
             .Returns(true);
+
+        cacheStorageService
+          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.CacheKey))
+          .ReturnsAsync(cacheModel);
 
         mockMapper
             .Setup(x => x.Map<SelectProviderViewModel>(It.IsAny<AddApprenticeshipCacheModel>()))
             .ReturnsAsync(viewModel);
 
         await controller.SelectProvider(cacheModel.CacheKey);
-        mockMapper.Verify(x => x.Map<SelectProviderViewModel>(It.IsAny<SelectProviderRequest>()), Times.Once);
+        mockMapper.Verify(x => x.Map<SelectProviderViewModel>(It.IsAny<AddApprenticeshipCacheModel>()), Times.Once);
         mockEncodingService.Verify(x => x.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out accountLegalEntityId), Times.Once);
     }
 
     [Test, MoqAutoData]
     public async Task ThenReturnsView(
-        SelectProviderRequest request,
         SelectProviderViewModel viewModel,
         [Frozen] Mock<IEncodingService> mockEncodingService,
         AddApprenticeshipCacheModel cacheModel,
         [Frozen] Mock<IModelMapper> mockMapper,
+        [Frozen] Mock<ICacheStorageService> cacheStorageService,
         [Greedy] CohortController controller)
     {
         long accountLegalEntityId = 123;
@@ -45,16 +52,18 @@ public class WhenGettingSelectProvider
             .Setup(x => x.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out accountLegalEntityId))
             .Returns(true);
 
+        cacheStorageService
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.CacheKey))
+           .ReturnsAsync(cacheModel);
+
         mockMapper
-            .Setup(mapper => mapper.Map<SelectProviderViewModel>(request))
+            .Setup(mapper => mapper.Map<SelectProviderViewModel>(cacheModel))
             .ReturnsAsync(viewModel);
 
         var result = await controller.SelectProvider(cacheModel.CacheKey) as ViewResult;
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.ViewName, Is.Null);
-            Assert.That(result.Model, Is.SameAs(viewModel));
-        });
+        result.Should().NotBeNull();
+        result.ViewName.Should().BeNull();
+        result.Model.Should().BeEquivalentTo(viewModel);       
     }
 }

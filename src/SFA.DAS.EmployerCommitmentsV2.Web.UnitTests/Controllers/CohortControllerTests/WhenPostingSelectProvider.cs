@@ -24,6 +24,8 @@ public class WhenPostingSelectProvider
         GetProviderResponse apiResponse,
         [Greedy] CohortController controller)
     {
+        viewModel.ProviderId = providerId.ToString();
+
         cacheModel.CacheKey = viewModel.AddApprenticeshipCacheKey;
         cacheStorageService
           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(viewModel.AddApprenticeshipCacheKey))
@@ -37,7 +39,6 @@ public class WhenPostingSelectProvider
            .Setup(x => x.GetProvider(long.Parse(viewModel.ProviderId), CancellationToken.None))
            .ReturnsAsync(apiResponse);
 
-        viewModel.ProviderId = providerId.ToString();
 
         await controller.SelectProvider(viewModel);
 
@@ -67,11 +68,8 @@ public class WhenPostingSelectProvider
 
         var result = await controller.SelectProvider(viewModel) as RedirectToActionResult;
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.ActionName, Is.EqualTo(nameof(CohortController.SelectProvider)));
-            Assert.That(controller.ModelState.IsValid, Is.False);
-        });
+        result.ActionName.Should().Be(nameof(CohortController.SelectProvider));
+        controller.ModelState.IsValid.Should().BeFalse();
     }
 
     [Test, MoqAutoData]
@@ -97,12 +95,8 @@ public class WhenPostingSelectProvider
 
         var result = await controller.SelectProvider(viewModel) as RedirectToActionResult;
 
-        Assert.That(result, Is.Not.Null);
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.ActionName, Is.EqualTo("Error"));
-            Assert.That(result.ControllerName, Is.EqualTo("Error"));
-        });
+        result.Should().NotBeNull();
+        result.ControllerName.Should().Be("Error");
     }
 
 
@@ -139,6 +133,5 @@ public class WhenPostingSelectProvider
         redirectResult.ActionName.Should().Be("ConfirmProvider");
         redirectResult.RouteValues["AccountHashedId"].Should().Be(cacheModel.AccountHashedId);
         redirectResult.RouteValues["CacheKey"].Should().Be(cacheModel.CacheKey);
-        //WILLOG todo, doesthis last test fail? If so, change the naming of guids in controller
     }
 }

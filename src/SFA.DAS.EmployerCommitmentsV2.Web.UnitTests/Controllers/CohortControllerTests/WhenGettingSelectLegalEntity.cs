@@ -1,9 +1,9 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using FluentAssertions;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
@@ -12,86 +12,108 @@ using SFA.DAS.Encoding;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests;
 
 [TestFixture]
-public class WhenSelectOrganisation
+public class WhenGettingSelectLegalEntity
 {
     private CohortController _controller;
     private SelectLegalEntityViewModel _selectLegalEntityViewModel;
-    private SelectLegalEntityRequest _chooseOrganisationRequest;
     private Mock<IModelMapper> _modelMapper;
-    private Mock<ILinkGenerator> _linkGenerator;        
     private const string LegalEntityCode = "LCODE";
-    private const string LegalEntityName = "LNAME";        
+    private const string LegalEntityName = "LNAME";
     private const string CohortRefViewModel = "ViewModelCohortReef";
+    private const string EncodedPledgeApplicationId = "PLDG";
+    private const string TransferConnectionCode = "TRNSCD";
+    private const string AccountHashedId = "ACCNTID";
+
+    private AddApprenticeshipCacheModel _cacheModel;
+    private Mock<ICacheStorageService> _cacheStorageService;
 
     [SetUp]
     public void Arrange()
     {
         var autoFixture = new Fixture();
         _modelMapper = new Mock<IModelMapper>();
-        _linkGenerator = new Mock<ILinkGenerator>();            
 
-        _chooseOrganisationRequest = autoFixture.Create<SelectLegalEntityRequest>();
+        _cacheModel = autoFixture.Create<AddApprenticeshipCacheModel>();
+
+        _cacheStorageService = new Mock<ICacheStorageService>();
+        _cacheStorageService
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.CacheKey))
+           .ReturnsAsync(_cacheModel);
+
+        _cacheStorageService
+        .Setup(x => x.SaveToCache(It.IsAny<Guid>(), It.IsAny<AddApprenticeshipCacheModel>(), 1))
+        .Returns(Task.CompletedTask);
+
         _selectLegalEntityViewModel = autoFixture.Create<SelectLegalEntityViewModel>();
-        _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<SelectLegalEntityRequest>(r => r == _chooseOrganisationRequest)))
+        _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(
+            It.Is<AddApprenticeshipCacheModel>(r => r == _cacheModel)))
             .ReturnsAsync(_selectLegalEntityViewModel);
 
         _controller = new CohortController(Mock.Of<ICommitmentsApiClient>(),
             Mock.Of<ILogger<CohortController>>(),
-            _linkGenerator.Object,
+            Mock.Of<ILinkGenerator>(),
             _modelMapper.Object,
             Mock.Of<IEncodingService>(),
             Mock.Of<IApprovalsApiClient>(),
-            Mock.Of<ICacheStorageService>());
+            _cacheStorageService.Object);
     }
-        
+
     [TearDown]
     public void TearDown() => _controller?.Dispose();
 
     [TestCase(true)]
     [TestCase(false)]
-    public async Task Then_Verify_ViewModel_Is_Mapped_From_Request(bool isTransfer)
+    public async Task Then_Verify_ViewModel_Is_Mapped_From_CacheModel(bool isTransfer)
     {
         //Arrange
-        _chooseOrganisationRequest.transferConnectionCode = isTransfer ? _chooseOrganisationRequest.transferConnectionCode : string.Empty;
 
         //Act
-        var result = await _controller.SelectLegalEntity(_chooseOrganisationRequest);
+        var result = await _controller.SelectLegalEntity(
+            AccountHashedId,
+            _cacheModel.CacheKey,
+            isTransfer ? TransferConnectionCode : null,
+            isTransfer ? EncodedPledgeApplicationId : null);
 
         //Assert            
         var viewResult = result as ViewResult;
         var viewModel = viewResult.Model;
-        
-        Assert.Multiple(() =>
-        {
-            Assert.That(viewModel, Is.InstanceOf<SelectLegalEntityViewModel>());
-            Assert.That((SelectLegalEntityViewModel)viewModel, Is.EqualTo(_selectLegalEntityViewModel));
-        });
+
+        viewModel.Should().BeOfType<SelectLegalEntityViewModel>();
+        viewModel.As<SelectLegalEntityViewModel>().Should().BeEquivalentTo(_selectLegalEntityViewModel);
     }
 
     [TestCase(true)]
     [TestCase(false)]
-    public void Then_Throw_Exception_If_LegalEntity_Is_null(bool isTransfer)
+    public async Task Then_Throw_Exception_If_LegalEntity_Is_null(bool isTransfer)
     {
         //Arrange
-        _chooseOrganisationRequest.transferConnectionCode = isTransfer ? _chooseOrganisationRequest.transferConnectionCode : string.Empty;
-        _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<SelectLegalEntityRequest>(r => r == _chooseOrganisationRequest)))
+        _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<AddApprenticeshipCacheModel>(r => r == _cacheModel)))
             .ReturnsAsync(new SelectLegalEntityViewModel());
-            
+
         //Assert
-        Assert.ThrowsAsync<Exception>(() => _controller.SelectLegalEntity(_chooseOrganisationRequest));
+        await _controller.Invoking(c => c.SelectLegalEntity(
+            AccountHashedId,
+            _cacheModel.CacheKey,
+            isTransfer ? TransferConnectionCode : null,
+            isTransfer ? EncodedPledgeApplicationId : null))
+        .Should().ThrowAsync<Exception>();
     }
 
     [TestCase(true)]
     [TestCase(false)]
-    public void Then_Throw_Exception_If_LegalEntity_Is_Empty(bool isTransfer)
+    public async Task Then_Throw_Exception_If_LegalEntity_Is_Empty(bool isTransfer)
     {
         //Arrange
-        _chooseOrganisationRequest.transferConnectionCode = isTransfer ? _chooseOrganisationRequest.transferConnectionCode : string.Empty;
-        _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<SelectLegalEntityRequest>(r => r == _chooseOrganisationRequest)))
+        _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<AddApprenticeshipCacheModel>(r => r == _cacheModel)))
             .ReturnsAsync(new SelectLegalEntityViewModel { LegalEntities = Enumerable.Empty<LegalEntity>() });
 
         //Assert
-        Assert.ThrowsAsync<Exception>(() => _controller.SelectLegalEntity(_chooseOrganisationRequest));
+        await _controller.Invoking(c => c.SelectLegalEntity(
+            AccountHashedId,
+            _cacheModel.CacheKey,
+            isTransfer ? TransferConnectionCode : null,
+            isTransfer ? EncodedPledgeApplicationId : null))
+            .Should().ThrowAsync<Exception>();
     }
 
     [TestCase(true, EmployerAgreementStatus.Signed, 1, ExpectedAction.AgreementNotSigned)]
@@ -108,7 +130,7 @@ public class WhenSelectOrganisation
     public async Task Then_with_single_legal_entity_then_redirects_correctly(bool isTransfer, EmployerAgreementStatus status, int templateVersionNumber, ExpectedAction expectedAction)
     {
         //Arrange                        
-        _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<SelectLegalEntityRequest>(r => r == _chooseOrganisationRequest)))
+        _modelMapper.Setup(x => x.Map<SelectLegalEntityViewModel>(It.Is<AddApprenticeshipCacheModel>(r => r == _cacheModel)))
             .ReturnsAsync(new SelectLegalEntityViewModel
             {
                 LegalEntities = new[] { new LegalEntity
@@ -124,19 +146,31 @@ public class WhenSelectOrganisation
                 CohortRef = CohortRefViewModel
             });
 
+        if (!isTransfer)
+        {
+            _cacheModel.TransferSenderId = null;
+            _cacheStorageService
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.CacheKey))
+           .ReturnsAsync(_cacheModel);
+        }
         //Act
-        _chooseOrganisationRequest.transferConnectionCode = isTransfer ? _chooseOrganisationRequest.transferConnectionCode : string.Empty;
-        var result = await _controller.SelectLegalEntity(_chooseOrganisationRequest);
+        var result = await _controller.SelectLegalEntity(
+            AccountHashedId,
+            _cacheModel.CacheKey,
+            isTransfer ? TransferConnectionCode : null,
+            isTransfer ? EncodedPledgeApplicationId : null);
 
         //Assert
         var redirectToActionResult = result as RedirectToActionResult;
+        redirectToActionResult.Should().NotBeNull();
+
         switch (expectedAction)
         {
             case ExpectedAction.AgreementNotSigned:
-                Assert.That(redirectToActionResult.ActionName, Is.EqualTo(expectedAction.ToString()));
+                redirectToActionResult.ActionName.Should().Be(expectedAction.ToString());
                 break;
             case ExpectedAction.SelectProvider:
-                Assert.That(redirectToActionResult.ActionName, Is.EqualTo(expectedAction.ToString()));
+                redirectToActionResult.ActionName.Should().Be(expectedAction.ToString());
                 break;
             default:
                 throw new NotImplementedException();

@@ -29,6 +29,7 @@ public class WhenSelectTransferConnection
 
         _selectTransferConnectionViewModel = autoFixture.Create<SelectTransferConnectionViewModel>();
         _selectTransferConnectionViewModel.AddApprenticeshipCacheKey = _cacheModel.CacheKey;
+        _selectTransferConnectionViewModel.AccountHashedId = _cacheModel.AccountHashedId;
 
         _modelMapper.Setup(x => x.Map<SelectTransferConnectionViewModel>(
             It.Is<AddApprenticeshipCacheModel>(r => r == _cacheModel)))
@@ -63,7 +64,7 @@ public class WhenSelectTransferConnection
 
         //Assert
         var redirectToActionResult = result as RedirectToActionResult;
-        Assert.That(redirectToActionResult.ActionName, Is.EqualTo("SelectLegalEntity"));
+        redirectToActionResult.ActionName.Should().Be("SelectLegalEntity");
     }
 
     [Test]
@@ -76,11 +77,8 @@ public class WhenSelectTransferConnection
         var viewResult = result as ViewResult;
         var viewModel = viewResult.Model;
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(viewModel, Is.InstanceOf<SelectTransferConnectionViewModel>());
-            Assert.That((SelectTransferConnectionViewModel)viewModel, Is.EqualTo(_selectTransferConnectionViewModel));
-        });
+        viewModel.Should().BeOfType<SelectTransferConnectionViewModel>();
+        viewModel.As<SelectTransferConnectionViewModel>().Should().BeEquivalentTo(_selectTransferConnectionViewModel);
     }
 
     [Test]
@@ -98,7 +96,7 @@ public class WhenSelectTransferConnection
         result.ActionName.Should().Be("SelectLegalEntity");
         result.RouteValues.Should().NotBeEmpty();
         result.RouteValues["AccountHashedId"].Should().Be(_selectTransferConnectionViewModel.AccountHashedId);
-        result.RouteValues["AddApprenticeshipCacheKey"].Should().Be(_selectTransferConnectionViewModel.AddApprenticeshipCacheKey);
+        result.RouteValues["CacheKey"].Should().Be(_selectTransferConnectionViewModel.AddApprenticeshipCacheKey);
     }
 
     [Test]
@@ -111,6 +109,6 @@ public class WhenSelectTransferConnection
         result.ActionName.Should().Be("SelectLegalEntity");
         result.RouteValues.Should().NotBeEmpty();
         result.RouteValues["AccountHashedId"].Should().Be(_selectTransferConnectionViewModel.AccountHashedId);
-        result.RouteValues["AddApprenticeshipCacheKey"].Should().Be(_selectTransferConnectionViewModel.AddApprenticeshipCacheKey);
+        result.RouteValues["CacheKey"].Should().Be(_selectTransferConnectionViewModel.AddApprenticeshipCacheKey);
     }
 }

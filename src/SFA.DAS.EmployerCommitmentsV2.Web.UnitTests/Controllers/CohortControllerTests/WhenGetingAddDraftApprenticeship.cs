@@ -10,9 +10,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 public class WhenGetingAddDraftApprenticeship
 {
     [Test, MoqAutoData]
-    public async Task ThenReturnsViewWhenNoModelInCache(
+    public async Task ThenReturnsViewWhenModelIsInCache(
         AddApprenticeshipCacheModel cacheModel,
-        ApprenticeRequest request,
         [Frozen] Mock<IModelMapper> mockMapper,
         [Frozen] Mock<ICacheStorageService> cacheStorageService,
         [Greedy] CohortController controller)
@@ -20,51 +19,25 @@ public class WhenGetingAddDraftApprenticeship
         var viewModel = new ApprenticeViewModel();
 
         cacheStorageService
-            .Setup(x => x.RetrieveFromCache<ApprenticeViewModel>(It.IsAny<Guid>()))
-            .ReturnsAsync((ApprenticeViewModel)null);
-
-        mockMapper
-            .Setup(mapper => mapper.Map<ApprenticeViewModel>(request))
-            .ReturnsAsync(viewModel);
-
-        var result = await controller.AddDraftApprenticeship(request) as ViewResult;
-
-        result.Should().NotBeNull();
-        result.ViewName.Should().Be("Apprentice");
-        result.Model.Should().BeEquivalentTo(viewModel);
-    }
-
-    [Test, MoqAutoData]
-    public async Task ThenReturnsViewWhenModelIsInCache(
-       ApprenticeRequest request,
-       [Frozen] Mock<IModelMapper> mockMapper,
-       [Frozen] Mock<ICacheStorageService> cacheStorageService,
-       [Greedy] CohortController controller)
-    {
-        var viewModel = new ApprenticeViewModel();
-        var cacheItem = new ApprenticeViewModel
-        {
-            DeliveryModel = CommitmentsV2.Types.DeliveryModel.Regular,
-            CourseCode = "CourseCode",
-            CacheKey = request.CacheKey            
-        };
+            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.CacheKey))
+            .ReturnsAsync(cacheModel);
 
         cacheStorageService
-            .Setup(x => x.RetrieveFromCache<ApprenticeViewModel>(cacheItem.CacheKey.Value))
-            .ReturnsAsync(cacheItem);
+            .Setup(x => x.SaveToCache(It.IsAny<Guid>(), It.IsAny<AddApprenticeshipCacheModel>(), 1))
+            .Returns(Task.CompletedTask);
 
         mockMapper
-            .Setup(mapper => mapper.Map<ApprenticeViewModel>(request))
+            .Setup(mapper => mapper.Map<ApprenticeViewModel>(cacheModel))
             .ReturnsAsync(viewModel);
 
-        var result = await controller.AddDraftApprenticeship(request) as ViewResult;
+        var result = await controller.AddDraftApprenticeship(cacheModel.CacheKey) as ViewResult;
+
         result.Should().NotBeNull();
         result.ViewName.Should().Be("Apprentice");
 
         var resultObject = result.Model as ApprenticeViewModel;
 
         resultObject.Should().NotBeNull();
-        resultObject.DeliveryModel.Should().Be(cacheItem.DeliveryModel);
-        resultObject.CourseCode.Should().Be(cacheItem.CourseCode);
+        resultObject.Should().BeEquivalentTo(viewModel);
     }
 }

@@ -22,13 +22,13 @@ public class WhenCallingGetIndex
          .Returns(Task.CompletedTask);
 
         mockMapper
-            .Setup(mapper => mapper.Map<IndexViewModel>(It.IsAny<AddApprenticeshipCacheModel>()))
+            .Setup(mapper => mapper.Map<IndexViewModel>(It.IsAny<IndexRequest>()))
             .ReturnsAsync(viewModel);
 
         var result = await controller.Index(request) as ViewResult;
 
         result.ViewName.Should().BeNull();
         var model = result.Model as IndexViewModel;
-        model.Should().BeSameAs(viewModel);
+        model.Should().BeEquivalentTo(viewModel);
     }
 }

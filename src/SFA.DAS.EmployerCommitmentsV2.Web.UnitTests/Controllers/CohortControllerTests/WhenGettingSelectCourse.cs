@@ -1,4 +1,6 @@
-﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using FluentAssertions;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
@@ -10,22 +12,25 @@ public class WhenGettingSelectCourse
 {
     [Test, MoqAutoData]
     public async Task ThenReturnsView(
-        ApprenticeRequest request,
+        AddApprenticeshipCacheModel cacheModel,
         SelectCourseViewModel viewModel,
-        [Frozen] Mock<IModelMapper> mockMapper,
+        [Frozen] Mock<ICacheStorageService> cacheStorageService,
+        [Frozen] Mock<IModelMapper> modelMapper,
         [Greedy] CohortController controller)
     {
-        mockMapper
-            .Setup(mapper => mapper.Map<SelectCourseViewModel>(request))
+        cacheStorageService
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.CacheKey))
+           .ReturnsAsync(cacheModel);
+
+        modelMapper.Setup(x => x.Map<SelectCourseViewModel>(
+            It.Is<AddApprenticeshipCacheModel>(r => r == cacheModel)))
             .ReturnsAsync(viewModel);
 
-        var result = await controller.SelectCourse(request) as ViewResult;
+        var result = await controller.SelectCourse(cacheModel.CacheKey) as ViewResult;
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.ViewName, Is.SameAs("SelectCourse"));
-            Assert.That(result.Model, Is.SameAs(viewModel));
-        });
+        result.Should().NotBeNull();
+        result.ViewName.Should().BeSameAs("SelectCourse");
+        result.Model.Should().BeSameAs(viewModel);
+
     }
 }
