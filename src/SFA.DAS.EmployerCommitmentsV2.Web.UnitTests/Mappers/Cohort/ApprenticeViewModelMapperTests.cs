@@ -85,7 +85,7 @@ public class ApprenticeViewModelMapperTests
     [Test]
     public void StartDateIsMappedCorrectly()
     {
-        _result.StartDate.Date.Should().Be(new MonthYearModel(_source.StartMonthYear).Date));
+        _result.StartDate.Date.Should().Be(new MonthYearModel(_source.StartMonthYear).Date);
     }
 
     [Test]
