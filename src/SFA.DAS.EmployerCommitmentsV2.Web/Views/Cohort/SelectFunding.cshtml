@@ -16,15 +16,15 @@
 
         <h1 class="govuk-heading-l">@ViewBag.Title</h1>
 
+        <div class="govuk-body">
+            You can choose existing funding that you have previously applied for or
+            reserve new funding.
+        </div>
+
         <form method="POST">
 
         @Html.AntiForgeryToken()
-
         <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.FundingType,  "govuk-form-group--error")">
-            <div class="govuk-hint">
-                You can choose existing funding that you have previously applied for or
-                reserve new funding.
-            </div>
             <fieldset class="govuk-fieldset">
                 @if (!ViewData.ModelState.IsValid)
                 {
