@@ -179,7 +179,7 @@ public class CohortController : Controller
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(addApprenticeshipCacheKey);
 
         _encodingService.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out var id);
-        cacheModel.AccountLegalEntityId = (long)13213; // id;
+        cacheModel.AccountLegalEntityId = id;
 
         var viewModel = await _modelMapper.Map<SelectProviderViewModel>(cacheModel);
 
@@ -540,16 +540,9 @@ public class CohortController : Controller
     [Route("add/legal-entity")]
     public async Task<IActionResult> SelectLegalEntity([FromRoute] string accountHashedId, Guid? addApprenticeshipCacheKey, string encodedPledgeApplicationId = null, string transferConnectionCode = null)
     {
-        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(addApprenticeshipCacheKey);
-
-        cacheModel ??= new AddApprenticeshipCacheModel
-        {
-            AddApprenticeshipCacheKey = Guid.NewGuid(),
-            AccountHashedId = accountHashedId,
-            AccountId = _encodingService.Decode(accountHashedId, EncodingType.ApprenticeshipId),
-            TransferSenderId = transferConnectionCode,
-            EncodedPledgeApplicationId = encodedPledgeApplicationId
-        };
+        var cacheModel = addApprenticeshipCacheKey.HasValue
+        ? await GetAddApprenticeshipCacheModelFromCache(addApprenticeshipCacheKey.Value)
+        : await CreateAndStoreNewCacheModel(accountHashedId, encodedPledgeApplicationId, transferConnectionCode);
 
         var response = await _modelMapper.Map<SelectLegalEntityViewModel>(cacheModel);
 
@@ -668,5 +661,21 @@ public class CohortController : Controller
         cacheModel.Cost = model.Cost;
         cacheModel.EmploymentPrice = model.EmploymentPrice;
         cacheModel.Reference = model.Reference;
+    }
+
+    //This is needed when joining from LTM
+    private async Task<AddApprenticeshipCacheModel> CreateAndStoreNewCacheModel(string accountHashedId, string encodedPledgeApplicationId, string transferConnectionCode)
+    {
+        var cacheModel = new AddApprenticeshipCacheModel
+        {
+            AddApprenticeshipCacheKey = Guid.NewGuid(),
+            AccountHashedId = accountHashedId,
+            AccountId = _encodingService.Decode(accountHashedId, EncodingType.ApprenticeshipId),
+            TransferSenderId = transferConnectionCode,
+            EncodedPledgeApplicationId = encodedPledgeApplicationId
+        };
+
+        await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.AddApprenticeshipCacheKey);
+        return cacheModel;
     }
 }
