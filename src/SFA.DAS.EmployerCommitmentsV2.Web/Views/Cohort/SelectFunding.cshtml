@@ -24,6 +24,9 @@
         <form method="POST">
 
         @Html.AntiForgeryToken()
+
+        <h1 class="govuk-heading-m">What funding would you like to select?</h1>
+
         <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.FundingType,  "govuk-form-group--error")">
             <fieldset class="govuk-fieldset">
                 @if (!ViewData.ModelState.IsValid)
