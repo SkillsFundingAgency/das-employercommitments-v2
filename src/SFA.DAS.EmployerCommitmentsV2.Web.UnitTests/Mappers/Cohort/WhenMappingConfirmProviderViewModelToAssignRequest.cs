@@ -1,4 +1,5 @@
-﻿using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
+﻿using FluentAssertions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -13,7 +14,7 @@ public class WhenMappingConfirmProviderViewModelToAssignRequest
     {
         var result = await mapper.Map(request);
 
-        Assert.That(result.ReservationId, Is.EqualTo(request.ReservationId));
+        result.ReservationId.Should().Be(request.ReservationId);
     }
 
     [Test, MoqAutoData]
@@ -23,7 +24,7 @@ public class WhenMappingConfirmProviderViewModelToAssignRequest
     {
         var result = await mapper.Map(request);
 
-        Assert.That(result.AccountHashedId, Is.EqualTo(request.AccountHashedId));
+        result.AccountHashedId.Should().Be(request.AccountHashedId);
     }
 
     [Test, MoqAutoData]
@@ -33,7 +34,7 @@ public class WhenMappingConfirmProviderViewModelToAssignRequest
     {
         var result = await mapper.Map(request);
 
-        Assert.That(result.CourseCode, Is.EqualTo(request.CourseCode));
+        result.CourseCode.Should().Be(request.CourseCode);
     }
 
     [Test, MoqAutoData]
@@ -43,7 +44,7 @@ public class WhenMappingConfirmProviderViewModelToAssignRequest
     {
         var result = await mapper.Map(request);
 
-        Assert.That(result.StartMonthYear, Is.EqualTo(request.StartMonthYear));
+        result.StartMonthYear.Should().Be(request.StartMonthYear);
     }
 
     [Test, MoqAutoData]
@@ -53,7 +54,7 @@ public class WhenMappingConfirmProviderViewModelToAssignRequest
     {
         var result = await mapper.Map(request);
 
-        Assert.That(result.AccountLegalEntityHashedId, Is.EqualTo(request.AccountLegalEntityHashedId));
+        result.AccountLegalEntityHashedId.Should().Be(request.AccountLegalEntityHashedId);
     }
 
     [Test, MoqAutoData]
@@ -63,7 +64,7 @@ public class WhenMappingConfirmProviderViewModelToAssignRequest
     {
         var result = await mapper.Map(request);
 
-        Assert.That(result.ProviderId, Is.EqualTo(request.ProviderId));
+        result.ProviderId.Should().Be(request.ProviderId);
     }
 
     [Test, MoqAutoData]
@@ -73,6 +74,16 @@ public class WhenMappingConfirmProviderViewModelToAssignRequest
     {
         var result = await mapper.Map(request);
 
-        Assert.That(result.TransferSenderId, Is.EqualTo(request.TransferSenderId));
+        result.TransferSenderId.Should().Be(request.TransferSenderId);
+    }
+
+    [Test, MoqAutoData]
+    public async Task ThenMapsFundingType(
+        ConfirmProviderViewModel request,
+        AssignRequestMapper mapper)
+    {
+        var result = await mapper.Map(request);
+
+        result.FundingType.Should().Be(request.FundingType);
     }
 }
