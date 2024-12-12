@@ -69,6 +69,7 @@ public class Startup
             .UseRouting()
             .UseAuthorization()
             .UseMiddleware<MissingAddApprenticeshipCacheKeyMiddleware>()
+            .UseMiddleware<CacheItemNotFoundMiddleware>()
             .UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute()
             );
     }

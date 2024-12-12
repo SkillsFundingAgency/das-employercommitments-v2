@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
+using SFA.DAS.EmployerCommitmentsV2.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Infrastructure
@@ -42,7 +43,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Infrastructure
         {
             var json = await _distributedCache.GetStringAsync(key);
 
-            return json == null ? default : JsonConvert.DeserializeObject<T>(json);
+            return json == null
+                      ? throw new CacheItemNotFoundException<T>($"Cache item {key} of type {typeof(T).Name} not found")
+                      : JsonConvert.DeserializeObject<T>(json);
         }
 
         public Task<T> RetrieveFromCache<T>(Guid key)
@@ -53,6 +56,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Infrastructure
         public async Task DeleteFromCache(Guid key)
         {
             await _distributedCache.RemoveAsync(key.ToString());
-        }      
+        }
     }
 }
