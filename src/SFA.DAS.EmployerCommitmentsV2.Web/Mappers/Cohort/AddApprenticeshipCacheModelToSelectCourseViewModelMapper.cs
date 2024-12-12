@@ -23,8 +23,8 @@ public class AddApprenticeshipCacheModelToSelectCourseViewModelMapper(ICommitmen
             StartMonthYear = source.StartMonthYear,
             DeliveryModel = source.DeliveryModel,
             TransferSenderId = source.TransferSenderId,
-            CacheKey = source.CacheKey,
-            AddApprenticeshipCacheKey = source.CacheKey
+            CacheKey = source.AddApprenticeshipCacheKey,
+            AddApprenticeshipCacheKey = source.AddApprenticeshipCacheKey
         };
     }
 }

@@ -44,7 +44,7 @@ public class ApprenticeViewModelMapper(ICommitmentsApiClient commitmentsApiClien
             Cost = source.Cost,
             EmploymentPrice = source.EmploymentPrice,
             Reference = source.Reference,
-            AddApprenticeshipCacheKey = source.CacheKey
+            AddApprenticeshipCacheKey = source.AddApprenticeshipCacheKey
         };
 
         return result;

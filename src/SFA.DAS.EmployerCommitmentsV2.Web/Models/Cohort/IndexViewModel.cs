@@ -11,24 +11,31 @@ public class IndexViewModel
     public bool IsLevyFunded { get; set; }
     public Guid? AddApprenticeshipCacheKey { get; set; }
 
-    public virtual Dictionary<string, string> ToDictionary()
+    public virtual Dictionary<string, string> ToDictionary(bool includeCacheKey = false)
     {
         var dictionary = new Dictionary<string, string>
         {
-            {nameof(AccountHashedId), AccountHashedId },
-            {nameof(AccountLegalEntityHashedId), AccountLegalEntityHashedId },
-            {nameof(Origin), Origin.ToString() }
+            {nameof(AccountHashedId), AccountHashedId }         
         };
-            
-        if (ReservationId.HasValue)
-            dictionary.Add(nameof(ReservationId), ReservationId.ToString());
-        if (!string.IsNullOrWhiteSpace(StartMonthYear))
-            dictionary.Add(nameof(StartMonthYear), StartMonthYear);
-        if (!string.IsNullOrWhiteSpace(CourseCode))
-            dictionary.Add(nameof(CourseCode), CourseCode);
-        if (AddApprenticeshipCacheKey.HasValue)
-            dictionary.Add(nameof(AddApprenticeshipCacheKey), AddApprenticeshipCacheKey.ToString());
+          
+        if (includeCacheKey)
+        {
+            if (AddApprenticeshipCacheKey.HasValue)
+                dictionary.Add(nameof(AddApprenticeshipCacheKey), AddApprenticeshipCacheKey.ToString());
+        }
+        else
+        {
+            dictionary.Add(nameof(AccountLegalEntityHashedId), AccountLegalEntityHashedId);
+            dictionary.Add(nameof(Origin), Origin.ToString());
 
+            if (ReservationId.HasValue)
+                dictionary.Add(nameof(ReservationId), ReservationId.ToString());
+            if (!string.IsNullOrWhiteSpace(StartMonthYear))
+                dictionary.Add(nameof(StartMonthYear), StartMonthYear);
+            if (!string.IsNullOrWhiteSpace(CourseCode))
+                dictionary.Add(nameof(CourseCode), CourseCode);
+        }
+        
         return dictionary;
-    }
+    }  
 }

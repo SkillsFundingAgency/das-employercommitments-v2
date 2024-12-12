@@ -24,6 +24,6 @@ public class WhenPostingSelectCourse
         result.Should().NotBeNull();
         result.ActionName.Should().BeEquivalentTo("SelectDeliveryModel");
         result.RouteValues["AccountHashedId"].Should().Be(cacheModel.AccountHashedId);
-        result.RouteValues["CacheKey"].Should().Be(cacheModel.CacheKey);
+        result.RouteValues["AddApprenticeshipCacheKey"].Should().Be(cacheModel.AddApprenticeshipCacheKey);
     }
 }

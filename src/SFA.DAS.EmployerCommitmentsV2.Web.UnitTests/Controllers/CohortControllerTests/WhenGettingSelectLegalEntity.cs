@@ -37,7 +37,7 @@ public class WhenGettingSelectLegalEntity
 
         _cacheStorageService = new Mock<ICacheStorageService>();
         _cacheStorageService
-           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.CacheKey))
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.AddApprenticeshipCacheKey))
            .ReturnsAsync(_cacheModel);
 
         _cacheStorageService
@@ -70,7 +70,7 @@ public class WhenGettingSelectLegalEntity
         //Act
         var result = await _controller.SelectLegalEntity(
             AccountHashedId,
-            _cacheModel.CacheKey,
+            _cacheModel.AddApprenticeshipCacheKey,
             isTransfer ? TransferConnectionCode : null,
             isTransfer ? EncodedPledgeApplicationId : null);
 
@@ -93,7 +93,7 @@ public class WhenGettingSelectLegalEntity
         //Assert
         await _controller.Invoking(c => c.SelectLegalEntity(
             AccountHashedId,
-            _cacheModel.CacheKey,
+            _cacheModel.AddApprenticeshipCacheKey,
             isTransfer ? TransferConnectionCode : null,
             isTransfer ? EncodedPledgeApplicationId : null))
         .Should().ThrowAsync<Exception>();
@@ -110,7 +110,7 @@ public class WhenGettingSelectLegalEntity
         //Assert
         await _controller.Invoking(c => c.SelectLegalEntity(
             AccountHashedId,
-            _cacheModel.CacheKey,
+            _cacheModel.AddApprenticeshipCacheKey,
             isTransfer ? TransferConnectionCode : null,
             isTransfer ? EncodedPledgeApplicationId : null))
             .Should().ThrowAsync<Exception>();
@@ -150,13 +150,13 @@ public class WhenGettingSelectLegalEntity
         {
             _cacheModel.TransferSenderId = null;
             _cacheStorageService
-           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.CacheKey))
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.AddApprenticeshipCacheKey))
            .ReturnsAsync(_cacheModel);
         }
         //Act
         var result = await _controller.SelectLegalEntity(
             AccountHashedId,
-            _cacheModel.CacheKey,
+            _cacheModel.AddApprenticeshipCacheKey,
             isTransfer ? TransferConnectionCode : null,
             isTransfer ? EncodedPledgeApplicationId : null);
 

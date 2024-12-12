@@ -19,7 +19,7 @@ public class WhenGetingAddDraftApprenticeship
         var viewModel = new ApprenticeViewModel();
 
         cacheStorageService
-            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.CacheKey))
+            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
             .ReturnsAsync(cacheModel);
 
         cacheStorageService
@@ -30,7 +30,7 @@ public class WhenGetingAddDraftApprenticeship
             .Setup(mapper => mapper.Map<ApprenticeViewModel>(cacheModel))
             .ReturnsAsync(viewModel);
 
-        var result = await controller.AddDraftApprenticeship(cacheModel.CacheKey) as ViewResult;
+        var result = await controller.AddDraftApprenticeship(cacheModel.AddApprenticeshipCacheKey) as ViewResult;
 
         result.Should().NotBeNull();
         result.ViewName.Should().Be("Apprentice");

@@ -25,7 +25,7 @@ public class SelectProviderViewModelMapper(IApprovalsApiClient outerApiClient) :
             Origin = DetermineOrigin(source),
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
             Providers = providers,
-            AddApprenticeshipCacheKey = source.CacheKey
+            AddApprenticeshipCacheKey = source.AddApprenticeshipCacheKey
         };
     }
 

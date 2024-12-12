@@ -23,8 +23,8 @@ public class AddApprenticeshipCacheModelToSelectDeliveryModelViewModelMapper(IAp
             ReservationId = source.ReservationId,
             StartMonthYear = source.StartMonthYear,
             TransferSenderId = source.TransferSenderId,
-            CacheKey = source.CacheKey,
-            AddApprenticeshipCacheKey = source.CacheKey
+            CacheKey = source.AddApprenticeshipCacheKey,
+            AddApprenticeshipCacheKey = source.AddApprenticeshipCacheKey
         };
     }
 }

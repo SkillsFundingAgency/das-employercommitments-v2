@@ -15,7 +15,7 @@ public class AddApprenticeshipCacheModelToSelectTransferConnectionViewModelMappe
         {
             AccountHashedId = source.AccountHashedId,
             TransferConnections = result,
-            AddApprenticeshipCacheKey = source.CacheKey
+            AddApprenticeshipCacheKey = source.AddApprenticeshipCacheKey
         };
     }
 

@@ -24,11 +24,11 @@ internal class WhenGettingApprentice
         _fixture = new Fixture();
         _apprenticeRequest = _fixture.Create<ApprenticeRequest>();
         _cacheModel = _fixture.Create<AddApprenticeshipCacheModel>();
-        _apprenticeRequest.AddApprenticeshipCacheKey = _cacheModel.CacheKey;
+        _apprenticeRequest.AddApprenticeshipCacheKey = _cacheModel.AddApprenticeshipCacheKey;
 
         _cacheStorageService = new Mock<ICacheStorageService>();
         _cacheStorageService
-           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.CacheKey))
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.AddApprenticeshipCacheKey))
            .ReturnsAsync(_cacheModel);
         _cacheStorageService
         .Setup(x => x.SaveToCache(It.IsAny<Guid>(), It.IsAny<AddApprenticeshipCacheModel>(), 1))
@@ -51,7 +51,7 @@ internal class WhenGettingApprentice
 
         // Assert
         _cacheStorageService.Verify(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_apprenticeRequest.AddApprenticeshipCacheKey.Value), Times.Once);
-        _cacheStorageService.Verify(x => x.SaveToCache(_cacheModel.CacheKey, It.Is<AddApprenticeshipCacheModel>(m =>
+        _cacheStorageService.Verify(x => x.SaveToCache(_cacheModel.AddApprenticeshipCacheKey, It.Is<AddApprenticeshipCacheModel>(m =>
             m.ReservationId == _apprenticeRequest.ReservationId &&
             m.CourseCode == _apprenticeRequest.CourseCode &&
             m.StartMonthYear == _apprenticeRequest.StartMonthYear), 1), Times.Once);
@@ -59,7 +59,7 @@ internal class WhenGettingApprentice
         var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirectResult.ActionName.Should().Be(nameof(CohortController.SelectCourse));
         redirectResult.RouteValues["AccountHashedId"].Should().Be(_cacheModel.AccountHashedId);
-        redirectResult.RouteValues["CacheKey"].Should().Be(_cacheModel.CacheKey);
+        redirectResult.RouteValues["AddApprenticeshipCacheKey"].Should().Be(_cacheModel.AddApprenticeshipCacheKey);
     }
 
     [TearDown]

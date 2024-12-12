@@ -28,7 +28,7 @@ public class WhenSelectTransferConnection
         _cacheModel = autoFixture.Create<AddApprenticeshipCacheModel>();
 
         _selectTransferConnectionViewModel = autoFixture.Create<SelectTransferConnectionViewModel>();
-        _selectTransferConnectionViewModel.AddApprenticeshipCacheKey = _cacheModel.CacheKey;
+        _selectTransferConnectionViewModel.AddApprenticeshipCacheKey = _cacheModel.AddApprenticeshipCacheKey;
         _selectTransferConnectionViewModel.AccountHashedId = _cacheModel.AccountHashedId;
 
         _modelMapper.Setup(x => x.Map<SelectTransferConnectionViewModel>(
@@ -36,7 +36,7 @@ public class WhenSelectTransferConnection
             .ReturnsAsync(_selectTransferConnectionViewModel);
 
         _cacheStorageService = new Mock<ICacheStorageService>();
-        _cacheStorageService.Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.CacheKey))
+        _cacheStorageService.Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.AddApprenticeshipCacheKey))
            .ReturnsAsync(_cacheModel);
         _cacheStorageService.Setup(x => x.SaveToCache(It.IsAny<Guid>(), It.IsAny<AddApprenticeshipCacheModel>(), 1))
          .Returns(Task.CompletedTask);
@@ -60,7 +60,7 @@ public class WhenSelectTransferConnection
         _selectTransferConnectionViewModel.TransferConnections = new List<TransferConnection>();
 
         //Act
-        var result = await _controller.SelectTransferConnection(_cacheModel.CacheKey);
+        var result = await _controller.SelectTransferConnection(_cacheModel.AddApprenticeshipCacheKey);
 
         //Assert
         var redirectToActionResult = result as RedirectToActionResult;
@@ -71,7 +71,7 @@ public class WhenSelectTransferConnection
     public async Task Then_Verify_ViewModel()
     {
         //Act
-        var result = await _controller.SelectTransferConnection(_cacheModel.CacheKey);
+        var result = await _controller.SelectTransferConnection(_cacheModel.AddApprenticeshipCacheKey);
 
         //Assert
         var viewResult = result as ViewResult;
@@ -91,12 +91,12 @@ public class WhenSelectTransferConnection
            .ReturnsAsync(_selectTransferConnectionViewModel);
 
         //Act
-        var result = await _controller.SelectTransferConnection(_cacheModel.CacheKey) as RedirectToActionResult;
+        var result = await _controller.SelectTransferConnection(_cacheModel.AddApprenticeshipCacheKey) as RedirectToActionResult;
 
         result.ActionName.Should().Be("SelectLegalEntity");
         result.RouteValues.Should().NotBeEmpty();
         result.RouteValues["AccountHashedId"].Should().Be(_selectTransferConnectionViewModel.AccountHashedId);
-        result.RouteValues["CacheKey"].Should().Be(_selectTransferConnectionViewModel.AddApprenticeshipCacheKey);
+        result.RouteValues["AddApprenticeshipCacheKey"].Should().Be(_selectTransferConnectionViewModel.AddApprenticeshipCacheKey);
     }
 
     [Test]
@@ -109,6 +109,6 @@ public class WhenSelectTransferConnection
         result.ActionName.Should().Be("SelectLegalEntity");
         result.RouteValues.Should().NotBeEmpty();
         result.RouteValues["AccountHashedId"].Should().Be(_selectTransferConnectionViewModel.AccountHashedId);
-        result.RouteValues["CacheKey"].Should().Be(_selectTransferConnectionViewModel.AddApprenticeshipCacheKey);
+        result.RouteValues["AddApprenticeshipCacheKey"].Should().Be(_selectTransferConnectionViewModel.AddApprenticeshipCacheKey);
     }
 }

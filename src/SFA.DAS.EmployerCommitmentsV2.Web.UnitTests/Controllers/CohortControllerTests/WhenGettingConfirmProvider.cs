@@ -24,7 +24,7 @@ public class WhenGettingConfirmProvider
         [Greedy] CohortController controller)
     {
         cacheStorageService
-           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.CacheKey))
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
            .ReturnsAsync(cacheModel);
 
         mockMapper
@@ -36,7 +36,7 @@ public class WhenGettingConfirmProvider
             .Setup(x => x.GetProvider(providerId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(getProviderResponse);
 
-        var result = await controller.ConfirmProvider(cacheModel.CacheKey) as ViewResult;
+        var result = await controller.ConfirmProvider(cacheModel.AddApprenticeshipCacheKey) as ViewResult;
 
         result.ViewName.Should().BeNull();
     }

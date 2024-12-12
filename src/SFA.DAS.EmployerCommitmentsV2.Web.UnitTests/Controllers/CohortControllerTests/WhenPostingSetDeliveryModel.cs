@@ -21,10 +21,10 @@ public class WhenPostingSetDeliveryModel
         [Greedy] CohortController controller)
     {
         viewModel.DeliveryModels = new Fixture().CreateMany<DeliveryModel>().ToArray();
-        cacheModel.CacheKey = viewModel.AddApprenticeshipCacheKey.Value;
+        cacheModel.AddApprenticeshipCacheKey = viewModel.AddApprenticeshipCacheKey.Value;
 
         cacheStorageService
-           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.CacheKey))
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
            .ReturnsAsync(cacheModel);
 
         cacheStorageService
@@ -39,6 +39,6 @@ public class WhenPostingSetDeliveryModel
         result.Should().NotBeNull();
         result.ActionName.Should().Be("AddDraftApprenticeship");
         result.RouteValues["AccountHashedId"].Should().Be(cacheModel.AccountHashedId);
-        result.RouteValues["CacheKey"].Should().Be(cacheModel.CacheKey);
+        result.RouteValues["AddApprenticeshipCacheKey"].Should().Be(cacheModel.AddApprenticeshipCacheKey);
     }
 }

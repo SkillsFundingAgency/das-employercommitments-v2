@@ -10,7 +10,7 @@ public class ConfirmProviderViewModel : IndexViewModel
     public string TransferSenderId { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
 
-    public override Dictionary<string, string> ToDictionary()
+    public override Dictionary<string, string> ToDictionary(bool includeCacheKey = false)
     {
         var result = base.ToDictionary();
 

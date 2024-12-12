@@ -26,13 +26,13 @@ public class WhenPostingSelectProvider
     {
         viewModel.ProviderId = providerId.ToString();
 
-        cacheModel.CacheKey = viewModel.AddApprenticeshipCacheKey;
+        cacheModel.AddApprenticeshipCacheKey = viewModel.AddApprenticeshipCacheKey;
         cacheStorageService
           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(viewModel.AddApprenticeshipCacheKey))
           .ReturnsAsync(cacheModel);
 
         cacheStorageService
-         .Setup(x => x.SaveToCache(cacheModel.CacheKey, It.IsAny<AddApprenticeshipCacheModel>(), 1))
+         .Setup(x => x.SaveToCache(cacheModel.AddApprenticeshipCacheKey, It.IsAny<AddApprenticeshipCacheModel>(), 1))
          .Returns(Task.CompletedTask);
 
         mockApiClient
@@ -55,7 +55,7 @@ public class WhenPostingSelectProvider
         HttpResponseMessage error,
         [Greedy] CohortController controller)
     {
-        cacheModel.CacheKey = viewModel.AddApprenticeshipCacheKey;
+        cacheModel.AddApprenticeshipCacheKey = viewModel.AddApprenticeshipCacheKey;
         cacheStorageService
           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(viewModel.AddApprenticeshipCacheKey))
           .ReturnsAsync(cacheModel);
@@ -82,7 +82,7 @@ public class WhenPostingSelectProvider
         HttpResponseMessage error,
         [Greedy] CohortController controller)
     {
-        cacheModel.CacheKey = viewModel.AddApprenticeshipCacheKey;
+        cacheModel.AddApprenticeshipCacheKey = viewModel.AddApprenticeshipCacheKey;
         cacheStorageService
           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(viewModel.AddApprenticeshipCacheKey))
           .ReturnsAsync(cacheModel);
@@ -112,7 +112,7 @@ public class WhenPostingSelectProvider
         GetProviderResponse apiResponse,
         [Greedy] CohortController controller)
     {
-        cacheModel.CacheKey = viewModel.AddApprenticeshipCacheKey;
+        cacheModel.AddApprenticeshipCacheKey = viewModel.AddApprenticeshipCacheKey;
         cacheStorageService
           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(viewModel.AddApprenticeshipCacheKey))
           .ReturnsAsync(cacheModel);
@@ -132,6 +132,6 @@ public class WhenPostingSelectProvider
         redirectResult.Should().NotBeNull();
         redirectResult.ActionName.Should().Be("ConfirmProvider");
         redirectResult.RouteValues["AccountHashedId"].Should().Be(cacheModel.AccountHashedId);
-        redirectResult.RouteValues["CacheKey"].Should().Be(cacheModel.CacheKey);
+        redirectResult.RouteValues["AddApprenticeshipCacheKey"].Should().Be(cacheModel.AddApprenticeshipCacheKey);
     }
 }

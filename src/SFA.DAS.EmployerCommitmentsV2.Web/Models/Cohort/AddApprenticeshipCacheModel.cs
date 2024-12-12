@@ -1,11 +1,10 @@
 ﻿using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
-public class AddApprenticeshipCacheModel : ICacheModel
+public class AddApprenticeshipCacheModel
 {
-    public Guid CacheKey { get; set; }
+    public Guid AddApprenticeshipCacheKey { get; set; }
     public string AccountHashedId { get; set; }
     public long AccountId { get; set; }
     public string CohortRef { get; set; }

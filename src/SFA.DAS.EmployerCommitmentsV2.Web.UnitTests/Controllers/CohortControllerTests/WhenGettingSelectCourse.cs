@@ -19,14 +19,14 @@ public class WhenGettingSelectCourse
         [Greedy] CohortController controller)
     {
         cacheStorageService
-           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.CacheKey))
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
            .ReturnsAsync(cacheModel);
 
         modelMapper.Setup(x => x.Map<SelectCourseViewModel>(
             It.Is<AddApprenticeshipCacheModel>(r => r == cacheModel)))
             .ReturnsAsync(viewModel);
 
-        var result = await controller.SelectCourse(cacheModel.CacheKey) as ViewResult;
+        var result = await controller.SelectCourse(cacheModel.AddApprenticeshipCacheKey) as ViewResult;
 
         result.Should().NotBeNull();
         result.ViewName.Should().BeSameAs("SelectCourse");
