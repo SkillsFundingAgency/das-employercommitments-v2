@@ -27,7 +27,7 @@ public class WhenPostingSelectLegalEntity
         _selectLegalEntityViewModel = _fixture.Create<SelectLegalEntityViewModel>();
 
         _cacheModel = _fixture.Create<AddApprenticeshipCacheModel>();
-        _cacheModel.AddApprenticeshipCacheKey = _selectLegalEntityViewModel.AddApprenticeshipCacheKey;
+        _cacheModel.AddApprenticeshipCacheKey = _selectLegalEntityViewModel.AddApprenticeshipCacheKey.Value;
 
         _cacheStorageService = new Mock<ICacheStorageService>();
         _cacheStorageService

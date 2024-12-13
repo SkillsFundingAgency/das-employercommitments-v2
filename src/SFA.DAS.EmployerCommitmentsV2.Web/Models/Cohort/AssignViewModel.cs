@@ -23,7 +23,7 @@ public class AssignViewModel : IAuthorizationContextModel
     [Required(ErrorMessage = "Select who will add apprentices")]
     public WhoIsAddingApprentices? WhoIsAddingApprentices { get; set; }
     public string Message { get; set; }
-    public Guid AddApprenticeshipCacheKey { get; set; }
+    public Guid? AddApprenticeshipCacheKey { get; set; }
 
 }
 

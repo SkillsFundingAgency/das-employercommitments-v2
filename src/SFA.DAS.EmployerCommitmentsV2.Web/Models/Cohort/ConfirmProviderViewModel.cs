@@ -12,7 +12,7 @@ public class ConfirmProviderViewModel : IndexViewModel
 
     public override Dictionary<string, string> ToDictionary(bool includeCacheKey = false)
     {
-        var result = base.ToDictionary();
+        var result = base.ToDictionary(includeCacheKey);
 
         result.Add("ProviderId", ProviderId.ToString());
 

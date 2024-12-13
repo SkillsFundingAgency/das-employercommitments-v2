@@ -8,5 +8,5 @@ public class SelectLegalEntityViewModel
     public string CohortRef { get; set; }
     public IEnumerable<LegalEntity> LegalEntities { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
-    public Guid AddApprenticeshipCacheKey { get; set; }
+    public Guid? AddApprenticeshipCacheKey { get; set; }
 }

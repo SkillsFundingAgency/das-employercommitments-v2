@@ -262,7 +262,7 @@ public class CohortController : Controller
                 $"providerId={model.ProviderId}" +
                 $"&transferSenderId={model.TransferSenderId}" +
                 $"&encodedPledgeApplicationId={model.EncodedPledgeApplicationId}" +
-                $"&approvalsCacheKey={model.AddApprenticeshipCacheKey}");
+                $"&addApprenticeshipCacheKey={model.AddApprenticeshipCacheKey}");
             return Redirect(url);
         }
 
@@ -300,7 +300,7 @@ public class CohortController : Controller
     [Route("add/apprentice")]
     public async Task<IActionResult> Apprentice(ApprenticeRequest request)
     {
-        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(request.AddApprenticeshipCacheKey.Value);
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(request.AddApprenticeshipCacheKey);
         cacheModel.ReservationId = request.ReservationId;
         cacheModel.CourseCode = request.CourseCode;
         cacheModel.StartMonthYear = request.StartMonthYear;
@@ -335,7 +335,7 @@ public class CohortController : Controller
     [Route("add/select-delivery-model")]
     public async Task<IActionResult> SelectDeliveryModel(ApprenticeRequest request)
     {
-        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(request.AddApprenticeshipCacheKey.Value);
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(request.AddApprenticeshipCacheKey);
 
         cacheModel.ReservationId = request.ReservationId.HasValue ? request.ReservationId : cacheModel.ReservationId;
         cacheModel.CourseCode = !string.IsNullOrEmpty(request.CourseCode) ? request.CourseCode : cacheModel.CourseCode;
@@ -361,7 +361,7 @@ public class CohortController : Controller
     [Route("add/select-delivery-model")]
     public async Task<IActionResult> SetDeliveryModel(SelectDeliveryModelViewModel model)
     {
-        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(model.AddApprenticeshipCacheKey.Value);
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(model.AddApprenticeshipCacheKey);
 
         if (model.DeliveryModel == null)
         {
@@ -541,7 +541,7 @@ public class CohortController : Controller
     public async Task<IActionResult> SelectLegalEntity([FromRoute] string accountHashedId, Guid? addApprenticeshipCacheKey, string encodedPledgeApplicationId = null, string transferConnectionCode = null)
     {
         var cacheModel = addApprenticeshipCacheKey.HasValue
-        ? await GetAddApprenticeshipCacheModelFromCache(addApprenticeshipCacheKey.Value)
+        ? await GetAddApprenticeshipCacheModelFromCache(addApprenticeshipCacheKey)
         : await CreateAndStoreNewCacheModel(accountHashedId, encodedPledgeApplicationId, transferConnectionCode);
 
         var response = await _modelMapper.Map<SelectLegalEntityViewModel>(cacheModel);

@@ -14,7 +14,7 @@ public class CacheItemNotFoundMiddleware(RequestDelegate next, ILogger<CacheItem
         }
         catch (CacheItemNotFoundException<AddApprenticeshipCacheModel> ex)
         {
-            logger.LogError(ex, ex.Message);
+            logger.LogError(ex, "CacheItemNotFoundException: {message}", ex.Message);
             var redirectUrl = $"/error/404";
             context.Response.Redirect(redirectUrl);
         }

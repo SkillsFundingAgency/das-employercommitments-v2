@@ -26,9 +26,9 @@ public class WhenPostingSelectProvider
     {
         viewModel.ProviderId = providerId.ToString();
 
-        cacheModel.AddApprenticeshipCacheKey = viewModel.AddApprenticeshipCacheKey;
+        cacheModel.AddApprenticeshipCacheKey = viewModel.AddApprenticeshipCacheKey.Value;
         cacheStorageService
-          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(viewModel.AddApprenticeshipCacheKey))
+          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
           .ReturnsAsync(cacheModel);
 
         cacheStorageService
@@ -55,9 +55,9 @@ public class WhenPostingSelectProvider
         HttpResponseMessage error,
         [Greedy] CohortController controller)
     {
-        cacheModel.AddApprenticeshipCacheKey = viewModel.AddApprenticeshipCacheKey;
+        cacheModel.AddApprenticeshipCacheKey = viewModel.AddApprenticeshipCacheKey.Value;
         cacheStorageService
-          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(viewModel.AddApprenticeshipCacheKey))
+          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
           .ReturnsAsync(cacheModel);
 
         error.StatusCode = HttpStatusCode.NotFound;
@@ -82,9 +82,9 @@ public class WhenPostingSelectProvider
         HttpResponseMessage error,
         [Greedy] CohortController controller)
     {
-        cacheModel.AddApprenticeshipCacheKey = viewModel.AddApprenticeshipCacheKey;
+        cacheModel.AddApprenticeshipCacheKey = viewModel.AddApprenticeshipCacheKey.Value;
         cacheStorageService
-          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(viewModel.AddApprenticeshipCacheKey))
+          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
           .ReturnsAsync(cacheModel);
 
         error.StatusCode = HttpStatusCode.NetworkAuthenticationRequired;
@@ -112,9 +112,9 @@ public class WhenPostingSelectProvider
         GetProviderResponse apiResponse,
         [Greedy] CohortController controller)
     {
-        cacheModel.AddApprenticeshipCacheKey = viewModel.AddApprenticeshipCacheKey;
+        cacheModel.AddApprenticeshipCacheKey = viewModel.AddApprenticeshipCacheKey.Value;
         cacheStorageService
-          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(viewModel.AddApprenticeshipCacheKey))
+          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
           .ReturnsAsync(cacheModel);
 
         viewModel.ProviderId = providerId.ToString();
