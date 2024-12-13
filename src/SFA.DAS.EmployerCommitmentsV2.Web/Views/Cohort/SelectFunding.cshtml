@@ -24,6 +24,9 @@
         <form method="POST">
 
         @Html.AntiForgeryToken()
+
+        <h1 class="govuk-heading-m">What funding would you like to select?</h1>
+
         <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.FundingType,  "govuk-form-group--error")">
             <fieldset class="govuk-fieldset">
                 @if (!ViewData.ModelState.IsValid)
@@ -38,18 +41,28 @@
                         <div class="govuk-radios__item" id="radio-item-funding-type">
                                 <input class="govuk-radios__input" id="FundingType-1" name="FundingType" type="radio" value="1">
                                 <label class="govuk-label govuk-radios__label" for="FundingType-1">
-                                    Direct transfer funds from a connection
-                                    <p class="govuk-hint">
-                                        A direct transfer from an organisation you're connected with
-                                    </p>
-                            </label>
+                                    @if (Model.IsLevyAccount)
+                                    {
+                                        <span>Transfer funds from a connection</span>
+                                        <p class="govuk-hint">
+                                            A levy paying business that has set up a connection with you in the service
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <span>Direct transfer funds from a connection</span>
+                                        <p class="govuk-hint">
+                                            A direct transfer from an organisation you're connected with
+                                        </p>
+                                    }
+                                </label>
                         </div>
                     }
-                    @if(Model.HasUnallocatedReservationsAvailable)
+                    @if(!Model.IsLevyAccount && Model.HasUnallocatedReservationsAvailable)
                     {
                         <div class="govuk-radios__item" id="radio-item-funding-type">
                                 <input class="govuk-radios__input" id="FundingType-2" name="FundingType" type="radio" value="2">
-                            <label class="govuk-label govuk-radios__label" for="FundingType-UR">
+                            <label class="govuk-label govuk-radios__label" for="FundingType-2">
                                 Reserved funds
                                 <p class="govuk-hint">
                                     Funding you've reserved from the government
@@ -57,11 +70,11 @@
                             </label>
                         </div>
                     }
-                    @if (Model.HasAdditionalReservationFundsAvailable)
+                    @if (!Model.IsLevyAccount && Model.HasAdditionalReservationFundsAvailable)
                     {
                         <div class="govuk-radios__item" id="radio-item-funding-type">
                                 <input class="govuk-radios__input" id="FundingType-3" name="FundingType" type="radio" value="3">
-                            <label class="govuk-label govuk-radios__label" for="FundingType-AR">
+                            <label class="govuk-label govuk-radios__label" for="FundingType-3">
                                 I want to reserve new funds
                                 <p class="govuk-hint">
                                     You will automatically reserve new funding for an apprentice once you
@@ -70,7 +83,15 @@
                             </label>
                         </div>
                     }
-
+                    @if (Model.IsLevyAccount)
+                    {
+                        <div class="govuk-radios__item" id="radio-item-funding-type">
+                            <input class="govuk-radios__input" id="FundingType-4" name="FundingType" type="radio" value="4">
+                            <label class="govuk-label govuk-radios__label" for="FundingType-4">
+                                Current levy funds
+                            </label>
+                        </div>
+                    }
                 </div>
             </fieldset>
         </div>
