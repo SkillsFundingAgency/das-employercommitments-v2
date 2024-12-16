@@ -56,8 +56,7 @@ public class WhenMappingBaseSelectProviderRequestToTransferConnectionViewModelTe
             FundingEmployerPublicHashedAccountId = "PublicAccountHashId",
             FundingEmployerHashedAccountId = "AccountHashId",
             FundingEmployerAccountName = x.FundingEmployerAccountName,
-            Status = x.Status,
-            StatusAssignedOn = x.StatusAssignedOn
+            ApprovedOn = x.ApprovedOn
         }));
     }
 

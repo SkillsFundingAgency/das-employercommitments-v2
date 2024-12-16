@@ -54,10 +54,10 @@
                                 <input class="govuk-radios__input" id="TransferConnection-@entity.FundingEmployerPublicHashedAccountId" name="TransferConnectionCode" type="radio" value="@entity.FundingEmployerPublicHashedAccountId">
                                 <label class="govuk-label govuk-radios__label" for="TransferConnection-@entity.FundingEmployerPublicHashedAccountId">
                                     @entity.FundingEmployerAccountName
-                                    @if (entity.StatusAssignedOn.HasValue)
+                                    @if (entity.ApprovedOn.HasValue)
                                     {
                                         <p class="govuk-hint">
-                                            Connection approved on @entity.StatusAssignedOn.Value.ToString("dd MMM yyyy"); 
+                                            Connection approved on @entity.ApprovedOn.Value.ToString("dd MMM yyyy"); 
                                         </p>
                                     }
                                 </label>

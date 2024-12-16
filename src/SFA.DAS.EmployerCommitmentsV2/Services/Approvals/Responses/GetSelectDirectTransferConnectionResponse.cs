@@ -12,6 +12,5 @@ public class TransferConnection
     public string FundingEmployerHashedAccountId { get; set; }
     public string FundingEmployerPublicHashedAccountId { get; set; }
     public string FundingEmployerAccountName { get; set; }
-    public short? Status { get; set; }
-    public DateTime? StatusAssignedOn { get; set; }
+    public DateTime? ApprovedOn { get; set; }
 }
