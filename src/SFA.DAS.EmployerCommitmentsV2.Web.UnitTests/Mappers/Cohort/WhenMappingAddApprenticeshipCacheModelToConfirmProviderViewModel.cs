@@ -7,7 +7,7 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
-public class WhenMappingAddApprenticeshipCacheModelToViewModel
+public class WhenMappingAddApprenticeshipCacheModelToConfirmProviderViewModel
 {
     [Test, MoqAutoData]
     public async Task Then_Maps_AccountHashedId(

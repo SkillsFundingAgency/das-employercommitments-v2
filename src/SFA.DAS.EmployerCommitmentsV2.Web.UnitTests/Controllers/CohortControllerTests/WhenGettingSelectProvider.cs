@@ -16,15 +16,9 @@ public class WhenGettingSelectProvider
         AddApprenticeshipCacheModel cacheModel,
         SelectProviderViewModel viewModel,
         [Frozen] Mock<IModelMapper> mockMapper,
-        [Frozen] Mock<IEncodingService> mockEncodingService,
         [Frozen] Mock<ICacheStorageService> cacheStorageService,
         [Greedy] CohortController controller)
     {
-        long accountLegalEntityId = 123;
-        mockEncodingService
-            .Setup(x => x.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out accountLegalEntityId))
-            .Returns(true);
-
         cacheStorageService
           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
           .ReturnsAsync(cacheModel);
@@ -35,7 +29,6 @@ public class WhenGettingSelectProvider
 
         await controller.SelectProvider(cacheModel.ApprenticeshipSessionKey);
         mockMapper.Verify(x => x.Map<SelectProviderViewModel>(It.IsAny<AddApprenticeshipCacheModel>()), Times.Once);
-        mockEncodingService.Verify(x => x.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out accountLegalEntityId), Times.Once);
     }
 
     [Test, MoqAutoData]
@@ -64,6 +57,6 @@ public class WhenGettingSelectProvider
 
         result.Should().NotBeNull();
         result.ViewName.Should().BeNull();
-        result.Model.Should().BeEquivalentTo(viewModel);       
+        result.Model.Should().BeEquivalentTo(viewModel);
     }
 }

@@ -6,6 +6,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
+using SFA.DAS.Encoding;
 using SFA.DAS.Http;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -15,16 +16,22 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 public class WhenPostingSelectProvider
 {
     [Test, MoqAutoData]
-    public async Task ThenCallsApi(
+    public async Task ThenCallsApi_And_Decodes_AccountLegalEntityId(
         SelectProviderViewModel viewModel,
         AddApprenticeshipCacheModel cacheModel,
         long providerId,
         [Frozen] Mock<ICacheStorageService> cacheStorageService,
         [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
+        [Frozen] Mock<IEncodingService> mockEncodingService,
         GetProviderResponse apiResponse,
         [Greedy] CohortController controller)
     {
         viewModel.ProviderId = providerId.ToString();
+
+        long accountLegalEntityId = 123;
+        mockEncodingService
+            .Setup(x => x.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out accountLegalEntityId))
+            .Returns(true);
 
         cacheModel.ApprenticeshipSessionKey = viewModel.ApprenticeshipSessionKey.Value;
         cacheStorageService
@@ -39,10 +46,10 @@ public class WhenPostingSelectProvider
            .Setup(x => x.GetProvider(long.Parse(viewModel.ProviderId), CancellationToken.None))
            .ReturnsAsync(apiResponse);
 
-
         await controller.SelectProvider(viewModel);
 
         mockApiClient.Verify(x => x.GetProvider(providerId, CancellationToken.None), Times.Once);
+        mockEncodingService.Verify(x => x.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out accountLegalEntityId), Times.Once);
     }
 
     [Test, MoqAutoData]

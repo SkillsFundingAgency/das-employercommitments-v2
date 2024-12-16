@@ -174,16 +174,11 @@ public class CohortController : Controller
     }
 
     [Route("add/select-provider")]
-    public async Task<IActionResult> SelectProvider(Guid apprenticeshipSessionKey)
+    public async Task<IActionResult> SelectProvider([FromQuery] Guid apprenticeshipSessionKey)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
 
-        _encodingService.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out var id);
-        cacheModel.AccountLegalEntityId = id;
-
         var viewModel = await _modelMapper.Map<SelectProviderViewModel>(cacheModel);
-
-        await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
         return View(viewModel);
     }
@@ -197,8 +192,12 @@ public class CohortController : Controller
             var cacheModel = await GetAddApprenticeshipCacheModelFromCache(request.ApprenticeshipSessionKey);
 
             await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
-
             cacheModel.ProviderId = long.Parse(request.ProviderId);
+
+            _encodingService.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out var id);
+            cacheModel.AccountLegalEntityId = id;
+            cacheModel.LegalEntityName = request.LegalEntityName;
+
             await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
             return RedirectToAction(RouteNames.CohortConfirmProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
@@ -223,7 +222,7 @@ public class CohortController : Controller
 
     [Route("add/confirm-provider")]
     [HttpGet]
-    public async Task<IActionResult> ConfirmProvider(Guid apprenticeshipSessionKey)
+    public async Task<IActionResult> ConfirmProvider([FromQuery] Guid apprenticeshipSessionKey)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
 
@@ -244,7 +243,7 @@ public class CohortController : Controller
     }
 
     [Route("add/assign")]
-    public async Task<IActionResult> Assign(Guid apprenticeshipSessionKey)
+    public async Task<IActionResult> Assign([FromQuery] Guid apprenticeshipSessionKey)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
         var viewModel = await _modelMapper.Map<AssignViewModel>(cacheModel);
@@ -311,7 +310,7 @@ public class CohortController : Controller
 
     [HttpGet]
     [Route("add/select-course")]
-    public async Task<IActionResult> SelectCourse(Guid apprenticeshipSessionKey)
+    public async Task<IActionResult> SelectCourse([FromQuery] Guid apprenticeshipSessionKey)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
 
@@ -343,16 +342,13 @@ public class CohortController : Controller
 
         var model = await _modelMapper.Map<SelectDeliveryModelViewModel>(cacheModel);
 
+        cacheModel.DeliveryModel = model.DeliveryModels.Length > 1 ? null : model.DeliveryModels.FirstOrDefault();
+        await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
+
         if (model.DeliveryModels.Length > 1)
         {
-            await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
-
             return View(RouteNames.CohortSelectDeliveryModel, model);
         }
-
-        cacheModel.DeliveryModel = model.DeliveryModels.FirstOrDefault();
-
-        await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
         return RedirectToAction(nameof(AddDraftApprenticeship), new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
     }
@@ -378,15 +374,11 @@ public class CohortController : Controller
 
     [HttpGet]
     [Route("add/apprenticeship")]
-    public async Task<IActionResult> AddDraftApprenticeship(Guid apprenticeshipSessionKey)
+    public async Task<IActionResult> AddDraftApprenticeship([FromQuery] Guid apprenticeshipSessionKey)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
 
         var model = await _modelMapper.Map<ApprenticeViewModel>(cacheModel);
-
-        cacheModel.LegalEntityName = model.LegalEntityName;
-
-        await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
         return View(RouteNames.CohortApprentice, model);
     }
@@ -503,7 +495,7 @@ public class CohortController : Controller
 
     [HttpGet]
     [Route("transferConnection/create")]
-    public async Task<IActionResult> SelectTransferConnection(Guid apprenticeshipSessionKey)
+    public async Task<IActionResult> SelectTransferConnection([FromQuery] Guid apprenticeshipSessionKey)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
 
@@ -538,7 +530,11 @@ public class CohortController : Controller
     [HttpGet]
     [Route("legalEntity/create")]
     [Route("add/legal-entity")]
-    public async Task<IActionResult> SelectLegalEntity([FromRoute] string accountHashedId, Guid? apprenticeshipSessionKey, string encodedPledgeApplicationId = null, string transferConnectionCode = null)
+    public async Task<IActionResult> SelectLegalEntity(
+        [FromRoute] string accountHashedId, 
+        [FromQuery] Guid? apprenticeshipSessionKey, 
+        [FromQuery] string encodedPledgeApplicationId = null, 
+        [FromQuery] string transferConnectionCode = null)
     {
         var cacheModel = apprenticeshipSessionKey.HasValue
         ? await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey)

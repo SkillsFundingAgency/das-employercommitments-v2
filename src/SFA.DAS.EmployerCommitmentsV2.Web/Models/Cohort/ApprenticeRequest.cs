@@ -11,6 +11,7 @@ public class ApprenticeRequest : BaseApprenticeRequest
 
 public class BaseApprenticeRequest : IndexRequest
 {
+    [FromQuery]
     public Guid? ApprenticeshipSessionKey { get; set; }
     public long ProviderId { get; set; }
     public string LegalEntityName { get; set; }
