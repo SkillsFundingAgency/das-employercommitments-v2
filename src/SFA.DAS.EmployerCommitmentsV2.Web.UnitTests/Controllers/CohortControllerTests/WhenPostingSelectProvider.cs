@@ -22,17 +22,10 @@ public class WhenPostingSelectProvider
         long providerId,
         [Frozen] Mock<ICacheStorageService> cacheStorageService,
         [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
-        [Frozen] Mock<IEncodingService> mockEncodingService,
         GetProviderResponse apiResponse,
         [Greedy] CohortController controller)
     {
-        viewModel.ProviderId = providerId.ToString();
-
-        long accountLegalEntityId = 123;
-        mockEncodingService
-            .Setup(x => x.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out accountLegalEntityId))
-            .Returns(true);
-
+        viewModel.ProviderId = providerId.ToString();   
         cacheModel.ApprenticeshipSessionKey = viewModel.ApprenticeshipSessionKey.Value;
         cacheStorageService
           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
@@ -49,7 +42,6 @@ public class WhenPostingSelectProvider
         await controller.SelectProvider(viewModel);
 
         mockApiClient.Verify(x => x.GetProvider(providerId, CancellationToken.None), Times.Once);
-        mockEncodingService.Verify(x => x.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out accountLegalEntityId), Times.Once);
     }
 
     [Test, MoqAutoData]

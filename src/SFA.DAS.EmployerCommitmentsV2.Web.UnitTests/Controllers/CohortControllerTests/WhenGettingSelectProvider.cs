@@ -58,5 +58,6 @@ public class WhenGettingSelectProvider
         result.Should().NotBeNull();
         result.ViewName.Should().BeNull();
         result.Model.Should().BeEquivalentTo(viewModel);
+        mockEncodingService.Verify(x => x.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out accountLegalEntityId), Times.Once);
     }
 }

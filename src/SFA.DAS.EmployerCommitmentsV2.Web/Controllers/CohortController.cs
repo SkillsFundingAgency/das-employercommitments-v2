@@ -178,6 +178,10 @@ public class CohortController : Controller
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
 
+        _encodingService.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out var id);
+        cacheModel.AccountLegalEntityId = id;
+        await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
+
         var viewModel = await _modelMapper.Map<SelectProviderViewModel>(cacheModel);
 
         return View(viewModel);
@@ -193,11 +197,7 @@ public class CohortController : Controller
 
             await _commitmentsApiClient.GetProvider(long.Parse(request.ProviderId));
             cacheModel.ProviderId = long.Parse(request.ProviderId);
-
-            _encodingService.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out var id);
-            cacheModel.AccountLegalEntityId = id;
             cacheModel.LegalEntityName = request.LegalEntityName;
-
             await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
             return RedirectToAction(RouteNames.CohortConfirmProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
@@ -531,14 +531,14 @@ public class CohortController : Controller
     [Route("legalEntity/create")]
     [Route("add/legal-entity")]
     public async Task<IActionResult> SelectLegalEntity(
-        [FromRoute] string accountHashedId, 
-        [FromQuery] Guid? apprenticeshipSessionKey, 
-        [FromQuery] string encodedPledgeApplicationId = null, 
+        [FromRoute] string accountHashedId,
+        [FromQuery] Guid? apprenticeshipSessionKey,
+        [FromQuery] string encodedPledgeApplicationId = null,
         [FromQuery] string transferConnectionCode = null)
     {
         var cacheModel = apprenticeshipSessionKey.HasValue
         ? await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey)
-        : await CreateAndStoreNewCacheModel(accountHashedId, encodedPledgeApplicationId, transferConnectionCode);
+        : await CreateAndStoreNewCacheModelFromLevyTransfer(accountHashedId, encodedPledgeApplicationId, transferConnectionCode);
 
         var response = await _modelMapper.Map<SelectLegalEntityViewModel>(cacheModel);
 
@@ -553,6 +553,11 @@ public class CohortController : Controller
         var hasSignedMinimumRequiredAgreementVersion = autoSelectLegalEntity.HasSignedMinimumRequiredAgreementVersion(!string.IsNullOrWhiteSpace(cacheModel.TransferSenderId));
 
         cacheModel.AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId;
+        cacheModel.LegalEntityName = autoSelectLegalEntity.Name;
+        _encodingService.TryDecode(autoSelectLegalEntity.AccountLegalEntityPublicHashedId, EncodingType.PublicAccountLegalEntityId, out var id);
+        cacheModel.AccountLegalEntityId = id;
+        cacheModel.AccountLegalEntityId = autoSelectLegalEntity.Id;
+        cacheModel.HasSignedMinimumRequiredAgreementVersion = hasSignedMinimumRequiredAgreementVersion;
 
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
@@ -561,30 +566,24 @@ public class CohortController : Controller
             return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
         }
 
-        var model = new LegalEntitySignedAgreementViewModel
-        {
-            AccountHashedId = cacheModel.AccountHashedId,
-            AccountLegalEntityId = autoSelectLegalEntity.Id,
-            CohortRef = cacheModel.CohortRef,
-            LegalEntityName = autoSelectLegalEntity.Name,
-            TransferConnectionCode = cacheModel.TransferSenderId,
-            AccountLegalEntityHashedId = cacheModel.AccountLegalEntityHashedId
-        };
-
-        return RedirectToAction(RouteNames.CohortAgreementNotSigned, model.CloneBaseValues());
-
+        return RedirectToAction(RouteNames.CohortAgreementNotSigned, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
     }
 
     [HttpPost]
     [Route("legalEntity/create")]
     [Route("add/legal-entity")]
-    public async Task<ActionResult> SetLegalEntity(SelectLegalEntityViewModel selectedLegalEntity)
+    public async Task<ActionResult> SelectLegalEntity(SelectLegalEntityViewModel selectedLegalEntity)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(selectedLegalEntity.ApprenticeshipSessionKey);
 
         var response = await _modelMapper.Map<LegalEntitySignedAgreementViewModel>(selectedLegalEntity);
 
         cacheModel.AccountLegalEntityHashedId = response.AccountLegalEntityHashedId;
+        cacheModel.AccountLegalEntityId = response.AccountLegalEntityId;
+        cacheModel.LegalEntityName = response.LegalEntityName;
+        cacheModel.HasSignedMinimumRequiredAgreementVersion = response.HasSignedMinimumRequiredAgreementVersion;
+        cacheModel.CohortRef = response.CohortRef;
+
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
         if (response.HasSignedMinimumRequiredAgreementVersion)
@@ -592,24 +591,16 @@ public class CohortController : Controller
             return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
         }
 
-        var model = new LegalEntitySignedAgreementViewModel
-        {
-            AccountHashedId = selectedLegalEntity.AccountHashedId,
-            AccountLegalEntityId = selectedLegalEntity.LegalEntityId,
-            CohortRef = selectedLegalEntity.CohortRef,
-            LegalEntityName = response.LegalEntityName,
-            AccountLegalEntityHashedId = response.AccountLegalEntityHashedId,
-            EncodedPledgeApplicationId = selectedLegalEntity.EncodedPledgeApplicationId
-        };
-
-        return RedirectToAction(RouteNames.CohortAgreementNotSigned, model.CloneBaseValues());
+        return RedirectToAction(RouteNames.CohortAgreementNotSigned, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
     }
 
     [HttpGet]
     [Route(RouteNames.CohortAgreementNotSigned)]
-    public async Task<ActionResult> AgreementNotSigned(LegalEntitySignedAgreementViewModel viewModel)
+    public async Task<ActionResult> AgreementNotSigned([FromQuery] Guid apprenticeshipSessionKey)
     {
-        var response = await _modelMapper.Map<AgreementNotSignedViewModel>(viewModel);
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
+
+        var response = await _modelMapper.Map<AgreementNotSignedViewModel>(cacheModel);
 
         return View(response);
     }
@@ -659,8 +650,7 @@ public class CohortController : Controller
         cacheModel.Reference = model.Reference;
     }
 
-    //This is needed when joining from LTM
-    private async Task<AddApprenticeshipCacheModel> CreateAndStoreNewCacheModel(string accountHashedId, string encodedPledgeApplicationId, string transferConnectionCode)
+    private async Task<AddApprenticeshipCacheModel> CreateAndStoreNewCacheModelFromLevyTransfer(string accountHashedId, string encodedPledgeApplicationId, string transferConnectionCode)
     {
         var cacheModel = new AddApprenticeshipCacheModel
         {

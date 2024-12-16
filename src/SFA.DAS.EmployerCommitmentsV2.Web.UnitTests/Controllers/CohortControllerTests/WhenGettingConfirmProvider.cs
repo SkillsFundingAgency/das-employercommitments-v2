@@ -15,7 +15,6 @@ public class WhenGettingConfirmProvider
     public async Task Then_The_View_Is_Returned(
         int providerId,
         AddApprenticeshipCacheModel cacheModel,
-        ConfirmProviderRequest confirmProviderRequest,
         GetProviderResponse getProviderResponse,
         ConfirmProviderViewModel viewModel,
         [Frozen] Mock<ICommitmentsApiClient> mockApiClient,
@@ -31,7 +30,6 @@ public class WhenGettingConfirmProvider
             .Setup(mapper => mapper.Map<ConfirmProviderViewModel>(cacheModel))
             .ReturnsAsync(viewModel);
 
-        confirmProviderRequest.ProviderId = providerId;
         mockApiClient
             .Setup(x => x.GetProvider(providerId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(getProviderResponse);

@@ -10,6 +10,7 @@ public class AddApprenticeshipCacheModel
     public string CohortRef { get; set; }
     public string EncodedPledgeApplicationId { get; set; } = null;
     public string AccountLegalEntityHashedId { get; set; }
+    public bool HasSignedMinimumRequiredAgreementVersion { get; set; }
     public long AccountLegalEntityId { get; set; }
     public string LegalEntityName { get; set; }
     public string CourseCode { get; set; }

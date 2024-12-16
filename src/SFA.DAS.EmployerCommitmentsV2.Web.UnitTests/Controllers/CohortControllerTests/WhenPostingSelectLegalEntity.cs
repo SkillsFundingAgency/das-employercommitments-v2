@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
@@ -51,7 +52,7 @@ public class WhenPostingSelectLegalEntity
     public void TearDown() => _controller?.Dispose();
 
     [Test]
-    public async Task SetLegalEntity_WhenAgreementSigned_ShouldRedirectToSelectProvider()
+    public async Task SelectLegalEntity_WhenAgreementSigned_ShouldRedirectToSelectProvider()
     {
         // Arrange
         var response = _fixture.Build<LegalEntitySignedAgreementViewModel>()
@@ -62,7 +63,7 @@ public class WhenPostingSelectLegalEntity
                    .ReturnsAsync(response);
 
         // Act
-        var result = await _controller.SetLegalEntity(_selectLegalEntityViewModel);
+        var result = await _controller.SelectLegalEntity(_selectLegalEntityViewModel);
 
         // Assert
         var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
@@ -72,7 +73,7 @@ public class WhenPostingSelectLegalEntity
     }
 
     [Test]
-    public async Task SetLegalEntity_WhenAgreementNotSigned_ShouldRedirectToAgreementNotSigned()
+    public async Task SelectLegalEntity_WhenAgreementNotSigned_ShouldRedirectToAgreementNotSigned()
     {
         // Arrange
         var response = _fixture.Build<LegalEntitySignedAgreementViewModel>()
@@ -83,16 +84,12 @@ public class WhenPostingSelectLegalEntity
                    .ReturnsAsync(response);
 
         // Act
-        var result = await _controller.SetLegalEntity(_selectLegalEntityViewModel) as RedirectToActionResult;
+        var result = await _controller.SelectLegalEntity(_selectLegalEntityViewModel) as RedirectToActionResult;
 
         // Assert
         result.ActionName.Should().Be("AgreementNotSigned");
         result.RouteValues.Should().NotBeEmpty();
-
-        result.RouteValues["AccountHashedId"].Should().Be(_selectLegalEntityViewModel.AccountHashedId);
-        result.RouteValues["CohortRef"].Should().Be(_selectLegalEntityViewModel.CohortRef);
-        result.RouteValues["LegalEntityName"].Should().Be(response.LegalEntityName);
-        result.RouteValues["AccountLegalEntityHashedId"].Should().Be(response.AccountLegalEntityHashedId);
-        result.RouteValues["EncodedPledgeApplicationId"].Should().Be(_selectLegalEntityViewModel.EncodedPledgeApplicationId);
+        result.RouteValues["AccountHashedId"].Should().Be(_cacheModel.AccountHashedId);
+        result.RouteValues["ApprenticeshipSessionKey"].Should().Be(_cacheModel.ApprenticeshipSessionKey);
     }
 }
