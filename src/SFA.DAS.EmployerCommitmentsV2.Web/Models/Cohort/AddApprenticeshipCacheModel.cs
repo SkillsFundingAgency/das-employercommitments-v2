@@ -4,7 +4,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 public class AddApprenticeshipCacheModel
 {
-    public Guid AddApprenticeshipCacheKey { get; set; }
+    public Guid ApprenticeshipSessionKey { get; set; }
     public string AccountHashedId { get; set; }
     public long AccountId { get; set; }
     public string CohortRef { get; set; }

@@ -27,7 +27,7 @@ public class WhenPostingAddDraftApprenticeshipOrRoute
         [Frozen] Mock<IApprovalsApiClient> approvalsApiClient)
     {
         var viewModel = new ApprenticeViewModel();
-        viewModel.AddApprenticeshipCacheKey = cacheModel.AddApprenticeshipCacheKey;
+        viewModel.ApprenticeshipSessionKey = cacheModel.ApprenticeshipSessionKey;
         var autoFixture = new Fixture();
 
         var createCohortResponse = autoFixture.Create<CreateCohortResponse>();
@@ -36,7 +36,7 @@ public class WhenPostingAddDraftApprenticeshipOrRoute
             .Create();
 
         cacheStorageService
-           .Setup(x => x.DeleteFromCache(cacheModel.AddApprenticeshipCacheKey))
+           .Setup(x => x.DeleteFromCache(cacheModel.ApprenticeshipSessionKey))
            .Returns(Task.CompletedTask);
 
         approvalsApiClient.Setup(x => x.CreateCohort(It.IsAny<CreateCohortApimRequest>(), It.IsAny<CancellationToken>()))
@@ -70,12 +70,12 @@ public class WhenPostingAddDraftApprenticeshipOrRoute
     {
         var viewModel = new ApprenticeViewModel
         {
-            AddApprenticeshipCacheKey = cacheModel.AddApprenticeshipCacheKey,
+            ApprenticeshipSessionKey = cacheModel.ApprenticeshipSessionKey,
             AccountHashedId = cacheModel.AccountHashedId
         };
 
         cacheStorageService
-          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
+          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
           .ReturnsAsync(cacheModel);
 
         cacheStorageService
@@ -96,7 +96,7 @@ public class WhenPostingAddDraftApprenticeshipOrRoute
         result.Should().NotBeNull();
         result.ActionName.Should().Be("SelectCourse");
         result.RouteValues["AccountHashedId"].Should().Be(viewModel.AccountHashedId);
-        result.RouteValues["AddApprenticeshipCacheKey"].Should().Be(viewModel.AddApprenticeshipCacheKey);
+        result.RouteValues["ApprenticeshipSessionKey"].Should().Be(viewModel.ApprenticeshipSessionKey);
     }
 
     [Test, MoqAutoData]
@@ -106,12 +106,12 @@ public class WhenPostingAddDraftApprenticeshipOrRoute
     {
         var viewModel = new ApprenticeViewModel
         {
-            AddApprenticeshipCacheKey = cacheModel.AddApprenticeshipCacheKey,
+            ApprenticeshipSessionKey = cacheModel.ApprenticeshipSessionKey,
             AccountHashedId = cacheModel.AccountHashedId
         };
 
         cacheStorageService
-          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
+          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
           .ReturnsAsync(cacheModel);
 
         cacheStorageService
@@ -131,6 +131,6 @@ public class WhenPostingAddDraftApprenticeshipOrRoute
         result.Should().NotBeNull();
         result.ActionName.Should().Be("SelectDeliveryModel");
         result.RouteValues["AccountHashedId"].Should().Be(viewModel.AccountHashedId);
-        result.RouteValues["AddApprenticeshipCacheKey"].Should().Be(viewModel.AddApprenticeshipCacheKey);
+        result.RouteValues["ApprenticeshipSessionKey"].Should().Be(viewModel.ApprenticeshipSessionKey);
     }
 }

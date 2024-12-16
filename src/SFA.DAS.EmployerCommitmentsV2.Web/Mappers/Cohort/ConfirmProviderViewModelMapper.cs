@@ -22,7 +22,7 @@ public class ConfirmProviderViewModelMapper(ICommitmentsApiClient commitmentsApi
             ProviderName = providerResponse.Name,
             TransferSenderId = source.TransferSenderId,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
-            AddApprenticeshipCacheKey = source.AddApprenticeshipCacheKey
+            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey
         };
 
         return result;

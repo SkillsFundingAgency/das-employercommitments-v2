@@ -6,9 +6,9 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Middleware;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Middleware;
 
 [TestFixture]
-public class MissingAddApprenticeshipCacheKeyMiddlewareTests
+public class MissingApprenticeshipSessionKeyMiddlewareTests
 {
-    private MissingAddApprenticeshipCacheKeyMiddleware _middleware;
+    private MissingApprenticeshipSessionKeyMiddleware _middleware;
     private Mock<RequestDelegate> _nextDelegate;
     private DefaultHttpContext _httpContext;
 
@@ -16,7 +16,7 @@ public class MissingAddApprenticeshipCacheKeyMiddlewareTests
     public void SetUp()
     {
         _nextDelegate = new Mock<RequestDelegate>();
-        _middleware = new MissingAddApprenticeshipCacheKeyMiddleware(_nextDelegate.Object);
+        _middleware = new MissingApprenticeshipSessionKeyMiddleware(_nextDelegate.Object);
         _httpContext = new DefaultHttpContext();
     }
 
@@ -25,7 +25,7 @@ public class MissingAddApprenticeshipCacheKeyMiddlewareTests
     {
         // Arrange
         _nextDelegate.Setup(next => next(It.IsAny<HttpContext>()))
-            .ThrowsAsync(new MissingAddApprenticeshipCacheKeyException());
+            .ThrowsAsync(new MissingApprenticeshipSessionKeyException());
 
         // Act
         await _middleware.InvokeAsync(_httpContext);

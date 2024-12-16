@@ -20,10 +20,10 @@ public class WhenGettingSelectDeliveryModel
         [Frozen] Mock<ICacheStorageService> cacheStorageService,
         [Greedy] CohortController controller)
     {
-        cacheModel.AddApprenticeshipCacheKey = request.AddApprenticeshipCacheKey.Value;
+        cacheModel.ApprenticeshipSessionKey = request.ApprenticeshipSessionKey.Value;
 
         cacheStorageService
-           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
            .ReturnsAsync(cacheModel);
 
         cacheStorageService
@@ -53,10 +53,10 @@ public class WhenGettingSelectDeliveryModel
         [Greedy] CohortController controller)
     {
         viewModel.DeliveryModels = [];
-        cacheModel.AddApprenticeshipCacheKey = request.AddApprenticeshipCacheKey.Value;
+        cacheModel.ApprenticeshipSessionKey = request.ApprenticeshipSessionKey.Value;
 
         cacheStorageService
-          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
+          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
           .ReturnsAsync(cacheModel);
 
         cacheStorageService
@@ -72,6 +72,6 @@ public class WhenGettingSelectDeliveryModel
         result.Should().NotBeNull();
         result.ActionName.Should().Be("AddDraftApprenticeship");
         result.RouteValues["AccountHashedId"].Should().Be(cacheModel.AccountHashedId);
-        result.RouteValues["AddApprenticeshipCacheKey"].Should().Be(cacheModel.AddApprenticeshipCacheKey);
+        result.RouteValues["ApprenticeshipSessionKey"].Should().Be(cacheModel.ApprenticeshipSessionKey);
     }
 }

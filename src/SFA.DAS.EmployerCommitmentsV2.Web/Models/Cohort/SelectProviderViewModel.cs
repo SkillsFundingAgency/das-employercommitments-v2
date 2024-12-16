@@ -18,6 +18,6 @@ public class SelectProviderViewModel
     public Origin Origin { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
     public List<Provider> Providers { get; set; }
-    public Guid? AddApprenticeshipCacheKey { get; set; }
+    public Guid? ApprenticeshipSessionKey { get; set; }
 
 }

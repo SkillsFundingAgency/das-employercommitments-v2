@@ -28,7 +28,7 @@ public class WhenCallingPostAssign
             viewModel.ProviderId,
             viewModel.TransferSenderId,
             viewModel.EncodedPledgeApplicationId,
-            viewModel.AddApprenticeshipCacheKey
+            viewModel.ApprenticeshipSessionKey
         });
         viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Employer;
 

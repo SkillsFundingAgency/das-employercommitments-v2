@@ -110,7 +110,7 @@ public class CreateCohortWithDraftApprenticeshipControllerTestFixtures
    
     public CreateCohortWithDraftApprenticeshipControllerTestFixtures ForPostRequest()
     {
-        PostRequest = new ApprenticeViewModel { ProviderId = 1, AddApprenticeshipCacheKey = CacheKey };
+        PostRequest = new ApprenticeViewModel { ProviderId = 1, ApprenticeshipSessionKey = CacheKey };
         return this;
     }
 

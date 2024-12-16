@@ -15,7 +15,7 @@
         <h1 class="govuk-heading-l"> @ViewBag.Title </h1>
 
         <form method="post">
-            @Html.HiddenFor(x => x.AddApprenticeshipCacheKey)
+            @Html.HiddenFor(x => x.ApprenticeshipSessionKey)
             @Html.AntiForgeryToken()
             
             <div class="govuk-form-group">

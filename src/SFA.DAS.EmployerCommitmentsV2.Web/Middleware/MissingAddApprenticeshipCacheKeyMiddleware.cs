@@ -3,7 +3,7 @@ using SFA.DAS.EmployerCommitmentsV2.Exceptions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Middleware;
 
-public class MissingAddApprenticeshipCacheKeyMiddleware(RequestDelegate next)
+public class MissingApprenticeshipSessionKeyMiddleware(RequestDelegate next)
 {
     public async Task InvokeAsync(HttpContext context)
     {
@@ -11,7 +11,7 @@ public class MissingAddApprenticeshipCacheKeyMiddleware(RequestDelegate next)
         {
             await next(context);
         }
-        catch (MissingAddApprenticeshipCacheKeyException)
+        catch (MissingApprenticeshipSessionKeyException)
         {
             var redirectUrl = $"/error/404";
             context.Response.Redirect(redirectUrl);

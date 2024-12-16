@@ -22,6 +22,6 @@ public class SelectCourseViewModel : IAuthorizationContextModel
     public string TransferSenderId { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
     public Guid? CacheKey { get; set; }
-    public Guid? AddApprenticeshipCacheKey { get; set; }
+    public Guid? ApprenticeshipSessionKey { get; set; }
 
 }

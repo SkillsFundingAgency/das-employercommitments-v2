@@ -26,14 +26,14 @@ public class WhenGettingSelectProvider
             .Returns(true);
 
         cacheStorageService
-          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
+          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
           .ReturnsAsync(cacheModel);
 
         mockMapper
             .Setup(x => x.Map<SelectProviderViewModel>(It.IsAny<AddApprenticeshipCacheModel>()))
             .ReturnsAsync(viewModel);
 
-        await controller.SelectProvider(cacheModel.AddApprenticeshipCacheKey);
+        await controller.SelectProvider(cacheModel.ApprenticeshipSessionKey);
         mockMapper.Verify(x => x.Map<SelectProviderViewModel>(It.IsAny<AddApprenticeshipCacheModel>()), Times.Once);
         mockEncodingService.Verify(x => x.TryDecode(cacheModel.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId, out accountLegalEntityId), Times.Once);
     }
@@ -53,14 +53,14 @@ public class WhenGettingSelectProvider
             .Returns(true);
 
         cacheStorageService
-           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
            .ReturnsAsync(cacheModel);
 
         mockMapper
             .Setup(mapper => mapper.Map<SelectProviderViewModel>(cacheModel))
             .ReturnsAsync(viewModel);
 
-        var result = await controller.SelectProvider(cacheModel.AddApprenticeshipCacheKey) as ViewResult;
+        var result = await controller.SelectProvider(cacheModel.ApprenticeshipSessionKey) as ViewResult;
 
         result.Should().NotBeNull();
         result.ViewName.Should().BeNull();

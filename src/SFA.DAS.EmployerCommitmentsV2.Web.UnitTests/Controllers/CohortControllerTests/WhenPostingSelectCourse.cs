@@ -17,13 +17,13 @@ public class WhenPostingSelectCourse
         [Greedy] CohortController controller)
     {
         cacheStorageService
-           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(viewModel.AddApprenticeshipCacheKey.Value))
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(viewModel.ApprenticeshipSessionKey.Value))
            .ReturnsAsync(cacheModel);
 
         var result = await controller.SelectCourse(viewModel) as RedirectToActionResult;
         result.Should().NotBeNull();
         result.ActionName.Should().BeEquivalentTo("SelectDeliveryModel");
         result.RouteValues["AccountHashedId"].Should().Be(cacheModel.AccountHashedId);
-        result.RouteValues["AddApprenticeshipCacheKey"].Should().Be(cacheModel.AddApprenticeshipCacheKey);
+        result.RouteValues["ApprenticeshipSessionKey"].Should().Be(cacheModel.ApprenticeshipSessionKey);
     }
 }

@@ -11,7 +11,7 @@ public class ApprenticeRequest : BaseApprenticeRequest
 
 public class BaseApprenticeRequest : IndexRequest
 {
-    public Guid? AddApprenticeshipCacheKey { get; set; }
+    public Guid? ApprenticeshipSessionKey { get; set; }
     public long ProviderId { get; set; }
     public string LegalEntityName { get; set; }
     public string TransferSenderId { get; set; }

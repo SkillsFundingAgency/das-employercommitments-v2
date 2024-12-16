@@ -27,7 +27,7 @@ public class AddApprenticeshipCacheModelToSelectLegalEntityViewModelMapper(
             LegalEntities = legalEntities.LegalEntities.ConvertAll(MapToLegalEntityVm),
             CohortRef = cohortRef,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
-            AddApprenticeshipCacheKey = source.AddApprenticeshipCacheKey
+            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey
         };
     }
 

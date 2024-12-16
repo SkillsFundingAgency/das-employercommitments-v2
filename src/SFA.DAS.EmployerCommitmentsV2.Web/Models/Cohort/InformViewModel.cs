@@ -6,5 +6,5 @@ public class InformViewModel : IAuthorizationContextModel
 {
     public string AccountHashedId { get; set; }
     public bool IsLevyFunded { get; set; }
-    public Guid AddApprenticeshipCacheKey { get; set; }
+    public Guid ApprenticeshipSessionKey { get; set; }
 }

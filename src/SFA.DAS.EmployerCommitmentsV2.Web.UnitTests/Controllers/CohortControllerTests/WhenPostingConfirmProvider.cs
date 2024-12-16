@@ -18,7 +18,7 @@ public class WhenPostingConfirmProvider
         result.ActionName.Should().Be("assign");
         result.RouteValues.Should().NotBeEmpty();
         result.RouteValues["AccountHashedId"].Should().Be(viewModel.AccountHashedId);
-        result.RouteValues["AddApprenticeshipCacheKey"].Should().Be(viewModel.AddApprenticeshipCacheKey);
+        result.RouteValues["ApprenticeshipSessionKey"].Should().Be(viewModel.ApprenticeshipSessionKey);
     }
 
 
@@ -34,6 +34,6 @@ public class WhenPostingConfirmProvider
         result.ActionName.Should().Be("SelectProvider");
         result.RouteValues.Should().NotBeEmpty();
         result.RouteValues["AccountHashedId"].Should().Be(viewModel.AccountHashedId);
-        result.RouteValues["AddApprenticeshipCacheKey"].Should().Be(viewModel.AddApprenticeshipCacheKey);
+        result.RouteValues["ApprenticeshipSessionKey"].Should().Be(viewModel.ApprenticeshipSessionKey);
     }
 }

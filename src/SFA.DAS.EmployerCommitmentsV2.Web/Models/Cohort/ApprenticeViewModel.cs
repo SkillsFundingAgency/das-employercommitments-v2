@@ -11,5 +11,5 @@ public class ApprenticeViewModel : DraftApprenticeshipViewModel
     public long? DecodedTransferSenderId { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
     public long? PledgeApplicationId { get; set; }
-    public Guid? AddApprenticeshipCacheKey { get; set; }
+    public Guid? ApprenticeshipSessionKey { get; set; }
 }

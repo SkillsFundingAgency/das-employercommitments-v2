@@ -18,14 +18,14 @@ public class WhenCallingGetAssign
         [Greedy] CohortController controller)
     {
         cacheStorageService
-           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.AddApprenticeshipCacheKey))
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
            .ReturnsAsync(cacheModel);
 
         mockMapper
             .Setup(mapper => mapper.Map<AssignViewModel>(cacheModel))
             .ReturnsAsync(viewModel);
 
-        var result = await controller.Assign(cacheModel.AddApprenticeshipCacheKey) as ViewResult;
+        var result = await controller.Assign(cacheModel.ApprenticeshipSessionKey) as ViewResult;
 
         result.ViewName.Should().BeNull();
         var model = result.Model as AssignViewModel;

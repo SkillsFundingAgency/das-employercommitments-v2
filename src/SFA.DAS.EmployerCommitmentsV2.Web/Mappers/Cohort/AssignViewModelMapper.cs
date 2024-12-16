@@ -21,7 +21,7 @@ public class AssignViewModelMapper(ICommitmentsApiClient commitmentsApiClient) :
             ProviderId = request.ProviderId,
             TransferSenderId = request.TransferSenderId,
             EncodedPledgeApplicationId = request.EncodedPledgeApplicationId,
-            AddApprenticeshipCacheKey = request.AddApprenticeshipCacheKey
+            ApprenticeshipSessionKey = request.ApprenticeshipSessionKey
         };
     }
 }

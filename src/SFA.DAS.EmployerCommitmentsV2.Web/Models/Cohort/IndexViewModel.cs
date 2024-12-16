@@ -9,7 +9,7 @@ public class IndexViewModel
     public string CourseCode { get; set; }
     public Origin Origin { get; set; }
     public bool IsLevyFunded { get; set; }
-    public Guid? AddApprenticeshipCacheKey { get; set; }
+    public Guid? ApprenticeshipSessionKey { get; set; }
 
     public virtual Dictionary<string, string> ToDictionary(bool includeCacheKey = false)
     {
@@ -20,8 +20,8 @@ public class IndexViewModel
           
         if (includeCacheKey)
         {
-            if (AddApprenticeshipCacheKey.HasValue)
-                dictionary.Add(nameof(AddApprenticeshipCacheKey), AddApprenticeshipCacheKey.ToString());
+            if (ApprenticeshipSessionKey.HasValue)
+                dictionary.Add(nameof(ApprenticeshipSessionKey), ApprenticeshipSessionKey.ToString());
         }
         else
         {

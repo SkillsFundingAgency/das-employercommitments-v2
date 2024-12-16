@@ -27,11 +27,11 @@ public class WhenPostingSelectLegalEntity
         _selectLegalEntityViewModel = _fixture.Create<SelectLegalEntityViewModel>();
 
         _cacheModel = _fixture.Create<AddApprenticeshipCacheModel>();
-        _cacheModel.AddApprenticeshipCacheKey = _selectLegalEntityViewModel.AddApprenticeshipCacheKey.Value;
+        _cacheModel.ApprenticeshipSessionKey = _selectLegalEntityViewModel.ApprenticeshipSessionKey.Value;
 
         _cacheStorageService = new Mock<ICacheStorageService>();
         _cacheStorageService
-           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.AddApprenticeshipCacheKey))
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.ApprenticeshipSessionKey))
            .ReturnsAsync(_cacheModel);
         _cacheStorageService
         .Setup(x => x.SaveToCache(It.IsAny<Guid>(), It.IsAny<AddApprenticeshipCacheModel>(), 1))
@@ -68,7 +68,7 @@ public class WhenPostingSelectLegalEntity
         var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirectResult.ActionName.Should().Be("SelectProvider");
         redirectResult.RouteValues["AccountHashedId"].Should().Be(_cacheModel.AccountHashedId);
-        redirectResult.RouteValues["AddApprenticeshipCacheKey"].Should().Be(_cacheModel.AddApprenticeshipCacheKey);
+        redirectResult.RouteValues["ApprenticeshipSessionKey"].Should().Be(_cacheModel.ApprenticeshipSessionKey);
     }
 
     [Test]
