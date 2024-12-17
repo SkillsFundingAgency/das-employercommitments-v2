@@ -18,6 +18,7 @@ public class AddApprenticeshipCacheModel
     public string StartMonthYear { get; set; }
     public string TransferSenderId { get; set; }
     public long ProviderId { get; set; }
+    public string Message { get; set; }
     public DeliveryModel? DeliveryModel { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }

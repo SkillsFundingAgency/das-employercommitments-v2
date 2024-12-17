@@ -254,14 +254,17 @@ public class CohortController : Controller
     [HttpPost]
     public async Task<IActionResult> Assign(AssignViewModel model)
     {
-        if (!model.ReservationId.HasValue && model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(model.ApprenticeshipSessionKey);
+        cacheModel.Message = model.Message;
+
+        if (!cacheModel.ReservationId.HasValue && model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
         {
             var url = _linkGenerator.ReservationsLink(
-                $"accounts/{model.AccountHashedId}/reservations/{model.AccountLegalEntityHashedId}/select?" +
-                $"providerId={model.ProviderId}" +
-                $"&transferSenderId={model.TransferSenderId}" +
-                $"&encodedPledgeApplicationId={model.EncodedPledgeApplicationId}" +
-                $"&apprenticeshipSessionKey={model.ApprenticeshipSessionKey}");
+                $"accounts/{cacheModel.AccountHashedId}/reservations/{cacheModel.AccountLegalEntityHashedId}/select?" +
+                $"providerId={cacheModel.ProviderId}" +
+                $"&transferSenderId={cacheModel.TransferSenderId}" +
+                $"&encodedPledgeApplicationId={cacheModel.EncodedPledgeApplicationId}" +
+                $"&apprenticeshipSessionKey={cacheModel.ApprenticeshipSessionKey}");
             return Redirect(url);
         }
 
@@ -275,21 +278,21 @@ public class CohortController : Controller
             case WhoIsAddingApprentices.Employer:
                 var routeValues = new
                 {
-                    model.AccountHashedId,
-                    model.AccountLegalEntityHashedId,
-                    model.ReservationId,
-                    model.StartMonthYear,
-                    model.CourseCode,
-                    model.ProviderId,
-                    model.TransferSenderId,
-                    model.EncodedPledgeApplicationId,
-                    model.ApprenticeshipSessionKey
+                    cacheModel.AccountHashedId,
+                    cacheModel.AccountLegalEntityHashedId,
+                    cacheModel.ReservationId,
+                    cacheModel.StartMonthYear,
+                    cacheModel.CourseCode,
+                    cacheModel.ProviderId,
+                    cacheModel.TransferSenderId,
+                    cacheModel.EncodedPledgeApplicationId,
+                    cacheModel.ApprenticeshipSessionKey
                 };
                 return RedirectToAction(RouteNames.CohortApprentice, "Cohort", routeValues);
             case WhoIsAddingApprentices.Provider:
-                var request = await _modelMapper.Map<CreateCohortWithOtherPartyRequest>(model);
+                var request = await _modelMapper.Map<CreateCohortWithOtherPartyRequest>(cacheModel);
                 var response = await _commitmentsApiClient.CreateCohort(request);
-                return RedirectToAction("Finished", new { model.AccountHashedId, response.CohortReference });
+                return RedirectToAction("Finished", new { cacheModel.AccountHashedId, response.CohortReference });
             default:
                 return RedirectToAction("Error", "Error");
         }

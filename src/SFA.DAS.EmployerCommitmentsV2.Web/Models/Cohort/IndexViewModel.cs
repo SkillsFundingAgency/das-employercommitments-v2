@@ -11,31 +11,16 @@ public class IndexViewModel
     public bool IsLevyFunded { get; set; }
     public Guid? ApprenticeshipSessionKey { get; set; }
 
-    public virtual Dictionary<string, string> ToDictionary(bool includeCacheKey = false)
+    public virtual Dictionary<string, string> ToDictionary()
     {
         var dictionary = new Dictionary<string, string>
         {
             {nameof(AccountHashedId), AccountHashedId }         
         };
-          
-        if (includeCacheKey)
-        {
-            if (ApprenticeshipSessionKey.HasValue)
-                dictionary.Add(nameof(ApprenticeshipSessionKey), ApprenticeshipSessionKey.ToString());
-        }
-        else
-        {
-            dictionary.Add(nameof(AccountLegalEntityHashedId), AccountLegalEntityHashedId);
-            dictionary.Add(nameof(Origin), Origin.ToString());
 
-            if (ReservationId.HasValue)
-                dictionary.Add(nameof(ReservationId), ReservationId.ToString());
-            if (!string.IsNullOrWhiteSpace(StartMonthYear))
-                dictionary.Add(nameof(StartMonthYear), StartMonthYear);
-            if (!string.IsNullOrWhiteSpace(CourseCode))
-                dictionary.Add(nameof(CourseCode), CourseCode);
-        }
-        
+        if (ApprenticeshipSessionKey.HasValue)
+            dictionary.Add(nameof(ApprenticeshipSessionKey), ApprenticeshipSessionKey.ToString());
+
         return dictionary;
     }  
 }

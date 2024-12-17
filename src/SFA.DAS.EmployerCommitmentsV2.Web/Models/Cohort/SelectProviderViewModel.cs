@@ -14,7 +14,6 @@ public class SelectProviderViewModel
     public string StartMonthYear { get; set; }
     public string CourseCode { get; set; }
     public string ProviderId { get; set; }
-    public string TransferSenderId { get; set; }
     public Origin Origin { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
     public List<Provider> Providers { get; set; }

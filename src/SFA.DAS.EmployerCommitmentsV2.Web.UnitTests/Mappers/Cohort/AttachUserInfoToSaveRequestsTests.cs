@@ -1,10 +1,11 @@
-﻿using SFA.DAS.CommitmentsV2.Shared.Models;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+﻿using SFA.DAS.CommitmentsV2.Api.Types.Requests;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
@@ -57,10 +58,11 @@ public class AttachUserInfoToSaveRequestsTests
 
 public class AttachUserInfoToSaveRequestsTestsFixture
 {
-    public AttachUserInfoToSaveRequests<AssignViewModel, CreateCohortWithOtherPartyRequest> SaveRequestMapper;
+    public AttachUserInfoToSaveRequests<AddApprenticeshipCacheModel, CreateCohortWithOtherPartyRequest> SaveRequestMapper;
     public AttachUserInfoToSaveRequests<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel> NonSaveRequestMapper;
     public Mock<IAuthenticationService> AuthenticationServiceMock;
-    public AssignViewModel InputViewModel;
+    public Mock<IEncodingService> EncodingService;
+    public AddApprenticeshipCacheModel InputViewModel;
     public EditDraftApprenticeshipDetails InputDetails;
     public UserInfo UserInfo;
 
@@ -70,12 +72,15 @@ public class AttachUserInfoToSaveRequestsTestsFixture
         var autoFixture = new Fixture();
 
         AuthenticationServiceMock = new Mock<IAuthenticationService>();
-        InputViewModel = new AssignViewModel();
+        EncodingService = new Mock<IEncodingService>();
+        InputViewModel = new AddApprenticeshipCacheModel();
         InputDetails = new EditDraftApprenticeshipDetails();
         UserInfo = new UserInfo();
 
-        SaveRequestMapper = new AttachUserInfoToSaveRequests<AssignViewModel, CreateCohortWithOtherPartyRequest>(new CreateCohortWithOtherPartyRequestMapper(), AuthenticationServiceMock.Object);
-        NonSaveRequestMapper = new AttachUserInfoToSaveRequests<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel>(new EditDraftApprenticeshipViewModelMapper(), AuthenticationServiceMock.Object);
+        SaveRequestMapper = new AttachUserInfoToSaveRequests<AddApprenticeshipCacheModel, CreateCohortWithOtherPartyRequest>
+            (new CreateCohortWithOtherPartyRequestMapper(EncodingService.Object), AuthenticationServiceMock.Object);
+        NonSaveRequestMapper = new AttachUserInfoToSaveRequests<EditDraftApprenticeshipDetails, EditDraftApprenticeshipViewModel>
+            (new EditDraftApprenticeshipViewModelMapper(), AuthenticationServiceMock.Object);
     }
 
     public AttachUserInfoToSaveRequestsTestsFixture SetupAuthenticatedUser()

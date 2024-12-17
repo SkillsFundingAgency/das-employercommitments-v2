@@ -19,15 +19,6 @@ public class WhenMappingAddApprenticeshipCacheModelToAssignViewModel
         viewModel.AccountHashedId.Should().Be(request.AccountHashedId);
     }
 
-    [Test, MoqAutoData]
-    public async Task Then_Maps_EmployerAccountLegalEntityPublicHashedId(
-        AddApprenticeshipCacheModel request,
-        AssignViewModelMapper mapper)
-    {
-        var viewModel = await mapper.Map(request);
-
-        viewModel.AccountLegalEntityHashedId.Should().Be(request.AccountLegalEntityHashedId);
-    }
 
     [Test, MoqAutoData]
     public async Task Then_Maps_LegalEntityName(
@@ -55,43 +46,14 @@ public class WhenMappingAddApprenticeshipCacheModelToAssignViewModel
         viewModel.ReservationId.Should().Be(request.ReservationId);
     }
 
+
     [Test, MoqAutoData]
-    public async Task Then_Maps_StartMonthYear(
+    public async Task Then_Maps_ApprenticeshipSessionKey(
         AddApprenticeshipCacheModel request,
         AssignViewModelMapper mapper)
     {
         var viewModel = await mapper.Map(request);
 
-        viewModel.StartMonthYear.Should().Be(request.StartMonthYear);
-    }
-
-    [Test, MoqAutoData]
-    public async Task Then_Maps_CourseCode(
-        AddApprenticeshipCacheModel request,
-        AssignViewModelMapper mapper)
-    {
-        var viewModel = await mapper.Map(request);
-
-        viewModel.CourseCode.Should().Be(request.CourseCode);
-    }
-
-    [Test, MoqAutoData]
-    public async Task Then_Maps_UkPrn(
-        AddApprenticeshipCacheModel request,
-        AssignViewModelMapper mapper)
-    {
-        var viewModel = await mapper.Map(request);
-
-        viewModel.ProviderId.Should().Be(request.ProviderId);
-    }
-
-    [Test, MoqAutoData]
-    public async Task Then_Maps_TransferSenderId(
-        AddApprenticeshipCacheModel request,
-        AssignViewModelMapper mapper)
-    {
-        var viewModel = await mapper.Map(request);
-
-        viewModel.TransferSenderId.Should().Be(request.TransferSenderId);
+        viewModel.ApprenticeshipSessionKey.Should().Be(request.ApprenticeshipSessionKey);
     }
 }

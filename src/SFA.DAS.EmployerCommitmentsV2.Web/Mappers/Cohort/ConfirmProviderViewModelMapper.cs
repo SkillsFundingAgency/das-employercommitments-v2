@@ -13,15 +13,9 @@ public class ConfirmProviderViewModelMapper(ICommitmentsApiClient commitmentsApi
         var result = new ConfirmProviderViewModel
         {
             AccountHashedId = source.AccountHashedId,
-            AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
             LegalEntityName = source.LegalEntityName,
-            ReservationId = source.ReservationId,
-            StartMonthYear = source.StartMonthYear,
-            CourseCode = source.CourseCode,
             ProviderId = source.ProviderId,
-            ProviderName = providerResponse.Name,
-            TransferSenderId = source.TransferSenderId,
-            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
+            ProviderName = providerResponse.Name,        
             ApprenticeshipSessionKey = source.ApprenticeshipSessionKey
         };
 

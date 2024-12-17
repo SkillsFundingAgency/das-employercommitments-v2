@@ -13,14 +13,8 @@ public class AssignViewModelMapper(ICommitmentsApiClient commitmentsApiClient) :
         return new AssignViewModel
         {
             AccountHashedId = request.AccountHashedId,
-            AccountLegalEntityHashedId = request.AccountLegalEntityHashedId,
             LegalEntityName = accountLegalEntity.LegalEntityName,
             ReservationId = request.ReservationId,
-            StartMonthYear = request.StartMonthYear,
-            CourseCode = request.CourseCode,
-            ProviderId = request.ProviderId,
-            TransferSenderId = request.TransferSenderId,
-            EncodedPledgeApplicationId = request.EncodedPledgeApplicationId,
             ApprenticeshipSessionKey = request.ApprenticeshipSessionKey
         };
     }

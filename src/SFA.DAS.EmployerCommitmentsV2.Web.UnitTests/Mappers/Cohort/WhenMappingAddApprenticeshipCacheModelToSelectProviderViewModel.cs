@@ -85,14 +85,6 @@ public class WhenMappingAddApprenticeshipCacheModelToSelectProviderViewModel
     }
 
     [Test]
-    public async Task ThenMapsTransferSenderId()
-    {
-        var result = await _mapper.Map(_request);
-
-        Assert.That(result.TransferSenderId, Is.EqualTo(_request.TransferSenderId));
-    }
-
-    [Test]
     public async Task ThenMapsOrigin()
     {
         var result = await _mapper.Map(_request);

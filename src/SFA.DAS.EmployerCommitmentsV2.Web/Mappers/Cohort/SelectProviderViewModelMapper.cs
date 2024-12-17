@@ -21,7 +21,6 @@ public class SelectProviderViewModelMapper(IApprovalsApiClient outerApiClient) :
             LegalEntityName = accountLegalEntity.LegalEntityName,
             StartMonthYear = source.StartMonthYear,
             ReservationId = source.ReservationId,
-            TransferSenderId = source.TransferSenderId,
             Origin = DetermineOrigin(source),
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
             Providers = providers,
