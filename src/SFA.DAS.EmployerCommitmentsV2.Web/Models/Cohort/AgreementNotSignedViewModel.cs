@@ -3,4 +3,5 @@
 public class AgreementNotSignedViewModel : LegalEntitySignedAgreementViewModel
 {
     public bool CanContinueAnyway { get; set; }
+    public Guid? ApprenticeshipSessionKey { get; set; }
 }

@@ -1,6 +1,5 @@
 ﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
 using Agreement = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.Agreement;
@@ -9,24 +8,26 @@ using LegalEntity = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.L
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class SelectLegalEntityRequestToSelectLegalEntityViewModelMapper(
+public class AddApprenticeshipCacheModelToSelectLegalEntityViewModelMapper(
     IApprovalsApiClient apiClient,
-    IEncodingService encodingService) : IMapper<SelectLegalEntityRequest, SelectLegalEntityViewModel>
+    IEncodingService encodingService) : IMapper<AddApprenticeshipCacheModel, SelectLegalEntityViewModel>
 {
-    public async Task<SelectLegalEntityViewModel> Map(SelectLegalEntityRequest source)
+    public async Task<SelectLegalEntityViewModel> Map(AddApprenticeshipCacheModel source)
     {
-        var cohortRef = string.IsNullOrWhiteSpace(source.cohortRef)
+        var cohortRef = string.IsNullOrWhiteSpace(source.CohortRef)
             ? Guid.NewGuid().ToString().ToUpper()
-            : source.cohortRef;
+            : source.CohortRef;
         var accountId = encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
         var legalEntities = await apiClient.GetLegalEntitiesForAccount(cohortRef, accountId);
 
-        return new SelectLegalEntityViewModel {
+        return new SelectLegalEntityViewModel
+        {
             AccountHashedId = source.AccountHashedId,
-            TransferConnectionCode = source.transferConnectionCode,
+            TransferConnectionCode = source.TransferSenderId,
             LegalEntities = legalEntities.LegalEntities.ConvertAll(MapToLegalEntityVm),
             CohortRef = cohortRef,
-            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
+            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
+            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey
         };
     }
 

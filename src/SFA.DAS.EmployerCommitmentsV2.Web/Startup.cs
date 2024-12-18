@@ -5,6 +5,7 @@ using OpenTelemetry.Logs;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Middleware;
 using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 using SFA.DAS.EmployerUrlHelper.DependencyResolution;
 
@@ -67,6 +68,8 @@ public class Startup
             .UseAuthentication()
             .UseRouting()
             .UseAuthorization()
+            .UseMiddleware<MissingApprenticeshipSessionKeyMiddleware>()
+            .UseMiddleware<CacheItemNotFoundMiddleware>()
             .UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute()
             );
     }

@@ -25,12 +25,7 @@
                     @Html.ActionLink("Change", "SelectProvider", "Cohort", new
                     {
                         Model.AccountHashedId,
-                        Model.AccountLegalEntityHashedId,
-                        Model.CourseCode,
-                        Model.ReservationId,
-                        Model.TransferSenderId,
-                        Model.StartMonthYear,
-                        Model.EncodedPledgeApplicationId
+                        Model.ApprenticeshipSessionKey
                     }, new { @class = "govuk-link", id = "change-training-provider-link" })
                 </dd>
             </div>
@@ -87,11 +82,6 @@
     @Html.ActionLink("Back", "SelectProvider", "Cohort", new
     {
         Model.AccountHashedId,
-        Model.AccountLegalEntityHashedId,
-        Model.CourseCode,
-        Model.ReservationId,
-        Model.TransferSenderId,
-        Model.StartMonthYear,
-        Model.EncodedPledgeApplicationId
+        Model.ApprenticeshipSessionKey
     }, new { @class = "govuk-back-link", id = "back-link" })
 }
