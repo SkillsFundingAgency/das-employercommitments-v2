@@ -44,8 +44,8 @@ public class WhenCallingPostAssign
 
         result.Should().NotBeNull();
         result.ActionName.Should().Be("Apprentice");
-        result.ControllerName.Should().Be("Cohort");
-        result.RouteValues.Should().BeEquivalentTo(expectedRouteValues);
+        result.RouteValues["AccountHashedId"].Should().Be(cacheModel.AccountHashedId);
+        result.RouteValues["ApprenticeshipSessionKey"].Should().Be(cacheModel.ApprenticeshipSessionKey);
     }
 
     [Test, MoqAutoData]

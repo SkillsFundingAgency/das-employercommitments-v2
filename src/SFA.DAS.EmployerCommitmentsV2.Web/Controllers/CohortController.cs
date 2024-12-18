@@ -275,20 +275,8 @@ public class CohortController : Controller
 
         switch (model.WhoIsAddingApprentices)
         {
-            case WhoIsAddingApprentices.Employer:
-                var routeValues = new
-                {
-                    cacheModel.AccountHashedId,
-                    cacheModel.AccountLegalEntityHashedId,
-                    cacheModel.ReservationId,
-                    cacheModel.StartMonthYear,
-                    cacheModel.CourseCode,
-                    cacheModel.ProviderId,
-                    cacheModel.TransferSenderId,
-                    cacheModel.EncodedPledgeApplicationId,
-                    cacheModel.ApprenticeshipSessionKey
-                };
-                return RedirectToAction(RouteNames.CohortApprentice, "Cohort", routeValues);
+            case WhoIsAddingApprentices.Employer:               
+                return RedirectToAction(RouteNames.CohortApprentice, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
             case WhoIsAddingApprentices.Provider:
                 var request = await _modelMapper.Map<CreateCohortWithOtherPartyRequest>(cacheModel);
                 var response = await _commitmentsApiClient.CreateCohort(request);
@@ -303,9 +291,8 @@ public class CohortController : Controller
     public async Task<IActionResult> Apprentice(ApprenticeRequest request)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(request.ApprenticeshipSessionKey);
-        cacheModel.ReservationId = request.ReservationId;
-        cacheModel.CourseCode = request.CourseCode;
-        cacheModel.StartMonthYear = request.StartMonthYear;
+        UpdateAddApprenticeshipCacheModelFromApprenticeRequest(request, cacheModel);
+
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
         return RedirectToAction(RouteNames.CohortSelectCourse, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
@@ -338,10 +325,7 @@ public class CohortController : Controller
     public async Task<IActionResult> SelectDeliveryModel(ApprenticeRequest request)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(request.ApprenticeshipSessionKey);
-
-        cacheModel.ReservationId = request.ReservationId.HasValue ? request.ReservationId : cacheModel.ReservationId;
-        cacheModel.CourseCode = !string.IsNullOrEmpty(request.CourseCode) ? request.CourseCode : cacheModel.CourseCode;
-        cacheModel.StartMonthYear = !string.IsNullOrEmpty(request.StartMonthYear) ? request.StartMonthYear : cacheModel.StartMonthYear;
+        UpdateAddApprenticeshipCacheModelFromApprenticeRequest(request, cacheModel);
 
         var model = await _modelMapper.Map<SelectDeliveryModelViewModel>(cacheModel);
 
@@ -667,4 +651,12 @@ public class CohortController : Controller
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
         return cacheModel;
     }
+
+    private static void UpdateAddApprenticeshipCacheModelFromApprenticeRequest(ApprenticeRequest request, AddApprenticeshipCacheModel cacheModel)
+    {
+        cacheModel.ReservationId = request.ReservationId ?? cacheModel.ReservationId;
+        cacheModel.CourseCode = !string.IsNullOrEmpty(request.CourseCode) ? request.CourseCode : cacheModel.CourseCode;
+        cacheModel.StartMonthYear = !string.IsNullOrEmpty(request.StartMonthYear) ? request.StartMonthYear : cacheModel.StartMonthYear;
+    }
+
 }
