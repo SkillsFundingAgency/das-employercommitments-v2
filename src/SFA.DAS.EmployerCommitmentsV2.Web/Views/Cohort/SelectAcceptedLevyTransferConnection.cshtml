@@ -33,7 +33,7 @@
 
             @Html.AntiForgeryToken()
 
-            <div class="govuk-form-group" @Html.AddClassIfPropertyInError(x => x.ApplicationAndSenderHashedId, "govuk-form-group--error")>
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApplicationAndSenderHashedId, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset" id="radio-lines">
                     @if (!ViewData.ModelState.IsValid)
                     {

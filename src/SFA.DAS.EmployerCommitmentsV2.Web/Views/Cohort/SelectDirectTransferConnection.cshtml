@@ -4,7 +4,7 @@
 @using SFA.DAS.EmployerUrlHelper.Mvc
 
 @{
-    ViewBag.Title = "Select a connection to transfer from";
+    ViewBag.Title = "Select a connection";
     ViewBag.GaData.Vpv = "/unapproved/add/select-funding/select-direct-connection";
 }
 
@@ -40,7 +40,7 @@
 
             @Html.AntiForgeryToken()
 
-            <div class="govuk-form-group" @Html.AddClassIfPropertyInError(x => x.TransferConnectionCode, "govuk-form-group--error")>
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.TransferConnectionCode, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset" id="radio-lines">
                     @if (!ViewData.ModelState.IsValid)
                     {
