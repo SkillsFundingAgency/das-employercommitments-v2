@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @using SFA.DAS.EmployerUrlHelper.Mvc
 
@@ -39,7 +40,7 @@
 
             @Html.AntiForgeryToken()
 
-            <div class="govuk-form-group">
+            <div class="govuk-form-group" @Html.AddClassIfPropertyInError(x => x.TransferConnectionCode, "govuk-form-group--error")>
                 <fieldset class="govuk-fieldset" id="radio-lines">
                     @if (!ViewData.ModelState.IsValid)
                     {
