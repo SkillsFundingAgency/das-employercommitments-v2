@@ -19,9 +19,11 @@
         <p class="govuk-body">
             These are your approved transfer funds.
         </p>
-        
         <p class="govuk-body">
-            If you cannot find the transfer you need, you can <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications")" id="back-link" target="_blank" class="govuk-back-link">manage your transfers (opens in new tab)</a>
+            You can only use one transfer per application, but you can add multiple apprenticeships to that transfer if funding amount allows.
+        </p>
+        <p class="govuk-body">
+            If you cannot find the transfer you need, you can <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications")" id="info-link" target="_blank" class="govuk-link">manage your transfers (opens in new tab)</a>
         </p>
 
         <form method="post">
