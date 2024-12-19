@@ -7,6 +7,6 @@ public class SelectTransferConnectionViewModelValidator : AbstractValidator<Sele
     public SelectTransferConnectionViewModelValidator()
     {
         RuleFor(x => x.AccountHashedId).NotEmpty();
-        RuleFor(x => x.TransferConnectionCode).NotEmpty().WithMessage("Please select a connection");            
+        RuleFor(x => x.TransferConnectionCode).NotEmpty().WithMessage("Select a connection");            
     }
 }

@@ -114,4 +114,9 @@ public class ApprovalsApiClient : IApprovalsApiClient
     {
         return _client.Get<GetSelectDirectTransferConnectionResponse>($"{accountId}/unapproved/add/select-funding/select-direct-connection");
     }
+
+    public Task<GetSelectLevyTransferConnectionResponse> GetSelectLevyTransferConnection(long accountId, CancellationToken cancellationToken = default)
+    {
+        return _client.Get<GetSelectLevyTransferConnectionResponse>($"{accountId}/unapproved/add/select-funding/select-accepted-levy-connection");
+    }
 }
