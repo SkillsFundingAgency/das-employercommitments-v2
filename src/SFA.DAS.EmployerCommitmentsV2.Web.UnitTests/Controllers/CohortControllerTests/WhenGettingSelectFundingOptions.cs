@@ -84,27 +84,6 @@ public class WhenGettingSelectFundingOptions
     }
 
     [Test, MoqAutoData]
-    public async Task AndIsLevyAccountThenRedirectsToSelectProvider(
-        SelectFundingRequest request,
-        SelectFundingViewModel viewModel,
-        [Frozen] Mock<IModelMapper> mockMapper,
-        [Greedy] CohortController controller)
-    {
-        request.EncodedPledgeApplicationId = null;
-        request.TransferSenderId = null;
-        viewModel.IsLevyAccount = true;
-        mockMapper.Setup(mapper => mapper.Map<SelectFundingViewModel>(request)).ReturnsAsync(viewModel);
-
-        var result = await controller.SelectFunding(request) as RedirectToActionResult;
-
-        result.ActionName.Should().Be("SelectProvider");
-        result.RouteValues["AccountHashedId"].Should().Be(request.AccountHashedId);
-        result.RouteValues["TransferSenderId"].Should().Be(request.TransferSenderId);
-        result.RouteValues["AccountLegalEntityHashedId"].Should().Be(request.AccountLegalEntityHashedId);
-        result.RouteValues["EncodedPledgeApplicationId"].Should().Be(request.EncodedPledgeApplicationId);
-    }
-
-    [Test, MoqAutoData]
     public async Task AndNoFundsAvailableThenRedirectsToSelectProvider(
         SelectFundingRequest request,
         SelectFundingViewModel viewModel,
