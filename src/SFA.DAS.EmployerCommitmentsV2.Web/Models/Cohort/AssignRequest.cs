@@ -13,6 +13,7 @@ public class BaseAssignRequest : IndexRequest
     public string LegalEntityName { get; set; }
     public string TransferSenderId { get; set; }
     public Origin Origin { get; set; }
+    public FundingType? FundingType { get; set; }
 
     [FromQuery]
     public string EncodedPledgeApplicationId { get; set; }

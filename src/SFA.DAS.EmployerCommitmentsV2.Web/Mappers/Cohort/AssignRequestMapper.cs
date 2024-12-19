@@ -16,7 +16,8 @@ public class AssignRequestMapper : IMapper<ConfirmProviderViewModel, AssignReque
             StartMonthYear = source.StartMonthYear,
             ProviderId = source.ProviderId,
             TransferSenderId = source.TransferSenderId,
-            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
+            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
+            FundingType = source.FundingType
         });
     }
 }

@@ -226,7 +226,18 @@ public class CohortController : Controller
     [HttpPost]
     public async Task<IActionResult> Assign(AssignViewModel model)
     {
-        if (!model.ReservationId.HasValue && model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
+        bool NeedsToGetAReservation()
+        {
+            if (model.WhoIsAddingApprentices != WhoIsAddingApprentices.Employer)
+                return false;
+            if (model.ReservationId.HasValue)
+                return false;
+            if (model.FundingType == FundingType.AdditionalReservations)
+                return false;
+            return true;
+        }
+
+        if (NeedsToGetAReservation())
         {
             var url = _linkGenerator.ReservationsLink(
                 $"accounts/{model.AccountHashedId}/reservations/{model.AccountLegalEntityHashedId}/select?providerId={model.ProviderId}&transferSenderId={model.TransferSenderId}&encodedPledgeApplicationId={model.EncodedPledgeApplicationId}");
@@ -438,30 +449,6 @@ public class CohortController : Controller
     }
 
     [HttpGet]
-    [Route("transferConnection/create")]
-    public async Task<IActionResult> SelectTransferConnection(InformRequest request)
-    {
-        var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(request);
-
-        if (viewModel.TransferConnections.Any())
-        {
-            return View(viewModel);
-        }
-
-        return RedirectToAction("SelectLegalEntity", new SelectLegalEntityRequest { AccountHashedId = request.AccountHashedId, transferConnectionCode = string.Empty });
-    }
-
-    [HttpPost]
-    [Route("transferConnection/create")]
-    public ActionResult SetTransferConnection(SelectTransferConnectionViewModel selectedTransferConnection)
-    {
-        var transferConnectionCode = selectedTransferConnection.TransferConnectionCode.Equals("None", StringComparison.InvariantCultureIgnoreCase)
-            ? null : selectedTransferConnection.TransferConnectionCode;
-
-        return RedirectToAction("SelectLegalEntity", new SelectLegalEntityRequest { AccountHashedId = selectedTransferConnection.AccountHashedId, transferConnectionCode = transferConnectionCode });
-    }
-
-    [HttpGet]
     [Route("legalEntity/create")]
     [Route("add/legal-entity")]
     public async Task<IActionResult> SelectLegalEntity(SelectLegalEntityRequest request)
@@ -480,7 +467,7 @@ public class CohortController : Controller
 
         if (hasSignedMinimumRequiredAgreementVersion)
         {
-            return RedirectToAction("SelectProvider", new BaseSelectProviderRequest
+            return RedirectToAction("SelectFunding", new SelectFundingRequest
             {
                 AccountHashedId = request.AccountHashedId,
                 TransferSenderId = request.transferConnectionCode,
@@ -512,7 +499,7 @@ public class CohortController : Controller
 
         if (response.HasSignedMinimumRequiredAgreementVersion)
         {
-            return RedirectToAction("SelectProvider", new SelectProviderRequest
+            return RedirectToAction("SelectFunding", new SelectFundingRequest
             {
                 AccountHashedId = selectedLegalEntity.AccountHashedId,
                 TransferSenderId = selectedLegalEntity.TransferConnectionCode,
@@ -532,6 +519,79 @@ public class CohortController : Controller
         };
 
         return RedirectToAction("AgreementNotSigned", model.CloneBaseValues());
+    }
+
+    [HttpGet]
+    [Route("add/select-funding")]
+    public async Task<IActionResult> SelectFunding(SelectFundingRequest request)
+    {
+        if (request.EncodedPledgeApplicationId != null || request.TransferSenderId != null)
+        {
+            return RedirectToAction("SelectProvider", new BaseSelectProviderRequest
+            {
+                AccountHashedId = request.AccountHashedId,
+                TransferSenderId = request.TransferSenderId,
+                AccountLegalEntityHashedId = request.AccountLegalEntityHashedId,
+                EncodedPledgeApplicationId = request.EncodedPledgeApplicationId
+            });
+        }
+
+        var viewModel = await _modelMapper.Map<SelectFundingViewModel>(request);
+
+        if (viewModel.HasDirectTransfersAvailable == false &&
+             viewModel.HasAdditionalReservationFundsAvailable == false &&
+             viewModel.HasUnallocatedReservationsAvailable == false)
+        {
+            return RedirectToAction("SelectProvider", new BaseSelectProviderRequest
+            {
+                AccountHashedId = request.AccountHashedId,
+                TransferSenderId = request.TransferSenderId,
+                AccountLegalEntityHashedId = request.AccountLegalEntityHashedId,
+                EncodedPledgeApplicationId = request.EncodedPledgeApplicationId
+            });
+        }
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route("add/select-funding")]
+    public async Task<ActionResult> SetFundingType(SelectFundingViewModel selectedFunding)
+    {
+        var redirectRequest = new BaseSelectProviderRequest
+        {
+            AccountHashedId = selectedFunding.AccountHashedId,
+            AccountLegalEntityHashedId = selectedFunding.AccountLegalEntityHashedId,
+            FundingType = selectedFunding.FundingType
+        };
+
+        if (selectedFunding.FundingType == FundingType.DirectTransfers)
+        {
+            return RedirectToAction("SelectDirectTransferConnection", redirectRequest);
+        }
+        return RedirectToAction("SelectProvider", redirectRequest);
+    }
+
+    [HttpGet]
+    [Route("add/select-funding/select-direct-connection")]
+    public async Task<IActionResult> SelectDirectTransferConnection(BaseSelectProviderRequest request)
+    {
+        var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(request);
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route("add/select-funding/select-direct-connection")]
+    public ActionResult SelectDirectTransferConnection(SelectTransferConnectionViewModel selectedTransferConnection)
+    {
+        var transferConnectionCode = selectedTransferConnection.TransferConnectionCode;
+
+        return RedirectToAction("SelectProvider", new BaseSelectProviderRequest
+        {
+            AccountHashedId = selectedTransferConnection.AccountHashedId,
+            TransferSenderId = transferConnectionCode,
+            AccountLegalEntityHashedId = selectedTransferConnection.AccountLegalEntityHashedId,
+        });
     }
 
     [HttpGet]

@@ -27,7 +27,8 @@ public class AssignViewModelMapper : IMapper<AssignRequest, AssignViewModel>
             CourseCode = request.CourseCode,
             ProviderId = request.ProviderId,
             TransferSenderId = request.TransferSenderId,
-            EncodedPledgeApplicationId = request.EncodedPledgeApplicationId
+            EncodedPledgeApplicationId = request.EncodedPledgeApplicationId,
+            FundingType = request.FundingType
         };
     }
 }

@@ -109,4 +109,15 @@ public class WhenMappingConfirmProviderRequestToViewModel
         viewModel.TransferSenderId.Should().Be(request.TransferSenderId);
     }
 
+    [Test, MoqAutoData]
+    public async Task Then_Maps_FundingType(
+        ConfirmProviderRequest request,
+        [Frozen] Mock<ICommitmentsApiClient> commitmentsApiClient,
+        ConfirmProviderViewModelMapper mapper)
+    {
+        var viewModel = await mapper.Map(request);
+
+        viewModel.FundingType.Should().Be(request.FundingType);
+    }
+
 }
