@@ -1,0 +1,14 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+<div id="start-date-change-pending-banner" class="govuk-notification-banner govuk-notification-banner">
+    <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+            Important
+        </h2>
+    </div>
+    <div class="govuk-notification-banner__content">
+        <h3 class="govuk-notification-banner__heading">
+            Provider payments set to "Withheld" on the @Model.PaymentFrozenOn.Value.ToGdsHumanisedDate()
+        </h3>
+    </div>
+</div>
