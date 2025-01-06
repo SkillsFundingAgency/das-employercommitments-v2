@@ -61,7 +61,7 @@ public class WhenGetingAddDraftApprenticeship
             .ReturnsAsync(viewModel);
 
         mockApprovalsApiClient
-            .Setup(x => x.GetFundingBandDataByCourseCodeAndStartDate(request.CourseCode, It.IsAny<DateTime?>()))
+            .Setup(x => x.GetFundingBandDataByCourseCodeAndStartDate(It.IsAny<string>(), It.IsAny<DateTime?>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(fundingDataResponse);
 
         var result = await controller.AddDraftApprenticeship(request) as ViewResult;
