@@ -529,10 +529,10 @@ public class CohortController : Controller
         {
             return RedirectToAction("SelectFunding", new SelectFundingRequest
             {
-                AccountHashedId = request.AccountHashedId,
-                TransferSenderId = request.transferConnectionCode,
+                AccountHashedId = cacheModel.AccountHashedId,
+                TransferSenderId = cacheModel.TransferSenderId,
                 AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId,
-                EncodedPledgeApplicationId = request.EncodedPledgeApplicationId
+                EncodedPledgeApplicationId = cacheModel.EncodedPledgeApplicationId
             });
         }
 
@@ -644,8 +644,8 @@ public class CohortController : Controller
     }
 
     [HttpGet]
-    [Route("AgreementNotSigned")]
-    public async Task<ActionResult> AgreementNotSigned(LegalEntitySignedAgreementViewModel viewModel)
+    [Route(RouteNames.CohortAgreementNotSigned)]
+    public async Task<ActionResult> AgreementNotSigned([FromQuery] Guid apprenticeshipSessionKey)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
 

@@ -60,7 +60,7 @@ public class WhenMappingAddApprenticeshipCacheModelToAssignViewModel
 
     [Test, MoqAutoData]
     public async Task Then_Maps_FundingType(
-        AssignRequest request,
+        AddApprenticeshipCacheModel request,
         AssignViewModelMapper mapper)
     {
         var viewModel = await mapper.Map(request);

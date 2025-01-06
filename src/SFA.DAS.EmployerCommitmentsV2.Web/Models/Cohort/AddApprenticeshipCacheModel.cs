@@ -12,6 +12,8 @@ public class AddApprenticeshipCacheModel
     public string AccountLegalEntityHashedId { get; set; }
     public bool HasSignedMinimumRequiredAgreementVersion { get; set; }
     public long AccountLegalEntityId { get; set; }
+    public FundingType? FundingType { get; set; }
+
     public string LegalEntityName { get; set; }
     public string CourseCode { get; set; }
     public Guid? ReservationId { get; set; }

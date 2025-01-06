@@ -52,7 +52,7 @@ public class WhenPostingSelectLegalEntity
     public void TearDown() => _controller?.Dispose();
 
     [Test]
-    public async Task SelectLegalEntity_WhenAgreementSigned_ShouldRedirectToSelectProvider()
+    public async Task SelectLegalEntity_WhenAgreementSigned_ShouldRedirectToSelectFunding()
     {
         // Arrange
         var response = _fixture.Build<LegalEntitySignedAgreementViewModel>()
@@ -67,7 +67,7 @@ public class WhenPostingSelectLegalEntity
 
         // Assert
         var redirectResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
-        redirectResult.ActionName.Should().Be("SelectProvider");
+        redirectResult.ActionName.Should().Be("SelectFunding");
         redirectResult.RouteValues["AccountHashedId"].Should().Be(_cacheModel.AccountHashedId);
         redirectResult.RouteValues["ApprenticeshipSessionKey"].Should().Be(_cacheModel.ApprenticeshipSessionKey);
     }
