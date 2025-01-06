@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
@@ -518,20 +519,24 @@ public class CohortController : Controller
 
         cacheModel.AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId;
         cacheModel.LegalEntityName = autoSelectLegalEntity.Name;
-        _encodingService.TryDecode(autoSelectLegalEntity.AccountLegalEntityPublicHashedId, EncodingType.PublicAccountLegalEntityId, out var id);
-        cacheModel.AccountLegalEntityId = id;
+
+        //todo willo, what is the AccountLegalEntityId then?
+        //_encodingService.TryDecode(autoSelectLegalEntity.AccountLegalEntityPublicHashedId, EncodingType.PublicAccountLegalEntityId, out var id);
+        //cacheModel.AccountLegalEntityId = id;
         cacheModel.AccountLegalEntityId = autoSelectLegalEntity.Id;
+
         cacheModel.HasSignedMinimumRequiredAgreementVersion = hasSignedMinimumRequiredAgreementVersion;
 
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
         if (hasSignedMinimumRequiredAgreementVersion)
         {
+            // todo send only cache key, making sure that cache is populated with all values needed on this endpoint. 
             return RedirectToAction("SelectFunding", new SelectFundingRequest
             {
                 AccountHashedId = cacheModel.AccountHashedId,
                 TransferSenderId = cacheModel.TransferSenderId,
-                AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId,
+                AccountLegalEntityHashedId = cacheModel.AccountLegalEntityHashedId,
                 EncodedPledgeApplicationId = cacheModel.EncodedPledgeApplicationId
             });
         }
@@ -558,6 +563,7 @@ public class CohortController : Controller
 
         if (response.HasSignedMinimumRequiredAgreementVersion)
         {
+            // todo send only cache key, making sure that cache is populated with all values needed on this endpoint. 
             return RedirectToAction("SelectFunding", new SelectFundingRequest
             {
                 AccountHashedId = selectedLegalEntity.AccountHashedId,
@@ -572,75 +578,63 @@ public class CohortController : Controller
 
     [HttpGet]
     [Route("add/select-funding")]
-    public async Task<IActionResult> SelectFunding(SelectFundingRequest request)
+    public async Task<IActionResult> SelectFunding([FromQuery] Guid apprenticeshipSessionKey)
     {
-        if (request.EncodedPledgeApplicationId != null || request.TransferSenderId != null)
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
+
+        if (cacheModel.EncodedPledgeApplicationId != null || cacheModel.TransferSenderId != null)
         {
-            return RedirectToAction("SelectProvider", new BaseSelectProviderRequest
-            {
-                AccountHashedId = request.AccountHashedId,
-                TransferSenderId = request.TransferSenderId,
-                AccountLegalEntityHashedId = request.AccountLegalEntityHashedId,
-                EncodedPledgeApplicationId = request.EncodedPledgeApplicationId
-            });
+            return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
         }
 
-        var viewModel = await _modelMapper.Map<SelectFundingViewModel>(request);
+        //todo new mapper 
+        var viewModel = await _modelMapper.Map<SelectFundingViewModel>(cacheModel);
 
         if (viewModel.HasDirectTransfersAvailable == false &&
              viewModel.HasAdditionalReservationFundsAvailable == false &&
              viewModel.HasUnallocatedReservationsAvailable == false)
         {
-            return RedirectToAction("SelectProvider", new BaseSelectProviderRequest
-            {
-                AccountHashedId = request.AccountHashedId,
-                TransferSenderId = request.TransferSenderId,
-                AccountLegalEntityHashedId = request.AccountLegalEntityHashedId,
-                EncodedPledgeApplicationId = request.EncodedPledgeApplicationId
-            });
+            return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
         }
         return View(viewModel);
     }
 
     [HttpPost]
     [Route("add/select-funding")]
-    public async Task<ActionResult> SetFundingType(SelectFundingViewModel selectedFunding)
+    public async Task<ActionResult> SelectFundingType(SelectFundingViewModel selectedFunding)
     {
-        var redirectRequest = new BaseSelectProviderRequest
-        {
-            AccountHashedId = selectedFunding.AccountHashedId,
-            AccountLegalEntityHashedId = selectedFunding.AccountLegalEntityHashedId,
-            FundingType = selectedFunding.FundingType
-        };
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(selectedFunding.ApprenticeshipSessionKey);
+        cacheModel.FundingType = selectedFunding.FundingType;
+        await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);       
 
         if (selectedFunding.FundingType == FundingType.DirectTransfers)
         {
-            return RedirectToAction("SelectDirectTransferConnection", redirectRequest);
+            return RedirectToAction("SelectDirectTransferConnection", new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
         }
-        return RedirectToAction("SelectProvider", redirectRequest);
+        return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
     }
 
     [HttpGet]
     [Route("add/select-funding/select-direct-connection")]
-    public async Task<IActionResult> SelectDirectTransferConnection(BaseSelectProviderRequest request)
+    public async Task<IActionResult> SelectDirectTransferConnection([FromQuery] Guid apprenticeshipSessionKey)
     {
-        var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(request);
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
+        //todo new mapper 
+        var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(cacheModel);
 
         return View(viewModel);
     }
 
     [HttpPost]
     [Route("add/select-funding/select-direct-connection")]
-    public ActionResult SelectDirectTransferConnection(SelectTransferConnectionViewModel selectedTransferConnection)
+    public async Task<IActionResult> SelectDirectTransferConnection(SelectTransferConnectionViewModel selectedTransferConnection)
     {
-        var transferConnectionCode = selectedTransferConnection.TransferConnectionCode;
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(selectedTransferConnection.ApprenticeshipSessionKey);
+        var transferConnectionCode = selectedTransferConnection.TransferConnectionCode;       
+        cacheModel.TransferSenderId = transferConnectionCode;
+        await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
-        return RedirectToAction("SelectProvider", new BaseSelectProviderRequest
-        {
-            AccountHashedId = selectedTransferConnection.AccountHashedId,
-            TransferSenderId = transferConnectionCode,
-            AccountLegalEntityHashedId = selectedTransferConnection.AccountLegalEntityHashedId,
-        });
+        return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
     }
 
     [HttpGet]

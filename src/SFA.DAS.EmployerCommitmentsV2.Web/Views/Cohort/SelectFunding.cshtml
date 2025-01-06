@@ -24,6 +24,7 @@
         <form method="POST">
 
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.ApprenticeshipSessionKey)
 
         <h1 class="govuk-heading-m">What funding would you like to select?</h1>
 

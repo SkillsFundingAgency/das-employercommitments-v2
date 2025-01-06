@@ -35,7 +35,7 @@ public class WhenPostingSelectDirectConnection
     public void TearDown() => _controller?.Dispose();
 
     [Test]
-    public async Task Then_User_Is_Redirected_To_SelectProvider_Page()
+    public void Then_User_Is_Redirected_To_SelectProvider_Page()
     {
         //Act
         var result = _controller.SelectDirectTransferConnection(_model);
@@ -46,7 +46,7 @@ public class WhenPostingSelectDirectConnection
     }
 
     [Test]
-    public async Task Then_Verify_RouteValues()
+    public void Then_Verify_RouteValues()
     {
         //Act
         var result = _controller.SelectDirectTransferConnection(_model);

@@ -19,6 +19,8 @@ public class SelectFundingViewModel
     public bool HasUnallocatedReservationsAvailable { get; set; }
     public bool HasAdditionalReservationFundsAvailable { get; set; }
     public FundingType? FundingType { get; set; }
+    public Guid ApprenticeshipSessionKey { get; set; }
+
 }
 
 
