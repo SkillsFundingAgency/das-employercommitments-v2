@@ -34,27 +34,15 @@ public class SelectFundingRequestToSelectFundingViewModelMapperTests
     }
 
     [Test]
-    public void AccountLegalEntityHashedIdIsMappedCorrectly()
+    public void FundingTypeIsMappedCorrectly()
     {
-        _result.AccountLegalEntityHashedId.Should().Be(_source.AccountLegalEntityHashedId);
+        _result.FundingType.Should().Be(_source.FundingType);
     }
 
     [Test]
-    public void ReservationIdIsMappedCorrectly()
+    public void ApprenticeshipSessionKeyIsMappedCorrectly()
     {
-        _result.ReservationId.Should().Be(_source.ReservationId);
-    }
-
-    [Test]
-    public void TransferSenderIdIsMappedCorrectly()
-    {
-        _result.TransferSenderId.Should().Be(_source.TransferSenderId);
-    }
-
-    [Test]
-    public void EncodedPledgeApplicationIdIsMappedCorrectly()
-    {
-        _result.EncodedPledgeApplicationId.Should().Be(_source.EncodedPledgeApplicationId);
+        _result.ApprenticeshipSessionKey.Should().Be(_source.ApprenticeshipSessionKey);
     }
 
     [Test]

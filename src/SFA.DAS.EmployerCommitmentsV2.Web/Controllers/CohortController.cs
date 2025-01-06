@@ -519,10 +519,6 @@ public class CohortController : Controller
 
         cacheModel.AccountLegalEntityHashedId = autoSelectLegalEntity.AccountLegalEntityPublicHashedId;
         cacheModel.LegalEntityName = autoSelectLegalEntity.Name;
-
-        //todo willo, what is the AccountLegalEntityId then?
-        //_encodingService.TryDecode(autoSelectLegalEntity.AccountLegalEntityPublicHashedId, EncodingType.PublicAccountLegalEntityId, out var id);
-        //cacheModel.AccountLegalEntityId = id;
         cacheModel.AccountLegalEntityId = autoSelectLegalEntity.Id;
 
         cacheModel.HasSignedMinimumRequiredAgreementVersion = hasSignedMinimumRequiredAgreementVersion;

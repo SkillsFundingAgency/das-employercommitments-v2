@@ -26,15 +26,13 @@ public class SelectFundingViewModelMapper : IMapper<AddApprenticeshipCacheModel,
 
         return new SelectFundingViewModel
         {
-            AccountHashedId = source.AccountHashedId,
-            AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
-            ReservationId = source.ReservationId,
-            TransferSenderId = source.TransferSenderId,
-            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
+            AccountHashedId = source.AccountHashedId,           
             IsLevyAccount = selectFundingDetails.IsLevyAccount,
             HasDirectTransfersAvailable = selectFundingDetails.HasDirectTransfersAvailable,
             HasUnallocatedReservationsAvailable = selectFundingDetails.HasUnallocatedReservationsAvailable,
-            HasAdditionalReservationFundsAvailable = selectFundingDetails.HasAdditionalReservationFundsAvailable
+            HasAdditionalReservationFundsAvailable = selectFundingDetails.HasAdditionalReservationFundsAvailable,
+            FundingType = source.FundingType,
+            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey
         };
     }
 }
