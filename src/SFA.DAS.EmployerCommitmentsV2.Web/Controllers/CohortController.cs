@@ -615,7 +615,15 @@ public class CohortController : Controller
     {
         if (key.IsNotNullOrEmpty())
         {
-            return await _cacheStorageService.RetrieveFromCache<ApprenticeViewModel>(key.Value);
+            var model =  await _cacheStorageService.RetrieveFromCache<ApprenticeViewModel>(key.Value);
+
+            if (!string.IsNullOrEmpty(model?.CourseCode))
+            {
+                var fundingBandData = await _approvalsApiClient.GetFundingBandDataByCourseCodeAndStartDate(model.CourseCode, model.StartDate.Date);
+                model.FundingBandMax = fundingBandData?.ProposedMaxFunding;
+                model.StandardPageUrl = fundingBandData?.StandardPageUrl;
+                return model;
+            }
         }
         return null;
     }

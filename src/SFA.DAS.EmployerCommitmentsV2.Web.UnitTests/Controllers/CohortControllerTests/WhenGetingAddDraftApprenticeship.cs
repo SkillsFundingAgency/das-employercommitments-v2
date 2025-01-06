@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Testing.AutoFixture;
@@ -36,7 +38,9 @@ public class WhenGetingAddDraftApprenticeship
     [Test, MoqAutoData]
     public async Task ThenReturnsViewWhenModelIsInCache(
        ApprenticeRequest request,
+       GetFundingBandDataResponse fundingDataResponse,
        [Frozen] Mock<IModelMapper> mockMapper,
+       [Frozen] Mock<IApprovalsApiClient> mockApprovalsApiClient,
        [Frozen] Mock<ICacheStorageService> cacheStorageService,
        [Greedy] CohortController controller)
     {
@@ -56,6 +60,10 @@ public class WhenGetingAddDraftApprenticeship
             .Setup(mapper => mapper.Map<ApprenticeViewModel>(request))
             .ReturnsAsync(viewModel);
 
+        mockApprovalsApiClient
+            .Setup(x => x.GetFundingBandDataByCourseCodeAndStartDate(request.CourseCode, It.IsAny<DateTime?>()))
+            .ReturnsAsync(fundingDataResponse);
+
         var result = await controller.AddDraftApprenticeship(request) as ViewResult;
         result.Should().NotBeNull();
         result.ViewName.Should().Be("Apprentice");
@@ -65,5 +73,7 @@ public class WhenGetingAddDraftApprenticeship
         resultObject.Should().NotBeNull();
         resultObject.DeliveryModel.Should().Be(cacheItem.DeliveryModel);
         resultObject.CourseCode.Should().Be(cacheItem.CourseCode);
+        resultObject.StandardPageUrl.Should().Be(fundingDataResponse.StandardPageUrl);
+        resultObject.FundingBandMax.Should().Be(fundingDataResponse.ProposedMaxFunding);
     }
 }

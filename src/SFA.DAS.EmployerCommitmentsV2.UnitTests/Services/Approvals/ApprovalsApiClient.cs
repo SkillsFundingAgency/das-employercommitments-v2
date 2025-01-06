@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using System.Web;
 using AutoFixture.NUnit3;
@@ -75,6 +76,32 @@ public class ApprovalsApiClientTests
         var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
 
         var actual = await approvalsApiClient.GetSelectDirectTransferConnection(accountId);
+
+        actual.Should().BeSameAs(response);
+    }
+
+    [Test, AutoData]
+    public async Task When_Calling_GetFundingBandDataByCourseCodeAndStartDate_WithNoStartDate_Then_The_Data_Is_Returned(string courseCode, GetFundingBandDataResponse response)
+    {
+        var outerApiClient = new Mock<IOuterApiClient>();
+        var expectedUrl = $"courses/{courseCode}/funding-band";
+        outerApiClient.Setup(x => x.Get<GetFundingBandDataResponse>(expectedUrl)).ReturnsAsync(response);
+        var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
+
+        var actual = await approvalsApiClient.GetFundingBandDataByCourseCodeAndStartDate(courseCode, null);
+
+        actual.Should().BeSameAs(response);
+    }
+
+    [Test, AutoData]
+    public async Task When_Calling_GetFundingBandDataByCourseCodeAndStartDate_Then_The_Data_Is_Returned(string courseCode, DateTime? dateTime, GetFundingBandDataResponse response)
+    {
+        var outerApiClient = new Mock<IOuterApiClient>();
+        var expectedUrl = $"courses/{courseCode}/funding-band?startDate={dateTime.Value.ToString("yyyy-MM-dd")}";
+        outerApiClient.Setup(x => x.Get<GetFundingBandDataResponse>(expectedUrl)).ReturnsAsync(response);
+        var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
+
+        var actual = await approvalsApiClient.GetFundingBandDataByCourseCodeAndStartDate(courseCode, dateTime);
 
         actual.Should().BeSameAs(response);
     }

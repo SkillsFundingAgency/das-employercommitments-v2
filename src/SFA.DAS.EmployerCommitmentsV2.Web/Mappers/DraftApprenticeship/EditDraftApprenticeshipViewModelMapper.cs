@@ -37,6 +37,16 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
             ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
             : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes;
 
+        var currentCourse = courses.FirstOrDefault(x => x.StandardUId == draftApprenticeship.StandardUId);
+        string standardPageUrl = null;
+        int? fundingBandMax = null;
+
+        if (currentCourse != null)
+        {
+            standardPageUrl = currentCourse.StandardPageUrl;
+            fundingBandMax = GetFundingBandForDate(currentCourse.FundingPeriods, draftApprenticeship.StartDate);
+        }
+
         return new EditDraftApprenticeshipViewModel(draftApprenticeship.DateOfBirth, draftApprenticeship.StartDate, draftApprenticeship.EndDate)
         {
             DraftApprenticeshipId = source.Request.DraftApprenticeshipId,
@@ -76,7 +86,16 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
             DurationReducedByHours = draftApprenticeship.DurationReducedByHours,
             DurationReducedBy = draftApprenticeship.DurationReducedBy,
             PriceReducedBy = draftApprenticeship.PriceReducedBy,
-            CacheKey = source.Request.CacheKey.IsNotNullOrEmpty() ? source.Request.CacheKey : Guid.NewGuid()
+            CacheKey = source.Request.CacheKey.IsNotNullOrEmpty() ? source.Request.CacheKey : Guid.NewGuid(),
+            StandardPageUrl = standardPageUrl,
+            FundingBandMax = fundingBandMax
         };
+    }
+
+    private static int? GetFundingBandForDate(List<TrainingProgrammeFundingPeriod> bands, DateTime? forDate)
+    {
+        forDate ??= DateTime.Today;
+        var match = bands.FirstOrDefault(x => x.EffectiveFrom <= forDate && (x.EffectiveTo ?? DateTime.Today.AddYears(5)) >= forDate);
+        return match?.FundingCap;
     }
 }

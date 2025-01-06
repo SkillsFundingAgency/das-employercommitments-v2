@@ -114,4 +114,14 @@ public class ApprovalsApiClient : IApprovalsApiClient
     {
         return _client.Get<GetSelectDirectTransferConnectionResponse>($"{accountId}/unapproved/add/select-funding/select-direct-connection");
     }
+
+    public Task<GetFundingBandDataResponse> GetFundingBandDataByCourseCodeAndStartDate(string courseCode, DateTime? startDate, CancellationToken cancellationToken = default)
+    {
+        if (startDate == null)
+        {
+            return _client.Get<GetFundingBandDataResponse>($"courses/{courseCode}/funding-band");
+        }
+
+        return _client.Get<GetFundingBandDataResponse>($"courses/{courseCode}/funding-band?startDate={startDate.Value.ToString("yyyy-MM-dd")}");
+    }
 }
