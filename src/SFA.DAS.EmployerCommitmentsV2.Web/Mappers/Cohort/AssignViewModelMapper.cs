@@ -15,7 +15,8 @@ public class AssignViewModelMapper(ICommitmentsApiClient commitmentsApiClient) :
             AccountHashedId = request.AccountHashedId,
             LegalEntityName = accountLegalEntity.LegalEntityName,
             ReservationId = request.ReservationId,
-            ApprenticeshipSessionKey = request.ApprenticeshipSessionKey
+            ApprenticeshipSessionKey = request.ApprenticeshipSessionKey,
+            FundingType = request.FundingType
         };
     }
 }

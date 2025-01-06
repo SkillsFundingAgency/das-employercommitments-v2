@@ -49,6 +49,37 @@ public class WhenCallingPostAssign
     }
 
     [Test, MoqAutoData]
+    public async Task And_FundingType_Is_AdditionalReservations_And_Employer_Adding_Apprentices_Then_Redirect_To_Add_Apprentice(
+        AssignViewModel viewModel,
+        [Greedy] CohortController controller)
+    {
+        viewModel.ReservationId = null;
+        viewModel.FundingType = FundingType.AdditionalReservations;
+        viewModel.EncodedPledgeApplicationId = null;
+
+        var expectedRouteValues = new RouteValueDictionary(new
+        {
+            viewModel.AccountHashedId,
+            viewModel.AccountLegalEntityHashedId,
+            viewModel.ReservationId,
+            viewModel.StartMonthYear,
+            viewModel.CourseCode,
+            viewModel.ProviderId,
+            viewModel.TransferSenderId,
+            viewModel.EncodedPledgeApplicationId,
+            Origin = viewModel.ReservationId.HasValue ? Origin.Reservations : Origin.Apprentices
+        });
+        viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Employer;
+
+        var result = await controller.Assign(viewModel) as RedirectToActionResult;
+
+        result.Should().NotBeNull();
+        result.ActionName.Should().Be("Apprentice");
+        result.ControllerName.Should().Be("Cohort");
+        result.RouteValues.Should().BeEquivalentTo(expectedRouteValues);
+    }
+
+    [Test, MoqAutoData]
     public async Task And_Provider_Adding_Apprentices_Then_Redirect_To_Finish(
         AssignViewModel viewModel,
         CreateCohortWithOtherPartyRequest createCohortRequest,
@@ -115,6 +146,7 @@ public class WhenCallingPostAssign
         const string reservationsUrl = "RESERVATIONS-URL";
         linkGenerator.Setup(x => x.ReservationsLink(It.IsAny<string>())).Returns(reservationsUrl);
         viewModel.ReservationId = null;
+        viewModel.FundingType = null;
         viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Employer;
 
         var result = await controller.Assign(viewModel) as RedirectResult;

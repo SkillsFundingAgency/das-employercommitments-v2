@@ -15,6 +15,8 @@ public class SelectProviderViewModel
     public string CourseCode { get; set; }
     public string ProviderId { get; set; }
     public Origin Origin { get; set; }
+    public FundingType? FundingType { get; set; }
+
     public string EncodedPledgeApplicationId { get; set; }
     public List<Provider> Providers { get; set; }
     public Guid? ApprenticeshipSessionKey { get; set; }

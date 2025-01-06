@@ -6,4 +6,5 @@ public class ConfirmProviderViewModel : IndexViewModel
     public string ProviderName { get; set; }
     public string LegalEntityName { get; set; }
     public bool? UseThisProvider { get; set; }
+    public FundingType? FundingType { get; set; }
 }

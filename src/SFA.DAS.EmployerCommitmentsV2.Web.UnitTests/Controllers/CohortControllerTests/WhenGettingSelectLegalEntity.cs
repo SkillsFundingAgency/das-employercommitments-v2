@@ -117,12 +117,12 @@ public class WhenGettingSelectLegalEntity
     }
 
     [TestCase(true, EmployerAgreementStatus.Signed, 1, ExpectedAction.AgreementNotSigned)]
-    [TestCase(true, EmployerAgreementStatus.Signed, 2, ExpectedAction.SelectProvider)]
+    [TestCase(true, EmployerAgreementStatus.Signed, 2, ExpectedAction.SelectFunding)]
     [TestCase(true, EmployerAgreementStatus.Pending, 0, ExpectedAction.AgreementNotSigned)]
     [TestCase(true, EmployerAgreementStatus.Expired, 0, ExpectedAction.AgreementNotSigned)]
     [TestCase(true, EmployerAgreementStatus.Removed, 0, ExpectedAction.AgreementNotSigned)]
     [TestCase(true, EmployerAgreementStatus.Superseded, 0, ExpectedAction.AgreementNotSigned)]
-    [TestCase(false, EmployerAgreementStatus.Signed, 1, ExpectedAction.SelectProvider)]
+    [TestCase(false, EmployerAgreementStatus.Signed, 1, ExpectedAction.SelectFunding)]
     [TestCase(false, EmployerAgreementStatus.Pending, 1, ExpectedAction.AgreementNotSigned)]
     [TestCase(false, EmployerAgreementStatus.Expired, 1, ExpectedAction.AgreementNotSigned)]
     [TestCase(false, EmployerAgreementStatus.Removed, 1, ExpectedAction.AgreementNotSigned)]
@@ -167,9 +167,7 @@ public class WhenGettingSelectLegalEntity
         switch (expectedAction)
         {
             case ExpectedAction.AgreementNotSigned:
-                redirectToActionResult.ActionName.Should().Be(expectedAction.ToString());
-                break;
-            case ExpectedAction.SelectProvider:
+            case ExpectedAction.SelectFunding:
                 redirectToActionResult.ActionName.Should().Be(expectedAction.ToString());
                 break;
             default:
@@ -180,6 +178,6 @@ public class WhenGettingSelectLegalEntity
     public enum ExpectedAction
     {
         AgreementNotSigned,
-        SelectProvider
+        SelectFunding
     }
 }

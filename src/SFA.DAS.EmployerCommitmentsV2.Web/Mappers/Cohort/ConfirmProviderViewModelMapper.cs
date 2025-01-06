@@ -16,7 +16,8 @@ public class ConfirmProviderViewModelMapper(ICommitmentsApiClient commitmentsApi
             LegalEntityName = source.LegalEntityName,
             ProviderId = source.ProviderId,
             ProviderName = providerResponse.Name,        
-            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey
+            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey,
+            FundingType = source.FundingType
         };
 
         return result;

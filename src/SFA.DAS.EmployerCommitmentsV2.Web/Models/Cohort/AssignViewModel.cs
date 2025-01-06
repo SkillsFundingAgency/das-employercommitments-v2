@@ -9,6 +9,7 @@ public class AssignViewModel : IAuthorizationContextModel
     public Guid? ReservationId { get; set; }
     public string LegalEntityName { get; set; }
     public Guid? ApprenticeshipSessionKey { get; set; }
+    public FundingType? FundingType { get; set; }
 
     [Required(ErrorMessage = "Select who will add apprentices")]
     public WhoIsAddingApprentices? WhoIsAddingApprentices { get; set; }

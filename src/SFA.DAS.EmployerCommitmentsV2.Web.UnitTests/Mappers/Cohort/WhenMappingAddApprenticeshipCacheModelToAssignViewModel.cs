@@ -56,4 +56,16 @@ public class WhenMappingAddApprenticeshipCacheModelToAssignViewModel
 
         viewModel.ApprenticeshipSessionKey.Should().Be(request.ApprenticeshipSessionKey);
     }
+
+
+    [Test, MoqAutoData]
+    public async Task Then_Maps_FundingType(
+        AssignRequest request,
+        AssignViewModelMapper mapper)
+    {
+        var viewModel = await mapper.Map(request);
+
+        viewModel.FundingType.Should().Be(request.FundingType);
+    }
+
 }
