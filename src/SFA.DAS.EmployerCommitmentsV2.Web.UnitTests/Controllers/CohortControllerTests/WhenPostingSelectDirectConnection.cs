@@ -66,7 +66,7 @@ public class WhenPostingSelectDirectConnection
 
         //Assert
         var redirectToActionResult = result as RedirectToActionResult;
-        redirectToActionResult.RouteValues["AccountHashedId"].Should().Be(_model.AccountHashedId);
-        redirectToActionResult.RouteValues["ApprenticeshipSessionKey"].Should().Be(_model.ApprenticeshipSessionKey);
+        redirectToActionResult.RouteValues["AccountHashedId"].Should().Be(_cacheModel.AccountHashedId);
+        redirectToActionResult.RouteValues["ApprenticeshipSessionKey"].Should().Be(_cacheModel.ApprenticeshipSessionKey);
     }
 }
