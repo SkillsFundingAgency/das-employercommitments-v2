@@ -531,14 +531,7 @@ public class CohortController : Controller
 
         if (hasSignedMinimumRequiredAgreementVersion)
         {
-            // todo send only cache key, making sure that cache is populated with all values needed on this endpoint. 
-            return RedirectToAction("SelectFunding", new SelectFundingRequest
-            {
-                AccountHashedId = cacheModel.AccountHashedId,
-                TransferSenderId = cacheModel.TransferSenderId,
-                AccountLegalEntityHashedId = cacheModel.AccountLegalEntityHashedId,
-                EncodedPledgeApplicationId = cacheModel.EncodedPledgeApplicationId
-            });
+            return RedirectToAction(RouteNames.CohortSelectFunding, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
         }
 
         return RedirectToAction(RouteNames.CohortAgreementNotSigned, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
@@ -563,14 +556,7 @@ public class CohortController : Controller
 
         if (response.HasSignedMinimumRequiredAgreementVersion)
         {
-            // todo send only cache key, making sure that cache is populated with all values needed on this endpoint. 
-            return RedirectToAction("SelectFunding", new SelectFundingRequest
-            {
-                AccountHashedId = selectedLegalEntity.AccountHashedId,
-                TransferSenderId = selectedLegalEntity.TransferConnectionCode,
-                AccountLegalEntityHashedId = response.AccountLegalEntityHashedId,
-                EncodedPledgeApplicationId = selectedLegalEntity.EncodedPledgeApplicationId
-            });
+            return RedirectToAction(RouteNames.CohortSelectFunding, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
         }
 
         return RedirectToAction(RouteNames.CohortAgreementNotSigned, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
@@ -609,7 +595,7 @@ public class CohortController : Controller
 
         if (selectedFunding.FundingType == FundingType.DirectTransfers)
         {
-            return RedirectToAction("SelectDirectTransferConnection", new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
+            return RedirectToAction(RouteNames.CohortSelectDirectTransferConnection, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
         }
         return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
     }
