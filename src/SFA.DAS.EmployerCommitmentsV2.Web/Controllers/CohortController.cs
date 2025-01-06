@@ -573,7 +573,6 @@ public class CohortController : Controller
             return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
         }
 
-        //todo new mapper 
         var viewModel = await _modelMapper.Map<SelectFundingViewModel>(cacheModel);
 
         if (viewModel.HasDirectTransfersAvailable == false &&
@@ -605,7 +604,6 @@ public class CohortController : Controller
     public async Task<IActionResult> SelectDirectTransferConnection([FromQuery] Guid apprenticeshipSessionKey)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
-        //todo new mapper 
         var viewModel = await _modelMapper.Map<SelectTransferConnectionViewModel>(cacheModel);
 
         return View(viewModel);

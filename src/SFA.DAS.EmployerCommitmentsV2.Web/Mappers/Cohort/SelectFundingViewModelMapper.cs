@@ -1,12 +1,10 @@
-﻿using Microsoft.Azure.KeyVault.WebKey;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class SelectFundingViewModelMapper : IMapper<SelectFundingRequest, SelectFundingViewModel>
+public class SelectFundingViewModelMapper : IMapper<AddApprenticeshipCacheModel, SelectFundingViewModel>
 {
     private readonly IApprovalsApiClient _outerApiClient;
     private readonly ILogger<SelectFundingViewModelMapper> _logger;
@@ -17,7 +15,7 @@ public class SelectFundingViewModelMapper : IMapper<SelectFundingRequest, Select
         _logger = logger;
     }
 
-    public async Task<SelectFundingViewModel> Map(SelectFundingRequest source)
+    public async Task<SelectFundingViewModel> Map(AddApprenticeshipCacheModel source)
     {
         var selectFundingDetails = await _outerApiClient.GetSelectFundingOptions(source.AccountId);
 
