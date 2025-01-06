@@ -6,6 +6,7 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
@@ -14,6 +15,8 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.Encoding;
 using SFA.DAS.Http;
+using StructureMap.Query;
+using System.Reflection;
 using AddDraftApprenticeshipRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.AddDraftApprenticeshipRequest;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -391,7 +394,16 @@ public class DraftApprenticeshipController : Controller
     {
         if (key.IsNotNullOrEmpty())
         {
-            return await _cacheStorageService.RetrieveFromCache<AddDraftApprenticeshipViewModel>(key.Value);
+            var model = await _cacheStorageService.RetrieveFromCache<AddDraftApprenticeshipViewModel>(key.Value);
+            if (!string.IsNullOrEmpty(model?.CourseCode))
+            {
+                var fundingBandData = await _outerApi.GetFundingBandDataByCourseCodeAndStartDate(model.CourseCode, model.StartDate.Date);
+                model.FundingBandMax = fundingBandData?.ProposedMaxFunding;
+                model.StandardPageUrl = fundingBandData?.StandardPageUrl;
+                return model;
+            }
+
+            return model;
         }
         return null;
     }
@@ -416,7 +428,14 @@ public class DraftApprenticeshipController : Controller
     {
         if (key.IsNotNullOrEmpty())
         {
-            return await _cacheStorageService.RetrieveFromCache<EditDraftApprenticeshipViewModel>(key.Value);
+            var model = await _cacheStorageService.RetrieveFromCache<EditDraftApprenticeshipViewModel>(key.Value);
+            if (!string.IsNullOrEmpty(model?.CourseCode))
+            {
+                var fundingBandData = await _outerApi.GetFundingBandDataByCourseCodeAndStartDate(model.CourseCode, model.StartDate.Date);
+                model.FundingBandMax = fundingBandData?.ProposedMaxFunding;
+                model.StandardPageUrl = fundingBandData?.StandardPageUrl;
+                return model;
+            }
         }
         return null;
     }
