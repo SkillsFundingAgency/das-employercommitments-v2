@@ -121,24 +121,27 @@ public class DraftApprenticeshipController : Controller
                 model.CourseCode = request.CourseCode;
                 model.DeliveryModel = request.DeliveryModel;
             }
+            await AssignFundingDetailsToModel(model);
 
             return View("AddDraftApprenticeship", model);
         }
         catch (CohortEmployerUpdateDeniedException)
         {
-            return RedirectToAction("Details", "Cohort", new { request.AccountHashedId, request.CohortReference });
+            return RedirectToAction("Details", "Cohort", new {request.AccountHashedId, request.CohortReference});
         }
     }
 
     [HttpPost]
     [Route("add-another")]
-    public async Task<IActionResult> AddDraftApprenticeshipDetails(string changeCourse, string changeDeliveryModel, AddDraftApprenticeshipViewModel model)
+    public async Task<IActionResult> AddDraftApprenticeshipDetails(string changeCourse, string changeDeliveryModel,
+        AddDraftApprenticeshipViewModel model)
     {
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
             await StoreAddDraftApprenticeshipInCache(model, model.CacheKey);
             var request = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
-            return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel), request.CloneBaseValues());
+            return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourse) : nameof(SelectDeliveryModel),
+                request.CloneBaseValues());
         }
 
         var addDraftApprenticeshipRequest = await _modelMapper.Map<AddDraftApprenticeshipApimRequest>(model);
@@ -147,9 +150,11 @@ public class DraftApprenticeshipController : Controller
 
         await RemoveAddDraftApprenticeshipFromCache(model.CacheKey);
 
-        var draftApprenticeshipHashedId = _encodingService.Encode(response.DraftApprenticeshipId, EncodingType.ApprenticeshipId);
+        var draftApprenticeshipHashedId =
+            _encodingService.Encode(response.DraftApprenticeshipId, EncodingType.ApprenticeshipId);
 
-        return RedirectToAction("SelectOption", "DraftApprenticeship", new { model.AccountHashedId, model.CohortReference, draftApprenticeshipHashedId });
+        return RedirectToAction("SelectOption", "DraftApprenticeship",
+            new {model.AccountHashedId, model.CohortReference, draftApprenticeshipHashedId});
     }
 
     [HttpGet]
@@ -181,6 +186,7 @@ public class DraftApprenticeshipController : Controller
         {
             localModel.CourseCode = request.CourseCode;
             localModel.DeliveryModel = request.DeliveryModel;
+            await AssignFundingDetailsToModel(localModel);
             return View("Edit", localModel);
         }
 
@@ -193,14 +199,17 @@ public class DraftApprenticeshipController : Controller
     [Route("{DraftApprenticeshipHashedId}")]
     [Route("{DraftApprenticeshipHashedId}/edit")]
     [Route("{DraftApprenticeshipHashedId}/edit-display")]
-    public async Task<IActionResult> EditDraftApprenticeship(string changeCourse, string changeDeliveryModel, EditDraftApprenticeshipViewModel model)
+    public async Task<IActionResult> EditDraftApprenticeship(string changeCourse, string changeDeliveryModel,
+        EditDraftApprenticeshipViewModel model)
     {
         if (changeCourse == "Edit" || changeDeliveryModel == "Edit")
         {
             await StoreEditDraftApprenticeshipInCache(model, model.CacheKey);
             var req = await _modelMapper.Map<AddDraftApprenticeshipRequest>(model);
 
-            return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit), req.CloneBaseValues());
+            return RedirectToAction(
+                changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit),
+                req.CloneBaseValues());
         }
 
         var updateRequest = await _modelMapper.Map<UpdateDraftApprenticeshipApimRequest>(model);
@@ -209,7 +218,8 @@ public class DraftApprenticeshipController : Controller
 
         await RemoveEditDraftApprenticeshipFromCache(model.CacheKey);
 
-        return RedirectToAction("SelectOption", "DraftApprenticeship", new { model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId });
+        return RedirectToAction("SelectOption", "DraftApprenticeship",
+            new {model.AccountHashedId, model.CohortReference, model.DraftApprenticeshipHashedId});
     }
 
     [HttpGet]
@@ -243,17 +253,22 @@ public class DraftApprenticeshipController : Controller
 
         if (model != null)
         {
-            model.DeliveryModel = (DeliveryModel?)request.DeliveryModel;
+            model.DeliveryModel = (DeliveryModel?) request.DeliveryModel;
 
             if (model.DeliveryModels.Count > 1 || model.HasUnavailableFlexiJobAgencyDeliveryModel)
             {
                 return View(model);
             }
 
-            request.DeliveryModel = (CommitmentsV2.Types.DeliveryModel)model.DeliveryModels.FirstOrDefault();
+            request.DeliveryModel = (CommitmentsV2.Types.DeliveryModel) model.DeliveryModels.FirstOrDefault();
         }
 
-        return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), new { request.AccountHashedId, request.CohortReference, request.DraftApprenticeshipHashedId, request.DeliveryModel, request.CourseCode, request.CacheKey });
+        return RedirectToAction(nameof(EditDraftApprenticeshipDisplay),
+            new
+            {
+                request.AccountHashedId, request.CohortReference, request.DraftApprenticeshipHashedId,
+                request.DeliveryModel, request.CourseCode, request.CacheKey
+            });
     }
 
     [HttpPost]
@@ -264,21 +279,33 @@ public class DraftApprenticeshipController : Controller
 
         if (draft != null)
         {
-            draft.HasChangedDeliveryModel = draft.DeliveryModel != (CommitmentsV2.Types.DeliveryModel?)model.DeliveryModel;
-            draft.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?)model.DeliveryModel;
+            draft.HasChangedDeliveryModel =
+                draft.DeliveryModel != (CommitmentsV2.Types.DeliveryModel?) model.DeliveryModel;
+            draft.DeliveryModel = (CommitmentsV2.Types.DeliveryModel?) model.DeliveryModel;
             if (!string.IsNullOrWhiteSpace(model.CourseCode))
             {
                 draft.CourseCode = model.CourseCode;
-            };
+                await AssignFundingDetailsToModel(draft);
+            }
+
             await StoreEditDraftApprenticeshipInCache(draft, model.CacheKey);
-            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), new { model.AccountHashedId, draft.CohortReference, draft.DraftApprenticeshipHashedId, model.DeliveryModel, model.CourseCode, model.CacheKey });
+            return RedirectToAction(nameof(EditDraftApprenticeshipDisplay),
+                new
+                {
+                    model.AccountHashedId, draft.CohortReference, draft.DraftApprenticeshipHashedId,
+                    model.DeliveryModel, model.CourseCode, model.CacheKey
+                });
         }
+
         if (model.DeliveryModel == null)
         {
-            throw new CommitmentsApiModelException(new List<ErrorDetail> { new("DeliveryModel", "You must select the apprenticeship delivery model") });
+            throw new CommitmentsApiModelException(new List<ErrorDetail>
+                {new("DeliveryModel", "You must select the apprenticeship delivery model")});
         }
+
         return RedirectToAction(nameof(EditDraftApprenticeshipDisplay), model);
     }
+
     [HttpGet]
     [Route("{DraftApprenticeshipHashedId}/select-option")]
     public async Task<IActionResult> SelectOption(SelectOptionRequest request)
@@ -286,7 +313,7 @@ public class DraftApprenticeshipController : Controller
         var model = await _modelMapper.Map<SelectOptionViewModel>(request);
         if (model == null)
         {
-            return RedirectToAction("Details", "Cohort", new { request.AccountHashedId, request.CohortReference });
+            return RedirectToAction("Details", "Cohort", new {request.AccountHashedId, request.CohortReference});
         }
         return View(model);
     }
@@ -299,7 +326,7 @@ public class DraftApprenticeshipController : Controller
 
         await _outerApi.UpdateDraftApprenticeship(model.CohortId.Value, model.DraftApprenticeshipId, updateRequest);
 
-        return RedirectToAction("Details", "Cohort", new { model.AccountHashedId, model.CohortReference });
+        return RedirectToAction("Details", "Cohort", new {model.AccountHashedId, model.CohortReference});
     }
 
     [HttpGet]
@@ -336,9 +363,10 @@ public class DraftApprenticeshipController : Controller
     {
         if (await CohortExists(model.CohortId))
         {
-            return RedirectToAction("Details", "Cohort", new { model.AccountHashedId, model.CohortReference });
+            return RedirectToAction("Details", "Cohort", new {model.AccountHashedId, model.CohortReference});
         }
-        return RedirectToAction("Review", "Cohort", new { model.AccountHashedId });
+
+        return RedirectToAction("Review", "Cohort", new {model.AccountHashedId});
     }
 
     private async Task<bool> CohortExists(long? cohortId)
@@ -366,12 +394,12 @@ public class DraftApprenticeshipController : Controller
     {
         return origin == DeleteDraftApprenticeshipOrigin.CohortDetails
             ? RedirectToCohortDetails(accountHashedId, cohortReference)
-            : RedirectToAction("Details", new { accountHashedId, cohortReference, draftApprenticeshipHashedId });
+            : RedirectToAction("Details", new {accountHashedId, cohortReference, draftApprenticeshipHashedId});
     }
 
     private IActionResult RedirectToCohortDetails(string accountHashedId, string cohortReference)
     {
-        return RedirectToAction("Details", "Cohort", new { accountHashedId, cohortReference });
+        return RedirectToAction("Details", "Cohort", new {accountHashedId, cohortReference});
     }
 
     private async Task StoreAddDraftApprenticeshipInCache(AddDraftApprenticeshipViewModel model, Guid? key)
@@ -394,17 +422,9 @@ public class DraftApprenticeshipController : Controller
     {
         if (key.IsNotNullOrEmpty())
         {
-            var model = await _cacheStorageService.RetrieveFromCache<AddDraftApprenticeshipViewModel>(key.Value);
-            if (!string.IsNullOrEmpty(model?.CourseCode))
-            {
-                var fundingBandData = await _outerApi.GetFundingBandDataByCourseCodeAndStartDate(model.CourseCode, model.StartDate.Date);
-                model.FundingBandMax = fundingBandData?.ProposedMaxFunding;
-                model.StandardPageUrl = fundingBandData?.StandardPageUrl;
-                return model;
-            }
-
-            return model;
+            return await _cacheStorageService.RetrieveFromCache<AddDraftApprenticeshipViewModel>(key.Value);
         }
+
         return null;
     }
 
@@ -428,15 +448,19 @@ public class DraftApprenticeshipController : Controller
     {
         if (key.IsNotNullOrEmpty())
         {
-            var model = await _cacheStorageService.RetrieveFromCache<EditDraftApprenticeshipViewModel>(key.Value);
-            if (!string.IsNullOrEmpty(model?.CourseCode))
-            {
-                var fundingBandData = await _outerApi.GetFundingBandDataByCourseCodeAndStartDate(model.CourseCode, model.StartDate.Date);
-                model.FundingBandMax = fundingBandData?.ProposedMaxFunding;
-                model.StandardPageUrl = fundingBandData?.StandardPageUrl;
-                return model;
-            }
+            return await _cacheStorageService.RetrieveFromCache<EditDraftApprenticeshipViewModel>(key.Value);
         }
+
         return null;
+    }
+
+    private async Task AssignFundingDetailsToModel(DraftApprenticeshipViewModel model)
+    {
+        if (!string.IsNullOrEmpty(model?.CourseCode))
+        {
+            var fundingBandData = await _outerApi.GetFundingBandDataByCourseCodeAndStartDate(model.CourseCode, model.StartDate.Date);
+            model.FundingBandMax = fundingBandData?.ProposedMaxFunding;
+            model.StandardPageUrl = fundingBandData?.StandardPageUrl;
+        }
     }
 }
