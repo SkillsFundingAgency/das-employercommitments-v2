@@ -84,7 +84,7 @@ public class ApprovalsApiClientTests
     public async Task When_Calling_GetFundingBandDataByCourseCodeAndStartDate_WithNoStartDate_Then_The_Data_Is_Returned(string courseCode, GetFundingBandDataResponse response)
     {
         var outerApiClient = new Mock<IOuterApiClient>();
-        var expectedUrl = $"courses/{courseCode}/funding-band";
+        var expectedUrl = $"TrainingCourses/{courseCode}/funding-band";
         outerApiClient.Setup(x => x.Get<GetFundingBandDataResponse>(expectedUrl)).ReturnsAsync(response);
         var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
 
@@ -97,7 +97,7 @@ public class ApprovalsApiClientTests
     public async Task When_Calling_GetFundingBandDataByCourseCodeAndStartDate_Then_The_Data_Is_Returned(string courseCode, DateTime? dateTime, GetFundingBandDataResponse response)
     {
         var outerApiClient = new Mock<IOuterApiClient>();
-        var expectedUrl = $"courses/{courseCode}/funding-band?startDate={dateTime.Value.ToString("yyyy-MM-dd")}";
+        var expectedUrl = $"TrainingCourses/{courseCode}/funding-band?startDate={dateTime.Value.ToString("yyyy-MM-dd")}";
         outerApiClient.Setup(x => x.Get<GetFundingBandDataResponse>(expectedUrl)).ReturnsAsync(response);
         var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
 

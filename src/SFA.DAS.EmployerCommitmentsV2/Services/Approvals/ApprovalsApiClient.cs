@@ -119,9 +119,9 @@ public class ApprovalsApiClient : IApprovalsApiClient
     {
         if (startDate == null)
         {
-            return _client.Get<GetFundingBandDataResponse>($"courses/{courseCode}/funding-band");
+            return _client.Get<GetFundingBandDataResponse>($"TrainingCourses/{courseCode}/funding-band");
         }
 
-        return _client.Get<GetFundingBandDataResponse>($"courses/{courseCode}/funding-band?startDate={startDate.Value.ToString("yyyy-MM-dd")}");
+        return _client.Get<GetFundingBandDataResponse>($"TrainingCourses/{courseCode}/funding-band?startDate={startDate.Value.ToString("yyyy-MM-dd")}");
     }
 }
