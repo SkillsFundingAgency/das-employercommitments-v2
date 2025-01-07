@@ -20,8 +20,10 @@ public class SelectTransferConnectionViewModelValidatorTests : ValidatorTestBase
     }
 
     [Test]
-    [InlineAutoData(" ", false, "Please choose an option")]
-    [InlineAutoData("", false, "Please choose an option")]        
+    [InlineAutoData(" ", false, "Please select a connection")]
+    [InlineAutoData("", false, "Please select a connection")]        
+    [InlineAutoData(null, false, "Please select a connection")]        
+    [InlineAutoData("CCC", true, null)]        
     public void WhenValidatingSelectTransferConnection_ValidateTransferConnectionCode(string transferConnectionCode, bool expectedValid, string errorMessage, SelectTransferConnectionViewModel viewModel)
     {
         //Arrange

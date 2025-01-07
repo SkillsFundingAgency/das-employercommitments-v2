@@ -18,7 +18,7 @@ public class AssignViewModel : IAuthorizationContextModel
     public long? DecodedTransferSenderId { get; set; }
     public string EncodedPledgeApplicationId { get; set; }
     public long? PledgeApplicationId { get; set; }
-
+    public FundingType? FundingType { get; set; }
 
     [Required(ErrorMessage = "Select who will add apprentices")]
     public WhoIsAddingApprentices? WhoIsAddingApprentices { get; set; }

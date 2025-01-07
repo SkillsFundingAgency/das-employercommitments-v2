@@ -17,7 +17,8 @@ public class ConfirmProviderRequestMapper : IMapper<SelectProviderViewModel, Con
             ReservationId = source.ReservationId,
             StartMonthYear = source.StartMonthYear,
             TransferSenderId = source.TransferSenderId,
-            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId
+            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
+            FundingType = source.FundingType
         });
     }
 }
