@@ -6,7 +6,6 @@
     ViewBag.GaData.Vpv = "/unapproved/select-funding/create/choose-funding-type";
 }
 
-
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.SelectFundingViewModel
 
 <div class="govuk-grid-row">
@@ -22,7 +21,7 @@
 
         <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.FundingType,  "govuk-form-group--error")">
             <div class="govuk-hint">
-                You can choose from funds you've already set up ore reserve new existing funding.
+                You can choose from funds you've already set up or reserve new existing funding.
             </div>
             <fieldset class="govuk-fieldset">
                 @if (!ViewData.ModelState.IsValid)
