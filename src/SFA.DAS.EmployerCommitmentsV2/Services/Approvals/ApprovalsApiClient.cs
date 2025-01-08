@@ -89,7 +89,15 @@ public class ApprovalsApiClient : IApprovalsApiClient
 
     public async Task<GetAddFirstDraftApprenticeshipResponse> GetAddFirstDraftApprenticeshipDetails(long accountId, long accountLegalEntityId, long providerId, string courseCode, DateTime? startDate = null, CancellationToken cancellationToken = default)
     {
-        return await _client.Get<GetAddFirstDraftApprenticeshipResponse>($"employer/{accountId}/unapproved/add/apprenticeship?accountLegalEntityId={accountLegalEntityId}&providerId={providerId}&courseCode={courseCode}");
+        var dateAsString = startDate.HasValue ? startDate.Value.ToString("yyyy-MM-dd") : null;   
+        return await _client.Get<GetAddFirstDraftApprenticeshipResponse>($"employer/{accountId}/unapproved/add/apprenticeship?accountLegalEntityId={accountLegalEntityId}&providerId={providerId}&courseCode={courseCode}&StartDate={dateAsString}");
+    }
+
+    public Task<GetAddAnotherDraftApprenticeshipResponse> GetAddAnotherDraftApprenticeshipDetails(long accountId, long cohortId, string courseCode, DateTime? startDate = null,
+        CancellationToken cancellationToken = default)
+    {
+        var dateAsString = startDate.HasValue ? startDate.Value.ToString("yyyy-MM-dd") : null;
+        return _client.Get<GetAddAnotherDraftApprenticeshipResponse>($"employer/{accountId}/unapproved/{cohortId}/apprentices/add/details?courseCode={courseCode}&StartDate={dateAsString}");
     }
 
     public async Task<GetManageApprenticeshipDetailsResponse> GetManageApprenticeshipDetails(long accountId, long apprenticeshipId, CancellationToken cancellationToken = default)

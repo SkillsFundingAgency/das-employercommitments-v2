@@ -352,8 +352,8 @@ public class CohortController : Controller
         {
             model.CourseCode = request.CourseCode;
             model.DeliveryModel = request.DeliveryModel;
+            await AssignFundingDetailsToModel(model);
         }
-        await AssignFundingDetailsToModel(model);
 
         return View("Apprentice", model);
     }
