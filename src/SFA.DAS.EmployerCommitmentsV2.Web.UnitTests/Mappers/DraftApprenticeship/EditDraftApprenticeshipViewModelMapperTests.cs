@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
@@ -18,7 +17,6 @@ public class EditDraftApprenticeshipViewModelMapperTests
     private EditDraftApprenticeshipRequest _source;
     private EditDraftApprenticeshipViewModel _result;
 
-    private Mock<ICommitmentsApiClient> _commitmentsApiClient;
     private Mock<IApprovalsApiClient> _apiClient;
     private GetEditDraftApprenticeshipResponse _draftApprenticeshipResponse;
     private Mock<IEncodingService> _encodingService;
@@ -53,21 +51,6 @@ public class EditDraftApprenticeshipViewModelMapperTests
 
         _draftApprenticeshipResponse = autoFixture.Create<GetEditDraftApprenticeshipResponse>();
         _draftApprenticeshipResponse.IsContinuation = false;
-        _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            
-        _commitmentsApiClient
-            .Setup(x => x.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse
-            {
-                TrainingProgrammes = _standardTrainingProgrammes
-            });
-            
-        _commitmentsApiClient
-            .Setup(x => x.GetAllTrainingProgrammes(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GetAllTrainingProgrammesResponse
-            {
-                TrainingProgrammes = _allTrainingProgrammes
-            });
 
         _apiClient = new Mock<IApprovalsApiClient>();
         _apiClient.Setup(x =>
@@ -77,12 +60,10 @@ public class EditDraftApprenticeshipViewModelMapperTests
         _cohort = autoFixture.Create<GetCohortResponse>();
         _cohort.WithParty = Party.Employer;
         _cohort.ChangeOfPartyRequestId = null;
-        _commitmentsApiClient.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_cohort);
 
         _source = autoFixture.Create<EditDraftApprenticeshipRequest>();
         _source.Cohort = _cohort;
-        _mapper = new EditDraftApprenticeshipViewModelMapper(_commitmentsApiClient.Object, _encodingService.Object, _apiClient.Object);
+        _mapper = new EditDraftApprenticeshipViewModelMapper(_encodingService.Object, _apiClient.Object);
 
         _result = await _mapper.Map(TestHelper.Clone(_source)) as EditDraftApprenticeshipViewModel;
     }
@@ -225,43 +206,6 @@ public class EditDraftApprenticeshipViewModelMapperTests
         _result.LegalEntityName.Should().Be(_source.Cohort.LegalEntityName);
     }
 
-    [TestCase(123, true)]
-    [TestCase(null, false)]
-    public async Task CoursesAreMappedCorrectlyWhenAccountIsLevy(long? transferSenderId, bool fundedByTransfer)
-    {
-        _cohort.LevyStatus = ApprenticeshipEmployerType.Levy;
-        _cohort.TransferSenderId = transferSenderId;
-
-        _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
-
-        _result.Courses.Should().BeEquivalentTo(fundedByTransfer
-            ? _standardTrainingProgrammes
-            : _allTrainingProgrammes);
-    }
-
-    [TestCase(123)]
-    [TestCase(null)]
-    public async Task CoursesAreMappedCorrectlyWhenAccountIsNonLevy(long? transferSenderId)
-    {
-        _cohort.LevyStatus = ApprenticeshipEmployerType.NonLevy;
-        _cohort.TransferSenderId = transferSenderId;
-
-        _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
-
-        _result.Courses.Should().BeEquivalentTo(_standardTrainingProgrammes);
-    }
-
-    [Test]
-    public async Task CoursesAreMappedCorrectlyWhenCohortIsChangeOfParty()
-    {
-        _cohort.LevyStatus = ApprenticeshipEmployerType.NonLevy;
-        _draftApprenticeshipResponse.IsContinuation = true;
-
-        _result = await _mapper.Map(_source) as EditDraftApprenticeshipViewModel;
-
-        _result.Courses.Should().BeEquivalentTo(_allTrainingProgrammes);
-    }
-
     [TestCase(true)]
     [TestCase(false)]
     public async Task ThenIsContinuationIsMappedCorrectly(bool isContinuation)
@@ -338,46 +282,14 @@ public class EditDraftApprenticeshipViewModelMapperTests
     }
 
     [Test]
-    public void StandardPageUrlIsNullWhenNoMatch()
+    public void FundingBandsIsMapped()
     {
-        _result.StandardPageUrl.Should().BeNull();
+        _result.FundingBandMax.Should().Be(_draftApprenticeshipResponse.ProposedMaxFunding);
     }
 
     [Test]
-    public async Task StandardPageUrlIMappedWhenMatchExists()
+    public void StandardPageUrlIsMapped()
     {
-        _standardTrainingProgrammes.Add(new TrainingProgramme
-        {
-            CourseCode = "123",
-            StandardUId = _draftApprenticeshipResponse.StandardUId,
-            StandardPageUrl = "https://test123",
-            FundingPeriods = new List<TrainingProgrammeFundingPeriod>()
-        });
-
-        _result = await _mapper.Map(TestHelper.Clone(_source)) as EditDraftApprenticeshipViewModel;
-
-        _result.StandardPageUrl.Should().Be("https://test123");
-    }
-
-    [Test]
-    public void FundingBandsIsNullWhenNoMatch()
-    {
-        _result.FundingBandMax.Should().BeNull();
-    }
-
-    [Test]
-    public async Task FundingBandsWhenMatchExists()
-    {
-        _standardTrainingProgrammes.Add(new TrainingProgramme
-        {
-            CourseCode = "123",
-            StandardUId = _draftApprenticeshipResponse.StandardUId,
-            StandardPageUrl = "https://test123",
-            FundingPeriods = new List<TrainingProgrammeFundingPeriod>() { new TrainingProgrammeFundingPeriod { EffectiveFrom = DateTime.MinValue, EffectiveTo = DateTime.MaxValue, FundingCap = 1234}}
-        });
-
-        _result = await _mapper.Map(TestHelper.Clone(_source)) as EditDraftApprenticeshipViewModel;
-
-        _result.FundingBandMax.Should().Be(1234);
+        _result.FundingBandMax.Should().Be(_draftApprenticeshipResponse.ProposedMaxFunding);
     }
 }
