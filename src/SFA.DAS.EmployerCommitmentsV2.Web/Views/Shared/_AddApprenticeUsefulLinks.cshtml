@@ -1,0 +1,40 @@
+﻿@model bool
+
+<div class="app-section">
+    <br/>
+    <h2 class="govuk-heading-s">Useful links</h2>
+    <p class="govuk-body-s">
+        The following links open in a new tab:
+    </p>
+    <ul class="govuk-list govuk-list--spaced">
+        @if (Model)
+        {
+            <li>
+                <a class="govuk-link"
+                   href="https://www.gov.uk/government/publications/apprenticeship-funding/apprenticeship-funding"
+                   target="_blank">Apprenticeship funding</a></li>
+
+            <li>
+                <a class="govuk-link"
+                   href="https://www.gov.uk/guidance/receive-a-levy-transfer-from-another-business-to-fund-an-apprenticeship"
+                   target="_blank">Receiving a transfer to fund an apprentice</a></li>
+        }
+        else
+        {
+            <li>
+                <a class="govuk-link" href="https://www.gov.uk/employing-an-apprentice/get-funding"
+                   target="_blank">Get
+                    funding for apprenticeship training</a></li>
+
+            <li>
+                <a class="govuk-link"
+                   href="https://www.gov.uk/government/publications/apprenticeship-funding/apprenticeship-funding-for-employers-who-do-not-pay-the-apprenticeship-levy"
+                   target="_blank">Reserving funds for an apprentice</a></li>
+
+            <li>
+                <a class="govuk-link"
+                   href="https://www.gov.uk/guidance/receive-a-levy-transfer-from-another-business-to-fund-an-apprenticeship"
+                   target="_blank">Receiving a transfer to fund an apprentice</a></li>
+        }
+    </ul>
+</div>
