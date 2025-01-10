@@ -25,8 +25,6 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<AddDraftApprentices
     {
         var accountId = _encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
         var startDate = new MonthYearModel(source.StartMonthYear).Date;
-
-        // approvalsApi.GetAddAnotherApprentice
         var details = await _client.GetAddAnotherDraftApprenticeshipDetails(accountId, source.CohortId, source.CourseCode, startDate);
 
         if (details == null)
