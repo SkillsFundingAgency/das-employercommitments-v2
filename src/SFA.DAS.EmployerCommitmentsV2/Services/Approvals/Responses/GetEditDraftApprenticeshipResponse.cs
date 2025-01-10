@@ -45,4 +45,6 @@ public class GetEditDraftApprenticeshipResponse
     public bool? IsOnFlexiPaymentPilot { get; set; }
     public DateTime? ActualStartDate { get; set; }
     public bool? EmailAddressConfirmed { get; set; }
+    public string StandardPageUrl { get; set; }
+    public int? ProposedMaxFunding { get; set; }
 }

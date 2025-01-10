@@ -145,6 +145,8 @@ public class BaseDraftApprenticeshipViewModel
     public int? DurationReducedByHours { get; set; }
     public int? DurationReducedBy { get; set; }
     public int? PriceReducedBy { get; set; }
+    public int? FundingBandMax { get; set; }
+    public string StandardPageUrl { get; set; }
 
     public BaseDraftApprenticeshipViewModel CloneBaseValues() => this.ExplicitClone();
 }

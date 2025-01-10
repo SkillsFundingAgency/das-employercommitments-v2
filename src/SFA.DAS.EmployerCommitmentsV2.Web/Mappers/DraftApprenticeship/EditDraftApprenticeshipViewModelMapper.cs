@@ -14,10 +14,8 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
     private readonly IEncodingService _encodingService;
     private readonly IApprovalsApiClient _apiClient;
 
-    public EditDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient,
-        IEncodingService encodingService, IApprovalsApiClient apiClient)
+    public EditDraftApprenticeshipViewModelMapper(IEncodingService encodingService, IApprovalsApiClient apiClient)
     {
-        _commitmentsApiClient = commitmentsApiClient;
         _encodingService = encodingService;
         _apiClient = apiClient;
     }
@@ -28,14 +26,6 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
 
         var draftApprenticeship = await _apiClient.GetEditDraftApprenticeship(source.Request.AccountId, source.Request.CohortId,
             source.Request.DraftApprenticeshipId);
-
-        //all data should come from a single call to the outer api (above)
-        //however, this list appears to be populated only to select .Single() in the view itself
-        //so this should be refactored away altogether and just the name of the course provided instead
-        var courses = (cohort.IsFundedByTransfer || cohort.LevyStatus == ApprenticeshipEmployerType.NonLevy) &&
-                      !draftApprenticeship.IsContinuation
-            ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
-            : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes;
 
         return new EditDraftApprenticeshipViewModel(draftApprenticeship.DateOfBirth, draftApprenticeship.StartDate, draftApprenticeship.EndDate)
         {
@@ -61,7 +51,6 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
             ProviderName = cohort.ProviderName,
             LegalEntityName = source.Cohort.LegalEntityName,
             IsContinuation = draftApprenticeship.IsContinuation,
-            Courses = courses,
             AccountLegalEntityId = cohort.AccountLegalEntityId,
             AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
             HasMultipleDeliveryModelOptions = draftApprenticeship.HasMultipleDeliveryModelOptions,
@@ -76,7 +65,9 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
             DurationReducedByHours = draftApprenticeship.DurationReducedByHours,
             DurationReducedBy = draftApprenticeship.DurationReducedBy,
             PriceReducedBy = draftApprenticeship.PriceReducedBy,
-            CacheKey = source.Request.CacheKey.IsNotNullOrEmpty() ? source.Request.CacheKey : Guid.NewGuid()
+            CacheKey = source.Request.CacheKey.IsNotNullOrEmpty() ? source.Request.CacheKey : Guid.NewGuid(),
+            StandardPageUrl = draftApprenticeship.StandardPageUrl,
+            FundingBandMax = draftApprenticeship.ProposedMaxFunding
         };
     }
 }

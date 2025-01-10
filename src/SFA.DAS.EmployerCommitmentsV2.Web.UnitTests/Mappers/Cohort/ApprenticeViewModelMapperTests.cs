@@ -1,7 +1,10 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using FluentAssertions;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
@@ -11,51 +14,28 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 public class ApprenticeViewModelMapperTests
 {
     private ApprenticeViewModelMapper _mapper;
-    private Mock<ICommitmentsApiClient> _commitmentsApiClient;
-    private GetProviderResponse _providerResponse;
-    private AccountLegalEntityResponse _accountLegalEntityResponse;
+    private Mock<IApprovalsApiClient> _approvalsApiClient;
+    private GetAddFirstDraftApprenticeshipResponse _response;
     private ApprenticeRequest _source;
     private ApprenticeViewModel _result;
-    private TrainingProgramme _courseStandard;
-    private TrainingProgramme _course;
-    private List<TrainingProgramme> _allTrainingProgrammes;
-    private List<TrainingProgramme> _standardTrainingProgrammes;
 
     [SetUp]
     public async Task Arrange()
     {
         var autoFixture = new Fixture();
-
-        _course = autoFixture.Create<TrainingProgramme>();
-        _courseStandard = autoFixture.Create<TrainingProgramme>();
-        _providerResponse = autoFixture.Create<GetProviderResponse>();
-        _accountLegalEntityResponse = autoFixture.Build<AccountLegalEntityResponse>().With(x=>x.LevyStatus, ApprenticeshipEmployerType.Levy).Create();
         _source = autoFixture.Create<ApprenticeRequest>();
-        _source.StartMonthYear = "062020";
         _source.TransferSenderId = string.Empty;
         _source.AccountId = 12345;
+        var startDate = new DateTime(2020, 06, 01);
+        _source.StartMonthYear = startDate.ToString("MMyyyy");
 
-        _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-        _commitmentsApiClient.Setup(x => x.GetProvider(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_providerResponse);
-        _commitmentsApiClient.Setup(x => x.GetAccountLegalEntity(_source.AccountLegalEntityId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_accountLegalEntityResponse);
-        _standardTrainingProgrammes = new List<TrainingProgramme>{_courseStandard};
-        _commitmentsApiClient
-            .Setup(x => x.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse
-            {
-                TrainingProgrammes = _standardTrainingProgrammes
-            });
-        _allTrainingProgrammes = new List<TrainingProgramme>{_courseStandard, _course};
-        _commitmentsApiClient
-            .Setup(x => x.GetAllTrainingProgrammes(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GetAllTrainingProgrammesResponse
-            {
-                TrainingProgrammes = _allTrainingProgrammes
-            });
 
-        _mapper = new ApprenticeViewModelMapper(_commitmentsApiClient.Object);
+        _response = autoFixture.Create<GetAddFirstDraftApprenticeshipResponse>();
+        _approvalsApiClient = new Mock<IApprovalsApiClient>();
+        _approvalsApiClient.Setup(x => x.GetAddFirstDraftApprenticeshipDetails(_source.AccountId, _source.AccountLegalEntityId, _source.ProviderId, _source.CourseCode, startDate, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_response);
+
+        _mapper = new ApprenticeViewModelMapper(_approvalsApiClient.Object);
 
         _result = await _mapper.Map(TestHelper.Clone(_source));
     }
@@ -63,66 +43,72 @@ public class ApprenticeViewModelMapperTests
     [Test]
     public void AccountLegalEntityIdIsMappedCorrectly()
     {
-        Assert.That(_result.AccountLegalEntityId, Is.EqualTo(_source.AccountLegalEntityId));
+        _result.AccountLegalEntityId.Should().Be(_source.AccountLegalEntityId);
     }
 
     [Test]
     public void AccountLegalEntityHashedIdIsMappedCorrectly()
     {
-        Assert.That(_result.AccountLegalEntityHashedId, Is.EqualTo(_source.AccountLegalEntityHashedId));
+        _result.AccountLegalEntityHashedId.Should().Be(_source.AccountLegalEntityHashedId);
     }
 
     [Test]
     public void AccountLegalEntityNameIsMappedCorrectly()
     {
-        Assert.That(_result.LegalEntityName, Is.EqualTo(_accountLegalEntityResponse.LegalEntityName));
+        _result.LegalEntityName.Should().Be(_response.LegalEntityName);
     }
 
     [Test]
     public void StartDateIsMappedCorrectly()
     {
-        Assert.That(_result.StartDate.Date, Is.EqualTo(new MonthYearModel(_source.StartMonthYear).Date));
+        _result.StartDate.Date.Should().Be(new MonthYearModel(_source.StartMonthYear).Date);
     }
 
     [Test]
     public void ReservationIdIsMappedCorrectly()
     {
-        Assert.That(_result.ReservationId, Is.EqualTo(_source.ReservationId));
+        _result.ReservationId.Should().Be(_source.ReservationId);
     }
 
     [Test]
     public void CourseCodeIsMappedCorrectly()
     {
-        Assert.That(_result.CourseCode, Is.EqualTo(_source.CourseCode));
+        _result.CourseCode.Should().Be(_source.CourseCode);
     }
 
     [Test]
     public void ProviderIdIsMappedCorrectly()
     {
-        Assert.That(_result.ProviderId, Is.EqualTo(_source.ProviderId));
+        _result.ProviderId.Should().Be(_source.ProviderId);
     }
 
     [Test]
     public void ProviderNameIsMappedCorrectly()
     {
-        Assert.That(_result.ProviderName, Is.EqualTo(_providerResponse.Name));
+        _result.ProviderName.Should().Be(_response.ProviderName);
     }
 
     [Test]
     public void TransferSenderIdIsMappedCorrectly()
     {
-        Assert.That(_result.TransferSenderId, Is.EqualTo(_source.TransferSenderId));
+        _result.TransferSenderId.Should().Be(_source.TransferSenderId);
     }
 
     [Test]
     public void EncodedPledgeApplicationIdIsMappedCorrectly()
     {
-        Assert.That(_result.EncodedPledgeApplicationId, Is.EqualTo(_source.EncodedPledgeApplicationId));
+        _result.EncodedPledgeApplicationId.Should().Be(_source.EncodedPledgeApplicationId);
     }
 
     [Test]
-    public void OriginIsMappedCorrectly()
+    public void StandardPageUrlIsMappedCorrectly()
     {
-        Assert.That(_result.Origin, Is.EqualTo(_source.Origin));
+        _result.StandardPageUrl.Should().Be(_response.StandardPageUrl);
+    }
+
+    [Test]
+    public void FundingBandMaxIsMappedCorrectly()
+    {
+        _result.FundingBandMax.Should().Be(_response.ProposedMaxFunding);
     }
 }

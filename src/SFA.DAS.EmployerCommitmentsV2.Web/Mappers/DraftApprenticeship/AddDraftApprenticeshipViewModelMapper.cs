@@ -2,6 +2,7 @@
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
@@ -11,21 +12,23 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 
 public class AddDraftApprenticeshipViewModelMapper : IMapper<AddDraftApprenticeshipRequest, AddDraftApprenticeshipViewModel>
 {
-    private readonly ICommitmentsApiClient _commitmentsApiClient;
+    private readonly IApprovalsApiClient _client;
     private readonly IEncodingService _encodingService;
 
-    public AddDraftApprenticeshipViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService)
+    public AddDraftApprenticeshipViewModelMapper(IApprovalsApiClient client, IEncodingService encodingService)
     {
-        _commitmentsApiClient = commitmentsApiClient;
+        _client = client;
         _encodingService = encodingService;
     }
         
     public async Task<AddDraftApprenticeshipViewModel> Map(AddDraftApprenticeshipRequest source)
     {
-        var cohort = await _commitmentsApiClient.GetCohort(source.CohortId);
+        var accountId = _encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
+        var startDate = new MonthYearModel(source.StartMonthYear).Date;
+        var details = await _client.GetAddAnotherDraftApprenticeshipDetails(accountId, source.CohortId, source.CourseCode, startDate);
 
-        if (cohort.WithParty != Party.Employer)
-            throw new CohortEmployerUpdateDeniedException($"Cohort {cohort} is not with the Employer");
+        if (details == null)
+            throw new CohortEmployerUpdateDeniedException($"Cohort {source.CohortId} is not with the Employer");
 
         var result = new AddDraftApprenticeshipViewModel
         {
@@ -34,17 +37,19 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<AddDraftApprentices
             CohortId = source.CohortId,
             AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
             AccountLegalEntityId = source.AccountLegalEntityId,
-            LegalEntityName = cohort.LegalEntityName,
+            LegalEntityName = details.LegalEntityName,
             ReservationId = source.ReservationId,
             StartDate = new MonthYearModel(source.StartMonthYear),
             CourseCode = source.CourseCode,
             ProviderId = source.ProviderId,
-            ProviderName = cohort.ProviderName,
+            ProviderName = details.ProviderName,
             Courses = null,
-            TransferSenderHashedId = cohort.IsFundedByTransfer ? _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId) : string.Empty,
+            TransferSenderHashedId = details.IsFundedByTransfer ? _encodingService.Encode(details.TransferSenderId.Value, EncodingType.PublicAccountId) : string.Empty,
             DeliveryModel = source.DeliveryModel,
             IsOnFlexiPaymentPilot = false,
-            CacheKey = source.CacheKey.IsNotNullOrEmpty() ? source.CacheKey : Guid.NewGuid()
+            CacheKey = source.CacheKey.IsNotNullOrEmpty() ? source.CacheKey : Guid.NewGuid(),
+            StandardPageUrl = details.StandardPageUrl,
+            FundingBandMax = details.ProposedMaxFunding
         };
 
         return result;

@@ -1,4 +1,5 @@
-﻿@using SFA.DAS.CommitmentsV2.Api.Client
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SFA.DAS.CommitmentsV2.Api.Client
 @using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
@@ -329,6 +330,32 @@ else
                 </div>
             </div>
         </fieldset>
+    </div>
+}
+@if(!string.IsNullOrWhiteSpace(Model.StandardPageUrl))
+{
+    <h1 class="govuk-heading-l  govuk-!-margin-top-9">Apprenticeship price</h1>
+
+    <div class="govuk-form-group">
+        <label class="govuk-label govuk-!-font-weight-bold">Minimum funding band</label>
+        <p>
+            The government sets a maximum funding band for each course. Learn more on the <a class="govuk-link" href="@Model.StandardPageUrl" target="_blank" title="Opens in a new window">IfATE website (opens in new tab)</a>
+        </p>
+        
+        <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+            <div class="govuk-summary-list__row">
+                <dd class="govuk-summary-list__value" id="course-value">
+                    @Model.CourseName
+                </dd>
+                @if (Model.FundingBandMax.HasValue)
+                {
+                    <dd class="govuk-summary-list__actions">
+                        £@Model.FundingBandMax.Value.ToString("N0")
+                    </dd>
+                }
+            </div>
+        </dl>
+        
     </div>
 }
 
