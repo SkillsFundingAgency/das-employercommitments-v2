@@ -262,9 +262,9 @@ public class CohortController : Controller
         {
             if (model.WhoIsAddingApprentices != WhoIsAddingApprentices.Employer)
                 return false;
-            if (model.ReservationId.HasValue)
+            if (cacheModel.ReservationId.HasValue)
                 return false;
-            if (model.FundingType == FundingType.AdditionalReservations)
+            if (cacheModel.FundingType == FundingType.AdditionalReservations)
                 return false;
             return true;
         }     
@@ -588,10 +588,32 @@ public class CohortController : Controller
         cacheModel.FundingType = selectedFunding.FundingType;
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);       
 
-        if (selectedFunding.FundingType == FundingType.DirectTransfers)
+        switch (selectedFunding.FundingType)
         {
-            return RedirectToAction(RouteNames.CohortSelectDirectTransferConnection, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
+            case FundingType.DirectTransfers:
+                return RedirectToAction(RouteNames.CohortSelectDirectTransferConnection, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
+            case FundingType.UnallocatedReservations:
+            {
+                var url = _linkGenerator.ReservationsLink(
+                    $"accounts/{cacheModel.AccountHashedId}/reservations/{cacheModel.AccountLegalEntityHashedId}/select?" +
+                    $"&beforeProviderSelected=true" +
+                    $"&apprenticeshipSessionKey={cacheModel.ApprenticeshipSessionKey}");
+                return Redirect(url);
+            }
+            default:
+                return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
         }
+    }
+
+    [HttpGet]
+    [Route("add/set-reservation")]
+    public async Task<ActionResult> SetReservation([FromQuery] Guid? reservationId, [FromQuery] string courseCode, [FromQuery] string startMonthYear, [FromQuery] Guid? apprenticeshipSessionKey)
+    {
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
+        cacheModel.ReservationId = reservationId;
+        cacheModel.CourseCode = courseCode;
+        cacheModel.StartMonthYear = startMonthYear;
+        await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
         return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
     }
 
