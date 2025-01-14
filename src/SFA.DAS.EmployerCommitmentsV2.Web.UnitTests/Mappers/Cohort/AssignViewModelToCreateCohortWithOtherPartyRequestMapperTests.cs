@@ -117,6 +117,7 @@ public class AssignViewModelToCreateCohortWithOtherPartyRequestMapperTests
         _result.PledgeApplicationId.Should().BeNull();
     }
 
+    [Test]
     public async Task ThenPledgeApplicationIdIsNullWhenEncodedPledgeApplicationIdIsNull()
     {
         _source.EncodedPledgeApplicationId = null;
