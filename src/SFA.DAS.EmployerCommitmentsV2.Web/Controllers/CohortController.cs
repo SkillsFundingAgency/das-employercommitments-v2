@@ -262,9 +262,9 @@ public class CohortController : Controller
         {
             if (model.WhoIsAddingApprentices != WhoIsAddingApprentices.Employer)
                 return false;
-            if (model.ReservationId.HasValue)
+            if (cacheModel.ReservationId.HasValue)
                 return false;
-            if (model.FundingType == FundingType.AdditionalReservations)
+            if (cacheModel.FundingType == FundingType.AdditionalReservations)
                 return false;
             return true;
         }     
