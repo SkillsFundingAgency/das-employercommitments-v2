@@ -29,7 +29,7 @@ public class AssignViewModelToCreateCohortWithOtherPartyRequestMapperTests
                 return true;
             });
 
-        _mockEncodingService.Setup(x => x.TryDecode(_source.TransferSenderId, EncodingType.PledgeApplicationId, out It.Ref<long>.IsAny))
+        _mockEncodingService.Setup(x => x.TryDecode(_source.EncodedPledgeApplicationId, EncodingType.PledgeApplicationId, out It.Ref<long>.IsAny))
             .Returns((string id, EncodingType type, out long decodedId) =>
             {
                 decodedId = 456;
@@ -79,7 +79,7 @@ public class AssignViewModelToCreateCohortWithOtherPartyRequestMapperTests
     }
 
     [Test]
-    public async Task ThenTransferSenderIdIsNullWhenDecodedValueIsZero()
+    public async Task ThenTransferSenderIdMapsToNullWhenDecodedValueIsZero()
     {
         _mockEncodingService.Setup(x => x.TryDecode(_source.TransferSenderId, EncodingType.PublicAccountId, out It.Ref<long>.IsAny))
             .Returns((string id, EncodingType type, out long decodedId) =>
@@ -94,14 +94,32 @@ public class AssignViewModelToCreateCohortWithOtherPartyRequestMapperTests
     }
 
     [Test]
-    public async Task ThenPledgeApplicationIdIsNullWhenDecodedValueIsZero()
+    public async Task ThenTransferSenderIdIsNullWhenTransferIdIsNull()
     {
-        _mockEncodingService.Setup(x => x.TryDecode(_source.TransferSenderId, EncodingType.PledgeApplicationId, out It.Ref<long>.IsAny))
+        _source.TransferSenderId = null;
+        _result = await _mapper.Map(_source);
+
+        _result.TransferSenderId.Should().BeNull();
+    }
+
+    [Test]
+    public async Task ThenPledgeApplicationIdMapsToNullWhenDecodedValueIsZero()
+    {
+        _mockEncodingService.Setup(x => x.TryDecode(_source.EncodedPledgeApplicationId, EncodingType.PledgeApplicationId, out It.Ref<long>.IsAny))
             .Returns((string id, EncodingType type, out long decodedId) =>
             {
                 decodedId = 0;
                 return true;
             });
+
+        _result = await _mapper.Map(_source);
+
+        _result.PledgeApplicationId.Should().BeNull();
+    }
+
+    public async Task ThenPledgeApplicationIdIsNullWhenEncodedPledgeApplicationIdIsNull()
+    {
+        _source.EncodedPledgeApplicationId = null;
 
         _result = await _mapper.Map(_source);
 
