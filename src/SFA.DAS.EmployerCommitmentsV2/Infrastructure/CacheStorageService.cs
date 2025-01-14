@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Infrastructure
             var json = await _distributedCache.GetStringAsync(key);
 
             return json == null
-                      ? throw new CacheItemNotFoundException<T>($"Cache item {key} of type {typeof(T).Name} not found")
+                      ? default
                       : JsonConvert.DeserializeObject<T>(json);
         }
 

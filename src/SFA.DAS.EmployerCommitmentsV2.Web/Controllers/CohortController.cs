@@ -642,8 +642,8 @@ public class CohortController : Controller
         {
             throw new MissingApprenticeshipSessionKeyException();
         }
-
-        return await _cacheStorageService.RetrieveFromCache<AddApprenticeshipCacheModel>(key.Value);
+        var response = await _cacheStorageService.RetrieveFromCache<AddApprenticeshipCacheModel>(key.Value);
+        return response ?? throw new CacheItemNotFoundException<AddApprenticeshipCacheModel>($"Cache item {key} of type {typeof(AddApprenticeshipCacheModel).Name} not found");
     }
 
     private async Task RemoveAddApprenticeshipCacheModelFromCache(Guid? key)
