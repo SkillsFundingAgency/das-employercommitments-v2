@@ -588,11 +588,12 @@ public class CohortController : Controller
         cacheModel.FundingType = selectedFunding.FundingType;
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
-        if (selectedFunding.FundingType == FundingType.DirectTransfers)
+        return selectedFunding.FundingType switch
         {
-            return RedirectToAction(RouteNames.CohortSelectDirectTransferConnection, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
-        }
-        return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
+            FundingType.DirectTransfers => RedirectToAction(RouteNames.CohortSelectDirectTransferConnection, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey }),
+            FundingType.LtmTransfers => RedirectToAction(RouteNames.CohortSelectAcceptedLevyTransferConnection, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey }),
+            _ => RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey })
+        };
     }
 
     [HttpGet]
@@ -616,6 +617,35 @@ public class CohortController : Controller
 
         return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
     }
+
+    [HttpGet]
+    [ActionName(RouteNames.CohortSelectAcceptedLevyTransferConnection)]
+    [Route("add/select-funding/select-accepted-levy-connection")]
+    public async Task<IActionResult> SelectAcceptedLevyTransferConnection([FromQuery] Guid apprenticeshipSessionKey)
+    {
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
+
+        var viewModel = await _modelMapper.Map<SelectAcceptedLevyTransferConnectionViewModel>(cacheModel);
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Route("add/select-funding/select-accepted-levy-connection")]
+    public async Task<IActionResult> SelectAcceptedLevyTransferConnection(SelectAcceptedLevyTransferConnectionViewModel selectedLevyTransferConnection)
+    {
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(selectedLevyTransferConnection.ApprenticeshipSessionKey);
+
+        var ids = selectedLevyTransferConnection.ApplicationAndSenderHashedId.Split('|');
+
+        cacheModel.EncodedPledgeApplicationId = ids[0];
+        cacheModel.TransferSenderId = ids[1];
+        cacheModel.AccountLegalEntityHashedId = selectedLevyTransferConnection.AccountLegalEntityHashedId;
+        await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
+
+        return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
+    }
+
 
     [HttpGet]
     [Route(RouteNames.CohortAgreementNotSigned)]
