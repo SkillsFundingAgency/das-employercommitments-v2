@@ -43,4 +43,5 @@ public static class RouteNames
     public const string CohortAgreementNotSigned = "AgreementNotSigned";
     public const string CohortSelectFunding = "SelectFunding";
     public const string CohortSelectDirectTransferConnection = "SelectDirectTransferConnection";
+    public const string CohortSelectAcceptedLevyTransferConnection = "SelectAcceptedLevyTransferConnection";
 }

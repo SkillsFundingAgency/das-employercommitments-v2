@@ -9,8 +9,20 @@ public class CreateCohortWithOtherPartyRequestMapper(IEncodingService encodingSe
 {
     public Task<CreateCohortWithOtherPartyRequest> Map(AddApprenticeshipCacheModel source)
     {
-        encodingService.TryDecode(source.TransferSenderId, EncodingType.PublicAccountId, out var decodedTransferSenderId);
-        encodingService.TryDecode(source.TransferSenderId, EncodingType.PledgeApplicationId, out var decodedPledgeApplicationId);
+        long? decodedTransferSenderId = null;
+        int? decodedPledgeApplicationId = null;
+
+        if (!string.IsNullOrEmpty(source.TransferSenderId))
+        {
+            encodingService.TryDecode(source.TransferSenderId, EncodingType.PublicAccountId, out var tempTransferSenderId);
+            decodedTransferSenderId = tempTransferSenderId == 0 ? null : tempTransferSenderId;
+        }
+
+        if (!string.IsNullOrEmpty(source.EncodedPledgeApplicationId))
+        {
+            encodingService.TryDecode(source.EncodedPledgeApplicationId, EncodingType.PledgeApplicationId, out var tempPledgeApplicationId);
+            decodedPledgeApplicationId = tempPledgeApplicationId == 0 ? null : (int?)tempPledgeApplicationId;
+        }     
 
         return Task.FromResult(new CreateCohortWithOtherPartyRequest
         {
@@ -18,8 +30,8 @@ public class CreateCohortWithOtherPartyRequestMapper(IEncodingService encodingSe
             AccountLegalEntityId = source.AccountLegalEntityId,
             ProviderId = source.ProviderId,
             Message = source.Message,
-            TransferSenderId = decodedTransferSenderId == 0 ? null : decodedTransferSenderId,
-            PledgeApplicationId = decodedPledgeApplicationId == 0 ? null : (int?)decodedPledgeApplicationId
+            TransferSenderId = decodedTransferSenderId,
+            PledgeApplicationId = decodedPledgeApplicationId
         });
     }
 }

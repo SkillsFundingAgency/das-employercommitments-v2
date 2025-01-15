@@ -1,4 +1,4 @@
-﻿@inject ILinkGenerator LinkGenerator
+@inject ILinkGenerator LinkGenerator
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.InformViewModel
 
@@ -17,35 +17,45 @@
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-l">Add an apprentice</h1>
 
-        <p class="govuk-body">Add details of one or more apprentices to your account, and authorise payments to your training provider.</p>
-        
+        <p class="govuk-body">Add details of one or more apprentices to your account, and authorise payments to your
+            training provider.</p>
+
         @if (!Model.IsLevyFunded)
         {
             <h2 class="govuk-heading-m">Funding</h2>
             <p class="govuk-body">
-                If you have not reserved funds for this apprenticeship yet, adding a new apprentice will reserve funds for you. 
-                If you have reserved funds or have transfer funds available, you can select one whilst adding a new apprentice.
+                If you have not reserved funds for this apprenticeship yet, adding a new apprentice will reserve funds for
+                you.
+                If you have reserved funds or have transfer funds available, you can select one whilst adding a new
+                apprentice.
             </p>
         }
 
-        <h2 class="govuk-heading-m">Before you start</h2>
+        <h2 class="govuk-heading-m">What you'll need</h2>
 
         <p class="govuk-body">You must:</p>
         <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
             <li>have a <b>training provider</b></li>
             <li>know the <b>legal name</b> and <b>email address</b> of your apprentice</li>
             <li>know the <b>course name</b> and <b>start date</b></li>
-            <li>have <b>authority to act</b> for the organisation that's named on the contract you have with your training provider (<a href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)" class="govuk-link">view your organisations</a>)</li>
-            <li>make sure the <b>PAYE scheme</b> that the apprentices will be paid through is added to your account (<a href="@LinkGenerator.PayeSchemes(Model.AccountHashedId)" class="govuk-link">view your PAYE schemes</a>)</li>
+            <li>have <b>authority to act</b> for the organisation that's named on the contract you have with your
+                training provider (<a href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)"
+                    class="govuk-link">view your organisations</a>)</li>
+            <li>make sure the <b>PAYE scheme</b> that the apprentices will be paid through is added to your account (<a
+                    href="@LinkGenerator.PayeSchemes(Model.AccountHashedId)" class="govuk-link">view your PAYE
+                    schemes</a>)</li>
         </ul>
         
         <a asp-action="SelectLegalEntity" id="continue-button" asp-all-route-data="routeModel" role="button" draggable="false" class="govuk-button govuk-button--start">
             Start now
             <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19"
-                 viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+                viewBox="0 0 33 40" aria-hidden="true" focusable="false">
                 <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
             </svg>
         </a>
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <partial name="_AddApprenticeUsefulLinks" for="@Model.IsLevyFunded" />
     </div>
 </div>
 
