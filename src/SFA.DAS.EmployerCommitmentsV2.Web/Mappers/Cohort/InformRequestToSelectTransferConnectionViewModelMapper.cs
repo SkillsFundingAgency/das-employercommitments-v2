@@ -1,46 +1,32 @@
 ﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.EAS.Account.Api.Client;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
 public class InformRequestToSelectTransferConnectionViewModelMapper : IMapper<InformRequest, SelectTransferConnectionViewModel>
 {
-    private readonly IAccountApiClient _accountsApiClient;
-    private readonly IEncodingService _encodingService;
+    private readonly IApprovalsApiClient _approvalsApiClient;
+    private readonly ILogger<InformRequestToSelectTransferConnectionViewModelMapper> _logger;
 
-    public InformRequestToSelectTransferConnectionViewModelMapper(IAccountApiClient accountApiClient, IEncodingService encodingService)
+    public InformRequestToSelectTransferConnectionViewModelMapper(IApprovalsApiClient approvalsApiClient, ILogger<InformRequestToSelectTransferConnectionViewModelMapper> logger)
     {
-        _accountsApiClient = accountApiClient;
-        _encodingService = encodingService;
+        _approvalsApiClient = approvalsApiClient;
+        _logger = logger;
     }
 
     public async Task<SelectTransferConnectionViewModel> Map(InformRequest source)
     {
-        var result = await GetTransferConnectionsForAccount(source.AccountHashedId);
+        _logger.LogInformation("Getting Direct Transfers for Account hash {0} id {1}", source.AccountHashedId, source.AccountId);
+
+        var result = await _approvalsApiClient.GetSelectDirectTransferConnection(source.AccountId);
 
         return new SelectTransferConnectionViewModel
         {
             AccountHashedId = source.AccountHashedId,
-            TransferConnections = result
+            IsLevyAccount = result.IsLevyAccount,
+            TransferConnections = result.TransferConnections == null ? new List<TransferConnection>() : result.TransferConnections.ToList()
         };
     }
-
-    public async Task<List<TransferConnection>> GetTransferConnectionsForAccount(string accountHashedId)
-    {
-        var listOfTransferConnections = await _accountsApiClient.GetTransferConnections(accountHashedId);
-
-        if (listOfTransferConnections == null)
-        {
-            return new List<TransferConnection>();
-        }
-
-        return listOfTransferConnections.Select(x => new TransferConnection
-        {
-            TransferConnectionCode = _encodingService.Encode(x.FundingEmployerAccountId, EncodingType.PublicAccountId),
-            TransferConnectionName = x.FundingEmployerAccountName
-        }).ToList();
-    }
-
 }

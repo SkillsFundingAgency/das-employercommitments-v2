@@ -15,11 +15,7 @@
         <form method="post">
             @Html.AntiForgeryToken()
             <div class="govuk-form-group">
-                <h1 class="govuk-label-wrapper">
-                    <label class="govuk-label govuk-label--xl" for="Ukprn">
-                        Select your training provider
-                    </label>
-                </h1>
+                <h1 class="govuk-heading-l">Select your training provider</h1>               
                 <p class="govuk-body">
                     Before you can add your apprentice, you need to add the training provider for this apprenticeship.
                 </p>
@@ -83,10 +79,10 @@
     else if (Model.Origin == Origin.LevyTransferMatching)
     {
         <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications/{Model.EncodedPledgeApplicationId}")"
-    id="back-link" class="govuk-back-link">Back</a>
+            id="back-link" class="govuk-back-link">Back</a>
     }
     else
     {
         <a href="@Url.Action("Inform", "Cohort", new { Model.AccountHashedId})" id="back-link" class="govuk-back-link">Back</a>
     }
-    }
+ }

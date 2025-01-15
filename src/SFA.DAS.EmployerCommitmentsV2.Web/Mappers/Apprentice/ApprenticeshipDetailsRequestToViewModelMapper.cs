@@ -89,6 +89,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 EndpointAssessorName = response.Apprenticeship.EndpointAssessorName,
                 MadeRedundant = response.Apprenticeship.MadeRedundant,
                 HasPendingChangeOfProviderRequest = pendingChangeOfProviderRequest != null,
+                PaymentFrozenOn = response.PaymentsStatus.FrozenOn,
                 PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty,
                 HasContinuation = response.Apprenticeship.HasContinuation,
                 TrainingProviderHistory = response.ChangeOfProviderChain
