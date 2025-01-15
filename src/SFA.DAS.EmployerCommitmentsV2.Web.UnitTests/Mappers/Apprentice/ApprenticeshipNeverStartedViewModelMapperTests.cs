@@ -12,7 +12,7 @@ public class ApprenticeshipNeverStartedViewModelMapperTests
 
     private readonly DateTime _referenceDate = DateTime.UtcNow;
 
-    private readonly long _apprenticeshipId;
+    private readonly long _apprenticeshipId = 1;
 
     [SetUp]
     public void SetUp()

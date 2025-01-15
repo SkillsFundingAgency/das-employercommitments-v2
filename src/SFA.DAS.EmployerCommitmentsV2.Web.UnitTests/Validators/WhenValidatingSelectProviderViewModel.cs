@@ -56,26 +56,4 @@ public class WhenValidatingSelectProviderViewModel : ValidatorTestBase<SelectPro
 
         AssertValidationResult(x => x.ProviderId, viewModel, false, expectedMessage);
     }
-
-    [Test, MoqAutoData]
-    public void AndTheEmployerLegalEntityPublicHashedIdIsEmpty_ThenReturnsInvalid(SelectProviderViewModel viewModel)
-    {
-        viewModel.AccountLegalEntityHashedId = string.Empty;
-
-        AssertValidationResult(x => x.AccountLegalEntityHashedId, viewModel, false);
-    }
-
-    [Test, MoqAutoData]
-    public void AndTheEmployerLegalEntityPublicHashedIdIsWhiteSpace_ThenReturnsInvalid(SelectProviderViewModel viewModel)
-    {
-        viewModel.AccountLegalEntityHashedId = "  ";
-
-        AssertValidationResult(x => x.AccountLegalEntityHashedId, viewModel, false);
-    }
-
-    [Test, MoqAutoData]
-    public void AndViewModelIsValid_ThenReturnsValid(SelectProviderViewModel viewModel)
-    {
-        AssertValidationResult(x => x.AccountLegalEntityHashedId, viewModel, true);
-    }
 }

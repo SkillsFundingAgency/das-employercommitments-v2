@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 public class SelectFundingRequestToSelectFundingViewModelMapperTests
 {
     private SelectFundingViewModelMapper _mapper;
-    private SelectFundingRequest _source;
+    private AddApprenticeshipCacheModel _source;
     private SelectFundingViewModel _result;
     private GetSelectFundingOptionsResponse _fundingOptionsResponse;
     private Mock<IApprovalsApiClient> _outerApiMock;
@@ -22,7 +22,7 @@ public class SelectFundingRequestToSelectFundingViewModelMapperTests
         _outerApiMock = new Mock<IApprovalsApiClient>();
         _fundingOptionsResponse = autoFixture.Create<GetSelectFundingOptionsResponse>();
         _mapper = new SelectFundingViewModelMapper(_outerApiMock.Object, Mock.Of<ILogger<SelectFundingViewModelMapper>>());
-        _source = autoFixture.Create<SelectFundingRequest>();
+        _source = autoFixture.Create<AddApprenticeshipCacheModel>();
         _outerApiMock.Setup(x => x.GetSelectFundingOptions(_source.AccountId, CancellationToken.None)).ReturnsAsync(_fundingOptionsResponse);
         _result = await _mapper.Map(TestHelper.Clone(_source));
     }
@@ -34,27 +34,15 @@ public class SelectFundingRequestToSelectFundingViewModelMapperTests
     }
 
     [Test]
-    public void AccountLegalEntityHashedIdIsMappedCorrectly()
+    public void FundingTypeIsMappedCorrectly()
     {
-        _result.AccountLegalEntityHashedId.Should().Be(_source.AccountLegalEntityHashedId);
+        _result.FundingType.Should().Be(_source.FundingType);
     }
 
     [Test]
-    public void ReservationIdIsMappedCorrectly()
+    public void ApprenticeshipSessionKeyIsMappedCorrectly()
     {
-        _result.ReservationId.Should().Be(_source.ReservationId);
-    }
-
-    [Test]
-    public void TransferSenderIdIsMappedCorrectly()
-    {
-        _result.TransferSenderId.Should().Be(_source.TransferSenderId);
-    }
-
-    [Test]
-    public void EncodedPledgeApplicationIdIsMappedCorrectly()
-    {
-        _result.EncodedPledgeApplicationId.Should().Be(_source.EncodedPledgeApplicationId);
+        _result.ApprenticeshipSessionKey.Should().Be(_source.ApprenticeshipSessionKey);
     }
 
     [Test]

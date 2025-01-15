@@ -12,8 +12,8 @@ public class WhenMappingBaseSelectProviderRequestToTransferConnectionViewModelTe
 {
     private Mock<IApprovalsApiClient> _approvalsApiClient;
     private Mock<IEncodingService> _encodingService;
-    private BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper _mapper;
-    private BaseSelectProviderRequest _request;
+    private SelectTransferConnectionViewModelMapper _mapper;
+    private AddApprenticeshipCacheModel _request;
     private GetSelectDirectTransferConnectionResponse _response;
 
     [SetUp]
@@ -22,7 +22,7 @@ public class WhenMappingBaseSelectProviderRequestToTransferConnectionViewModelTe
         var autoFixture = new Fixture();
         _approvalsApiClient = new Mock<IApprovalsApiClient>();
         _encodingService = new Mock<IEncodingService>();
-        _request = autoFixture.Create<BaseSelectProviderRequest>();
+        _request = autoFixture.Create<AddApprenticeshipCacheModel>();
         _response = autoFixture.Create<GetSelectDirectTransferConnectionResponse>();
 
         _approvalsApiClient.Setup(x => x.GetSelectDirectTransferConnection(_request.AccountId, CancellationToken.None))
@@ -30,7 +30,7 @@ public class WhenMappingBaseSelectProviderRequestToTransferConnectionViewModelTe
         _encodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.PublicAccountId)).Returns("PublicAccountHashId");
         _encodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.AccountId)).Returns("AccountHashId");
 
-        _mapper = new BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper(_approvalsApiClient.Object, _encodingService.Object);
+        _mapper = new SelectTransferConnectionViewModelMapper(_approvalsApiClient.Object, _encodingService.Object);
     }
 
     [Test]

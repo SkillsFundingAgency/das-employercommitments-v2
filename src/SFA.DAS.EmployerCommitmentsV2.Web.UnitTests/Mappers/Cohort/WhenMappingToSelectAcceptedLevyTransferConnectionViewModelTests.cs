@@ -8,12 +8,12 @@ using SFA.DAS.Encoding;
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
 [TestFixture]
-public class WhenMappingBaseSelectProviderRequestToLevyConnectionViewModelTests
+public class WhenMappingToSelectAcceptedLevyTransferConnectionViewModelTests
 {
     private Mock<IApprovalsApiClient> _approvalsApiClient;
     private Mock<IEncodingService> _encodingService;
-    private BaseSelectProviderRequestToSelectAcceptedLevyTransferConnectionViewModelMapper _mapper;
-    private BaseSelectProviderRequest _request;
+    private SelectAcceptedLevyTransferConnectionViewModelMapper _mapper;
+    private AddApprenticeshipCacheModel _request;
     private GetSelectLevyTransferConnectionResponse _response;
 
     [SetUp]
@@ -22,7 +22,7 @@ public class WhenMappingBaseSelectProviderRequestToLevyConnectionViewModelTests
         var autoFixture = new Fixture();
         _approvalsApiClient = new Mock<IApprovalsApiClient>();
         _encodingService = new Mock<IEncodingService>();
-        _request = autoFixture.Create<BaseSelectProviderRequest>();
+        _request = autoFixture.Create<AddApprenticeshipCacheModel>();
         _response = autoFixture.Create<GetSelectLevyTransferConnectionResponse>();
 
         _approvalsApiClient.Setup(x => x.GetSelectLevyTransferConnection(_request.AccountId, CancellationToken.None))
@@ -31,7 +31,7 @@ public class WhenMappingBaseSelectProviderRequestToLevyConnectionViewModelTests
         _encodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.PledgeId)).Returns((long input, EncodingType _) => input.ToString() + "PledgeId");
         _encodingService.Setup(x => x.Encode(It.IsAny<long>(), EncodingType.PublicAccountId)).Returns((long input, EncodingType _) => input.ToString() + "PublicId");
 
-        _mapper = new BaseSelectProviderRequestToSelectAcceptedLevyTransferConnectionViewModelMapper(_approvalsApiClient.Object, _encodingService.Object);
+        _mapper = new SelectAcceptedLevyTransferConnectionViewModelMapper(_approvalsApiClient.Object, _encodingService.Object);
     }
 
     [Test]

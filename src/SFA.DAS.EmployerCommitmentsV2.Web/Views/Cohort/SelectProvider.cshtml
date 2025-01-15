@@ -13,6 +13,7 @@
 
         <partial name="_ValidationSummary" />
         <form method="post">
+            <partial name="_SelectProviderHiddenPartial" model="@Model" />
             @Html.AntiForgeryToken()
             <div class="govuk-form-group">
                 <h1 class="govuk-heading-l">Select your training provider</h1>               
