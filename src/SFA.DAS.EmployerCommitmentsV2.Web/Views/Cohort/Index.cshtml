@@ -16,11 +16,11 @@
 
         @if (!Model.IsLevyFunded)
         {
-        <h2 class="govuk-heading-m">Funding</h2>
-        <p class="govuk-body">
-            If you have not reserved funds for this apprenticeship yet, adding a new apprentice will reserve funds for you.
-            If you have reserved funds or have transfer funds available, you can select one whilst adding a new apprentice.
-        </p>
+            <h2 class="govuk-heading-m">Funding</h2>
+            <p class="govuk-body">
+                If you have not reserved funds for this apprenticeship yet, adding a new apprentice will reserve funds for you.
+                If you have reserved funds or have transfer funds available, you can select one whilst adding a new apprentice.
+            </p>
         }
         
         <h2 class="govuk-heading-m">Before you start</h2>
@@ -41,6 +41,9 @@
                 <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
             </svg>
         </a>
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <partial name="_AddApprenticeUsefulLinks" for="@Model.IsLevyFunded" />
     </div>
 </div>
 

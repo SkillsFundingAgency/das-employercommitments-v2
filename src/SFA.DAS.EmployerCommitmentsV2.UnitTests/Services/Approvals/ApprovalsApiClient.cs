@@ -78,4 +78,17 @@ public class ApprovalsApiClientTests
 
         actual.Should().BeSameAs(response);
     }
+
+    [Test, AutoData]
+    public async Task When_Calling_GetSelectLevyTransferConnections_Then_The_Data_Is_Returned(long accountId, GetSelectLevyTransferConnectionResponse response)
+    {
+        var outerApiClient = new Mock<IOuterApiClient>();
+        var expectedUrl = $"{accountId}/unapproved/add/select-funding/select-accepted-levy-connection";
+        outerApiClient.Setup(x => x.Get<GetSelectLevyTransferConnectionResponse>(expectedUrl)).ReturnsAsync(response);
+        var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
+
+        var actual = await approvalsApiClient.GetSelectLevyTransferConnection(accountId);
+
+        actual.Should().BeSameAs(response);
+    }
 }

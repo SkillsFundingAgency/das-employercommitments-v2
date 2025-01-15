@@ -80,4 +80,10 @@ public class SelectFundingRequestToSelectFundingViewModelMapperTests
     {
         _result.HasAdditionalReservationFundsAvailable.Should().Be(_fundingOptionsResponse.HasAdditionalReservationFundsAvailable);
     }
+
+    [Test]
+    public void HasLtmTransfersAvailableIsMappedCorrectly()
+    {
+        _result.HasLtmTransfersAvailable.Should().Be(_fundingOptionsResponse.HasLtmTransfersAvailable);
+    }
 }
