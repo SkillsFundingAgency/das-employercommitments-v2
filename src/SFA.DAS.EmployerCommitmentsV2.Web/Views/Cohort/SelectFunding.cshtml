@@ -6,7 +6,6 @@
     ViewBag.GaData.Vpv = "/unapproved/select-funding/create/choose-funding-type";
 }
 
-
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.SelectFundingViewModel
 
 <div class="govuk-grid-row">
@@ -16,30 +15,15 @@
 
         <h1 class="govuk-heading-l">@ViewBag.Title</h1>
 
-        <div class="govuk-body">
-            @if (Model.IsLevyAccount)
-            {
-                <span>
-                    You can choose from funds you’ve already set up or use your current levy funds.
-                </span>
-
-            }
-            else
-            {
-                <span>
-                    You can choose from funds you’ve already set up or reserve new funding.
-                </span>
-            }
-        </div>
-
         <form method="POST">
 
         @Html.AntiForgeryToken()
         @Html.HiddenFor(x => x.ApprenticeshipSessionKey)
 
-            <h1 class="govuk-heading-m">Which funding would you like to select?</h1>
-
         <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.FundingType,  "govuk-form-group--error")">
+            <div class="govuk-hint">
+                You can choose from funds you've already set up or reserve new existing funding.
+            </div>
             <fieldset class="govuk-fieldset">
                 @if (!ViewData.ModelState.IsValid)
                 {
@@ -48,8 +32,7 @@
                     </span>
                 }
                 <div class="govuk-radios">
-
-                    @if (Model.HasLtmTransfersAvailable)
+                        @if (Model.HasLtmTransfersAvailable)
                     {
                         <div class="govuk-radios__item" id="radio-item-funding-type">
                             <input class="govuk-radios__input" id="FundingType-5" name="FundingType" type="radio" value="5">

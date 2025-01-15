@@ -32,6 +32,7 @@ public class SelectTransferConnectionViewModelMapper : IMapper<AddApprenticeship
                     FundingEmployerPublicHashedAccountId = _encodingService.Encode(x.FundingEmployerAccountId, EncodingType.PublicAccountId),
                     FundingEmployerHashedAccountId = _encodingService.Encode(x.FundingEmployerAccountId, EncodingType.AccountId),
                     FundingEmployerAccountName = x.FundingEmployerAccountName,
+                    ApprovedOn = x.ApprovedOn
                 }).ToList()
         };
     }
