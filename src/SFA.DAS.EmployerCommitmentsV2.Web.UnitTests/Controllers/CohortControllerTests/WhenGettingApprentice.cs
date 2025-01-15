@@ -22,7 +22,10 @@ internal class WhenGettingApprentice
     public void SetUp()
     {
         _fixture = new Fixture();
-        _apprenticeRequest = _fixture.Create<ApprenticeRequest>();
+        _apprenticeRequest = _fixture.Build<ApprenticeRequest>()
+            .With(x => x.StartMonthYear, "012025")
+            .Create();
+
         _cacheModel = _fixture.Create<AddApprenticeshipCacheModel>();
         _apprenticeRequest.ApprenticeshipSessionKey = _cacheModel.ApprenticeshipSessionKey;
 

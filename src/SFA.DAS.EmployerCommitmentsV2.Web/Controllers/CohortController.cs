@@ -1,9 +1,9 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
@@ -267,7 +267,7 @@ public class CohortController : Controller
             if (cacheModel.FundingType == FundingType.AdditionalReservations)
                 return false;
             return true;
-        }     
+        }
 
         if (NeedsToGetAReservation())
         {
@@ -287,7 +287,7 @@ public class CohortController : Controller
 
         switch (model.WhoIsAddingApprentices)
         {
-            case WhoIsAddingApprentices.Employer:               
+            case WhoIsAddingApprentices.Employer:
                 return RedirectToAction(RouteNames.CohortApprentice, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
             case WhoIsAddingApprentices.Provider:
                 var request = await _modelMapper.Map<CreateCohortWithOtherPartyRequest>(cacheModel);
@@ -586,7 +586,7 @@ public class CohortController : Controller
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(selectedFunding.ApprenticeshipSessionKey);
         cacheModel.FundingType = selectedFunding.FundingType;
-        await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);       
+        await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
         if (selectedFunding.FundingType == FundingType.DirectTransfers)
         {
@@ -610,7 +610,7 @@ public class CohortController : Controller
     public async Task<IActionResult> SelectDirectTransferConnection(SelectTransferConnectionViewModel selectedTransferConnection)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(selectedTransferConnection.ApprenticeshipSessionKey);
-        var transferConnectionCode = selectedTransferConnection.TransferConnectionCode;       
+        var transferConnectionCode = selectedTransferConnection.TransferConnectionCode;
         cacheModel.TransferSenderId = transferConnectionCode;
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
@@ -693,6 +693,9 @@ public class CohortController : Controller
         cacheModel.ReservationId = request.ReservationId ?? cacheModel.ReservationId;
         cacheModel.CourseCode = !string.IsNullOrEmpty(request.CourseCode) ? request.CourseCode : cacheModel.CourseCode;
         cacheModel.StartMonthYear = !string.IsNullOrEmpty(request.StartMonthYear) ? request.StartMonthYear : cacheModel.StartMonthYear;
-    }
 
+        var monthYearModel = new MonthYearModel(cacheModel.StartMonthYear);
+        cacheModel.StartMonth = monthYearModel.Month;
+        cacheModel.StartYear = monthYearModel.Year;
+    }
 }

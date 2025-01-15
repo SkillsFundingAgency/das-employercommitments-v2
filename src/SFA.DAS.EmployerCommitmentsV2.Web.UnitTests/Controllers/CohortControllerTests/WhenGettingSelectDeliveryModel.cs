@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -21,7 +22,7 @@ public class WhenGettingSelectDeliveryModel
         [Greedy] CohortController controller)
     {
         cacheModel.ApprenticeshipSessionKey = request.ApprenticeshipSessionKey.Value;
-
+        request.StartMonthYear = "012025";
         cacheStorageService
            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
            .ReturnsAsync(cacheModel);
@@ -53,6 +54,7 @@ public class WhenGettingSelectDeliveryModel
         [Greedy] CohortController controller)
     {
         viewModel.DeliveryModels = [];
+        request.StartMonthYear = "012025";
         cacheModel.ApprenticeshipSessionKey = request.ApprenticeshipSessionKey.Value;
 
         cacheStorageService
