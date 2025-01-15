@@ -1,12 +1,11 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
-using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControllerTests;
 
@@ -17,6 +16,7 @@ public class WhenGettingInform
     private InformViewModel _viewModel;
     private CohortController _controller;
     private Mock<IModelMapper> _modelMapper;
+    private Mock<ICacheStorageService> _cacheStorageService;
 
     [SetUp]
     public void Arrange()
@@ -24,6 +24,11 @@ public class WhenGettingInform
         var autoFixture = new Fixture();
         _request = autoFixture.Create<InformRequest>();
         _viewModel = autoFixture.Create<InformViewModel>();
+
+        _cacheStorageService = new Mock<ICacheStorageService>();
+        _cacheStorageService
+            .Setup(x => x.SaveToCache(It.IsAny<Guid>(), It.IsAny<AddApprenticeshipCacheModel>(), 1))
+            .Returns(Task.CompletedTask);
 
         _modelMapper = new Mock<IModelMapper>();
         _modelMapper.Setup(x => x.Map<InformViewModel>(It.Is<InformRequest>(r => r == _request)))

@@ -15,6 +15,8 @@ public class WhenPostingSelectDirectConnection
 {
     private CohortController _controller;
     private SelectTransferConnectionViewModel _model;
+    private AddApprenticeshipCacheModel _cacheModel;
+    private Mock<ICacheStorageService> _cacheStorageService;
 
     [SetUp]
     public void Arrange()
@@ -22,13 +24,24 @@ public class WhenPostingSelectDirectConnection
         var autoFixture = new Fixture();
         _model = autoFixture.Create<SelectTransferConnectionViewModel>();
 
+        _cacheModel = autoFixture.Create<AddApprenticeshipCacheModel>();
+        _cacheModel.ApprenticeshipSessionKey = _model.ApprenticeshipSessionKey.Value;
+
+        _cacheStorageService = new Mock<ICacheStorageService>();
+        _cacheStorageService
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.ApprenticeshipSessionKey))
+           .ReturnsAsync(_cacheModel);
+        _cacheStorageService
+        .Setup(x => x.SaveToCache(It.IsAny<Guid>(), It.IsAny<AddApprenticeshipCacheModel>(), 1))
+        .Returns(Task.CompletedTask);
+
         _controller = new CohortController(Mock.Of<ICommitmentsApiClient>(),
             Mock.Of<ILogger<CohortController>>(),
             Mock.Of<ILinkGenerator>(),
             Mock.Of<IModelMapper>(),
             Mock.Of<IEncodingService>(),
             Mock.Of<IApprovalsApiClient>(),
-            Mock.Of<ICacheStorageService>());
+            _cacheStorageService.Object);
     }
       
     [TearDown]
@@ -38,7 +51,7 @@ public class WhenPostingSelectDirectConnection
     public async Task Then_User_Is_Redirected_To_SelectProvider_Page()
     {
         //Act
-        var result = _controller.SelectDirectTransferConnection(_model);
+        var result = await _controller.SelectDirectTransferConnection(_model);
 
         //Assert
         var redirectToActionResult = result as RedirectToActionResult;
@@ -49,12 +62,11 @@ public class WhenPostingSelectDirectConnection
     public async Task Then_Verify_RouteValues()
     {
         //Act
-        var result = _controller.SelectDirectTransferConnection(_model);
+        var result = await _controller.SelectDirectTransferConnection(_model);
 
         //Assert
         var redirectToActionResult = result as RedirectToActionResult;
-        redirectToActionResult.RouteValues["AccountHashedId"].Should().Be(_model.AccountHashedId);
-        redirectToActionResult.RouteValues["TransferSenderId"].Should().Be(_model.TransferConnectionCode);
-        redirectToActionResult.RouteValues["AccountLegalEntityHashedId"].Should().Be(_model.AccountLegalEntityHashedId);
+        redirectToActionResult.RouteValues["AccountHashedId"].Should().Be(_cacheModel.AccountHashedId);
+        redirectToActionResult.RouteValues["ApprenticeshipSessionKey"].Should().Be(_cacheModel.ApprenticeshipSessionKey);
     }
 }

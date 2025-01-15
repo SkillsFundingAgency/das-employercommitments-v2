@@ -1,23 +1,15 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class ApprenticeRequestToSelectCourseViewModelMapper : IMapper<ApprenticeRequest, SelectCourseViewModel>
+public class AddApprenticeshipCacheModelToSelectCourseViewModelMapper(ICommitmentsApiClient commitmentsApiClient) : IMapper<AddApprenticeshipCacheModel, SelectCourseViewModel>
 {
-    private readonly ICommitmentsApiClient _commitmentsApiClient;
-
-    public ApprenticeRequestToSelectCourseViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
-        => _commitmentsApiClient = commitmentsApiClient;
-
-    public async Task<SelectCourseViewModel> Map(ApprenticeRequest source)
+    public async Task<SelectCourseViewModel> Map(AddApprenticeshipCacheModel source)
     {
-        var ale = await _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
-
-        var courses = (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes;
+        var courses = (await commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes;
 
         return new SelectCourseViewModel
         {
@@ -31,7 +23,8 @@ public class ApprenticeRequestToSelectCourseViewModelMapper : IMapper<Apprentice
             StartMonthYear = source.StartMonthYear,
             DeliveryModel = source.DeliveryModel,
             TransferSenderId = source.TransferSenderId,
-            CacheKey = source.CacheKey
+            CacheKey = source.ApprenticeshipSessionKey,
+            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey
         };
     }
 }

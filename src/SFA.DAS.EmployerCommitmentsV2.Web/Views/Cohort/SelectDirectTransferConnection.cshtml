@@ -38,6 +38,7 @@
 
             <h1 class="govuk-heading-m">Which connection would you like to select?</h1>
 
+            @Html.HiddenFor(x => x.ApprenticeshipSessionKey)
             @Html.AntiForgeryToken()
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.TransferConnectionCode, "govuk-form-group--error")">

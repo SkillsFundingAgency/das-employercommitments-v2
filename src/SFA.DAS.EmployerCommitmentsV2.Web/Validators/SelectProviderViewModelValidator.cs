@@ -8,11 +8,7 @@ public class SelectProviderViewModelValidator : AbstractValidator<SelectProvider
     {
         RuleFor(x => x.ProviderId)
             .Must(BeALongGreaterThanZero)
-            .WithMessage("Select a training provider");
-
-        RuleFor(x => x.AccountLegalEntityHashedId)
-            .NotNull()
-            .NotEmpty();
+            .WithMessage("Select a training provider");   
     }
 
     private static bool BeALongGreaterThanZero(string value)

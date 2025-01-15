@@ -6,6 +6,7 @@ public class SelectAcceptedLevyTransferConnectionViewModel
     public string AccountLegalEntityHashedId { get; set; }
     public string ApplicationAndSenderHashedId { get; set; }
     public List<LevyTransferDisplayConnection> Applications { get; set; }
+    public Guid? ApprenticeshipSessionKey { get; set; }
 }
 
 
