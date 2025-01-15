@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @using SFA.DAS.EmployerUrlHelper.Mvc
 
@@ -19,9 +20,11 @@
         <p class="govuk-body">
             These are your approved transfer funds.
         </p>
-        
         <p class="govuk-body">
-            If you cannot find the transfer you need, you can <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications")" id="back-link" target="_blank" class="govuk-back-link">manage your transfers (opens in new tab)</a>
+            You can only use one transfer per application, but you can add multiple apprenticeships to that transfer if funding amount allows.
+        </p>
+        <p class="govuk-body">
+            If you cannot find the transfer you need, you can <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications")" id="info-link" target="_blank" class="govuk-link">manage your transfers (opens in new tab)</a>
         </p>
 
         <form method="post">
@@ -30,7 +33,7 @@
 
             @Html.AntiForgeryToken()
 
-            <div class="govuk-form-group">
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApplicationAndSenderHashedId, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset" id="radio-lines">
                     @if (!ViewData.ModelState.IsValid)
                     {
