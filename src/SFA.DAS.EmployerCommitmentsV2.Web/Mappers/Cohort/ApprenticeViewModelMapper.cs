@@ -1,25 +1,17 @@
-﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
-using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class ApprenticeViewModelMapper : IMapper<ApprenticeRequest, ApprenticeViewModel>
-{
-    private readonly ICommitmentsApiClient _commitmentsApiClient;
-
-    public ApprenticeViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
+public class ApprenticeViewModelMapper(ICommitmentsApiClient commitmentsApiClient) : IMapper<AddApprenticeshipCacheModel, ApprenticeViewModel>
+{   
+    public async Task<ApprenticeViewModel> Map(AddApprenticeshipCacheModel source)
     {
-        _commitmentsApiClient = commitmentsApiClient;
-    }
+        var accountLegalEntity = await commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
 
-    public async Task<ApprenticeViewModel> Map(ApprenticeRequest source)
-    {
-        var accountLegalEntity = await _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
-
-        var provider = await _commitmentsApiClient.GetProvider(source.ProviderId);
+        var provider = await commitmentsApiClient.GetProvider(source.ProviderId);
 
         var result = new ApprenticeViewModel
         {
@@ -35,10 +27,24 @@ public class ApprenticeViewModelMapper : IMapper<ApprenticeRequest, ApprenticeVi
             Courses = null,
             TransferSenderId = source.TransferSenderId,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
-            Origin = source.Origin,
             DeliveryModel = source.DeliveryModel,
             IsOnFlexiPaymentPilot = false,
-            CacheKey = source.CacheKey.IsNotNullOrEmpty() ? source.CacheKey : Guid.NewGuid()
+            FirstName = source.FirstName,
+            LastName = source.LastName,
+            Email = source.Email,
+            BirthDay = source.BirthDay,
+            BirthMonth = source.BirthMonth,
+            BirthYear = source.BirthYear,
+            StartMonth = source.StartMonth,
+            StartYear = source.StartYear,
+            EndMonth = source.EndMonth,
+            EndYear = source.EndYear,
+            EmploymentEndMonth = source.EmploymentEndMonth,
+            EmploymentEndYear = source.EmploymentEndYear,
+            Cost = source.Cost,
+            EmploymentPrice = source.EmploymentPrice,
+            Reference = source.Reference,
+            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey
         };
 
         return result;

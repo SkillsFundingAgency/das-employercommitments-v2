@@ -6,25 +6,16 @@ using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class BaseSelectProviderRequestToSelectAcceptedLevyTransferConnectionViewModelMapper : IMapper<BaseSelectProviderRequest, SelectAcceptedLevyTransferConnectionViewModel>
+public class SelectAcceptedLevyTransferConnectionViewModelMapper(IApprovalsApiClient approvalsApiClient, IEncodingService encodingService) : IMapper<AddApprenticeshipCacheModel, SelectAcceptedLevyTransferConnectionViewModel>
 {
-    private readonly IApprovalsApiClient _approvalsApiClient;
-    private readonly IEncodingService _encodingService;
-
-    public BaseSelectProviderRequestToSelectAcceptedLevyTransferConnectionViewModelMapper(IApprovalsApiClient approvalsApiClient, IEncodingService encodingService)
+    public async Task<SelectAcceptedLevyTransferConnectionViewModel> Map(AddApprenticeshipCacheModel source)
     {
-        _approvalsApiClient = approvalsApiClient;
-        _encodingService = encodingService;
-    }
-
-    public async Task<SelectAcceptedLevyTransferConnectionViewModel> Map(BaseSelectProviderRequest source)
-    {
-        var result = await _approvalsApiClient.GetSelectLevyTransferConnection(source.AccountId);
+        var result = await approvalsApiClient.GetSelectLevyTransferConnection(source.AccountId);
 
         return new SelectAcceptedLevyTransferConnectionViewModel
         {
             AccountHashedId = source.AccountHashedId,
-            Applications = result.Applications == null ? new List<LevyTransferDisplayConnection>() :
+            Applications = result.Applications == null ? [] :
                 result.Applications.Select(x => new LevyTransferDisplayConnection()
                 {
                     Id = x.Id,
@@ -40,17 +31,17 @@ public class BaseSelectProviderRequestToSelectAcceptedLevyTransferConnectionView
 
     private string GetOpportunityHashedId(LevyTransferConnection x)
     {
-        return _encodingService.Encode(x.OpportunityId, EncodingType.PledgeId);
+        return encodingService.Encode(x.OpportunityId, EncodingType.PledgeId);
     }
 
     private string GetSendingEmployerPublicHashedId(LevyTransferConnection x)
     {
-        return _encodingService.Encode(x.SenderEmployerAccountId, EncodingType.PublicAccountId);
+        return encodingService.Encode(x.SenderEmployerAccountId, EncodingType.PublicAccountId);
     }
 
     private string GetApplicationHashedId(LevyTransferConnection x)
     {
-        return _encodingService.Encode(x.Id, EncodingType.PledgeApplicationId);
+        return encodingService.Encode(x.Id, EncodingType.PledgeApplicationId);
     }
 
     private string BuildTitle(LevyTransferConnection levyTransferConnection)
@@ -62,7 +53,7 @@ public class BaseSelectProviderRequestToSelectAcceptedLevyTransferConnectionView
             title = levyTransferConnection.SenderEmployerAccountName;
         }
 
-        title += $" ({hashedId}) - £{levyTransferConnection.TotalAmount.ToString("N")}";
+        title += $" ({hashedId}) - £{levyTransferConnection.TotalAmount:N}";
         return title;
     }
 }

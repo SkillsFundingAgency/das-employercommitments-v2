@@ -15,12 +15,24 @@ public class WhenPostingSelectLevyConnection
 {
     private CohortController _controller;
     private SelectAcceptedLevyTransferConnectionViewModel _model;
+    private Mock<ICacheStorageService> _cacheStorageService;
+    private AddApprenticeshipCacheModel _cacheModel;
 
     [SetUp]
     public void Arrange()
     {
         var autoFixture = new Fixture();
         _model = autoFixture.Create<SelectAcceptedLevyTransferConnectionViewModel>();
+
+        _cacheModel = autoFixture.Create<AddApprenticeshipCacheModel>();
+        _cacheModel.ApprenticeshipSessionKey = _model.ApprenticeshipSessionKey.Value;
+        _cacheModel.AccountHashedId = _model.AccountHashedId;
+
+        _cacheStorageService = new Mock<ICacheStorageService>();
+
+        _cacheStorageService
+          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.ApprenticeshipSessionKey))
+          .ReturnsAsync(_cacheModel);
 
         foreach (var app in _model.Applications)
         {
@@ -35,7 +47,7 @@ public class WhenPostingSelectLevyConnection
             Mock.Of<IModelMapper>(),
             Mock.Of<IEncodingService>(),
             Mock.Of<IApprovalsApiClient>(),
-            Mock.Of<ICacheStorageService>());
+            _cacheStorageService.Object);
     }
       
     [TearDown]
@@ -45,7 +57,7 @@ public class WhenPostingSelectLevyConnection
     public async Task Then_User_Is_Redirected_To_SelectProvider_Page()
     {
         //Act
-        var result = _controller.SelectAcceptedLevyTransferConnection(_model);
+        var result = await _controller.SelectAcceptedLevyTransferConnection(_model);
 
         //Assert
         var redirectToActionResult = result as RedirectToActionResult;
@@ -56,14 +68,11 @@ public class WhenPostingSelectLevyConnection
     public async Task Then_Verify_RouteValues()
     {
         //Act
-        var result = _controller.SelectAcceptedLevyTransferConnection(_model);
-        var ids = _model.ApplicationAndSenderHashedId.Split("|"); 
+        var result = await _controller.SelectAcceptedLevyTransferConnection(_model);
 
         //Assert
         var redirectToActionResult = result as RedirectToActionResult;
         redirectToActionResult.RouteValues["AccountHashedId"].Should().Be(_model.AccountHashedId);
-        redirectToActionResult.RouteValues["EncodedPledgeApplicationId"].Should().Be(ids[0]);
-        redirectToActionResult.RouteValues["TransferSenderId"].Should().Be(ids[1]);
-        redirectToActionResult.RouteValues["AccountLegalEntityHashedId"].Should().Be(_model.AccountLegalEntityHashedId);
+        redirectToActionResult.RouteValues["ApprenticeshipSessionKey"].Should().Be(_model.ApprenticeshipSessionKey);
     }
 }

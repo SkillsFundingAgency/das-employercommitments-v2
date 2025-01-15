@@ -32,6 +32,7 @@
             <h1 class="govuk-heading-m">Which transfer would you like to select?</h1>
 
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.ApprenticeshipSessionKey)
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApplicationAndSenderHashedId, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset" id="radio-lines">
