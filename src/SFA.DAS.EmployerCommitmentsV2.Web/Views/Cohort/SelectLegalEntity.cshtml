@@ -62,6 +62,7 @@
         @Html.Hidden("TransferConnectionCode", Model.TransferConnectionCode)
         @Html.Hidden("CohortRef", Model.CohortRef)
         @Html.HiddenFor(x => x.EncodedPledgeApplicationId)
+        @Html.HiddenFor(x => x.ApprenticeshipSessionKey)
 
         <button type="submit" class="govuk-button" id="submit-legal-entity">Continue</button>
         

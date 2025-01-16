@@ -4,30 +4,18 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class AssignViewModelMapper : IMapper<AssignRequest, AssignViewModel>
+public class AssignViewModelMapper(ICommitmentsApiClient commitmentsApiClient) : IMapper<AddApprenticeshipCacheModel, AssignViewModel>
 {
-    private readonly ICommitmentsApiClient _commitmentsApiClient;
-
-    public AssignViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
+    public async Task<AssignViewModel> Map(AddApprenticeshipCacheModel request)
     {
-        _commitmentsApiClient = commitmentsApiClient;
-    }
-
-    public async Task<AssignViewModel> Map(AssignRequest request)
-    {
-        var accountLegalEntity = await _commitmentsApiClient.GetAccountLegalEntity(request.AccountLegalEntityId);
+        var accountLegalEntity = await commitmentsApiClient.GetAccountLegalEntity(request.AccountLegalEntityId);
 
         return new AssignViewModel
         {
             AccountHashedId = request.AccountHashedId,
-            AccountLegalEntityHashedId = request.AccountLegalEntityHashedId,
             LegalEntityName = accountLegalEntity.LegalEntityName,
             ReservationId = request.ReservationId,
-            StartMonthYear = request.StartMonthYear,
-            CourseCode = request.CourseCode,
-            ProviderId = request.ProviderId,
-            TransferSenderId = request.TransferSenderId,
-            EncodedPledgeApplicationId = request.EncodedPledgeApplicationId,
+            ApprenticeshipSessionKey = request.ApprenticeshipSessionKey,
             FundingType = request.FundingType
         };
     }

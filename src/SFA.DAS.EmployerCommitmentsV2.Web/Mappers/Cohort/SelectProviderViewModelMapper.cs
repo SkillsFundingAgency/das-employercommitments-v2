@@ -4,18 +4,11 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, SelectProviderViewModel>
+public class SelectProviderViewModelMapper(IApprovalsApiClient outerApiClient) : IMapper<AddApprenticeshipCacheModel, SelectProviderViewModel>
 {
-    private readonly IApprovalsApiClient _outerApiClient;
-
-    public SelectProviderViewModelMapper(IApprovalsApiClient outerApiClient)
+    public async Task<SelectProviderViewModel> Map(AddApprenticeshipCacheModel source)
     {
-        _outerApiClient = outerApiClient;
-    }
-
-    public async Task<SelectProviderViewModel> Map(SelectProviderRequest source)
-    {
-        var selectProviderDetails = await _outerApiClient.GetSelectProviderDetails(source.AccountId, source.AccountLegalEntityId);
+        var selectProviderDetails = await outerApiClient.GetSelectProviderDetails(source.AccountId, source.AccountLegalEntityId);
 
         var providers = selectProviderDetails.Providers.ToList();
         var accountLegalEntity = selectProviderDetails.AccountLegalEntity;
@@ -28,14 +21,14 @@ public class SelectProviderViewModelMapper : IMapper<SelectProviderRequest, Sele
             LegalEntityName = accountLegalEntity.LegalEntityName,
             StartMonthYear = source.StartMonthYear,
             ReservationId = source.ReservationId,
-            TransferSenderId = source.TransferSenderId,
             Origin = DetermineOrigin(source),
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
-            Providers = providers
+            Providers = providers,
+            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey
         };
     }
 
-    private static Origin DetermineOrigin(SelectProviderRequest source)
+    private static Origin DetermineOrigin(AddApprenticeshipCacheModel source)
     {
         if (source.ReservationId.HasValue)
         {
