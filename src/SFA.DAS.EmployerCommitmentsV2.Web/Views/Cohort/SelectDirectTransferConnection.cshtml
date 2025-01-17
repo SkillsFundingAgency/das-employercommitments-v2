@@ -38,6 +38,7 @@
 
             <h1 class="govuk-heading-m">Which connection would you like to select?</h1>
 
+            @Html.HiddenFor(x => x.ApprenticeshipSessionKey)
             @Html.AntiForgeryToken()
 
             <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.TransferConnectionCode, "govuk-form-group--error")">
@@ -55,6 +56,12 @@
                                 <input class="govuk-radios__input" id="TransferConnection-@entity.FundingEmployerPublicHashedAccountId" name="TransferConnectionCode" type="radio" value="@entity.FundingEmployerPublicHashedAccountId">
                                 <label class="govuk-label govuk-radios__label" for="TransferConnection-@entity.FundingEmployerPublicHashedAccountId">
                                     @entity.FundingEmployerAccountName
+                                    @if (entity.ApprovedOn.HasValue)
+                                    {
+                                        <p class="govuk-hint">
+                                            Connection approved on @entity.ApprovedOn.Value.ToString("dd MMM yyyy") 
+                                        </p>
+                                    }
                                 </label>
                             </div>
                         }

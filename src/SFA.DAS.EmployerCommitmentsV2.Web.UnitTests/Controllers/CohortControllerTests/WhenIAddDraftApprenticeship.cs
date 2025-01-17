@@ -1,3 +1,4 @@
+using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
@@ -22,22 +23,9 @@ public class CreateCohortWithDraftApprenticeshipControllerTests
     {
         var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures();
 
-        fixtures.CreateController();
+        Action act = () => fixtures.CreateController();
 
-        Assert.Pass("Created controller without exception");
-    }
-
-    [Test]
-    public async Task GetAddDraftApprenticeship_ValidModel_ShouldReturnViewModel()
-    {
-        var fixtures = new CreateCohortWithDraftApprenticeshipControllerTestFixtures()
-            .ForGetRequest()
-            .WithTrainingProvider();
-
-        var result = await fixtures.CheckGet();
-
-        result.VerifyReturnsViewModel()
-            .WithModel<ApprenticeViewModel>();
+        act.Should().NotThrow();
     }
 
     [Test]
@@ -93,9 +81,14 @@ public class CreateCohortWithDraftApprenticeshipControllerTestFixtures
         ModelMapperMock = new Mock<IModelMapper>();
         ModelMapperMock.Setup(x => x.Map<ApprenticeViewModel>(It.IsAny<ApprenticeRequest>()))
             .ReturnsAsync(new ApprenticeViewModel());
+
+        CacheStorageServiceMock = new Mock<ICacheStorageService>();
+        CacheStorageServiceMock.Setup(x => x.DeleteFromCache(CacheKey))
+           .Returns(Task.CompletedTask);
         EncodingServiceMock = new Mock<IEncodingService>();
         ApprovalsApiClientMock = new Mock<IApprovalsApiClient>();
     }
+    private static Guid CacheKey => Guid.NewGuid();
 
     public Mock<ILinkGenerator> LinkGeneratorMock { get; }
     public ILinkGenerator LinkGenerator => LinkGeneratorMock.Object;
@@ -105,23 +98,19 @@ public class CreateCohortWithDraftApprenticeshipControllerTestFixtures
 
     public Mock<IEncodingService> EncodingServiceMock { get; set; }
     public IEncodingService EncodingService => EncodingServiceMock.Object;
-    public ApprenticeRequest GetRequest { get; private set; }
-    public ApprenticeViewModel PostRequest { get; private set; }
 
+    public Mock<ICacheStorageService> CacheStorageServiceMock { get; set; }
+    public ICacheStorageService CacheStorageService => CacheStorageServiceMock.Object;
+
+    public ApprenticeViewModel PostRequest { get; private set; }
     public Mock<ICommitmentsApiClient> CommitmentsApiClientMock { get; }
     public Mock<IApprovalsApiClient> ApprovalsApiClientMock { get; }
     public ICommitmentsApiClient CommitmentsApiClient => CommitmentsApiClientMock.Object;
     public IApprovalsApiClient ApprovalsApiClient => ApprovalsApiClientMock.Object;
-
-    public CreateCohortWithDraftApprenticeshipControllerTestFixtures ForGetRequest()
-    {
-        GetRequest = new ApprenticeRequest { ProviderId = 1 };
-        return this;
-    }
-
+   
     public CreateCohortWithDraftApprenticeshipControllerTestFixtures ForPostRequest()
     {
-        PostRequest = new ApprenticeViewModel { ProviderId = 1 };
+        PostRequest = new ApprenticeViewModel { ProviderId = 1, ApprenticeshipSessionKey = CacheKey };
         return this;
     }
 
@@ -181,16 +170,9 @@ public class CreateCohortWithDraftApprenticeshipControllerTestFixtures
             ModelMapper,
             Mock.Of<IEncodingService>(),
             ApprovalsApiClient,
-            Mock.Of<ICacheStorageService>()
+            CacheStorageService
         );
         return controller;
-    }
-
-    public async Task<IActionResult> CheckGet()
-    {
-        var controller = CreateController();
-
-        return await controller.AddDraftApprenticeship(GetRequest);
     }
 
     public async Task<IActionResult> CheckPost()

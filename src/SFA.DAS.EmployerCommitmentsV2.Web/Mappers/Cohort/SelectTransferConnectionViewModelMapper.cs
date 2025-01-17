@@ -6,18 +6,18 @@ using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper : IMapper<BaseSelectProviderRequest, SelectTransferConnectionViewModel>
+public class SelectTransferConnectionViewModelMapper : IMapper<AddApprenticeshipCacheModel, SelectTransferConnectionViewModel>
 {
     private readonly IApprovalsApiClient _approvalsApiClient;
     private readonly IEncodingService _encodingService;
 
-    public BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper(IApprovalsApiClient approvalsApiClient, IEncodingService encodingService)
+    public SelectTransferConnectionViewModelMapper(IApprovalsApiClient approvalsApiClient, IEncodingService encodingService)
     {
         _approvalsApiClient = approvalsApiClient;
         _encodingService = encodingService;
     }
 
-    public async Task<SelectTransferConnectionViewModel> Map(BaseSelectProviderRequest source)
+    public async Task<SelectTransferConnectionViewModel> Map(AddApprenticeshipCacheModel source)
     {
         var result = await _approvalsApiClient.GetSelectDirectTransferConnection(source.AccountId);
 
@@ -32,6 +32,7 @@ public class BaseSelectProviderRequestToSelectTransferConnectionViewModelMapper 
                     FundingEmployerPublicHashedAccountId = _encodingService.Encode(x.FundingEmployerAccountId, EncodingType.PublicAccountId),
                     FundingEmployerHashedAccountId = _encodingService.Encode(x.FundingEmployerAccountId, EncodingType.AccountId),
                     FundingEmployerAccountName = x.FundingEmployerAccountName,
+                    ApprovedOn = x.ApprovedOn
                 }).ToList()
         };
     }

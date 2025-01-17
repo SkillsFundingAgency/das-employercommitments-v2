@@ -1,26 +1,30 @@
 ﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class SelectDeliveryModelViewModelToApprenticeRequestMapper : IMapper<SelectDeliveryModelViewModel, ApprenticeRequest>
+public class AddApprenticeshipCacheModelToSelectDeliveryModelViewModelMapper(IApprovalsApiClient approvalsApiClient) : IMapper<AddApprenticeshipCacheModel, SelectDeliveryModelViewModel>
 {
-    public Task<ApprenticeRequest> Map(SelectDeliveryModelViewModel source)
+    public async Task<SelectDeliveryModelViewModel> Map(AddApprenticeshipCacheModel source)
     {
-        return Task.FromResult(new ApprenticeRequest
+        var response = await approvalsApiClient.GetProviderCourseDeliveryModels(source.ProviderId, source.CourseCode, source.AccountLegalEntityId);
+
+        return new SelectDeliveryModelViewModel
         {
             AccountHashedId = source.AccountHashedId,
             AccountLegalEntityId = source.AccountLegalEntityId,
             AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
             CourseCode = source.CourseCode,
             DeliveryModel = source.DeliveryModel,
+            DeliveryModels = response.DeliveryModels.ToArray(),
             ProviderId = source.ProviderId,
             ReservationId = source.ReservationId,
             StartMonthYear = source.StartMonthYear,
             TransferSenderId = source.TransferSenderId,
-            EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
-            CacheKey = source.CacheKey
-        });
+            CacheKey = source.ApprenticeshipSessionKey,
+            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey
+        };
     }
 }

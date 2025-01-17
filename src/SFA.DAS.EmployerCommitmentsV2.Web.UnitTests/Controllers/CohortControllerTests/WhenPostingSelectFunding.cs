@@ -15,12 +15,23 @@ public class WhenPostingSelectFunding
 {
     private CohortController _controller;
     private SelectFundingViewModel _model;
+    private Mock<ICacheStorageService> _cacheStorageService;
+    private AddApprenticeshipCacheModel _cacheModel;
 
     [SetUp]
     public void Arrange()
     {
         var autoFixture = new Fixture();
         _model = autoFixture.Create<SelectFundingViewModel>();
+        _cacheModel = autoFixture.Create<AddApprenticeshipCacheModel>();
+        _cacheModel.ApprenticeshipSessionKey = _model.ApprenticeshipSessionKey.Value;
+        _cacheModel.AccountHashedId = _model.AccountHashedId;
+
+        _cacheStorageService = new Mock<ICacheStorageService>();
+
+        _cacheStorageService
+          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.ApprenticeshipSessionKey))
+          .ReturnsAsync(_cacheModel);
 
         _controller = new CohortController(Mock.Of<ICommitmentsApiClient>(),
             Mock.Of<ILogger<CohortController>>(),
@@ -28,9 +39,9 @@ public class WhenPostingSelectFunding
             Mock.Of<IModelMapper>(),
             Mock.Of<IEncodingService>(),
             Mock.Of<IApprovalsApiClient>(),
-            Mock.Of<ICacheStorageService>());
+            _cacheStorageService.Object);
     }
-      
+
     [TearDown]
     public void TearDown() => _controller?.Dispose();
 
@@ -41,7 +52,7 @@ public class WhenPostingSelectFunding
     {
         _model.FundingType = fundingType;
         //Act
-        var result = await _controller.SetFundingType(_model);
+        var result = await _controller.SelectFundingType(_model);
 
         //Assert
         var redirectToActionResult = result as RedirectToActionResult;
@@ -53,7 +64,7 @@ public class WhenPostingSelectFunding
     {
         _model.FundingType = FundingType.DirectTransfers;
         //Act
-        var result = await _controller.SetFundingType(_model);
+        var result = await _controller.SelectFundingType(_model);
 
         //Assert
         var redirectToActionResult = result as RedirectToActionResult;
@@ -65,11 +76,13 @@ public class WhenPostingSelectFunding
     {
         _model.FundingType = FundingType.LtmTransfers;
         //Act
-        var result = await _controller.SetFundingType(_model);
+        var result = await _controller.SelectFundingType(_model);
 
         //Assert
         var redirectToActionResult = result as RedirectToActionResult;
         redirectToActionResult.ActionName.Should().Be("SelectAcceptedLevyTransferConnection");
+        redirectToActionResult.RouteValues["AccountHashedId"].Should().Be(_model.AccountHashedId);
+        redirectToActionResult.RouteValues["ApprenticeshipSessionKey"].Should().Be(_model.ApprenticeshipSessionKey);
     }
 
 }
