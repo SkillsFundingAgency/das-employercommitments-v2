@@ -26,4 +26,5 @@ public interface IApprovalsApiClient
     Task<GetSelectFundingOptionsResponse> GetSelectFundingOptions(long accountId, CancellationToken cancellationToken = default);
     Task<GetSelectDirectTransferConnectionResponse> GetSelectDirectTransferConnection(long accountId, CancellationToken cancellationToken = default);
     Task<GetSelectLevyTransferConnectionResponse> GetSelectLevyTransferConnection(long accountId, CancellationToken cancellationToken = default);
+    Task<GetAgreementNotSignedResponse> GetAgreementNotSigned(long accountId, CancellationToken cancellationToken = default);
 }
