@@ -91,4 +91,18 @@ public class ApprovalsApiClientTests
 
         actual.Should().BeSameAs(response);
     }
+
+    [Test, AutoData]
+    public async Task When_Calling_GetAgreementNotSigned_Then_The_Data_Is_Returned(long accountId, GetAgreementNotSignedResponse response)
+    {
+        var outerApiClient = new Mock<IOuterApiClient>();
+        var expectedUrl = $"{accountId}/unapproved/AgreementNotSigned";
+        outerApiClient.Setup(x => x.Get<GetAgreementNotSignedResponse>(expectedUrl)).ReturnsAsync(response);
+        var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
+
+        var actual = await approvalsApiClient.GetAgreementNotSigned(accountId);
+
+        actual.Should().BeSameAs(response);
+    }
+
 }

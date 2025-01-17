@@ -119,4 +119,9 @@ public class ApprovalsApiClient : IApprovalsApiClient
     {
         return _client.Get<GetSelectLevyTransferConnectionResponse>($"{accountId}/unapproved/add/select-funding/select-accepted-levy-connection");
     }
+
+    public Task<GetAgreementNotSignedResponse> GetAgreementNotSigned(long accountId, CancellationToken cancellationToken = default)
+    {
+        return _client.Get<GetAgreementNotSignedResponse>($"{accountId}/unapproved/AgreementNotSigned");
+    }
 }

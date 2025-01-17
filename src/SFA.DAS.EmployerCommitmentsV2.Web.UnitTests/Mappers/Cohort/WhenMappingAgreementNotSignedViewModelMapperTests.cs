@@ -1,16 +1,17 @@
-﻿using SFA.DAS.Encoding;
+﻿using FluentAssertions;
+using SFA.DAS.Encoding;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerCommitmentsV2.Web.Services;
-using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 
 public class WhenMappingAgreementNotSignedViewModelMapperTests
 {
-    private Mock<IEmployerAccountsService> _employerAccountsService;
+    private Mock<IApprovalsApiClient> _client;
     private Mock<IEncodingService> _encodingService;
-    private Account _account;
+    private GetAgreementNotSignedResponse _response;
     private AddApprenticeshipCacheModelToAgreementNotSignedViewModelMapper _mapper;
     private AddApprenticeshipCacheModel _cacheModel;
 
@@ -18,31 +19,30 @@ public class WhenMappingAgreementNotSignedViewModelMapperTests
     public void Arrange()
     {
         var autoFixture = new Fixture();
-        _employerAccountsService = new Mock<IEmployerAccountsService>();
+        _client = new Mock<IApprovalsApiClient>();
         _encodingService = new Mock<IEncodingService>();
         _cacheModel = autoFixture.Create<AddApprenticeshipCacheModel>();
 
-        _account = autoFixture.Create<Account>();
-        _account.Id = 123;
+        _response = autoFixture.Create<GetAgreementNotSignedResponse>();
 
         _encodingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.AccountId)).Returns(123);
-        _employerAccountsService.Setup(x => x.GetAccount(123)).ReturnsAsync(_account);            
+        _client.Setup(x => x.GetAgreementNotSigned(123, It.IsAny<CancellationToken>())).ReturnsAsync(_response);            
 
-        _mapper = new AddApprenticeshipCacheModelToAgreementNotSignedViewModelMapper(_employerAccountsService.Object, _encodingService.Object);
+        _mapper = new AddApprenticeshipCacheModelToAgreementNotSignedViewModelMapper(_client.Object, _encodingService.Object);
     }
 
-    [TestCase(ApprenticeshipEmployerType.Levy , true)]
-    [TestCase(ApprenticeshipEmployerType.NonLevy, false)]
-    public async Task Then_CanContinueAnyway_Is_Mapped(ApprenticeshipEmployerType apprenticeshipEmployerType, bool canContinue)
+    [TestCase(true)]
+    [TestCase(false)]
+    public async Task Then_CanContinueAnyway_Is_Mapped(bool isLevy)
     {
         //Arrange
-        _account.ApprenticeshipEmployerType = apprenticeshipEmployerType;
+        _response.IsLevyAccount = isLevy;
             
         //Act
         var result = await _mapper.Map(_cacheModel);
 
         //Assert           
-        Assert.That(result.CanContinueAnyway, Is.EqualTo(canContinue));
+        result.CanContinueAnyway.Should().Be(isLevy);
     }
 
     [Test]
