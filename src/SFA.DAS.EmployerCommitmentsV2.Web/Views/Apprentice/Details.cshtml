@@ -321,7 +321,7 @@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Total agreed apprenticeship price</th>
                         <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost()</td>
-                        @if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
+                        @if (Model.ShowPriceChangeLink)
                         {
                             <td class="govuk-table__cell"><a id="linkChangeApprenticeshipPrice" href="@Model.PriceChangeUrl" class="govuk-link">Change<span class="govuk-visually-hidden"> total agreed apprenticeship price</span></a></td>
                         }
