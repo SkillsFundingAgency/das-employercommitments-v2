@@ -1,5 +1,4 @@
-﻿using AspNetCore.IServiceCollection.AddIUrlHelper;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
@@ -7,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
@@ -18,7 +16,6 @@ using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 using SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Stubs;
 using SFA.DAS.EmployerUrlHelper.Configuration;
 using SFA.DAS.Encoding;
-using SFA.DAS.GovUK.Auth.Configuration;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests;
 
@@ -36,14 +33,12 @@ public class WhenAddingServicesToTheContainer
         RunTestForType(toResolve);
     }
 
-    [TestCase(typeof(EmployerCommitmentsV2Configuration))]
     [TestCase(typeof(CommitmentPermissionsApiClientConfiguration))]
     [TestCase(typeof(ZenDeskConfiguration))]
     [TestCase(typeof(CommitmentsClientApiConfiguration))]
     [TestCase(typeof(CommitmentPermissionsApiClientConfiguration))]
     [TestCase(typeof(EncodingConfig))]
     [TestCase(typeof(EmployerUrlHelperConfiguration))]
-    [TestCase(typeof(AccountApiConfiguration))]
     [TestCase(typeof(ApprovalsApiClientConfiguration))]
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_Configuration(Type toResolve)
     {
@@ -55,12 +50,6 @@ public class WhenAddingServicesToTheContainer
     [TestCase(typeof(ICommitmentsAuthorisationHandler))]
     [TestCase(typeof(IEmployerAccountAuthorisationHandler))]
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_Authorization_Services(Type toResolve)
-    {
-        RunTestForType(new TestType(toResolve.Name, toResolve));
-    }
-
-    [TestCase(typeof(IAccountApiClient))]
-    public void Then_The_Dependencies_Are_Correctly_Resolved_For_Client_Services(Type toResolve)
     {
         RunTestForType(new TestType(toResolve.Name, toResolve));
     }
@@ -113,8 +102,7 @@ public class WhenAddingServicesToTheContainer
 
         var configuration = GenerateConfiguration();
         var employerCommitmentsV2Configuration = configuration
-            .GetSection(ConfigurationKeys.EmployerCommitmentsV2)
-            .Get<EmployerCommitmentsV2Configuration>();
+            .GetSection(ConfigurationKeys.EmployerCommitmentsV2);
 
         services.AddLogging();
         services.AddSingleton<IConfiguration>(configuration);
@@ -134,7 +122,6 @@ public class WhenAddingServicesToTheContainer
 
         services.AddCommitmentsApiClient(configuration);
         services.AddApprovalsApiClient();
-        services.AddAccountsApiClient(employerCommitmentsV2Configuration);
         services.AddEncodingServices(configuration);
         services.AddAuthorizationServices(configuration);
         services.AddDasEmployerAuthentication(configuration);
@@ -177,9 +164,6 @@ public class WhenAddingServicesToTheContainer
 
                 new($"{ConfigurationKeys.EmployerFeaturesConfiguration}:FeatureToggles:Feature", "DeliveryModel"),
                 new($"{ConfigurationKeys.EmployerFeaturesConfiguration}:FeatureToggles:IsEnabled", "false"),
-
-                new($"{ConfigurationKeys.AccountApiConfiguration}:ApiBaseUrl", "https://internal.test/"),
-                new($"{ConfigurationKeys.AccountApiConfiguration}:IdentifierUrl", "https://internal.test/"),
 
                 new($"{ConfigurationKeys.ZenDeskConfiguration}:SectionId", "235345345"),
                 new($"{ConfigurationKeys.ZenDeskConfiguration}:SnippetKey", Guid.NewGuid().ToString()),
