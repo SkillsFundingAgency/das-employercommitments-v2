@@ -1,8 +1,5 @@
 ﻿using FluentAssertions;
-using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
-using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
@@ -16,19 +13,20 @@ public class ApprenticeViewModelMapperTests
     private ApprenticeViewModelMapper _mapper;
     private Mock<IApprovalsApiClient> _approvalsApiClient;
     private GetAddFirstDraftApprenticeshipResponse _response;
-    private ApprenticeRequest _source;
+    private AddApprenticeshipCacheModel _source;
     private ApprenticeViewModel _result;
 
     [SetUp]
     public async Task Arrange()
     {
         var autoFixture = new Fixture();
-        _source = autoFixture.Create<ApprenticeRequest>();
+        _source = autoFixture.Create<AddApprenticeshipCacheModel>();
         _source.TransferSenderId = string.Empty;
         _source.AccountId = 12345;
         var startDate = new DateTime(2020, 06, 01);
         _source.StartMonthYear = startDate.ToString("MMyyyy");
-
+        _source.StartMonth = 6;
+        _source.StartYear = 2020;
 
         _response = autoFixture.Create<GetAddFirstDraftApprenticeshipResponse>();
         _approvalsApiClient = new Mock<IApprovalsApiClient>();

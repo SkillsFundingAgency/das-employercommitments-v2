@@ -25,6 +25,7 @@ public interface IApprovalsApiClient
     Task<GetSelectProviderDetailsResponse> GetSelectProviderDetails(long accountId, long accountLegalEntityId, CancellationToken cancellationToken = default);
     Task<GetSelectFundingOptionsResponse> GetSelectFundingOptions(long accountId, CancellationToken cancellationToken = default);
     Task<GetSelectDirectTransferConnectionResponse> GetSelectDirectTransferConnection(long accountId, CancellationToken cancellationToken = default);
+    Task<GetSelectLevyTransferConnectionResponse> GetSelectLevyTransferConnection(long accountId, CancellationToken cancellationToken = default);
     Task<GetFundingBandDataResponse> GetFundingBandDataByCourseCodeAndStartDate(string courseCode, DateTime? startDate, CancellationToken cancellationToken = default);
     Task<GetAddFirstDraftApprenticeshipResponse> GetAddFirstDraftApprenticeshipDetails(long accountId, long accountLegalEntityId, long providerId, string courseCode, DateTime? startDate = null, CancellationToken cancellationToken = default);
     Task<GetAddAnotherDraftApprenticeshipResponse> GetAddAnotherDraftApprenticeshipDetails(long accountId, long cohortId, string courseCode, DateTime? startDate = null, CancellationToken cancellationToken = default);

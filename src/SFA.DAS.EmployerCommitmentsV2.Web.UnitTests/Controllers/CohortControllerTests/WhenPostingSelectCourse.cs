@@ -1,4 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using FluentAssertions;
+using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
@@ -10,18 +11,19 @@ public class WhenPostingSelectCourse
 {
     [Test, MoqAutoData]
     public async Task ThenReturnsRedirect(
-        ApprenticeRequest request,
+        AddApprenticeshipCacheModel cacheModel,
         SelectCourseViewModel viewModel,
-        [Frozen] Mock<IModelMapper> mockMapper,
+        [Frozen] Mock<ICacheStorageService> cacheStorageService,
         [Greedy] CohortController controller)
     {
-        mockMapper
-            .Setup(mapper => mapper.Map<ApprenticeRequest>(viewModel))
-            .ReturnsAsync(request);
+        cacheStorageService
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(viewModel.ApprenticeshipSessionKey.Value))
+           .ReturnsAsync(cacheModel);
 
         var result = await controller.SelectCourse(viewModel) as RedirectToActionResult;
-
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.ActionName, Is.EqualTo("SelectDeliveryModel"));
+        result.Should().NotBeNull();
+        result.ActionName.Should().BeEquivalentTo("SelectDeliveryModel");
+        result.RouteValues["AccountHashedId"].Should().Be(cacheModel.AccountHashedId);
+        result.RouteValues["ApprenticeshipSessionKey"].Should().Be(cacheModel.ApprenticeshipSessionKey);
     }
 }

@@ -1,9 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @using SFA.DAS.EmployerUrlHelper.Mvc
 
 @{
-    ViewBag.Title = "Select a connection to transfer from";
+    ViewBag.Title = "Select a connection";
     ViewBag.GaData.Vpv = "/unapproved/add/select-funding/select-direct-connection";
 }
 
@@ -37,9 +38,10 @@
 
             <h1 class="govuk-heading-m">Which connection would you like to select?</h1>
 
+            @Html.HiddenFor(x => x.ApprenticeshipSessionKey)
             @Html.AntiForgeryToken()
 
-            <div class="govuk-form-group">
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.TransferConnectionCode, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset" id="radio-lines">
                     @if (!ViewData.ModelState.IsValid)
                     {
@@ -54,9 +56,14 @@
                                 <input class="govuk-radios__input" id="TransferConnection-@entity.FundingEmployerPublicHashedAccountId" name="TransferConnectionCode" type="radio" value="@entity.FundingEmployerPublicHashedAccountId">
                                 <label class="govuk-label govuk-radios__label" for="TransferConnection-@entity.FundingEmployerPublicHashedAccountId">
                                     @entity.FundingEmployerAccountName
+                                    @if (entity.ApprovedOn.HasValue)
+                                    {
+                                        <p class="govuk-hint">
+                                            Connection approved on @entity.ApprovedOn.Value.ToString("dd MMM yyyy") 
+                                        </p>
+                                    }
                                 </label>
                             </div>
-                            <hr />
                         }
                     </div>
                 </fieldset>

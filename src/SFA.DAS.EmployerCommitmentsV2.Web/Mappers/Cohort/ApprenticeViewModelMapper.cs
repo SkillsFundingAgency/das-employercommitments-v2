@@ -2,11 +2,10 @@
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class ApprenticeViewModelMapper : IMapper<ApprenticeRequest, ApprenticeViewModel>
+public class ApprenticeViewModelMapper : IMapper<AddApprenticeshipCacheModel, ApprenticeViewModel>
 {
     private readonly IApprovalsApiClient _client;
 
@@ -15,7 +14,7 @@ public class ApprenticeViewModelMapper : IMapper<ApprenticeRequest, ApprenticeVi
         _client = client;
     }
 
-    public async Task<ApprenticeViewModel> Map(ApprenticeRequest source)
+    public async Task<ApprenticeViewModel> Map(AddApprenticeshipCacheModel source)
     {
         var startDate = new MonthYearModel(source.StartMonthYear);
 
@@ -36,10 +35,24 @@ public class ApprenticeViewModelMapper : IMapper<ApprenticeRequest, ApprenticeVi
             Courses = null,
             TransferSenderId = source.TransferSenderId,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
-            Origin = source.Origin,
             DeliveryModel = source.DeliveryModel,
             IsOnFlexiPaymentPilot = false,
-            CacheKey = source.CacheKey.IsNotNullOrEmpty() ? source.CacheKey : Guid.NewGuid(),
+            FirstName = source.FirstName,
+            LastName = source.LastName,
+            Email = source.Email,
+            BirthDay = source.BirthDay,
+            BirthMonth = source.BirthMonth,
+            BirthYear = source.BirthYear,
+            StartMonth = source.StartMonth,
+            StartYear = source.StartYear,
+            EndMonth = source.EndMonth,
+            EndYear = source.EndYear,
+            EmploymentEndMonth = source.EmploymentEndMonth,
+            EmploymentEndYear = source.EmploymentEndYear,
+            Cost = source.Cost,
+            EmploymentPrice = source.EmploymentPrice,
+            Reference = source.Reference,
+            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey,
             StandardPageUrl = details.StandardPageUrl,
             FundingBandMax = details.ProposedMaxFunding
         };

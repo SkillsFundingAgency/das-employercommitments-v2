@@ -12,8 +12,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.CohortControll
 public class WhenGetingAddDraftApprenticeship
 {
     [Test, MoqAutoData]
-    public async Task ThenReturnsViewWhenNoModelInCache(
-        ApprenticeRequest request,
+    public async Task ThenReturnsViewWhenModelIsInCacheAndNoCoursePresent(
+        AddApprenticeshipCacheModel cacheModel,
         [Frozen] Mock<IModelMapper> mockMapper,
         [Frozen] Mock<ICacheStorageService> cacheStorageService,
         [Greedy] CohortController controller)
@@ -21,14 +21,14 @@ public class WhenGetingAddDraftApprenticeship
         var viewModel = new ApprenticeViewModel();
 
         cacheStorageService
-            .Setup(x => x.RetrieveFromCache<ApprenticeViewModel>(It.IsAny<Guid>()))
-            .ReturnsAsync((ApprenticeViewModel)null);
+            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(It.IsAny<Guid>()))
+            .ReturnsAsync(cacheModel);
 
         mockMapper
-            .Setup(mapper => mapper.Map<ApprenticeViewModel>(request))
+            .Setup(mapper => mapper.Map<ApprenticeViewModel>(cacheModel))
             .ReturnsAsync(viewModel);
 
-        var result = await controller.AddDraftApprenticeship(request) as ViewResult;
+        var result = await controller.AddDraftApprenticeship(Guid.NewGuid()) as ViewResult;
 
         result.Should().NotBeNull();
         result.ViewName.Should().Be("Apprentice");
@@ -36,43 +36,46 @@ public class WhenGetingAddDraftApprenticeship
     }
 
     [Test, MoqAutoData]
-    public async Task ThenReturnsViewWhenModelIsInCache(
+    public async Task ThenReturnsViewWhenModelIsInCacheAndHasCoursePresent(
        ApprenticeRequest request,
+       AddApprenticeshipCacheModel cacheModel,
        GetFundingBandDataResponse fundingDataResponse,
        [Frozen] Mock<IModelMapper> mockMapper,
        [Frozen] Mock<IApprovalsApiClient> mockApprovalsApiClient,
        [Frozen] Mock<ICacheStorageService> cacheStorageService,
        [Greedy] CohortController controller)
     {
-        var viewModel = new ApprenticeViewModel();
-        var cacheItem = new ApprenticeViewModel
+        var viewModel= new ApprenticeViewModel
         {
             DeliveryModel = CommitmentsV2.Types.DeliveryModel.Regular,
-            CourseCode = "CourseCode",
-            CacheKey = request.CacheKey            
+            CourseCode = "CourseCode"
         };
+        cacheStorageService
+            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
+            .ReturnsAsync(cacheModel);
 
         cacheStorageService
-            .Setup(x => x.RetrieveFromCache<ApprenticeViewModel>(cacheItem.CacheKey.Value))
-            .ReturnsAsync(cacheItem);
+            .Setup(x => x.SaveToCache(It.IsAny<Guid>(), It.IsAny<AddApprenticeshipCacheModel>(), 1))
+            .Returns(Task.CompletedTask);
 
         mockMapper
-            .Setup(mapper => mapper.Map<ApprenticeViewModel>(request))
+            .Setup(mapper => mapper.Map<ApprenticeViewModel>(cacheModel))
             .ReturnsAsync(viewModel);
 
         mockApprovalsApiClient
             .Setup(x => x.GetFundingBandDataByCourseCodeAndStartDate(It.IsAny<string>(), It.IsAny<DateTime?>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(fundingDataResponse);
 
-        var result = await controller.AddDraftApprenticeship(request) as ViewResult;
+        var result = await controller.AddDraftApprenticeship(cacheModel.ApprenticeshipSessionKey) as ViewResult;
         result.Should().NotBeNull();
         result.ViewName.Should().Be("Apprentice");
 
         var resultObject = result.Model as ApprenticeViewModel;
 
         resultObject.Should().NotBeNull();
-        resultObject.DeliveryModel.Should().Be(cacheItem.DeliveryModel);
-        resultObject.CourseCode.Should().Be(cacheItem.CourseCode);
+        resultObject.Should().BeEquivalentTo(viewModel);
+        resultObject.DeliveryModel.Should().Be(viewModel.DeliveryModel);
+        resultObject.CourseCode.Should().Be(viewModel.CourseCode);
         resultObject.StandardPageUrl.Should().Be(fundingDataResponse.StandardPageUrl);
         resultObject.FundingBandMax.Should().Be(fundingDataResponse.ProposedMaxFunding);
     }

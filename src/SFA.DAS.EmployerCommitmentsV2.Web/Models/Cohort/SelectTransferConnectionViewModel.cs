@@ -11,4 +11,5 @@ public class SelectTransferConnectionViewModel
     public string TransferConnectionCode { get; set; }
 
     public List<TransferConnection> TransferConnections { get; set; }
+    public Guid? ApprenticeshipSessionKey { get; set; }
 }

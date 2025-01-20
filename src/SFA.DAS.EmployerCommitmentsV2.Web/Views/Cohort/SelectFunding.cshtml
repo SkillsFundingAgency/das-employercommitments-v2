@@ -6,7 +6,6 @@
     ViewBag.GaData.Vpv = "/unapproved/select-funding/create/choose-funding-type";
 }
 
-
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.SelectFundingViewModel
 
 <div class="govuk-grid-row">
@@ -16,18 +15,15 @@
 
         <h1 class="govuk-heading-l">@ViewBag.Title</h1>
 
-        <div class="govuk-body">
-            You can choose existing funding that you have previously applied for or
-            reserve new funding.
-        </div>
-
         <form method="POST">
 
         @Html.AntiForgeryToken()
-
-        <h1 class="govuk-heading-m">What funding would you like to select?</h1>
+        @Html.HiddenFor(x => x.ApprenticeshipSessionKey)
 
         <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.FundingType,  "govuk-form-group--error")">
+            <div class="govuk-hint">
+                You can choose from funds you've already set up or reserve new existing funding.
+            </div>
             <fieldset class="govuk-fieldset">
                 @if (!ViewData.ModelState.IsValid)
                 {
@@ -36,32 +32,34 @@
                     </span>
                 }
                 <div class="govuk-radios">
-                    @if(Model.HasDirectTransfersAvailable)
+                        @if (Model.HasLtmTransfersAvailable)
                     {
                         <div class="govuk-radios__item" id="radio-item-funding-type">
-                                <input class="govuk-radios__input" id="FundingType-1" name="FundingType" type="radio" value="1">
-                                <label class="govuk-label govuk-radios__label" for="FundingType-1">
-                                    @if (Model.IsLevyAccount)
-                                    {
-                                        <span>Transfer funds from a connection</span>
-                                        <p class="govuk-hint">
-                                            A levy paying business that has set up a connection with you in the service
-                                        </p>
-                                    }
-                                    else
-                                    {
-                                        <span>Direct transfer funds from a connection</span>
-                                        <p class="govuk-hint">
-                                            A direct transfer from an organisation you're connected with
-                                        </p>
-                                    }
-                                </label>
+                            <input class="govuk-radios__input" id="FundingType-5" name="FundingType" type="radio" value="5">
+                            <label class="govuk-label govuk-radios__label" for="FundingType-5">
+                                <span>Transfer funds</span>
+                                <p class="govuk-hint">
+                                    A funding opportunity (pledge) from a levy-paying business
+                                </p>
+                            </label>
                         </div>
                     }
-                    @if(!Model.IsLevyAccount && Model.HasUnallocatedReservationsAvailable)
+                    @if (Model.HasDirectTransfersAvailable)
                     {
                         <div class="govuk-radios__item" id="radio-item-funding-type">
-                                <input class="govuk-radios__input" id="FundingType-2" name="FundingType" type="radio" value="2">
+                            <input class="govuk-radios__input" id="FundingType-1" name="FundingType" type="radio" value="1">
+                            <label class="govuk-label govuk-radios__label" for="FundingType-1">
+                                <span>Transfer funds from a connection</span>
+                                <p class="govuk-hint">
+                                    A levy-paying business that has set up a connection with you in the service
+                                </p>
+                            </label>
+                        </div>
+                    }
+                    @if (!Model.IsLevyAccount && Model.HasUnallocatedReservationsAvailable)
+                    {
+                        <div class="govuk-radios__item" id="radio-item-funding-type">
+                            <input class="govuk-radios__input" id="FundingType-2" name="FundingType" type="radio" value="2">
                             <label class="govuk-label govuk-radios__label" for="FundingType-2">
                                 Reserved funds
                                 <p class="govuk-hint">
@@ -73,7 +71,7 @@
                     @if (!Model.IsLevyAccount && Model.HasAdditionalReservationFundsAvailable)
                     {
                         <div class="govuk-radios__item" id="radio-item-funding-type">
-                                <input class="govuk-radios__input" id="FundingType-3" name="FundingType" type="radio" value="3">
+                            <input class="govuk-radios__input" id="FundingType-3" name="FundingType" type="radio" value="3">
                             <label class="govuk-label govuk-radios__label" for="FundingType-3">
                                 I want to reserve new funds
                                 <p class="govuk-hint">
