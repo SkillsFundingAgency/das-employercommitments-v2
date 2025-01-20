@@ -378,6 +378,7 @@ public class CohortController : Controller
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
 
         var model = await _modelMapper.Map<ApprenticeViewModel>(cacheModel);
+        await AssignFundingDetailsToModel(model);
 
         return View(RouteNames.CohortApprentice, model);
     }
@@ -750,4 +751,13 @@ public class CohortController : Controller
         cacheModel.StartYear = monthYearModel.Year;
     }
 
+    private async Task AssignFundingDetailsToModel(DraftApprenticeshipViewModel model)
+    {
+        if (!string.IsNullOrEmpty(model?.CourseCode))
+        {
+            var fundingBandData = await _approvalsApiClient.GetFundingBandDataByCourseCodeAndStartDate(model.CourseCode, model.StartDate.Date);
+            model.FundingBandMax = fundingBandData?.ProposedMaxFunding;
+            model.StandardPageUrl = fundingBandData?.StandardPageUrl;
+        }
+    }
 }

@@ -1,29 +1,37 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class ApprenticeViewModelMapper(ICommitmentsApiClient commitmentsApiClient) : IMapper<AddApprenticeshipCacheModel, ApprenticeViewModel>
-{   
+public class ApprenticeViewModelMapper : IMapper<AddApprenticeshipCacheModel, ApprenticeViewModel>
+{
+    private readonly IApprovalsApiClient _client;
+
+    public ApprenticeViewModelMapper(IApprovalsApiClient client)
+    {
+        _client = client;
+    }
+
     public async Task<ApprenticeViewModel> Map(AddApprenticeshipCacheModel source)
     {
-        var accountLegalEntity = await commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
+        var startDate = new MonthYearModel(source.StartMonthYear);
 
-        var provider = await commitmentsApiClient.GetProvider(source.ProviderId);
+        var details = await _client.GetAddFirstDraftApprenticeshipDetails(source.AccountId, source.AccountLegalEntityId,
+            source.ProviderId, source.CourseCode, startDate.Date);
 
         var result = new ApprenticeViewModel
         {
             AccountHashedId = source.AccountHashedId,
             AccountLegalEntityId = source.AccountLegalEntityId,
             AccountLegalEntityHashedId = source.AccountLegalEntityHashedId,
-            LegalEntityName = accountLegalEntity.LegalEntityName,
-            StartDate = new MonthYearModel(source.StartMonthYear),
+            LegalEntityName = details.LegalEntityName,
+            StartDate = startDate,
             ReservationId = source.ReservationId,
             CourseCode = source.CourseCode,
             ProviderId = (int)source.ProviderId,
-            ProviderName = provider.Name,
+            ProviderName = details.ProviderName,
             Courses = null,
             TransferSenderId = source.TransferSenderId,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
@@ -44,7 +52,9 @@ public class ApprenticeViewModelMapper(ICommitmentsApiClient commitmentsApiClien
             Cost = source.Cost,
             EmploymentPrice = source.EmploymentPrice,
             Reference = source.Reference,
-            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey
+            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey,
+            StandardPageUrl = details.StandardPageUrl,
+            FundingBandMax = details.ProposedMaxFunding
         };
 
         return result;
