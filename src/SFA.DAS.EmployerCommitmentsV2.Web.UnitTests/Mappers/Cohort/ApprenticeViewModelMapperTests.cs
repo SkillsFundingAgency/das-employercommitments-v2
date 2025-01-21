@@ -1,8 +1,7 @@
 ﻿using FluentAssertions;
-using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
-using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
@@ -12,54 +11,29 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Cohort;
 public class ApprenticeViewModelMapperTests
 {
     private ApprenticeViewModelMapper _mapper;
-    private Mock<ICommitmentsApiClient> _commitmentsApiClient;
-    private GetProviderResponse _providerResponse;
-    private AccountLegalEntityResponse _accountLegalEntityResponse;
+    private Mock<IApprovalsApiClient> _approvalsApiClient;
+    private GetAddFirstDraftApprenticeshipResponse _response;
     private AddApprenticeshipCacheModel _source;
     private ApprenticeViewModel _result;
-    private TrainingProgramme _courseStandard;
-    private TrainingProgramme _course;
-    private List<TrainingProgramme> _allTrainingProgrammes;
-    private List<TrainingProgramme> _standardTrainingProgrammes;
 
     [SetUp]
     public async Task Arrange()
     {
         var autoFixture = new Fixture();
-
-        _course = autoFixture.Create<TrainingProgramme>();
-        _courseStandard = autoFixture.Create<TrainingProgramme>();
-        _providerResponse = autoFixture.Create<GetProviderResponse>();
-        _accountLegalEntityResponse = autoFixture.Build<AccountLegalEntityResponse>().With(x => x.LevyStatus, ApprenticeshipEmployerType.Levy).Create();
         _source = autoFixture.Create<AddApprenticeshipCacheModel>();
-        _source.StartMonthYear = "062020";
+        _source.TransferSenderId = string.Empty;
+        _source.AccountId = 12345;
+        var startDate = new DateTime(2020, 06, 01);
+        _source.StartMonthYear = startDate.ToString("MMyyyy");
         _source.StartMonth = 6;
         _source.StartYear = 2020;
 
-        _source.TransferSenderId = string.Empty;
-        _source.AccountId = 12345;
+        _response = autoFixture.Create<GetAddFirstDraftApprenticeshipResponse>();
+        _approvalsApiClient = new Mock<IApprovalsApiClient>();
+        _approvalsApiClient.Setup(x => x.GetAddFirstDraftApprenticeshipDetails(_source.AccountId, _source.AccountLegalEntityId, _source.ProviderId, _source.CourseCode, startDate, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_response);
 
-        _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
-        _commitmentsApiClient.Setup(x => x.GetProvider(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_providerResponse);
-        _commitmentsApiClient.Setup(x => x.GetAccountLegalEntity(_source.AccountLegalEntityId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_accountLegalEntityResponse);
-        _standardTrainingProgrammes = new List<TrainingProgramme> { _courseStandard };
-        _commitmentsApiClient
-            .Setup(x => x.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse
-            {
-                TrainingProgrammes = _standardTrainingProgrammes
-            });
-        _allTrainingProgrammes = new List<TrainingProgramme> { _courseStandard, _course };
-        _commitmentsApiClient
-            .Setup(x => x.GetAllTrainingProgrammes(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GetAllTrainingProgrammesResponse
-            {
-                TrainingProgrammes = _allTrainingProgrammes
-            });
-
-        _mapper = new ApprenticeViewModelMapper(_commitmentsApiClient.Object);
+        _mapper = new ApprenticeViewModelMapper(_approvalsApiClient.Object);
 
         _result = await _mapper.Map(TestHelper.Clone(_source));
     }
@@ -79,7 +53,7 @@ public class ApprenticeViewModelMapperTests
     [Test]
     public void AccountLegalEntityNameIsMappedCorrectly()
     {
-        _result.LegalEntityName.Should().Be(_accountLegalEntityResponse.LegalEntityName);
+        _result.LegalEntityName.Should().Be(_response.LegalEntityName);
     }
 
     [Test]
@@ -109,7 +83,7 @@ public class ApprenticeViewModelMapperTests
     [Test]
     public void ProviderNameIsMappedCorrectly()
     {
-        _result.ProviderName.Should().Be(_providerResponse.Name);
+        _result.ProviderName.Should().Be(_response.ProviderName);
     }
 
     [Test]
@@ -122,5 +96,17 @@ public class ApprenticeViewModelMapperTests
     public void EncodedPledgeApplicationIdIsMappedCorrectly()
     {
         _result.EncodedPledgeApplicationId.Should().Be(_source.EncodedPledgeApplicationId);
+    }
+
+    [Test]
+    public void StandardPageUrlIsMappedCorrectly()
+    {
+        _result.StandardPageUrl.Should().Be(_response.StandardPageUrl);
+    }
+
+    [Test]
+    public void FundingBandMaxIsMappedCorrectly()
+    {
+        _result.FundingBandMax.Should().Be(_response.ProposedMaxFunding);
     }
 }
