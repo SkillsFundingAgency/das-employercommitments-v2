@@ -591,6 +591,8 @@ public class CohortController : Controller
 
         switch (selectedFunding.FundingType)
         {
+            case FundingType.LtmTransfers:
+                return RedirectToAction(RouteNames.CohortSelectAcceptedLevyTransferConnection, new {cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey});
             case FundingType.DirectTransfers:
                 return RedirectToAction(RouteNames.CohortSelectDirectTransferConnection, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
             case FundingType.UnallocatedReservations:
@@ -662,7 +664,6 @@ public class CohortController : Controller
 
         cacheModel.EncodedPledgeApplicationId = ids[0];
         cacheModel.TransferSenderId = ids[1];
-        cacheModel.AccountLegalEntityHashedId = selectedLevyTransferConnection.AccountLegalEntityHashedId;
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
         return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
