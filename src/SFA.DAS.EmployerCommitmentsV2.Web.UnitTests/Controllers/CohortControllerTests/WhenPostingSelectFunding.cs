@@ -48,6 +48,19 @@ public class WhenPostingSelectFunding
     public void TearDown() => _controller?.Dispose();
 
     [Test]
+    public async Task And_SelectedFunding_Is_Levy_Approved_Transfer_Then_Redirect_To_LTMTransfersConnection()
+    {
+        _model.FundingType = FundingType.LtmTransfers;
+
+        var result = await _controller.SelectFundingType(_model);
+
+        var redirectToActionResult = result as RedirectToActionResult;
+        redirectToActionResult.ActionName.Should().Be("SelectAcceptedLevyTransferConnection");
+        redirectToActionResult.RouteValues["AccountHashedId"].Should().Be(_cacheModel.AccountHashedId);
+        redirectToActionResult.RouteValues["ApprenticeshipSessionKey"].Should().Be(_cacheModel.ApprenticeshipSessionKey);
+    }
+
+    [Test]
     public async Task And_SelectedFunding_Is_Direct_Transfer_Then_Redirect_To_SelectDirectTransferConnection()
     {
         _model.FundingType = FundingType.DirectTransfers;
