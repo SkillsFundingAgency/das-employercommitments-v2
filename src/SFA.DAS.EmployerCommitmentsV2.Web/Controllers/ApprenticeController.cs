@@ -888,6 +888,15 @@ public class ApprenticeController : Controller
 
         // Get Edit Model if it exists to pre-select version if navigating back
         var editApprenticeViewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
+        
+        _logger.LogInformation("ApprenticeController.ChangeVersion editApprenticeViewModel: {Data}", JsonSerializer.Serialize(editApprenticeViewModel));
+
+        if (editApprenticeViewModel == null)
+        {
+            viewModel.AccountHashedId = request.AccountHashedId;
+            viewModel.ApprenticeshipHashedId = request.ApprenticeshipHashedId;
+            viewModel.CacheKey = request.CacheKey;
+        }
 
         if (editApprenticeViewModel != null && !string.IsNullOrWhiteSpace(editApprenticeViewModel.Version))
         {
