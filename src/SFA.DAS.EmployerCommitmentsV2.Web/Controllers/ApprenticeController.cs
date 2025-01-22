@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
@@ -882,6 +883,8 @@ public class ApprenticeController : Controller
     public async Task<IActionResult> ChangeVersion(ChangeVersionRequest request)
     {
         var viewModel = await _modelMapper.Map<ChangeVersionViewModel>(request);
+        
+        _logger.LogInformation("ApprenticeController.ChangeVersion request: {Data}", JsonSerializer.Serialize(request));
 
         // Get Edit Model if it exists to pre-select version if navigating back
         var editApprenticeViewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
@@ -890,7 +893,9 @@ public class ApprenticeController : Controller
         {
             viewModel.SelectedVersion = editApprenticeViewModel.Version;
         }
-
+        
+        _logger.LogInformation("ApprenticeController.ChangeVersion viewModel: {Data}", JsonSerializer.Serialize(viewModel));
+        
         return View(viewModel);
     }
 
