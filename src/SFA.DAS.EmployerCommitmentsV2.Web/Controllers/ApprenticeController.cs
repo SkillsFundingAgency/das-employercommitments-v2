@@ -884,26 +884,13 @@ public class ApprenticeController : Controller
     {
         var viewModel = await _modelMapper.Map<ChangeVersionViewModel>(request);
         
-        _logger.LogInformation("ApprenticeController.ChangeVersion request: {Data}", JsonSerializer.Serialize(request));
-
         // Get Edit Model if it exists to pre-select version if navigating back
         var editApprenticeViewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
         
-        _logger.LogInformation("ApprenticeController.ChangeVersion editApprenticeViewModel: {Data}", JsonSerializer.Serialize(editApprenticeViewModel));
-
-        if (editApprenticeViewModel == null)
-        {
-            viewModel.AccountHashedId = request.AccountHashedId;
-            viewModel.ApprenticeshipHashedId = request.ApprenticeshipHashedId;
-            viewModel.CacheKey = request.CacheKey;
-        }
-
         if (editApprenticeViewModel != null && !string.IsNullOrWhiteSpace(editApprenticeViewModel.Version))
         {
             viewModel.SelectedVersion = editApprenticeViewModel.Version;
         }
-        
-        _logger.LogInformation("ApprenticeController.ChangeVersion viewModel: {Data}", JsonSerializer.Serialize(viewModel));
         
         return View(viewModel);
     }
