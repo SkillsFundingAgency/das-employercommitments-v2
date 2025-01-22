@@ -60,5 +60,5 @@
 </form>
 
 @section back {
-    <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ApprenticeDetail)">Back</a>
+    <a id="back-link" class="govuk-back-link" href="@Url.RouteUrl(RouteNames.ApprenticeDetail, new { Model.ApprenticeshipHashedId })">Back</a>
 }
