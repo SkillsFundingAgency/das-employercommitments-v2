@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -15,7 +16,7 @@ public class SelectProviderViewModelMapper(IApprovalsApiClient outerApiClient, I
         var accountLegalEntity = selectProviderDetails.AccountLegalEntity;
         
         logger.LogInformation("SelectProviderViewModelMapper source: {Data}", JsonSerializer.Serialize(source));
-
+        
         return new SelectProviderViewModel
         {
             AccountHashedId = source.AccountHashedId,

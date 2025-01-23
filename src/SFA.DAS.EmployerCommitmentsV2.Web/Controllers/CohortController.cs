@@ -550,10 +550,21 @@ public class CohortController : Controller
         cacheModel.CohortRef = response.CohortRef;
 
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
-
+         
         if (response.HasSignedMinimumRequiredAgreementVersion)
         {
-            return RedirectToAction(RouteNames.CohortSelectFunding, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
+            object routeValues;
+
+            if (string.IsNullOrEmpty(selectedLegalEntity.EncodedPledgeApplicationId))
+            {
+                routeValues = new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey };   
+            }
+            else
+            {
+                routeValues = new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey, selectedLegalEntity.EncodedPledgeApplicationId };
+            }
+            
+            return RedirectToAction(RouteNames.CohortSelectFunding, routeValues);
         }
 
         return RedirectToAction(RouteNames.CohortAgreementNotSigned, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
