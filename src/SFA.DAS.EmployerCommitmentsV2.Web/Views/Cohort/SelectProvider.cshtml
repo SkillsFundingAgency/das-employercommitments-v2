@@ -1,7 +1,10 @@
-﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+﻿@using Microsoft.AspNetCore.Http
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @using SFA.DAS.EmployerUrlHelper.Mvc
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.SelectProviderViewModel
+
+@inject IHttpContextAccessor ContextAccessor;
 @{
     ViewData["Title"] = "Apprenticeships";
     ViewBag.Title = "Add training provider details";
@@ -77,10 +80,14 @@
                 Model.StartMonthYear
             }, new { @class = "govuk-back-link", id = "back-link" })
     }
-    else if (Model.Origin == Origin.LevyTransferMatching)
+    else if (Model.Origin == Origin.LevyTransferMatching && ContextAccessor.HttpContext?.Request.Query["encodedpledgeapplicationid"].ToString() != null)
     {
         <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications/{Model.EncodedPledgeApplicationId}")"
             id="back-link" class="govuk-back-link">Back</a>
+    }
+    else if (Model.Origin == Origin.LevyTransferMatching && ContextAccessor.HttpContext?.Request.Query["encodedpledgeapplicationid"].ToString() == null)
+    {
+        <a href="@Url.Action("SelectFunding", "Cohort", new { Model.AccountHashedId, Model.ApprenticeshipSessionKey })" id="back-link" class="govuk-back-link">Back</a>
     }
     else
     {
