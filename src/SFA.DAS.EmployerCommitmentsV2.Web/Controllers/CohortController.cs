@@ -51,20 +51,20 @@ public class CohortController(
         {
             case CohortDetailsOptions.Send:
             case CohortDetailsOptions.Approve:
-                {
-                    var request = await modelMapper.Map<AcknowledgementRequest>(viewModel);
-                    var acknowledgementAction = viewModel.Selection == CohortDetailsOptions.Approve ? "Approved" : "Sent";
-                    return RedirectToAction(acknowledgementAction, request);
-                }
+            {
+                var request = await modelMapper.Map<AcknowledgementRequest>(viewModel);
+                var acknowledgementAction = viewModel.Selection == CohortDetailsOptions.Approve ? "Approved" : "Sent";
+                return RedirectToAction(acknowledgementAction, request);
+            }
             case CohortDetailsOptions.ViewEmployerAgreement:
-                {
-                    var request = await modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
-                    return ViewEmployeeAgreementRedirect(request);
-                }
+            {
+                var request = await modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
+                return ViewEmployeeAgreementRedirect(request);
+            }
             case CohortDetailsOptions.Homepage:
-                {
-                    return Redirect(linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
-                }
+            {
+                return Redirect(linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
+            }
             default:
                 throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
         }
@@ -91,6 +91,7 @@ public class CohortController(
         {
             return Redirect(linkGenerator.AccountsLink($"accounts/{request.AccountHashedId}/agreements/"));
         }
+
         return Redirect(linkGenerator.AccountsLink(
             $"accounts/{request.AccountHashedId}/agreements/{request.AgreementHashedId}/about-your-agreement"));
     }
@@ -113,6 +114,7 @@ public class CohortController(
             await commitmentsApiClient.DeleteCohort(viewModel.CohortId, authenticationService.UserInfo, CancellationToken.None);
             return RedirectToAction(RouteNames.CohortReview, new { viewModel.CohortReference, viewModel.AccountHashedId });
         }
+
         return RedirectToAction(RouteNames.CohortDetails, new { viewModel.CohortReference, viewModel.AccountHashedId });
     }
 
@@ -343,7 +345,7 @@ public class CohortController(
         if (model.DeliveryModel == null)
         {
             throw new CommitmentsApiModelException(new List<ErrorDetail>
-                {new ErrorDetail("DeliveryModel", "You must select the apprenticeship delivery model")});
+                { new ErrorDetail("DeliveryModel", "You must select the apprenticeship delivery model") });
         }
 
         cacheModel.DeliveryModel = model.DeliveryModel;
@@ -485,8 +487,8 @@ public class CohortController(
         [FromQuery] string transferConnectionCode = null)
     {
         var cacheModel = apprenticeshipSessionKey.HasValue
-        ? await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey)
-        : await CreateAndStoreNewCacheModelFromLevyTransfer(accountHashedId, encodedPledgeApplicationId, transferConnectionCode);
+            ? await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey)
+            : await CreateAndStoreNewCacheModelFromLevyTransfer(accountHashedId, encodedPledgeApplicationId, transferConnectionCode);
 
         var response = await modelMapper.Map<SelectLegalEntityViewModel>(cacheModel);
 
@@ -532,20 +534,20 @@ public class CohortController(
         cacheModel.CohortRef = response.CohortRef;
 
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
-         
+
         if (response.HasSignedMinimumRequiredAgreementVersion)
         {
             object routeValues;
 
             if (string.IsNullOrEmpty(selectedLegalEntity.EncodedPledgeApplicationId))
             {
-                routeValues = new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey };   
+                routeValues = new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey };
             }
             else
             {
                 routeValues = new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey, fromLtmWeb = true };
             }
-            
+
             return RedirectToAction(RouteNames.CohortSelectFunding, routeValues);
         }
 
@@ -554,27 +556,24 @@ public class CohortController(
 
     [HttpGet]
     [Route("add/select-funding")]
-    public async Task<IActionResult> SelectFunding([FromQuery] Guid apprenticeshipSessionKey, [FromQuery] bool fromLtmWeb = false, [FromQuery] bool sourceBackLink = false)
+    public async Task<IActionResult> SelectFunding([FromQuery] Guid apprenticeshipSessionKey)
     {
-        logger.LogInformation("CohortController.SelectFunding fromLtmWeb: {FromLtmWeb}, sourceBackLink: {SourceBackLink}", fromLtmWeb, sourceBackLink);
-        
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
 
-        if (!sourceBackLink && (cacheModel.EncodedPledgeApplicationId != null || cacheModel.TransferSenderId != null))
+        if (cacheModel.EncodedPledgeApplicationId != null || cacheModel.TransferSenderId != null)
         {
-            logger.LogInformation("CohortController.SelectFunding RedirectToAction = RouteNames.CohortSelectProvider cacheModel params");
-            return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey, fromLtmWeb });
+            return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
         }
 
         var viewModel = await modelMapper.Map<SelectFundingViewModel>(cacheModel);
 
         if (viewModel.HasDirectTransfersAvailable == false &&
-             viewModel.HasAdditionalReservationFundsAvailable == false &&
-             viewModel.HasUnallocatedReservationsAvailable == false)
+            viewModel.HasAdditionalReservationFundsAvailable == false &&
+            viewModel.HasUnallocatedReservationsAvailable == false)
         {
-            logger.LogInformation("CohortController.SelectFunding RedirectToAction = RouteNames.CohortSelectProvider non-cacheModel params");
             return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
         }
+
         logger.LogInformation("CohortController.SelectFunding Returning View");
         return View(viewModel);
     }
@@ -590,7 +589,7 @@ public class CohortController(
         switch (selectedFunding.FundingType)
         {
             case FundingType.LtmTransfers:
-                return RedirectToAction(RouteNames.CohortSelectAcceptedLevyTransferConnection, new {cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey});
+                return RedirectToAction(RouteNames.CohortSelectAcceptedLevyTransferConnection, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
             case FundingType.DirectTransfers:
                 return RedirectToAction(RouteNames.CohortSelectDirectTransferConnection, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
             case FundingType.UnallocatedReservations:
@@ -693,6 +692,7 @@ public class CohortController(
         {
             throw new MissingApprenticeshipSessionKeyException();
         }
+
         var response = await cacheStorageService.RetrieveFromCache<AddApprenticeshipCacheModel>(key.Value);
         return response ?? throw new CacheItemNotFoundException<AddApprenticeshipCacheModel>($"Cache item {key} of type {typeof(AddApprenticeshipCacheModel).Name} not found");
     }
