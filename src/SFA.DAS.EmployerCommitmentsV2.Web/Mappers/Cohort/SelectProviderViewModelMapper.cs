@@ -1,10 +1,11 @@
-﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using System.Text.Json;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class SelectProviderViewModelMapper(IApprovalsApiClient outerApiClient) : IMapper<AddApprenticeshipCacheModel, SelectProviderViewModel>
+public class SelectProviderViewModelMapper(IApprovalsApiClient outerApiClient, ILogger<SelectProviderViewModelMapper> logger) : IMapper<AddApprenticeshipCacheModel, SelectProviderViewModel>
 {
     public async Task<SelectProviderViewModel> Map(AddApprenticeshipCacheModel source)
     {
@@ -12,6 +13,8 @@ public class SelectProviderViewModelMapper(IApprovalsApiClient outerApiClient) :
 
         var providers = selectProviderDetails.Providers.ToList();
         var accountLegalEntity = selectProviderDetails.AccountLegalEntity;
+        
+        logger.LogInformation("SelectProviderViewModelMapper source: {Data}", JsonSerializer.Serialize(source));
 
         return new SelectProviderViewModel
         {
