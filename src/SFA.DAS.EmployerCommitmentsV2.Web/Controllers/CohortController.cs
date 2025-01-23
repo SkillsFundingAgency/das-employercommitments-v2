@@ -554,11 +554,11 @@ public class CohortController(
 
     [HttpGet]
     [Route("add/select-funding")]
-    public async Task<IActionResult> SelectFunding([FromQuery] Guid apprenticeshipSessionKey, [FromQuery] bool fromLtmWeb = false)
+    public async Task<IActionResult> SelectFunding([FromQuery] Guid apprenticeshipSessionKey, [FromQuery] bool fromLtmWeb = false, [FromQuery] bool sourceBackLink = false)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
 
-        if (cacheModel.EncodedPledgeApplicationId != null || cacheModel.TransferSenderId != null)
+        if (!sourceBackLink && cacheModel.EncodedPledgeApplicationId != null || cacheModel.TransferSenderId != null)
         {
             return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey, fromLtmWeb });
         }

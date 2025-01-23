@@ -88,7 +88,7 @@
     }
     else if (Model.Origin == Origin.LevyTransferMatching && !isLtmWebOrigin)
     {
-        <a href="@Url.Action("SelectFunding", "Cohort", new { Model.AccountHashedId, Model.ApprenticeshipSessionKey })"
+        <a href="@Url.Action("SelectFunding", "Cohort", new { Model.AccountHashedId, Model.ApprenticeshipSessionKey, sourceBackLink = true })"
            id="back-link" class="govuk-back-link">Back</a>
     }
     else
