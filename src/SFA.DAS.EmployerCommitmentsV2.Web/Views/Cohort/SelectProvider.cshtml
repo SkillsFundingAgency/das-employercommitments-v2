@@ -80,12 +80,12 @@
                 Model.StartMonthYear
             }, new { @class = "govuk-back-link", id = "back-link" })
     }
-    else if (Model.Origin == Origin.LevyTransferMatching && ContextAccessor.HttpContext?.Request.Query["encodedpledgeapplicationid"].ToString() != null)
+    else if (Model.Origin == Origin.LevyTransferMatching && !string.IsNullOrEmpty(ContextAccessor.HttpContext?.Request.Query["EncodedPledgeApplicationId"].ToString()))
     {
         <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications/{Model.EncodedPledgeApplicationId}")"
             id="back-link" class="govuk-back-link">Back</a>
     }
-    else if (Model.Origin == Origin.LevyTransferMatching && ContextAccessor.HttpContext?.Request.Query["encodedpledgeapplicationid"].ToString() == null)
+    else if (Model.Origin == Origin.LevyTransferMatching && string.IsNullOrEmpty(ContextAccessor.HttpContext?.Request.Query["EncodedPledgeApplicationId"].ToString()))
     {
         <a href="@Url.Action("SelectFunding", "Cohort", new { Model.AccountHashedId, Model.ApprenticeshipSessionKey })" id="back-link" class="govuk-back-link">Back</a>
     }
