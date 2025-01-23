@@ -560,7 +560,7 @@ public class CohortController(
         
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
 
-        if (!sourceBackLink && cacheModel.EncodedPledgeApplicationId != null || cacheModel.TransferSenderId != null)
+        if (!sourceBackLink && (cacheModel.EncodedPledgeApplicationId != null || cacheModel.TransferSenderId != null))
         {
             logger.LogInformation("CohortController.SelectFunding RedirectToAction = RouteNames.CohortSelectProvider cacheModel params");
             return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey, fromLtmWeb });

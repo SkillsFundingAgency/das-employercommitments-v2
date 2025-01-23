@@ -27,9 +27,9 @@ public class WhenGettingSelectFundingOptions
         viewModel.HasDirectTransfersAvailable = true;
 
         cacheStorageService
-          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
-          .ReturnsAsync(cacheModel);
-    
+            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
+            .ReturnsAsync(cacheModel);
+
         mockMapper
             .Setup(mapper => mapper.Map<SelectFundingViewModel>(cacheModel))
             .ReturnsAsync(viewModel);
@@ -53,8 +53,8 @@ public class WhenGettingSelectFundingOptions
         viewModel.HasDirectTransfersAvailable = true;
 
         cacheStorageService
-        .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
-        .ReturnsAsync(cacheModel);
+            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
+            .ReturnsAsync(cacheModel);
 
         mockMapper
             .Setup(mapper => mapper.Map<SelectFundingViewModel>(cacheModel))
@@ -63,7 +63,7 @@ public class WhenGettingSelectFundingOptions
         var result = await controller.SelectFunding(cacheModel.ApprenticeshipSessionKey) as ViewResult;
 
         result.ViewName.Should().BeNull();
-        result.Model.Should().Be(viewModel); 
+        result.Model.Should().Be(viewModel);
     }
 
     [Test, MoqAutoData]
@@ -76,16 +76,38 @@ public class WhenGettingSelectFundingOptions
         cacheModel.TransferSenderId = null;
 
         cacheStorageService
-       .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
-       .ReturnsAsync(cacheModel);
-     
-        var result = await controller.SelectFunding(cacheModel.ApprenticeshipSessionKey) as RedirectToActionResult;
+            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
+            .ReturnsAsync(cacheModel);
+
+        var result = await controller.SelectFunding(cacheModel.ApprenticeshipSessionKey, fromLtmWeb: true) as RedirectToActionResult;
 
         result.ActionName.Should().Be("SelectProvider");
         result.RouteValues["AccountHashedId"].Should().Be(cacheModel.AccountHashedId);
-        result.RouteValues["ApprenticeshipSessionKey"].Should().Be(cacheModel.ApprenticeshipSessionKey);     
+        result.RouteValues["ApprenticeshipSessionKey"].Should().Be(cacheModel.ApprenticeshipSessionKey);
+        ((bool)result.RouteValues["FromLtmWeb"]).Should().BeTrue();
     }
 
+    [Test, MoqAutoData]
+    public async Task AndEncodedPledgeIsSetButSourceBackLinkIsTrueThenRedirectsToSelectProvider(
+        AddApprenticeshipCacheModel cacheModel,
+        [Frozen] Mock<ICacheStorageService> cacheStorageService,
+        [Greedy] CohortController controller)
+    {
+        cacheModel.EncodedPledgeApplicationId = "XXXXXXX";
+        cacheModel.TransferSenderId = null;
+
+        cacheStorageService
+            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
+            .ReturnsAsync(cacheModel);
+
+        var result = await controller.SelectFunding(cacheModel.ApprenticeshipSessionKey, fromLtmWeb: false, sourceBackLink: true) as RedirectToActionResult;
+
+        result.ActionName.Should().Be("SelectProvider");
+        result.RouteValues["AccountHashedId"].Should().Be(cacheModel.AccountHashedId);
+        result.RouteValues["ApprenticeshipSessionKey"].Should().Be(cacheModel.ApprenticeshipSessionKey);
+        result.RouteValues["FromLtmWeb"].Should().BeNull();
+    }
+    
     [Test, MoqAutoData]
     public async Task AndTransferSenderIdIsSetThenRedirectsToSelectProvider(
         AddApprenticeshipCacheModel cacheModel,
@@ -96,8 +118,8 @@ public class WhenGettingSelectFundingOptions
         cacheModel.TransferSenderId = "XXXXX";
 
         cacheStorageService
-          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
-          .ReturnsAsync(cacheModel);
+            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
+            .ReturnsAsync(cacheModel);
 
         var result = await controller.SelectFunding(cacheModel.ApprenticeshipSessionKey) as RedirectToActionResult;
 
@@ -122,8 +144,8 @@ public class WhenGettingSelectFundingOptions
         viewModel.HasAdditionalReservationFundsAvailable = false;
 
         cacheStorageService
-        .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
-        .ReturnsAsync(cacheModel);
+            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
+            .ReturnsAsync(cacheModel);
 
         mockMapper.Setup(mapper => mapper.Map<SelectFundingViewModel>(cacheModel)).ReturnsAsync(viewModel);
 
