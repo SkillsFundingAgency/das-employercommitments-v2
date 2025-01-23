@@ -578,7 +578,7 @@ public class CohortController : Controller
 
         if (cacheModel.EncodedPledgeApplicationId != null || cacheModel.TransferSenderId != null)
         {
-            return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
+            return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey, cacheModel.EncodedPledgeApplicationId });
         }
 
         var viewModel = await _modelMapper.Map<SelectFundingViewModel>(cacheModel);
