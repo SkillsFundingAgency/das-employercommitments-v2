@@ -556,10 +556,13 @@ public class CohortController(
     [Route("add/select-funding")]
     public async Task<IActionResult> SelectFunding([FromQuery] Guid apprenticeshipSessionKey, [FromQuery] bool fromLtmWeb = false, [FromQuery] bool sourceBackLink = false)
     {
+        logger.LogInformation("CohortController.SelectFunding fromLtmWeb: {FromLtmWeb}, sourceBackLink: {SourceBackLink}", fromLtmWeb, sourceBackLink);
+        
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
 
         if (!sourceBackLink && cacheModel.EncodedPledgeApplicationId != null || cacheModel.TransferSenderId != null)
         {
+            logger.LogInformation("CohortController.SelectFunding RedirectToAction = RouteNames.CohortSelectProvider cacheModel params");
             return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey, fromLtmWeb });
         }
 
@@ -569,8 +572,10 @@ public class CohortController(
              viewModel.HasAdditionalReservationFundsAvailable == false &&
              viewModel.HasUnallocatedReservationsAvailable == false)
         {
+            logger.LogInformation("CohortController.SelectFunding RedirectToAction = RouteNames.CohortSelectProvider non-cacheModel params");
             return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
         }
+        logger.LogInformation("CohortController.SelectFunding Returning View");
         return View(viewModel);
     }
 
