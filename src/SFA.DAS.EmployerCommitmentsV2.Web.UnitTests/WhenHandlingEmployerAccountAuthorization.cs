@@ -3,15 +3,11 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerCommitmentsV2.Authorization;
-using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
-using SFA.DAS.EmployerCommitmentsV2.Models.UserAccounts;
 using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.Testing.AutoFixture;
@@ -249,7 +245,6 @@ public class WhenHandlingEmployerAccountAuthorization
         EmployerIdentifier employerIdentifier,
         EmployerTransactorOwnerAccountRequirement transactorOwnerRolesRequirement,
         [Frozen] Mock<IHttpContextAccessor> httpContextAccessor,
-        [Frozen] Mock<IOptions<EmployerCommitmentsV2Configuration>> forecastingConfiguration,
         EmployerAccountAuthorisationHandler authorizationHandler)
     {
         //Arrange
