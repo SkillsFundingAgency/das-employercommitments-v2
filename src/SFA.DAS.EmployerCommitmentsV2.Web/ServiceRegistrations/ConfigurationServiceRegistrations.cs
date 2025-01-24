@@ -19,15 +19,12 @@ public static class ConfigurationServiceRegistrations
 
         services.AddConfigurationFor<CommitmentPermissionsApiClientConfiguration>(configuration, ConfigurationKeys.CommitmentsApiClientConfiguration);
         services.AddConfigurationFor<EmployerUrlHelperConfiguration>(configuration, ConfigurationKeys.EmployerUrlConfiguration);
-
-        services.AddConfigurationFor<EmployerCommitmentsV2Configuration>(configuration, ConfigurationKeys.EmployerCommitmentsV2);
         services.AddConfigurationFor<GovUkOidcConfiguration>(configuration, ConfigurationKeys.GovUkSignInConfiguration);
 
         var encodingConfigJson = configuration.GetSection(ConfigurationKeys.Encoding).Value;
         var encodingConfig = JsonConvert.DeserializeObject<EncodingConfig>(encodingConfigJson);
         services.AddSingleton(encodingConfig);
 
-        services.AddConfigurationFor<AccountApiConfiguration>(configuration, ConfigurationKeys.AccountApiConfiguration);
         services.AddConfigurationFor<ZenDeskConfiguration>(configuration, ConfigurationKeys.ZenDeskConfiguration);
         services.AddConfigurationFor<ApprovalsApiClientConfiguration>(configuration, ConfigurationKeys.ApprovalsApiClientConfiguration);
 
