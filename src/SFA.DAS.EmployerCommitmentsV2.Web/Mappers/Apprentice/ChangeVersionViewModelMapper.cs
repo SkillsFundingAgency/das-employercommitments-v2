@@ -4,22 +4,15 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
-public class ChangeVersionViewModelMapper : IMapper<ChangeVersionRequest, ChangeVersionViewModel>
+public class ChangeVersionViewModelMapper(ICommitmentsApiClient commitmentsApiClient) : IMapper<ChangeVersionRequest, ChangeVersionViewModel>
 {
-    private readonly ICommitmentsApiClient _commitmentsApiClient;
-        
-    public ChangeVersionViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
-    {
-        _commitmentsApiClient = commitmentsApiClient;
-    }
-
     public async Task<ChangeVersionViewModel> Map(ChangeVersionRequest source)
     {
-        var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
+        var apprenticeship = await commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
 
-        var currentVersion = await _commitmentsApiClient.GetTrainingProgrammeVersionByStandardUId(apprenticeship.StandardUId);
+        var currentVersion = await commitmentsApiClient.GetTrainingProgrammeVersionByStandardUId(apprenticeship.StandardUId);
 
-        var newerVersions = await _commitmentsApiClient.GetNewerTrainingProgrammeVersions(apprenticeship.StandardUId);
+        var newerVersions = await commitmentsApiClient.GetNewerTrainingProgrammeVersions(apprenticeship.StandardUId);
 
         return new ChangeVersionViewModel
         {
@@ -27,7 +20,10 @@ public class ChangeVersionViewModelMapper : IMapper<ChangeVersionRequest, Change
             StandardTitle = currentVersion.TrainingProgramme.Name,
             StandardUrl = currentVersion.TrainingProgramme.StandardPageUrl,
             NewerVersions = newerVersions.NewerVersions.Select(x => x.Version),
-            CacheKey = source.CacheKey
+            CacheKey = source.CacheKey,
+            
+            AccountHashedId = source.AccountHashedId,
+            ApprenticeshipHashedId = source.ApprenticeshipHashedId,
         };
     }
 }
