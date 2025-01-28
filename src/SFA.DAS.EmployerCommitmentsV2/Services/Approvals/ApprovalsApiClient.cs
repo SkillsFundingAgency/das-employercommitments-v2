@@ -86,6 +86,20 @@ public class ApprovalsApiClient : IApprovalsApiClient
     {
         return await _client.Post<CreateCohortResponse>($"cohorts", request);
     }
+
+    public async Task<GetAddFirstDraftApprenticeshipResponse> GetAddFirstDraftApprenticeshipDetails(long accountId, long accountLegalEntityId, long providerId, string courseCode, DateTime? startDate = null, CancellationToken cancellationToken = default)
+    {
+        var dateAsString = startDate.HasValue ? startDate.Value.ToString("yyyy-MM-dd") : null;   
+        return await _client.Get<GetAddFirstDraftApprenticeshipResponse>($"employer/{accountId}/unapproved/add/apprenticeship?accountLegalEntityId={accountLegalEntityId}&providerId={providerId}&courseCode={courseCode}&StartDate={dateAsString}");
+    }
+
+    public Task<GetAddAnotherDraftApprenticeshipResponse> GetAddAnotherDraftApprenticeshipDetails(long accountId, long cohortId, string courseCode, DateTime? startDate = null,
+        CancellationToken cancellationToken = default)
+    {
+        var dateAsString = startDate.HasValue ? startDate.Value.ToString("yyyy-MM-dd") : null;
+        return _client.Get<GetAddAnotherDraftApprenticeshipResponse>($"employer/{accountId}/unapproved/{cohortId}/apprentices/add/details?courseCode={courseCode}&StartDate={dateAsString}");
+    }
+
     public async Task<GetManageApprenticeshipDetailsResponse> GetManageApprenticeshipDetails(long accountId, long apprenticeshipId, CancellationToken cancellationToken = default)
     {
         return await _client.Get<GetManageApprenticeshipDetailsResponse>($"employer/{accountId}/apprenticeships/{apprenticeshipId}/details");
@@ -118,5 +132,20 @@ public class ApprovalsApiClient : IApprovalsApiClient
     public Task<GetSelectLevyTransferConnectionResponse> GetSelectLevyTransferConnection(long accountId, CancellationToken cancellationToken = default)
     {
         return _client.Get<GetSelectLevyTransferConnectionResponse>($"{accountId}/unapproved/add/select-funding/select-accepted-levy-connection");
+    }
+
+    public Task<GetFundingBandDataResponse> GetFundingBandDataByCourseCodeAndStartDate(string courseCode, DateTime? startDate, CancellationToken cancellationToken = default)
+    {
+        if (startDate == null)
+        {
+            return _client.Get<GetFundingBandDataResponse>($"TrainingCourses/{courseCode}/funding-band");
+        }
+
+        return _client.Get<GetFundingBandDataResponse>($"TrainingCourses/{courseCode}/funding-band?startDate={startDate.Value.ToString("yyyy-MM-dd")}");
+    }
+
+    public Task<GetAgreementNotSignedResponse> GetAgreementNotSigned(long accountId, CancellationToken cancellationToken = default)
+    {
+        return _client.Get<GetAgreementNotSignedResponse>($"{accountId}/unapproved/AgreementNotSigned");
     }
 }

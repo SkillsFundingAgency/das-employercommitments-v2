@@ -15,74 +15,89 @@ public class WhenPostingSelectFunding
 {
     private CohortController _controller;
     private SelectFundingViewModel _model;
-    private Mock<ICacheStorageService> _cacheStorageService;
     private AddApprenticeshipCacheModel _cacheModel;
+    private Mock<ICacheStorageService> _cacheStorageService;
+    private Mock<ILinkGenerator> _linkGenerator;
 
     [SetUp]
     public void Arrange()
     {
         var autoFixture = new Fixture();
         _model = autoFixture.Create<SelectFundingViewModel>();
+
         _cacheModel = autoFixture.Create<AddApprenticeshipCacheModel>();
         _cacheModel.ApprenticeshipSessionKey = _model.ApprenticeshipSessionKey.Value;
-        _cacheModel.AccountHashedId = _model.AccountHashedId;
 
         _cacheStorageService = new Mock<ICacheStorageService>();
+        _cacheStorageService.Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.ApprenticeshipSessionKey))
+           .ReturnsAsync(_cacheModel);
 
-        _cacheStorageService
-          .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(_cacheModel.ApprenticeshipSessionKey))
-          .ReturnsAsync(_cacheModel);
+        _linkGenerator = new Mock<ILinkGenerator>();
+        _linkGenerator.Setup(x => x.ReservationsLink(It.IsAny<string>())).Returns("https://reservations.com");
 
         _controller = new CohortController(Mock.Of<ICommitmentsApiClient>(),
             Mock.Of<ILogger<CohortController>>(),
-            Mock.Of<ILinkGenerator>(),
+            _linkGenerator.Object,
             Mock.Of<IModelMapper>(),
             Mock.Of<IEncodingService>(),
             Mock.Of<IApprovalsApiClient>(),
             _cacheStorageService.Object);
     }
-
+      
     [TearDown]
     public void TearDown() => _controller?.Dispose();
 
-    [TestCase(FundingType.AdditionalReservations)]
-    [TestCase(FundingType.UnallocatedReservations)]
-    [TestCase(FundingType.CurrentLevy)]
-    public async Task And_This_Funding_Option_Is_Selected_Then_User_Is_Redirected_To_SelectProvider_Page(FundingType fundingType)
-    {
-        _model.FundingType = fundingType;
-        //Act
-        var result = await _controller.SelectFundingType(_model);
-
-        //Assert
-        var redirectToActionResult = result as RedirectToActionResult;
-        redirectToActionResult.ActionName.Should().Be("SelectProvider");
-    }
-
     [Test]
-    public async Task And_DirectTransfers_Is_Selected_Then_User_Is_Redirected_To_SelectDirectTransferConnection_Page()
-    {
-        _model.FundingType = FundingType.DirectTransfers;
-        //Act
-        var result = await _controller.SelectFundingType(_model);
-
-        //Assert
-        var redirectToActionResult = result as RedirectToActionResult;
-        redirectToActionResult.ActionName.Should().Be("SelectDirectTransferConnection");
-    }
-
-    [Test]
-    public async Task And_LtmTransfers_Is_Selected_Then_User_Is_Redirected_To_SelectLtmTransfers_Page()
+    public async Task And_SelectedFunding_Is_Levy_Approved_Transfer_Then_Redirect_To_LTMTransfersConnection()
     {
         _model.FundingType = FundingType.LtmTransfers;
-        //Act
+
         var result = await _controller.SelectFundingType(_model);
 
-        //Assert
         var redirectToActionResult = result as RedirectToActionResult;
         redirectToActionResult.ActionName.Should().Be("SelectAcceptedLevyTransferConnection");
-        redirectToActionResult.RouteValues["AccountHashedId"].Should().Be(_model.AccountHashedId);
-        redirectToActionResult.RouteValues["ApprenticeshipSessionKey"].Should().Be(_model.ApprenticeshipSessionKey);
+        redirectToActionResult.RouteValues["AccountHashedId"].Should().Be(_cacheModel.AccountHashedId);
+        redirectToActionResult.RouteValues["ApprenticeshipSessionKey"].Should().Be(_cacheModel.ApprenticeshipSessionKey);
     }
 
+    [Test]
+    public async Task And_SelectedFunding_Is_Direct_Transfer_Then_Redirect_To_SelectDirectTransferConnection()
+    {
+        _model.FundingType = FundingType.DirectTransfers;
+
+        var result = await _controller.SelectFundingType(_model);
+
+        var redirectToActionResult = result as RedirectToActionResult;
+        redirectToActionResult.ActionName.Should().Be("SelectDirectTransferConnection");
+        redirectToActionResult.RouteValues["AccountHashedId"].Should().Be(_cacheModel.AccountHashedId);
+        redirectToActionResult.RouteValues["ApprenticeshipSessionKey"].Should().Be(_cacheModel.ApprenticeshipSessionKey);
+    }
+
+    [Test]
+    public async Task And_SelectedFunding_Is_UnallocatedReservations_Then_Redirect_To_Reservation()
+    {
+        _model.FundingType = FundingType.UnallocatedReservations;
+
+        var result = await _controller.SelectFundingType(_model);
+
+        _linkGenerator.Verify(x => x.ReservationsLink($"accounts/{_cacheModel.AccountHashedId}/reservations/{_cacheModel.AccountLegalEntityHashedId}/select?" +
+                                                      $"&beforeProviderSelected=true" +
+                                                      $"&apprenticeshipSessionKey={_cacheModel.ApprenticeshipSessionKey}"));
+        var redirectResult = result as RedirectResult;
+        redirectResult.Url.Should().Be("https://reservations.com");
+    }
+
+    [TestCase(FundingType.CurrentLevy)]
+    [TestCase(FundingType.AdditionalReservations)]
+    public async Task And_SelectedFunding_Is_AnotherType(FundingType fundingType)
+    {
+        _model.FundingType = fundingType;
+
+        var result = await _controller.SelectFundingType(_model);
+
+        var redirectToActionResult = result as RedirectToActionResult;
+        redirectToActionResult.ActionName.Should().Be("SelectProvider");
+        redirectToActionResult.RouteValues["AccountHashedId"].Should().Be(_cacheModel.AccountHashedId);
+        redirectToActionResult.RouteValues["ApprenticeshipSessionKey"].Should().Be(_cacheModel.ApprenticeshipSessionKey);
+    }
 }
