@@ -143,4 +143,9 @@ public class ApprovalsApiClient : IApprovalsApiClient
 
         return _client.Get<GetFundingBandDataResponse>($"TrainingCourses/{courseCode}/funding-band?startDate={startDate.Value.ToString("yyyy-MM-dd")}");
     }
+
+    public Task<GetAgreementNotSignedResponse> GetAgreementNotSigned(long accountId, CancellationToken cancellationToken = default)
+    {
+        return _client.Get<GetAgreementNotSignedResponse>($"{accountId}/unapproved/AgreementNotSigned");
+    }
 }
