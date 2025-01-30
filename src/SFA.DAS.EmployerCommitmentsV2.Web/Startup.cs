@@ -43,7 +43,7 @@ public class Startup
             .AddApplicationServices()
             .AddCommitmentsApiClient(_configuration)
             .AddAuthorizationServices(_configuration)
-            .AddCommitmentPermissionsApiClient()
+            .AddCommitmentPermissionsApiClient(_configuration)
             .AddDasHealthChecks()
             .AddDasMaMenuConfiguration(_configuration)
             .AddDasMvc()
