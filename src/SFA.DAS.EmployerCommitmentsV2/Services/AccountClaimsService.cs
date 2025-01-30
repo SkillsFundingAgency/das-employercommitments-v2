@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using SFA.DAS.EmployerCommitmentsV2.Extensions;
 using SFA.DAS.GovUK.Auth.Employer;
 using EmployerClaims = SFA.DAS.EmployerCommitmentsV2.Infrastructure.EmployerClaims;
 
@@ -26,6 +27,12 @@ public class AccountClaimsService(IGovAuthEmployerAccountService accountsService
     public async Task<Dictionary<string, EmployerUserAccountItem>> GetAssociatedAccounts(bool forceRefresh)
     {
         var user = httpContextAccessor.HttpContext.User;
+
+        if (user.ClaimsAreEmpty())
+        {
+            return null;
+        }
+        
         var employerAccountsClaim = user.FindFirst(c => c.Type.Equals(EmployerClaims.AccountsClaimsTypeIdentifier));
 
         if (!forceRefresh && employerAccountsClaim != null)

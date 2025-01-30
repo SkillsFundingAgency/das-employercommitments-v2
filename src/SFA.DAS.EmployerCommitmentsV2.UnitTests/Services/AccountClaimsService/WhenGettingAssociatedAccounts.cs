@@ -18,6 +18,40 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Services.AssociatedAccounts;
 
 public class WhenGettingAssociatedAccounts
 {
+    
+    [Test, MoqAutoData]
+    public async Task Then_Returns_Null_When_Claims_Are_Empty(
+        string userId,
+        string email,
+        [Frozen] Mock<IHttpContextAccessor> httpContextAccessor,
+        Mock<ILogger<AccountClaimsService>> logger,
+        Mock<IGovAuthEmployerAccountService> userAccountService,
+        Dictionary<string, EmployerUserAccountItem> accountData
+    )
+    {
+        //Arrange
+        var claimsPrinciple = new ClaimsPrincipal([new ClaimsIdentity(new List<Claim>())]);
+
+        var httpContext = new DefaultHttpContext(new FeatureCollection())
+        {
+            User = claimsPrinciple
+        };
+
+        httpContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
+
+        var helper = new AccountClaimsService(userAccountService.Object, httpContextAccessor.Object, logger.Object)
+        {
+            MaxPermittedNumberOfAccountsOnClaim = accountData.Count
+        };
+
+        //Act
+        var result = await helper.GetAssociatedAccounts(forceRefresh: false);
+
+        //Assert
+        userAccountService.Verify(x => x.GetUserAccounts(userId, email), Times.Never);
+        result.Should().BeNull();
+    }
+    
     [Test, MoqAutoData]
     public async Task Then_User_EmployerAccounts_Should_Be_Retrieved_From_Claims_When_Populated_And_ForceRefresh_Is_False(
         string userId,

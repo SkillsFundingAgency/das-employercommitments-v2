@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.EmployerCommitmentsV2.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
 using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
@@ -23,6 +19,13 @@ public class EmployerAccountAuthorisationHandler(
     public async Task<bool> IsEmployerAuthorised(AuthorizationHandlerContext context, EmployerUserRole minimumAllowedRole)
     {
         if (!httpContextAccessor.HttpContext.Request.RouteValues.ContainsKey(RouteValueKeys.AccountHashedId))
+        {
+            return false;
+        }
+        
+        var user = httpContextAccessor.HttpContext?.User;
+        
+        if (user.ClaimsAreEmpty())
         {
             return false;
         }
