@@ -24,8 +24,6 @@ public static class ApplicationServiceRegistrations
         services.AddTransient<IAutoConfigurationService, TableStorageConfigurationService>();
         services.AddTransient<IDeliveryModelService, DeliveryModelService>();
 
-        services.AddTransient<IEmployerAccountsService, EmployerAccountsService>();
-        
         services.AddSingleton<ILinkGenerator, LinkGenerator>();
         services.AddSingleton<IAuthenticationService, AuthenticationService>();
         
