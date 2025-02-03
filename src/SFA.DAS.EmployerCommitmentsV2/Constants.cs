@@ -11,6 +11,6 @@ public static class Constants
     
     public static class WebConstants
     {
-        public const int MaxNumberOfEmployerAccountsAllowedOnClaim = 50;
+        public const int MaxNumberOfEmployerAccountsAllowedOnClaim = 20;
     }
 }
