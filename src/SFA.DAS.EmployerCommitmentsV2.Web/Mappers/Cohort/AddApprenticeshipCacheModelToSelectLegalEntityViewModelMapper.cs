@@ -2,9 +2,6 @@
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
-using Agreement = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.Agreement;
-using AgreementModel = SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.Agreement;
-using LegalEntity = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.LegalEntity;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
@@ -24,32 +21,10 @@ public class AddApprenticeshipCacheModelToSelectLegalEntityViewModelMapper(
         {
             AccountHashedId = source.AccountHashedId,
             TransferConnectionCode = source.TransferSenderId,
-            LegalEntities = legalEntities.LegalEntities.ConvertAll(MapToLegalEntityVm),
+            LegalEntities = legalEntities.LegalEntities.ConvertAll(x=>x.MapToLegalEntityVm()),
             CohortRef = cohortRef,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
             ApprenticeshipSessionKey = source.ApprenticeshipSessionKey
-        };
-    }
-
-    private Models.Cohort.LegalEntity MapToLegalEntityVm(LegalEntity input)
-    {
-        return new Models.Cohort.LegalEntity
-        {
-            Name = input.Name,
-            RegisteredAddress = input.Address,
-            Id = input.LegalEntityId,
-            AccountLegalEntityPublicHashedId = input.AccountLegalEntityPublicHashedId,
-            Agreements = input.Agreements.ConvertAll(MapToAgreementVm)
-        };
-    }
-
-    private AgreementModel MapToAgreementVm(Agreement input)
-    {
-        return new AgreementModel
-        {
-            Id = input.Id,
-            Status = input.Status,
-            TemplateVersionNumber = input.TemplateVersionNumber
         };
     }
 }

@@ -38,13 +38,10 @@ public class Startup
         services.AddModelMappings();
         services.AddApprovalsApiClient();
 
-        var employerCommitmentsV2Configuration = _configuration.Get<EmployerCommitmentsV2Configuration>();
-
         services
             .AddDasEmployerAuthentication(_configuration)
             .AddApplicationServices()
             .AddCommitmentsApiClient(_configuration)
-            .AddAccountsApiClient(employerCommitmentsV2Configuration)
             .AddAuthorizationServices(_configuration)
             .AddCommitmentPermissionsApiClient(_configuration)
             .AddDasHealthChecks()

@@ -378,6 +378,7 @@ public class CohortController : Controller
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
 
         var model = await _modelMapper.Map<ApprenticeViewModel>(cacheModel);
+        await AssignFundingDetailsToModel(model);
 
         return View(RouteNames.CohortApprentice, model);
     }
@@ -588,12 +589,35 @@ public class CohortController : Controller
         cacheModel.FundingType = selectedFunding.FundingType;
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
-        return selectedFunding.FundingType switch
+        switch (selectedFunding.FundingType)
         {
-            FundingType.DirectTransfers => RedirectToAction(RouteNames.CohortSelectDirectTransferConnection, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey }),
-            FundingType.LtmTransfers => RedirectToAction(RouteNames.CohortSelectAcceptedLevyTransferConnection, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey }),
-            _ => RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey })
-        };
+            case FundingType.LtmTransfers:
+                return RedirectToAction(RouteNames.CohortSelectAcceptedLevyTransferConnection, new {cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey});
+            case FundingType.DirectTransfers:
+                return RedirectToAction(RouteNames.CohortSelectDirectTransferConnection, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
+            case FundingType.UnallocatedReservations:
+            {
+                var url = _linkGenerator.ReservationsLink(
+                    $"accounts/{cacheModel.AccountHashedId}/reservations/{cacheModel.AccountLegalEntityHashedId}/select?" +
+                    $"&beforeProviderSelected=true" +
+                    $"&apprenticeshipSessionKey={cacheModel.ApprenticeshipSessionKey}");
+                return Redirect(url);
+            }
+            default:
+                return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
+        }
+    }
+
+    [HttpGet]
+    [Route("add/set-reservation")]
+    public async Task<ActionResult> SetReservation([FromQuery] Guid? reservationId, [FromQuery] string courseCode, [FromQuery] string startMonthYear, [FromQuery] Guid? apprenticeshipSessionKey)
+    {
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
+        cacheModel.ReservationId = reservationId;
+        cacheModel.CourseCode = courseCode;
+        cacheModel.StartMonthYear = startMonthYear;
+        await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
+        return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
     }
 
     [HttpGet]
@@ -640,7 +664,6 @@ public class CohortController : Controller
 
         cacheModel.EncodedPledgeApplicationId = ids[0];
         cacheModel.TransferSenderId = ids[1];
-        cacheModel.AccountLegalEntityHashedId = selectedLevyTransferConnection.AccountLegalEntityHashedId;
         await StoreAddApprenticeshipCacheModelInCache(cacheModel, cacheModel.ApprenticeshipSessionKey);
 
         return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
@@ -727,5 +750,15 @@ public class CohortController : Controller
         var monthYearModel = new MonthYearModel(cacheModel.StartMonthYear);
         cacheModel.StartMonth = monthYearModel.Month;
         cacheModel.StartYear = monthYearModel.Year;
+    }
+
+    private async Task AssignFundingDetailsToModel(DraftApprenticeshipViewModel model)
+    {
+        if (!string.IsNullOrEmpty(model?.CourseCode))
+        {
+            var fundingBandData = await _approvalsApiClient.GetFundingBandDataByCourseCodeAndStartDate(model.CourseCode, model.StartDate.Date);
+            model.FundingBandMax = fundingBandData?.ProposedMaxFunding;
+            model.StandardPageUrl = fundingBandData?.StandardPageUrl;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
@@ -882,15 +883,15 @@ public class ApprenticeController : Controller
     public async Task<IActionResult> ChangeVersion(ChangeVersionRequest request)
     {
         var viewModel = await _modelMapper.Map<ChangeVersionViewModel>(request);
-
+        
         // Get Edit Model if it exists to pre-select version if navigating back
         var editApprenticeViewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
-
+        
         if (editApprenticeViewModel != null && !string.IsNullOrWhiteSpace(editApprenticeViewModel.Version))
         {
             viewModel.SelectedVersion = editApprenticeViewModel.Version;
         }
-
+        
         return View(viewModel);
     }
 
