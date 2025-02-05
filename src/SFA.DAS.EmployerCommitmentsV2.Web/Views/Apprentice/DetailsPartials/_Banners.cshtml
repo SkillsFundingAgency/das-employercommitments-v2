@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SFA.DAS.Apprenticeships.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
@@ -65,4 +66,9 @@ else if (Model.HasWithheldPayment && Model.PaymentFrozenOn.HasValue)
 {
     var providerPaymentsActiveBannerModel = new SuccessBannerModel("provider-payments-active-banner", "Provider payments have been set to \"Active\"", "The training provider has been informed of this update.");
     <partial name="DetailsPartials/_SuccessBanner" model="providerPaymentsActiveBannerModel" />
+}
+
+@if (Model.LearnerStatus == LearnerStatus.Withdrawn)
+{
+    <partial name="DetailsPartials/_WithdrawnPermanentInformationBanner" />
 }
