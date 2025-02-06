@@ -3,15 +3,11 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerCommitmentsV2.Authorization;
-using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Infrastructure;
-using SFA.DAS.EmployerCommitmentsV2.Models.UserAccounts;
 using SFA.DAS.EmployerCommitmentsV2.Services;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization.EmployerAccounts;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.Testing.AutoFixture;
@@ -21,6 +17,30 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests;
 
 public class WhenHandlingEmployerAccountAuthorization
 {
+    [Test, MoqAutoData]
+    public async Task Then_Returns_False_If_Claims_Are_Empty(
+        string accountId,
+        EmployerTransactorOwnerAccountRequirement ownerRequirement,
+        [Frozen] Mock<IHttpContextAccessor> httpContextAccessor,
+        [Frozen] Mock<IAccountClaimsService> associatedAccountsHelper,
+        EmployerAccountAuthorisationHandler authorizationHandler)
+    {
+        //Arrange
+        var claimsPrinciple = new ClaimsPrincipal([new ClaimsIdentity(new List<Claim>())]);
+        var context = new AuthorizationHandlerContext([ownerRequirement], claimsPrinciple, null);
+        var httpContext = new DefaultHttpContext(new FeatureCollection());
+
+        httpContext.Request.RouteValues.Add(RouteValueKeys.AccountHashedId, accountId);
+        httpContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
+
+        //Act
+        var actual = await authorizationHandler.IsEmployerAuthorised(context, EmployerUserRole.Transactor);
+
+        //Assert
+        actual.Should().BeFalse();
+        associatedAccountsHelper.Verify(x=> x.GetAssociatedAccounts(false), Times.Never);
+    }
+    
     [Test, MoqAutoData]
     public async Task Then_User_EmployerAccounts_Should_Be_Retrieved_From_AssociatedAccountsService(
         EmployerIdentifier employerIdentifier,
@@ -47,7 +67,10 @@ public class WhenHandlingEmployerAccountAuthorization
         ]);
         
         var context = new AuthorizationHandlerContext([transactorOwnerRolesRequirement], claimsPrinciple, null);
-        var httpContext = new DefaultHttpContext(new FeatureCollection());
+        var httpContext = new DefaultHttpContext(new FeatureCollection())
+        {
+            User = claimsPrinciple
+        };
         httpContext.Request.RouteValues.Add(RouteValueKeys.AccountHashedId, employerIdentifier.AccountId);
         httpContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
         
@@ -91,7 +114,10 @@ public class WhenHandlingEmployerAccountAuthorization
             ])
         ]);
         var context = new AuthorizationHandlerContext([transactorOwnerRolesRequirement], claimsPrinciple, null);
-        var httpContext = new DefaultHttpContext(new FeatureCollection());
+        var httpContext = new DefaultHttpContext(new FeatureCollection())
+        {
+            User = claimsPrinciple
+        };
         httpContext.Request.RouteValues.Add(RouteValueKeys.AccountHashedId, employerIdentifier.AccountId);
         httpContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
 
@@ -249,7 +275,6 @@ public class WhenHandlingEmployerAccountAuthorization
         EmployerIdentifier employerIdentifier,
         EmployerTransactorOwnerAccountRequirement transactorOwnerRolesRequirement,
         [Frozen] Mock<IHttpContextAccessor> httpContextAccessor,
-        [Frozen] Mock<IOptions<EmployerCommitmentsV2Configuration>> forecastingConfiguration,
         EmployerAccountAuthorisationHandler authorizationHandler)
     {
         //Arrange
