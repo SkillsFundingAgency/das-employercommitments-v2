@@ -68,7 +68,7 @@ else if (Model.HasWithheldPayment && Model.PaymentFrozenOn.HasValue)
     <partial name="DetailsPartials/_SuccessBanner" model="providerPaymentsActiveBannerModel" />
 }
 
-@if (Model.LearnerStatus == LearnerStatus.Withdrawn)
+@if (Model.LearnerStatus == LearnerStatus.Withdrawn && Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
 {
     <partial name="DetailsPartials/_WithdrawnPermanentInformationBanner" />
 }
