@@ -74,9 +74,10 @@
 
 @section Back
 {
-    @{
-        var routeData = new Dictionary<string, string> { { "ApprenticeshipSessionKey", Model.ApprenticeshipSessionKey.ToString() } };
-    }
-    
-    <a asp-controller="Cohort" asp-action="SelectFunding" asp-route-accountHashedId="@Model.AccountHashedId" asp-all-route-data="@routeData" id="back-link" class="govuk-back-link">Back</a>
+   
+    <a asp-controller="Cohort" 
+       asp-action="SelectFunding" 
+       asp-route-accountHashedId="@Model.AccountHashedId" 
+       asp-route-apprenticeshipSessionKey="@Model.ApprenticeshipSessionKey" 
+       id="back-link" class="govuk-back-link">Back</a>
 }
