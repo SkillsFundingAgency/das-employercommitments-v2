@@ -13,18 +13,21 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <partial name="_ValidationSummary" />
+        <partial name="_ValidationSummary"/>
 
         <h1 class="govuk-heading-l"> @ViewBag.Title </h1>
-        
+
         <p class="govuk-body">
             These are your approved transfer funds.
         </p>
         <p class="govuk-body">
-            You can only use one transfer per application, but you can add multiple apprenticeships to that transfer if funding amount allows.
+            You can only use one transfer per application, but you can add multiple apprenticeships to that transfer if
+            funding amount allows.
         </p>
         <p class="govuk-body">
-            If you cannot find the transfer you need, you can <a href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications")" id="info-link" target="_blank" class="govuk-link">manage your transfers (opens in new tab)</a>
+            If you cannot find the transfer you need, you can <a
+                href="@Url.LevyTransferMatchingLink($"accounts/{Model.AccountHashedId}/applications")" id="info-link"
+                target="_blank" class="govuk-link">manage your transfers (opens in new tab)</a>
         </p>
 
         <form method="post">
@@ -34,20 +37,28 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.ApprenticeshipSessionKey)
 
-            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApplicationAndSenderHashedId, "govuk-form-group--error")">
+            <div
+                class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApplicationAndSenderHashedId, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset" id="radio-lines">
                     @if (!ViewData.ModelState.IsValid)
                     {
-                        <span id="error-message-@nameof(SelectAcceptedLevyTransferConnectionViewModel.ApplicationAndSenderHashedId)" class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(SelectAcceptedLevyTransferConnectionViewModel.ApplicationAndSenderHashedId)].Errors.First().ErrorMessage
+                        <span
+                            id="error-message-@nameof(SelectAcceptedLevyTransferConnectionViewModel.ApplicationAndSenderHashedId)"
+                            class="govuk-error-message">
+                            <span
+                                class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(SelectAcceptedLevyTransferConnectionViewModel.ApplicationAndSenderHashedId)].Errors.First().ErrorMessage
                         </span>
                     }
                     <div class="govuk-radios">
                         @foreach (var entity in Model.Applications)
                         {
                             <div class="govuk-radios__item" id="radio-item-levytransfer-connection">
-                                <input class="govuk-radios__input" id="LevyTransferConnection-@entity.ApplicationAndSenderHashedId" name="ApplicationAndSenderHashedId" type="radio" value="@entity.ApplicationAndSenderHashedId">
-                                <label class="govuk-label govuk-radios__label" for="LevyTransferConnection-@entity.ApplicationAndSenderHashedId">
+                                <input class="govuk-radios__input"
+                                       id="LevyTransferConnection-@entity.ApplicationAndSenderHashedId"
+                                       name="ApplicationAndSenderHashedId" type="radio"
+                                       value="@entity.ApplicationAndSenderHashedId">
+                                <label class="govuk-label govuk-radios__label"
+                                       for="LevyTransferConnection-@entity.ApplicationAndSenderHashedId">
                                     @entity.DisplayName
                                 </label>
                             </div>
@@ -63,5 +74,6 @@
 
 @section Back
 {
-    <a href="@Url.Action("SelectFunding", "Cohort", new { Model.ApprenticeshipSessionKey})" id="back-link" class="govuk-back-link">Back</a>
+    <a href="@Url.Action("SelectFunding", "Cohort", new { Model.AccountHashedId, Model.ApprenticeshipSessionKey })"
+       id="back-link" class="govuk-back-link">Back</a>
 }
