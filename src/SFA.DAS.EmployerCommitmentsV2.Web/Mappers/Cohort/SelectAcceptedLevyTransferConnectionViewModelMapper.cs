@@ -15,6 +15,7 @@ public class SelectAcceptedLevyTransferConnectionViewModelMapper(IApprovalsApiCl
         return new SelectAcceptedLevyTransferConnectionViewModel
         {
             AccountHashedId = source.AccountHashedId,
+            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey,
             Applications = result.Applications == null ? [] :
                 result.Applications.Select(x => new LevyTransferDisplayConnection()
                 {
