@@ -74,6 +74,9 @@
 
 @section Back
 {
-    <a href="@Url.Action("SelectFunding", "Cohort", new { Model.AccountHashedId, Model.ApprenticeshipSessionKey })"
-       id="back-link" class="govuk-back-link">Back</a>
+    @{
+        var routeData = new Dictionary<string, string> { { "ApprenticeshipSessionKey", Model.ApprenticeshipSessionKey.ToString() } };
+    }
+    
+    <a asp-controller="Cohort" asp-action="SelectFunding" asp-route-accountHashedId="@Model.AccountHashedId" asp-all-route-data="@routeData" id="back-link" class="govuk-back-link">Back</a>
 }
