@@ -34,7 +34,7 @@
                 <div class="govuk-radios">
                         @if (Model.HasLtmTransfersAvailable)
                     {
-                        <div class="govuk-radios__item" id="radio-item-funding-type">
+                        <div class="govuk-radios__item" id="radio-item-funding-type-transfer">
                             <input class="govuk-radios__input" id="FundingType-5" name="FundingType" type="radio" value="5">
                             <label class="govuk-label govuk-radios__label" for="FundingType-5">
                                 Transfer funds
@@ -46,7 +46,7 @@
                     }
                     @if (Model.HasDirectTransfersAvailable)
                     {
-                        <div class="govuk-radios__item" id="radio-item-funding-type">
+                        <div class="govuk-radios__item" id="radio-item-funding-type-transfer-connection">
                             <input class="govuk-radios__input" id="FundingType-1" name="FundingType" type="radio" value="1">
                             <label class="govuk-label govuk-radios__label" for="FundingType-1">
                                 Transfer funds from a connection
@@ -58,7 +58,7 @@
                     }
                     @if (!Model.IsLevyAccount && Model.HasUnallocatedReservationsAvailable)
                     {
-                        <div class="govuk-radios__item" id="radio-item-funding-type">
+                        <div class="govuk-radios__item" id="radio-item-funding-type-reservation">
                             <input class="govuk-radios__input" id="FundingType-2" name="FundingType" type="radio" value="2">
                             <label class="govuk-label govuk-radios__label" for="FundingType-2">
                                 Reserved funds
@@ -70,7 +70,7 @@
                     }
                     @if (!Model.IsLevyAccount && Model.HasAdditionalReservationFundsAvailable)
                     {
-                        <div class="govuk-radios__item" id="radio-item-funding-type">
+                        <div class="govuk-radios__item" id="radio-item-funding-type-new-reservation">
                             <input class="govuk-radios__input" id="FundingType-3" name="FundingType" type="radio" value="3">
                             <label class="govuk-label govuk-radios__label" for="FundingType-3">
                                 I want to reserve new funds
@@ -83,7 +83,7 @@
                     }
                     @if (Model.IsLevyAccount)
                     {
-                        <div class="govuk-radios__item" id="radio-item-funding-type">
+                        <div class="govuk-radios__item" id="radio-item-funding-type-levy">
                             <input class="govuk-radios__input" id="FundingType-4" name="FundingType" type="radio" value="4">
                             <label class="govuk-label govuk-radios__label" for="FundingType-4">
                                 Current levy funds
