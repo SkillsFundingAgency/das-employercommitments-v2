@@ -10,8 +10,8 @@ public enum CohortStatus
     Review,
     WithProvider,
     WithTransferSender
-    
 }
+
 public static class CohortSummaryExtension
 {
     public static CohortStatus GetStatus(this CohortSummary cohort)
@@ -33,33 +33,47 @@ public static class CohortSummaryExtension
 
     public static ApprenticeshipRequestsHeaderViewModel GetCohortCardLinkViewModel(this CohortSummary[] cohorts, IUrlHelper urlHelper, string accountHashedId, CohortStatus selectedStatus)
     {
+        var cohortsInDraftCount = cohorts.CountForStatus(CohortStatus.Draft);
+        var cohortsInReviewCount = cohorts.CountForStatus(CohortStatus.Review);
+        var cohortsWithProviderCount = cohorts.CountForStatus(CohortStatus.WithProvider);
+        var cohortsWithTransferSenderCount = cohorts.CountForStatus(CohortStatus.WithTransferSender);
+
         return new ApprenticeshipRequestsHeaderViewModel
         {
             AccountHashedId = accountHashedId,
+
             CohortsInDraft = new ApprenticeshipRequestsTabViewModel(
-                cohorts.Count(x => x.GetStatus() == CohortStatus.Draft),
-                cohorts.Count(x => x.GetStatus() == CohortStatus.Draft) == 1 ? "Draft" : "Drafts",
+                cohortsInDraftCount,
+                cohortsInDraftCount == 1 ? "Draft" : "Drafts",
                 urlHelper.Action("Draft", "Cohort", new { accountHashedId }),
                 CohortStatus.Draft.ToString(),
                 selectedStatus == CohortStatus.Draft),
+
             CohortsInReview = new ApprenticeshipRequestsTabViewModel(
-                cohorts.Count(x => x.GetStatus() == CohortStatus.Review),
-                $"apprentice request{(cohorts.Count(x => x.GetStatus() == CohortStatus.Review) == 1 ? "" : "s")} ready for review",
+                cohortsInReviewCount,
+                $"apprentice request{(cohortsInReviewCount == 1 ? "" : "s")} ready for review",
                 urlHelper.Action("Review", "Cohort", new { accountHashedId }),
                 CohortStatus.Review.ToString(),
                 selectedStatus == CohortStatus.Review),
+
             CohortsWithTrainingProvider = new ApprenticeshipRequestsTabViewModel(
-                cohorts.Count(x => x.GetStatus() == CohortStatus.WithProvider),
+                cohortsWithProviderCount,
                 "With training providers",
                 urlHelper.Action("WithTrainingProvider", "Cohort", new { accountHashedId }),
                 CohortStatus.WithProvider.ToString(),
                 selectedStatus == CohortStatus.WithProvider),
+
             CohortsWithTransferSender = new ApprenticeshipRequestsTabViewModel(
-                cohorts.Count(x => x.GetStatus() == CohortStatus.WithTransferSender),
+                cohortsWithTransferSenderCount,
                 "With transfer sending employers",
                 urlHelper.Action("WithTransferSender", "Cohort", new { accountHashedId }),
                 CohortStatus.WithTransferSender.ToString(),
                 selectedStatus == CohortStatus.WithTransferSender)
         };
+    }
+
+    private static int CountForStatus(this CohortSummary[] cohorts, CohortStatus status)
+    {
+        return cohorts.Count(x => x.GetStatus() == status);
     }
 }
