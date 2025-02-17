@@ -37,11 +37,11 @@
                         <div class="govuk-radios__item" id="radio-item-funding-type">
                             <input class="govuk-radios__input" id="FundingType-5" name="FundingType" type="radio" value="5">
                             <label class="govuk-label govuk-radios__label" for="FundingType-5">
-                                <span>Transfer funds</span>
-                                <p class="govuk-hint">
-                                    A funding opportunity (pledge) from a levy-paying business
-                                </p>
+                                Transfer funds
                             </label>
+                            <div class="govuk-hint govuk-radios__hint">
+                                A funding opportunity (pledge) from a levy-paying business
+                            </div>
                         </div>
                     }
                     @if (Model.HasDirectTransfersAvailable)
@@ -49,11 +49,11 @@
                         <div class="govuk-radios__item" id="radio-item-funding-type">
                             <input class="govuk-radios__input" id="FundingType-1" name="FundingType" type="radio" value="1">
                             <label class="govuk-label govuk-radios__label" for="FundingType-1">
-                                <span>Transfer funds from a connection</span>
-                                <p class="govuk-hint">
-                                    A levy-paying business that has set up a connection with you in the service
-                                </p>
+                                Transfer funds from a connection
                             </label>
+                            <div class="govuk-hint govuk-radios__hint">
+                                A levy-paying business that has set up a connection with you in the service
+                            </div>
                         </div>
                     }
                     @if (!Model.IsLevyAccount && Model.HasUnallocatedReservationsAvailable)
@@ -62,10 +62,10 @@
                             <input class="govuk-radios__input" id="FundingType-2" name="FundingType" type="radio" value="2">
                             <label class="govuk-label govuk-radios__label" for="FundingType-2">
                                 Reserved funds
-                                <p class="govuk-hint">
-                                    Funding you've reserved from the government
-                                </p>
                             </label>
+                            <div class="govuk-hint govuk-radios__hint">
+                                Funding you've reserved from the government
+                            </div>
                         </div>
                     }
                     @if (!Model.IsLevyAccount && Model.HasAdditionalReservationFundsAvailable)
@@ -74,11 +74,11 @@
                             <input class="govuk-radios__input" id="FundingType-3" name="FundingType" type="radio" value="3">
                             <label class="govuk-label govuk-radios__label" for="FundingType-3">
                                 I want to reserve new funds
-                                <p class="govuk-hint">
-                                    You will automatically reserve new funding for an apprentice once you
-                                    enter their details
-                                </p>
                             </label>
+                            <div class="govuk-hint govuk-radios__hint">
+                                You will automatically reserve new funding for an apprentice once you
+                                enter their details
+                            </div>
                         </div>
                     }
                     @if (Model.IsLevyAccount)
