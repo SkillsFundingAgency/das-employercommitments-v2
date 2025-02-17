@@ -90,12 +90,16 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public bool HasPendingStartDateChange => PendingStartDateChange != null;
     public bool HasPendingProviderInitiatedPriceChange => PendingPriceChange?.ProviderApprovedDate != null;
     public bool HasPendingProviderInitiatedStartDateChange => PendingStartDateChange != null;
+    public bool HasWithheldPayment => PaymentStatus == "Withheld";
     public string PriceChangeUrl { get; set; }
     public string PendingPriceChangeUrl { get; set; }
     public string PendingStartDateChangeUrl { get; set; }
     public string PaymentStatusChangeUrl { get; set; }
     public ApprenticeDetailsBanners ShowBannersFlags { get; set; }
     public LearnerStatus LearnerStatus { get; set; }
+    public DateTime? PaymentFrozenOn { get; set; }
+
+    public bool ShowPriceChangeLink => IsOnFlexiPaymentPilot.GetValueOrDefault() && LearnerStatus != LearnerStatus.Withdrawn;
 
     public ActionRequiredBanner GetActionRequiredBanners()
     {

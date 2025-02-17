@@ -28,6 +28,7 @@ public class CookieStorageService<T> : ICookieStorageService<T>
         {
             IsEssential = true,
             HttpOnly = true,
+            Secure = true,
             Expires = DateTimeOffset.Now.AddDays(expiryDays)
         };
             

@@ -1,5 +1,4 @@
 ﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
-@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @inject ILinkGenerator LinkGenerator
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.AgreementNotSignedViewModel
 
@@ -31,7 +30,7 @@
             <a class="govuk-button" href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)" aria-label="Review your agreement">Review agreement</a>
             @if (Model.CanContinueAnyway)
             {
-                <a class="govuk-link" href="@Url.Action("SelectProvider", new { AccountHashedId = Model.AccountHashedId, ApprenticeshipSessionKey = Model.ApprenticeshipSessionKey})">Continue anyway</a>
+                <a class="govuk-link" href="@Url.Action("SelectFunding", new { Model.AccountHashedId, Model.ApprenticeshipSessionKey})">Continue anyway</a>
             }
         </div>
     </div>
