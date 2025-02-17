@@ -44,7 +44,7 @@ public static class CohortSummaryExtension
                 selectedStatus == CohortStatus.Draft),
             CohortsInReview = new ApprenticeshipRequestsTabViewModel(
                 cohorts.Count(x => x.GetStatus() == CohortStatus.Review),
-                "Ready to review",
+                $"apprentice request{(cohorts.Count(x => x.GetStatus() == CohortStatus.Review) == 1 ? "" : "s")} ready for review",
                 urlHelper.Action("Review", "Cohort", new { accountHashedId }),
                 CohortStatus.Review.ToString(),
                 selectedStatus == CohortStatus.Review),
