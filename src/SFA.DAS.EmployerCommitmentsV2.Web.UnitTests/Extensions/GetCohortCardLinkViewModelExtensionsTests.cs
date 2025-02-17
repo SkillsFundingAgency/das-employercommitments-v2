@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Routing;
+﻿using FluentAssertions;
+using Microsoft.AspNetCore.Mvc.Routing;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -18,12 +19,21 @@ public class GetCohortCardLinkViewModelExtensionsTests
     }
 
     [Test]
-    public void TheCohortsInReviewIsPopulatedCorrectly()
+    public void TheCohortsInReviewIsPopulatedCorrectlyForSingles()
+    {
+        var fixture = new GetCohortCardLinkViewModelTestsFixture(useSingles: true);
+        var result = fixture.GetCohortCardLinkViewModel();
+
+        fixture.VerifyCohortsInReviewIsCorrectForSingles(result);
+    }
+
+    [Test]
+    public void TheCohortsInReviewIsPopulatedCorrectlyForMultiples()
     {
         var fixture = new GetCohortCardLinkViewModelTestsFixture();
         var result = fixture.GetCohortCardLinkViewModel();
 
-        fixture.VerifyCohortsInReviewIsCorrect(result);
+        fixture.VerifyCohortsInReviewIsCorrectForMultiples(result);
     }
 
     [Test]
@@ -65,56 +75,61 @@ public class GetCohortCardLinkViewModelExtensionsTests
 
         private static string AccountHashed => "ABC123";
 
-        public GetCohortCardLinkViewModelTestsFixture()
+        public GetCohortCardLinkViewModelTestsFixture(bool useSingles = false)
         {
             UrlHelper = new Mock<IUrlHelper>();
             UrlHelper.Setup(x => x.Action(It.IsAny<UrlActionContext>())).Returns<UrlActionContext>((ac) => $"http://{ac.Controller}/{ac.Action}/");
             _fixture = new Fixture();
 
-            CohortSummaries = CreateGetCohortsResponse();
+            CohortSummaries = CreateGetCohortsResponse(useSingles);
         }
 
         public void VerifyCohortsInDraftIsCorrect(ApprenticeshipRequestsHeaderViewModel result)
         {
-            Assert.That(result.CohortsInDraft, Is.Not.Null);
-            Assert.That(result.CohortsInDraft.Count, Is.EqualTo(5));
-            Assert.That(result.CohortsInDraft.Description, Is.EqualTo("Drafts"));
+            result.CohortsInDraft.Should().NotBeNull();
+            result.CohortsInDraft.Count.Should().Be(5);
+            result.CohortsInDraft.Description.Should().Be("Drafts");
             UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "Draft")));
         }
 
-        public void VerifyCohortsInReviewIsCorrect(ApprenticeshipRequestsHeaderViewModel result)
+        public void VerifyCohortsInReviewIsCorrectForMultiples(ApprenticeshipRequestsHeaderViewModel result)
         {
-            Assert.That(result.CohortsInReview, Is.Not.Null);
-            Assert.That(result.CohortsInReview.Count, Is.EqualTo(4));
-            Assert.That(result.CohortsInReview.Description, Is.EqualTo("Ready to review"));
+            result.CohortsInDraft.Should().NotBeNull();
+            result.CohortsInReview.Count.Should().Be(4);
+            result.CohortsInReview.Description.Should().Be("apprentice requests ready for review");
+            UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "Review")));
+        }
+
+        public void VerifyCohortsInReviewIsCorrectForSingles(ApprenticeshipRequestsHeaderViewModel result)
+        {
+            result.CohortsInDraft.Should().NotBeNull();
+            result.CohortsInReview.Count.Should().Be(1);
+            result.CohortsInReview.Description.Should().Be("apprentice request ready for review");
             UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "Review")));
         }
 
         public void VerifyCohortsWithProviderIsCorrect(ApprenticeshipRequestsHeaderViewModel result)
         {
-            Assert.That(result.CohortsWithTrainingProvider, Is.Not.Null);
-            Assert.That(result.CohortsWithTrainingProvider.Count, Is.EqualTo(3));
-            Assert.That(result.CohortsWithTrainingProvider.Description, Is.EqualTo("With training providers"));
+            result.CohortsInDraft.Should().NotBeNull();
+            result.CohortsWithTrainingProvider.Count.Should().Be(3);
+            result.CohortsWithTrainingProvider.Description.Should().Be("With training providers");
             UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "WithTrainingProvider")));
         }
 
         public void VerifyCohortsWithTransferSenderIsCorrect(ApprenticeshipRequestsHeaderViewModel result)
         {
-            Assert.That(result.CohortsWithTransferSender, Is.Not.Null);
-            Assert.That(result.CohortsWithTransferSender.Count, Is.EqualTo(2));
-            Assert.That(result.CohortsWithTransferSender.Description, Is.EqualTo("With transfer sending employers"));
+            result.CohortsInDraft.Should().NotBeNull();
+            result.CohortsWithTransferSender.Count.Should().Be(2);
+            result.CohortsWithTransferSender.Description.Should().Be("With transfer sending employers");
             UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "WithTransferSender")));
         }
 
         public static void VerifySelectedCohortStatusIsCorrect(ApprenticeshipRequestsHeaderViewModel result, CohortStatus expectedCohortStatus)
         {
-            Assert.Multiple(() =>
-            {
-                Assert.That(result.CohortsWithTransferSender.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.WithTransferSender));
-                Assert.That(result.CohortsInDraft.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.Draft));
-                Assert.That(result.CohortsInReview.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.Review));
-                Assert.That(result.CohortsWithTrainingProvider.IsSelected, Is.EqualTo(expectedCohortStatus == CohortStatus.WithProvider));
-            });
+            result.CohortsWithTransferSender.IsSelected.Should().Be(expectedCohortStatus == CohortStatus.WithTransferSender);
+            result.CohortsInDraft.IsSelected.Should().Be(expectedCohortStatus == CohortStatus.Draft);
+            result.CohortsInReview.IsSelected.Should().Be(expectedCohortStatus == CohortStatus.Review);
+            result.CohortsWithTrainingProvider.IsSelected.Should().Be(expectedCohortStatus == CohortStatus.WithProvider);
         }
 
         public ApprenticeshipRequestsHeaderViewModel GetCohortCardLinkViewModel(CohortStatus selectedCohortStatus = CohortStatus.Draft)
@@ -122,23 +137,21 @@ public class GetCohortCardLinkViewModelExtensionsTests
             return CohortSummaries.GetCohortCardLinkViewModel(UrlHelper.Object, AccountHashed, selectedCohortStatus);
         }
 
-        private static List<CohortSummary> PopulateWith(List<CohortSummary> list, bool draft, Party withParty)
+        private static void PopulateWith(List<CohortSummary> list, bool draft, Party withParty)
         {
             foreach (var item in list)
             {
                 item.IsDraft = draft;
                 item.WithParty = withParty;
             }
-
-            return list;
         }
 
-        private CohortSummary[] CreateGetCohortsResponse()
+        private CohortSummary[] CreateGetCohortsResponse(bool useSingles = false)
         {
             var listInDraft = _fixture.CreateMany<CohortSummary>(5).ToList();
             PopulateWith(listInDraft, true, Party.Employer);
 
-            var listInReview = _fixture.CreateMany<CohortSummary>(4).ToList();
+            var listInReview = _fixture.CreateMany<CohortSummary>(useSingles ? 1 : 4).ToList();
             PopulateWith(listInReview, false, Party.Employer);
 
             var listWithProvider = _fixture.CreateMany<CohortSummary>(3).ToList();
