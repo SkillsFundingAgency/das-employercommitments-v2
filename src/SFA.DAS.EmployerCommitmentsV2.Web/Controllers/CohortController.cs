@@ -564,20 +564,24 @@ public class CohortController : Controller
     public async Task<IActionResult> SelectFunding([FromQuery] Guid apprenticeshipSessionKey)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
-
+        
         if (cacheModel.EncodedPledgeApplicationId != null || cacheModel.TransferSenderId != null)
         {
-            return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
+            return RedirectToCohortSelectProvider(cacheModel);
         }
 
         var viewModel = await _modelMapper.Map<SelectFundingViewModel>(cacheModel);
-
-        if (viewModel.HasDirectTransfersAvailable == false &&
-             viewModel.HasAdditionalReservationFundsAvailable == false &&
-             viewModel.HasUnallocatedReservationsAvailable == false)
+        
+        if (ShouldRedirectToProvider(viewModel))
         {
-            return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
+            return RedirectToCohortSelectProvider(cacheModel);
         }
+
+        if (ShouldRedirectToReservations(viewModel))
+        {
+            return Redirect(GenerateReservationUrl(cacheModel));
+        }
+
         return View(viewModel);
     }
 
@@ -760,5 +764,34 @@ public class CohortController : Controller
             model.FundingBandMax = fundingBandData?.ProposedMaxFunding;
             model.StandardPageUrl = fundingBandData?.StandardPageUrl;
         }
+    }
+    
+    private IActionResult RedirectToCohortSelectProvider(AddApprenticeshipCacheModel cacheModel)
+    {
+        return RedirectToAction(RouteNames.CohortSelectProvider, new
+        {
+            cacheModel.AccountHashedId,
+            cacheModel.ApprenticeshipSessionKey
+        });
+    }
+    
+    private bool ShouldRedirectToProvider(SelectFundingViewModel viewModel)
+    {
+        return viewModel.IsLevyAccount && !viewModel.HasDirectTransfersAvailable && !viewModel.HasLtmTransfersAvailable;
+    }
+
+    private bool ShouldRedirectToReservations(SelectFundingViewModel viewModel)
+    {
+        return !viewModel.IsLevyAccount &&
+               !viewModel.HasDirectTransfersAvailable &&
+               !viewModel.HasLtmTransfersAvailable &&
+               !viewModel.HasUnallocatedReservationsAvailable;
+    }
+
+    private string GenerateReservationUrl(AddApprenticeshipCacheModel cacheModel)
+    {
+        return _linkGenerator.ReservationsLink(
+            $"accounts/{cacheModel.AccountHashedId}/reservations/{cacheModel.AccountLegalEntityHashedId}/select?" +
+            $"&beforeProviderSelected=true&apprenticeshipSessionKey={cacheModel.ApprenticeshipSessionKey}");
     }
 }
