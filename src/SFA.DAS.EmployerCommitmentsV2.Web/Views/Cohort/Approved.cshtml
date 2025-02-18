@@ -9,7 +9,7 @@
 }
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
+    <div class="govuk-grid-column-two-thirds">
         <div class="govuk-panel govuk-panel--confirmation">
             <h1 class="govuk-panel__title">@Model.PageTitle</h1>
         </div>
@@ -42,7 +42,7 @@
         {
             <p class="govuk-body">Your training provider will review these apprentice details and either confirm the information is correct or contact you to suggest changes.</p>
             <p>
-                @Html.ActionLink("Go back to view apprentice records.", "Details", new {Model.AccountHashedId, Model.CohortReference}, new {id="next-back-link", @class="govuk-link"})
+                @Html.ActionLink("Go back to view apprentice records", "Details", new {Model.AccountHashedId, Model.CohortReference}, new {id="next-back-link", @class="govuk-link"})
             </p>
         }
         else if (Model.WithParty == Party.TransferSender)
