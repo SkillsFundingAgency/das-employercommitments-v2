@@ -12,7 +12,7 @@ public class SelectProviderViewModelMapper(IApprovalsApiClient outerApiClient) :
 
         var providers = selectProviderDetails.Providers.ToList();
         var accountLegalEntity = selectProviderDetails.AccountLegalEntity;
-
+        
         return new SelectProviderViewModel
         {
             AccountHashedId = source.AccountHashedId,
