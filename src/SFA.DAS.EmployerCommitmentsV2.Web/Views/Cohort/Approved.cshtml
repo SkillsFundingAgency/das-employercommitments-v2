@@ -42,7 +42,7 @@
         {
             <p class="govuk-body">Your training provider will review these apprentice details and either confirm the information is correct or contact you to suggest changes.</p>
             <p>
-                @Html.ActionLink("Go back to view apprentice records.", "Details", new {Model.AccountHashedId, Model.CohortReference}, new {id="next-back-link", @class="govuk-link"})
+                @Html.ActionLink("Go back to view apprentice records", "Details", new {Model.AccountHashedId, Model.CohortReference}, new {id="next-back-link", @class="govuk-link"})
             </p>
         }
         else if (Model.WithParty == Party.TransferSender)
