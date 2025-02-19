@@ -360,7 +360,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task LearnerStatus_IsMapped(LearnerStatus status, string statusText)
         {
             //Arrange
-            GetManageApprenticeshipDetailsResponse.LearnerStatus = status;
+            GetManageApprenticeshipDetailsResponse.LearnerStatusDetails = new LearnerStatusDetails{ LearnerStatus = status };
 
             //Act
             var result = await _mapper.Map(_request);
@@ -368,6 +368,26 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Assert
             var learnerStatus = result.LearnerStatus.GetDescription();
             learnerStatus.Should().Be(statusText);
+        }
+
+        [Test]
+        public async Task WithdrawalChangedDate_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            result.WithdrawalChangedDate.Should().Be(GetManageApprenticeshipDetailsResponse.LearnerStatusDetails.WithdrawalChangedDate);
+        }
+
+        [Test]
+        public async Task WithdrawalReason_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            result.WithdrawalReason.Should().Be(GetManageApprenticeshipDetailsResponse.LearnerStatusDetails.WithdrawalReason);
         }
 
         [Test]
@@ -884,7 +904,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         public async Task ThenPaymentStatusIsMappedCorrectly(bool paymentsFrozen, bool waitingToStart, string expectedStatus)
         {
             //Act
-            GetManageApprenticeshipDetailsResponse.LearnerStatus = waitingToStart ? LearnerStatus.WaitingToStart : LearnerStatus.InLearning;
+            GetManageApprenticeshipDetailsResponse.LearnerStatusDetails = waitingToStart ? new LearnerStatusDetails{ LearnerStatus = LearnerStatus.WaitingToStart } : new LearnerStatusDetails { LearnerStatus = LearnerStatus.InLearning };
             GetManageApprenticeshipDetailsResponse.PaymentsStatus.PaymentsFrozen = paymentsFrozen;
             var result = await _mapper.Map(_request);
 
