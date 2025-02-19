@@ -13,14 +13,14 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <partial name="_ValidationSummary" />
+        <partial name="_ValidationSummary"/>
 
         <h1 class="govuk-heading-l"> @ViewBag.Title </h1>
-        
+
         <p class="govuk-body">
             These are the employers you’ve connected with.
         </p>
-        
+
         <p class="govuk-body">
             You can only use one transfer from a connection per application, but you can
             add multiple apprenticeships to that transfer.
@@ -31,7 +31,9 @@
         </p>
 
         <p class="govuk-body">
-            If you cannot find the transfer you need, you can <a href="@Url.FinanceLink($"accounts/{Model.AccountHashedId}/transfers/connections")" id="info-link" target="_blank" class="govuk-link">manage your transfer connections (opens in new tab)</a>
+            If you cannot find the transfer you need, you can <a
+                href="@Url.FinanceLink($"accounts/{Model.AccountHashedId}/transfers/connections")" id="info-link"
+                target="_blank" class="govuk-link">manage your transfer connections (opens in new tab)</a>
         </p>
 
         <form method="post">
@@ -41,25 +43,32 @@
             @Html.HiddenFor(x => x.ApprenticeshipSessionKey)
             @Html.AntiForgeryToken()
 
-            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.TransferConnectionCode, "govuk-form-group--error")">
+            <div
+                class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.TransferConnectionCode, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset" id="radio-lines">
                     @if (!ViewData.ModelState.IsValid)
                     {
-                        <span id="error-message-@nameof(SelectTransferConnectionViewModel.TransferConnectionCode)" class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(SelectTransferConnectionViewModel.TransferConnectionCode)].Errors.First().ErrorMessage
+                        <span id="error-message-@nameof(SelectTransferConnectionViewModel.TransferConnectionCode)"
+                              class="govuk-error-message">
+                            <span
+                                class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(SelectTransferConnectionViewModel.TransferConnectionCode)].Errors.First().ErrorMessage
                         </span>
                     }
                     <div class="govuk-radios">
                         @foreach (var entity in Model.TransferConnections)
                         {
                             <div class="govuk-radios__item" id="radio-item-transfer-connection">
-                                <input class="govuk-radios__input" id="TransferConnection-@entity.FundingEmployerPublicHashedAccountId" name="TransferConnectionCode" type="radio" value="@entity.FundingEmployerPublicHashedAccountId">
-                                <label class="govuk-label govuk-radios__label" for="TransferConnection-@entity.FundingEmployerPublicHashedAccountId">
+                                <input class="govuk-radios__input"
+                                       id="TransferConnection-@entity.FundingEmployerPublicHashedAccountId"
+                                       name="TransferConnectionCode" type="radio"
+                                       value="@entity.FundingEmployerPublicHashedAccountId">
+                                <label class="govuk-label govuk-radios__label"
+                                       for="TransferConnection-@entity.FundingEmployerPublicHashedAccountId">
                                     @entity.FundingEmployerAccountName
                                     @if (entity.ApprovedOn.HasValue)
                                     {
                                         <p class="govuk-hint">
-                                            Connection approved on @entity.ApprovedOn.Value.ToString("dd MMM yyyy") 
+                                            Connection approved on @entity.ApprovedOn.Value.ToString("dd MMM yyyy")
                                         </p>
                                     }
                                 </label>
@@ -76,5 +85,9 @@
 
 @section Back
 {
-    <a href="@Url.Action("Inform", "Cohort", new { Model.AccountHashedId})" id="back-link" class="govuk-back-link">Back</a>
+    <a asp-controller="Cohort"
+       asp-action="SelectFunding"
+       asp-route-accountHashedId="@Model.AccountHashedId"
+       asp-route-apprenticeshipSessionKey="@Model.ApprenticeshipSessionKey"
+       id="back-link" class="govuk-back-link">Back</a>
 }

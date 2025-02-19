@@ -4,22 +4,15 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class SelectFundingViewModelMapper : IMapper<AddApprenticeshipCacheModel, SelectFundingViewModel>
+public class SelectFundingViewModelMapper(IApprovalsApiClient outerApiClient, ILogger<SelectFundingViewModelMapper> logger)
+    : IMapper<AddApprenticeshipCacheModel, SelectFundingViewModel>
 {
-    private readonly IApprovalsApiClient _outerApiClient;
-    private readonly ILogger<SelectFundingViewModelMapper> _logger;
-
-    public SelectFundingViewModelMapper(IApprovalsApiClient outerApiClient, ILogger<SelectFundingViewModelMapper> logger)
-    {
-        _outerApiClient = outerApiClient;
-        _logger = logger;
-    }
-
     public async Task<SelectFundingViewModel> Map(AddApprenticeshipCacheModel source)
     {
-        var selectFundingDetails = await _outerApiClient.GetSelectFundingOptions(source.AccountId);
+        var selectFundingDetails = await outerApiClient.GetSelectFundingOptions(source.AccountId);
 
-        _logger.LogInformation("Funding Options Levy {0}, Direct {1}, Additional Res {2}, Unallocated Res {3}", selectFundingDetails.IsLevyAccount,
+        logger.LogInformation("Funding Options Levy {IsLevyAccount}, Direct {HasDirectTransfersAvailable}, Additional Res {HasAdditionalReservationFundsAvailable}, Unallocated Res {HasUnallocatedReservationsAvailable}", 
+            selectFundingDetails.IsLevyAccount,
             selectFundingDetails.HasDirectTransfersAvailable,
             selectFundingDetails.HasAdditionalReservationFundsAvailable,
             selectFundingDetails.HasUnallocatedReservationsAvailable);
