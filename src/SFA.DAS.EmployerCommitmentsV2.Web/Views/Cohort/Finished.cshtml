@@ -7,43 +7,50 @@
 }
 
 <div class="govuk-grid-row">
-    <p class="govuk-grid-column-two-thirds">
-    <div class="govuk-panel govuk-panel--confirmation">
-        <h1 class="govuk-panel__title">Add apprentice request sent to training provider</h1>
-    </div>
-    <dl class="govuk-summary-list">
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Reference</dt>
-            <dd class="govuk-summary-list__value">@Model.CohortReference</dd>
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">Add apprentice request sent to training provider</h1>
         </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Training provider</dt>
-            <dd class="govuk-summary-list__value">@Model.ProviderName</dd>
-        </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Message for training provider</dt>
-            <dd class="govuk-summary-list__value">@(string.IsNullOrEmpty(Model.Message) ? "No message" : Model.Message)</dd>
-        </div>
-    </dl>
-    <h2 class="govuk-heading-m">What happens next?</h2>
-        
-    <p class="govuk-body">
-        Now you’ve submitted your request:
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Reference</dt>
+                <dd class="govuk-summary-list__value">@Model.CohortReference</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Training provider</dt>
+                <dd class="govuk-summary-list__value">@Model.ProviderName</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Message for training provider</dt>
+                <dd class="govuk-summary-list__value">@(string.IsNullOrEmpty(Model.Message) ? "No message" : Model.Message)</dd>
+            </div>
+        </dl>
+        <h2 class="govuk-heading-m">What happens next?</h2>
+
+        <p class="govuk-body">
+            Now you’ve submitted your request:
         <ul class="govuk-list govuk-list--bullet">
             <li>you’ll receive a confirmation email</li>
             <li>your training provider will add the apprentice’s details</li>
             <li>you’ll receive another email asking you to review these details</li>
-            <li>you should review and approve this as soon as possible in <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Review", "Cohort", new { Model.AccountHashedId })" id="apprentice-requests">Apprentice requests</a></li>
+            <li>you should review and approve this as soon as possible in <a
+                    class="govuk-link govuk-link--no-visited-state"
+                    href="@Url.Action("Review", "Cohort", new { Model.AccountHashedId })" id="apprentice-requests">Apprentice
+                    requests</a></li>
         </ul>
-    </p>
-    <div class="govuk-inset-text das-inset-text--filled">
-        <h3 class="govuk-heading-m govuk-!-margin-bottom-2">Help us improve this section</h3>
-        <p class="govuk-body">Take a 3 minute survey about adding apprentices so that we can improve the service.</p>
-        <a class="govuk-button" href="https://www.smartsurvey.co.uk/s/apprenticeshipservicefeedback">Take the survey</a>
+        </p>
+        <div class="govuk-inset-text das-inset-text--filled">
+            <h3 class="govuk-heading-m govuk-!-margin-bottom-2">Help us improve this section</h3>
+            <p class="govuk-body">Take a 3 minute survey about adding apprentices so that we can improve the
+                service.</p>
+            <a class="govuk-button" href="https://www.smartsurvey.co.uk/s/apprenticeshipservicefeedback">Take the
+                survey</a>
+        </div>
     </div>
 </div>
 
 @section Back
 {
-    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new {Model.AccountHashedId})">Back to Apprentices</a>
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new { Model.AccountHashedId })">Back to
+        Apprentices</a>
 } 
