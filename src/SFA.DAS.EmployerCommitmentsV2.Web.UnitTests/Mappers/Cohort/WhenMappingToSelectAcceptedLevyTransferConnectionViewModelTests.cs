@@ -53,6 +53,16 @@ public class WhenMappingToSelectAcceptedLevyTransferConnectionViewModelTests
         //Assert           
         result.AccountHashedId.Should().Be(_request.AccountHashedId);
     }
+    
+    [Test]
+    public async Task Then_ApprenticeshipSessionKey_Is_Mapped()
+    {
+        //Act
+        var result = await _mapper.Map(_request);
+
+        //Assert           
+        result.ApprenticeshipSessionKey.Should().Be(_request.ApprenticeshipSessionKey);
+    }
 
     [Test]
     public async Task Then_List_Of_Applications_Is_Mapped()

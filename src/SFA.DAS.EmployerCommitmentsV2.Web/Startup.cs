@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using OpenTelemetry.Logs;
-using SFA.DAS.EmployerCommitmentsV2.Configuration;
+using SFA.DAS.GovUK.Auth.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Middleware;
@@ -26,7 +26,7 @@ public class Startup
     {
         services.AddSingleton(_configuration);
         services.AddHttpClient();
-        
+
         services.AddLogging(builder =>
         {
             builder.AddFilter<OpenTelemetryLoggerProvider>(string.Empty, LogLevel.Information);
@@ -43,7 +43,7 @@ public class Startup
             .AddApplicationServices()
             .AddCommitmentsApiClient(_configuration)
             .AddAuthorizationServices(_configuration)
-            .AddCommitmentPermissionsApiClient()
+            .AddCommitmentPermissionsApiClient(_configuration)
             .AddDasHealthChecks()
             .AddDasMaMenuConfiguration(_configuration)
             .AddDasMvc()
@@ -67,7 +67,10 @@ public class Startup
             .UseAuthorization()
             .UseMiddleware<MissingApprenticeshipSessionKeyMiddleware>()
             .UseMiddleware<CacheItemNotFoundMiddleware>()
-            .UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute()
-            );
+            .UseEndpoints(endpoints =>
+            {
+                endpoints.MapSessionKeepAliveEndpoint();
+                endpoints.MapDefaultControllerRoute();
+            });
     }
 }
