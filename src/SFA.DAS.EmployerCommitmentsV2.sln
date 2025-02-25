@@ -23,6 +23,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.EmployerCommitments
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.EmployerCommitmentsV2.Api.FakeServers", "SFA.DAS.EmployerCommitmentsV2.Api.FakeServers\SFA.DAS.EmployerCommitmentsV2.Api.FakeServers.csproj", "{CC545EBB-887E-44A3-BA0A-80791E0D2372}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Validation.Mvc", "SFA.DAS.Validation.Mvc\SFA.DAS.Validation.Mvc.csproj", "{2640F2E1-2146-4789-8420-872BABF9F396}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Validation", "SFA.DAS.Validation\SFA.DAS.Validation.csproj", "{F5B9AEE7-3F3E-42A8-B015-88766B9D2051}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +53,14 @@ Global
 		{CC545EBB-887E-44A3-BA0A-80791E0D2372}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC545EBB-887E-44A3-BA0A-80791E0D2372}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC545EBB-887E-44A3-BA0A-80791E0D2372}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2640F2E1-2146-4789-8420-872BABF9F396}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2640F2E1-2146-4789-8420-872BABF9F396}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2640F2E1-2146-4789-8420-872BABF9F396}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2640F2E1-2146-4789-8420-872BABF9F396}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5B9AEE7-3F3E-42A8-B015-88766B9D2051}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5B9AEE7-3F3E-42A8-B015-88766B9D2051}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5B9AEE7-3F3E-42A8-B015-88766B9D2051}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5B9AEE7-3F3E-42A8-B015-88766B9D2051}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
