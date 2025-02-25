@@ -36,7 +36,7 @@ public class ValidateModelStateFilter(ILogger<ValidateModelStateFilter> logger) 
         {
             var tempDataFactory = filterContext.HttpContext.RequestServices.GetRequiredService<ITempDataDictionaryFactory>();
             var tempData = tempDataFactory.GetTempData(filterContext.HttpContext);
-            var serializableModelState = filterContext.ModelState.ToSerializable();
+            var serializableModelState = filterContext.ModelState.ToSerializableWithOnlyErrors();
             
             logger.LogInformation("ValidateModelStateFilter.OnActionExecuting tempData before saving: {Model}", JsonConvert.SerializeObject(tempData));
             
