@@ -31,13 +31,13 @@
     <PackageReference Include="Scrutor" Version="6.0.1" />
     <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.127" />
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84" />
-	<PackageReference Include="SFA.DAS.Employer.Shared.UI" Version="17.1.127" />
-	<PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />
+    <PackageReference Include="SFA.DAS.Employer.Shared.UI" Version="17.1.131" />
+    <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />
     <PackageReference Include="SFA.DAS.InputValidation" Version="17.1.100" />
+    <PackageReference Include="SFA.DAS.Validation.Mvc" Version="6.0.31" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.1" />
     <PackageReference Include="System.Text.Json" Version="9.0.0" />
     <PackageReference Include="WebEssentials.AspNetCore.CdnTagHelpers" Version="1.0.21" />
-    <PackageReference Include="SFA.DAS.Validation.Mvc" Version="6.0.30" />
     <PackageReference Include="StackExchange.Redis" Version="2.8.24" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.12" />
