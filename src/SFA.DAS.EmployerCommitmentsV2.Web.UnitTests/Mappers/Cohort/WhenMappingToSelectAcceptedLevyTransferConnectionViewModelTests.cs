@@ -78,7 +78,7 @@ public class WhenMappingToSelectAcceptedLevyTransferConnectionViewModelTests
             SendingEmployerPublicHashedId = x.SenderEmployerAccountId + "PublicId",
             OpportunityHashedId = x.OpportunityId + "PledgeId",
             ApplicationAndSenderHashedId = x.Id + "AppId" + "|" + x.SenderEmployerAccountId + "PublicId",
-            DisplayName = (x.IsNamePublic ? x.SenderEmployerAccountName : "Opportunity") + $" ({x.OpportunityId + "PledgeId"}) - £{x.TotalAmount.ToString("N")}"
+            DisplayName = (x.IsNamePublic ? x.SenderEmployerAccountName : "Opportunity") + $" ({x.PledgeId + "PledgeId"}) - £{x.TotalAmount.ToString("N")}"
         }));
     }
 

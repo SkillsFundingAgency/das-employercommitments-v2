@@ -34,6 +34,11 @@ public class SelectAcceptedLevyTransferConnectionViewModelMapper(IApprovalsApiCl
     {
         return encodingService.Encode(x.OpportunityId, EncodingType.PledgeId);
     }
+    
+    private string GetPledgeHashedId(LevyTransferConnection x)
+    {
+        return encodingService.Encode(x.PledgeId, EncodingType.PledgeId);
+    }
 
     private string GetSendingEmployerPublicHashedId(LevyTransferConnection x)
     {
@@ -47,14 +52,16 @@ public class SelectAcceptedLevyTransferConnectionViewModelMapper(IApprovalsApiCl
 
     private string BuildTitle(LevyTransferConnection levyTransferConnection)
     {
-        string title = "Opportunity";
-        string hashedId = GetOpportunityHashedId(levyTransferConnection);
+        var title = "Opportunity";
+        var hashedId = GetPledgeHashedId(levyTransferConnection);
+        
         if (levyTransferConnection.IsNamePublic)
         {
             title = levyTransferConnection.SenderEmployerAccountName;
         }
 
         title += $" ({hashedId}) - £{levyTransferConnection.TotalAmount:N}";
+        
         return title;
     }
 }
