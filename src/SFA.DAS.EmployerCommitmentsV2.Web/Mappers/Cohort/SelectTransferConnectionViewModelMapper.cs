@@ -6,31 +6,24 @@ using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class SelectTransferConnectionViewModelMapper : IMapper<AddApprenticeshipCacheModel, SelectTransferConnectionViewModel>
+public class SelectTransferConnectionViewModelMapper(IApprovalsApiClient approvalsApiClient, IEncodingService encodingService)
+    : IMapper<AddApprenticeshipCacheModel, SelectTransferConnectionViewModel>
 {
-    private readonly IApprovalsApiClient _approvalsApiClient;
-    private readonly IEncodingService _encodingService;
-
-    public SelectTransferConnectionViewModelMapper(IApprovalsApiClient approvalsApiClient, IEncodingService encodingService)
-    {
-        _approvalsApiClient = approvalsApiClient;
-        _encodingService = encodingService;
-    }
-
     public async Task<SelectTransferConnectionViewModel> Map(AddApprenticeshipCacheModel source)
     {
-        var result = await _approvalsApiClient.GetSelectDirectTransferConnection(source.AccountId);
+        var result = await approvalsApiClient.GetSelectDirectTransferConnection(source.AccountId);
 
         return new SelectTransferConnectionViewModel
         {
             AccountHashedId = source.AccountHashedId,
             IsLevyAccount = result.IsLevyAccount,
+            ApprenticeshipSessionKey = source.ApprenticeshipSessionKey,
             TransferConnections = result.TransferConnections == null ? new List<TransferConnection>() :
                 result.TransferConnections.Select(x => new TransferConnection
                 {
                     FundingEmployerAccountId = x.FundingEmployerAccountId,
-                    FundingEmployerPublicHashedAccountId = _encodingService.Encode(x.FundingEmployerAccountId, EncodingType.PublicAccountId),
-                    FundingEmployerHashedAccountId = _encodingService.Encode(x.FundingEmployerAccountId, EncodingType.AccountId),
+                    FundingEmployerPublicHashedAccountId = encodingService.Encode(x.FundingEmployerAccountId, EncodingType.PublicAccountId),
+                    FundingEmployerHashedAccountId = encodingService.Encode(x.FundingEmployerAccountId, EncodingType.AccountId),
                     FundingEmployerAccountName = x.FundingEmployerAccountName,
                     ApprovedOn = x.ApprovedOn
                 }).ToList()
