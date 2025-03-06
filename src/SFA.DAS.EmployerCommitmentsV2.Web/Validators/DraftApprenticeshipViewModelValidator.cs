@@ -5,8 +5,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Validators;
 
 public class DraftApprenticeshipViewModelValidator : AbstractValidator<DraftApprenticeshipViewModel>
 {
-    private const string EmailAddressEmptyErrorMessage = "Enter an email address";
-    private const string EmailAddressFormatErrorMessage = "Enter an email address in the correct format";
+    private const string EmailAddressEmptyErrorMessage = "Email must not be empty";
+    private const string EmailAddressFormatErrorMessage = "Email must be in the correct format";
 
     public DraftApprenticeshipViewModelValidator()
     {
