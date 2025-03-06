@@ -16,7 +16,7 @@ public class GetManageApprenticeshipDetailsResponse
     public PendingPriceChangeDetails PendingPriceChange { get; set; }
     public PendingStartDateChangeDetails PendingStartDateChange { get; set; }
     public PaymentsStatusDetails PaymentsStatus { get; set; }
-    public LearnerStatus LearnerStatus { get; set; }
+    public LearnerStatusDetails LearnerStatusDetails { get; set; }
 
     public class GetApprenticeshipResponse
     {
@@ -207,4 +207,11 @@ public class GetManageApprenticeshipDetailsResponse
         public string ReasonFrozen { get; set; }
         public DateTime? FrozenOn { get; set; }
     }
+}
+
+public class LearnerStatusDetails
+{
+    public LearnerStatus LearnerStatus { get; set; }
+    public DateTime? WithdrawalChangedDate { get; set; }
+    public string WithdrawalReason { get; set; }
 }
