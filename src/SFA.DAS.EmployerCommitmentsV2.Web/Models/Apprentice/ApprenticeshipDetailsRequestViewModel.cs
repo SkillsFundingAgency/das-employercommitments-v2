@@ -98,6 +98,8 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public ApprenticeDetailsBanners ShowBannersFlags { get; set; }
     public LearnerStatus LearnerStatus { get; set; }
     public DateTime? PaymentFrozenOn { get; set; }
+    public DateTime? WithdrawalChangedDate { get; set; }
+    public string WithdrawalReason { get; set; }
 
     public bool ShowPriceChangeLink => IsOnFlexiPaymentPilot.GetValueOrDefault() && LearnerStatus != LearnerStatus.Withdrawn;
 
