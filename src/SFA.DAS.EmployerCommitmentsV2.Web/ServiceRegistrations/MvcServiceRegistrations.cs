@@ -1,5 +1,6 @@
 ﻿using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using SFA.DAS.CommitmentsV2.Shared.Filters;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Web.Filters;
 using SFA.DAS.EmployerCommitmentsV2.Web.ModelBinding;
@@ -19,6 +20,7 @@ public static class MvcServiceRegistrations
             {
                 options.EnableEndpointRouting = false;
                 options.AddValidation();
+                options.Filters.Add<DomainExceptionRedirectGetFilterAttribute>();
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 options.Filters.Add(new GoogleAnalyticsFilter());
                 options.ModelBinderProviders.Insert(0, new AuthorizationModelBinderProvider());
