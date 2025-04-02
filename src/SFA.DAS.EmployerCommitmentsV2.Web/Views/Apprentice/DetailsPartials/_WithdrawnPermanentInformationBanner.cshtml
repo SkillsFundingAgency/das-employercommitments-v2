@@ -1,0 +1,19 @@
+﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+<div id="withdrawn-permanent-banner" class="govuk-notification-banner">
+    <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+            Important
+        </h2>
+    </div>
+    <div class="govuk-notification-banner__content">
+        <h3 class="govuk-notification-banner__heading">
+            The training provider changed the apprentice status to "Withdrawn" on the @Model.WithdrawalChangedDate.GetValueOrDefault().ToGdsHumanisedDate()
+        </h3>
+        <p class="govuk-body">
+            Reason for update: @Model.WithdrawalReason <br/>
+            <br />
+            If you believe this was done in error please contact the training provider.
+        </p>
+    </div>
+</div>
