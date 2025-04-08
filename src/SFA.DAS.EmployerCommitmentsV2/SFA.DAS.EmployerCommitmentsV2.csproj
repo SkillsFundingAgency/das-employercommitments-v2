@@ -17,7 +17,7 @@
     <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="100.0.43" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.76" />
-    <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.127" />
+    <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.139" />
     <PackageReference Include="SFA.DAS.Validation.Mvc" Version="6.0.31" />
     <PackageReference Include="System.Formats.Asn1" Version="8.0.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.1" />
