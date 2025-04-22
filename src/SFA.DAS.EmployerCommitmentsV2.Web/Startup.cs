@@ -69,7 +69,6 @@ public class Startup
             .UseMiddleware<CacheItemNotFoundMiddleware>()
             .UseEndpoints(endpoints =>
             {
-                endpoints.MapSessionKeepAliveEndpoint();
                 endpoints.MapDefaultControllerRoute();
             });
     }
