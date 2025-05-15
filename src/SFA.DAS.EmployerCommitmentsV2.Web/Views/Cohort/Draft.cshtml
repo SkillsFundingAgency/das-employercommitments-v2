@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DraftViewModel
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DraftViewModel
 
 @{
     ViewData["Title"] = "Draft apprentice details";
@@ -11,7 +12,7 @@
         <div class="govuk-width-container">
             @await Html.PartialAsync("_ApprenticeshipRequestsHeaderPartial", Model.ApprenticeshipRequestsHeaderViewModel)
 
-            @if (Model.Cohorts.Count() > 0)
+            @if (Model.Cohorts.Any())
             {
                 <table class="govuk-table das-table--responsive">
                     <thead class="govuk-table__head">
@@ -32,7 +33,7 @@
                                 <td class="govuk-table__cell" data-label="Reference">@cohort.CohortReference</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfApprentices</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" data-label="">
-                                    @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohort.CohortReference }, new { @class = "govuk-link cohort-details-link" })
+                                    <a class="govuk-link cohort-details-link" href="@Url.RouteUrl(RouteNames.CohortDetails, new { Model.AccountHashedId, cohort.CohortReference })">Details<span class="govuk-visually-hidden"> Cohort @cohort.CohortReference</span></a>
                                 </td>
                             </tr>
                         }
