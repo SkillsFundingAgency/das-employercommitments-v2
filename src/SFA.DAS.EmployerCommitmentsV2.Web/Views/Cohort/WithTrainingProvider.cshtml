@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.WithTrainingProviderViewModel
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.WithTrainingProviderViewModel
 
 @{
     ViewData["Title"] = Model.Title;
@@ -33,7 +34,7 @@
                                 <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfApprentices</td>
                                 <td class="govuk-table__cell" data-label="Last Message">@cohort.LastMessage</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" data-label="">
-                                    @Html.ActionLink("Details", "Details", "Cohort", new { @Model.AccountHashedId, cohort.CohortReference }, new { @class = "govuk-link cohort-details-link" })
+                                    <a class="govuk-link cohort-details-link" href="@Url.RouteUrl(RouteNames.CohortDetails, new { Model.AccountHashedId, cohort.CohortReference })">Details<span class="govuk-visually-hidden"> Cohort @cohort.CohortReference</span></a>
                                 </td>
                             </tr>
                         }
