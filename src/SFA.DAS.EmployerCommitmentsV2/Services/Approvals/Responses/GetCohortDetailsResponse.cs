@@ -6,4 +6,5 @@ public class GetCohortDetailsResponse
     public string ProviderName { get; set; }
     public long ProviderId { get; set; }
     public bool HasUnavailableFlexiJobAgencyDeliveryModel { get; set; }
+    public bool HasFoundationApprenticeships { get; set; }
 }

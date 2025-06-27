@@ -780,6 +780,15 @@ public class DetailsViewModelMapperTests
         var result = await fixture.Map();
         Assert.That(result.Status, Is.EqualTo("Under review with provider"));
     }
+
+    [TestCase(true, true)]
+    [TestCase(false, false)]
+    public async Task HasFoundationApprenticeshipsIsMappedCorrectly(bool hasFoundationApprenticeships, bool expectedHasFoundationApprenticeships)
+    {
+        var fixture = new DetailsViewModelMapperTestsFixture().SetHasFoundationApprenticeships(hasFoundationApprenticeships);
+        var result = await fixture.Map();
+        Assert.That(result.HasFoundationApprenticeships, Is.EqualTo(expectedHasFoundationApprenticeships));
+    }
 }
 
 public class DetailsViewModelMapperTestsFixture
@@ -1073,6 +1082,12 @@ public class DetailsViewModelMapperTestsFixture
     public DetailsViewModelMapperTestsFixture UnavailableFlexiJobAgencyDeliveryModel(bool hasUnavailableFlexiJobAgencyDeliveryModel)
     {
         CohortDetails.HasUnavailableFlexiJobAgencyDeliveryModel = hasUnavailableFlexiJobAgencyDeliveryModel;
+        return this;
+    }
+
+    public DetailsViewModelMapperTestsFixture SetHasFoundationApprenticeships(bool hasFoundationApprenticeships)
+    {
+        CohortDetails.HasFoundationApprenticeships = hasFoundationApprenticeships;
         return this;
     }
 }
