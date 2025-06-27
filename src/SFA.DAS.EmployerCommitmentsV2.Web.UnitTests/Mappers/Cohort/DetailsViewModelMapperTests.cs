@@ -813,7 +813,9 @@ public class DetailsViewModelMapperTestsFixture
         _autoFixture = new Fixture();
 
         CohortDetails = _autoFixture.Build<GetCohortDetailsResponse>()
-            .With(x => x.HasUnavailableFlexiJobAgencyDeliveryModel, false).Create();
+            .With(x => x.HasUnavailableFlexiJobAgencyDeliveryModel, false)
+            .With(x => x.HasFoundationApprenticeships, false)
+            .Create();
         Cohort = _autoFixture.Build<GetCohortResponse>().Without(x => x.TransferSenderId).Without(x => x.ChangeOfPartyRequestId).Create();
         var accountLegalEntityResponse = _autoFixture.Create<AccountLegalEntityResponse>();
         EmailOverlapResponse = new GetEmailOverlapsResponse { ApprenticeshipEmailOverlaps = new List<ApprenticeshipEmailOverlap>() };
