@@ -9,29 +9,21 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
 using SFA.DAS.Http;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
-public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
+public class DetailsViewModelMapper(
+    ICommitmentsApiClient commitmentsApiClient,
+    IEncodingService encodingService,
+    IApprovalsApiClient approvalsApiClient)
+    : IMapper<DetailsRequest, DetailsViewModel>
 {
-    private readonly ICommitmentsApiClient _commitmentsApiClient;
-    private readonly IEncodingService _encodingService;
-    private readonly IApprovalsApiClient _approvalsApiClient;
-
-    public DetailsViewModelMapper(ICommitmentsApiClient commitmentsApiClient, IEncodingService encodingService, IApprovalsApiClient approvalsApiClient)
-    {
-        _commitmentsApiClient = commitmentsApiClient;
-        _encodingService = encodingService;
-        _approvalsApiClient = approvalsApiClient;
-    }
-
     public async Task<DetailsViewModel> Map(DetailsRequest source)
     {
-        var cohortTask = _commitmentsApiClient.GetCohort(source.CohortId);
-        var cohortDetailsTask = _approvalsApiClient.GetCohortDetails(source.AccountId, source.CohortId);
-        var draftApprenticeshipsTask = _commitmentsApiClient.GetDraftApprenticeships(source.CohortId);
-        var emailOverlapsTask = _commitmentsApiClient.GetEmailOverlapChecks(source.CohortId);
+        var cohortTask = commitmentsApiClient.GetCohort(source.CohortId);
+        var cohortDetailsTask = approvalsApiClient.GetCohortDetails(source.AccountId, source.CohortId);
+        var draftApprenticeshipsTask = commitmentsApiClient.GetDraftApprenticeships(source.CohortId);
+        var emailOverlapsTask = commitmentsApiClient.GetEmailOverlapChecks(source.CohortId);
 
         await Task.WhenAll(cohortTask, draftApprenticeshipsTask, emailOverlapsTask, cohortDetailsTask);
 
@@ -50,11 +42,11 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
             CohortReference = source.CohortReference,
             CohortId = source.CohortId,
             WithParty = cohort.WithParty,
-            AccountLegalEntityHashedId = _encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
+            AccountLegalEntityHashedId = encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
             LegalEntityName = cohortDetails.LegalEntityName,
             ProviderName = cohortDetails.ProviderName,
-            TransferSenderHashedId = cohort.TransferSenderId == null ? null : _encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId),
-            EncodedPledgeApplicationId = cohort.PledgeApplicationId == null ? null : _encodingService.Encode(cohort.PledgeApplicationId.Value, EncodingType.PledgeApplicationId),
+            TransferSenderHashedId = cohort.TransferSenderId == null ? null : encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId),
+            EncodedPledgeApplicationId = cohort.PledgeApplicationId == null ? null : encodingService.Encode(cohort.PledgeApplicationId.Value, EncodingType.PledgeApplicationId),
             Message = cohort.LatestMessageCreatedByProvider,
             Courses = courses,
             PageTitle = draftApprenticeships.Count == 1
@@ -66,7 +58,8 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
             HasEmailOverlaps = emailOverlaps.Any(),
             ShowAddAnotherApprenticeOption = !cohort.IsLinkedToChangeOfPartyRequest,
             ShowRofjaaRemovalBanner = cohortDetails.HasUnavailableFlexiJobAgencyDeliveryModel,
-            Status = GetCohortStatus(cohort)
+            Status = GetCohortStatus(cohort),
+            HasFoundationApprenticeships = cohortDetails.HasFoundationApprenticeships
         };
     }
 
@@ -82,7 +75,7 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
             request.AgreementFeatures = new[] { AgreementFeature.Transfers };
         }
 
-        return _commitmentsApiClient.IsAgreementSigned(request);
+        return commitmentsApiClient.IsAgreementSigned(request);
     }
 
     private async Task<IReadOnlyCollection<DetailsViewCourseGroupingModel>> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships, List<ApprenticeshipEmailOverlap> emailOverlaps, GetCohortResponse cohortResponse)
@@ -101,7 +94,7 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
                     .Select(a => new CohortDraftApprenticeshipViewModel
                     {
                         Id = a.Id,
-                        DraftApprenticeshipHashedId = _encodingService.Encode(a.Id, EncodingType.ApprenticeshipId),
+                        DraftApprenticeshipHashedId = encodingService.Encode(a.Id, EncodingType.ApprenticeshipId),
                         FirstName = a.FirstName,
                         LastName = a.LastName,
                         Cost = a.Cost,
@@ -152,7 +145,7 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
                 continue;
             }
             
-            var result = await _commitmentsApiClient.ValidateUlnOverlap(new ValidateUlnOverlapRequest
+            var result = await commitmentsApiClient.ValidateUlnOverlap(new ValidateUlnOverlapRequest
             {
                 EndDate = draftApprenticeship.EndDate.Value,
                 StartDate = draftApprenticeship.StartDate.Value,
@@ -201,14 +194,15 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
         }
     }
 
-    private async Task SetFundingBandCap(string courseCode, IEnumerable<CohortDraftApprenticeshipViewModel> draftApprenticeships)
+    private async Task SetFundingBandCap(string courseCode,
+        IEnumerable<CohortDraftApprenticeshipViewModel> draftApprenticeships)
     {
         GetTrainingProgrammeResponse course = null;
         if (!string.IsNullOrEmpty(courseCode))
         {
             try
             {
-                course = await _commitmentsApiClient.GetTrainingProgramme(courseCode);
+                course = await commitmentsApiClient.GetTrainingProgramme(courseCode);
             }
             catch (RestHttpClientException e)
             {
@@ -219,13 +213,14 @@ public class DetailsViewModelMapper : IMapper<DetailsRequest, DetailsViewModel>
             }
         }
 
-            foreach (var draftApprenticeship in draftApprenticeships)
-            {
-                draftApprenticeship.FundingBandCap = draftApprenticeship.IsOnFlexiPaymentPilot.GetValueOrDefault()
-                    ? GetFundingBandCap(course, draftApprenticeship.OriginalStartDate ?? draftApprenticeship.ActualStartDate)
-                    : GetFundingBandCap(course, draftApprenticeship.OriginalStartDate ?? draftApprenticeship.StartDate);
-            }
+        foreach (var draftApprenticeship in draftApprenticeships)
+        {
+            draftApprenticeship.FundingBandCap = draftApprenticeship.IsOnFlexiPaymentPilot.GetValueOrDefault()
+                ? GetFundingBandCap(course,
+                    draftApprenticeship.OriginalStartDate ?? draftApprenticeship.ActualStartDate)
+                : GetFundingBandCap(course, draftApprenticeship.OriginalStartDate ?? draftApprenticeship.StartDate);
         }
+    }
 
     private static int? GetFundingBandCap(GetTrainingProgrammeResponse course, DateTime? startDate)
     {
