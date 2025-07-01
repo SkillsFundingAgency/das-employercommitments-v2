@@ -32,7 +32,7 @@ public class CohortController(
     : Controller
 {
     [Route("{cohortReference}")]
-    [Route("{cohortReference}/details")]
+    [Route("{cohortReference}/details", Name = RouteNames.CohortDetails)]
     [Authorize(Policy = nameof(PolicyNames.AccessCohort))]
     public async Task<IActionResult> Details(DetailsRequest request)
     {
