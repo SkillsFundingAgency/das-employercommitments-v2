@@ -91,7 +91,7 @@ public class WhenPostingConfirmDeleteDetails
             var redirect = (RedirectToActionResult)result;
             Assert.Multiple(() =>
             {
-                Assert.That(redirect.ActionName?.ToLower(), Is.EqualTo("details"));
+                Assert.That(redirect.ActionName?.ToLower(), Is.EqualTo("cohortdetails"));
                 Assert.That(redirect.RouteValues["CohortReference"], Is.EqualTo(ConfirmDeleteViewModel.CohortReference));
                 Assert.That(redirect.RouteValues["AccountHashedId"], Is.EqualTo(ConfirmDeleteViewModel.AccountHashedId));
             });
