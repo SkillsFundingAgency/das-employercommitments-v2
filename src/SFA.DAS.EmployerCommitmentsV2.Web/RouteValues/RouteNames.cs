@@ -34,7 +34,7 @@ public static class RouteNames
     public const string CohortSelectProvider = "SelectProvider";
     public const string CohortConfirmProvider = "ConfirmProvider";
     public const string CohortReview = "Review";
-    public const string CohortDetails = "Details";
+    public const string CohortDetails = "CohortDetails";
     public const string CohortAssign = "assign";
     public const string CohortSelectCourse = "SelectCourse";
     public const string CohortSelectDeliveryModel = "SelectDeliveryModel";

@@ -39,7 +39,7 @@ public class CreateCohortWithDraftApprenticeshipControllerTests
 
         var result = await fixtures.CheckPost();
 
-        result.VerifyReturnsRedirectToActionResult().WithActionName("Details");
+        result.VerifyReturnsRedirectToActionResult().WithActionName("CohortDetails");
     }
 
     [Test]
