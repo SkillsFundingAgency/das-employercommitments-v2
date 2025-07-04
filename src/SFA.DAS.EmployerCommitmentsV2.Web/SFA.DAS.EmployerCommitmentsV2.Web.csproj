@@ -46,7 +46,4 @@
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.EmployerCommitmentsV2\SFA.DAS.EmployerCommitmentsV2.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="SFA.DAS.CommitmentsV2.Shared" />
-  </ItemGroup>
 </Project>

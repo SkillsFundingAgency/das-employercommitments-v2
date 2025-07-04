@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -22,13 +23,15 @@ public class WhenPostingChangeOptionTests : ApprenticeControllerTestBase
 
         MockModelMapper = new Mock<IModelMapper>();
         CacheStorageService = new Mock<ICacheStorageService>();
+        ApprovalsApiClient  =  new Mock<IApprovalsApiClient>();
 
         Controller = new ApprenticeController(
             MockModelMapper.Object,
             Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             Mock.Of<ICommitmentsApiClient>(),
             CacheStorageService.Object,
-            Mock.Of<ILogger<ApprenticeController>>());
+            Mock.Of<ILogger<ApprenticeController>>(),
+            ApprovalsApiClient.Object);
 
         Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
     }
