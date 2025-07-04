@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Testing.AutoFixture;
@@ -17,12 +18,14 @@ public class WhenPostingConfirmHasValidEndDateChanges : ApprenticeControllerTest
         MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
         MockModelMapper = new Mock<IModelMapper>();
         CacheStorageService = new Mock<Interfaces.ICacheStorageService>();
+        ApprovalsApiClient = new Mock<IApprovalsApiClient>();
 
         Controller = new ApprenticeController(MockModelMapper.Object,
             Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             MockCommitmentsApiClient.Object,
             CacheStorageService.Object,
-            Mock.Of<ILogger<ApprenticeController>>());
+            Mock.Of<ILogger<ApprenticeController>>(),
+            ApprovalsApiClient.Object);
 
         Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
     }

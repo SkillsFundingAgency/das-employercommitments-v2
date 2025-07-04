@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -25,6 +26,7 @@ public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTes
         MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
         MockModelMapper = new Mock<IModelMapper>();
         CacheStorageService = new Mock<ICacheStorageService>();
+        ApprovalsApiClient =  new Mock<IApprovalsApiClient>();
 
         _response = new EditApprenticeshipResponse { NeedReapproval = true };
 
@@ -34,7 +36,8 @@ public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTes
             Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             MockCommitmentsApiClient.Object,
             CacheStorageService.Object,
-            Mock.Of<ILogger<ApprenticeController>>());
+            Mock.Of<ILogger<ApprenticeController>>(),
+            ApprovalsApiClient.Object);
         Controller.TempData = new TempDataDictionary(new Mock<HttpContext>().Object, new Mock<ITempDataProvider>().Object);
     }
 

@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -29,6 +30,7 @@ public class WhenCallingGetSendRequestNewTrainingProviderTestsFixture
 {
     private readonly Mock<IModelMapper> _modelMapper;
     protected readonly Mock<ICacheStorageService> _cacheStorageService;
+    protected readonly Mock<IApprovalsApiClient> _approvalsApiClient;
     private ApprenticeController _controller;
     private SendNewTrainingProviderViewModel _expectedViewModel;
     private SendNewTrainingProviderRequest _request;
@@ -40,7 +42,8 @@ public class WhenCallingGetSendRequestNewTrainingProviderTestsFixture
         _request = autoFixture.Create<SendNewTrainingProviderRequest>();
 
         _cacheStorageService = new Mock<ICacheStorageService>();
-
+        _approvalsApiClient = new Mock<IApprovalsApiClient>();
+        
         _modelMapper = new Mock<IModelMapper>();
         _modelMapper
             .Setup(mapper => mapper.Map<SendNewTrainingProviderViewModel>(_request))
@@ -50,7 +53,8 @@ public class WhenCallingGetSendRequestNewTrainingProviderTestsFixture
             Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             Mock.Of<ICommitmentsApiClient>(),
             _cacheStorageService.Object,
-            Mock.Of<ILogger<ApprenticeController>>());
+            Mock.Of<ILogger<ApprenticeController>>(),
+            _approvalsApiClient.Object);
     }
 
     public async Task<IActionResult> SendRequestNewTrainingProvider()

@@ -5,17 +5,9 @@ using SFA.DAS.Http;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Client;
 
-public class LocalDevApiClientFactory : ICommitmentsApiClientFactory, ICommitmentPermissionsApiClientFactory
+public class LocalDevApiClientFactory(CommitmentsClientApiConfiguration configuration, ILoggerFactory loggerFactory)
+    : ICommitmentsApiClientFactory, ICommitmentPermissionsApiClientFactory
 {
-    private readonly CommitmentsClientApiConfiguration _configuration;
-    private readonly ILoggerFactory _loggerFactory;
-
-    public LocalDevApiClientFactory(CommitmentsClientApiConfiguration configuration, ILoggerFactory loggerFactory)
-    {
-        _configuration = configuration;
-        _loggerFactory = loggerFactory;
-    }
-
     public ICommitmentsApiClient CreateClient()
     {
         var value = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -26,11 +18,11 @@ public class LocalDevApiClientFactory : ICommitmentsApiClientFactory, ICommitmen
                 .WithDefaultHeaders()
                 .Build();
 
-            httpClient.BaseAddress = new Uri(_configuration.ApiBaseUrl);
+            httpClient.BaseAddress = new Uri(configuration.ApiBaseUrl);
             var byteArray = System.Text.Encoding.ASCII.GetBytes($"employer:password1234");
             httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
-            var restHttpClient = new CommitmentsRestHttpClient(httpClient, _loggerFactory);
+            var restHttpClient = new CommitmentsRestHttpClient(httpClient, loggerFactory);
             return new CommitmentsApiClient(restHttpClient);
         }
 
@@ -47,9 +39,9 @@ public class LocalDevApiClientFactory : ICommitmentsApiClientFactory, ICommitmen
                 .WithDefaultHeaders()
                 .Build();
 
-            httpClient.BaseAddress = new Uri(_configuration.ApiBaseUrl);
+            httpClient.BaseAddress = new Uri(configuration.ApiBaseUrl);
 
-            var restHttpClient = new CommitmentsRestHttpClient(httpClient, _loggerFactory);
+            var restHttpClient = new CommitmentsRestHttpClient(httpClient, loggerFactory);
             return new CommitmentPermissionsApiClient(restHttpClient);
         }
 

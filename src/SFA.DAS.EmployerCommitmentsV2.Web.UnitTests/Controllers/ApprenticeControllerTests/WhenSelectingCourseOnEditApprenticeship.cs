@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -67,6 +68,7 @@ public class WhenSelectingCourseOnEditApprenticeshipFixture
 
     public Mock<IModelMapper> ModelMapperMock;
     public Mock<ITempDataDictionary> TempDataMock;
+    public Mock<IApprovalsApiClient> ApprovalsApiClientMock;
     public SelectCourseViewModel ViewModel;
     public EditApprenticeshipRequest Request;
     public EditApprenticeshipRequestViewModel Apprenticeship;
@@ -95,13 +97,15 @@ public class WhenSelectingCourseOnEditApprenticeshipFixture
         CommitmentsApiClientMock.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(Cohort);
 
         CacheStorageServiceMock = new Mock<ICacheStorageService>();
-
+        ApprovalsApiClientMock = new Mock<IApprovalsApiClient>();
+        
         Sut = new ApprenticeController(
             ModelMapperMock.Object,
             Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             CommitmentsApiClientMock.Object,
             CacheStorageServiceMock.Object,
-            Mock.Of<ILogger<ApprenticeController>>());
+            Mock.Of<ILogger<ApprenticeController>>(),
+            ApprovalsApiClientMock.Object);
         Sut.TempData = TempDataMock.Object;
     }
 

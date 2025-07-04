@@ -5,6 +5,8 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
@@ -19,6 +21,7 @@ public class WhenPostingEditApprenticeshipDetails
     private GetApprenticeshipResponse _apprenticeshipResponse;
     private GetTrainingProgrammeResponse _standardVersionResponse;
     private GetTrainingProgrammeResponse _frameworkResponse;
+    private ValidateEditApprenticeshipResponse _validateEditApprenticeshipResponse;
 
     [SetUp]
     public void Arrange()
@@ -41,6 +44,12 @@ public class WhenPostingEditApprenticeshipDetails
         _frameworkResponse = _autoFixture.Create<GetTrainingProgrammeResponse>();
         _frameworkResponse.TrainingProgramme.Version = null;
 
+        _validateEditApprenticeshipResponse = _autoFixture.Build<ValidateEditApprenticeshipResponse>()
+            .With(x => x.HasOptions, false)
+            .With(x => x.Version, "1.0")
+            .With(x => x.CourseOrStartDateChange, false)
+            .Create();
+
         _viewModel = _autoFixture.Build<EditApprenticeshipRequestViewModel>()
             .Without(x => x.StartDate)
             .Without(x => x.EndDate)
@@ -52,80 +61,76 @@ public class WhenPostingEditApprenticeshipDetails
         _viewModel.StartDate = new MonthYearModel(_apprenticeshipResponse.StartDate.Value.ToString("MMyyyy"));
 
         _fixture.SetUpGetApprenticeship(_apprenticeshipResponse);
+        _fixture.SetUpEditApprenticeship(_validateEditApprenticeshipResponse);
     }
 
     [Test]
-    public async Task And_NewStandardSelected_Then_GetCalculatedVersion()
+    public async Task And_NewStandardSelected_Then_EditApprenticeshipIsCalled()
     {
         _viewModel.CourseCode = _autoFixture.Create<int>().ToString();
-        _fixture.SetUpGetCalculatedTrainingProgrammeVersion(_viewModel, _standardVersionResponse);
 
         await _fixture.EditApprenticeship(_viewModel);
 
-        _fixture.VerifyGetCalculatedTrainingProgrameVersionIsCalled();
+        _fixture.VerifyEditApprenticeshipIsCalled();
     }
 
     [Test]
-    public async Task And_StandardIsSelected_And_StartDateMovedForward_Then_GetCalculatedVersion()
+    public async Task And_StandardIsSelected_And_StartDateMovedForward_Then_EditApprenticeshipIsCalled()
     {
         _viewModel.StartDate = new MonthYearModel(_viewModel.StartDate.Date.Value.AddMonths(1).ToString("MMyyy"));
-        _fixture.SetUpGetCalculatedTrainingProgrammeVersion(_viewModel, _standardVersionResponse);
 
         await _fixture.EditApprenticeship(_viewModel);
 
-        _fixture.VerifyGetCalculatedTrainingProgrameVersionIsCalled();
+        _fixture.VerifyEditApprenticeshipIsCalled();
     }
 
     [Test]
-    public async Task And_StandardNotChanged_And_StartDateNotMovedForward_Then_NeitherGetTrainingProgrammeMethodCalled()
+    public async Task And_StandardNotChanged_And_StartDateNotMovedForward_Then_EditApprenticeshipIsCalled()
     {
         await _fixture.EditApprenticeship(_viewModel);
 
-        _fixture.VerifyGetCalculatedTrainingProgrameVersionIsNotCalled();
-        _fixture.VerifyGetTrainingProgrameIsNotCalled();
+        _fixture.VerifyEditApprenticeshipIsCalled();
     }
 
     [Test]
-    public async Task And_StartDateIsMovedForward_And_FrameworkNotChanged_Then_GetTrainingProgramme()
+    public async Task And_StartDateIsMovedForward_And_FrameworkNotChanged_Then_EditApprenticeshipIsCalled()
     {
         _viewModel.StartDate = new MonthYearModel(_viewModel.StartDate.Date.Value.AddMonths(1).ToString("MMyyy"));
         _viewModel.CourseCode = "1-2-3";
         _apprenticeshipResponse.CourseCode = "1-2-3";
-        _fixture.SetUpGetTrainingProgramme(_viewModel, _frameworkResponse);
 
         await _fixture.EditApprenticeship(_viewModel);
 
-        _fixture.VerifyGetTrainingProgrameIsCalled();
+        _fixture.VerifyEditApprenticeshipIsCalled();
     }
 
     [Test]
-    public async Task And_FrameworkIsChanged_Then_GetTrainingProgramme()
+    public async Task And_FrameworkIsChanged_Then_EditApprenticeshipIsCalled()
     {
         _viewModel.CourseCode = "4-5-6";
         _apprenticeshipResponse.CourseCode = "1-2-3";
-        _fixture.SetUpGetTrainingProgramme(_viewModel, _frameworkResponse);
 
         await _fixture.EditApprenticeship(_viewModel);
 
-        _fixture.VerifyGetTrainingProgrameIsCalled();
+        _fixture.VerifyEditApprenticeshipIsCalled();
     }
 
     [Test]
-    public async Task And_FrameworkNotChanged_And_StartDateNotMovedForward_Then_GetTrainingProgrammeIsNotCalled()
+    public async Task And_FrameworkNotChanged_And_StartDateNotMovedForward_Then_EditApprenticeshipIsCalled()
     {
         _viewModel.CourseCode = "1-2-3";
         _apprenticeshipResponse.CourseCode = "1-2-3";
 
         await _fixture.EditApprenticeship(_viewModel);
 
-        _fixture.VerifyGetTrainingProgrameIsNotCalled();
+        _fixture.VerifyEditApprenticeshipIsCalled();
     }
 
     [Test]
     public async Task And_StandardHasOptions_Then_RedirectToChangeOption()
     {
-        _standardVersionResponse.TrainingProgramme.Options = _autoFixture.Create<List<string>>();
-        _viewModel.HasOptions = true;
+        _validateEditApprenticeshipResponse.HasOptions = true;
+        _fixture.SetUpEditApprenticeship(_validateEditApprenticeshipResponse);
 
         var result = await _fixture.EditApprenticeship(_viewModel);
 
@@ -161,6 +166,75 @@ public class WhenPostingEditApprenticeshipDetails
         var result = await _fixture.EditChangingDeliveryModel(_viewModel);
         WhenPostingEditApprenticeshipDetailsFixture.VerifyRedirectedTo(result, nameof(ApprenticeController.SelectDeliveryModelForEdit));
     }
+
+    [Test]
+    public void When_ApiReturnsNull_Then_ThrowsException()
+    {
+        _fixture.SetUpEditApprenticeship(null);
+        Func<Task> act = async () => await _fixture.EditApprenticeship(_viewModel);
+        act.Should().ThrowAsync<NullReferenceException>();
+    }
+
+    [Test]
+    public void When_ApiThrowsException_Then_PropagatesException()
+    {
+        _fixture.SetUpEditApprenticeshipToThrow();
+        Func<Task> act = async () => await _fixture.EditApprenticeship(_viewModel);
+        act.Should().ThrowAsync<Exception>();
+    }
+
+    [Test]
+    public async Task When_ApiReturnsResponse_Then_ViewModelPropertiesAreSet()
+    {
+        var response = new ValidateEditApprenticeshipResponse
+        {
+            HasOptions = true,
+            Version = "2.0",
+            CourseOrStartDateChange = false
+        };
+        _fixture.SetUpEditApprenticeship(response);
+        await _fixture.EditApprenticeship(_viewModel);
+        _viewModel.HasOptions.Should().Be(response.HasOptions);
+        _viewModel.Version.Should().Be(response.Version);
+        _viewModel.Option.Should().Be(_viewModel.Option); // unchanged
+    }
+
+    [Test]
+    public async Task When_ApiReturnsNullVersion_Then_ViewModelVersionIsNull()
+    {
+        var response = new ValidateEditApprenticeshipResponse
+        {
+            HasOptions = false,
+            Version = null,
+            CourseOrStartDateChange = false
+        };
+        _fixture.SetUpEditApprenticeship(response);
+        await _fixture.EditApprenticeship(_viewModel);
+        _viewModel.Version.Should().BeNull();
+    }
+
+    [Test]
+    public async Task When_CourseOrStartDateChangeTrue_And_OptionAlreadyNull_Then_OptionRemainsNull()
+    {
+        var response = new ValidateEditApprenticeshipResponse
+        {
+            HasOptions = false,
+            Version = "1.0",
+            CourseOrStartDateChange = true
+        };
+        _fixture.SetUpEditApprenticeship(response);
+        _viewModel.Option = null;
+        await _fixture.EditApprenticeship(_viewModel);
+        _viewModel.Option.Should().BeNull();
+    }
+
+    [Test]
+    public async Task When_CacheKeyIsMissing_Then_StillRedirectsAndCaches()
+    {
+        _viewModel.CacheKey = null;
+        var result = await _fixture.EditApprenticeship(_viewModel);
+        result.Should().BeOfType<RedirectToActionResult>();
+    }
 }
 
 public class WhenPostingEditApprenticeshipDetailsFixture : ApprenticeControllerTestFixtureBase
@@ -191,46 +265,31 @@ public class WhenPostingEditApprenticeshipDetailsFixture : ApprenticeControllerT
             .ReturnsAsync(response);
     }
 
-    public void SetUpGetCalculatedTrainingProgrammeVersion(EditApprenticeshipRequestViewModel viewModel, GetTrainingProgrammeResponse response)
+    public void SetUpEditApprenticeship(ValidateEditApprenticeshipResponse response)
     {
-        MockCommitmentsApiClient.Setup(c => c.GetCalculatedTrainingProgrammeVersion(int.Parse(viewModel.CourseCode), viewModel.StartDate.Date.Value, It.IsAny<CancellationToken>()))
+        ApprovalsApiClientMock.Setup(c => c.EditApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<ValidateEditApprenticeshipRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
     }
 
-    public void SetUpGetTrainingProgramme(EditApprenticeshipRequestViewModel viewModel, GetTrainingProgrammeResponse response)
+    public void SetUpEditApprenticeshipToThrow()
     {
-        MockCommitmentsApiClient.Setup(c => c.GetTrainingProgramme(viewModel.CourseCode, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(response);
+        ApprovalsApiClientMock.Setup(c => c.EditApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<ValidateEditApprenticeshipRequest>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new Exception("API error"));
     }
 
-    public void VerifyGetCalculatedTrainingProgrameVersionIsCalled()
+    public void VerifyEditApprenticeshipIsCalled()
     {
-        MockCommitmentsApiClient.Verify(x => x.GetCalculatedTrainingProgrammeVersion(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<CancellationToken>()), Times.Once());
-    }
-
-    public void VerifyGetTrainingProgrameIsCalled()
-    {
-        MockCommitmentsApiClient.Verify(x => x.GetTrainingProgramme(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
-    }
-
-    public void VerifyGetCalculatedTrainingProgrameVersionIsNotCalled()
-    {
-        MockCommitmentsApiClient.Verify(x => x.GetCalculatedTrainingProgrammeVersion(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<CancellationToken>()), Times.Never());
-    }
-
-    public void VerifyGetTrainingProgrameIsNotCalled()
-    {
-        MockCommitmentsApiClient.Verify(x => x.GetTrainingProgramme(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never());
+        ApprovalsApiClientMock.Verify(x => x.EditApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<ValidateEditApprenticeshipRequest>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     public void VerifyValidationApiIsCalled()
     {
-        MockCommitmentsApiClient.Verify(x => x.ValidateApprenticeshipForEdit(It.IsAny<ValidateApprenticeshipForEditRequest>(), CancellationToken.None), Times.Once());
+        ApprovalsApiClientMock.Verify(x => x.EditApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<ValidateEditApprenticeshipRequest>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     public void VerifyMapperIsCalled()
     {
-        MockMapper.Verify(x => x.Map<ValidateApprenticeshipForEditRequest>(It.IsAny<EditApprenticeshipRequestViewModel>()), Times.Once());
+        MockMapper.Verify(x => x.Map<ValidateEditApprenticeshipRequest>(It.IsAny<EditApprenticeshipRequestViewModel>()), Times.Once());
     }
 
     public static void VerifyRedirectToChangeOption(RedirectToActionResult result)

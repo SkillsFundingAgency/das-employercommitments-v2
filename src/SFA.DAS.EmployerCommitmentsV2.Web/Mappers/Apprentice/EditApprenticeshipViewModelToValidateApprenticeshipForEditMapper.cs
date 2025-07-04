@@ -1,19 +1,19 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
+﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
-public class EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper : IMapper<EditApprenticeshipRequestViewModel, ValidateApprenticeshipForEditRequest>
+public class EditApprenticeshipViewModelToValidateEditApprenticeshipRequestMapper : IMapper<EditApprenticeshipRequestViewModel, ValidateEditApprenticeshipRequest>
 {
-    public Task<ValidateApprenticeshipForEditRequest> Map(EditApprenticeshipRequestViewModel source)
+    public Task<ValidateEditApprenticeshipRequest> Map(EditApprenticeshipRequestViewModel source)
     {
-        var result = new ValidateApprenticeshipForEditRequest
+        var result = new ValidateEditApprenticeshipRequest
         {
             EmployerAccountId = source.AccountId,
             ApprenticeshipId = source.ApprenticeshipId,
+            ProviderId = source.ProviderId,
             FirstName = source.FirstName,
             LastName = source.LastName,
             Email = source.Email,
@@ -23,8 +23,8 @@ public class EditApprenticeshipViewModelToValidateApprenticeshipForEditMapper : 
             EmployerReference = source.EmployerReference,
             StartDate = source.StartDate.Date,
             EndDate = source.EndDate.Date,
-            DeliveryModel = source.DeliveryModel,
-            TrainingCode = source.CourseCode,
+            DeliveryModel = (int)source.DeliveryModel,
+            CourseCode = source.CourseCode,
             Version = source.Version,
             Option = source.Option == "TBC" ? string.Empty : source.Option,
             EmploymentEndDate = source.EmploymentEndDate.Date,
