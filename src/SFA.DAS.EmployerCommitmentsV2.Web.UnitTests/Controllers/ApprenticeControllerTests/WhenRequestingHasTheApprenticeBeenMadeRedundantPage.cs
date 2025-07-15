@@ -28,7 +28,7 @@ public class WhenRequestingHasTheApprenticeBeenMadeRedundantPage : ApprenticeCon
     }
 
     [Test, MoqAutoData]
-    public async Task WhenRequesting_HasTheAppretniceBeenMadeRedundant_ThenMadeRedundantViewModelIsPassedToTheView(MadeRedundantViewModel expectedViewModel)
+    public async Task WhenRequesting_HasTheApprenticeBeenMadeRedundant_ThenMadeRedundantViewModelIsPassedToTheView(MadeRedundantViewModel expectedViewModel)
     {
         MockModelMapper.Setup(m => m.Map<MadeRedundantViewModel>(It.IsAny<MadeRedundantRequest>()))
             .ReturnsAsync(expectedViewModel);
