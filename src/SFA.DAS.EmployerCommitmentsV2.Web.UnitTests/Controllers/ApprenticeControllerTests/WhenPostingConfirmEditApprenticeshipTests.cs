@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Testing.AutoFixture;
@@ -18,23 +17,22 @@ public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTes
     private const string EditApprenticeUpdated = "You have updated apprentice details";
     private const string FlashMessageBody = "FlashMessageBody";
     private const string FlashMessageLevel = "FlashMessageLevel";
-    private EditApprenticeshipResponse _response;
+    private ConfirmEditApprenticeshipResponse _response;
 
     [SetUp]
     public void Arrange()
     {
-        MockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
         MockModelMapper = new Mock<IModelMapper>();
         CacheStorageService = new Mock<ICacheStorageService>();
-        ApprovalsApiClient =  new Mock<IApprovalsApiClient>();
+        ApprovalsApiClient = new Mock<IApprovalsApiClient>();
 
-        _response = new EditApprenticeshipResponse { NeedReapproval = true };
+        _response = new ConfirmEditApprenticeshipResponse { NeedReapproval = true };
 
-        MockCommitmentsApiClient.Setup(x => x.EditApprenticeship(It.IsAny<EditApprenticeshipApiRequest>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(_response));
+        ApprovalsApiClient.Setup(x => x.ConfirmEditApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests.ConfirmEditApprenticeshipRequest>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult(_response));
 
         Controller = new ApprenticeController(MockModelMapper.Object,
             Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
-            MockCommitmentsApiClient.Object,
+            Mock.Of<ICommitmentsApiClient>(),
             CacheStorageService.Object,
             Mock.Of<ILogger<ApprenticeController>>(),
             ApprovalsApiClient.Object);
@@ -79,7 +77,7 @@ public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTes
     }
 
     [Test, MoqAutoData]
-    public async Task AndTheEditApprenticeship_IsConfirmed_CommitmentApi_IsCalled(ConfirmEditApprenticeshipViewModel viewModel)
+    public async Task AndTheEditApprenticeship_IsConfirmed_OuterApi_IsCalled(ConfirmEditApprenticeshipViewModel viewModel)
     {
         //Arrange
         viewModel.ConfirmChanges = true;
@@ -88,11 +86,11 @@ public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTes
         await Controller.ConfirmEditApprenticeship(viewModel);
 
         //Assert
-        MockCommitmentsApiClient.Verify(x => x.EditApprenticeship(It.IsAny<EditApprenticeshipApiRequest>(), CancellationToken.None), Times.Once);
+        ApprovalsApiClient.Verify(x => x.ConfirmEditApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests.ConfirmEditApprenticeshipRequest>(), CancellationToken.None), Times.Once);
     }
 
     [Test, MoqAutoData]
-    public async Task AndTheEditApprenticeship_IsNotConfirmed_CommitmentApi_IsNotCalled(ConfirmEditApprenticeshipViewModel viewModel)
+    public async Task AndTheEditApprenticeship_IsNotConfirmed_OuterApi_IsNotCalled(ConfirmEditApprenticeshipViewModel viewModel)
     {
         //Arrange
         viewModel.ConfirmChanges = false;
@@ -101,7 +99,7 @@ public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTes
         await Controller.ConfirmEditApprenticeship(viewModel);
 
         //Assert
-        MockCommitmentsApiClient.Verify(x => x.EditApprenticeship(It.IsAny<EditApprenticeshipApiRequest>(), CancellationToken.None), Times.Never);
+        ApprovalsApiClient.Verify(x => x.ConfirmEditApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests.ConfirmEditApprenticeshipRequest>(), CancellationToken.None), Times.Never);
     }
 
     [Test, MoqAutoData]
@@ -114,11 +112,11 @@ public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTes
         await Controller.ConfirmEditApprenticeship(viewModel);
 
         //Assert
-        MockModelMapper.Verify(x => x.Map<EditApprenticeshipApiRequest>(viewModel), Times.Once);
+        MockModelMapper.Verify(x => x.Map<SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests.ConfirmEditApprenticeshipRequest>(viewModel), Times.Once);
     }
 
     [Test, MoqAutoData]
-    public async Task AndTheEditApprenticeship_IsNotConfirmed__and_Mapper_IsNotCalled(ConfirmEditApprenticeshipViewModel viewModel)
+    public async Task AndTheEditApprenticeship_IsNotConfirmed_and_Mapper_IsNotCalled(ConfirmEditApprenticeshipViewModel viewModel)
     {
         //Arrange
         viewModel.ConfirmChanges = false;
@@ -127,7 +125,7 @@ public class WhenPostingConfirmEditApprenticeshipTests : ApprenticeControllerTes
         await Controller.ConfirmEditApprenticeship(viewModel);
 
         //Assert
-        MockModelMapper.Verify(x => x.Map<EditApprenticeshipApiRequest>(viewModel), Times.Never);
+        MockModelMapper.Verify(x => x.Map<SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests.ConfirmEditApprenticeshipRequest>(viewModel), Times.Never);
     }
 
     [Test, MoqAutoData]

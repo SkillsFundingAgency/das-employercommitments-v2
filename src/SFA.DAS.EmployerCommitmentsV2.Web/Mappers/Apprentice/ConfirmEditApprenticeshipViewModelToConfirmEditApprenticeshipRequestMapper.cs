@@ -1,14 +1,13 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
-public class ConfirmEditApprenticehsipViewModelToEditApiRequestMapper : IMapper<ConfirmEditApprenticeshipViewModel, EditApprenticeshipApiRequest>
+public class ConfirmEditApprenticeshipViewModelToConfirmEditApprenticeshipRequestMapper : IMapper<ConfirmEditApprenticeshipViewModel, SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests.ConfirmEditApprenticeshipRequest>
 {
-    public Task<EditApprenticeshipApiRequest> Map(ConfirmEditApprenticeshipViewModel source)
+    public Task<SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests.ConfirmEditApprenticeshipRequest> Map(ConfirmEditApprenticeshipViewModel source)
     {
-        return Task.FromResult(new EditApprenticeshipApiRequest
+        return Task.FromResult(new SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests.ConfirmEditApprenticeshipRequest
         {
             ApprenticeshipId = source.ApprenticeshipId,
             AccountId = source.AccountId,
@@ -20,7 +19,7 @@ public class ConfirmEditApprenticehsipViewModelToEditApiRequestMapper : IMapper<
             EmployerReference = source.EmployerReference,
             StartDate = source.StartDate,
             EndDate = source.EndDate,
-            DeliveryModel = source.DeliveryModel,
+            DeliveryModel = source.DeliveryModel?.ToString(),
             EmploymentEndDate = source.EmploymentEndDate,
             EmploymentPrice = source.EmploymentPrice,
             CourseCode = source.CourseCode,
@@ -28,4 +27,4 @@ public class ConfirmEditApprenticehsipViewModelToEditApiRequestMapper : IMapper<
             Option = source.Option == "TBC" ? string.Empty : source.Option
         });
     }
-}
+} 

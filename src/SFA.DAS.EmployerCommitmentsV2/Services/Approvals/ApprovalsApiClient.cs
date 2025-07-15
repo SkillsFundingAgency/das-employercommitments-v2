@@ -146,4 +146,9 @@ public class ApprovalsApiClient(IOuterApiClient client) : IApprovalsApiClient
     {
         return await client.Put<ValidateEditApprenticeshipResponse>($"employer/{accountId}/apprentices/{apprenticeshipId}", request);
     }
+
+    public async Task<ConfirmEditApprenticeshipResponse> ConfirmEditApprenticeship(long accountId, long apprenticeshipId, ConfirmEditApprenticeshipRequest request, CancellationToken cancellationToken = default)
+    {
+        return await client.Post<ConfirmEditApprenticeshipResponse>($"employer/{accountId}/apprentices/{apprenticeshipId}/edit/confirm", request);
+    }
 }

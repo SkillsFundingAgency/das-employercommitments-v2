@@ -31,4 +31,5 @@ public interface IApprovalsApiClient
     Task<GetAddAnotherDraftApprenticeshipResponse> GetAddAnotherDraftApprenticeshipDetails(long accountId, long cohortId, string courseCode, DateTime? startDate = null, CancellationToken cancellationToken = default);
     Task<GetAgreementNotSignedResponse> GetAgreementNotSigned(long accountId, CancellationToken cancellationToken = default);
     Task<ValidateEditApprenticeshipResponse> EditApprenticeship(long accountId, long apprenticeshipId, ValidateEditApprenticeshipRequest request, CancellationToken cancellationToken = default);
+    Task<ConfirmEditApprenticeshipResponse> ConfirmEditApprenticeship(long accountId, long apprenticeshipId, ConfirmEditApprenticeshipRequest request, CancellationToken cancellationToken = default);
 }

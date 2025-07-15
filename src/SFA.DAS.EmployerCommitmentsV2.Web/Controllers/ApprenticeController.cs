@@ -917,7 +917,7 @@ public class ApprenticeController(
     [HttpGet]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/edit/confirm")]
-    public async Task<IActionResult> ConfirmEditApprenticeship(ConfirmEditApprenticeshipRequest request)
+    public async Task<IActionResult> ConfirmEditApprenticeship(Models.Apprentice.ConfirmEditApprenticeshipRequest request)
     {
         var editApprenticeshipRequestViewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
 
@@ -932,8 +932,8 @@ public class ApprenticeController(
     {
         if (viewModel.ConfirmChanges.Value)
         {
-            var request = await modelMapper.Map<EditApprenticeshipApiRequest>(viewModel);
-            var result = await commitmentsApiClient.EditApprenticeship(request);
+            var request = await modelMapper.Map<SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests.ConfirmEditApprenticeshipRequest>(viewModel);
+            var result = await outerApi.ConfirmEditApprenticeship(viewModel.AccountId, viewModel.ApprenticeshipId, request);
 
             if (result.NeedReapproval)
             {
