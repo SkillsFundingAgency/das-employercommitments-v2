@@ -1,26 +1,26 @@
-﻿using System.ComponentModel.DataAnnotations;
-using SFA.DAS.CommitmentsV2.Shared.Models;
+﻿using SFA.DAS.CommitmentsV2.Shared.Models;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using System.ComponentModel.DataAnnotations;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
 public class DraftApprenticeshipViewModel : BaseDraftApprenticeshipViewModel, IAuthorizationContextModel
 {
-    public DraftApprenticeshipViewModel(DateTime? dateOfBirth, DateTime? startDate, DateTime? endDate, DateTime? employmentEndDate = null) 
+    public DraftApprenticeshipViewModel(DateTime? dateOfBirth, DateTime? startDate, DateTime? endDate, DateTime? employmentEndDate = null)
         : base(dateOfBirth, startDate, endDate, employmentEndDate)
-    {           
+    {
     }
 
     public DraftApprenticeshipViewModel()
     {
-          
+
     }
-        
+
     public long? CohortId { get; set; }
-        
+
     public long AccountLegalEntityId { get; set; }
 }
 
@@ -126,12 +126,10 @@ public class BaseDraftApprenticeshipViewModel
     [Display(Name = "Reference (optional)")]
     public string Reference { get; set; }
 
-    public IEnumerable<TrainingProgramme> Courses { get; set; }
-
     // If you remove these two properties it will break the routing of some actions
     public string AccountHashedId { get; set; }
     public string DraftApprenticeshipHashedId { get; set; }
-    public bool IsContinuation { get; set; }     
+    public bool IsContinuation { get; set; }
     public string AccountLegalEntityHashedId { get; set; }
     public bool? HasMultipleDeliveryModelOptions { get; set; }
     public bool? IsOnFlexiPaymentPilot { get; set; }

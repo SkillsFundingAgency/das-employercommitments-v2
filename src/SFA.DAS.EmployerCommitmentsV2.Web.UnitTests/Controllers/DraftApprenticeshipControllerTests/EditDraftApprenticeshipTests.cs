@@ -174,7 +174,6 @@ public class EditDraftApprenticeshipTestsFixture
             .With(x => x.StartYear, startDate?.Year)
             .With(x => x.DeliveryModel, DeliveryModel.Regular)
             .Without(x => x.StartDate)
-            .Without(x => x.Courses)
             .Create();
 
         _editDetailsRequest = _autoFixture.Build<EditDetailsRequest>()

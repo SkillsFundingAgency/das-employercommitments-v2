@@ -46,7 +46,6 @@ public class EditDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapp
             .With(x => x.CourseCode, "Course1")
             .With(x => x.DeliveryModel, DeliveryModel.PortableFlexiJob)
             .Without(x => x.StartDate)
-            .Without(x => x.Courses)
             .Create();
 
         _commitmentsApiClient = new Mock<ICommitmentsApiClient>();
