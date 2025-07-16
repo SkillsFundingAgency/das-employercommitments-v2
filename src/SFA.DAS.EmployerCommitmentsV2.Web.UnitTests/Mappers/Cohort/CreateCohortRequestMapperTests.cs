@@ -1,7 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
@@ -38,7 +37,6 @@ public class CreateCohortRequestMapperTests
             .With(x => x.EmploymentEndMonth, employmentEndDate?.Month)
             .With(x => x.EmploymentEndYear, employmentEndDate?.Year)
             .Without(x => x.StartDate)
-            .Without(x => x.Courses)
             .Create();
 
         _result = await _mapper.Map(TestHelper.Clone(_source));
@@ -151,7 +149,7 @@ public class CreateCohortRequestMapperTests
     {
         Assert.That(_result.IsOnFlexiPaymentPilot, Is.EqualTo(_source.IsOnFlexiPaymentPilot));
     }
-    
+
     [Test]
     public void ThenRequestingPartyIsNotMissing()
     {
