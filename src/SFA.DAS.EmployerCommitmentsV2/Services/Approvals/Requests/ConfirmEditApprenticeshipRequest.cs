@@ -1,6 +1,6 @@
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
-public class ConfirmEditApprenticeshipRequest
+public class ConfirmEditApprenticeshipRequest : ApimSaveDataRequest
 {
     public long ApprenticeshipId { get; set; }
     public long AccountId { get; set; }

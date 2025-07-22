@@ -1,5 +1,6 @@
 using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Testing.AutoFixture;
@@ -10,11 +11,17 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice;
 public class ConfirmEditApprenticeshipViewModelToConfirmEditApprenticeshipRequestMapperTests
 {
     private ConfirmEditApprenticeshipViewModelToConfirmEditApprenticeshipRequestMapper _mapper;
+    private Mock<IAuthenticationService> _mockAuthenticationService;
 
     [SetUp]
     public void Arrange()
     {
-        _mapper = new ConfirmEditApprenticeshipViewModelToConfirmEditApprenticeshipRequestMapper();
+        _mockAuthenticationService = new Mock<IAuthenticationService>();
+        _mockAuthenticationService.Setup(x => x.UserId).Returns("TestUserId");
+        _mockAuthenticationService.Setup(x => x.UserName).Returns("TestUserName");
+        _mockAuthenticationService.Setup(x => x.UserEmail).Returns("test@example.com");
+        
+        _mapper = new ConfirmEditApprenticeshipViewModelToConfirmEditApprenticeshipRequestMapper(_mockAuthenticationService.Object);
     }
 
     [Test, MoqAutoData]
@@ -54,6 +61,35 @@ public class ConfirmEditApprenticeshipViewModelToConfirmEditApprenticeshipReques
         result.CourseCode.Should().Be(source.CourseCode);
         result.Version.Should().Be(source.Version);
         result.Option.Should().Be(string.Empty); // TBC should be converted to empty string
+        result.UserInfo.Should().NotBeNull();
+        result.UserInfo.UserId.Should().Be("TestUserId");
+        result.UserInfo.UserDisplayName.Should().Be("TestUserName");
+        result.UserInfo.UserEmail.Should().Be("test@example.com");
+    }
+
+    [Test, MoqAutoData]
+    public async Task Then_Maps_UserInfo_Correctly(ConfirmEditApprenticeshipViewModel source)
+    {
+        // Arrange
+        // Ensure valid date properties to avoid AutoFixture issues
+        source.BirthDay = 1;
+        source.BirthMonth = 1;
+        source.BirthYear = 1990;
+        source.StartMonth = 1;
+        source.StartYear = 2024;
+        source.EndMonth = 1;
+        source.EndYear = 2026;
+        source.EmploymentEndMonth = 12;
+        source.EmploymentEndYear = 2025;
+
+        // Act
+        var result = await _mapper.Map(source);
+
+        // Assert
+        result.UserInfo.Should().NotBeNull();
+        result.UserInfo.UserId.Should().Be("TestUserId");
+        result.UserInfo.UserDisplayName.Should().Be("TestUserName");
+        result.UserInfo.UserEmail.Should().Be("test@example.com");
     }
 
     [Test, MoqAutoData]
