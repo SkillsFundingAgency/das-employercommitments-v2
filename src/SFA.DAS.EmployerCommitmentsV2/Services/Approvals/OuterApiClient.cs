@@ -53,13 +53,33 @@ public class OuterApiClient : IOuterApiClient
     
     private void AddRequestHeaders(HttpRequestMessage request)
     {
+        _logger.LogInformation("=== EMPLOYER COMMITMENTS: AddRequestHeaders called ===");
+        _logger.LogInformation("Request URL: {RequestUrl}", request.RequestUri);
+        
         if (_httpContextAccessor.HttpContext.TryGetBearerToken(out var bearerToken))
         {
             request.Headers.Add("Authorization", $"Bearer {bearerToken}");
+            _logger.LogInformation("Bearer token added to request: {BearerToken}", 
+                bearerToken.Substring(0, Math.Min(50, bearerToken.Length)) + "...");
+        }
+        else
+        {
+            _logger.LogWarning("No bearer token found in HttpContext");
         }
 
         request.Headers.Add(SubscriptionKeyRequestHeaderKey, _config.SubscriptionKey);
         request.Headers.Add(VersionRequestHeaderKey, "1");
+        
+        _logger.LogInformation("Subscription key added: {SubscriptionKey}", 
+            _config.SubscriptionKey.Substring(0, Math.Min(10, _config.SubscriptionKey.Length)) + "...");
+        _logger.LogInformation("Version header added: 1");
+        
+        // Log all outgoing headers
+        _logger.LogInformation("=== OUTGOING REQUEST HEADERS ===");
+        foreach (var header in request.Headers)
+        {
+            _logger.LogInformation("Header: {HeaderKey} = {HeaderValue}", header.Key, string.Join(", ", header.Value));
+        }
     }
 
     public Task<TResponse> Post<TResponse>(string url, object data)
