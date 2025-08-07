@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -76,7 +77,9 @@ public class WhenSelectingDeliveryModelOnEditApprenticeshipFixture
 
     public Mock<IModelMapper> ModelMapperMock;
     private Mock<ICacheStorageService> CacheStorageServiceMock;
+    private Mock<IApprovalsApiClient> ApprovalsApiClient;
     public Mock<ITempDataDictionary> TempDataMock;
+    public Mock<IApprovalsApiClient> ApprovalsApiClientMock;
     public EditApprenticeshipDeliveryModelViewModel ViewModel;
     public EditApprenticeshipRequest Request;
     public EditApprenticeshipRequestViewModel Apprenticeship;
@@ -95,13 +98,16 @@ public class WhenSelectingDeliveryModelOnEditApprenticeshipFixture
         ModelMapperMock = new Mock<IModelMapper>();
         TempDataMock = new Mock<ITempDataDictionary>();
         CacheStorageServiceMock = new Mock<ICacheStorageService>();
+        ApprovalsApiClient = new Mock<IApprovalsApiClient>();
+        ApprovalsApiClientMock = new Mock<IApprovalsApiClient>();
 
         Sut = new ApprenticeController(
             ModelMapperMock.Object,
             Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             Mock.Of<ICommitmentsApiClient>(),
             CacheStorageServiceMock.Object,
-            Mock.Of<ILogger<ApprenticeController>>());
+            Mock.Of<ILogger<ApprenticeController>>(),
+            ApprovalsApiClient.Object);
     }
 
     public WhenSelectingDeliveryModelOnEditApprenticeshipFixture WithDeliveryModels(List<EmployerCommitmentsV2.Services.Approvals.Types.DeliveryModel> list)

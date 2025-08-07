@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
@@ -9,6 +8,7 @@ using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
@@ -24,14 +24,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 [Route("{accountHashedId}/apprentices")]
 [SetNavigationSection(NavigationSection.ApprenticesHome)]
 [Authorize(Policy = nameof(PolicyNames.HasEmployerTransactorOwnerAccount))]
-public class ApprenticeController : Controller
+public class ApprenticeController(
+    IModelMapper modelMapper,
+    Interfaces.ICookieStorageService<IndexRequest> cookieStorage,
+    ICommitmentsApiClient commitmentsApiClient,
+    ICacheStorageService cacheStorageService,
+    ILogger<ApprenticeController> logger,
+    IApprovalsApiClient outerApi)
+    : Controller
 {
-    private readonly IModelMapper _modelMapper;
-    private readonly Interfaces.ICookieStorageService<IndexRequest> _cookieStorage;
-    private readonly ICommitmentsApiClient _commitmentsApiClient;
-    private readonly ILogger<ApprenticeController> _logger;
-    private readonly ICacheStorageService _cacheStorageService;
-
     private const string ApprenticePausedMessage = "Apprenticeship paused";
     private const string ApprenticeResumeMessage = "Apprenticeship resumed";
     private const string ApprenticeStoppedMessage = "Apprenticeship stopped";
@@ -44,16 +45,6 @@ public class ApprenticeController : Controller
     private const string ChangesUndoneMessage = "Changes undone";
     private const string ApprenticeEndDateConfirmed = "Current planned end date confirmed ";
 
-    public ApprenticeController(IModelMapper modelMapper, Interfaces.ICookieStorageService<IndexRequest> cookieStorage,
-        ICommitmentsApiClient commitmentsApiClient, ICacheStorageService cacheStorageService, ILogger<ApprenticeController> logger)
-    {
-        _modelMapper = modelMapper;
-        _cookieStorage = cookieStorage;
-        _commitmentsApiClient = commitmentsApiClient;
-        _cacheStorageService = cacheStorageService;
-        _logger = logger;
-    }
-
     [Route("", Name = RouteNames.ApprenticesIndex)]
     public async Task<IActionResult> Index(IndexRequest request)
     {
@@ -61,7 +52,7 @@ public class ApprenticeController : Controller
 
         if (request.FromSearch)
         {
-            savedRequest = _cookieStorage.Get(CookieNames.ManageApprentices);
+            savedRequest = cookieStorage.Get(CookieNames.ManageApprentices);
 
             if (savedRequest != null)
             {
@@ -71,10 +62,10 @@ public class ApprenticeController : Controller
 
         if (savedRequest == null)
         {
-            _cookieStorage.Update(CookieNames.ManageApprentices, request);
+            cookieStorage.Update(CookieNames.ManageApprentices, request);
         }
 
-        var viewModel = await _modelMapper.Map<IndexViewModel>(request);
+        var viewModel = await modelMapper.Map<IndexViewModel>(request);
         viewModel.SortedByHeader();
 
         return View(viewModel);
@@ -83,7 +74,7 @@ public class ApprenticeController : Controller
     [Route("download", Name = RouteNames.ApprenticesDownload)]
     public async Task<IActionResult> Download(DownloadRequest request)
     {
-        var downloadViewModel = await _modelMapper.Map<DownloadViewModel>(request);
+        var downloadViewModel = await modelMapper.Map<DownloadViewModel>(request);
 
         return File(downloadViewModel.Content, downloadViewModel.ContentType, downloadViewModel.Name);
     }
@@ -92,7 +83,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> EditEndDate(EditEndDateRequest request)
     {
-        var viewModel = await _modelMapper.Map<EditEndDateViewModel>(request);
+        var viewModel = await modelMapper.Map<EditEndDateViewModel>(request);
         return View(viewModel);
     }
 
@@ -100,8 +91,8 @@ public class ApprenticeController : Controller
     [HttpPost]
     public async Task<IActionResult> EditEndDate(EditEndDateViewModel viewModel)
     {
-        var request = await _modelMapper.Map<CommitmentsV2.Api.Types.Requests.EditEndDateRequest>(viewModel);
-        await _commitmentsApiClient.UpdateEndDateOfCompletedRecord(request, CancellationToken.None);
+        var request = await modelMapper.Map<CommitmentsV2.Api.Types.Requests.EditEndDateRequest>(viewModel);
+        await commitmentsApiClient.UpdateEndDateOfCompletedRecord(request, CancellationToken.None);
 
         TempData.AddFlashMessage(ApprenticeEndDateUpdatedOnCompletedRecord,
             TempDataDictionaryExtensions.FlashMessageLevel.Success);
@@ -118,7 +109,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
     {
-        var viewModel = await _modelMapper.Map<ChangeStatusRequestViewModel>(request);
+        var viewModel = await modelMapper.Map<ChangeStatusRequestViewModel>(request);
         return View(viewModel);
     }
 
@@ -157,7 +148,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> ChangeProviderInform(ChangeProviderInformRequest request)
     {
-        var viewModel = await _modelMapper.Map<ChangeProviderInformViewModel>(request);
+        var viewModel = await modelMapper.Map<ChangeProviderInformViewModel>(request);
 
         return View(viewModel);
     }
@@ -174,7 +165,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> EnterNewTrainingProvider(ChangeOfProviderRequest request)
     {
-        var viewModel = await _modelMapper.Map<EnterNewTrainingProviderViewModel>(request);
+        var viewModel = await modelMapper.Map<EnterNewTrainingProviderViewModel>(request);
 
         if (request.Edit.GetValueOrDefault())
         {
@@ -192,7 +183,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/change-provider/select-provider", Name = RouteNames.EnterNewTrainingProvider)]
     public async Task<IActionResult> EnterNewTrainingProvider(EnterNewTrainingProviderViewModel vm)
     {
-        var request = await _modelMapper.Map<ChangeOfProviderRequest>(vm);
+        var request = await modelMapper.Map<ChangeOfProviderRequest>(vm);
 
         if (vm.Edit)
         {
@@ -206,7 +197,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> WhoWillEnterTheDetails(ChangeOfProviderRequest request)
     {
-        var viewModel = await _modelMapper.Map<WhoWillEnterTheDetailsViewModel>(request);
+        var viewModel = await modelMapper.Map<WhoWillEnterTheDetailsViewModel>(request);
         return View(viewModel);
     }
 
@@ -214,7 +205,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/change-provider/who-enter-details", Name = RouteNames.WhoWillEnterTheDetails)]
     public async Task<IActionResult> WhoWillEnterTheDetails(WhoWillEnterTheDetailsViewModel vm)
     {
-        var request = await _modelMapper.Map<ChangeOfProviderRequest>(vm);
+        var request = await modelMapper.Map<ChangeOfProviderRequest>(vm);
 
         return RedirectToRoute(vm.EmployerWillAdd == true
                 ? RouteNames.WhatIsTheNewStartDate
@@ -227,7 +218,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> WhatIsTheNewStartDate(ChangeOfProviderRequest request)
     {
-        var viewModel = await _modelMapper.Map<WhatIsTheNewStartDateViewModel>(request);
+        var viewModel = await modelMapper.Map<WhatIsTheNewStartDateViewModel>(request);
 
         if (request.Edit.GetValueOrDefault())
         {
@@ -253,7 +244,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/change-provider/start-date", Name = RouteNames.WhatIsTheNewStartDate)]
     public async Task<IActionResult> WhatIsTheNewStartDate(WhatIsTheNewStartDateViewModel vm)
     {
-        var request = await _modelMapper.Map<ChangeOfProviderRequest>(vm);
+        var request = await modelMapper.Map<ChangeOfProviderRequest>(vm);
 
         return RedirectToRoute(vm.Edit
                 ? RouteNames.ConfirmDetailsAndSendRequest
@@ -266,7 +257,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> WhatIsTheNewEndDate(ChangeOfProviderRequest request)
     {
-        var viewModel = await _modelMapper.Map<WhatIsTheNewEndDateViewModel>(request);
+        var viewModel = await modelMapper.Map<WhatIsTheNewEndDateViewModel>(request);
 
         if (request.Edit.GetValueOrDefault())
         {
@@ -294,7 +285,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/change-provider/end-date", Name = RouteNames.WhatIsTheNewEndDate)]
     public async Task<IActionResult> WhatIsTheNewEndDate(WhatIsTheNewEndDateViewModel viewModel)
     {
-        var request = await _modelMapper.Map<ChangeOfProviderRequest>(viewModel);
+        var request = await modelMapper.Map<ChangeOfProviderRequest>(viewModel);
 
         return RedirectToRoute(viewModel.Edit
                 ? RouteNames.ConfirmDetailsAndSendRequest
@@ -307,7 +298,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> WhatIsTheNewPrice(ChangeOfProviderRequest request)
     {
-        var viewModel = await _modelMapper.Map<WhatIsTheNewPriceViewModel>(request);
+        var viewModel = await modelMapper.Map<WhatIsTheNewPriceViewModel>(request);
 
         if (request.Edit.GetValueOrDefault())
         {
@@ -337,7 +328,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/change-provider/price", Name = RouteNames.WhatIsTheNewPrice)]
     public async Task<IActionResult> WhatIsTheNewPrice(WhatIsTheNewPriceViewModel viewModel)
     {
-        var request = await _modelMapper.Map<ChangeOfProviderRequest>(viewModel);
+        var request = await modelMapper.Map<ChangeOfProviderRequest>(viewModel);
         return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, request);
     }
 
@@ -346,7 +337,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> ConfirmDetailsAndSendRequestPage(ChangeOfProviderRequest request)
     {
-        var viewModel = await _modelMapper.Map<ConfirmDetailsAndSendViewModel>(request);
+        var viewModel = await modelMapper.Map<ConfirmDetailsAndSendViewModel>(request);
 
         return View(viewModel);
     }
@@ -357,8 +348,8 @@ public class ApprenticeController : Controller
     {
         try
         {
-            var apiRequest = await _modelMapper.Map<CreateChangeOfPartyRequestRequest>(viewModel);
-            await _commitmentsApiClient.CreateChangeOfPartyRequest(viewModel.ApprenticeshipId, apiRequest);
+            var apiRequest = await modelMapper.Map<CreateChangeOfPartyRequestRequest>(viewModel);
+            await commitmentsApiClient.CreateChangeOfPartyRequest(viewModel.ApprenticeshipId, apiRequest);
             return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation, new
             {
                 viewModel.AccountHashedId,
@@ -369,7 +360,7 @@ public class ApprenticeController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed '{ControllerName}.{ActionName}'.",
+            logger.LogError(ex, "Failed '{ControllerName}.{ActionName}'.",
                 nameof(ApprenticeController),
                 nameof(ConfirmDetailsAndSendRequestPage));
 
@@ -382,7 +373,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> CancelChangeOfProviderRequest(ChangeOfProviderRequest request)
     {
-        var viewModel = await _modelMapper.Map<CancelChangeOfProviderRequestViewModel>(request);
+        var viewModel = await modelMapper.Map<CancelChangeOfProviderRequestViewModel>(request);
 
         return View(viewModel);
     }
@@ -396,7 +387,7 @@ public class ApprenticeController : Controller
             return RedirectToRoute(RouteNames.ApprenticeDetail, new { viewModel.ApprenticeshipHashedId, viewModel.AccountHashedId });
         }
 
-        var request = await _modelMapper.Map<ChangeOfProviderRequest>(viewModel);
+        var request = await modelMapper.Map<ChangeOfProviderRequest>(viewModel);
 
         return RedirectToRoute(RouteNames.ConfirmDetailsAndSendRequest, request);
     }
@@ -405,7 +396,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> SendRequestNewTrainingProvider(SendNewTrainingProviderRequest request)
     {
-        var viewModel = await _modelMapper.Map<SendNewTrainingProviderViewModel>(request);
+        var viewModel = await modelMapper.Map<SendNewTrainingProviderViewModel>(request);
         return View(viewModel);
     }
 
@@ -417,8 +408,8 @@ public class ApprenticeController : Controller
         {
             try
             {
-                var apiRequest = await _modelMapper.Map<CreateChangeOfPartyRequestRequest>(request);
-                await _commitmentsApiClient.CreateChangeOfPartyRequest(request.ApprenticeshipId, apiRequest);
+                var apiRequest = await modelMapper.Map<CreateChangeOfPartyRequestRequest>(request);
+                await commitmentsApiClient.CreateChangeOfPartyRequest(request.ApprenticeshipId, apiRequest);
                 return RedirectToRoute(RouteNames.ChangeProviderRequestedConfirmation,
                     new
                     {
@@ -431,7 +422,7 @@ public class ApprenticeController : Controller
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed '{ControllerName}.{ActionName}'.",
+                logger.LogError(ex, "Failed '{ControllerName}.{ActionName}'.",
                     nameof(ApprenticeController),
                     nameof(SendRequestNewTrainingProvider));
 
@@ -450,7 +441,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> ChangeProviderRequested(ChangeProviderRequestedConfirmationRequest request)
     {
-        var viewModel = await _modelMapper.Map<ChangeProviderRequestedConfirmationViewModel>(request);
+        var viewModel = await modelMapper.Map<ChangeProviderRequestedConfirmationViewModel>(request);
 
         return View(viewModel);
     }
@@ -459,7 +450,7 @@ public class ApprenticeController : Controller
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> ViewChanges(ViewChangesRequest request)
     {
-        var viewModel = await _modelMapper.Map<ViewChangesViewModel>(request);
+        var viewModel = await modelMapper.Map<ViewChangesViewModel>(request);
 
         return View(viewModel);
     }
@@ -469,7 +460,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     public async Task<IActionResult> StopApprenticeship(StopRequest request)
     {
-        var viewModel = await _modelMapper.Map<StopRequestViewModel>(request);
+        var viewModel = await modelMapper.Map<StopRequestViewModel>(request);
         return View(viewModel);
     }
 
@@ -493,7 +484,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     public async Task<IActionResult> HasTheApprenticeBeenMadeRedundant(MadeRedundantRequest request)
     {
-        var viewModel = await _modelMapper.Map<MadeRedundantViewModel>(request);
+        var viewModel = await modelMapper.Map<MadeRedundantViewModel>(request);
         return View(viewModel);
     }
 
@@ -517,7 +508,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     public async Task<IActionResult> WhyStopApprenticeship(WhyStopApprenticeshipRequest request)
     {
-        var viewModel = await _modelMapper.Map<WhyStopApprenticeshipViewModel>(request);
+        var viewModel = await modelMapper.Map<WhyStopApprenticeshipViewModel>(request);
         return View(viewModel);
     }
 
@@ -565,7 +556,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     public async Task<IActionResult> ApprenticeshipNeverStarted(ApprenticeshipNeverStartedRequest request)
     {
-        var viewModel = await _modelMapper.Map<ApprenticeshipNeverStartedViewModel>(request);
+        var viewModel = await modelMapper.Map<ApprenticeshipNeverStartedViewModel>(request);
         return View(viewModel);
     }
 
@@ -588,7 +579,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     public async Task<IActionResult> ApprenticeshipNotEnded(ApprenticeshipNotEndedRequest request)
     {
-        var viewModel = await _modelMapper.Map<ApprenticeshipNotEndedViewModel>(request);
+        var viewModel = await modelMapper.Map<ApprenticeshipNotEndedViewModel>(request);
         return View(viewModel);
     }
 
@@ -597,7 +588,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     public async Task<IActionResult> ConfirmStop(ConfirmStopRequest request)
     {
-        var viewModel = await _modelMapper.Map<ConfirmStopRequestViewModel>(request);
+        var viewModel = await modelMapper.Map<ConfirmStopRequestViewModel>(request);
         return View(viewModel);
     }
 
@@ -607,9 +598,9 @@ public class ApprenticeController : Controller
     {
         if (viewModel.StopConfirmed.HasValue && viewModel.StopConfirmed.Value)
         {
-            var stopApprenticeshipRequest = await _modelMapper.Map<StopApprenticeshipRequest>(viewModel);
+            var stopApprenticeshipRequest = await modelMapper.Map<StopApprenticeshipRequest>(viewModel);
 
-            await _commitmentsApiClient.StopApprenticeship(viewModel.ApprenticeshipId, stopApprenticeshipRequest,
+            await commitmentsApiClient.StopApprenticeship(viewModel.ApprenticeshipId, stopApprenticeshipRequest,
                 CancellationToken.None);
 
             if (viewModel.IsCoPJourney)
@@ -651,7 +642,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     public async Task<IActionResult> PauseApprenticeship(PauseRequest request)
     {
-        var viewModel = await _modelMapper.Map<PauseRequestViewModel>(request);
+        var viewModel = await modelMapper.Map<PauseRequestViewModel>(request);
         return View(viewModel);
     }
 
@@ -661,9 +652,9 @@ public class ApprenticeController : Controller
     {
         if (viewModel.PauseConfirmed.HasValue && viewModel.PauseConfirmed.Value)
         {
-            var pauseRequest = await _modelMapper.Map<PauseApprenticeshipRequest>(viewModel);
+            var pauseRequest = await modelMapper.Map<PauseApprenticeshipRequest>(viewModel);
 
-            await _commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
+            await commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
 
             TempData.AddFlashMessage(ApprenticePausedMessage, TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
@@ -680,7 +671,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     public async Task<IActionResult> ResumeApprenticeship(ResumeRequest request)
     {
-        var viewModel = await _modelMapper.Map<ResumeRequestViewModel>(request);
+        var viewModel = await modelMapper.Map<ResumeRequestViewModel>(request);
         return View(viewModel);
     }
 
@@ -690,9 +681,9 @@ public class ApprenticeController : Controller
     {
         if (viewModel.ResumeConfirmed.HasValue && viewModel.ResumeConfirmed.Value)
         {
-            var resumeRequest = await _modelMapper.Map<ResumeApprenticeshipRequest>(viewModel);
+            var resumeRequest = await modelMapper.Map<ResumeApprenticeshipRequest>(viewModel);
 
-            await _commitmentsApiClient.ResumeApprenticeship(resumeRequest, CancellationToken.None);
+            await commitmentsApiClient.ResumeApprenticeship(resumeRequest, CancellationToken.None);
 
             TempData.AddFlashMessage(ApprenticeResumeMessage, TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
@@ -706,7 +697,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
     public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, ApprenticeDetailsBanners banners = 0)
     {
-        var viewModel = await _modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
+        var viewModel = await modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
         viewModel.ShowBannersFlags = banners;
         return View("details", viewModel);
     }
@@ -716,7 +707,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/details/editstopdate", Name = "EditStopDateOption")]
     public async Task<ActionResult> EditStopDate(EditStopDateRequest request)
     {
-        var viewModel = await _modelMapper.Map<EditStopDateViewModel>(request);
+        var viewModel = await modelMapper.Map<EditStopDateViewModel>(request);
         return View(viewModel);
     }
 
@@ -724,9 +715,9 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/details/editstopdate", Name = "PostEditStopDate")]
     public async Task<ActionResult> UpdateApprenticeshipStopDate(EditStopDateViewModel viewModel)
     {
-        var request = await _modelMapper.Map<ApprenticeshipStopDateRequest>(viewModel);
+        var request = await modelMapper.Map<ApprenticeshipStopDateRequest>(viewModel);
 
-        await _commitmentsApiClient.UpdateApprenticeshipStopDate(viewModel.ApprenticeshipId, request,
+        await commitmentsApiClient.UpdateApprenticeshipStopDate(viewModel.ApprenticeshipId, request,
             CancellationToken.None);
 
         TempData.AddFlashMessage(ApprenticeEditStopDate, TempDataDictionaryExtensions.FlashMessageLevel.Success);
@@ -745,11 +736,11 @@ public class ApprenticeController : Controller
         if (request.CacheKey != null && request.CacheKey != Guid.Empty)
         {
             viewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey)
-                        ?? await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
+                        ?? await modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
         }
         else
         {
-            viewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
+            viewModel = await modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
             viewModel.CacheKey = Guid.NewGuid();
         }
 
@@ -768,41 +759,15 @@ public class ApprenticeController : Controller
             return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit),
                 new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, viewModel.AccountHashedId, cacheKey });
         }
+        
+        var request = await modelMapper.Map<ValidateEditApprenticeshipRequest>(viewModel);
 
-        var apprenticeship = await _commitmentsApiClient.GetApprenticeship(viewModel.ApprenticeshipId);
-        // Only calculate the version if the course changes, or the start date changes and is > than the original start date.
-        var triggerCalculate = viewModel.CourseCode != apprenticeship.CourseCode ||
-                               apprenticeship.StartDate < viewModel.StartDate.Date.Value;
-        if (triggerCalculate)
-        {
-            TrainingProgramme trainingProgramme;
+        var response = await outerApi.EditApprenticeship(viewModel.AccountId, viewModel.ApprenticeshipId, request);
+        
+        viewModel.HasOptions = response.HasOptions;
+        viewModel.Version = response.Version;
 
-            if (int.TryParse(viewModel.CourseCode, out var standardId))
-            {
-                var standardVersionResponse =
-                    await _commitmentsApiClient.GetCalculatedTrainingProgrammeVersion(standardId,
-                        viewModel.StartDate.Date.Value);
-
-                trainingProgramme = standardVersionResponse.TrainingProgramme;
-            }
-            else
-            {
-                var frameworkResponse = await _commitmentsApiClient.GetTrainingProgramme(viewModel.CourseCode);
-
-                trainingProgramme = frameworkResponse.TrainingProgramme;
-            }
-
-            viewModel.Version = trainingProgramme.Version;
-            viewModel.HasOptions = trainingProgramme.Options.Any();
-        }
-
-        var validationRequest = await _modelMapper.Map<ValidateApprenticeshipForEditRequest>(viewModel);
-        await _commitmentsApiClient.ValidateApprenticeshipForEdit(validationRequest);
-
-        if (triggerCalculate)
-        {
-            viewModel.Option = null;
-        }
+        viewModel.Option = response.CourseOrStartDateChange ? null : viewModel.Option;
 
         cacheKey = await StoreEditApprenticeshipRequestViewModelInCache(viewModel, viewModel.CacheKey);
 
@@ -818,7 +783,7 @@ public class ApprenticeController : Controller
     public async Task<IActionResult> SelectCourseForEdit(EditApprenticeshipRequest request)
     {
         var draft = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
-        var model = await _modelMapper.Map<SelectCourseViewModel>(draft);
+        var model = await modelMapper.Map<SelectCourseViewModel>(draft);
         return View("SelectCourse", model);
     }
 
@@ -847,7 +812,7 @@ public class ApprenticeController : Controller
     public async Task<IActionResult> SelectDeliveryModelForEdit(EditApprenticeshipRequest request)
     {
         var draft = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
-        var model = await _modelMapper.Map<EditApprenticeshipDeliveryModelViewModel>(draft);
+        var model = await modelMapper.Map<EditApprenticeshipDeliveryModelViewModel>(draft);
 
         if (model.DeliveryModels.Count > 1)
         {
@@ -882,7 +847,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/change-version", Name = RouteNames.ChangeVersion)]
     public async Task<IActionResult> ChangeVersion(ChangeVersionRequest request)
     {
-        var viewModel = await _modelMapper.Map<ChangeVersionViewModel>(request);
+        var viewModel = await modelMapper.Map<ChangeVersionViewModel>(request);
         
         // Get Edit Model if it exists to pre-select version if navigating back
         var editApprenticeViewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
@@ -899,7 +864,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/change-version")]
     public async Task<IActionResult> ChangeVersion(ChangeVersionViewModel changeVersionViewModel)
     {
-        var editRequestViewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(changeVersionViewModel);
+        var editRequestViewModel = await modelMapper.Map<EditApprenticeshipRequestViewModel>(changeVersionViewModel);
         var cacheKey = await StoreEditApprenticeshipRequestViewModelInCache(editRequestViewModel, changeVersionViewModel.CacheKey);
 
         return RedirectToAction(editRequestViewModel.HasOptions
@@ -917,7 +882,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/change-option", Name = RouteNames.ChangeOption)]
     public async Task<IActionResult> ChangeOption(ChangeOptionRequest request)
     {
-        var viewModel = await _modelMapper.Map<ChangeOptionViewModel>(request);
+        var viewModel = await modelMapper.Map<ChangeOptionViewModel>(request);
 
         return View(viewModel);
     }
@@ -926,7 +891,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/change-option")]
     public async Task<IActionResult> ChangeOption(ChangeOptionViewModel viewModel)
     {
-        var editViewModel = await _modelMapper.Map<EditApprenticeshipRequestViewModel>(viewModel);
+        var editViewModel = await modelMapper.Map<EditApprenticeshipRequestViewModel>(viewModel);
         var cacheKey = await StoreEditApprenticeshipRequestViewModelInCache(editViewModel, viewModel.CacheKey);
 
         return RedirectToAction("ConfirmEditApprenticeship",
@@ -952,11 +917,11 @@ public class ApprenticeController : Controller
     [HttpGet]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/edit/confirm")]
-    public async Task<IActionResult> ConfirmEditApprenticeship(ConfirmEditApprenticeshipRequest request)
+    public async Task<IActionResult> ConfirmEditApprenticeship(Models.Apprentice.ConfirmEditApprenticeshipRequest request)
     {
         var editApprenticeshipRequestViewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
 
-        var viewModel = await _modelMapper.Map<ConfirmEditApprenticeshipViewModel>(editApprenticeshipRequestViewModel);
+        var viewModel = await modelMapper.Map<ConfirmEditApprenticeshipViewModel>(editApprenticeshipRequestViewModel);
 
         return View(viewModel);
     }
@@ -967,8 +932,8 @@ public class ApprenticeController : Controller
     {
         if (viewModel.ConfirmChanges.Value)
         {
-            var request = await _modelMapper.Map<EditApprenticeshipApiRequest>(viewModel);
-            var result = await _commitmentsApiClient.EditApprenticeship(request);
+            var request = await modelMapper.Map<SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests.ConfirmEditApprenticeshipRequest>(viewModel);
+            var result = await outerApi.ConfirmEditApprenticeship(viewModel.AccountId, viewModel.ApprenticeshipId, request);
 
             if (result.NeedReapproval)
             {
@@ -993,7 +958,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/changes/review")]
     public async Task<IActionResult> ReviewApprenticeshipUpdates(ReviewApprenticeshipUpdatesRequest request)
     {
-        var viewModel = await _modelMapper.Map<ReviewApprenticeshipUpdatesViewModel>(request);
+        var viewModel = await modelMapper.Map<ReviewApprenticeshipUpdatesViewModel>(request);
 
         return View(viewModel);
     }
@@ -1012,7 +977,7 @@ public class ApprenticeController : Controller
                 UserInfo = authenticationService.UserInfo
             };
 
-            await _commitmentsApiClient.AcceptApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
+            await commitmentsApiClient.AcceptApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
             TempData.AddFlashMessageWithDetail(ChangesApprovedMessage, AlertDetailsWhenApproved,
                 TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
@@ -1025,7 +990,7 @@ public class ApprenticeController : Controller
                 UserInfo = authenticationService.UserInfo
             };
 
-            await _commitmentsApiClient.RejectApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
+            await commitmentsApiClient.RejectApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
             TempData.AddFlashMessage(ChangesRejectedMessage, TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
 
@@ -1038,7 +1003,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/changes/view", Name = RouteNames.ApprenticeViewUpdates)]
     public async Task<IActionResult> ViewApprenticeshipUpdates(ViewApprenticeshipUpdatesRequest request)
     {
-        var viewModel = await _modelMapper.Map<ViewApprenticeshipUpdatesViewModel>(request);
+        var viewModel = await modelMapper.Map<ViewApprenticeshipUpdatesViewModel>(request);
 
         return View(viewModel);
     }
@@ -1056,7 +1021,7 @@ public class ApprenticeController : Controller
                 UserInfo = authenticationService.UserInfo
             };
 
-            await _commitmentsApiClient.UndoApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
+            await commitmentsApiClient.UndoApprenticeshipUpdates(viewModel.ApprenticeshipId, request);
 
             TempData.AddFlashMessage(ChangesUndoneMessage, TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
@@ -1070,7 +1035,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/changes/request")]
     public async Task<IActionResult> DataLockRequestChanges(DataLockRequestChangesRequest request)
     {
-        var viewModel = await _modelMapper.Map<DataLockRequestChangesViewModel>(request);
+        var viewModel = await modelMapper.Map<DataLockRequestChangesViewModel>(request);
 
         return View(viewModel);
     }
@@ -1087,13 +1052,13 @@ public class ApprenticeController : Controller
 
         if (viewModel.AcceptChanges.Value)
         {
-            var request = await _modelMapper.Map<AcceptDataLocksRequestChangesRequest>(viewModel);
-            await _commitmentsApiClient.AcceptDataLockChanges(viewModel.ApprenticeshipId, request);
+            var request = await modelMapper.Map<AcceptDataLocksRequestChangesRequest>(viewModel);
+            await commitmentsApiClient.AcceptDataLockChanges(viewModel.ApprenticeshipId, request);
         }
         else
         {
-            var request = await _modelMapper.Map<RejectDataLocksRequestChangesRequest>(viewModel);
-            await _commitmentsApiClient.RejectDataLockChanges(viewModel.ApprenticeshipId, request);
+            var request = await modelMapper.Map<RejectDataLocksRequestChangesRequest>(viewModel);
+            await commitmentsApiClient.RejectDataLockChanges(viewModel.ApprenticeshipId, request);
         }
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
@@ -1105,7 +1070,7 @@ public class ApprenticeController : Controller
     [Route("{apprenticeshipHashedId}/changes/restart")]
     public async Task<IActionResult> DataLockRequestRestart(DataLockRequestRestartRequest request)
     {
-        var viewModel = await _modelMapper.Map<DataLockRequestRestartViewModel>(request);
+        var viewModel = await modelMapper.Map<DataLockRequestRestartViewModel>(request);
 
         return View(viewModel);
     }
@@ -1117,7 +1082,7 @@ public class ApprenticeController : Controller
     {
         try
         {
-            await _commitmentsApiClient.ResendApprenticeshipInvitation(request.ApprenticeshipId,
+            await commitmentsApiClient.ResendApprenticeshipInvitation(request.ApprenticeshipId,
                 new SaveDataRequest { UserInfo = authenticationService.UserInfo }, CancellationToken.None);
 
             TempData.AddFlashMessage("The invitation email has been resent.", null,
@@ -1139,7 +1104,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     public async Task<IActionResult> ConfirmHasNotStop(ConfirmHasNotStopRequest request)
     {
-        var viewModel = await _modelMapper.Map<ConfirmHasNotStopViewModel>(request);
+        var viewModel = await modelMapper.Map<ConfirmHasNotStopViewModel>(request);
         return View(viewModel);
     }
 
@@ -1147,7 +1112,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     public async Task<IActionResult> ConfirmHasValidEndDate(ConfirmHasValidEndDateRequest request)
     {
-        var viewModel = await _modelMapper.Map<ConfirmHasValidEndDateViewModel>(request);
+        var viewModel = await modelMapper.Map<ConfirmHasValidEndDateViewModel>(request);
         return View(viewModel);
     }
 
@@ -1176,7 +1141,7 @@ public class ApprenticeController : Controller
     {
         if (viewModel.EndDateConfirmed.Value)
         {
-            await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(
+            await commitmentsApiClient.ResolveOverlappingTrainingDateRequest(
                 new ResolveApprenticeshipOverlappingTrainingDateRequest
                 {
                     ApprenticeshipId = viewModel.ApprenticeshipId,
@@ -1203,7 +1168,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     public async Task<IActionResult> ReconfirmHasNotStop(ReConfirmHasNotStopRequest request)
     {
-        var viewModel = await _modelMapper.Map<ReconfirmHasNotStopViewModel>(request);
+        var viewModel = await modelMapper.Map<ReconfirmHasNotStopViewModel>(request);
         return View(viewModel);
     }
 
@@ -1213,7 +1178,7 @@ public class ApprenticeController : Controller
     {
         if (viewModel.StopConfirmed.HasValue && viewModel.StopConfirmed.Value)
         {
-            await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(
+            await commitmentsApiClient.ResolveOverlappingTrainingDateRequest(
                 new ResolveApprenticeshipOverlappingTrainingDateRequest
                 {
                     ApprenticeshipId = viewModel.ApprenticeshipId,
@@ -1235,7 +1200,7 @@ public class ApprenticeController : Controller
     [HttpGet]
     public async Task<IActionResult> ConfirmWhenApprenticeshipStopped(ConfirmWhenApprenticeshipStoppedRequest request)
     {
-        var viewModel = await _modelMapper.Map<ConfirmWhenApprenticeshipStoppedViewModel>(request);
+        var viewModel = await modelMapper.Map<ConfirmWhenApprenticeshipStoppedViewModel>(request);
         return View(viewModel);
     }
 
@@ -1246,7 +1211,7 @@ public class ApprenticeController : Controller
     {
         if (viewModel.IsCorrectStopDate.Value)
         {
-            await _commitmentsApiClient.ResolveOverlappingTrainingDateRequest(
+            await commitmentsApiClient.ResolveOverlappingTrainingDateRequest(
                 new ResolveApprenticeshipOverlappingTrainingDateRequest
                 {
                     ApprenticeshipId = viewModel.ApprenticeshipId,
@@ -1274,7 +1239,7 @@ public class ApprenticeController : Controller
     private async Task<Guid> StoreEditApprenticeshipRequestViewModelInCache(EditApprenticeshipRequestViewModel model, Guid? key)
     {
         key ??= Guid.NewGuid();
-        await _cacheStorageService.SaveToCache(key.Value, model, 1);
+        await cacheStorageService.SaveToCache(key.Value, model, 1);
         
         return key.Value;
     }
@@ -1283,7 +1248,7 @@ public class ApprenticeController : Controller
     {
         if (key.IsNotNullOrEmpty())
         {
-            return await _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>(key.Value);
+            return await cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>(key.Value);
         }
         
         return null;
@@ -1293,7 +1258,7 @@ public class ApprenticeController : Controller
     {
         if (key.IsNotNullOrEmpty())
         {
-            await _cacheStorageService.DeleteFromCache(key.Value);
+            await cacheStorageService.DeleteFromCache(key.Value);
         }
     }
 }

@@ -58,7 +58,7 @@ public static class BearerTokenProvider
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
         // Filter out AccountsClaimsTypeIdentifier because it holds unnecessary data for this feature, will bloat the token and potentially cause BadRequest errors with OuterApi calls.
-        var filteredClaims = user.Claims.Where(c=> !c.Type.Equals(EmployerClaims.AccountsClaimsTypeIdentifier));
+        var filteredClaims = user.Claims.Where(c=> !c.Type.Equals(EmployerClaims.AccountsClaimsTypeIdentifier)).ToList();
         
         var token = new JwtSecurityToken(
             claims: filteredClaims,

@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -31,6 +32,7 @@ public class WhenCallingChangeProviderRequestedConfirmationPageTestsFixture
     private readonly ChangeProviderRequestedConfirmationRequest _request;
     private readonly ChangeProviderRequestedConfirmationViewModel _viewModel;
     protected readonly Mock<ICacheStorageService> _cacheStorageService;
+    protected readonly Mock<IApprovalsApiClient> _approvalsApiClient;
 
     private readonly Mock<IModelMapper> _mockMapper;
     private readonly ApprenticeController _controller;
@@ -41,6 +43,7 @@ public class WhenCallingChangeProviderRequestedConfirmationPageTestsFixture
         _request = autoFixture.Create<ChangeProviderRequestedConfirmationRequest>();
         _viewModel = autoFixture.Create<ChangeProviderRequestedConfirmationViewModel>();
         _cacheStorageService = new Mock<ICacheStorageService>();
+        _approvalsApiClient = new Mock<IApprovalsApiClient>();
 
         _mockMapper = new Mock<IModelMapper>();
         _mockMapper.Setup(m => m.Map<ChangeProviderRequestedConfirmationViewModel>(_request))
@@ -50,7 +53,8 @@ public class WhenCallingChangeProviderRequestedConfirmationPageTestsFixture
             Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             Mock.Of<ICommitmentsApiClient>(),
             _cacheStorageService.Object,
-            Mock.Of<ILogger<ApprenticeController>>());                
+            Mock.Of<ILogger<ApprenticeController>>(),
+            _approvalsApiClient.Object);                
     }
 
     public async Task<IActionResult> ChangeProviderRequested()

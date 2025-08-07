@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -17,7 +18,8 @@ public class WhenPostingHasTheApprenticeBeenMadeRedundant : ApprenticeController
             Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
             Mock.Of<ICommitmentsApiClient>(),
             Mock.Of<ICacheStorageService>(),
-            Mock.Of<ILogger<ApprenticeController>>());
+            Mock.Of<ILogger<ApprenticeController>>(),
+            Mock.Of<IApprovalsApiClient>());
     }
 
     [Test, MoqAutoData]
