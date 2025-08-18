@@ -20,10 +20,6 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<ApprenticeRequest, 
     {
         var ale = await _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
 
-        var courses = !string.IsNullOrWhiteSpace(source.TransferSenderId) || ale.LevyStatus == ApprenticeshipEmployerType.NonLevy
-            ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
-            : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes;
-
         var provider = await _commitmentsApiClient.GetProvider(source.ProviderId);
 
         var result = new AddDraftApprenticeshipViewModel
@@ -34,8 +30,7 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<ApprenticeRequest, 
             ReservationId = source.ReservationId,
             CourseCode = source.CourseCode,
             ProviderId = (int)source.ProviderId,
-            ProviderName = provider.Name,
-            Courses =  courses
+            ProviderName = provider.Name
         };
 
         return result;

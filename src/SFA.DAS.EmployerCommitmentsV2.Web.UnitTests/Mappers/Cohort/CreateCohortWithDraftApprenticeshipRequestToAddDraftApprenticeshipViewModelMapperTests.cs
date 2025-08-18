@@ -100,31 +100,4 @@ public class CreateCohortWithDraftApprenticeshipRequestToAddDraftApprenticeshipV
     {
         Assert.That(_result.ProviderName, Is.EqualTo(_providerResponse.Name));
     }
-
-    [Test]
-    public void CoursesAreMappedCorrectly()
-    {
-        Assert.That(_result.Courses, Is.EqualTo(_allTrainingProgrammes));
-    }
-
-    [Test]
-    public async Task TransferFundedCohortsAllowStandardCoursesOnlyWhenEmployerIsLevy()
-    {
-        _source.TransferSenderId = "test";
-        _result = await _mapper.Map(TestHelper.Clone(_source));
-        _result.Courses.Should().BeEquivalentTo(_standardTrainingProgrammes);
-    }
-
-    [TestCase("12345")]
-    [TestCase(null)]
-    public async Task NonLevyCohortsAllowStandardCoursesOnlyRegardlessOfTransferStatus(string transferSenderId)
-    {
-        _source.TransferSenderId = transferSenderId;
-        _accountLegalEntityResponse.LevyStatus = ApprenticeshipEmployerType.NonLevy;
-            
-            
-        _result = await _mapper.Map(TestHelper.Clone(_source));
-        _result.Courses.Should().BeEquivalentTo(_standardTrainingProgrammes);
-    }
-
 }

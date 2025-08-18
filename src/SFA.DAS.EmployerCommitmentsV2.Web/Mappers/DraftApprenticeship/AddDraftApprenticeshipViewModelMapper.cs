@@ -43,7 +43,6 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<AddDraftApprentices
             CourseCode = source.CourseCode,
             ProviderId = source.ProviderId,
             ProviderName = details.ProviderName,
-            Courses = null,
             TransferSenderHashedId = details.IsFundedByTransfer ? _encodingService.Encode(details.TransferSenderId.Value, EncodingType.PublicAccountId) : string.Empty,
             DeliveryModel = source.DeliveryModel,
             IsOnFlexiPaymentPilot = false,

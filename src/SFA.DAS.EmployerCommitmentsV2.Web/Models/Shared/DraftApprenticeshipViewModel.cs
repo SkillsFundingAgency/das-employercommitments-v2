@@ -124,9 +124,7 @@ public class BaseDraftApprenticeshipViewModel
     public int? EmploymentPrice { get; set; }
 
     [Display(Name = "Reference (optional)")]
-    public string Reference { get; set; }
-
-    public IEnumerable<TrainingProgramme> Courses { get; set; }
+    public string Reference { get; set; }    
 
     // If you remove these two properties it will break the routing of some actions
     public string AccountHashedId { get; set; }

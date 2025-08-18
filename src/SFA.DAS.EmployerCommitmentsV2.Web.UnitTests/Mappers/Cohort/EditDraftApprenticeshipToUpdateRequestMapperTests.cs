@@ -46,7 +46,6 @@ public class WhenIMapDraftApprenticeshipToUpdateRequest
             .With(x => x.StartYear, startDate?.Year)
             .With(x => x.IsOnFlexiPaymentPilot, false)
             .Without(x => x.StartDate)
-            .Without(x => x.Courses)
             .Create();
 
         _mockCommitmentsApiClient.Setup(x => x.GetDraftApprenticeship(_source.CohortId.Value, _source.DraftApprenticeshipId, It.IsAny<CancellationToken>()))

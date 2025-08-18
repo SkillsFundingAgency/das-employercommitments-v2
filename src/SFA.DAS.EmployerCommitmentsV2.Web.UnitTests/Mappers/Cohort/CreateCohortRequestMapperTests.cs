@@ -38,7 +38,6 @@ public class CreateCohortRequestMapperTests
             .With(x => x.EmploymentEndMonth, employmentEndDate?.Month)
             .With(x => x.EmploymentEndYear, employmentEndDate?.Year)
             .Without(x => x.StartDate)
-            .Without(x => x.Courses)
             .Create();
 
         _result = await _mapper.Map(TestHelper.Clone(_source));
