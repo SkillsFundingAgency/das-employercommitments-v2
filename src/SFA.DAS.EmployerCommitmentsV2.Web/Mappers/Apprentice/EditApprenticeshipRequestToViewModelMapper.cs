@@ -39,11 +39,7 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
         var editApprenticeship = editApprenticeshipTask.Result;
         var accountDetails = accountDetailsTask.Result;
         var priceEpisodes = priceEpisodesTask.Result;
-
-        var courses = accountDetails.LevyStatus == ApprenticeshipEmployerType.NonLevy || editApprenticeship.IsFundedByTransfer
-            ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards(CancellationToken.None)).TrainingProgrammes
-            : (await _commitmentsApiClient.GetAllTrainingProgrammes(CancellationToken.None)).TrainingProgrammes;
-
+        
         var isLockedForUpdate = IsLiveAndHasHadDataLockSuccess(apprenticeship)
                                 ||
                                 IsLiveAndIsNotWithInFundingPeriod(apprenticeship)
@@ -68,7 +64,6 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
             Option = apprenticeship.Option == string.Empty ? "TBC" : apprenticeship.Option,
             Cost = priceEpisodes.PriceEpisodes.GetPrice(),
             EmployerReference = apprenticeship.EmployerReference,
-            Courses = courses,
             IsContinuation = apprenticeship.IsContinuation,
             IsLockedForUpdate = isLockedForUpdate,
             IsUpdateLockedForStartDateAndCourse = editApprenticeship.IsFundedByTransfer && !apprenticeship.HasHadDataLockSuccess,

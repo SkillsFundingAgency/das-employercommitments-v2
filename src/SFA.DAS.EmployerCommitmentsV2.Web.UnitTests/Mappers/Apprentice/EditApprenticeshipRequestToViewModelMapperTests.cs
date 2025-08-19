@@ -3,7 +3,6 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -50,22 +49,7 @@ public class EditApprenticeshipRequestToViewModelMapperTests
 
         //Assert
         _fixture.VerifyGetAccountIsCalled();
-    }
-
-    [Test]
-    public async Task For_LevyEmployer_GetAllTrainingProgramme_IsCalled()
-    {
-        //Setup
-        _fixture.SetUpLevyAccount().NotTransferSender();
-
-        //Act
-        await _fixture.Map();
-
-        //Assert
-        _fixture
-            .VerifyGetAllTrainingProgrammeIsCalled()
-            .VerifyGetAllTrainingProgrammeStandardsIsNotCalled();
-    }
+    }    
 
     [Test]
     public async Task For_TransferSender_FundedApprenticeship_GetAllTrainingProgrammeStandard_IsCalled()
@@ -78,12 +62,11 @@ public class EditApprenticeshipRequestToViewModelMapperTests
 
         //Assert
         _fixture
-            .VerifyGetAllTrainingProgrammeIsNotCalled()
-            .VerifyGetAllTrainingProgrammeStandardsIsCalled();
+            .VerifyGetAllTrainingProgrammeIsNotCalled();
     }
 
     [Test]
-    public async Task For_NonLevyEmployer_GetAllTrainingProgrammeStandards_IsCalled()
+    public async Task For_NonLevyEmployer_GetAllTrainingProgramme_IsNotCalled()
     {
         //Setup
         _fixture.SetUpNonLevyAccount().NotTransferSender();
@@ -93,8 +76,7 @@ public class EditApprenticeshipRequestToViewModelMapperTests
 
         //Assert
         _fixture
-            .VerifyGetAllTrainingProgrammeIsNotCalled()
-            .VerifyGetAllTrainingProgrammeStandardsIsCalled();
+            .VerifyGetAllTrainingProgrammeIsNotCalled();
     }
 
     [Test]
@@ -230,37 +212,7 @@ public class EditApprenticeshipRequestToViewModelMapperTests
 
         //Assert
         _fixture.VerifyCourseCodeIsMapped();
-    }
-
-    [Test]
-    public async Task Cost_IsMapped()
-    {
-        //Act
-        await _fixture.Map();
-
-        //Assert
-        _fixture.VerifyCoursesAreMapped();
-    }
-
-    [Test]
-    public async Task EmployerReference_IsMapped()
-    {
-        //Act
-        await _fixture.Map();
-
-        //Assert
-        _fixture.VerifyCoursesAreMapped();
-    }
-
-    [Test]
-    public async Task Courses_AreMapped()
-    {
-        //Act
-        await _fixture.Map();
-
-        //Assert
-        _fixture.VerifyCoursesAreMapped();
-    }
+    }     
 
     [Test]
     public async Task IsContinuationIsMapped()
@@ -485,18 +437,6 @@ public class EditApprenticeshipRequestToViewModelMapperTestsFixture
         return this;
     }
 
-    internal EditApprenticeshipRequestToViewModelMapperTestsFixture VerifyGetAllTrainingProgrammeStandardsIsNotCalled()
-    {
-        _mockCommitmentsApiClient.Verify(t => t.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()), Times.Never());
-        return this;
-    }
-
-    internal EditApprenticeshipRequestToViewModelMapperTestsFixture VerifyGetAllTrainingProgrammeStandardsIsCalled()
-    {
-        _mockCommitmentsApiClient.Verify(t => t.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()), Times.Once());
-        return this;
-    }
-
     internal void VerifyHashedApprenticeshipIdIsMapped()
     {
         Assert.That(_viewModel.HashedApprenticeshipId, Is.EqualTo(_request.ApprenticeshipHashedId));
@@ -551,12 +491,7 @@ public class EditApprenticeshipRequestToViewModelMapperTestsFixture
     {
         Assert.That(_viewModel.Version, Is.EqualTo(ApprenticeshipResponse.Version));
     }
-
-    internal void VerifyCoursesAreMapped()
-    {
-        Assert.That(_viewModel.Courses, Is.EqualTo(_courses));
-    }
-
+    
     internal static void VerifyIsLockedForUpdateIsMapped()
     {
         //   throw new NotImplementedException();
@@ -647,8 +582,7 @@ public class EditApprenticeshipRequestToViewModelMapperTestsFixture
             .Create();
 
         _getEditApprenticeshipResponse = autoFixture.Create<GetEditApprenticeshipResponse>();
-        _accountResponse = autoFixture.Create<AccountResponse>();
-        var allTrainingProgrammeStandardsResponse = autoFixture.Create<GetAllTrainingProgrammeStandardsResponse>();
+        _accountResponse = autoFixture.Create<AccountResponse>();        
         var allTrainingProgrammeResponse = autoFixture.Create<GetAllTrainingProgrammesResponse>();
    
         _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
@@ -663,12 +597,6 @@ public class EditApprenticeshipRequestToViewModelMapperTestsFixture
 
         _mockCommitmentsApiClient.Setup(t => t.GetAccount(_request.AccountId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => _accountResponse);
-
-        _mockCommitmentsApiClient.Setup(t => t.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(() => {
-                _courses = allTrainingProgrammeStandardsResponse.TrainingProgrammes;
-                return allTrainingProgrammeStandardsResponse; 
-            });
 
         _mockCommitmentsApiClient.Setup(t => t.GetAllTrainingProgrammes(It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => {

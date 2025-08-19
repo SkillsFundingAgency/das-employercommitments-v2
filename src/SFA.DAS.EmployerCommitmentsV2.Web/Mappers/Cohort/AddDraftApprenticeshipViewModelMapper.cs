@@ -17,8 +17,6 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<ApprenticeRequest, 
 
     public async Task<AddDraftApprenticeshipViewModel> Map(ApprenticeRequest source)
     {
-        var ale = await _commitmentsApiClient.GetAccountLegalEntity(source.AccountLegalEntityId);
-
         var provider = await _commitmentsApiClient.GetProvider(source.ProviderId);
 
         var result = new AddDraftApprenticeshipViewModel
