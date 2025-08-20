@@ -56,11 +56,6 @@ public class EditApprenticeshipRequestViewModelToSelectCourseViewModelMapperTest
             .ReturnsAsync(_getApprenticeshipResponse);
         _commitmentsApiClient.Setup(x => x.GetCohort(_getApprenticeshipResponse.CohortId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(_getCohortResponse);
-        _commitmentsApiClient.Setup(x => x.GetAllTrainingProgrammeStandards(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse()
-            {
-                TrainingProgrammes = _standardTrainingProgrammes
-            });
         _commitmentsApiClient
             .Setup(x => x.GetAllTrainingProgrammes(It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetAllTrainingProgrammesResponse
@@ -77,31 +72,5 @@ public class EditApprenticeshipRequestViewModelToSelectCourseViewModelMapperTest
     public void CourseCodeIsMappedCorrectly()
     {
         Assert.That(_result.CourseCode, Is.EqualTo(_source.CourseCode));
-    }
-
-    [Test]
-    public void CoursesAreMappedCorrectlyToAllTrainingCourses()
-    {
-        Assert.That(_result.Courses, Is.EqualTo(_allTrainingProgrammes));
-    }
-
-    [Test]
-    public async Task CoursesAreMappedCorrectlyToAllStandardTrainingCoursesWhenFundedByTransferSender()
-    {
-        _getCohortResponse.TransferSenderId = _autoFixture.Create<long>();
-
-        _result = await _mapper.Map(TestHelper.Clone(_source));
-
-        Assert.That(_result.Courses, Is.EqualTo(_standardTrainingProgrammes));
-    }
-
-    [Test]
-    public async Task CoursesAreMappedCorrectlyToAllStandardTrainingCoursesWhenEmployerIsNonLevy()
-    {
-        _getCohortResponse.LevyStatus = ApprenticeshipEmployerType.NonLevy;
-
-        _result = await _mapper.Map(TestHelper.Clone(_source));
-
-        Assert.That(_result.Courses, Is.EqualTo(_standardTrainingProgrammes));
-    }
+    }    
 }

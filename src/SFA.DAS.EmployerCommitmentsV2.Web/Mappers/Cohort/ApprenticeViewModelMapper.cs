@@ -32,7 +32,6 @@ public class ApprenticeViewModelMapper : IMapper<AddApprenticeshipCacheModel, Ap
             CourseCode = source.CourseCode,
             ProviderId = (int)source.ProviderId,
             ProviderName = details.ProviderName,
-            Courses = null,
             TransferSenderId = source.TransferSenderId,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
             DeliveryModel = source.DeliveryModel,

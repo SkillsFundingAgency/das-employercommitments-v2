@@ -59,8 +59,6 @@ public class EditApprenticeshipRequestViewModel : IAuthorizationContextModel
     public string Version { get; set; }
     public string Option { get; set; }
 
-    public IEnumerable<TrainingProgramme> Courses { get; set; }
-
     public MonthYearModel StartDate { get; set; }
 
     [SuppressArgumentException(nameof(StartDate), "The start date is not valid")]

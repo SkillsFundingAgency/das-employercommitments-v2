@@ -141,9 +141,7 @@ public class AddDraftApprenticeshipTestsFixture
         Controller.TempData = TempData.Object;
 
         CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammes(CancellationToken.None))
-            .ReturnsAsync(new GetAllTrainingProgrammesResponse { TrainingProgrammes = Courses });
-        CommitmentsApiClient.Setup(c => c.GetAllTrainingProgrammeStandards(CancellationToken.None))
-            .ReturnsAsync(new GetAllTrainingProgrammeStandardsResponse { TrainingProgrammes = StandardCourses });
+            .ReturnsAsync(new GetAllTrainingProgrammesResponse { TrainingProgrammes = Courses });        
         OuterApiClient.Setup(c => c.AddDraftApprenticeship(ViewModel.CohortId.Value, AddDraftApprenticeshipRequest,
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new EmployerCommitmentsV2.Services.Approvals.Responses.AddDraftApprenticeshipResponse
