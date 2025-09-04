@@ -103,4 +103,5 @@ public class EditApprenticeshipRequestViewModel : IAuthorizationContextModel
     public string AccountLegalEntityHashedId { get; set; }
     public bool HasMultipleDeliveryModelOptions { get; set; }
     public Guid? CacheKey { get; set; }
+    public Party Party { get; set; }
 }

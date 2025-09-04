@@ -1,3 +1,5 @@
+using SFA.DAS.CommitmentsV2.Types;
+
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
 public class ValidateEditApprenticeshipRequest
@@ -25,4 +27,5 @@ public class ValidateEditApprenticeshipRequest
     public int? EmploymentPrice { get; set; }
     public string ChangeCourse { get; set; }
     public string ChangeDeliveryModel { get; set; }
+    public Party Party { get; set; }
 } 

@@ -82,7 +82,8 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
             ProviderId = apprenticeship.ProviderId,
             AccountLegalEntityHashedId = _encodingService.Encode(apprenticeship.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
             HasMultipleDeliveryModelOptions = editApprenticeship.HasMultipleDeliveryModelOptions,
-            CacheKey = source.CacheKey
+            CacheKey = source.CacheKey,
+            Party = Party.Employer
         };
 
         return result;

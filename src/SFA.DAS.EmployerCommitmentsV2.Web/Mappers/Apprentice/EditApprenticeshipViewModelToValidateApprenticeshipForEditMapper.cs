@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
@@ -29,6 +30,7 @@ public class EditApprenticeshipViewModelToValidateEditApprenticeshipRequestMappe
             Option = source.Option == "TBC" ? string.Empty : source.Option,
             EmploymentEndDate = source.EmploymentEndDate.Date,
             EmploymentPrice = source.EmploymentPrice,
+            Party = Party.Employer
         };
         
         return Task.FromResult(result);
