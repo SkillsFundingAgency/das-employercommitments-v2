@@ -82,7 +82,6 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public bool HasPendingOverlappingTrainingDateRequest { get; set; }
 
     public bool HasMultipleDeliveryModelOptions { get; set; }
-    public bool? IsOnFlexiPaymentPilot { get; set; }
     public string PaymentStatus { get; set; }
     public PendingPriceChange PendingPriceChange { get; set; }
     public bool HasPendingPriceChange => PendingPriceChange != null;
@@ -100,9 +99,7 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public DateTime? PaymentFrozenOn { get; set; }
     public DateTime? WithdrawalChangedDate { get; set; }
     public string WithdrawalReason { get; set; }
-
-    public bool ShowPriceChangeLink => IsOnFlexiPaymentPilot.GetValueOrDefault() && LearnerStatus != LearnerStatus.Withdrawn;
-
+    
     public ActionRequiredBanner GetActionRequiredBanners()
     {
         var actionRequiredBanner = ActionRequiredBanner.None;

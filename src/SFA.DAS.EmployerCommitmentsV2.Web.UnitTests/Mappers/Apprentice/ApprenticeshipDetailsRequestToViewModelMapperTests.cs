@@ -865,16 +865,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task IsOnFlexiPaymentPilotIsMapped()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            Assert.That(GetManageApprenticeshipDetailsResponse.Apprenticeship.IsOnFlexiPaymentPilot, Is.EqualTo(result.IsOnFlexiPaymentPilot));
-        }
-
-        [Test]
         public async Task And_PriceChangeDetailsIsNull_Then_PriceChangeDetailsNotReturned()
         {
             GetManageApprenticeshipDetailsResponse.PendingPriceChange = null;
