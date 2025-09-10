@@ -36,7 +36,6 @@ public class ApprenticeViewModelMapper : IMapper<AddApprenticeshipCacheModel, Ap
             TransferSenderId = source.TransferSenderId,
             EncodedPledgeApplicationId = source.EncodedPledgeApplicationId,
             DeliveryModel = source.DeliveryModel,
-            IsOnFlexiPaymentPilot = false,
             FirstName = source.FirstName,
             LastName = source.LastName,
             Email = source.Email,

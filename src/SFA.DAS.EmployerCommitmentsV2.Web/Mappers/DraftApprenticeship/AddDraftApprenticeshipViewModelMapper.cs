@@ -46,7 +46,6 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<AddDraftApprentices
             Courses = null,
             TransferSenderHashedId = details.IsFundedByTransfer ? _encodingService.Encode(details.TransferSenderId.Value, EncodingType.PublicAccountId) : string.Empty,
             DeliveryModel = source.DeliveryModel,
-            IsOnFlexiPaymentPilot = false,
             CacheKey = source.CacheKey.IsNotNullOrEmpty() ? source.CacheKey : Guid.NewGuid(),
             StandardPageUrl = details.StandardPageUrl,
             FundingBandMax = details.ProposedMaxFunding

@@ -23,5 +23,4 @@ public class AddDraftApprenticeshipApimRequest : ApimSaveDataRequest
     public int? EmploymentPrice { get; set; }
     public DateTime? EmploymentEndDate { get; set; }
     public bool IgnoreStartDateOverlap { get; set; }
-    public bool? IsOnFlexiPaymentPilot { get; set; }
 }

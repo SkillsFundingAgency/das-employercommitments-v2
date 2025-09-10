@@ -3,7 +3,6 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
@@ -44,7 +43,6 @@ public class WhenIMapDraftApprenticeshipToUpdateRequest
             .With(x => x.EndYear, endDate?.Year)
             .With(x => x.StartMonth, startDate?.Month)
             .With(x => x.StartYear, startDate?.Year)
-            .With(x => x.IsOnFlexiPaymentPilot, false)
             .Without(x => x.StartDate)
             .Without(x => x.Courses)
             .Create();
@@ -154,13 +152,6 @@ public class WhenIMapDraftApprenticeshipToUpdateRequest
         _getDraftApprenticeshipResponse.TrainingCourseOption = option;
         var result = await _act();
         Assert.That(result.CourseOption, Is.EqualTo(_getDraftApprenticeshipResponse.TrainingCourseOption));
-    }
-
-    [Test]
-    public async Task ThenIsOnFlexiPaymentPilotIsMappedCorrectly()
-    {
-        var result = await _act();
-        Assert.That(result.IsOnFlexiPaymentPilot, Is.EqualTo(_source.IsOnFlexiPaymentPilot));
     }
 
     [Test]
