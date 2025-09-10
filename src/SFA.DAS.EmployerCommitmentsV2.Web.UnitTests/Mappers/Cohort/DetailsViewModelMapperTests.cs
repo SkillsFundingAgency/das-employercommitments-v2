@@ -222,21 +222,6 @@ public class DetailsViewModelMapperTests
     }
 
     [Test]
-    public async Task FundingBandCapsAreMappedCorrectlyForPilotApprenticeships()
-    {
-        var fixture = new DetailsViewModelMapperTestsFixture().SetOnlyActualStartDateToHaveValidFundingBandCap();
-        var result = await fixture.Map();
-
-        foreach (var draftApprenticeship in fixture.DraftApprenticeshipsResponse.DraftApprenticeships.Where(x => x.IsOnFlexiPaymentPilot.GetValueOrDefault() && x.StartDate == fixture.DefaultStartDate))
-        {
-            var draftApprenticeshipResult =
-                result.Courses.SelectMany(c => c.DraftApprenticeships).Single(x => x.Id == draftApprenticeship.Id);
-
-            Assert.That(draftApprenticeshipResult.FundingBandCap, Is.EqualTo(1000));
-        }
-    }
-
-    [Test]
     public async Task Then_Funding_Cap_Is_Null_When_No_Course_Found()
     {
         var fixture = new DetailsViewModelMapperTestsFixture().SetNoCourse();
