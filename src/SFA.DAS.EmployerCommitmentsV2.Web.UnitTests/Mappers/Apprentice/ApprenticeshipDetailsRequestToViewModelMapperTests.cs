@@ -401,6 +401,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        [NonParallelizable]
         public async Task PendingChanges_IsMapped()
         {
             //Act
