@@ -205,12 +205,6 @@ public class ViewDraftApprenticeshipViewModelMapperTests
     }
 
     [Test]
-    public void Then_IsOnFlexiPaymentPilotIsMappedCorrectly()
-    {
-        Assert.That(_result.IsOnFlexiPaymentPilot, Is.EqualTo(_draftApprenticeship.IsOnFlexiPaymentPilot));
-    }
-
-    [Test]
     public void Then_ActualStartDateByIsMappedCorrectly()
     {
         Assert.That(_result.ActualStartDate, Is.EqualTo(_draftApprenticeship.ActualStartDate));
