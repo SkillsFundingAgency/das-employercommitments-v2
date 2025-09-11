@@ -14,8 +14,14 @@
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="CacheKey" />
             <button type="submit" id="defaultButton" aria-hidden="true" class="govuk-visually-hidden" tabindex="-1"></button>
-
-            <partial name="_DraftApprenticeship" for="@Model" />
+            @if (Model.IsContinuation || Model.LearnerDataId == null)
+            {
+                <partial name="_DraftApprenticeship" for="@Model"/>
+            }
+            else
+            {
+                <partial name="_DraftApprenticeshipReadOnly" for="@Model" />
+            }
 
             <button type="submit" id="continue-button" class="govuk-button">Save</button>
 
