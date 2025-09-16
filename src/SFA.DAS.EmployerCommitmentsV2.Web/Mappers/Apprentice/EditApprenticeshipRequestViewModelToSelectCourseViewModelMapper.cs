@@ -17,7 +17,6 @@ public class EditApprenticeshipRequestViewModelToSelectCourseViewModelMapper : I
     {
         var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
         var cohort = await _commitmentsApiClient.GetCohort(apprenticeship.CohortId);
-
         var courses = cohort.IsFundedByTransfer || cohort.LevyStatus == ApprenticeshipEmployerType.NonLevy
             ? (await _commitmentsApiClient.GetAllTrainingProgrammeStandards()).TrainingProgrammes
             : (await _commitmentsApiClient.GetAllTrainingProgrammes()).TrainingProgrammes;
@@ -25,8 +24,8 @@ public class EditApprenticeshipRequestViewModelToSelectCourseViewModelMapper : I
         return new SelectCourseViewModel
         {
             CourseCode = source.CourseCode,
-            Courses = courses.ToArray(),
-            CacheKey = source.CacheKey
+            CacheKey = source.CacheKey,
+            Courses = courses.ToArray()
         };
     }
 }
