@@ -31,7 +31,6 @@ public class AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMappe
             .With(x => x.EmploymentEndMonth, employmentEndDate?.Month)
             .With(x => x.EmploymentEndYear, employmentEndDate?.Year)
             .Without(x => x.StartDate)
-            .Without(x => x.Courses)
             .Create();            
 
         _mapper = new AddDraftApprenticeshipViewModelToAddDraftApprenticeshipRequestMapper();

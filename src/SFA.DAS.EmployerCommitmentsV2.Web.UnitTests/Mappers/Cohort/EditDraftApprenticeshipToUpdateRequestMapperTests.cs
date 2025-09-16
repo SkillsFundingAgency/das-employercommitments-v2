@@ -3,7 +3,6 @@ using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Web.Authentication;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
@@ -46,7 +45,6 @@ public class WhenIMapDraftApprenticeshipToUpdateRequest
             .With(x => x.StartYear, startDate?.Year)
             .With(x => x.IsOnFlexiPaymentPilot, false)
             .Without(x => x.StartDate)
-            .Without(x => x.Courses)
             .Create();
 
         _mockCommitmentsApiClient.Setup(x => x.GetDraftApprenticeship(_source.CohortId.Value, _source.DraftApprenticeshipId, It.IsAny<CancellationToken>()))

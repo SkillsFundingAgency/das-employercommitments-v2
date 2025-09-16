@@ -1,7 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Models;
-using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Exceptions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
@@ -43,7 +41,6 @@ public class AddDraftApprenticeshipViewModelMapper : IMapper<AddDraftApprentices
             CourseCode = source.CourseCode,
             ProviderId = source.ProviderId,
             ProviderName = details.ProviderName,
-            Courses = null,
             TransferSenderHashedId = details.IsFundedByTransfer ? _encodingService.Encode(details.TransferSenderId.Value, EncodingType.PublicAccountId) : string.Empty,
             DeliveryModel = source.DeliveryModel,
             IsOnFlexiPaymentPilot = false,
