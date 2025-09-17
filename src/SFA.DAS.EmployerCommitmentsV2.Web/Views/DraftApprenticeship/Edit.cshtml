@@ -2,7 +2,14 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.EditDraftApprenticeshipViewModel
 
 @{
-    ViewData["Title"] = "Edit apprentice details";
+    if (Model.IsContinuation || Model.LearnerDataId == null)
+    {
+        ViewData["Title"] = "Edit apprentice details";
+    }
+    else
+    {
+        ViewData["Title"] = "View apprentice details";
+    }
     ViewBag.GaData.Vpv = "/unapproved/cohort/apprentices/apprentice/edit";
     ViewBag.GaData.Org = Model.LegalEntityName;
 }
