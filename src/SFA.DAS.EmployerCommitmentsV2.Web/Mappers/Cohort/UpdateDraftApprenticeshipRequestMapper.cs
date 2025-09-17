@@ -36,10 +36,9 @@ public class UpdateDraftApprenticeshipRequestMapper : IMapper<EditDraftApprentic
             Cost = source.Cost,
             EmploymentPrice = source.EmploymentPrice,
             StartDate = source.StartDate.Date,
-            EndDate = (source.IsOnFlexiPaymentPilot ?? false) ? source.ActualEndDate : source.EndDate.Date,
+            EndDate = source.EndDate.Date,
             EmploymentEndDate = source.EmploymentEndDate.Date,
             Reference = source.Reference,
-            IsOnFlexiPaymentPilot = source.IsOnFlexiPaymentPilot,
             ActualStartDate = source.ActualStartDate,
             UserInfo = new ApimUserInfo
             {

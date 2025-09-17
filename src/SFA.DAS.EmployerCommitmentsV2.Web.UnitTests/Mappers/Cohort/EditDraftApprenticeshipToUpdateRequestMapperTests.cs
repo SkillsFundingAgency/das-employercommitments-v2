@@ -43,7 +43,6 @@ public class WhenIMapDraftApprenticeshipToUpdateRequest
             .With(x => x.EndYear, endDate?.Year)
             .With(x => x.StartMonth, startDate?.Month)
             .With(x => x.StartYear, startDate?.Year)
-            .With(x => x.IsOnFlexiPaymentPilot, false)
             .Without(x => x.StartDate)
             .Create();
 
@@ -152,13 +151,6 @@ public class WhenIMapDraftApprenticeshipToUpdateRequest
         _getDraftApprenticeshipResponse.TrainingCourseOption = option;
         var result = await _act();
         Assert.That(result.CourseOption, Is.EqualTo(_getDraftApprenticeshipResponse.TrainingCourseOption));
-    }
-
-    [Test]
-    public async Task ThenIsOnFlexiPaymentPilotIsMappedCorrectly()
-    {
-        var result = await _act();
-        Assert.That(result.IsOnFlexiPaymentPilot, Is.EqualTo(_source.IsOnFlexiPaymentPilot));
     }
 
     [Test]

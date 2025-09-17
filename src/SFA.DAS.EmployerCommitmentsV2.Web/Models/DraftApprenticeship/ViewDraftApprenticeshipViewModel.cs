@@ -26,7 +26,6 @@ public class ViewDraftApprenticeshipViewModel : IDraftApprenticeshipViewModel
     public bool? RecognisePriorLearning { get; set; }
     public int? DurationReducedBy { get; set; }
     public int? PriceReducedBy { get; set; }
-    public bool? IsOnFlexiPaymentPilot { get; set; }
     public DateTime? ActualStartDate { get; set; }
     public int? DurationReducedByHours { get; set; }
     public int? TrainingTotalHours { get; set; }

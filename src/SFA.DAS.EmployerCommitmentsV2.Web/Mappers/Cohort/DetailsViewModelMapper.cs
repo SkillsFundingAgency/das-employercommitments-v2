@@ -107,8 +107,7 @@ public class DetailsViewModelMapper(
                         ULN = a.Uln,
                         IsComplete = IsDraftApprenticeshipComplete(a, cohortResponse),
                         EmploymentPrice = a.EmploymentPrice,
-                        EmploymentEndDate = a.EmploymentEndDate,
-                        IsOnFlexiPaymentPilot = a.IsOnFlexiPaymentPilot
+                        EmploymentEndDate = a.EmploymentEndDate
                     })
                     .ToList()
             })
@@ -215,10 +214,7 @@ public class DetailsViewModelMapper(
 
         foreach (var draftApprenticeship in draftApprenticeships)
         {
-            draftApprenticeship.FundingBandCap = draftApprenticeship.IsOnFlexiPaymentPilot.GetValueOrDefault()
-                ? GetFundingBandCap(course,
-                    draftApprenticeship.OriginalStartDate ?? draftApprenticeship.ActualStartDate)
-                : GetFundingBandCap(course, draftApprenticeship.OriginalStartDate ?? draftApprenticeship.StartDate);
+            draftApprenticeship.FundingBandCap = GetFundingBandCap(course, draftApprenticeship.OriginalStartDate ?? draftApprenticeship.StartDate);
         }
     }
 

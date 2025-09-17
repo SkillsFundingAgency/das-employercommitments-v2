@@ -35,8 +35,7 @@ public class SelectOptionViewModelToUpdateDraftApprenticeshipRequestMapper : IMa
             EmploymentEndDate = response.EmploymentEndDate,
             Reference = response.Reference,
             ReservationId = response.ReservationId,
-            DeliveryModel = response.DeliveryModel,
-            IsOnFlexiPaymentPilot = response.IsOnFlexiPaymentPilot
+            DeliveryModel = response.DeliveryModel
         };
     }
 }

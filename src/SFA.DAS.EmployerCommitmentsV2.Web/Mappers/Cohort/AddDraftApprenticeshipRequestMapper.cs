@@ -34,12 +34,11 @@ public class AddDraftApprenticeshipRequestMapper : IMapper<AddDraftApprenticeshi
             Cost = source.Cost,
             EmploymentPrice = source.EmploymentPrice,
             StartDate = source.StartDate.Date,
-            EndDate = (source.IsOnFlexiPaymentPilot ?? false) ? source.ActualEndDate : source.EndDate.Date,
+            EndDate = source.EndDate.Date,
             EmploymentEndDate = source.EmploymentEndDate.Date,
             OriginatorReference = source.Reference,
             ReservationId = source.ReservationId,
             ActualStartDate = source.ActualStartDate,
-            IsOnFlexiPaymentPilot = source.IsOnFlexiPaymentPilot,
             UserInfo = new ApimUserInfo
             {
                 UserDisplayName = _authenticationService.UserName,

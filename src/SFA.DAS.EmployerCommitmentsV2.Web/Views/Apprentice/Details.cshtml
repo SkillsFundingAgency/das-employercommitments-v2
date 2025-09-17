@@ -1,8 +1,6 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.CommitmentsV2.Types
-@using SFA.DAS.Apprenticeships.Types
-@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
@@ -20,13 +18,6 @@
         <partial name="DetailsPartials/_Banners" />
 
         <h1 class="govuk-heading-xl" id="learnerName"><span class="das-breakable">@Model.ApprenticeName</span></h1>
-
-        @if (Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
-        {
-            <div class="govuk-inset-text">
-                This apprentice is part of the Payments Simplification private Beta. To change these details, you must contact your training provider.
-            </div>
-        }
 
         @{
             if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped && Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
@@ -62,7 +53,7 @@
                 <tr>
                     <th scope="row" class="govuk-table__header">Training provider</th>
                     <td class="govuk-table__cell">@Model.ProviderName</td>
-                    @if (Model.ShowChangeTrainingProviderLink && !Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
+                    @if (Model.ShowChangeTrainingProviderLink)
                     {
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <a id="change-training-provider-link" class="govuk-link" href="@Url.Action("ChangeProviderInform", new  ChangeProviderInformRequest{ AccountHashedId = Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change<span class="govuk-visually-hidden"> training provider</span></a>
@@ -113,7 +104,7 @@
                 <h2 class="govuk-heading-m">Apprentice details</h2>
             </div>
             <div class="govuk-grid-column-one-third das-!-text-align-right--from-tablet">
-                @if (Model.EnableEdit && !Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
+                @if (Model.EnableEdit)
                 {
                     <a id="edit-apprentice-link" href="@Url.Action("EditApprenticeship", new { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link govuk-body">Edit<span class="govuk-visually-hidden"> apprentice details</span></a>
                 }
@@ -184,7 +175,7 @@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header"> Version </th>
                         <td id="version" class="govuk-table__cell" colspan="2">@Model.Version </td>
-                        @if (Model.EnableEdit && Model.HasNewerVersions && !Model.IsOnFlexiPaymentPilot.GetValueOrDefault())
+                        @if (Model.EnableEdit && Model.HasNewerVersions)
                         {
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion, new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change<span class="govuk-visually-hidden"> version</span></a>
@@ -234,7 +225,7 @@
                     var endDate = string.Empty;
                     if (Model.EndDate.HasValue)
                     {
-                        endDate = Model.IsOnFlexiPaymentPilot.GetValueOrDefault() ? Model.EndDate.Value.ToGdsFormat() : Model.EndDate.Value.ToGdsFormatWithoutDay();
+                        endDate = Model.EndDate.Value.ToGdsFormatWithoutDay();
                     }
                 }
                 @if (!Model.HasPendingStartDateChange)
@@ -321,10 +312,6 @@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Total agreed apprenticeship price</th>
                         <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost()</td>
-                        @if (Model.ShowPriceChangeLink)
-                        {
-                            <td class="govuk-table__cell"><a id="linkChangeApprenticeshipPrice" href="@Model.PriceChangeUrl" class="govuk-link">Change<span class="govuk-visually-hidden"> total agreed apprenticeship price</span></a></td>
-                        }
                     </tr>
                 }
                 <tr class="govuk-table__row">
