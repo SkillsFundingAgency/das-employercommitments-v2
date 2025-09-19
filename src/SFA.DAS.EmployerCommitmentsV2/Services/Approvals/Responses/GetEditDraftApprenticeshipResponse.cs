@@ -46,4 +46,5 @@ public class GetEditDraftApprenticeshipResponse
     public bool? EmailAddressConfirmed { get; set; }
     public string StandardPageUrl { get; set; }
     public int? ProposedMaxFunding { get; set; }
+    public long? LearnerDataId { get; set; }
 }
