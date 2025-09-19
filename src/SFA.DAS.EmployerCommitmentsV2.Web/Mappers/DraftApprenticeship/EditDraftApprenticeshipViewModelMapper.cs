@@ -42,6 +42,8 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
             CourseCode = draftApprenticeship.CourseCode,
             StandardUId = draftApprenticeship.StandardUId,
             Cost = draftApprenticeship.Cost,
+            TrainingPrice = draftApprenticeship.TrainingPrice,
+            EndPointAssessmentPrice = draftApprenticeship.EndPointAssessmentPrice,
             EmploymentPrice = draftApprenticeship.EmploymentPrice,
             EmploymentEndMonth = draftApprenticeship.EmploymentEndDate.HasValue ? draftApprenticeship.EmploymentEndDate.Value.Month : (int?)null,
             EmploymentEndYear = draftApprenticeship.EmploymentEndDate.HasValue ? draftApprenticeship.EmploymentEndDate.Value.Year : (int?)null,
@@ -66,7 +68,8 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
             PriceReducedBy = draftApprenticeship.PriceReducedBy,
             CacheKey = source.Request.CacheKey.IsNotNullOrEmpty() ? source.Request.CacheKey : Guid.NewGuid(),
             StandardPageUrl = draftApprenticeship.StandardPageUrl,
-            FundingBandMax = draftApprenticeship.ProposedMaxFunding
+            FundingBandMax = draftApprenticeship.ProposedMaxFunding,
+            LearnerDataId = draftApprenticeship.LearnerDataId
         };
     }
 }

@@ -2,7 +2,14 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.EditDraftApprenticeshipViewModel
 
 @{
-    ViewData["Title"] = "Edit apprentice details";
+    if (Model.IsContinuation || Model.LearnerDataId == null)
+    {
+        ViewData["Title"] = "Edit apprentice details";
+    }
+    else
+    {
+        ViewData["Title"] = "View apprentice details";
+    }
     ViewBag.GaData.Vpv = "/unapproved/cohort/apprentices/apprentice/edit";
     ViewBag.GaData.Org = Model.LegalEntityName;
 }
@@ -14,8 +21,14 @@
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="CacheKey" />
             <button type="submit" id="defaultButton" aria-hidden="true" class="govuk-visually-hidden" tabindex="-1"></button>
-
-            <partial name="_DraftApprenticeship" for="@Model" />
+            @if (Model.IsContinuation || Model.LearnerDataId == null)
+            {
+                <partial name="_DraftApprenticeship" for="@Model"/>
+            }
+            else
+            {
+                <partial name="_DraftApprenticeshipReadOnly" for="@Model" />
+            }
 
             <button type="submit" id="continue-button" class="govuk-button">Save</button>
 
