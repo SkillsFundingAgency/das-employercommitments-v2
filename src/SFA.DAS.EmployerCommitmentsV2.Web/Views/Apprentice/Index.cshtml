@@ -297,17 +297,10 @@ else
                         @apprenticeship.CourseName
                     </td>
                     <td class="govuk-table__cell" data-label="Planned start date">
-                        @if (apprenticeship.IsOnFlexiPaymentPilot.GetValueOrDefault() && apprenticeship.ActualStartDate.HasValue)
-                        {
-                            @apprenticeship.ActualStartDate.GetValueOrDefault().ToGdsFormat();
-                        }
-                        else if (!apprenticeship.IsOnFlexiPaymentPilot.GetValueOrDefault())
-                        {
-                            @apprenticeship.PlannedStartDate.ToGdsFormatWithoutDay();
-                        }
+                        @apprenticeship.PlannedStartDate.ToGdsFormatWithoutDay()
                     </td>
                     <td class="govuk-table__cell" data-label="Planned end date">
-                        @(apprenticeship.IsOnFlexiPaymentPilot.GetValueOrDefault() ? apprenticeship.PlannedEndDate.ToGdsFormat() : apprenticeship.PlannedEndDate.ToGdsFormatWithoutDay())
+                        @apprenticeship.PlannedEndDate.ToGdsFormatWithoutDay()
                     </td>
                     <td class="govuk-table__cell" data-label="Training provider">
                         @apprenticeship.ProviderName

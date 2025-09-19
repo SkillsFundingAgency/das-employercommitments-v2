@@ -120,12 +120,6 @@ public class AddDraftApprenticeshipViewModelMapperTests
     }
 
     [Test]
-    public void IsOnFlexiPaymentPilotIsFalse()
-    {
-        _result.IsOnFlexiPaymentPilot.Should().BeFalse();
-    }
-
-    [Test]
     public void IsStandardPageUrlIsMapped()
     {
         _result.StandardPageUrl.Should().Be(_response.StandardPageUrl);

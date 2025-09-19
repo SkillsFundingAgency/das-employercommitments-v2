@@ -132,7 +132,6 @@ public class BaseDraftApprenticeshipViewModel
     public bool IsContinuation { get; set; }     
     public string AccountLegalEntityHashedId { get; set; }
     public bool? HasMultipleDeliveryModelOptions { get; set; }
-    public bool? IsOnFlexiPaymentPilot { get; set; }
     public DateTime? ActualStartDate { get; set; }
     public DateTime? ActualEndDate { get; set; }
     public bool HasUnavailableFlexiJobDeliveryModel { get; set; }

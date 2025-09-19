@@ -42,7 +42,6 @@ public class GetEditDraftApprenticeshipResponse
     public int? TrainingTotalHours { get; set; }
     public int? DurationReducedByHours { get; set; }
     public bool? IsDurationReducedByRpl { get; set; }
-    public bool? IsOnFlexiPaymentPilot { get; set; }
     public DateTime? ActualStartDate { get; set; }
     public bool? EmailAddressConfirmed { get; set; }
     public string StandardPageUrl { get; set; }

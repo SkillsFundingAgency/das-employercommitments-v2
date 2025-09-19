@@ -234,12 +234,6 @@ public class EditDraftApprenticeshipViewModelMapperTests
     }
 
     [Test]
-    public void IsOnFlexiPaymentsPilotIsMappedCorrectly()
-    {
-        _result.IsOnFlexiPaymentPilot.Should().Be(_draftApprenticeshipResponse.IsOnFlexiPaymentPilot);
-    }
-
-    [Test]
     public void ActualStartDateIsMappedCorrectly()
     {
         _result.ActualStartDate.Should().Be(_draftApprenticeshipResponse.ActualStartDate);

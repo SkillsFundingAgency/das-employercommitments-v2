@@ -39,7 +39,6 @@ public class CreateCohortRequestMapper :
             OriginatorReference = source.Reference,
             TransferSenderId = source.DecodedTransferSenderId,
             PledgeApplicationId = (int?)source.PledgeApplicationId,
-            IsOnFlexiPaymentPilot = source.IsOnFlexiPaymentPilot,
             UserInfo = new ApimUserInfo
             {
                 UserDisplayName = _authenticationService.UserName,
