@@ -34,6 +34,8 @@ public class UpdateDraftApprenticeshipRequestMapper : IMapper<EditDraftApprentic
             CourseCode = source.CourseCode,
             CourseOption = draftApprenticeship.TrainingCourseOption,
             Cost = source.Cost,
+            TrainingPrice = source.TrainingPrice,
+            EndPointAssessmentPrice = source.EndPointAssessmentPrice,
             EmploymentPrice = source.EmploymentPrice,
             StartDate = source.StartDate.Date,
             EndDate = (source.IsOnFlexiPaymentPilot ?? false) ? source.ActualEndDate : source.EndDate.Date,

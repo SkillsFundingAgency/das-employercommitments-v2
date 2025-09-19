@@ -1,4 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using FluentAssertions;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
@@ -173,5 +174,19 @@ public class WhenIMapDraftApprenticeshipToUpdateRequest
     {
         var result = await _act();
         Assert.That(result.RequestingParty, Is.EqualTo(Party.Employer));
+    }
+
+    [Test]
+    public async Task ThenTrainingPriceIsMappedCorrectly()
+    {
+        var result = await _act();
+        result.TrainingPrice.Should().Be(_source.TrainingPrice);
+    }
+
+    [Test]
+    public async Task ThenEndPointAssessmentPriceIsMappedCorrectly()
+    {
+        var result = await _act();
+        result.EndPointAssessmentPrice.Should().Be(_source.EndPointAssessmentPrice);
     }
 }
