@@ -25,5 +25,4 @@ public class UpdateDraftApprenticeshipApimRequest : ApimSaveDataRequest
     public string Reference { get; set; }
     public Guid? ReservationId { get; set; }
     public bool IgnoreStartDateOverlap { get; set; }
-    public bool? IsOnFlexiPaymentPilot { get; set; }
 }

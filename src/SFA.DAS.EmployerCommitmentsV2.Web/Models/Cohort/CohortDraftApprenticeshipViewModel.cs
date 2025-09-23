@@ -48,9 +48,6 @@ public class CohortDraftApprenticeshipViewModel
     public int? EmploymentPrice { get; set; }
     public DateTime? EmploymentEndDate { get; set; }
 
-    public bool? IsOnFlexiPaymentPilot { get; set; }
-    public string DislayIsPilot => !IsOnFlexiPaymentPilot.HasValue ? "-" : IsOnFlexiPaymentPilot.Value ? "Yes" : "No";
-
     private string ToGdsFormatDateRange()
     {
         if (ActualStartDate.HasValue && EndDate.HasValue)

@@ -401,6 +401,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        [NonParallelizable]
         public async Task PendingChanges_IsMapped()
         {
             //Act
@@ -862,16 +863,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.That(expected, Is.EqualTo(result.EnableEdit));
-        }
-
-        [Test]
-        public async Task IsOnFlexiPaymentPilotIsMapped()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            Assert.That(GetManageApprenticeshipDetailsResponse.Apprenticeship.IsOnFlexiPaymentPilot, Is.EqualTo(result.IsOnFlexiPaymentPilot));
         }
 
         [Test]

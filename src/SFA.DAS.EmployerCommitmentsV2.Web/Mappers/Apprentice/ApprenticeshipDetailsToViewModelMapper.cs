@@ -28,8 +28,7 @@ public class ApprenticeshipDetailsToViewModelMapper : IMapper<GetApprenticeships
             Status = source.ApprenticeshipStatus,
             ConfirmationStatus = source.ConfirmationStatus,
             Alerts = source.Alerts.Select(x => x.GetDescription()) ,
-            ActualStartDate = source.ActualStartDate,
-            IsOnFlexiPaymentPilot = source.IsOnFlexiPaymentPilot
+            ActualStartDate = source.ActualStartDate
         };
 
         return Task.FromResult(result);

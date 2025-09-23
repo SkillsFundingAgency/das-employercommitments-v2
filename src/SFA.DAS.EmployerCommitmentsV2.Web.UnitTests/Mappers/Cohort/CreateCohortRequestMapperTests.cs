@@ -145,12 +145,6 @@ public class CreateCohortRequestMapperTests
     }
 
     [Test]
-    public void ThenIsOnFlexiPaymentPilotIsMappedCorrectly()
-    {
-        Assert.That(_result.IsOnFlexiPaymentPilot, Is.EqualTo(_source.IsOnFlexiPaymentPilot));
-    }
-    
-    [Test]
     public void ThenRequestingPartyIsNotMissing()
     {
         Assert.That(_result.RequestingParty, Is.EqualTo(Party.Employer));

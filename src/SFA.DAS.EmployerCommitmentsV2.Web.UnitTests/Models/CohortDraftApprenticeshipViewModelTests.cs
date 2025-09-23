@@ -35,17 +35,6 @@ public class CohortDraftApprenticeshipViewModelTests
         Assert.That(_viewModel.DisplayTrainingDates, Is.EqualTo(expectedDisplayTrainingDates));
     }
 
-    [TestCase(null, null, "-")]
-    [TestCase("2019-01-13", null, "-")]
-    [TestCase(null, "2019-02-01", "-")]
-    [TestCase("2019-01-12", "2019-02-03", "12 Jan 2019 to 3 Feb 2019")]
-    public void ThenDisplayTrainingDatesIsCorrectForPilotUsers(DateTime? startDate, DateTime? endDate,
-        string expectedDisplayTrainingDates)
-    {
-        _viewModel = new CohortDraftApprenticeshipViewModel {StartDate = null, ActualStartDate = startDate, EndDate = endDate};
-        Assert.That(_viewModel.DisplayTrainingDates, Is.EqualTo(expectedDisplayTrainingDates));
-    }
-
     [TestCase("2017-11-01", "1 Nov 2017")]
     [TestCase("2018-10-10", "10 Oct 2018")]
     public void ThenDisplayDateOfBirth(DateTime? dateOfBirth, string expectedDisplayDateOfBirth)
