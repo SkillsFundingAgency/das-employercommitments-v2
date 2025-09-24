@@ -42,6 +42,8 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
             CourseCode = draftApprenticeship.CourseCode,
             StandardUId = draftApprenticeship.StandardUId,
             Cost = draftApprenticeship.Cost,
+            TrainingPrice = draftApprenticeship.TrainingPrice,
+            EndPointAssessmentPrice = draftApprenticeship.EndPointAssessmentPrice,
             EmploymentPrice = draftApprenticeship.EmploymentPrice,
             EmploymentEndMonth = draftApprenticeship.EmploymentEndDate.HasValue ? draftApprenticeship.EmploymentEndDate.Value.Month : (int?)null,
             EmploymentEndYear = draftApprenticeship.EmploymentEndDate.HasValue ? draftApprenticeship.EmploymentEndDate.Value.Year : (int?)null,

@@ -118,6 +118,8 @@ public class BaseDraftApprenticeshipViewModel
     [Display(Name = "Total agreed apprenticeship price (excluding VAT)")]
     [SuppressArgumentException(nameof(Cost), "The apprenticeship price is not valid")]
     public int? Cost { get; set; }
+    public int? TrainingPrice { get; set; }
+    public int? EndPointAssessmentPrice { get; set; }
 
     [Display(Name = "Agreed price for this employment (excluding VAT)")]
     [SuppressArgumentException(nameof(EmploymentPrice), "Agreed employment price must be 7 numbers or fewer")]
