@@ -56,7 +56,6 @@
     </dl>
 </div>
 
-
 <div>
     <input type="hidden" asp-for="CourseCode" value="@Model.CourseCode">
     <input type="hidden" asp-for="DeliveryModel" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
@@ -64,7 +63,6 @@
 
     @Html.HiddenFor(x => x.ProviderId)
     @Html.HiddenFor(x => x.AccountLegalEntityHashedId)
-    @Html.HiddenFor(x => x.IsOnFlexiPaymentPilot)
 
     <div class="govuk-form-group">
         <details class="govuk-details govuk-!-margin-top-2" data-module="govuk-details">
