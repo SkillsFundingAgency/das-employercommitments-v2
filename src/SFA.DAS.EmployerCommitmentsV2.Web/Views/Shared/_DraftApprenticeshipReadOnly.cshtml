@@ -1,0 +1,326 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SFA.DAS.CommitmentsV2.Api.Client
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
+@using SFA.DAS.EmployerCommitmentsV2.Web.Services
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared.DraftApprenticeshipViewModel
+@inject ICommitmentsApiClient CommitmentsApiClient
+@inject IDeliveryModelService DeliveryModelService
+
+@Html.HiddenFor(x => x.ReservationId)
+@Html.HiddenFor(x => x.StandardUId)
+
+@{
+    var editCourseLabel = "Add";
+    var startDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Planned training start date" : "Planned apprenticeship training start date";
+    var endDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Planned training end date" : "Projected apprenticeship training finish date";
+    var multipleDeliveryModels = await DeliveryModelService.HasMultipleDeliveryModels(Model.ProviderId, Model.CourseCode, Model.AccountLegalEntityHashedId);
+
+    if (!string.IsNullOrWhiteSpace(Model.CourseCode))
+    {
+        editCourseLabel = "Edit";
+    }
+
+    ViewBag.ValidationOrder = "FirstName,LastName,Email,DateOfBirth,Uln,StartDate,EndDate,EmploymentEndDate,Cost,EmploymentPrice,Reference";
+}
+
+@if (Model is EditDraftApprenticeshipViewModel)
+{
+    <h1 class="govuk-heading-l">View apprentice details</h1>
+}
+
+<div class="govuk-inset-text">
+    <p class="govuk-body">You’ll only be able to authorise payments for this apprentice when all details have been approved.</p>
+</div>
+
+<div>
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+        <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+            <dt class="govuk-summary-list__key" id="employer-label">
+                Training Provider
+            </dt>
+            <dd class="govuk-summary-list__value" id="employer-value">
+                @Model.ProviderName
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key" id="course-label">
+                Training course
+            </dt>
+            <dd class="govuk-summary-list__value" id="course-value">
+                @Model.CourseName
+            </dd>
+        </div>
+
+        @if (Model.HasMultipleDeliveryModelOptions == true || Model.HasChangedDeliveryModel || Model.DeliveryModel != DeliveryModel.Regular)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key" id="delivery-model-label">
+                    Delivery model
+                </dt>
+                <dd class="govuk-summary-list__value" id="delivery-model-value">
+                    @Model.DeliveryModel.ToDescription()
+                </dd>
+            </div>
+        }
+    </dl>
+</div>
+
+
+<div>
+    <input type="hidden" asp-for="CourseCode" value="@Model.CourseCode">
+    <input type="hidden" asp-for="DeliveryModel" value="@(Model.DeliveryModel ?? DeliveryModel.Regular)">
+    <input type="hidden" asp-for="ProviderName" value="@Model.ProviderName">
+
+    @Html.HiddenFor(x => x.ProviderId)
+    @Html.HiddenFor(x => x.AccountLegalEntityHashedId)
+
+    <div class="govuk-form-group">
+        <details class="govuk-details govuk-!-margin-top-2" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    I need to change some apprentice details
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                You can only change the apprentice’s email address. Your training provider will need to make any other changes.
+            </div>
+        </details>
+    </div>
+
+    <h2 class="govuk-heading-l">Apprentice personal details</h2>
+
+
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+            
+            <div class="govuk-form-group govuk-!-margin-bottom-0 @Html.AddClassIfPropertyInError(x => x.Uln, "govuk-form-group--error")">
+                @Html.ValidationMessageFor(m => m.Uln, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Uln) })
+                <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+                    <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+                        <dt class="govuk-summary-list__key" id="uln-label">
+                            Unique learner number
+                        </dt>
+                        <dd class="govuk-summary-list__value" id="uln-value">
+                            @Model.Uln
+                            @Html.HiddenFor(x => x.Uln)
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+            <div class="govuk-form-group govuk-!-margin-bottom-0 @Html.AddClassIfPropertyInError(x => x.FirstName, "govuk-form-group--error")">
+                @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.FirstName) })
+                <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+                    <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+                        <dt class="govuk-summary-list__key" id="firstname-label">
+                            First name
+                        </dt>
+                        <dd class="govuk-summary-list__value" id="firstname-value">
+                            @Model.FirstName
+                            @Html.HiddenFor(x => x.FirstName)
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+            <div class="govuk-form-group govuk-!-margin-bottom-0 @Html.AddClassIfPropertyInError(x => x.LastName, "govuk-form-group--error")">
+                @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
+                <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+                    <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+                        <dt class="govuk-summary-list__key" id="lastname-label">
+                            Last name
+                        </dt>
+                        <dd class="govuk-summary-list__value" id="lastname-value">
+                            @Model.LastName
+                            @Html.HiddenFor(x => x.LastName)
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+            <div class="govuk-form-group govuk-!-margin-bottom-0 @Html.AddClassIfPropertyInError(x => x.DateOfBirth, "govuk-form-group--error")">
+                @Html.ValidationMessageFor(m => m.DateOfBirth, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.DateOfBirth) })
+                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                    <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+                        <dt class="govuk-summary-list__key" id="dateofbirth-label">
+                            Date of birth
+                        </dt>
+                        <dd class="govuk-summary-list__value" id="dateofbirth-value">
+                            @(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Date.Value.ToString("dd MMM yyyy") : "")
+                            @Html.HiddenFor(x => x.BirthDay)
+                            @Html.HiddenFor(x => x.BirthMonth)
+                            @Html.HiddenFor(x => x.BirthYear)
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Email, "govuk-form-group--error")">
+                @Html.ValidationMessageFor(m => m.Email, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Email) })
+                <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                    <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+                        <dt class="govuk-summary-list__key" id="email-label">
+                            <label asp-for="Email" class="govuk-label govuk-!-font-weight-bold">Email address</label>
+                        </dt>
+                        <dd class="govuk-summary-list__value" id="email-value">
+                            <input asp-for="Email" class="govuk-input" style="width:400px;" />
+                        </dd>
+                    </div>
+                </dl>
+                <details class="govuk-details govuk-!-margin-top-4" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            Why do we need an email address?
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        Your apprentice will receive an email alert inviting them to the My apprenticeship service. On
+                        the service, your apprentice will be able to:
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>review and confirm their apprenticeship details</li>
+                            <li>
+                                understand the roles and responsibilities of an apprentice, an employer and a training
+                                provider
+                            </li>
+                            <li>find help and support during their apprenticeship</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+        </fieldset>
+    </div>
+
+    <h1 class="govuk-heading-l  govuk-!-margin-top-9">Apprentice training details</h1>
+
+    <div class="govuk-form-group govuk-!-margin-bottom-0 @Html.AddClassIfPropertyInError(x => x.StartDate, "govuk-form-group--error")">
+        @Html.ValidationMessageFor(m => m.StartDate, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.StartDate) })
+        <dl class="govuk-summary-list govuk-!-margin-bottom-0 )">
+            <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+                <dt class="govuk-summary-list__key" id="startdate-label">
+                    @startDateLabel
+                </dt>
+                <dd class="govuk-summary-list__value" id="startdate-value">
+                    @(Model.StartDate.HasValue && Model.StartDate.Date.HasValue ? Model.StartDate.Date.Value.ToString("MMM yyyy") : "")
+                    @Html.HiddenFor(x => x.StartMonth)
+                    @Html.HiddenFor(x => x.StartYear)
+                </dd>
+            </div>
+        </dl>
+    </div>
+    <div class="govuk-form-group govuk-!-margin-bottom-0 @Html.AddClassIfPropertyInError(x => x.EndDate, "govuk-form-group--error")">
+        @Html.ValidationMessageFor(m => m.EndDate, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.EndDate) })
+        <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+            <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+                <dt class="govuk-summary-list__key" id="enddate-label">
+                    @endDateLabel
+                </dt>
+                <dd class="govuk-summary-list__value" id="enddate-value">
+                    @(Model.EndDate.HasValue && Model.EndDate.Date.HasValue ? Model.EndDate.Date.Value.ToString("MMM yyyy") : "")
+                    @Html.HiddenFor(x => x.EndMonth)
+                    @Html.HiddenFor(x => x.EndYear)
+                </dd>
+            </div>
+        </dl>
+    </div>
+    <div class="govuk-form-group govuk-!-margin-bottom-0 @Html.AddClassIfPropertyInError(x => x.Cost, "govuk-form-group--error")">
+        @Html.ValidationMessageFor(m => m.Cost, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Cost) })
+        <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+            <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+                <dt class="govuk-summary-list__key" id="cost-label">
+                    Total agreed apprenticeship price (excluding VAT)
+                </dt>
+                <dd class="govuk-summary-list__value" id="cost-value">
+                    @DisplayCost(Model.Cost)
+                    @Html.HiddenFor(x => x.Cost)
+                </dd>
+            </div>
+        </dl>
+    </div>
+
+    <div class="govuk-character-count" data-module="character-count" data-maxlength="20">
+        <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.Reference, "govuk-form-group--error")">
+            @Html.ValidationMessageFor(m => m.Reference, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Reference) })
+            <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+                <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+                    <dt class="govuk-summary-list__key" id="email-label">
+                        <label asp-for="Reference" class="govuk-label govuk-!-font-weight-bold">Reference (optional)</label>
+                    </dt>
+                    <dd class="govuk-summary-list__value" id="email-value">
+                        <input maxlength="20" asp-for="Reference" class="govuk-input" style="width:400px;" />
+                    </dd>
+                </div>
+            </dl>
+            <span id="reference-hint" class="govuk-hint">
+                Add a reference, such as employee number or location - this won’t be seen by the employer
+            </span>
+        </div>
+    </div>
+
+    <div class="govuk-inset-text">
+        <h2 class="govuk-heading-s">End-point assessments</h2>
+        <p>We'll ask you to confirm the <a class="govuk-link" href="https://www.gov.uk/government/publications/using-the-register-of-apprentice-assessment-organisations" target="_blank" title="Opens in a new window">apprentice assessment organisation</a> for this apprentice. We'll do this before the end of the apprenticeship.</p>
+    </div>
+
+    @if (Model.RecognisePriorLearning.HasValue)
+    {
+        <h2 class="govuk-heading-m">Prior learning details</h2>
+        <dl class="govuk-summary-list">
+            @if (Model.RecognisePriorLearning == false)
+            {
+                <dd class="govuk-summary-list__value">
+                    This apprentice has no recognised prior learning
+                </dd>
+            }
+            else
+            {
+                if (Model.DurationReducedByHours.HasValue)
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Off-the-job training time reduction due to prior learning
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.DurationReducedByHours&nbsp;hours
+                        </dd>
+                    </div>
+                }
+                if (Model.DurationReducedBy.HasValue)
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Duration reduction due to prior learning
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.DurationReducedBy&nbsp;weeks
+                        </dd>
+                    </div>
+                }
+                if (Model.PriceReducedBy.HasValue)
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Price reduction due to prior learning
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @DisplayCost(Model.PriceReducedBy)
+                        </dd>
+                    </div>
+                }
+            }
+        </dl>
+    }
+    @if (Model.RecognisePriorLearning == true)
+    {
+        <div class="govuk-inset-text">
+            <p><a class="govuk-link" href="https://www.gov.uk/guidance/apprenticeship-funding-rules" target="_blank" rel="noopener noreferrer" title="Opens in a new window">The apprenticeship funding rules</a> outline the minimum reduction in price providers must give you based on recognition of prior learning.</p>
+        </div>
+    }
+
+</div>
+@functions
+{
+    private static string DisplayCost(int? value)
+    {
+        return value.HasValue ? value.Value.ToGdsCostFormat() : "--";
+    }
+}

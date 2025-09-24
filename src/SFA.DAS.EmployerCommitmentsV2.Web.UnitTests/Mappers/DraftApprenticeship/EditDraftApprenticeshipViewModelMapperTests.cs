@@ -286,4 +286,10 @@ public class EditDraftApprenticeshipViewModelMapperTests
     {
         _result.FundingBandMax.Should().Be(_draftApprenticeshipResponse.ProposedMaxFunding);
     }
+
+    [Test]
+    public void LearnerDataIdIsMappedCorrectly()
+    {
+        _result.LearnerDataId.Should().Be(_draftApprenticeshipResponse.LearnerDataId);
+    }
 }

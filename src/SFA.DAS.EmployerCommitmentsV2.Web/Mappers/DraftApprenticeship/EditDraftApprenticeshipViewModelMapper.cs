@@ -66,7 +66,8 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
             PriceReducedBy = draftApprenticeship.PriceReducedBy,
             CacheKey = source.Request.CacheKey.IsNotNullOrEmpty() ? source.Request.CacheKey : Guid.NewGuid(),
             StandardPageUrl = draftApprenticeship.StandardPageUrl,
-            FundingBandMax = draftApprenticeship.ProposedMaxFunding
+            FundingBandMax = draftApprenticeship.ProposedMaxFunding,
+            LearnerDataId = draftApprenticeship.LearnerDataId
         };
     }
 }
