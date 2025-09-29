@@ -173,6 +173,7 @@
                         <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Total training
                             price</th>
                         <th scope="col" class="govuk-table__header">Price</th>
+                        <th scope="col" class="govuk-table__header">Recognition of prior learning</th>
                         <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Action</span></th>
                     </tr>
                 </thead>
@@ -225,10 +226,14 @@
                                     @draftApprenticeship.DisplayCost
                                 }
                             </td>
+                            <td class="govuk-table__cell"
+                                data-label="Recognition of prior learning">
+                                draftApprenticeship.RecogDisplayEmploymentPrice
+                            </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <a class="govuk-link edit-apprentice das-!-display-block govuk-!-margin-bottom-1"
                                     href="@Url.RouteUrl("Details", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">
-                                    @(Model.IsReadOnly ? "View" : "Edit")
+                                    @(Model.IsReadOnly || draftApprenticeship.IsEditable ? "View" : "Edit")
                                     <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
                                 </a>
 

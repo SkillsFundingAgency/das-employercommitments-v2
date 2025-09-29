@@ -3,8 +3,8 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.CommitmentsV2.Types.Dtos;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.Encoding;
@@ -20,17 +20,10 @@ public class DetailsViewModelMapper(
 {
     public async Task<DetailsViewModel> Map(DetailsRequest source)
     {
-        var cohortTask = commitmentsApiClient.GetCohort(source.CohortId);
-        var cohortDetailsTask = approvalsApiClient.GetCohortDetails(source.AccountId, source.CohortId);
-        var draftApprenticeshipsTask = commitmentsApiClient.GetDraftApprenticeships(source.CohortId);
-        var emailOverlapsTask = commitmentsApiClient.GetEmailOverlapChecks(source.CohortId);
+        var cohort = await approvalsApiClient.GetCohortDetails(source.AccountId, source.CohortId);
 
-        await Task.WhenAll(cohortTask, draftApprenticeshipsTask, emailOverlapsTask, cohortDetailsTask);
-
-        var cohort = await cohortTask;
-        var cohortDetails = cohortDetailsTask.Result;
-        var draftApprenticeships = (await draftApprenticeshipsTask).DraftApprenticeships;
-        var emailOverlaps = (await emailOverlapsTask).ApprenticeshipEmailOverlaps.ToList();
+        var draftApprenticeships = cohort.DraftApprenticeships;
+        var emailOverlaps = cohort.ApprenticeshipEmailOverlaps;
 
         var courses = await GroupCourses(draftApprenticeships, emailOverlaps, cohort);
         var viewOrApprove = cohort.WithParty == Party.Employer ? "Approve" : "View";
@@ -43,8 +36,8 @@ public class DetailsViewModelMapper(
             CohortId = source.CohortId,
             WithParty = cohort.WithParty,
             AccountLegalEntityHashedId = encodingService.Encode(cohort.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
-            LegalEntityName = cohortDetails.LegalEntityName,
-            ProviderName = cohortDetails.ProviderName,
+            LegalEntityName = cohort.LegalEntityName,
+            ProviderName = cohort.ProviderName,
             TransferSenderHashedId = cohort.TransferSenderId == null ? null : encodingService.Encode(cohort.TransferSenderId.Value, EncodingType.PublicAccountId),
             EncodedPledgeApplicationId = cohort.PledgeApplicationId == null ? null : encodingService.Encode(cohort.PledgeApplicationId.Value, EncodingType.PledgeApplicationId),
             Message = cohort.LatestMessageCreatedByProvider,
@@ -57,13 +50,13 @@ public class DetailsViewModelMapper(
             IsCompleteForEmployer = cohort.IsCompleteForEmployer,
             HasEmailOverlaps = emailOverlaps.Any(),
             ShowAddAnotherApprenticeOption = !cohort.IsLinkedToChangeOfPartyRequest,
-            ShowRofjaaRemovalBanner = cohortDetails.HasUnavailableFlexiJobAgencyDeliveryModel,
+            ShowRofjaaRemovalBanner = cohort.HasUnavailableFlexiJobAgencyDeliveryModel,
             Status = GetCohortStatus(cohort),
-            HasFoundationApprenticeships = cohortDetails.HasFoundationApprenticeships
+            HasFoundationApprenticeships = cohort.HasFoundationApprenticeships
         };
     }
 
-    private Task<bool> IsAgreementSigned(long accountLegalEntityId, GetCohortResponse cohort)
+    private Task<bool> IsAgreementSigned(long accountLegalEntityId, GetCohortDetailsResponse cohort)
     {
         var request = new AgreementSignedRequest
         {
@@ -78,7 +71,7 @@ public class DetailsViewModelMapper(
         return commitmentsApiClient.IsAgreementSigned(request);
     }
 
-    private async Task<IReadOnlyCollection<DetailsViewCourseGroupingModel>> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships, List<ApprenticeshipEmailOverlap> emailOverlaps, GetCohortResponse cohortResponse)
+    private async Task<IReadOnlyCollection<DetailsViewCourseGroupingModel>> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships, IEnumerable<SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.ApprenticeshipEmailOverlap> emailOverlaps, GetCohortDetailsResponse cohortResponse)
     {
         var groupedByCourse = draftApprenticeships
             .GroupBy(a => new { a.CourseCode, a.CourseName, a.DeliveryModel })
@@ -121,7 +114,7 @@ public class DetailsViewModelMapper(
         return groupedByCourse;
     }
 
-    private static bool IsDraftApprenticeshipComplete(DraftApprenticeshipDto draftApprenticeship, GetCohortResponse cohortResponse) =>
+    private static bool IsDraftApprenticeshipComplete(DraftApprenticeshipDto draftApprenticeship, GetCohortDetailsResponse cohortResponse) =>
         !(
             string.IsNullOrWhiteSpace(draftApprenticeship.FirstName) || string.IsNullOrWhiteSpace(draftApprenticeship.LastName)
                                                                      || draftApprenticeship.DateOfBirth == null || string.IsNullOrWhiteSpace(draftApprenticeship.CourseName)
@@ -143,7 +136,7 @@ public class DetailsViewModelMapper(
             {
                 continue;
             }
-            
+
             var result = await commitmentsApiClient.ValidateUlnOverlap(new ValidateUlnOverlapRequest
             {
                 EndDate = draftApprenticeship.EndDate.Value,
@@ -183,7 +176,7 @@ public class DetailsViewModelMapper(
             {
                 continue;
             }
-            
+
             var fundingExceededValues = apprenticesExceedingFundingBand.GroupBy(x => x.FundingBandCap).Select(fundingBand => fundingBand.Key);
             var fundingBandCapExcessHeader = GetFundingBandExcessHeader(apprenticesExceedingFundingBand.Count);
             var fundingBandCapExcessLabel = GetFundingBandExcessLabel(apprenticesExceedingFundingBand.Count);
@@ -266,7 +259,7 @@ public class DetailsViewModelMapper(
         }
     }
 
-    private static string GetCohortStatus(GetCohortResponse cohort)
+    private static string GetCohortStatus(GetCohortDetailsResponse cohort)
     {
         if (cohort.TransferSenderId.HasValue &&
             cohort.TransferApprovalStatus == TransferApprovalStatus.Pending)
@@ -304,7 +297,7 @@ public class DetailsViewModelMapper(
         return "New request";
     }
 
-    private static string GetEmployerOnlyStatus(GetCohortResponse cohort)
+    private static string GetEmployerOnlyStatus(GetCohortDetailsResponse cohort)
     {
         switch (cohort.LastAction)
         {
@@ -323,7 +316,7 @@ public class DetailsViewModelMapper(
         }
     }
 
-    private static string GetProviderOnlyStatus(GetCohortResponse cohort)
+    private static string GetProviderOnlyStatus(GetCohortDetailsResponse cohort)
     {
         switch (cohort.LastAction)
         {

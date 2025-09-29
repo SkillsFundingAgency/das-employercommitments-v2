@@ -47,6 +47,7 @@ public class CohortDraftApprenticeshipViewModel
     public bool HasOverlappingEmail { get; set; }
     public int? EmploymentPrice { get; set; }
     public DateTime? EmploymentEndDate { get; set; }
+    public bool IsEditable { get; set; }
 
     private string ToGdsFormatDateRange()
     {
