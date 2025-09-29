@@ -48,6 +48,7 @@ public class CohortDraftApprenticeshipViewModel
     public int? EmploymentPrice { get; set; }
     public DateTime? EmploymentEndDate { get; set; }
     public bool IsEditable { get; set; }
+    public string HasRplDisplay { get; set; }
 
     private string ToGdsFormatDateRange()
     {

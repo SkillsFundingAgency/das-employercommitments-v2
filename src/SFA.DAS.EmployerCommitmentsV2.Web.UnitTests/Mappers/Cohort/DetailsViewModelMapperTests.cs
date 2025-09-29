@@ -133,6 +133,27 @@ public class DetailsViewModelMapperTests
         Assert.That(result.Courses.First().IsPortableFlexiJob, Is.EqualTo(isPortableFlexiJob));
     }
 
+    [TestCase(null, null)]
+    [TestCase(true, "Yes")]
+    [TestCase(false, "No")]
+    public async Task DraftApprenticeshipHasRplDisplayIsMappedCorrectly(bool? hasRpl, string expected)
+    {
+        var fixture = new DetailsViewModelMapperTestsFixture()
+            .CreateDraftApprenticeship(build => build.With(x => x.RecognisePriorLearning, hasRpl));
+        var result = await fixture.Map();
+        Assert.That(result.Courses.First().DraftApprenticeships.First().HasRplDisplay, Is.EqualTo(expected));
+    }
+
+    [TestCase(null, true)]
+    [TestCase(1234, false)]
+    public async Task DraftApprenticeshipIsEditableIsMappedCorrectly(long? learnerDataId, bool expected)
+    {
+        var fixture = new DetailsViewModelMapperTestsFixture()
+            .CreateDraftApprenticeship(build => build.With(x => x.LearnerDataId, learnerDataId));
+        var result = await fixture.Map();
+        Assert.That(result.Courses.First().DraftApprenticeships.First().IsEditable, Is.EqualTo(expected));
+    }
+
     [TestCase("2019-11-01", null, "-")]
     [TestCase(null, "2019-11-01", "Nov 2019")]
     [TestCase("2019-11-01", "2019-12-01", "Dec 2019")]
@@ -774,6 +795,9 @@ public class DetailsViewModelMapperTests
         var result = await fixture.Map();
         Assert.That(result.HasFoundationApprenticeships, Is.EqualTo(expectedHasFoundationApprenticeships));
     }
+
+
+
 }
 
 public class DetailsViewModelMapperTestsFixture

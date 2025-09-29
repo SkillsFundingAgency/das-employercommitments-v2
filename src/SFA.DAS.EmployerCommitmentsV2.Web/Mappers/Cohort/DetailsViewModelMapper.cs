@@ -100,7 +100,11 @@ public class DetailsViewModelMapper(
                         ULN = a.Uln,
                         IsComplete = IsDraftApprenticeshipComplete(a, cohortResponse),
                         EmploymentPrice = a.EmploymentPrice,
-                        EmploymentEndDate = a.EmploymentEndDate
+                        EmploymentEndDate = a.EmploymentEndDate,
+                        IsEditable = a.LearnerDataId == null,
+                        HasRplDisplay = !a.RecognisePriorLearning.HasValue ? null
+                                        : a.RecognisePriorLearning == true ? "Yes"
+                                        : "No"
                     })
                     .ToList()
             })
