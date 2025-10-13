@@ -1,8 +1,8 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using FluentAssertions;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.DraftApprenticeship;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
@@ -89,6 +89,18 @@ public class ViewDraftApprenticeshipViewModelMapperTests
     public void DateOfBirthIsMappedCorrectly()
     {
         Assert.That(_result.DateOfBirth, Is.EqualTo(_draftApprenticeship.DateOfBirth));
+    }
+
+    [Test]
+    public void ThenTrainingPriceIsMappedCorrectly()
+    {
+        _result.TrainingPrice.Should().Be(_draftApprenticeship.TrainingPrice);
+    }
+
+    [Test]
+    public void ThenEndPointAssessmentPriceIsMappedCorrectly()
+    {
+        _result.EndPointAssessmentPrice.Should().Be(_draftApprenticeship.EndPointAssessmentPrice);
     }
 
     [Test]
