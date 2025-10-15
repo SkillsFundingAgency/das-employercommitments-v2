@@ -3,7 +3,6 @@
 @using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
-@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.DetailsViewModel
 
 @{
@@ -82,24 +81,21 @@
         <dl class="das-definition-list das-definition-list--inline">
             <dt class="das-definition-list__title govuk-!-margin-bottom-4">Organisation</dt>
             <dd class="das-definition-list__definition govuk-!-margin-bottom-4">@Model.LegalEntityName</dd>
-            <dt class="das-definition-list__title">Reference</dt>
+            <dt class="das-definition-list__title">Cohort reference</dt>
             <dd class="das-definition-list__definition govuk-!-margin-bottom-4">@Model.CohortReference</dd>
             <dt class="das-definition-list__title govuk-!-margin-bottom-4">Status</dt>
             <dd id="cohortStatus" class="das-definition-list__definition">@Model.Status</dd>
+            <dt class="das-definition-list__title govuk-!-margin-bottom-4">Training provider</dt>
+            <dd id="cohortStatus" class="das-definition-list__definition">@Model.ProviderName</dd>
         </dl>
 
-        <h2 class="govuk-heading-s">Message from @Model.ProviderName:</h2>
-        <div class="govuk-inset-text">
-            @if (string.IsNullOrWhiteSpace(@Model.Message))
-            {
-                <span>No message added.</span>
-            }
-            else
-            {
+        @if(!string.IsNullOrWhiteSpace(Model.Message))
+        {
+            <h2 class="govuk-heading-s">Message:</h2>
+            <div class="govuk-inset-text">
                 @Model.Message
-            }
-        </div>
-
+            </div>
+        }
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
         @foreach (var course in Model.Courses)
@@ -172,7 +168,8 @@
                             this employment</th>
                         <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Total training
                             price</th>
-                        <th scope="col" class="govuk-table__header">Price</th>
+                        <th scope="col" class="govuk-table__header">Total Price</th>
+                        <th scope="col" class="govuk-table__header">Recognition of prior learning</th>
                         <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Action</span></th>
                     </tr>
                 </thead>
@@ -225,10 +222,14 @@
                                     @draftApprenticeship.DisplayCost
                                 }
                             </td>
+                            <td class="govuk-table__cell"
+                                data-label="Recognition of prior learning">
+                                @draftApprenticeship.HasRplDisplay
+                            </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <a class="govuk-link edit-apprentice das-!-display-block govuk-!-margin-bottom-1"
                                     href="@Url.RouteUrl("Details", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">
-                                    @(Model.IsReadOnly ? "View" : "Edit")
+                                    @(Model.IsReadOnly || !draftApprenticeship.IsEditable ? "View" : "Edit")
                                     <span class="govuk-visually-hidden">@draftApprenticeship.DisplayName's details</span>
                                 </a>
 
@@ -384,7 +385,7 @@
                             </fieldset>
                         </div>
                         <div class="govuk-button-group">
-                            <button type="submit" id="continue-button" class="govuk-button">Save and submit</button>
+                            <button type="submit" id="continue-button" class="govuk-button">Submit</button>
                             <a href="@Url.RouteUrl("Review", new { Model.AccountHashedId })"
                                 class="govuk-link govuk-link--no-visited-state">Save and exit</a>
                         </div>

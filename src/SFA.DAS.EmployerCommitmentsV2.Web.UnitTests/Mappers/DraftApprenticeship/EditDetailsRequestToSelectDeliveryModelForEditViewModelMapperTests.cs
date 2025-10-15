@@ -38,7 +38,7 @@ public class EditDetailsRequestToSelectDeliveryModelForEditViewModelMapperTests
         };
 
         _approvalsApiClient = new Mock<IApprovalsApiClient>();
-        _approvalsApiClient.Setup(x => x.GetEditDraftApprenticeshipSelectDeliveryModel(_cohortDetail.ProviderId,
+        _approvalsApiClient.Setup(x => x.GetEditDraftApprenticeshipSelectDeliveryModel(_cohortDetail.ProviderId.Value,
                 _source.CohortId, It.IsAny<long>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_response);
         _approvalsApiClient.Setup(x => x.GetCohortDetails(It.IsAny<long>(), _source.CohortId, It.IsAny<CancellationToken>()))
