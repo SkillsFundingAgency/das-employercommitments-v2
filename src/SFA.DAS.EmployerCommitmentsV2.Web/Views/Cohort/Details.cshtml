@@ -81,7 +81,7 @@
         <dl class="das-definition-list das-definition-list--inline">
             <dt class="das-definition-list__title govuk-!-margin-bottom-4">Organisation</dt>
             <dd class="das-definition-list__definition govuk-!-margin-bottom-4">@Model.LegalEntityName</dd>
-            <dt class="das-definition-list__title">Cohort Reference</dt>
+            <dt class="das-definition-list__title">Cohort reference</dt>
             <dd class="das-definition-list__definition govuk-!-margin-bottom-4">@Model.CohortReference</dd>
             <dt class="das-definition-list__title govuk-!-margin-bottom-4">Status</dt>
             <dd id="cohortStatus" class="das-definition-list__definition">@Model.Status</dd>
@@ -89,7 +89,7 @@
             <dd id="cohortStatus" class="das-definition-list__definition">@Model.ProviderName</dd>
         </dl>
 
-        @if (string.IsNullOrWhiteSpace(Model.Message))
+        @if(!string.IsNullOrWhiteSpace(Model.Message))
         {
             <h2 class="govuk-heading-s">Message:</h2>
             <div class="govuk-inset-text">
@@ -385,7 +385,7 @@
                             </fieldset>
                         </div>
                         <div class="govuk-button-group">
-                            <button type="submit" id="continue-button" class="govuk-button">Save and submit</button>
+                            <button type="submit" id="continue-button" class="govuk-button">Submit</button>
                             <a href="@Url.RouteUrl("Review", new { Model.AccountHashedId })"
                                 class="govuk-link govuk-link--no-visited-state">Save and exit</a>
                         </div>
