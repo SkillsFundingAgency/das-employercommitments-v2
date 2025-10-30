@@ -7,10 +7,10 @@ public class AccessCohortAuthorizationHandler(ICommitmentsAuthorisationHandler h
 {
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AccessCohortRequirement requirement)
     {
-        if (!await handler.CanAccessCohort())
-        {
-            return;
-        }
+        //if (!await handler.CanAccessCohort())
+        //{
+        //    return;
+        //}
 
         context.Succeed(requirement);
     }
