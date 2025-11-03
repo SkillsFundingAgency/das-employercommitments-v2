@@ -18,7 +18,7 @@ public class EditDetailsRequestToSelectDeliveryModelForEditViewModelMapper : IMa
     public async Task<SelectDeliveryModelForEditViewModel> Map(EditDetailsRequest source)
     {
         var cohort = await _apiClient.GetCohortDetails(source.AccountId, source.CohortId);
-        var apiResponse = await _apiClient.GetEditDraftApprenticeshipSelectDeliveryModel(cohort.ProviderId, source.CohortId, source.DraftApprenticeshipId, source.CourseCode);
+        var apiResponse = await _apiClient.GetEditDraftApprenticeshipSelectDeliveryModel(cohort.ProviderId.Value, source.CohortId, source.DraftApprenticeshipId, source.CourseCode);
 
         return new SelectDeliveryModelForEditViewModel
         {
