@@ -5,19 +5,13 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
-public class ChangeVersionViewModelToEditApprenticehipRequestViewModelMapper : IMapper<ChangeVersionViewModel, EditApprenticeshipRequestViewModel>
+public class ChangeVersionViewModelToEditApprenticeshipRequestViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
+    : IMapper<ChangeVersionViewModel, EditApprenticeshipRequestViewModel>
 {
-    private readonly ICommitmentsApiClient _commitmentsApiClient;
-
-    public ChangeVersionViewModelToEditApprenticehipRequestViewModelMapper(ICommitmentsApiClient commitmentsApiClient)
-    {
-        _commitmentsApiClient = commitmentsApiClient;
-    }
-
     public async Task<EditApprenticeshipRequestViewModel> Map(ChangeVersionViewModel source)
     {
-        var apprenticeshipTask = _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
-        var priceEpisodesTask = _commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId);
+        var apprenticeshipTask = commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
+        var priceEpisodesTask = commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId);
 
         await Task.WhenAll(apprenticeshipTask, priceEpisodesTask);
 
@@ -26,11 +20,11 @@ public class ChangeVersionViewModelToEditApprenticehipRequestViewModelMapper : I
 
         var currentPrice = priceEpisodes.PriceEpisodes.GetPrice();
 
-        var versionResponse = await _commitmentsApiClient.GetTrainingProgrammeVersionByCourseCodeAndVersion(apprenticeship.CourseCode, source.SelectedVersion);
+        var versionResponse = await commitmentsApiClient.GetTrainingProgrammeVersionByCourseCodeAndVersion(apprenticeship.CourseCode, source.SelectedVersion);
 
         var newStandardVersion = versionResponse.TrainingProgramme;
 
-        var editRequestViewModel = new EditApprenticeshipRequestViewModel(apprenticeship.DateOfBirth, apprenticeship.StartDate, apprenticeship.EndDate)
+        var editRequestViewModel = new EditApprenticeshipRequestViewModel(apprenticeship.DateOfBirth, apprenticeship.StartDate, apprenticeship.EndDate, apprenticeship.EmploymentEndDate)
         {
             AccountHashedId = source.AccountHashedId,
             HashedApprenticeshipId = source.ApprenticeshipHashedId,
@@ -44,6 +38,7 @@ public class ChangeVersionViewModelToEditApprenticehipRequestViewModelMapper : I
             TrainingName = apprenticeship.CourseName != newStandardVersion.Name ? newStandardVersion.Name : null,
             EmployerReference = apprenticeship.EmployerReference,
             HasOptions = newStandardVersion.Options.Any(),
+            DeliveryModel = apprenticeship.DeliveryModel,
             CacheKey = source.CacheKey
         };
 
