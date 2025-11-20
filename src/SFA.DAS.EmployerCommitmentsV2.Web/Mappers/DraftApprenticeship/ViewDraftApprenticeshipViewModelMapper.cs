@@ -39,6 +39,8 @@ public class ViewDraftApprenticeshipViewModelMapper : IMapper<ViewDraftApprentic
             HasStandardOptions = draftApprenticeship.HasStandardOptions,
             Version = draftApprenticeship.TrainingCourseVersion,
             CourseOption = GetCourseOption(draftApprenticeship.TrainingCourseOption),
+            TrainingPrice = draftApprenticeship.TrainingPrice,
+            EndPointAssessmentPrice = draftApprenticeship.EndPointAssessmentPrice,
             Cost = draftApprenticeship.Cost,
             EmploymentPrice = draftApprenticeship.EmploymentPrice,
             StartDate = draftApprenticeship.StartDate,

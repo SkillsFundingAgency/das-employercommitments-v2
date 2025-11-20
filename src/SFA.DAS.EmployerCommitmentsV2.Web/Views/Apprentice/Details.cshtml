@@ -209,17 +209,9 @@
                     // Start and End Date
                     var startDateLabel = "Planned training start date";
                     var startDate = string.Empty;
-                    if (Model.ActualStartDate.HasValue)
+                    if (Model.StartDate.HasValue)
                     {
-                        startDateLabel = "Actual training start date";
-                        startDate = Model.ActualStartDate.Value.ToGdsFormat();
-                    }
-                    else
-                    {
-                        if (Model.StartDate.HasValue)
-                        {
-                            startDate = Model.StartDate.Value.ToGdsFormatWithoutDay();
-                        }
+                        startDate = Model.StartDate.Value.ToGdsFormatWithoutDay();
                     }
 
                     var endDate = string.Empty;
