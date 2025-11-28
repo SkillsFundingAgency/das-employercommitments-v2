@@ -4,7 +4,6 @@ using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -61,7 +60,9 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
             var enableEdit = EnableEdit(response.Apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged, hasPendingoverlappingTrainingDateRequest);
 		
             var apprenticeshipDetails = await _approvalsApiClient.GetApprenticeshipDetails(response.Apprenticeship.ProviderId, apprenticeshipId, CancellationToken.None);
-		
+
+            var priceEpisode = response.PriceEpisodes.GetPriceEpisode();
+
             var result = new ApprenticeshipDetailsRequestViewModel
             {
                 HashedApprenticeshipId = source.ApprenticeshipHashedId,
@@ -79,7 +80,9 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 DeliveryModel = response.Apprenticeship.DeliveryModel,
                 Version = response.Apprenticeship.Version,
                 TrainingType = currentTrainingProgramme.ProgrammeType,
-                Cost = response.PriceEpisodes.GetPrice(),
+                Cost = priceEpisode?.Cost,
+                TrainingPrice = priceEpisode?.TrainingPrice,
+                EndPointAssessmentPrice = priceEpisode?.EndPointAssessmentPrice,
                 ApprenticeshipStatus = response.Apprenticeship.Status,
                 ProviderName = response.Apprenticeship.ProviderName,
                 PendingChanges = pendingChange,

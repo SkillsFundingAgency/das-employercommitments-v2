@@ -301,6 +301,24 @@
                 }
                 @if (!Model.HasPendingPriceChange)
                 {
+                    @if (Model.TrainingPrice.HasValue)
+                    {
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Training price (TNP1)</th>
+                            <td id="apprentice-trainingprice" class="govuk-table__cell">@Model.TrainingPrice.Value.ToGdsCostFormat()</td>
+                            <td class="govuk-table__cell"></td>
+                        </tr>
+                    }
+
+                    @if (Model.EndPointAssessmentPrice.HasValue)
+                    {
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">End-point assessment price (TNP2)</th>
+                            <td id="apprentice-epaoprice" class="govuk-table__cell">@Model.EndPointAssessmentPrice.Value.ToGdsCostFormat()</td>
+                            <td class="govuk-table__cell"></td>
+                        </tr>
+                    }
+
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Total agreed apprenticeship price</th>
                         <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost()</td>
