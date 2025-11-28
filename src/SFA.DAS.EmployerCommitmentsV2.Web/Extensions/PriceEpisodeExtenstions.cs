@@ -21,19 +21,18 @@ public static class PriceEpisodeExtenstions
         return (int)(episode?.Cost ?? episodes.First().Cost);
     }
 
-    public static int GetPrice(this IEnumerable<PriceEpisode> priceEpisodes)
+    public static PriceEpisode GetPriceEpisode(this IEnumerable<PriceEpisode> priceEpisodes)
     {
-        return priceEpisodes.GetPrice(DateTime.UtcNow);
+        return priceEpisodes.GetPriceEpisode(DateTime.UtcNow);
     }
 
-    private static int GetPrice(this IEnumerable<PriceEpisode> priceEpisodes, DateTime effectiveDate)
+    private static PriceEpisode GetPriceEpisode(this IEnumerable<PriceEpisode> priceEpisodes, DateTime effectiveDate)
     {
         var episodes = priceEpisodes.ToList();
 
         var episode = episodes.FirstOrDefault(x =>
             x.FromDate <= effectiveDate && (x.ToDate == null || x.ToDate >= effectiveDate));
 
-        return (int)(episode?.Cost ?? episodes.First().Cost);
+        return episode;
     }
-
 }

@@ -24,10 +24,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         private Mock<IApprovalsApiClient> _approvalsApiClient;
         private Mock<IEncodingService> _mockEncodingService;
         private GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse _apprenticeshipResponse;
-        private GetPriceEpisodeResponse _priceEpisodesResponse;
-        private GetApprenticeshipUpdateResponse _apprenticeshipUpdatesResponse;
-        private GetDataLockResponse _dataLocksResponse;
-        private GetChangeOfPartyRequestResponse _changeOfPartyRequestsResponse;
         private GetApprenticeshipOverlappingTrainingDateResponse _overlappingTrainingDateRequestResponce;
 
         private GetTrainingProgrammeResponse _getTrainingProgrammeByStandardUId;
@@ -63,20 +59,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .With(x => x.DateOfBirth, autoFixture.Create<DateTime>())
                 .Create();
             
-            _priceEpisodesResponse = autoFixture.Build<GetPriceEpisodeResponse>()
-                 .With(x => x.PriceEpisodes, new List<PriceEpisode> {
-                    new() { Cost = 1000, ToDate = DateTime.Now.AddMonths(-1)}})
-                .Create();
-
-            _overlappingTrainingDateRequestResponce = autoFixture.Create<GetApprenticeshipOverlappingTrainingDateResponse>();
-
-            _apprenticeshipUpdatesResponse = autoFixture.Build<GetApprenticeshipUpdateResponse>()
-                .With(x => x.ApprenticeshipUpdates, new List<ApprenticeshipUpdate> {
-                    new() { OriginatingParty = Party.Employer } })
-                .Create();
-            _dataLocksResponse = autoFixture.Build<GetDataLockResponse>().Create();
-            _changeOfPartyRequestsResponse = autoFixture.Build<GetChangeOfPartyRequestResponse>().Create();
-
             var trainingProgrammeByStandardUId = autoFixture.Build<TrainingProgramme>()
                 .With(x => x.CourseCode, _apprenticeshipResponse.CourseCode)
                 .With(x => x.StandardUId, "ST0001_1.0")
@@ -132,7 +114,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                .With(x => x.HasMultipleDeliveryModelOptions, false)
                .With(x => x.ApprenticeshipUpdates)
                .With(x => x.ChangeOfPartyRequests)
-               .With(x => x.PriceEpisodes, new List<PriceEpisode> { new() { Cost = 1000, ToDate = DateTime.Now.AddMonths(-1) } })
+               .With(x => x.PriceEpisodes, new List<PriceEpisode> { new() { Cost = 1000, TrainingPrice = 900, EndPointAssessmentPrice = 100, FromDate = DateTime.Now.AddMonths(-1) } })
                .With(x => x.ChangeOfProviderChain)
                .With(x => x.DataLocks)
                .With(x => x.OverlappingTrainingDateRequest)
@@ -294,13 +276,33 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task Price_IsMapped()
+        public async Task Cost_IsMapped()
         {
             //Act
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.That(GetManageApprenticeshipDetailsResponse.PriceEpisodes.FirstOrDefault().Cost, Is.EqualTo(result.Cost));
+            GetManageApprenticeshipDetailsResponse.PriceEpisodes.FirstOrDefault().Cost.Should().Be(result.Cost);
+        }
+
+        [Test]
+        public async Task TrainingPrice_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            GetManageApprenticeshipDetailsResponse.PriceEpisodes.FirstOrDefault().TrainingPrice.Should().Be(result.TrainingPrice);
+        }
+
+        [Test]
+        public async Task EpoaPrice_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            GetManageApprenticeshipDetailsResponse.PriceEpisodes.FirstOrDefault().EndPointAssessmentPrice.Should().Be(result.EndPointAssessmentPrice);
         }
 
         [TestCase(DeliveryModel.PortableFlexiJob, DeliveryModel.PortableFlexiJob)]

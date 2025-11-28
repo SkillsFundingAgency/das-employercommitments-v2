@@ -24,6 +24,8 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public string Option { get; set; }
     public IEnumerable<string> VersionOptions { get; set; }
     public decimal? Cost { get; set; }
+    public decimal? TrainingPrice { get; set; }
+    public decimal? EndPointAssessmentPrice { get; set; }
     public ApprenticeshipStatus ApprenticeshipStatus { get; set; }
     public string ProviderName { get; set; }
     public PendingChanges PendingChanges { get; set; }
