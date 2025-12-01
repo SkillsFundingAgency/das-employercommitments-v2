@@ -1,27 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-@using SFA.DAS.CommitmentsV2.Api.Client
 @using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.CommitmentsV2.Types
-@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
-@using SFA.DAS.EmployerCommitmentsV2.Web.Services
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared.DraftApprenticeshipViewModel
-@inject ICommitmentsApiClient CommitmentsApiClient
-@inject IDeliveryModelService DeliveryModelService
 
 @Html.HiddenFor(x => x.ReservationId)
 @Html.HiddenFor(x => x.StandardUId)
 
 @{
-    var editCourseLabel = "Add";
     var startDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Planned training start date" : "Planned apprenticeship training start date";
     var endDateLabel = Model.DeliveryModel == DeliveryModel.Regular ? "Planned training end date" : "Projected apprenticeship training finish date";
-    var multipleDeliveryModels = await DeliveryModelService.HasMultipleDeliveryModels(Model.ProviderId, Model.CourseCode, Model.AccountLegalEntityHashedId);
-
-    if (!string.IsNullOrWhiteSpace(Model.CourseCode))
-    {
-        editCourseLabel = "Edit";
-    }
 
     ViewBag.ValidationOrder = "FirstName,LastName,Email,DateOfBirth,Uln,StartDate,EndDate,EmploymentEndDate,Cost,EmploymentPrice,Reference";
 }
@@ -67,7 +55,6 @@
         }
     </dl>
 </div>
-
 
 <div>
     <input type="hidden" asp-for="CourseCode" value="@Model.CourseCode">
@@ -200,7 +187,8 @@
                     @startDateLabel
                 </dt>
                 <dd class="govuk-summary-list__value" id="startdate-value">
-                    @(Model.StartDate.HasValue && Model.StartDate.Date.HasValue ? Model.StartDate.Date.Value.ToString("MMM yyyy") : "")
+                    @(Model.StartDate.HasValue ? Model.StartDate.Date.Value.ToString("MMM yyyy") : "")
+                    @Html.HiddenFor(x => x.ActualStartDate)
                     @Html.HiddenFor(x => x.StartMonth)
                     @Html.HiddenFor(x => x.StartYear)
                 </dd>
@@ -222,6 +210,42 @@
             </div>
         </dl>
     </div>
+    
+    @if (Model.TrainingPrice.HasValue)
+    {
+        <div class="govuk-form-group govuk-!-margin-bottom-0 @Html.AddClassIfPropertyInError(x => x.TrainingPrice, "govuk-form-group--error")">
+            @Html.ValidationMessageFor(m => m.TrainingPrice, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.TrainingPrice)})
+            <dl class="govuk-summary-list govuk-summary-list--no-border">
+                <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+                    <dt class="govuk-summary-list__key" id="trainingprice-label">
+                        Training price (TNP1)
+                    </dt>
+                    <dd class="govuk-summary-list__value" id="trainingprice-value">
+                        @DisplayCost(Model.TrainingPrice)
+                        @Html.HiddenFor(x => x.TrainingPrice)
+                    </dd>
+                </div>
+            </dl>
+        </div>
+    }
+    
+    @if (Model.EndPointAssessmentPrice.HasValue)
+    {
+        <div class="govuk-form-group govuk-!-margin-bottom-0 @Html.AddClassIfPropertyInError(x => x.EndPointAssessmentPrice, "govuk-form-group--error")">
+            @Html.ValidationMessageFor(m => m.EndPointAssessmentPrice, null, new {@class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.EndPointAssessmentPrice)})
+            <dl class="govuk-summary-list govuk-summary-list--no-border">
+                <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+                    <dt class="govuk-summary-list__key" id="epaoprice-label">
+                        End-point assessment price (TNP2)
+                    </dt>
+                    <dd class="govuk-summary-list__value" id="epaoprice-value">
+                        @DisplayCost(Model.EndPointAssessmentPrice)
+                        @Html.HiddenFor(x => x.EndPointAssessmentPrice)
+                    </dd>
+                </div>
+            </dl>
+        </div>
+    }
     <div class="govuk-form-group govuk-!-margin-bottom-0 @Html.AddClassIfPropertyInError(x => x.Cost, "govuk-form-group--error")">
         @Html.ValidationMessageFor(m => m.Cost, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Cost) })
         <dl class="govuk-summary-list govuk-!-margin-bottom-4">

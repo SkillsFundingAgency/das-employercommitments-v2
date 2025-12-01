@@ -53,7 +53,7 @@ public class CohortDraftApprenticeshipViewModel
     private string ToGdsFormatDateRange()
     {
         if (ActualStartDate.HasValue && EndDate.HasValue)
-            return $"{ActualStartDate.Value.ToGdsFormat()} to {EndDate.Value.ToGdsFormat()}";
+            return $"{ActualStartDate.Value.ToGdsFormatWithoutDay()} to {EndDate.Value.ToGdsFormatWithoutDay()}";
         if (StartDate.HasValue && EndDate.HasValue)
             return $"{StartDate.Value.ToGdsFormatWithoutDay()} to {EndDate.Value.ToGdsFormatWithoutDay()}";
 
