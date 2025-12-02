@@ -33,6 +33,6 @@ public static class PriceEpisodeExtenstions
         var episode = episodes.FirstOrDefault(x =>
             x.FromDate <= effectiveDate && (x.ToDate == null || x.ToDate >= effectiveDate));
 
-        return episode;
+        return episode ?? episodes.First();
     }
 }
