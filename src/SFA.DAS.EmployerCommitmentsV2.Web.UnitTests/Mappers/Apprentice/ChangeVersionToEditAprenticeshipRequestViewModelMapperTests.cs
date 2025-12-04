@@ -20,7 +20,7 @@ public class ChangeVersionToEditAprenticeshipRequestViewModelMapperTests
 
     private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
 
-    private ChangeVersionViewModelToEditApprenticehipRequestViewModelMapper _mapper;
+    private ChangeVersionViewModelToEditApprenticeshipRequestViewModelMapper _mapper;
 
     [SetUp]
     public void Arrange()
@@ -55,7 +55,7 @@ public class ChangeVersionToEditAprenticeshipRequestViewModelMapperTests
         _mockCommitmentsApiClient.Setup(c => c.GetTrainingProgrammeVersionByCourseCodeAndVersion(_getApprenticeshipResponse.CourseCode, _viewModel.SelectedVersion, It.IsAny<CancellationToken>()))
             .ReturnsAsync(_getVersionResponse);
 
-        _mapper = new ChangeVersionViewModelToEditApprenticehipRequestViewModelMapper(_mockCommitmentsApiClient.Object);
+        _mapper = new ChangeVersionViewModelToEditApprenticeshipRequestViewModelMapper(_mockCommitmentsApiClient.Object);
     }
 
     [Test]
@@ -107,6 +107,8 @@ public class ChangeVersionToEditAprenticeshipRequestViewModelMapperTests
     [Test]
     public async Task VerifyViewModelIsMapped()
     {
+        _getApprenticeshipResponse.DeliveryModel = DeliveryModel.FlexiJobAgency;
+
         var result = await _mapper.Map(_viewModel);
 
         result.Version.Should().Be(_viewModel.SelectedVersion);
@@ -121,5 +123,6 @@ public class ChangeVersionToEditAprenticeshipRequestViewModelMapperTests
         result.EmployerReference.Should().Be(_getApprenticeshipResponse.EmployerReference);
 
         result.Cost.Should().Be(_getPriceEpisodesResponse.PriceEpisodes.GetPrice());
+        result.DeliveryModel.Should().Be(_getApprenticeshipResponse.DeliveryModel);
     }
 }
