@@ -52,7 +52,7 @@ public class DetailsViewModelMapper(
             ShowAddAnotherApprenticeOption = !cohort.IsLinkedToChangeOfPartyRequest,
             ShowRofjaaRemovalBanner = cohort.HasUnavailableFlexiJobAgencyDeliveryModel,
             Status = GetCohortStatus(cohort),
-            HasFoundationApprenticeships = cohort.HasFoundationApprenticeships
+            HasAgeRestrictedApprenticeships = cohort.HasAgeRestrictedApprenticeships
         };
     }
 

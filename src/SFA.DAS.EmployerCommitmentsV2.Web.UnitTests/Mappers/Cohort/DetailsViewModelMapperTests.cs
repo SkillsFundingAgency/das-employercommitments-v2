@@ -789,15 +789,12 @@ public class DetailsViewModelMapperTests
 
     [TestCase(true, true)]
     [TestCase(false, false)]
-    public async Task HasFoundationApprenticeshipsIsMappedCorrectly(bool hasFoundationApprenticeships, bool expectedHasFoundationApprenticeships)
+    public async Task HasAgeRestrictedApprenticeshipsIsMappedCorrectly(bool hasAgeRestrictedApprenticeships, bool expectedHasAgeRestrictedApprenticeships)
     {
-        var fixture = new DetailsViewModelMapperTestsFixture().SetHasFoundationApprenticeships(hasFoundationApprenticeships);
+        var fixture = new DetailsViewModelMapperTestsFixture().SetHasAgeRestrictedApprenticeships(hasAgeRestrictedApprenticeships);
         var result = await fixture.Map();
-        Assert.That(result.HasFoundationApprenticeships, Is.EqualTo(expectedHasFoundationApprenticeships));
+        Assert.That(result.HasAgeRestrictedApprenticeships, Is.EqualTo(expectedHasAgeRestrictedApprenticeships));
     }
-
-
-
 }
 
 public class DetailsViewModelMapperTestsFixture
@@ -820,7 +817,7 @@ public class DetailsViewModelMapperTestsFixture
 
         CohortDetails = _autoFixture.Build<GetCohortDetailsResponse>()
             .With(x => x.HasUnavailableFlexiJobAgencyDeliveryModel, false)
-            .With(x => x.HasFoundationApprenticeships, false)
+            .With(x => x.HasAgeRestrictedApprenticeships, false)
             .Without(x => x.TransferSenderId)
             .Without(x => x.ChangeOfPartyRequestId)
             .Create();
@@ -1086,9 +1083,9 @@ public class DetailsViewModelMapperTestsFixture
         return this;
     }
 
-    public DetailsViewModelMapperTestsFixture SetHasFoundationApprenticeships(bool hasFoundationApprenticeships)
+    public DetailsViewModelMapperTestsFixture SetHasAgeRestrictedApprenticeships(bool hasAgeRestrictedApprenticeships)
     {
-        CohortDetails.HasFoundationApprenticeships = hasFoundationApprenticeships;
+        CohortDetails.HasAgeRestrictedApprenticeships = hasAgeRestrictedApprenticeships;
         return this;
     }
 }

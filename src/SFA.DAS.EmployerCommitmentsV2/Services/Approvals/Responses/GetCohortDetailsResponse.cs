@@ -33,7 +33,7 @@ public class GetCohortDetailsResponse
     public IReadOnlyCollection<DraftApprenticeshipDto> DraftApprenticeships { get; set; }
     public IEnumerable<ApprenticeshipEmailOverlap> ApprenticeshipEmailOverlaps { get; set; }
     public IEnumerable<long> RplErrorDraftApprenticeshipIds { get; set; }
-    public bool HasFoundationApprenticeships { get; set; }
+    public bool HasAgeRestrictedApprenticeships { get; set; }
 }
 
 public class ApprenticeshipEmailOverlap

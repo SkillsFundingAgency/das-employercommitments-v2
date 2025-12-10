@@ -38,7 +38,7 @@ public class DetailsViewModel : IAuthorizationContextModel
     public bool ShowAddAnotherApprenticeOption { get; set; }
     public bool ShowRofjaaRemovalBanner { get; set; }
     public string Status { get; set; }
-    public bool HasFoundationApprenticeships { get; set; }
+    public bool HasAgeRestrictedApprenticeships { get; set; }
 
     public string SendBackToProviderOptionMessage
     {
