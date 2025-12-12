@@ -53,6 +53,8 @@ public class SelectOptionToUpdateDraftApprenticeshipRequestMapperTests
         result.ReservationId.Should().Be(_getDraftApprenticeshipResponse.ReservationId);
         result.CourseOption.Should().Be(_viewModel.CourseOption);
         result.Cost.Should().Be(_getDraftApprenticeshipResponse.Cost);
+        result.TrainingPrice.Should().Be(_getDraftApprenticeshipResponse.TrainingPrice);
+        result.EndPointAssessmentPrice.Should().Be(_getDraftApprenticeshipResponse.EndPointAssessmentPrice);
         result.EmploymentPrice.Should().Be(_getDraftApprenticeshipResponse.EmploymentPrice);
         result.EmploymentEndDate.Value.Should().Be(_getDraftApprenticeshipResponse.EmploymentEndDate.Value);
         result.DeliveryModel.Should().Be(_getDraftApprenticeshipResponse.DeliveryModel);

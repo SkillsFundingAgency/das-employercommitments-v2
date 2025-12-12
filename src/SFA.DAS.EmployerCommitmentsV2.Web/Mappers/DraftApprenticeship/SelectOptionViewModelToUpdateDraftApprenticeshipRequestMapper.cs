@@ -28,6 +28,8 @@ public class SelectOptionViewModelToUpdateDraftApprenticeshipRequestMapper : IMa
             CourseCode = response.CourseCode,
             CourseOption = source.CourseOption == "N/A" ? string.Empty : source.CourseOption,
             Cost = response.Cost,
+            TrainingPrice = response.TrainingPrice,
+            EndPointAssessmentPrice = response.EndPointAssessmentPrice,
             EmploymentPrice = response.EmploymentPrice,
             StartDate = response.StartDate,
             ActualStartDate = response.ActualStartDate,
