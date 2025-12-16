@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Home;
@@ -35,17 +35,6 @@ public class IndexViewModelMapperTests
         _fixture.VerifySetPaymentOrderLinkVisibility(expectShowLink);
     }
 
-    [TestCase("prd")]
-    [TestCase("pp")]
-    [TestCase("TEST")]
-    public async Task ThenThePublicSectorReportingUrlIsCorrectlySet(string environment)
-    {
-        _fixture.SetupProviders(2);
-        _fixture.SetResourceEnvironment(environment);
-        await _fixture.Map();
-        _fixture.VerifyPublicSectorReportingLink(environment);
-    }
-
     private class IndexViewModelMapperTestsFixture
     {
         private readonly IndexViewModelMapper _mapper;
@@ -53,7 +42,6 @@ public class IndexViewModelMapperTests
         private GetProviderPaymentsPriorityResponse _apiProvidersResponse;
         private readonly IndexRequest _request;
         private IndexViewModel _result;
-        private readonly Mock<IConfiguration> _configuration;
 
         public IndexViewModelMapperTestsFixture()
         {
@@ -61,17 +49,9 @@ public class IndexViewModelMapperTests
 
             _apiClient = new Mock<ICommitmentsApiClient>();
             var logger = new Mock<ILogger<IndexViewModelMapper>>();
-            _configuration = new Mock<IConfiguration>();
-            _configuration.Setup(x => x["ResourceEnvironmentName"]).Returns("test");
                 
-            _mapper = new IndexViewModelMapper(_apiClient.Object, logger.Object, _configuration.Object);
+            _mapper = new IndexViewModelMapper(_apiClient.Object, logger.Object);
             _request = autoFixture.Create<IndexRequest>();
-        }
-
-        public IndexViewModelMapperTestsFixture SetResourceEnvironment(string environment)
-        {
-            _configuration.Setup(x => x["ResourceEnvironmentName"]).Returns(environment);
-            return this;
         }
             
         public IndexViewModelMapperTestsFixture SetupProviders(int numberOfProviders)
@@ -102,7 +82,7 @@ public class IndexViewModelMapperTests
 
         public void VerifySetPaymentOrderLinkVisibility(bool expectVisible)
         {
-            Assert.That(_result.ShowSetPaymentOrderLink, Is.EqualTo(expectVisible));
+            _result.ShowSetPaymentOrderLink.Should().Be(expectVisible);
         }
 
         public async Task Map()
@@ -112,19 +92,7 @@ public class IndexViewModelMapperTests
 
         public void VerifyAccountHashedIdIsMappedCorrectly()
         {
-            Assert.That(_result.AccountHashedId, Is.EqualTo(_request.AccountHashedId));
-        }
-
-        public void VerifyPublicSectorReportingLink(string environment)
-        {
-            if(environment.ToLower() == "prd")
-            {
-                Assert.That(_result.PublicSectorReportingLink, Is.EqualTo($"https://reporting.manage-apprenticeships.service.gov.uk/accounts/{_result.AccountHashedId}/home"));   
-            }
-            else
-            {
-                Assert.That(_result.PublicSectorReportingLink, Is.EqualTo($"https://reporting.{environment.ToLower()}-eas.apprenticeships.education.gov.uk/accounts/{_result.AccountHashedId}/home"));
-            }
+            _result.AccountHashedId.Should().Be(_request.AccountHashedId);
         }
     }
 }
