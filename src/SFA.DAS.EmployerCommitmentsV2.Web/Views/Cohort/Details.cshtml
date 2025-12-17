@@ -274,8 +274,8 @@
             </p>
 
             <hr class="govuk-section-break govuk-section-break--l">
-            
-            @if (Model.HasFoundationApprenticeships)
+
+            @if (Model.HasAgeRestrictedApprenticeships)
             {
                 <div class="govuk-grid-row govuk-!-margin-bottom-8">
                     <div class="govuk-grid-column-two-thirds">
@@ -283,16 +283,9 @@
                             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                             <strong class="govuk-warning-text__text">
                                 <span class="govuk-visually-hidden">Warning</span>
-                                Check apprentices are eligible for foundation apprenticeships
+                                One or more of your apprenticeships have age eligibility criteria.
+                                Check the date of birth is correct or go to the funding rules to check who is eligible.
                             </strong>
-                        </div>
-                        <div aria-describedby="foundation-apprenticeship-warning">
-                            <p>If someone is aged between 22 and 24, to be funded for a foundation apprenticeship they must either:</p>
-                            <ul class="govuk-list govuk-list--bullet">
-                                <li>have an Education, Health and Care (EHC) plan</li>
-                                <li>be or have been in the care of their local authority</li>
-                                <li>be a prisoner or have been in prison</li>
-                            </ul>
                         </div>
                     </div>
                 </div>
