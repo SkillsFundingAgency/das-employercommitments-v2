@@ -90,7 +90,7 @@ public class ChangeOptionViewModelToEditApprenticeshipRequestViewModelMapperTest
     [Test]
     public async Task When_EditViewModelStoredInTempData_Then_GetTempData()
     {
-        SetUpCacheData();
+        SetUpCacheData((Guid)_viewModel.CacheKey);
 
         var result = await _mapper.Map(_viewModel);
 
@@ -107,7 +107,7 @@ public class ChangeOptionViewModelToEditApprenticeshipRequestViewModelMapperTest
     [Test]
     public async Task When_EditViewModelStoredInTempData_Then_DoNotCallApis()
     {
-        SetUpCacheData();
+        SetUpCacheData((Guid)_viewModel.CacheKey);
 
         await _mapper.Map(_viewModel);
 
@@ -151,10 +151,10 @@ public class ChangeOptionViewModelToEditApprenticeshipRequestViewModelMapperTest
         result.Option.Should().Be(string.Empty);
     }
 
-    private void SetUpCacheData()
+    private void SetUpCacheData(Guid cacheKey)
     {
         _mockCacheStorageService
-            .Setup(d => d.RetrieveFromCache<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel)))
+            .Setup(d => d.RetrieveFromCache<EditApprenticeshipRequestViewModel>(cacheKey))
             .ReturnsAsync(_editViewModel);
     }
 }

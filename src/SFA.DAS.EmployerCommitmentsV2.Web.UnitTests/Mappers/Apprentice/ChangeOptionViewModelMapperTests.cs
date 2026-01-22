@@ -35,6 +35,7 @@ public class ChangeOptionViewModelMapperTests
         var endDate = baseDate.AddYears(2);
         var dateOfBirth = baseDate.AddYears(-18);
 
+
         _getApprenticeshipResponse = _fixture.Build<GetApprenticeshipResponse>()
             .With(x => x.StartDate, startDate)
             .With(x => x.EndDate, endDate)
@@ -137,7 +138,7 @@ public class ChangeOptionViewModelMapperTests
     public async Task When_CourseCodeHasChanged_Then_SetReturnToEditTrue()
     {
         _editViewModel.CourseCode = "1";
-        SetUpCacheData();
+        SetUpCacheData((Guid)_request.CacheKey);
 
         var viewModel = await _mapper.Map(_request);
 
@@ -148,7 +149,7 @@ public class ChangeOptionViewModelMapperTests
     public async Task When_StartDateHasChanged_Then_SetReturnToEditTrue()
     {
         _editViewModel.StartDate.Month = _editViewModel.StartDate.Date.Value.AddMonths(1).Month;
-        SetUpCacheData();
+        SetUpCacheData((Guid)_request.CacheKey);
 
         var viewModel = await _mapper.Map(_request);
 
@@ -159,7 +160,7 @@ public class ChangeOptionViewModelMapperTests
     public async Task When_VersionHasChanged_Then_SetReturnToChangeVersionTrue()
     {
         _editViewModel.Version = "1.1";
-        SetUpCacheData();
+        SetUpCacheData((Guid)_request.CacheKey);
 
         var viewModel = await _mapper.Map(_request);
 
@@ -171,7 +172,7 @@ public class ChangeOptionViewModelMapperTests
     {
         _editViewModel.Version = "1.1";
         _editViewModel.Option = "New Option";
-        SetUpCacheData();
+        SetUpCacheData((Guid)_request.CacheKey);
 
         var viewModel = await _mapper.Map(_request);
 
@@ -179,10 +180,10 @@ public class ChangeOptionViewModelMapperTests
         viewModel.SelectedOption.Should().Be(_editViewModel.Option);
     }
 
-    private void SetUpCacheData()
+    private void SetUpCacheData(Guid key)
     {
         _mockCacheStorageService
-          .Setup(d => d.RetrieveFromCache<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel)))
+          .Setup(d => d.RetrieveFromCache<EditApprenticeshipRequestViewModel>(key))
           .ReturnsAsync(_editViewModel);
     }
 }
