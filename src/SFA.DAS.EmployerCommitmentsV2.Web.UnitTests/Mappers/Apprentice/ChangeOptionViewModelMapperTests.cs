@@ -35,7 +35,6 @@ public class ChangeOptionViewModelMapperTests
         var endDate = baseDate.AddYears(2);
         var dateOfBirth = baseDate.AddYears(-18);
 
-
         _getApprenticeshipResponse = _fixture.Build<GetApprenticeshipResponse>()
             .With(x => x.StartDate, startDate)
             .With(x => x.EndDate, endDate)
