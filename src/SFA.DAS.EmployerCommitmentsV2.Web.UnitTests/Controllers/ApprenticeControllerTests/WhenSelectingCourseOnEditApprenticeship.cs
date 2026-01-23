@@ -59,6 +59,7 @@ public class WhenSelectingCourseOnEditApprenticeship
         result.VerifyReturnsRedirectToActionResult().ActionName.Should().Be(nameof(ApprenticeController.SelectDeliveryModelForEdit));
         result.VerifyRouteValue("AccountHashedId", fixture.ViewModel.AccountHashedId);
         result.VerifyRouteValue("ApprenticeshipHashedId", fixture.ViewModel.ApprenticeshipHashedId);
+        fixture.Apprenticeship.TrainingName.Should().Be(fixture.TrainingDetails.TrainingProgramme.Name);
     }
 }
 
@@ -75,6 +76,8 @@ public class WhenSelectingCourseOnEditApprenticeshipFixture
     public GetCohortResponse Cohort;
     public Mock<ICommitmentsApiClient> CommitmentsApiClientMock;
     public Mock<ICacheStorageService> CacheStorageServiceMock;
+    public GetTrainingProgrammeResponse TrainingDetails;
+
     public WhenSelectingCourseOnEditApprenticeshipFixture()
     {
         var fixture = new Fixture();
@@ -87,6 +90,7 @@ public class WhenSelectingCourseOnEditApprenticeshipFixture
             .Create();
 
         Cohort = fixture.Create<GetCohortResponse>();
+        TrainingDetails = fixture.Create<GetTrainingProgrammeResponse>();
 
         ModelMapperMock = new Mock<IModelMapper>();
         ModelMapperMock.Setup(x => x.Map<SelectCourseViewModel>(It.IsAny<EditApprenticeshipRequestViewModel>())).ReturnsAsync(ViewModel);
@@ -95,10 +99,11 @@ public class WhenSelectingCourseOnEditApprenticeshipFixture
 
         CommitmentsApiClientMock = new Mock<ICommitmentsApiClient>();
         CommitmentsApiClientMock.Setup(x => x.GetCohort(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(Cohort);
+        CommitmentsApiClientMock.Setup(x => x.GetTrainingProgramme(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(TrainingDetails);
 
         CacheStorageServiceMock = new Mock<ICacheStorageService>();
         ApprovalsApiClientMock = new Mock<IApprovalsApiClient>();
-        
+
         Sut = new ApprenticeController(
             ModelMapperMock.Object,
             Mock.Of<Interfaces.ICookieStorageService<IndexRequest>>(),
