@@ -8,7 +8,7 @@ public class ErrorController : Controller
     [Route("error/{statuscode?}")]
     public IActionResult Error(int? statusCode)
     {
-        ViewBag.HideNav = true;
+        ViewBag.ShowNav = false;
 
         switch (statusCode)
         {
