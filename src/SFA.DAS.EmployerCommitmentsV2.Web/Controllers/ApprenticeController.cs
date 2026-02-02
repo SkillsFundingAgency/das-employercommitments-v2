@@ -759,11 +759,11 @@ public class ApprenticeController(
             return RedirectToAction(changeCourse == "Edit" ? nameof(SelectCourseForEdit) : nameof(SelectDeliveryModelForEdit),
                 new { apprenticeshipHashedId = viewModel.HashedApprenticeshipId, viewModel.AccountHashedId, cacheKey });
         }
-        
+
         var request = await modelMapper.Map<ValidateEditApprenticeshipRequest>(viewModel);
 
         var response = await outerApi.EditApprenticeship(viewModel.AccountId, viewModel.ApprenticeshipId, request);
-        
+
         viewModel.HasOptions = response.HasOptions;
         viewModel.Version = response.Version;
 
@@ -799,6 +799,12 @@ public class ApprenticeController(
         }
 
         var draft = await GetStoredEditApprenticeshipRequestViewModelFromCache(model.CacheKey);
+        if (draft.CourseCode != model.CourseCode)
+        {
+            var courseDetails = await commitmentsApiClient.GetTrainingProgramme(model.CourseCode);
+            draft.TrainingName = courseDetails.TrainingProgramme.Name;
+            draft.Version = courseDetails.TrainingProgramme.Version;
+        }
         draft.CourseCode = model.CourseCode;
 
         await StoreEditApprenticeshipRequestViewModelInCache(draft, model.CacheKey);
@@ -848,15 +854,15 @@ public class ApprenticeController(
     public async Task<IActionResult> ChangeVersion(ChangeVersionRequest request)
     {
         var viewModel = await modelMapper.Map<ChangeVersionViewModel>(request);
-        
+
         // Get Edit Model if it exists to pre-select version if navigating back
         var editApprenticeViewModel = await GetStoredEditApprenticeshipRequestViewModelFromCache(request.CacheKey);
-        
+
         if (editApprenticeViewModel != null && !string.IsNullOrWhiteSpace(editApprenticeViewModel.Version))
         {
             viewModel.SelectedVersion = editApprenticeViewModel.Version;
         }
-        
+
         return View(viewModel);
     }
 
@@ -1240,7 +1246,7 @@ public class ApprenticeController(
     {
         key ??= Guid.NewGuid();
         await cacheStorageService.SaveToCache(key.Value, model, 1);
-        
+
         return key.Value;
     }
 
@@ -1250,7 +1256,7 @@ public class ApprenticeController(
         {
             return await cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>(key.Value);
         }
-        
+
         return null;
     }
 

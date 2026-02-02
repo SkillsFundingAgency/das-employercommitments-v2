@@ -19,7 +19,7 @@ public class ChangeOptionViewModelToEditApprenticeshipRequestViewModelMapper : I
 
     public async Task<EditApprenticeshipRequestViewModel> Map(ChangeOptionViewModel source)
     {
-        var editViewModel = await _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>(nameof(EditApprenticeshipRequestViewModel));
+        var editViewModel = await _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>((Guid)source.CacheKey);
 
         if (editViewModel == null)
         {
