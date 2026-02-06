@@ -20,7 +20,7 @@ public class ChangeOptionViewModelMapper : IMapper<ChangeOptionRequest, ChangeOp
     {
         var apprenticeship = await _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId);
 
-        var editViewModel = await _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>((Guid)source.CacheKey);
+        var editViewModel = source.CacheKey.HasValue ? (await _cacheStorageService.RetrieveFromCache<EditApprenticeshipRequestViewModel>((Guid)source.CacheKey)) : null;
 
         string selectedVersion;
         string selectedCourseCode;
