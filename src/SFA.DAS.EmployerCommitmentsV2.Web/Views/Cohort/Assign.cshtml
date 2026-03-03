@@ -1,9 +1,9 @@
-﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
 @using SFA.DAS.CommitmentsV2.Shared.Extensions
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.AssignViewModel
 
 @{
-    ViewBag.Title = "Start adding apprentices";
+    ViewBag.Title = "How would you like to add learners?";
     ViewBag.GaData.Vpv = "/unapproved/add/assign";
     ViewBag.GaData.Org = Model.LegalEntityName;
 }
@@ -11,12 +11,27 @@
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary"/>
 
-        <h1 class="govuk-heading-l">Start adding apprentices</h1>
+        <h1 class="govuk-heading-l">How would you like to add learners?</h1>
 
-        <p class="govuk-body">You can start adding details of your apprentices or ask your training provider to add
-            them for you.</p>
-        <p class="govuk-body">If you ask your training provider to add them, you need to check and agree the details
-            before any payments are made.</p>
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    What are apprenticeships and apprenticeship units?
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                <p class="govuk-body">Apprenticeships are longer, structured courses which combine education with hands-on work experience.</p>
+                <p class="govuk-body">Apprenticeship units are flexible courses of up to 16 weeks. They are designed to upskill employees in critical skills.</p>
+            </div>
+        </details>
+
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-visually-hidden">Warning</span>
+                You must send a request to your training provider to add apprenticeship units
+            </strong>
+        </div>
 
         <form method="post">
             <partial name="_AssignHiddenPartial" model="@Model"/>
@@ -24,42 +39,32 @@
             <div
                 class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.WhoIsAddingApprentices, "govuk-form-group--error") @Html.AddClassIfPropertyInError(x => x.Message, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-visually-hidden">Will you or your provider add apprentices?</legend>
+                    <legend class="govuk-visually-hidden">How would you like to add learners?</legend>
                     <div class="govuk-radios govuk-radios--conditional" data-module="radios">
-                        @Html.ValidationMessageFor(m => m.WhoIsAddingApprentices, null, new
+                        @if (ViewData.ModelState[nameof(Model.WhoIsAddingApprentices)]?.Errors != null)
                         {
-                            @class =
-                                "govuk-error-message",
-                            id = "error-message-" + Html.IdFor(m => m.WhoIsAddingApprentices)
-                        })
-                        <div class="govuk-radios__item">
-                            <input asp-for="WhoIsAddingApprentices" class="govuk-radios__input"
-                                   id="WhoIsAddingApprentices" name="WhoIsAddingApprentices" type="radio"
-                                   value="@WhoIsAddingApprentices.Employer">
-                            <label class="govuk-label govuk-radios__label" for="WhoIsAddingApprentices">
-                                I will add apprentices
-                            </label>
-                        </div>
+                            <span id="error-message-@Html.IdFor(m => m.WhoIsAddingApprentices)">
+                                @foreach (var error in ViewData.ModelState[nameof(Model.WhoIsAddingApprentices)].Errors)
+                                {
+                                    <span class="govuk-error-message">@error.ErrorMessage</span>
+                                }
+                            </span>
+                        }
                         <div class="govuk-radios__item">
                             <input asp-for="WhoIsAddingApprentices" class="govuk-radios__input"
                                    id="WhoIsAddingApprentices-Provider" name="WhoIsAddingApprentices" type="radio"
                                    value="@WhoIsAddingApprentices.Provider" data-aria-controls="conditional-send">
                             <label class="govuk-label govuk-radios__label" for="WhoIsAddingApprentices-Provider">
-                                I would like my training provider to add apprentices
+                                Send a request to my training provider
                             </label>
-                            @if (Model.ReservationId != null)
-                            {
-                                <div id="WhoIsAddingApprentices-Provider-hint" class="govuk-hint govuk-radios__hint">
-                                    Your provider will have to select or make a new funding reservation on your behalf
-                                    if you choose this option
-                                </div>
-                            }
-
+                            <div id="WhoIsAddingApprentices-Provider-hint" class="govuk-hint govuk-radios__hint">
+                                Apprenticeships and apprenticeship units
+                            </div>
                         </div>
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-send">
                             <div class="govuk-form-group">
                                 <label class="govuk-label das-!-color-dark-grey" for="send-details">
-                                    Add a message for your training provider below (optional)
+                                    Type names of learners to add
                                 </label>
                                 @Html.ValidationMessageFor(m => m.Message, null, new
                                 {
@@ -68,7 +73,18 @@
                                         = "error-message-" + Html.IdFor(m => m.Message)
                                 })
                                 <textarea asp-for="Message" class="govuk-textarea" id="send-details" name="message"
-                                          rows="5"></textarea>
+                                          rows="5" placeholder="Type names of learners to add"></textarea>
+                            </div>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input asp-for="WhoIsAddingApprentices" class="govuk-radios__input"
+                                   id="WhoIsAddingApprentices" name="WhoIsAddingApprentices" type="radio"
+                                   value="@WhoIsAddingApprentices.Employer">
+                            <label class="govuk-label govuk-radios__label" for="WhoIsAddingApprentices">
+                                Add them myself
+                            </label>
+                            <div id="WhoIsAddingApprentices-hint" class="govuk-hint govuk-radios__hint">
+                                Apprenticeships only
                             </div>
                         </div>
                     </div>
