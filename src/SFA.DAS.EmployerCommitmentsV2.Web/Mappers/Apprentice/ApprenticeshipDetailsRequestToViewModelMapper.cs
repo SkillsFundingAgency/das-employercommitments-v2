@@ -40,25 +40,25 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
         {
             var apprenticeshipId = _encodingService.Decode(source.ApprenticeshipHashedId, EncodingType.ApprenticeshipId);
             var accountId = _encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
-		
+
             var response = await _approvalsApiClient.GetManageApprenticeshipDetails(accountId, apprenticeshipId, cancellationToken: CancellationToken.None);
-		
+
             var currentTrainingProgramme = await GetTrainingProgramme(response.Apprenticeship.CourseCode, response.Apprenticeship.StandardUId);
-		
+
             var pendingChange = GetPendingChanges(response.ApprenticeshipUpdates);
-		
+
             var dataLockCourseTriaged = response.DataLocks.HasDataLockCourseTriaged();
             var dataLockCourseChangedTraiged = response.DataLocks.HasDataLockCourseChangeTriaged();
             var dataLockPriceTriaged = response.DataLocks.HasDataLockPriceTriaged();
-		
+
             var pendingChangeOfProviderRequest = response.ChangeOfPartyRequests?
                 .Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
-		
+
             var hasPendingoverlappingTrainingDateRequest = response.OverlappingTrainingDateRequest != null &&
                 response?.OverlappingTrainingDateRequest?.Any(x => x.Status == OverlappingTrainingDateRequestStatus.Pending) == true;
-		
+
             var enableEdit = EnableEdit(response.Apprenticeship, pendingChange, dataLockCourseTriaged, dataLockCourseChangedTraiged, dataLockPriceTriaged, hasPendingoverlappingTrainingDateRequest);
-		
+
             var apprenticeshipDetails = await _approvalsApiClient.GetApprenticeshipDetails(response.Apprenticeship.ProviderId, apprenticeshipId, CancellationToken.None);
 
             var priceEpisode = response.PriceEpisodes.GetPriceEpisode();
@@ -105,7 +105,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                         ShowLink = response.Apprenticeship.Id != copc.ApprenticeshipId
                     })
                     .ToList(),
-		
+
                 PendingDataLockChange = dataLockPriceTriaged || dataLockCourseChangedTraiged,
                 PendingDataLockRestart = dataLockCourseTriaged,
                 ConfirmationStatus = response.Apprenticeship.ConfirmationStatus,
@@ -134,9 +134,10 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 PaymentStatusChangeUrl = _urlBuilder.ApprenticeshipsLink(response.PaymentsStatus.PaymentsFrozen ? "PaymentsUnfreeze" : "PaymentsFreeze", source.AccountHashedId, source.ApprenticeshipHashedId),
                 LearnerStatus = response.LearnerStatusDetails.LearnerStatus,
                 WithdrawalChangedDate = response.LearnerStatusDetails.WithdrawalChangedDate,
-                WithdrawalReason = response.LearnerStatusDetails.WithdrawalReason
+                WithdrawalReason = response.LearnerStatusDetails.WithdrawalReason,
+                EmploymentStatus = MapEmploymentStatus(response.Apprenticeship.EmployerVerificationStatus, response.Apprenticeship.EmployerVerificationNotes)
             };
-		
+
             return result;
         }
         catch (Exception e)
@@ -225,5 +226,33 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
         var newerVersionsResponse = await _commitmentsApiClient.GetNewerTrainingProgrammeVersions(trainingProgramme.StandardUId);
 
         return newerVersionsResponse?.NewerVersions != null && newerVersionsResponse.NewerVersions.Any();
+    }
+
+    private static string MapEmploymentStatus(int? status, string notes)
+    {
+        if (status == null)
+        {
+            return string.Empty;
+        }
+
+        if (status == 2)
+        {
+            return "Employed";
+        }
+
+        if (status == 0)
+        {
+            return "Check Pending";
+        }
+
+        return notes switch
+        {
+            "NinoAndPAYENotFound" => "Not Verified - No PAYE Scheme and invalid NINO",
+            "NinoFailure" => "Not Verified - missing or invalid NINO",
+            "NinoInvalid" => "Not Verified - missing or invalid NINO",
+            "NinoNotFound" => "Not Verified - missing or invalid NINO",
+            "PAYENotFound" => "Not Verified - No PAYE Scheme",
+            _ => "Not Verified"
+        };
     }
 }
