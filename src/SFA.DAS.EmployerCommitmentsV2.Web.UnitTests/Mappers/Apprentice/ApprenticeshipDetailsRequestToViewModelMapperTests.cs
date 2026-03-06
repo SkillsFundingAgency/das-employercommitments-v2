@@ -1,11 +1,9 @@
 ﻿using System.Text.RegularExpressions;
-using Azure.Core;
 using FluentAssertions;
 using SFA.DAS.Apprenticeships.Types;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
@@ -459,7 +457,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 {
                     Id = 1,
                     TriageStatus = TriageStatus.Restart,
-                    DataLockStatus = CommitmentsV2.Types.Status.Fail,
+                    DataLockStatus = Status.Fail,
                     IsResolved = false,
                     ErrorCode = dataLockErrorCode
                 },
