@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.AutoConfiguration;
-using SFA.DAS.CommitmentsV2.Services.Shared;
+﻿using SFA.DAS.AutoConfiguration;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Shared.Services;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
