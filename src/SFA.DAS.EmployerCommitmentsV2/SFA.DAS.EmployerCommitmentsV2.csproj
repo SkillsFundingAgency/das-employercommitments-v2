@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
@@ -14,7 +14,7 @@
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SFA.DAS.Apprenticeships.Types" Version="6.8.7" />
-    <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="100.0.173-prerelease-7" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="100.0.177-prerelease-15" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.76" />
     <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.141" />
