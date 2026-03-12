@@ -217,7 +217,10 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
 
     private async Task<bool> HasNewerVersions(TrainingProgramme trainingProgramme)
     {
-        if (trainingProgramme.ProgrammeType != ProgrammeType.Standard)
+        // This is definitely a hack, but because StandardUId is curently blank for AppUnits it will work
+        // We are adding code to return the LearningType to the GetApprentice details  on another branch
+        // but this worjkround will work until that code is in master
+        if (trainingProgramme.ProgrammeType != ProgrammeType.Standard || trainingProgramme.StandardUId == null)
         {
             return false;
         }

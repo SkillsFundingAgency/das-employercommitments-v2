@@ -266,6 +266,19 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task GetNewerTrainingVersionProbramme_IsNeverCalled()
+        {
+            //Arrange
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.StandardUId = null;
+            _getTrainingProgrammeResponse.TrainingProgramme.StandardUId = null;
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            _mockCommitmentsApiClient.Verify(t => t.GetNewerTrainingProgrammeVersions(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
         public async Task Option_IsMapped()
         {
             //Act
