@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
@@ -158,9 +158,9 @@ public class ApprenticeshipDetailsToViewModelMapperTests
     [TestCase("HmrcFailure", "Not Verified")]
     [TestCase("NinoFailure", "Not Verified - missing or invalid NINO")]
     [TestCase("NinoInvalid", "Not Verified - missing or invalid NINO")]
-    [TestCase("NinoNotFound", "Not Verified - missing or invalid NINO")]
-    [TestCase("NinoAndPAYENotFound", "Not Verified - No PAYE Scheme and invalid NINO")]
-    [TestCase("PAYENotFound", "Not Verified - No PAYE Scheme")]
+    [TestCase("NinoNotFound", "Not verified - invalid NINO")]
+    [TestCase("NinoAndPAYENotFound", "Not verified - missing PAYE scheme and invalid NINO")]
+    [TestCase("PAYENotFound", "Not verified - missing PAYE scheme")]
     public async Task Then_Maps_EmploymentStatus_ErrorWithCode_ReturnsCorrectNotVerifiedString(string errorCode, string expected)
     {
         var source = new GetApprenticeshipsResponse.ApprenticeshipDetailsResponse
