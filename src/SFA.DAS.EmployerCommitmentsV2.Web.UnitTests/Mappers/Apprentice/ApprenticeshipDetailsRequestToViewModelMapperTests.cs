@@ -266,7 +266,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task GetNewerTrainingVersionProbramme_IsNeverCalled()
+        public async Task GetNewerTrainingVersionProgramme_IsNeverCalled()
         {
             //Arrange
             GetManageApprenticeshipDetailsResponse.Apprenticeship.StandardUId = null;
