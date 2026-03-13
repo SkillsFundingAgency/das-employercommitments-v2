@@ -110,7 +110,14 @@ public class ApprenticeController(
     public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
     {
         var viewModel = await modelMapper.Map<ChangeStatusRequestViewModel>(request);
-        return View(viewModel);
+
+        var viewName = "ChangeStatus.Apprenticeship";
+        if (string.Equals(viewModel.LearningType, "ApprenticeshipUnit", StringComparison.OrdinalIgnoreCase))
+        {
+            viewName = "ChangeStatus.ApprenticeshipUnit";
+        }
+
+        return View(viewName, viewModel);
     }
 
     [Route("{apprenticeshipHashedId}/details/changestatus")]

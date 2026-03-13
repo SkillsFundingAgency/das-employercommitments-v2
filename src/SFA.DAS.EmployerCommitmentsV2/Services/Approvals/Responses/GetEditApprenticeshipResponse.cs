@@ -5,4 +5,6 @@ public class GetEditApprenticeshipResponse
     public bool HasMultipleDeliveryModelOptions { get; set; }
     public bool IsFundedByTransfer { get; set; }
     public string CourseName { get; set; }
+    public short Status { get; set; }
+    public string LearningType { get; set; }
 }

@@ -17,6 +17,7 @@ public class ChangeStatusRequestViewModel : IAuthorizationContextModel
 
     public ChangeStatusType? SelectedStatusChange { get; set; }
     public ApprenticeshipStatus CurrentStatus { get; set; }
+    public string LearningType { get; set; }
 }
 
 public enum ChangeStatusType
