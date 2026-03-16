@@ -28,7 +28,7 @@ public class ChangeStatusRequestToViewModelMapper : IMapper<ChangeStatusRequest,
             AccountHashedId = source.AccountHashedId,
             ApprenticeshipHashedId = source.ApprenticeshipHashedId,
             ApprenticeshipId = source.ApprenticeshipId,
-            CurrentStatus = apprenticeship.Status.ToString().ToEnum<ApprenticeshipStatus>(),
+            CurrentStatus = apprenticeship.Status,
             LearningType = apprenticeship.LearningType
         };
 
