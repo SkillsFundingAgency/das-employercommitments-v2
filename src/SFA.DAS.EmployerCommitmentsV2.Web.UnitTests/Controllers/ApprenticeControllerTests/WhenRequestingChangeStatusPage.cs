@@ -1,4 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using FluentAssertions;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Common.Domain.Types;
@@ -37,8 +38,8 @@ public class WhenRequestingChangeStatusPage : ApprenticeControllerTestBase
         var result = await Controller.ChangeStatus(new ChangeStatusRequest());
 
         var viewResult = result as ViewResult;
-        Assert.That(result, Is.InstanceOf<ViewResult>());
-        Assert.That(viewResult.ViewName, Is.EqualTo("ChangeStatus.Apprenticeship"));
+        result.Should().BeOfType<ViewResult>();
+        viewResult.ViewName.Should().Be("ChangeStatus.Apprenticeship");
     }
 
     [Test]
@@ -50,8 +51,8 @@ public class WhenRequestingChangeStatusPage : ApprenticeControllerTestBase
         var result = await Controller.ChangeStatus(new ChangeStatusRequest());
 
         var viewResult = result as ViewResult;
-        Assert.That(result, Is.InstanceOf<ViewResult>());
-        Assert.That(viewResult.ViewName, Is.EqualTo("ChangeStatus.Apprenticeship"));
+        result.Should().BeOfType<ViewResult>();
+        viewResult.ViewName.Should().Be("ChangeStatus.Apprenticeship");
     }
 
     [Test]
@@ -63,7 +64,7 @@ public class WhenRequestingChangeStatusPage : ApprenticeControllerTestBase
         var result = await Controller.ChangeStatus(new ChangeStatusRequest());
 
         var viewResult = result as ViewResult;
-        Assert.That(result, Is.InstanceOf<ViewResult>());
-        Assert.That(viewResult.ViewName, Is.EqualTo("ChangeStatus.ApprenticeshipUnit"));
+        result.Should().BeOfType<ViewResult>();
+        viewResult.ViewName.Should().Be("ChangeStatus.ApprenticeshipUnit");
     }
 }
