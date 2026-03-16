@@ -247,7 +247,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
 
         return notes switch
         {
-            "NinoAndPAYENotFound" => "Not verified - missing PAYE scheme and invalid NINO ",
+            "NinoAndPAYENotFound" => "Not verified - missing PAYE scheme and invalid NINO",
             "NinoFailure" => "Not Verified - missing or invalid NINO",
             "NinoInvalid" => "Not Verified - missing or invalid NINO",
             "NinoNotFound" => "Not verified - invalid NINO",
