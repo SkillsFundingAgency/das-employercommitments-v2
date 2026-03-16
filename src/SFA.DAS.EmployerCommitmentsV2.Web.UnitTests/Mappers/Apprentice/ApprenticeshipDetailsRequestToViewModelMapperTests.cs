@@ -604,7 +604,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            result.EmploymentStatus.Should().Be("Not Verified - No PAYE Scheme and invalid NINO");
+            result.EmploymentStatus.Should().Be("Not verified - missing PAYE scheme and invalid NINO");
         }
 
         [Test]
@@ -617,7 +617,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            result.EmploymentStatus.Should().Be("Not Verified - No PAYE Scheme");
+            result.EmploymentStatus.Should().Be("Not Verified - missing PAYE Scheme");
         }
 
         [Test]
