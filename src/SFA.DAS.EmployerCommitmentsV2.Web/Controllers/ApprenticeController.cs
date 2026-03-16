@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.Common.Domain.Types;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
@@ -112,7 +113,7 @@ public class ApprenticeController(
         var viewModel = await modelMapper.Map<ChangeStatusRequestViewModel>(request);
 
         var viewName = "ChangeStatus.Apprenticeship";
-        if (string.Equals(viewModel.LearningType, "ApprenticeshipUnit", StringComparison.OrdinalIgnoreCase))
+        if (viewModel.LearningType == LearningType.ApprenticeshipUnit)
         {
             viewName = "ChangeStatus.ApprenticeshipUnit";
         }

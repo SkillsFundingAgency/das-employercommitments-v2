@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+﻿using SFA.DAS.Common.Domain.Types;
+
+namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 public class GetEditApprenticeshipResponse
 {
@@ -6,5 +8,5 @@ public class GetEditApprenticeshipResponse
     public bool IsFundedByTransfer { get; set; }
     public string CourseName { get; set; }
     public short Status { get; set; }
-    public string LearningType { get; set; }
+    public LearningType LearningType { get; set; }
 }

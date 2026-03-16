@@ -15,6 +15,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SFA.DAS.Apprenticeships.Types" Version="6.8.7" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Shared" Version="100.0.43" />
+    <PackageReference Include="SFA.DAS.Common.Domain" Version="1.4.308" />
     <PackageReference Include="SFA.DAS.EmployerUrlHelper" Version="3.0.43" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.76" />
     <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.141" />
