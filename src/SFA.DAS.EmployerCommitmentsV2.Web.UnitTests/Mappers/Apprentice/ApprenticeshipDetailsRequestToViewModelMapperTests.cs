@@ -617,7 +617,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            result.EmploymentStatus.Should().Be("Not verified - missing PAYE Scheme");
+            result.EmploymentStatus.Should().Be("Not verified - missing PAYE scheme");
         }
 
         [Test]
