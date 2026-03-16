@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.Common.Domain.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -28,13 +29,41 @@ public class WhenRequestingChangeStatusPage : ApprenticeControllerTestBase
     }
 
     [Test]
-    public async Task AndCurrentStatusIsLive_ThenViewIsReturned()
+    public async Task AndCurrentStatusIsLive_Then_ApprenticeshipView_IsReturned_For_Apprenticeship()
     {
         MockModelMapper.Setup(m => m.Map<ChangeStatusRequestViewModel>(It.IsAny<ChangeStatusRequest>()))
-            .ReturnsAsync(new ChangeStatusRequestViewModel { CurrentStatus = ApprenticeshipStatus.Live });
+            .ReturnsAsync(new ChangeStatusRequestViewModel { CurrentStatus = ApprenticeshipStatus.Live, LearningType = LearningType.Apprenticeship });
 
         var result = await Controller.ChangeStatus(new ChangeStatusRequest());
 
+        var viewResult = result as ViewResult;
         Assert.That(result, Is.InstanceOf<ViewResult>());
+        Assert.That(viewResult.ViewName, Is.EqualTo("ChangeStatus.Apprenticeship"));
+    }
+
+    [Test]
+    public async Task AndCurrentStatusIsLive_Then_ApprenticeshipView_IsReturned_For_FoundationApprenticeship()
+    {
+        MockModelMapper.Setup(m => m.Map<ChangeStatusRequestViewModel>(It.IsAny<ChangeStatusRequest>()))
+            .ReturnsAsync(new ChangeStatusRequestViewModel { CurrentStatus = ApprenticeshipStatus.Live, LearningType = LearningType.FoundationApprenticeship });
+
+        var result = await Controller.ChangeStatus(new ChangeStatusRequest());
+
+        var viewResult = result as ViewResult;
+        Assert.That(result, Is.InstanceOf<ViewResult>());
+        Assert.That(viewResult.ViewName, Is.EqualTo("ChangeStatus.Apprenticeship"));
+    }
+
+    [Test]
+    public async Task AndCurrentStatusIsLive_Then_ApprenticeshipUnitView_IsReturned_For_ApprenticeshipUnit()
+    {
+        MockModelMapper.Setup(m => m.Map<ChangeStatusRequestViewModel>(It.IsAny<ChangeStatusRequest>()))
+            .ReturnsAsync(new ChangeStatusRequestViewModel { CurrentStatus = ApprenticeshipStatus.Live, LearningType = LearningType.ApprenticeshipUnit });
+
+        var result = await Controller.ChangeStatus(new ChangeStatusRequest());
+
+        var viewResult = result as ViewResult;
+        Assert.That(result, Is.InstanceOf<ViewResult>());
+        Assert.That(viewResult.ViewName, Is.EqualTo("ChangeStatus.ApprenticeshipUnit"));
     }
 }
