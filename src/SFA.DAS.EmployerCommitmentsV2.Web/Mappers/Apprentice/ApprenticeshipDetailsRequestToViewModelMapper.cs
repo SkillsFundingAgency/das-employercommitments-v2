@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Apprenticeships.Types;
+using SFA.DAS.Apprenticeships.Types;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
@@ -242,7 +242,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
 
         if (status == 0)
         {
-            return "Check Pending";
+            return string.Empty;
         }
 
         return notes switch

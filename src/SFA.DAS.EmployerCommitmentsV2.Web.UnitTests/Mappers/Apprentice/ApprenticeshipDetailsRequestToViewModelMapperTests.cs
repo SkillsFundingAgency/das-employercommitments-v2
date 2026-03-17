@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using FluentAssertions;
 using SFA.DAS.Apprenticeships.Types;
 using SFA.DAS.CommitmentsV2.Api.Client;
@@ -556,7 +556,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task ThenEmploymentStatusIsCheckPending_WhenStatusPending()
+        public async Task ThenEmploymentStatusIsBlank_WhenStatusPending()
         {
             //Arrange
             WithEmployerVerificationStatus(0, null);
@@ -565,7 +565,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            result.EmploymentStatus.Should().Be("Check Pending");
+            result.EmploymentStatus.Should().BeNullOrEmpty();
         }
 
         [Test]
