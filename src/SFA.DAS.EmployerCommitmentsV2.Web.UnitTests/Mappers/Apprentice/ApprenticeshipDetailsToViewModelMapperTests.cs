@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
@@ -132,7 +132,7 @@ public class ApprenticeshipDetailsToViewModelMapperTests
     }
 
     [Test, MoqAutoData]
-    public async Task Then_Maps_EmploymentStatus_Pending_ReturnsCheckPending(
+    public async Task Then_Maps_EmploymentStatus_Pending_ReturnsEmpty(
         GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source,
         ApprenticeshipDetailsToViewModelMapper mapper)
     {
@@ -140,7 +140,7 @@ public class ApprenticeshipDetailsToViewModelMapperTests
 
         var result = await mapper.Map(source);
 
-        result.EmploymentStatus.Should().Be("Check Pending");
+        result.EmploymentStatus.Should().Be(string.Empty);
     }
 
     [Test, MoqAutoData]

@@ -34,7 +34,7 @@ public class ApprenticeshipDetailsToViewModelMapper(IEncodingService encodingSer
         return status switch
         {
             null => string.Empty,
-            0 => "Check Pending",
+            0 => string.Empty,
             2 => "Employed",
             _ => notes switch
             {
