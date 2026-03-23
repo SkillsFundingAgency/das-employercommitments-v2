@@ -2,10 +2,11 @@
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.Common.Domain.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
 using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
@@ -26,9 +27,10 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
         _encodingService = encodingService;
         _apiClient = apiClient;
     }
+
     public async Task<EditApprenticeshipRequestViewModel> Map(EditApprenticeshipRequest source)
     {
-        var editApprenticeshipTask =  _apiClient.GetEditApprenticeship(source.AccountId, source.ApprenticeshipId);
+        var editApprenticeshipTask = _apiClient.GetEditApprenticeship(source.AccountId, source.ApprenticeshipId);
         var apprenticeshipTask = _commitmentsApiClient.GetApprenticeship(source.ApprenticeshipId, CancellationToken.None);
         var priceEpisodesTask = _commitmentsApiClient.GetPriceEpisodes(source.ApprenticeshipId, CancellationToken.None);
         var accountDetailsTask = _commitmentsApiClient.GetAccount(source.AccountId);
@@ -39,7 +41,7 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
         var editApprenticeship = editApprenticeshipTask.Result;
         var accountDetails = accountDetailsTask.Result;
         var priceEpisodes = priceEpisodesTask.Result;
-        
+
         var isLockedForUpdate = IsLiveAndHasHadDataLockSuccess(apprenticeship)
                                 ||
                                 IsLiveAndIsNotWithInFundingPeriod(apprenticeship)
@@ -50,14 +52,16 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
                                 ||
                                 IsPausedAndHasHadDataLockSuccessAndIsFundedByTransfer(apprenticeship, editApprenticeship.IsFundedByTransfer)
                                 ||
-                                IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(apprenticeship, editApprenticeship.IsFundedByTransfer);
+                                IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(apprenticeship, editApprenticeship.IsFundedByTransfer)
+                                ||
+                                IsAppUnitAndHasHadDataLockSuccess(editApprenticeship, apprenticeship);
 
         var result = new EditApprenticeshipRequestViewModel(apprenticeship.DateOfBirth, apprenticeship.StartDate, apprenticeship.EndDate, apprenticeship.EmploymentEndDate)
         {
             FirstName = apprenticeship.FirstName,
             LastName = apprenticeship.LastName,
             Email = apprenticeship.Email,
-            ULN= apprenticeship.Uln,
+            ULN = apprenticeship.Uln,
             DeliveryModel = apprenticeship.DeliveryModel,
             CourseCode = apprenticeship.CourseCode,
             Version = apprenticeship.Version,
@@ -67,7 +71,7 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
             IsContinuation = apprenticeship.IsContinuation,
             IsLockedForUpdate = isLockedForUpdate,
             IsUpdateLockedForStartDateAndCourse = editApprenticeship.IsFundedByTransfer && !apprenticeship.HasHadDataLockSuccess,
-            IsEndDateLockedForUpdate = IsEndDateLocked(isLockedForUpdate, apprenticeship.HasHadDataLockSuccess, apprenticeship.Status),
+            IsEndDateLockedForUpdate = IsEndDateLocked(isLockedForUpdate, apprenticeship.HasHadDataLockSuccess, apprenticeship.Status, editApprenticeship.LearningType),
             TrainingName = apprenticeship.CourseName,
             HashedApprenticeshipId = source.ApprenticeshipHashedId,
             AccountHashedId = source.AccountHashedId,
@@ -77,7 +81,8 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
             ProviderId = apprenticeship.ProviderId,
             AccountLegalEntityHashedId = _encodingService.Encode(apprenticeship.AccountLegalEntityId, EncodingType.PublicAccountLegalEntityId),
             HasMultipleDeliveryModelOptions = editApprenticeship.HasMultipleDeliveryModelOptions,
-            CacheKey = source.CacheKey
+            CacheKey = source.CacheKey,
+            LearningType = editApprenticeship.LearningType
         };
 
         return result;
@@ -111,7 +116,7 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
     private static bool IsWaitingToStartAndHasHadDataLockSuccessAndIsFundedByTransfer(GetApprenticeshipResponse apprenticeship, bool isFundedByTransfer)
     {
         return isFundedByTransfer
-               && HasHadDataLockSuccess(apprenticeship) 
+               && HasHadDataLockSuccess(apprenticeship)
                && IsWaitingToStart(apprenticeship);
     }
 
@@ -140,10 +145,10 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
         return apprenticeship.HasHadDataLockSuccess;
     }
 
-    private static bool IsEndDateLocked(bool isLockedForUpdate, bool hasHadDataLockSuccess, ApprenticeshipStatus status)
+    private static bool IsEndDateLocked(bool isLockedForUpdate, bool hasHadDataLockSuccess, ApprenticeshipStatus status, LearningType? learningType)
     {
         var result = isLockedForUpdate;
-        if (hasHadDataLockSuccess)
+        if (hasHadDataLockSuccess && learningType != LearningType.ApprenticeshipUnit)
         {
             result = status == ApprenticeshipStatus.WaitingToStart;
         }
@@ -155,5 +160,10 @@ public class EditApprenticeshipRequestToViewModelMapper : IMapper<EditApprentice
     {
         return trainingStartDate >= _academicYearDateProvider.CurrentAcademicYearStartDate ||
                _currentDateTime.UtcNow <= _academicYearDateProvider.LastAcademicYearFundingPeriod;
+    }
+
+    private static bool IsAppUnitAndHasHadDataLockSuccess(GetEditApprenticeshipResponse editResponse, GetApprenticeshipResponse apprenticeship)
+    {
+        return editResponse.LearningType == LearningType.ApprenticeshipUnit && HasHadDataLockSuccess(apprenticeship);
     }
 }
