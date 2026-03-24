@@ -164,7 +164,7 @@
             @if (Model.IsLockedForUpdate || Model.IsUpdateLockedForStartDateAndCourse)
             {
                 <dl class="das-definition-list">
-                    <dt class="das-definition-list__title">Planned apprenticeship training start date</dt>
+                    <dt class="das-definition-list__title">Planned training start date</dt>
                     <dd class="das-definition-list__definition" id="startDate">@Model.StartDate.Date.Value.ToGdsFormatLongMonthWithoutDay()</dd>
                 </dl>
                 @Html.HiddenFor(x => x.StartMonth)
@@ -206,7 +206,7 @@
             @if (Model.IsEndDateLockedForUpdate)
             {
                 <dl class="das-definition-list">
-                    <dt class="das-definition-list__title">Projected apprenticeship training finish date</dt>
+                    <dt class="das-definition-list__title">Planned training finish date</dt>
                     <dd class="das-definition-list__definition" id="endDate">@Model.EndDate.Date.Value.ToGdsFormatLongMonthWithoutDay()</dd>
                 </dl>
                 @Html.HiddenFor(x => x.EndMonth)
@@ -304,7 +304,7 @@
                 </dl>
 
                 <div class="govuk-inset-text das-inset-text--highlight">
-                    If you want to change the total agreed apprenticeship price, you'll need to ask your training provider to make the changes on your behalf.
+                    If you want to change the total agreed training price, you'll need to ask your training provider to make the changes on your behalf.
                     We'll ask you to approve any changes they make.
                 </div>
             }
