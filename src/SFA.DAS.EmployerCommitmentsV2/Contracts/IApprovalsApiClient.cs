@@ -1,4 +1,4 @@
-﻿using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Contracts;
@@ -32,4 +32,5 @@ public interface IApprovalsApiClient
     Task<GetAgreementNotSignedResponse> GetAgreementNotSigned(long accountId, CancellationToken cancellationToken = default);
     Task<ValidateEditApprenticeshipResponse> EditApprenticeship(long accountId, long apprenticeshipId, ValidateEditApprenticeshipRequest request, CancellationToken cancellationToken = default);
     Task<ConfirmEditApprenticeshipResponse> ConfirmEditApprenticeship(long accountId, long apprenticeshipId, ConfirmEditApprenticeshipRequest request, CancellationToken cancellationToken = default);
+    Task<GetAssignAllowEmployerAddResponse> GetAssignAllowEmployerAdd(string accountHashedId, Guid reservationId);
 }
