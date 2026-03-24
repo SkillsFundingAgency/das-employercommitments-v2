@@ -1,4 +1,4 @@
-﻿@{
+@{
     var validationOrder = ViewBag.ValidationOrder != null ? ViewBag.ValidationOrder.Split(',') : new string[] { };
 
     <div class="govuk-error-summary @(ViewData.ModelState.IsValid ? "das-hide" : "")" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary" id="validationSummary">
@@ -28,7 +28,7 @@
                                 }
                                 propertyLink = $"#{propertyLink}";
 
-                                <li>
+                                <li class="govuk-!-margin-bottom-2">
                                     <a href="@propertyLink" data-focuses="@propertyLink">
                                         @error.ErrorMessage
                                     </a>

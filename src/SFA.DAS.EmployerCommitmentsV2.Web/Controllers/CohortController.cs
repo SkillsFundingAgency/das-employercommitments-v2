@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
@@ -241,6 +241,24 @@ public class CohortController(
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(model.ApprenticeshipSessionKey);
         cacheModel.Message = model.Message;
+
+        if (cacheModel.ReservationId.HasValue && model.WhoIsAddingApprentices == WhoIsAddingApprentices.Employer)
+        {
+            try
+            {
+                var allowEmployerAddResponse = await approvalsApiClient.GetAssignAllowEmployerAdd(cacheModel.AccountHashedId, cacheModel.ReservationId.Value);
+                if (allowEmployerAddResponse is { AllowEmployerAdd: false })
+                {
+                    ModelState.AddModelError(nameof(AssignViewModel.WhoIsAddingApprentices), "You previously chose a reservation for an apprenticeship unit.");
+                    ModelState.AddModelError(nameof(AssignViewModel.WhoIsAddingApprentices), "You must send a request to your training provider to add learners doing apprenticeship units.");
+                    return View(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "GetAssignAllowEmployerAdd failed for reservation {ReservationId}", cacheModel.ReservationId);
+            }
+        }
 
         bool NeedsToGetAReservation()
         {
