@@ -135,7 +135,8 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 PaymentStatusChangeUrl = _urlBuilder.ApprenticeshipsLink(response.PaymentsStatus.PaymentsFrozen ? "PaymentsUnfreeze" : "PaymentsFreeze", source.AccountHashedId, source.ApprenticeshipHashedId),
                 LearnerStatus = response.LearnerStatusDetails.LearnerStatus,
                 WithdrawalChangedDate = response.LearnerStatusDetails.WithdrawalChangedDate,
-                WithdrawalReason = response.LearnerStatusDetails.WithdrawalReason
+                WithdrawalReason = response.LearnerStatusDetails.WithdrawalReason,
+                LearningType = response.Apprenticeship.LearningType
             };
 		
             return result;

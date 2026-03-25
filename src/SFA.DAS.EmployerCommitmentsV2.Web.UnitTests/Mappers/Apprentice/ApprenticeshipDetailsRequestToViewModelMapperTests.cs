@@ -407,6 +407,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task LearningType_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            result.LearningType.Should().Be(GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType);
+        }
+
+        [Test]
         public async Task ProviderName_IsMapped()
         {
             //Act
