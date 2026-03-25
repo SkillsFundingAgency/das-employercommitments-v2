@@ -1,10 +1,11 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Microsoft.AspNetCore.Routing;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 using SFA.DAS.EmployerUrlHelper;
@@ -19,12 +20,17 @@ public class WhenCallingPostAssign
         AssignViewModel viewModel,
         AddApprenticeshipCacheModel cacheModel,
         [Frozen] Mock<ICacheStorageService> cacheStorageService,
+        [Frozen] Mock<IApprovalsApiClient> approvalsApiClient,
         [Greedy] CohortController controller)
     {
         cacheModel.ApprenticeshipSessionKey = viewModel.ApprenticeshipSessionKey.Value;
+        cacheModel.ReservationId ??= Guid.NewGuid();
         cacheStorageService
             .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
             .ReturnsAsync(cacheModel);
+        approvalsApiClient
+            .Setup(x => x.GetAssignAllowEmployerAdd(cacheModel.AccountHashedId, cacheModel.ReservationId!.Value))
+            .ReturnsAsync(new GetAssignAllowEmployerAddResponse { AllowEmployerAdd = true });
 
         var expectedRouteValues = new RouteValueDictionary(new
         {
@@ -53,11 +59,15 @@ public class WhenCallingPostAssign
         AssignViewModel viewModel,
         AddApprenticeshipCacheModel cacheModel,
         [Frozen] Mock<ICacheStorageService> cacheStorageService,
+        [Frozen] Mock<IApprovalsApiClient> approvalsApiClient,
         [Greedy] CohortController controller)
     {
-        cacheModel.ApprenticeshipSessionKey = viewModel.ApprenticeshipSessionKey.Value;
+        var sessionKey = viewModel.ApprenticeshipSessionKey!.Value;
+        cacheModel.ApprenticeshipSessionKey = sessionKey;
+        cacheModel.ReservationId = null;
+        cacheModel.FundingType = FundingType.AdditionalReservations;
         cacheStorageService
-            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
+            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(sessionKey))
             .ReturnsAsync(cacheModel);
 
         viewModel.ReservationId = null;
@@ -73,7 +83,7 @@ public class WhenCallingPostAssign
         var result = await controller.Assign(viewModel) as RedirectToActionResult;
 
         result.Should().NotBeNull();
-        result.ActionName.Should().Be("Apprentice");
+        result!.ActionName.Should().Be("Apprentice");
         result.RouteValues.Should().BeEquivalentTo(expectedRouteValues);
     }
 
@@ -81,7 +91,7 @@ public class WhenCallingPostAssign
     public async Task And_Provider_Adding_Apprentices_Then_Redirect_To_Finish(
         AssignViewModel viewModel,
         CreateCohortWithOtherPartyRequest createCohortRequest,
-        CreateCohortResponse createCohortResponse,
+        SFA.DAS.CommitmentsV2.Api.Types.Responses.CreateCohortResponse createCohortResponse,
         AddApprenticeshipCacheModel cacheModel,
         [Frozen] Mock<ICacheStorageService> cacheStorageService,
         [Frozen] Mock<IModelMapper> modelMapper,
@@ -150,5 +160,34 @@ public class WhenCallingPostAssign
         var result = await controller.Assign(viewModel) as RedirectResult;
 
         result.Url.Should().Be(reservationsUrl);
+    }
+
+    [Test, MoqAutoData]
+    public async Task And_Employer_Adding_Apprentices_And_Reservation_Not_AllowEmployerAdd_Then_Return_View_With_Errors(
+        AssignViewModel viewModel,
+        AddApprenticeshipCacheModel cacheModel,
+        [Frozen] Mock<ICacheStorageService> cacheStorageService,
+        [Frozen] Mock<IApprovalsApiClient> approvalsApiClient,
+        [Greedy] CohortController controller)
+    {
+        cacheModel.ApprenticeshipSessionKey = viewModel.ApprenticeshipSessionKey.Value;
+        cacheModel.ReservationId = Guid.NewGuid();
+        cacheStorageService
+            .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
+            .ReturnsAsync(cacheModel);
+        approvalsApiClient
+            .Setup(x => x.GetAssignAllowEmployerAdd(cacheModel.AccountHashedId, cacheModel.ReservationId.Value))
+            .ReturnsAsync(new GetAssignAllowEmployerAddResponse { AllowEmployerAdd = false });
+
+        viewModel.WhoIsAddingApprentices = WhoIsAddingApprentices.Employer;
+
+        var result = await controller.Assign(viewModel) as ViewResult;
+
+        result.Should().NotBeNull();
+        result.ViewName.Should().BeNull();
+        result.Model.Should().Be(viewModel);
+        controller.ModelState[nameof(AssignViewModel.WhoIsAddingApprentices)].Errors.Should().HaveCount(2);
+        controller.ModelState[nameof(AssignViewModel.WhoIsAddingApprentices)].Errors[0].ErrorMessage.Should().Be("You previously chose a reservation for an apprenticeship unit.");
+        controller.ModelState[nameof(AssignViewModel.WhoIsAddingApprentices)].Errors[1].ErrorMessage.Should().Be("You must send a request to your training provider to add learners doing apprenticeship units.");
     }
 }

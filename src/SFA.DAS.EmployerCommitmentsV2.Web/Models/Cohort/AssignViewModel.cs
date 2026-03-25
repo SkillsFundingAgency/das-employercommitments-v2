@@ -1,4 +1,4 @@
-﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using System.ComponentModel.DataAnnotations;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
@@ -11,7 +11,7 @@ public class AssignViewModel : IAuthorizationContextModel
     public Guid? ApprenticeshipSessionKey { get; set; }
     public FundingType? FundingType { get; set; }
 
-    [Required(ErrorMessage = "Select who will add apprentices")]
+    [Required(ErrorMessage = "Select how you would like to add learners")]
     public WhoIsAddingApprentices? WhoIsAddingApprentices { get; set; }
     public string Message { get; set; }
 }
