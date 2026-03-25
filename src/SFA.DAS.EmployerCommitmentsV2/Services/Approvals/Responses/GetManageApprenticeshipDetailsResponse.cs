@@ -1,5 +1,8 @@
-﻿using SFA.DAS.Apprenticeships.Types;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SFA.DAS.Apprenticeships.Types;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.Common.Domain.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
@@ -57,7 +60,7 @@ public class GetManageApprenticeshipDetailsResponse
         public bool HasContinuation => ContinuedById.HasValue;
         public long? PreviousProviderId { get; set; }
         public long? PreviousEmployerAccountId { get; set; }
-        public ApprenticeshipEmployerType? ApprenticeshipEmployerTypeOnApproval { get; set; }
+        public CommitmentsV2.Types.ApprenticeshipEmployerType? ApprenticeshipEmployerTypeOnApproval { get; set; }
         public bool? MadeRedundant { get; set; }
         public ConfirmationStatus? ConfirmationStatus { get; set; }
         public bool EmailAddressConfirmedByApprentice { get; set; }
@@ -74,6 +77,8 @@ public class GetManageApprenticeshipDetailsResponse
         public long? TransferSenderId { get; set; }
         public int? EmployerVerificationStatus { get; set; }
         public string EmployerVerificationNotes { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public LearningType? LearningType { get; set; }
     }
 
     public class GetPriceEpisodeResponse

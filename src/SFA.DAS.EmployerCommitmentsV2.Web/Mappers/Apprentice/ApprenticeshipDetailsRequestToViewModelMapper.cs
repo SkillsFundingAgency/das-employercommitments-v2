@@ -2,6 +2,7 @@ using SFA.DAS.Apprenticeships.Types;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.Common.Domain.Types;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
@@ -111,7 +112,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 ConfirmationStatus = response.Apprenticeship.ConfirmationStatus,
                 Email = response.Apprenticeship.Email,
                 EmailShouldBePresent = response.Apprenticeship.EmailShouldBePresent,
-                HasNewerVersions = await HasNewerVersions(currentTrainingProgramme),
+                HasNewerVersions = await HasNewerVersions(currentTrainingProgramme, response.Apprenticeship.LearningType),
                 Option = response.Apprenticeship.Option,
                 VersionOptions = currentTrainingProgramme.Options,
                 EmailAddressConfirmedByApprentice = response.Apprenticeship.EmailAddressConfirmedByApprentice,
@@ -216,9 +217,9 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
         return pendingChange;
     }
 
-    private async Task<bool> HasNewerVersions(TrainingProgramme trainingProgramme)
+    private async Task<bool> HasNewerVersions(TrainingProgramme trainingProgramme, LearningType? learningType)
     {
-        if (trainingProgramme.ProgrammeType != ProgrammeType.Standard)
+        if (trainingProgramme.ProgrammeType != ProgrammeType.Standard || learningType == LearningType.ApprenticeshipUnit)
         {
             return false;
         }

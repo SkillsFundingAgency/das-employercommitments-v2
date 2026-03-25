@@ -1,7 +1,9 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using FluentAssertions;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.Common.Domain.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
@@ -357,6 +359,43 @@ public class EditApprenticeshipRequestToViewModelMapperTests
         _fixture.VerifyHasMultipleDeliveryModelsIsMapped();
     }
 
+    [TestCase(LearningType.Apprenticeship, false)]
+    [TestCase(LearningType.FoundationApprenticeship, false)]
+    [TestCase(LearningType.ApprenticeshipUnit, true)]
+    public async Task IsLockedForUpdate_DependingOnLearningType_And_WaitingToStart(LearningType learningType, bool expectedIsLockedForUpdated)
+    {
+        _fixture.NotTransferSender()
+            .IsWaitingToStartAndIsNotWithInFundingPeriod()
+            .SetLearningType(learningType)
+            .SetDataLockSuccess(true);
+
+        //Act
+        var viewModel = await _fixture.Map();
+
+        //Assert
+        viewModel.IsLockedForUpdate.Should().Be(expectedIsLockedForUpdated);
+    }
+
+    [TestCase(LearningType.Apprenticeship, true)]
+    [TestCase(LearningType.FoundationApprenticeship, true)]
+    [TestCase(LearningType.ApprenticeshipUnit, true)]
+    public async Task IsEndDateLockedForUpdateWhenWaitingToStart_Is_Mapped(LearningType learningType, bool expectedIsEndDateLockedForUpdate)
+    {
+        var status = ApprenticeshipStatus.WaitingToStart;
+
+        _fixture
+            .NotTransferSender()
+            .SetApprenticeshipStatus(status)
+            .SetLearningType(learningType)
+            .SetDataLockSuccess(true);
+
+        //Act
+        var viewModel = await _fixture.Map();
+
+        //Assert
+        viewModel.IsEndDateLockedForUpdate.Should().Be(expectedIsEndDateLockedForUpdate);
+    }
+
 }
 
 public class EditApprenticeshipRequestToViewModelMapperTestsFixture
@@ -398,13 +437,13 @@ public class EditApprenticeshipRequestToViewModelMapperTestsFixture
 
     internal EditApprenticeshipRequestToViewModelMapperTestsFixture SetUpLevyAccount()
     {
-        _accountResponse.LevyStatus = ApprenticeshipEmployerType.Levy;
+        _accountResponse.LevyStatus = CommitmentsV2.Types.ApprenticeshipEmployerType.Levy;
         return this;
     }
 
     internal EditApprenticeshipRequestToViewModelMapperTestsFixture SetUpNonLevyAccount()
     {
-        _accountResponse.LevyStatus = ApprenticeshipEmployerType.NonLevy;
+        _accountResponse.LevyStatus = CommitmentsV2.Types.ApprenticeshipEmployerType.NonLevy;
         return this;
     }
 
@@ -628,5 +667,11 @@ public class EditApprenticeshipRequestToViewModelMapperTestsFixture
     internal void VerifyHasMultipleDeliveryModelsIsMapped()
     {
         Assert.That(_viewModel.HasMultipleDeliveryModelOptions, Is.EqualTo(_getEditApprenticeshipResponse.HasMultipleDeliveryModelOptions));
+    }
+
+    internal EditApprenticeshipRequestToViewModelMapperTestsFixture SetLearningType(LearningType learningType)
+    {
+        _getEditApprenticeshipResponse.LearningType = learningType;
+        return this;
     }
 }
