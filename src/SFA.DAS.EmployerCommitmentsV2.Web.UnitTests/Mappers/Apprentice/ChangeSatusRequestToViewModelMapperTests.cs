@@ -1,10 +1,11 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
-using SFA.DAS.CommitmentsV2.Types;
+﻿using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.Common.Domain.Types;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using SFA.DAS.Encoding;
 using SFA.DAS.Testing.AutoFixture;
-using System.Text;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice;
 
@@ -12,21 +13,25 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice;
 public class WhenMapping_ChangeSatusRequestToViewModelMapperTests
 {
     private ChangeStatusRequestToViewModelMapper _mapper;
-    private Mock<ICommitmentsApiClient> _mockCommitmentsApiClient;
-
+    private Mock<IApprovalsApiClient> _mockApprovalsApiClient;
+    private Mock<IEncodingService> _mockEncodingService;
+     
     [SetUp]
     public void Arrange()
     {
-            
+        _mockApprovalsApiClient = new Mock<IApprovalsApiClient>();
+        _mockEncodingService = new Mock<IEncodingService>();
 
-        _mockCommitmentsApiClient = new Mock<ICommitmentsApiClient>();
-            
-        _mapper = new ChangeStatusRequestToViewModelMapper(_mockCommitmentsApiClient.Object);
-            
-        _mockCommitmentsApiClient.Setup(a => a.GetApprenticeship(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GetApprenticeshipResponse
+        _mapper = new ChangeStatusRequestToViewModelMapper(_mockApprovalsApiClient.Object, _mockEncodingService.Object);
+
+        _mockEncodingService.Setup(e => e.Decode(It.IsAny<string>(), It.IsAny<EncodingType>()))
+            .Returns(12345);
+
+        _mockApprovalsApiClient.Setup(a => a.GetEditApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GetEditApprenticeshipResponse
             {
-                Status = ApprenticeshipStatus.Completed
+                Status = ApprenticeshipStatus.Completed,
+                LearningType = LearningType.Apprenticeship
             });
     }
 
