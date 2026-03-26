@@ -58,6 +58,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .With(x => x.StandardUId, "ST0001_1.0")
                 .With(x => x.Version, "1.0")
                 .With(x => x.DateOfBirth, autoFixture.Create<DateTime>())
+                .With(x => x.LearningType, LearningType.Apprenticeship)
                 .Create();
             
             var trainingProgrammeByStandardUId = autoFixture.Build<TrainingProgramme>()
@@ -430,11 +431,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [NonParallelizable]
         public async Task PendingChanges_IsMapped()
         {
-            //Act
+            foreach(var update in GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates)
+            {
+                update.OriginatingParty = Party.Provider;
+            };
+
             var result = await _mapper.Map(_request);
 
-            //Assert
-            Assert.That(result.PendingChanges, Is.EqualTo(PendingChanges.ReadyForApproval));
+            result.PendingChanges.Should().Be(PendingChanges.ReadyForApproval);
         }
 
         [Test]
