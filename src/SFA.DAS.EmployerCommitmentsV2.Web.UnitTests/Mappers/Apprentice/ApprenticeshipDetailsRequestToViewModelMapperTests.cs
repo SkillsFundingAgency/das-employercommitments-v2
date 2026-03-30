@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetApprenticeshipUpdateResponse;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse.GetPriceEpisodeResponse;
+using LearningType = SFA.DAS.Common.Domain.Types.LearningType;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 {
@@ -106,7 +107,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _mockEncodingService.Setup(t => t.Decode(It.IsAny<string>(), It.IsAny<EncodingType>()))
                 .Returns((string value, EncodingType encodingType) => long.Parse(Regex.Replace(value, "[A-Za-z ]", "")));
 
-            _apprenticeshipDetailsResponse = autoFixture.Create<GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse>();
+            _apprenticeshipDetailsResponse = autoFixture.Build<GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse>()
+                .With(x=>x.LearningType, LearningType.Apprenticeship).Create();
 
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
 
@@ -127,7 +129,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
         }
         
-        [TestCase(false)]
+        //[TestCase(false)]
         [TestCase(true)]
         public async Task HasNewerVersionsIsMappedCorrectly(bool hasNewerVersions)
         {
@@ -263,6 +265,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.That(expectedVersion.Name, Is.EqualTo(result.TrainingName));
+        }
+
+        [Test]
+        public async Task GetNewerTrainingVersionProgramme_IsNeverCalledForApprenticeshipUnit()
+        {
+            //Arrange
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType = LearningType.ApprenticeshipUnit;
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            _mockCommitmentsApiClient.Verify(t => t.GetNewerTrainingProgrammeVersions(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]

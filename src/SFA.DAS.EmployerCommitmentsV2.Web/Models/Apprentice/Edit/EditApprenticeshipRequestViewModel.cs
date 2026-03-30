@@ -3,6 +3,7 @@ using SFA.DAS.CommitmentsV2.Types;
 using System.ComponentModel.DataAnnotations;
 using SFA.DAS.EmployerCommitmentsV2.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using LearningType = SFA.DAS.Common.Domain.Types.LearningType;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
@@ -101,4 +102,5 @@ public class EditApprenticeshipRequestViewModel : IAuthorizationContextModel
     public string AccountLegalEntityHashedId { get; set; }
     public bool HasMultipleDeliveryModelOptions { get; set; }
     public Guid? CacheKey { get; set; }
+    public LearningType LearningType   { get; set; }
 }

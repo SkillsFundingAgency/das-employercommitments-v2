@@ -151,4 +151,9 @@ public class ApprovalsApiClient(IOuterApiClient client) : IApprovalsApiClient
     {
         return await client.Post<ConfirmEditApprenticeshipResponse>($"employer/{accountId}/apprentices/{apprenticeshipId}/edit/confirm", request);
     }
+
+    public Task<GetAssignAllowEmployerAddResponse> GetAssignAllowEmployerAdd(string accountHashedId, Guid reservationId)
+    {
+        return client.Get<GetAssignAllowEmployerAddResponse>($"employer/{accountHashedId}/unapproved/add/assign/allow-employer-add?reservationId={reservationId}");
+    }
 }

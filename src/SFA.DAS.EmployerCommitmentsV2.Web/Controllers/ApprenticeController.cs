@@ -18,6 +18,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using static SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.WhyStopApprenticeshipViewModel;
 using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateRequest;
+using LearningType = SFA.DAS.Common.Domain.Types.LearningType;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
@@ -742,6 +743,11 @@ public class ApprenticeController(
         {
             viewModel = await modelMapper.Map<EditApprenticeshipRequestViewModel>(request);
             viewModel.CacheKey = Guid.NewGuid();
+        }
+
+        if (viewModel.LearningType == LearningType.ApprenticeshipUnit)
+        {
+            return View("EditApprenticeshipForAppUnit", viewModel);
         }
 
         return View(viewModel);
