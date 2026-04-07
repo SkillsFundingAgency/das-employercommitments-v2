@@ -36,6 +36,7 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
 
     public string EmployerReference { get; set; }
     public string CohortReference { get; set; }
+    public string EmploymentStatus { get; set; }
     public bool EnableEdit { get; set; }
     public bool PendingDataLockRestart { get; set; }
     public bool PendingDataLockChange { get; set; }
@@ -101,7 +102,7 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public DateTime? PaymentFrozenOn { get; set; }
     public DateTime? WithdrawalChangedDate { get; set; }
     public string WithdrawalReason { get; set; }
-    
+
     public ActionRequiredBanner GetActionRequiredBanners()
     {
         var actionRequiredBanner = ActionRequiredBanner.None;
