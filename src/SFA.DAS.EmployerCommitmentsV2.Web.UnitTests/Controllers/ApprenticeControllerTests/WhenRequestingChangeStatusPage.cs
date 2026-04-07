@@ -2,7 +2,7 @@
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.Common.Domain.Types;
+using DomainType = SFA.DAS.Common.Domain.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
@@ -33,7 +33,7 @@ public class WhenRequestingChangeStatusPage : ApprenticeControllerTestBase
     public async Task AndCurrentStatusIsLive_Then_ApprenticeshipView_IsReturned_For_Apprenticeship()
     {
         MockModelMapper.Setup(m => m.Map<ChangeStatusRequestViewModel>(It.IsAny<ChangeStatusRequest>()))
-            .ReturnsAsync(new ChangeStatusRequestViewModel { CurrentStatus = ApprenticeshipStatus.Live, LearningType = LearningType.Apprenticeship });
+            .ReturnsAsync(new ChangeStatusRequestViewModel { CurrentStatus = ApprenticeshipStatus.Live, LearningType = DomainType.LearningType.Apprenticeship });
 
         var result = await Controller.ChangeStatus(new ChangeStatusRequest());
 
@@ -46,7 +46,7 @@ public class WhenRequestingChangeStatusPage : ApprenticeControllerTestBase
     public async Task AndCurrentStatusIsLive_Then_ApprenticeshipView_IsReturned_For_FoundationApprenticeship()
     {
         MockModelMapper.Setup(m => m.Map<ChangeStatusRequestViewModel>(It.IsAny<ChangeStatusRequest>()))
-            .ReturnsAsync(new ChangeStatusRequestViewModel { CurrentStatus = ApprenticeshipStatus.Live, LearningType = LearningType.FoundationApprenticeship });
+            .ReturnsAsync(new ChangeStatusRequestViewModel { CurrentStatus = ApprenticeshipStatus.Live, LearningType = DomainType.LearningType.FoundationApprenticeship });
 
         var result = await Controller.ChangeStatus(new ChangeStatusRequest());
 
@@ -59,7 +59,7 @@ public class WhenRequestingChangeStatusPage : ApprenticeControllerTestBase
     public async Task AndCurrentStatusIsLive_Then_ApprenticeshipUnitView_IsReturned_For_ApprenticeshipUnit()
     {
         MockModelMapper.Setup(m => m.Map<ChangeStatusRequestViewModel>(It.IsAny<ChangeStatusRequest>()))
-            .ReturnsAsync(new ChangeStatusRequestViewModel { CurrentStatus = ApprenticeshipStatus.Live, LearningType = LearningType.ApprenticeshipUnit });
+            .ReturnsAsync(new ChangeStatusRequestViewModel { CurrentStatus = ApprenticeshipStatus.Live, LearningType = DomainType.LearningType.ApprenticeshipUnit });
 
         var result = await Controller.ChangeStatus(new ChangeStatusRequest());
 
