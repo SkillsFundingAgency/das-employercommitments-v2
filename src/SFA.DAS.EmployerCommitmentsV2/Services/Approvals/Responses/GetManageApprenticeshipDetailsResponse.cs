@@ -3,6 +3,7 @@ using Newtonsoft.Json.Converters;
 using SFA.DAS.Apprenticeships.Types;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Common.Domain.Types;
+using LearningType = SFA.DAS.Common.Domain.Types.LearningType;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
@@ -75,6 +76,8 @@ public class GetManageApprenticeshipDetailsResponse
         public int? DurationReducedBy { get; set; }
         public int? PriceReducedBy { get; set; }
         public long? TransferSenderId { get; set; }
+        public int? EmployerVerificationStatus { get; set; }
+        public string EmployerVerificationNotes { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public LearningType? LearningType { get; set; }
     }
@@ -91,6 +94,7 @@ public class GetManageApprenticeshipDetailsResponse
             public DateTime FromDate { get; set; }
             public DateTime? ToDate { get; set; }
         }
+
         public IReadOnlyCollection<PriceEpisode> PriceEpisodes { get; set; }
     }
 
@@ -117,6 +121,7 @@ public class GetManageApprenticeshipDetailsResponse
             public DateTime? EndDate { get; set; }
             public DateTime? DateOfBirth { get; set; }
         }
+
         public IReadOnlyCollection<ApprenticeshipUpdate> ApprenticeshipUpdates { get; set; }
     }
 
@@ -138,6 +143,7 @@ public class GetManageApprenticeshipDetailsResponse
             public TriageStatus TriageStatus { get; set; }
             public bool IsResolved { get; set; }
         }
+
         public IReadOnlyCollection<DataLock> DataLocks { get; set; }
     }
 
@@ -158,6 +164,7 @@ public class GetManageApprenticeshipDetailsResponse
             public long? NewApprenticeshipId { get; set; }
             public long? ProviderId { get; set; }
         }
+
         public IReadOnlyCollection<ChangeOfPartyRequest> ChangeOfParty { get; set; }
     }
 
@@ -172,6 +179,7 @@ public class GetManageApprenticeshipDetailsResponse
             public DateTime? StopDate { get; set; }
             public DateTime? CreatedOn { get; set; }
         }
+
         public IReadOnlyCollection<ChangeOfProviderLink> ChangeOfProviderChain { get; set; }
     }
 
@@ -186,6 +194,7 @@ public class GetManageApprenticeshipDetailsResponse
             public OverlappingTrainingDateRequestStatus Status { get; set; }
             public DateTime? ActionedOn { get; set; }
         }
+
         public IReadOnlyCollection<ApprenticeshipOverlappingTrainingDate> ApprenticeshipOverlappingTrainingDates { get; set; }
     }
 

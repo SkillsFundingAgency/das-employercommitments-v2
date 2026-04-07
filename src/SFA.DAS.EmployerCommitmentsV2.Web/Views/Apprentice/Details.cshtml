@@ -69,6 +69,14 @@
                     <td id="cohort-reference" class="govuk-table__cell">@Model.CohortReference</td>
                     <td class="govuk-table__cell"></td>
                 </tr>
+                @if (!string.IsNullOrEmpty(Model.EmploymentStatus))
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Employment status</th>
+                        <td id="employment-status" class="govuk-table__cell">@Model.EmploymentStatus</td>
+                        <td class="govuk-table__cell"></td>
+                    </tr>
+                }
                 @if (Model.TrainingProviderHistory != null && Model.TrainingProviderHistory.Count > 1)
                 {
                     <tr>
