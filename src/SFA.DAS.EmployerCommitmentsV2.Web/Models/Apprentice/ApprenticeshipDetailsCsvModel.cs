@@ -12,7 +12,7 @@ public class ApprenticeshipDetailsCsvModel
     public string Name { get ; private set ; }
     [Name("Training course")]
     public string TrainingCourseName { get; private set; }
-    [Name("Apprenticeship delivery model")]
+    [Name("Training delivery model")]
     public string DeliveryModel { get; private set; }
     [Name("Planned start date")]
     public string PlannedStartDate { get; private set; }
