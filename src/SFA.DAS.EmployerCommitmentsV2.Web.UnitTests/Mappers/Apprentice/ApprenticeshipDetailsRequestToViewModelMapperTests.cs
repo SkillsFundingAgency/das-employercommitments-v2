@@ -419,6 +419,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [NonParallelizable]
         public async Task PendingChanges_IsMapped()
         {
+            //Arrange
+            GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
+            {
+                new()
+                {
+                    OriginatingParty = Party.Provider
+                }
+            };
+
             //Act
             var result = await _mapper.Map(_request);
 
