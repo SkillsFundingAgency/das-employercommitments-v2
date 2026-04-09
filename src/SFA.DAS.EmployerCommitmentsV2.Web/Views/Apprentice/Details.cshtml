@@ -23,7 +23,7 @@
             if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped && Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
             {
                 <p class="govuk-body">
-                    Edit details if there's a change in apprentice or apprenticeship circumstances.
+                    Edit details if there's a change in learner or training circumstances.
                 </p>
             }
         }
@@ -32,14 +32,14 @@
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
-                        Help with your apprentice’s overdue confirmation
+                        Help with your learner’s overdue confirmation
                     </span>
                 </summary>
                 <div class="govuk-details__text">
-                    <p>If your apprentice has not confirmed their apprenticeship details within the 14 day deadline, you should:</p>
+                    <p>If your learner has not confirmed their training details within the 14 day deadline, you should:</p>
                     <ul class="govuk-list govuk-list--bullet">
                         <li>
-                            contact the apprentice to complete their apprenticeship confirmation
+                            contact the learner to complete their training confirmation
                         </li>
                     </ul>
                 </div>
@@ -109,7 +109,7 @@
 
         <div class="govuk-grid-row govuk-!-margin-bottom-2">
             <div class="govuk-grid-column-two-thirds">
-                <h2 class="govuk-heading-m">Apprentice details</h2>
+                <h2 class="govuk-heading-m">Personal details</h2>
             </div>
             <div class="govuk-grid-column-one-third das-!-text-align-right--from-tablet">
                 @if (Model.EnableEdit)
@@ -163,21 +163,30 @@
         </table>
 
         <h2 class="govuk-heading-m">
-            Apprenticeship details
+            Training details
         </h2>
         <table class="govuk-table  govuk-!-margin-bottom-8">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header das-table-cell-width-45">Apprenticeship training course </th>
+                    <th scope="row" class="govuk-table__header das-table-cell-width-45">Training course </th>
                     <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.TrainingName </td>
                 </tr>
                 @if (!Model.DeliveryModel.Equals(DeliveryModel.Regular) || Model.HasMultipleDeliveryModelOptions)
                 {
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header das-table-cell-width-45">Apprenticeship delivery model</th>
+                        <th scope="row" class="govuk-table__header das-table-cell-width-45">Training delivery model</th>
                         <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.DeliveryModel.ToDescription()</td>
                     </tr>
                 }
+
+                @if (Model.LearningType != null)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header das-table-cell-width-45">Training type</th>
+                        <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.LearningType</td>
+                    </tr>
+                }
+
                 @if (!string.IsNullOrEmpty(Model.Version))
                 {
                     <tr class="govuk-table__row">
@@ -328,7 +337,7 @@
                     }
 
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header">Total agreed apprenticeship price</th>
+                        <th scope="row" class="govuk-table__header">Total agreed training price</th>
                         <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost()</td>
                     </tr>
                 }
@@ -415,11 +424,7 @@
 
                     </tbody>
                 </table>
-            }
-            else
-            {
-                <p class="govuk-body">This apprentice has no recognised prior learning.</p>
-            }
+            }           
         }
 
     </div>

@@ -1033,6 +1033,15 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .Be($"https://apprenticeshipdetails.{MockUrlBuilderEnvironment}-eas.apprenticeships.education.gov.uk/employer/{_request.AccountHashedId}/PaymentsFreeze/{_request.ApprenticeshipHashedId}{expectedUrlSegment}");
         }
 
+        [Test]
+        public async Task LearnerType_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            Assert.That(GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType, Is.EqualTo(result.LearningType));
+        }
         private void WithEmployerVerificationStatus(int? status, string notes)
         {
             GetManageApprenticeshipDetailsResponse.Apprenticeship.EmployerVerificationStatus = status;

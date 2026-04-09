@@ -9,35 +9,49 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 public class ApprenticeshipDetailsCsvModel
 {
     [Name("Name")]
-    public string Name { get ; private set ; }
+    public string Name { get; private set; }
+
     [Name("Training course")]
     public string TrainingCourseName { get; private set; }
-    [Name("Apprenticeship delivery model")]
+
+    [Name("Training delivery model")]
     public string DeliveryModel { get; private set; }
+
     [Name("Planned start date")]
     public string PlannedStartDate { get; private set; }
+
     [Name("Planned end date")]
-    public string PlannedEndDate { get ; private set ; }
+    public string PlannedEndDate { get; private set; }
+
     [Name("Paused date")]
     public string PausedDate { get; private set; }
+
     [Name("Training provider")]
     public string Provider { get; private set; }
+
     [Name("Reference")]
     public string CohortReference { get; private set; }
+
     [Name("ULN")]
     public string Uln { get; private set; }
+
     [Name("Date of birth")]
     public string DateOfBirth { get; private set; }
+
     [Name("Total agreed apprenticeship price")]
     public string TotalAgreedPrice { get; private set; }
+
     [Name("Your reference")]
     public string EmployerRef { get; private set; }
+
     [Name("Learner confirmation")]
     public string LearnerConfirmation { get; private set; }
+
     [Name("Status")]
-    public string Status { get ; private set ; }
+    public string Status { get; private set; }
+
     [Name("Alerts")]
-    public string Alerts { get ; private set ; }
+    public string Alerts { get; private set; }
 
     public static implicit operator ApprenticeshipDetailsCsvModel(GetApprenticeshipsResponse.ApprenticeshipDetailsResponse model)
     {
@@ -48,7 +62,7 @@ public class ApprenticeshipDetailsCsvModel
             TrainingCourseName = model.CourseName,
             PlannedStartDate = model.StartDate.ToGdsFormatWithoutDay(),
             PlannedEndDate = model.EndDate.ToGdsFormatWithoutDay(),
-            PausedDate = model.PauseDate != DateTime.MinValue ?  model.PauseDate.ToGdsFormatWithoutDay() : "",
+            PausedDate = model.PauseDate != DateTime.MinValue ? model.PauseDate.ToGdsFormatWithoutDay() : "",
             CohortReference = model.CohortReference,
             EmployerRef = model.EmployerRef,
             Uln = model.Uln,

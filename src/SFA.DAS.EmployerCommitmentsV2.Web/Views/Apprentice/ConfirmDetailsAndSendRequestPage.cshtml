@@ -35,11 +35,11 @@
         @if (Model.ExceedsMaxFunding)
         {
             <div class="govuk-inset-text">
-                <p class="govuk-heading-s"> This apprenticeship is over the funding band maximum </p>
-                <p class="govuk-body"> The new agreed apprenticeship price is over the
+                <p class="govuk-heading-s"> This training is over the funding band maximum </p>
+                <p class="govuk-body"> The new agreed training price is over the
                     @Model.MaxFunding.Value.ToGdsCostFormat() <a class="govuk-link"
                         href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="_blank"
-                        id="funding-band-link">maximum value of the funding band</a> for this apprenticeship. You will need
+                        id="funding-band-link">maximum value of the funding band</a> for this training. You will need
                     to pay the difference - this cannot be funded from your account. </p>
             </div>
         }
