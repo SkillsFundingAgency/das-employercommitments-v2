@@ -1,4 +1,4 @@
-﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+﻿﻿@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
 
@@ -8,17 +8,17 @@
 
 @if (changeToApprenticeshipBanners > ChangeToApprenticeshipBanner.None)
 {
-    <h2 class="govuk-heading-m govuk-!-margin-bottom-4">Changes to this apprenticeship</h2>
+    <h2 class="govuk-heading-m govuk-!-margin-bottom-4">Changes to this learner</h2>
 
     @if (changeToApprenticeshipBanners.HasFlag(ChangeToApprenticeshipBanner.PendingChangeWaitingForApproval))
     {
         <div class="govuk-inset-text govuk-!-margin-top-0">
 
             <p class="govuk-body-s govuk-!-margin-bottom-1">
-                You have made a change to the apprentice’s details which will:
+                You have made a change to the learner’s details which will:
                 <ul>
                     <li>need to be approved by the training provider </li>
-                    <li>send an alert to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service</li>
+                    <li>send an alert to the learner for them to re-confirm their training details on the My apprenticeship service</li>
                 </ul>
             </p>
             <p class="govuk-body-s">
