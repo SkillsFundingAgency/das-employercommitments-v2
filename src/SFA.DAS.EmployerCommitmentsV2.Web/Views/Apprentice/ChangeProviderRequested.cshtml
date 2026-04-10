@@ -12,25 +12,29 @@
         <div class="govuk-panel govuk-panel--confirmation">
             <h1 class="govuk-panel__title"> Change of training provider requested </h1>
         </div>
-         
-        <p class="govuk-body">
-            We've stopped @apprenticeDisplayName learner record with their current training provider.
-        </p>
 
-        <p class="govuk-body">
-            We will create a new record in your apprenticeship service account once you both approve the details.
-        </p>
+
+        @if (Model.StoppedDuringCoP)
+        {
+            <p class="govuk-body">
+                We've stopped @apprenticeDisplayName apprenticeship record with their current training provider.
+            </p>
+
+            <p class="govuk-body">
+                We will create a new record in your apprenticeship service account once you both approve the details.
+            </p>
+        }
 
         <h2 class="govuk-heading-m"> What happens next </h2>
 
         @if (Model.ProviderAddDetails)
         {
-            <p class="govuk-body">We’ll ask @Model.ProviderName to enter the new training dates and price. Once they've added @apprenticeDisplayName learner details, you can sign in to view them.</p>
+            <p class="govuk-body">We’ll ask @Model.ProviderName to enter the new apprenticeship dates and price. Once they've added @apprenticeDisplayName apprenticeship details, you can sign in to view them.</p>
         }
         else
         {
             <p class="govuk-body">We'll ask @Model.ProviderName to check the details of this change. If they make any changes, it will come back to you.</p>
-            <p class="govuk-body">You and @Model.ProviderName must both approve the learner’s details.</p>
+            <p class="govuk-body">You and @Model.ProviderName must both approve the apprentice’s details.</p>
         }
 
         <p class="govuk-body"> Once you both approve them, @Model.ProviderName will become @apprenticeDisplayName new training provider.</p>
