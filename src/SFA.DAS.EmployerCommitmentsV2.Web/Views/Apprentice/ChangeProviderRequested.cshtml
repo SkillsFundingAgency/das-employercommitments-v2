@@ -13,13 +13,16 @@
             <h1 class="govuk-panel__title"> Change of training provider requested </h1>
         </div>
 
-        <p class="govuk-body">
-            We've stopped @apprenticeDisplayName learner record with their current training provider.
-        </p>
+        @if (Model.StoppedDuringCoP)
+        {
+            <p class="govuk-body">
+                We've stopped @apprenticeDisplayName learner record with their current training provider.
+            </p>
 
-        <p class="govuk-body">
-            We will create a new record in your apprenticeship service account once you both approve the details.
-        </p>
+            <p class="govuk-body">
+                We will create a new record in your apprenticeship service account once you both approve the details.
+            </p>
+        }
 
         <h2 class="govuk-heading-m"> What happens next </h2>
 
