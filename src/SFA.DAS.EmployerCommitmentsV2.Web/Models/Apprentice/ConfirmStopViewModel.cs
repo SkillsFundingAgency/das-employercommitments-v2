@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using LearningType = SFA.DAS.Common.Domain.Types.LearningType;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
@@ -29,4 +30,6 @@ public class ConfirmStopRequestViewModel : IAuthorizationContextModel
     public string Course { get; set; }
 
     public bool? StopConfirmed { get; set; }
+
+    public LearningType? LearningType { get; set; }
 }
