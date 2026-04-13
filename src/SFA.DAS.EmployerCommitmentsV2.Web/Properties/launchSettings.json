@@ -20,7 +20,7 @@
     "SFA.DAS.EmployerCommitmentsV2.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "VN48RP/unapproved",
+      "launchUrl": "MRLPWP/unapproved/with-training-provider",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "APPSETTING_EnvironmentName": "LOCAL",

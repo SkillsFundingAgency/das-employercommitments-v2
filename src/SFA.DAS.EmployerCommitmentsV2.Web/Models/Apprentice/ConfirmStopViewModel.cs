@@ -31,5 +31,5 @@ public class ConfirmStopRequestViewModel : IAuthorizationContextModel
 
     public bool? StopConfirmed { get; set; }
 
-    public LearningType? LearningType { get; set; }
+    public string LearningType { get; set; }
 }
