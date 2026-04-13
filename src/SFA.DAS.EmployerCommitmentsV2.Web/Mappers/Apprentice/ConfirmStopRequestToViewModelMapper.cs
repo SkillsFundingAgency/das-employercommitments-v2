@@ -1,8 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
-using SFA.DAS.CommitmentsV2.Types;
+﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
-using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
 using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse;
@@ -32,7 +29,7 @@ public class ConfirmStopRequestToViewModelMapper(IApprovalsApiClient approvalsAp
             Course = apprenticeship.CourseName,
             StopDate = stoppedDate,
             MadeRedundant = source.MadeRedundant,
-            LearningType = apprenticeship.LearningType.FormatEnumValue()
+            LearningType = apprenticeship.LearningType
         };
     }
 
