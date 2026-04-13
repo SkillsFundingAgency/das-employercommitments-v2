@@ -605,7 +605,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            result.EmploymentStatus.Should().Be("Not Employed");
+            result.EmploymentStatus.Should().Be("Not employed");
         }
 
         [Test]

@@ -36,7 +36,7 @@ public class ApprenticeshipDetailsToViewModelMapper(IEncodingService encodingSer
             null => string.Empty,
             0 => string.Empty,
             2 => "Employed",
-            3 => "Not Employed",
+            3 => "Not employed",
             _ => notes switch
             {
                 "NinoAndPAYENotFound" => "Not verified - missing PAYE scheme and invalid NINO",

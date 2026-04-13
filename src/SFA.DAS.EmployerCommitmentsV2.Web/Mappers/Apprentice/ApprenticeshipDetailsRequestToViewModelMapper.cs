@@ -248,7 +248,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
 
         if (status == 3)
         {
-            return "Not Employed";
+            return "Not employed";
         }
 
         return notes switch

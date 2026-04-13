@@ -186,7 +186,7 @@ public class ApprenticeshipDetailsToViewModelMapperTests
 
         var result = await mapper.Map(source);
 
-        result.EmploymentStatus.Should().Be("Not Employed");
+        result.EmploymentStatus.Should().Be("Not employed");
     }
 
     [Test, MoqAutoData]
