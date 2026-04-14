@@ -8,6 +8,7 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
@@ -1049,7 +1050,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.That(GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType, Is.EqualTo(result.LearningType));
+            Assert.That(GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType.FormatEnumValue(), Is.EqualTo(result.LearningType));
         }
 
         private void WithEmployerVerificationStatus(int? status, string notes)
