@@ -596,7 +596,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task ThenEmploymentStatusIsNotVerified_WhenStatusFailed()
+        public async Task ThenEmploymentStatusIsNotEmployed_WhenStatusFailed()
         {
             //Arrange
             WithEmployerVerificationStatus(3, null);
@@ -605,7 +605,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            result.EmploymentStatus.Should().Be("Not Verified");
+            result.EmploymentStatus.Should().Be("Not employed");
         }
 
         [Test]
