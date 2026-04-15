@@ -6,7 +6,7 @@
     string pageTitle;
     string pageHeading;
 
-    pageHeading = pageTitle = "Confirm apprenticeship stop";
+    pageHeading = pageTitle = "Confirm training stop";
     ViewBag.Title = pageTitle;
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/confirm-stop-apprenticeship";
     ViewBag.ZenDeskLabel = "Status-stop-confirm";
@@ -30,8 +30,8 @@
             <div class="govuk-warning-text">
                 <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                 <strong class="govuk-warning-text__text">
-                    <span class="govuk-warning-text__assistive">Warning</span>
-                    This apprenticeship record cannot be restarted once stopped.
+                    <span class="govuk-warning-text__assistive govuk-visually-hidden">Warning</span>
+                    This learner record cannot be restarted once stopped.
                 </strong>
             </div>
 
@@ -45,7 +45,7 @@
                     <dd class="govuk-summary-list__value"> @Model.ULN</dd>
                 </div>
                 <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key"> Apprenticeship training course </dt>
+                    <dt class="govuk-summary-list__key"> Training course </dt>
                     <dd class="govuk-summary-list__value"> @Model.Course</dd>
                 </div>
                 <div class="govuk-summary-list__row">
@@ -71,13 +71,13 @@
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="StopConfirmed" name="StopConfirmed" type="radio" value="true">
                             <label class="govuk-label govuk-radios__label" for="StopConfirmed">
-                                Yes, stop this apprenticeship
+                                Yes, stop this training
                             </label>
                         </div>
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="StopConfirmed-no" name="StopConfirmed" type="radio" value="false">
                             <label class="govuk-label govuk-radios__label" for="StopConfirmed-no">
-                                No, go back to apprentice details
+                                No, go back to learner details
                             </label>
                         </div>
                     </div>
