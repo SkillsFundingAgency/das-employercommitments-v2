@@ -1,25 +1,24 @@
-﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
-@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.IndexViewModel
 
 @{
-    ViewData["Title"] = Model.FilterModel.SearchOrFiltersApplied ? "Search results - Manage your apprentices" : "Manage your apprentices";
+    ViewData["Title"] = Model.FilterModel.SearchOrFiltersApplied ? "Search results - Manage your learners" : "Manage your learners";
     ViewBag.GaData.Vpv = "/apprentices";
 }
 
 @if (Model.FilterModel.SearchOrFiltersApplied)
 {
-    <h1 class="govuk-heading-xl"><span class="govuk-visually-hidden">Search results - </span>Manage your apprentices</h1>
+    <h1 class="govuk-heading-xl"><span class="govuk-visually-hidden">Search results - </span>Manage your learners</h1>
 } else {
-    <h1 class="govuk-heading-xl">Manage your apprentices</h1>
+    <h1 class="govuk-heading-xl">Manage your learners</h1>
 }
 
 @if (Model.FilterModel.TotalNumberOfApprenticeships == 0)
 {
     <div class="govuk-inset-text das-inset-text--filled das-inset-text--highlight">
-        <p>Your apprentices will appear here once you and your training provider approve their details.</p>
+        <p>Your learners will appear here once you and your training provider approve their details.</p>
     </div>
 }
 else
@@ -30,7 +29,7 @@ else
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
                     <div class="govuk-form-group">
-                        <label for="searchTerm" class="govuk-label">Search by apprentice name</label>
+                        <label for="searchTerm" class="govuk-label">Search by learner name or unique learner number (ULN)</label>
                         <div class="das-search-form__group">
                             <input class="govuk-input das-search-form__input" id="searchTerm" name="searchTerm" type="text" value="@Model.FilterModel.SearchTerm">
                             <div class="das-search-form__button-wrap">
@@ -65,7 +64,7 @@ else
                             </div>
                             <div class="govuk-grid-column-one-third">
                                 <div class="govuk-form-group">
-                                    <label class="govuk-label" for="selectedCourse">Apprenticeship training course</label>
+                                    <label class="govuk-label" for="selectedCourse">Training course</label>
                                     <select class="govuk-select govuk-!-width-full" id="selectedCourse" name="selectedCourse">
                                         <option label="All" aria-label="All courses" value="">All</option>
                                         @foreach (var course in Model.FilterModel.CourseFilters)
@@ -144,7 +143,7 @@ else
 
                             <div class="govuk-grid-column-one-third">
                                 <div class="govuk-form-group">
-                                    <label class="govuk-label" for="selectedApprenticeConfirmation">Apprentice confirmation</label>
+                                    <label class="govuk-label" for="selectedApprenticeConfirmation">Learner confirmation</label>
                                     <select class="govuk-select govuk-!-width-full" id="selectedApprenticeConfirmation" name="selectedApprenticeConfirmation">
                                         <option label="All" aria-label="All confirmations" value="">All</option>
                                         @foreach (var confirmation in Model.FilterModel.ApprenticeConfirmationFilters)
@@ -181,11 +180,11 @@ else
             <div class="govuk-grid-column-two-thirds">
                 @if (Model.FilterModel.TotalNumberOfApprenticeshipsWithAlertsFound > 0)
                 {
-                    <p class="govuk-body">@Model.FilterModel.TotalNumberOfApprenticeshipsFound apprentice record@(Model.FilterModel.TotalNumberOfApprenticeshipsFound != 1 ? "s" : null) @Model.FilterModel.FiltersUsedMessage, @Model.FilterModel.TotalNumberOfApprenticeshipsWithAlertsFound with alerts</p>
+                    <p class="govuk-body">@Model.FilterModel.TotalNumberOfApprenticeshipsFound learner record@(Model.FilterModel.TotalNumberOfApprenticeshipsFound != 1 ? "s" : null) @Model.FilterModel.FiltersUsedMessage, @Model.FilterModel.TotalNumberOfApprenticeshipsWithAlertsFound with alerts</p>
                 }
                 else
                 {
-                    <p class="govuk-body">@Model.FilterModel.TotalNumberOfApprenticeshipsFound apprentice record@(Model.FilterModel.TotalNumberOfApprenticeshipsFound != 1 ? "s" : null) @Model.FilterModel.FiltersUsedMessage</p>
+                    <p class="govuk-body">@Model.FilterModel.TotalNumberOfApprenticeshipsFound learner record@(Model.FilterModel.TotalNumberOfApprenticeshipsFound != 1 ? "s" : null) @Model.FilterModel.FiltersUsedMessage</p>
                 }
                 
             </div>
@@ -206,11 +205,11 @@ else
             <div class="govuk-grid-column-two-thirds">
                 @if (Model.FilterModel.TotalNumberOfApprenticeshipsWithAlertsFound > 0)
                 {
-                    <p class="govuk-body">@Model.FilterModel.TotalNumberOfApprenticeshipsFound apprentice record@(Model.FilterModel.TotalNumberOfApprenticeships != 1 ? "s" : null), @Model.FilterModel.TotalNumberOfApprenticeshipsWithAlertsFound with alerts</p>
+                    <p class="govuk-body">@Model.FilterModel.TotalNumberOfApprenticeshipsFound learner record@(Model.FilterModel.TotalNumberOfApprenticeships != 1 ? "s" : null), @Model.FilterModel.TotalNumberOfApprenticeshipsWithAlertsFound with alerts</p>
                 }
                 else
                 {
-                    <p class="govuk-body">@Model.FilterModel.TotalNumberOfApprenticeshipsFound apprentice record@(Model.FilterModel.TotalNumberOfApprenticeships != 1 ? "s" : null)</p>
+                    <p class="govuk-body">@Model.FilterModel.TotalNumberOfApprenticeshipsFound learner record@(Model.FilterModel.TotalNumberOfApprenticeships != 1 ? "s" : null)</p>
                 }
                 
             </div>
@@ -232,7 +231,7 @@ else
                            asp-route="@RouteNames.ApprenticesIndex"
                            asp-all-route-data="@Model.FilterModel.BuildSortRouteData("FirstName")"
                            title="Sort the table by name">
-                            Apprentice name
+                            Name
                         </a>
                     </th>
                     <th scope="col" class="govuk-table__header">
@@ -240,7 +239,7 @@ else
                            asp-route="@RouteNames.ApprenticesIndex"
                            asp-all-route-data="@Model.FilterModel.BuildSortRouteData("CourseName")"
                            title="Sort the table by name">
-                            Apprenticeship training course
+                            Training course
                         </a>
                     </th>
                     <th scope="col" class="govuk-table__header">
@@ -272,8 +271,11 @@ else
                            asp-route="@RouteNames.ApprenticesIndex"
                            asp-all-route-data="@Model.FilterModel.BuildSortRouteData("ConfirmationStatus")"
                            title="Sort the table by status">
-                            Apprentice confirmation
+                            Learner confirmation
                         </a>
+                    </th>
+                    <th scope="col" class="govuk-table__header">
+                        Employment status
                     </th>
                     <th scope="col" class="govuk-table__header">
                         Status
@@ -307,6 +309,9 @@ else
                     </td>
                     <td class="govuk-table__cell" data-label="Apprentice confirmation">
                         @apprenticeship.ConfirmationStatus.ToDisplayString()
+                    </td>
+                    <td class="govuk-table__cell" data-label="Employment status">
+                        @apprenticeship.EmploymentStatus
                     </td>
                     <td class="govuk-table__cell" data-label="Status">
                         <strong class="govuk-tag @apprenticeship.Status.GetDisplayClass()">

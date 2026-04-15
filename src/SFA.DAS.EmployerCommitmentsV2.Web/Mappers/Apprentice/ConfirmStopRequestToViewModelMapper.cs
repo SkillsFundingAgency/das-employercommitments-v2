@@ -1,21 +1,23 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+﻿using System.ComponentModel.DataAnnotations;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using SFA.DAS.Encoding;
+using static SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.GetManageApprenticeshipDetailsResponse;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
-public class ConfirmStopRequestToViewModelMapper : IMapper<ConfirmStopRequest, ConfirmStopRequestViewModel>
-{
-    private readonly ICommitmentsApiClient _client;
-    public ConfirmStopRequestToViewModelMapper(ICommitmentsApiClient client)
-    {
-        _client = client;
-    }
+public class ConfirmStopRequestToViewModelMapper(IApprovalsApiClient approvalsApiClient,
+    IEncodingService encodingService) : IMapper<ConfirmStopRequest, ConfirmStopRequestViewModel>
+{   
 
     public async Task<ConfirmStopRequestViewModel> Map(ConfirmStopRequest source)
     {
-        var apprenticeship = await _client.GetApprenticeship(source.ApprenticeshipId);
+        var accountId = encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
+        var apprenticeshipdetails = await approvalsApiClient.GetManageApprenticeshipDetails(accountId, source.ApprenticeshipId, cancellationToken: CancellationToken.None);
+        var apprenticeship = apprenticeshipdetails.Apprenticeship;
         var stoppedDate = GetStoppedDate(source, apprenticeship);
 
         return new ConfirmStopRequestViewModel
@@ -29,7 +31,8 @@ public class ConfirmStopRequestToViewModelMapper : IMapper<ConfirmStopRequest, C
             ULN = apprenticeship.Uln,
             Course = apprenticeship.CourseName,
             StopDate = stoppedDate,
-            MadeRedundant = source.MadeRedundant
+            MadeRedundant = source.MadeRedundant,
+            LearningType = apprenticeship.LearningType.FormatEnumValue()
         };
     }
 

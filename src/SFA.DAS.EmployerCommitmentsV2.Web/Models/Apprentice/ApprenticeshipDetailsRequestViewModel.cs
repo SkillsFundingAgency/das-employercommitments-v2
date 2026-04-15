@@ -1,8 +1,8 @@
 ﻿using SFA.DAS.Apprenticeships.Types;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.Common.Domain.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using LearningType = SFA.DAS.Common.Domain.Types.LearningType;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
@@ -37,6 +37,7 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
 
     public string EmployerReference { get; set; }
     public string CohortReference { get; set; }
+    public string EmploymentStatus { get; set; }
     public bool EnableEdit { get; set; }
     public bool PendingDataLockRestart { get; set; }
     public bool PendingDataLockChange { get; set; }

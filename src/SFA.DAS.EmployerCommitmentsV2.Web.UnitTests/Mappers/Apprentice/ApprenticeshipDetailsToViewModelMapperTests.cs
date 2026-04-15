@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
@@ -117,5 +117,88 @@ public class ApprenticeshipDetailsToViewModelMapperTests
         var result = await mapper.Map(source);
 
         result.ActualStartDate.Should().Be(source.ActualStartDate);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Then_Maps_EmploymentStatus_NullStatus_ReturnsEmpty(
+        GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source,
+        ApprenticeshipDetailsToViewModelMapper mapper)
+    {
+        source.EmployerVerificationStatus = null;
+
+        var result = await mapper.Map(source);
+
+        result.EmploymentStatus.Should().Be(string.Empty);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Then_Maps_EmploymentStatus_Pending_ReturnsEmpty(
+        GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source,
+        ApprenticeshipDetailsToViewModelMapper mapper)
+    {
+        source.EmployerVerificationStatus = 0;
+
+        var result = await mapper.Map(source);
+
+        result.EmploymentStatus.Should().Be(string.Empty);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Then_Maps_EmploymentStatus_Passed_ReturnsEmployed(
+        GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source,
+        ApprenticeshipDetailsToViewModelMapper mapper)
+    {
+        source.EmployerVerificationStatus = 2;
+
+        var result = await mapper.Map(source);
+
+        result.EmploymentStatus.Should().Be("Employed");
+    }
+
+    [TestCase("HmrcFailure", "Not Verified")]
+    [TestCase("NinoFailure", "Not Verified - missing or invalid NINO")]
+    [TestCase("NinoInvalid", "Not Verified - missing or invalid NINO")]
+    [TestCase("NinoNotFound", "Not verified - invalid NINO")]
+    [TestCase("NinoAndPAYENotFound", "Not verified - missing PAYE scheme and invalid NINO")]
+    [TestCase("PAYENotFound", "Not verified - missing PAYE scheme")]
+    public async Task Then_Maps_EmploymentStatus_ErrorWithCode_ReturnsCorrectNotVerifiedString(string errorCode, string expected)
+    {
+        var source = new GetApprenticeshipsResponse.ApprenticeshipDetailsResponse
+        {
+            EmployerVerificationStatus = 4,
+            EmployerVerificationNotes = errorCode,
+            Alerts = []
+        };
+        var mapper = new ApprenticeshipDetailsToViewModelMapper(Mock.Of<IEncodingService>());
+
+        var result = await mapper.Map(source);
+
+        result.EmploymentStatus.Should().Be(expected);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Then_Maps_EmploymentStatus_FailedNoNotes_ReturnsNotEmployed(
+        GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source,
+        ApprenticeshipDetailsToViewModelMapper mapper)
+    {
+        source.EmployerVerificationStatus = 3;
+        source.EmployerVerificationNotes = null;
+
+        var result = await mapper.Map(source);
+
+        result.EmploymentStatus.Should().Be("Not employed");
+    }
+
+    [Test, MoqAutoData]
+    public async Task Then_Maps_EmploymentStatus_UnknownErrorCode_ReturnsNotVerified(
+        GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source,
+        ApprenticeshipDetailsToViewModelMapper mapper)
+    {
+        source.EmployerVerificationStatus = 4;
+        source.EmployerVerificationNotes = "SomeUnknownCode";
+
+        var result = await mapper.Map(source);
+
+        result.EmploymentStatus.Should().Be("Not Verified");
     }
 }

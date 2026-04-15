@@ -17,9 +17,9 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.Edit;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
-using SFA.DAS.Common.Domain.Types;
 using static SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.WhyStopApprenticeshipViewModel;
 using EditEndDateRequest = SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditEndDateRequest;
+using LearningType = SFA.DAS.Common.Domain.Types.LearningType;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 

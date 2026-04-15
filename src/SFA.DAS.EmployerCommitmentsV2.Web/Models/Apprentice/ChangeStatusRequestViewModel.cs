@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.Common.Domain.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -18,7 +17,7 @@ public class ChangeStatusRequestViewModel : IAuthorizationContextModel
 
     public ChangeStatusType? SelectedStatusChange { get; set; }
     public ApprenticeshipStatus CurrentStatus { get; set; }
-    public LearningType LearningType { get; set; }
+    public Common.Domain.Types.LearningType LearningType { get; set; }
 }
 
 public enum ChangeStatusType

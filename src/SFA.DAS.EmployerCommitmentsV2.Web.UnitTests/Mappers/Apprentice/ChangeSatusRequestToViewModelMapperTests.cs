@@ -31,7 +31,7 @@ public class WhenMapping_ChangeSatusRequestToViewModelMapperTests
             .ReturnsAsync(new GetEditApprenticeshipResponse
             {
                 Status = ApprenticeshipStatus.Completed,
-                LearningType = LearningType.Apprenticeship
+                LearningType = Common.Domain.Types.LearningType.Apprenticeship
             });
     }
 
