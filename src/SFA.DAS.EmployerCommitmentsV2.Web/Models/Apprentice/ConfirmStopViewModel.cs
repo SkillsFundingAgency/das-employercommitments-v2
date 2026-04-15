@@ -29,4 +29,6 @@ public class ConfirmStopRequestViewModel : IAuthorizationContextModel
     public string Course { get; set; }
 
     public bool? StopConfirmed { get; set; }
+
+    public string LearningType { get; set; }
 }
