@@ -1,4 +1,4 @@
-﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+﻿﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.CommitmentsV2.Types
 @using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
@@ -23,7 +23,7 @@
             if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped && Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
             {
                 <p class="govuk-body">
-                    Edit details if there's a change in apprentice or apprenticeship circumstances.
+                    Edit details if there's a change in learner or training circumstances.
                 </p>
             }
         }
@@ -32,14 +32,14 @@
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
-                        Help with your apprentice’s overdue confirmation
+                        Help with your learner’s overdue confirmation
                     </span>
                 </summary>
                 <div class="govuk-details__text">
-                    <p>If your apprentice has not confirmed their apprenticeship details within the 14 day deadline, you should:</p>
+                    <p>If your learner has not confirmed their training details within the 14 day deadline, you should:</p>
                     <ul class="govuk-list govuk-list--bullet">
                         <li>
-                            contact the apprentice to complete their apprenticeship confirmation
+                            contact the learner to complete their training confirmation
                         </li>
                     </ul>
                 </div>
@@ -56,7 +56,7 @@
                     @if (Model.ShowChangeTrainingProviderLink)
                     {
                         <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <a id="change-training-provider-link" class="govuk-link" href="@Url.Action("ChangeProviderInform", new  ChangeProviderInformRequest{ AccountHashedId = Model.AccountHashedId ,  ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change<span class="govuk-visually-hidden"> training provider</span></a>
+                            <a id="change-training-provider-link" class="govuk-link" href="@Url.Action("ChangeProviderInform", new ChangeProviderInformRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change<span class="govuk-visually-hidden"> training provider</span></a>
                         </td>
                     }
                     else
@@ -109,7 +109,7 @@
 
         <div class="govuk-grid-row govuk-!-margin-bottom-2">
             <div class="govuk-grid-column-two-thirds">
-                <h2 class="govuk-heading-m">Apprentice details</h2>
+                <h2 class="govuk-heading-m">Personal details</h2>
             </div>
             <div class="govuk-grid-column-one-third das-!-text-align-right--from-tablet">
                 @if (Model.EnableEdit)
@@ -163,21 +163,30 @@
         </table>
 
         <h2 class="govuk-heading-m">
-            Apprenticeship details
+            Training details
         </h2>
         <table class="govuk-table  govuk-!-margin-bottom-8">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header das-table-cell-width-45">Apprenticeship training course </th>
+                    <th scope="row" class="govuk-table__header das-table-cell-width-45">Training course </th>
                     <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.TrainingName </td>
                 </tr>
                 @if (!Model.DeliveryModel.Equals(DeliveryModel.Regular) || Model.HasMultipleDeliveryModelOptions)
                 {
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header das-table-cell-width-45">Apprenticeship delivery model</th>
+                        <th scope="row" class="govuk-table__header das-table-cell-width-45">Training delivery model</th>
                         <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.DeliveryModel.ToDescription()</td>
                     </tr>
                 }
+
+                @if (Model.LearningType != null)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header das-table-cell-width-45">Training type</th>
+                        <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.LearningType</td>
+                    </tr>
+                }
+
                 @if (!string.IsNullOrEmpty(Model.Version))
                 {
                     <tr class="govuk-table__row">
@@ -257,34 +266,34 @@
                     <tr>
                         <td colspan="3">
                             <div id="change-of-start-date" class="" style="border-left: 5px solid #1d70b8; padding:10px;">
-						        <table class="govuk-table">
-							        <thead class="govuk-table__head">
-								        <tr class="govuk-table__row">
-									        <th scope="col" class="govuk-table__header app-custom-class govuk-!-width-one-third">
-										        <strong class="govuk-tag govuk-tag--yellow">Pending request</strong>
-									        </th>
-									        <th scope="col" class="govuk-table__header app-custom-class govuk-!-width-one-third">Current</th>
-									        <th scope="col" class="govuk-table__header app-custom-class govuk-!-width-one-third">Requested </th>
-									        <td class="govuk-table__cell"></td>
-								        </tr>
-							        </thead>
-							        <tbody class="govuk-table__body">
-								        <tr class="govuk-table__row">
-									        <th scope="row" class="govuk-table__header">Training start date</th>
-									        <td class="govuk-table__cell">@startDate</td>
+                                <table class="govuk-table">
+                                    <thead class="govuk-table__head">
+                                        <tr class="govuk-table__row">
+                                            <th scope="col" class="govuk-table__header app-custom-class govuk-!-width-one-third">
+                                                <strong class="govuk-tag govuk-tag--yellow">Pending request</strong>
+                                            </th>
+                                            <th scope="col" class="govuk-table__header app-custom-class govuk-!-width-one-third">Current</th>
+                                            <th scope="col" class="govuk-table__header app-custom-class govuk-!-width-one-third">Requested </th>
+                                            <td class="govuk-table__cell"></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="govuk-table__body">
+                                        <tr class="govuk-table__row">
+                                            <th scope="row" class="govuk-table__header">Training start date</th>
+                                            <td class="govuk-table__cell">@startDate</td>
                                             <td class="govuk-table__cell">@Model.PendingStartDateChange.PendingActualStartDate.ToGdsFormat()</td>
-								        </tr>
+                                        </tr>
                                         <tr class="govuk-table__row">
                                             <th scope="row" class="govuk-table__header">Planned training end date</th>
                                             <td class="govuk-table__cell">@endDate</td>
                                             <td class="govuk-table__cell">@Model.PendingStartDateChange.PendingEndDate.ToGdsFormat()</td>
                                         </tr>
-							        </tbody>
-						        </table>
-                                    <a class="govuk-link" href="@Model.PendingStartDateChangeUrl">
-							        Review request<span class="govuk-visually-hidden">for change of start date</span>
-						        </a>
-						    </div>
+                                    </tbody>
+                                </table>
+                                <a class="govuk-link" href="@Model.PendingStartDateChangeUrl">
+                                    Review request<span class="govuk-visually-hidden">for change of start date</span>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -328,7 +337,7 @@
                     }
 
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header">Total agreed apprenticeship price</th>
+                        <th scope="row" class="govuk-table__header">Total agreed training price</th>
                         <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost()</td>
                     </tr>
                 }
@@ -352,16 +361,16 @@
 
                 <table class="govuk-table">
                     <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header"></th>
-                        <th class="govuk-table__header">Current</th>
-                        <th class="govuk-table__header">Requested</th>
-                    </tr>
-                    <tr class="govuk-table__row" id="pendingPriceChangeTrainingPriceRow">
-                        <th scope="row" class="govuk-table__header">Total price</th>
-                        <td class="govuk-table__cell" id="priceChangeCurrentTotalPrice">@Model.Cost.FormatCost()</td>
-                        <td class="govuk-table__cell" id="priceChangeRequestedTotalPrice">@Model.PendingPriceChange.Cost.FormatCost()</td>
-                    </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header"></th>
+                            <th class="govuk-table__header">Current</th>
+                            <th class="govuk-table__header">Requested</th>
+                        </tr>
+                        <tr class="govuk-table__row" id="pendingPriceChangeTrainingPriceRow">
+                            <th scope="row" class="govuk-table__header">Total price</th>
+                            <td class="govuk-table__cell" id="priceChangeCurrentTotalPrice">@Model.Cost.FormatCost()</td>
+                            <td class="govuk-table__cell" id="priceChangeRequestedTotalPrice">@Model.PendingPriceChange.Cost.FormatCost()</td>
+                        </tr>
                     </tbody>
                 </table>
                 @if (Model.PendingPriceChange.GetPriceChangeInitiatedBy() == InitiatedBy.Provider)
@@ -373,19 +382,21 @@
                     <a id="linkViewPendingPrice" href="@Model.PendingPriceChangeUrl" class="govuk-link">View change request</a>
                 }
             </div>
-            <br/><br />
+            <br />
+
+            <br />
         }
 
         @if (Model.RecognisePriorLearning != null)
         {
-            <div class="govuk-grid-row govuk-!-margin-bottom-2">
-                <div class="govuk-grid-column-two-thirds">
-                    <h2 class="govuk-heading-m">Prior learning details</h2>
-                </div>
-            </div>
-
             @if (Model.RecognisePriorLearning == true)
             {
+                <div class="govuk-grid-row govuk-!-margin-bottom-2">
+                    <div class="govuk-grid-column-two-thirds">
+                        <h2 class="govuk-heading-m">Prior learning details</h2>
+                    </div>
+                </div>
+
                 <table class="govuk-table govuk-!-margin-bottom-8" aria-describedby="prior-learning-details">
                     <tbody class="govuk-table__body">
 
@@ -416,15 +427,11 @@
                     </tbody>
                 </table>
             }
-            else
-            {
-                <p class="govuk-body">This apprentice has no recognised prior learning.</p>
-            }
         }
 
     </div>
 </div>
 
 @section back {
-    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", new IndexRequest { AccountHashedId = Model.AccountHashedId, FromSearch = true})">Back to manage your apprentices</a>
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", new IndexRequest { AccountHashedId = Model.AccountHashedId, FromSearch = true })">Back to manage your apprentices</a>
 }
