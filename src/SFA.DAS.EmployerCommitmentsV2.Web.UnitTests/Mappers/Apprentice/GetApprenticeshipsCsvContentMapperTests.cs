@@ -54,7 +54,7 @@ public class GetApprenticeshipsCsvContentMapperTests
         var expectedCsvContent = new byte[] { 1, 2, 3, 4 };
         var expectedMemoryStream = new MemoryStream(expectedCsvContent);
         currentDateTime.Setup(x => x.UtcNow).Returns(new DateTime(2020, 12, 30));
-        var expectedFileName = $"{"Manageyourapprentices"}_{currentDateTime.Object.UtcNow:yyyyMMddhhmmss}.csv";
+        var expectedFileName = $"{"Manageyourlearners"}_{currentDateTime.Object.UtcNow:yyyyMMddhhmmss}.csv";
 
         mockEncodingService
             .Setup(service => service.Decode(request.AccountHashedId, EncodingType.AccountId))
