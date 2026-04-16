@@ -103,7 +103,7 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public DateTime? PaymentFrozenOn { get; set; }
     public DateTime? WithdrawalChangedDate { get; set; }
     public string WithdrawalReason { get; set; }
-    public string LearningType { get; set; }
+    public LearningType? LearningType { get; set; }
 
     public ActionRequiredBanner GetActionRequiredBanners()
     {

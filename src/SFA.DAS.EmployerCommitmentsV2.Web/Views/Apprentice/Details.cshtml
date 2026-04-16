@@ -134,7 +134,7 @@
                                 <tr>
                                     <td id="email-address">@Model.Email</td>
                                 </tr>
-                                @if (Model.CanResendInvitation)
+                                @if (Model.CanResendInvitation && Model.LearningType != SFA.DAS.Common.Domain.Types.LearningType.ApprenticeshipUnit)
                                 {
                                     <tr>
                                         <td>

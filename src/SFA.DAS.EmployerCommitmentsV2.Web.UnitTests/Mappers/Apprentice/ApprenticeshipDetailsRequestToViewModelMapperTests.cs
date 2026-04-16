@@ -59,6 +59,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .With(x => x.StandardUId, "ST0001_1.0")
                 .With(x => x.Version, "1.0")
                 .With(x => x.DateOfBirth, autoFixture.Create<DateTime>())
+                .With(x => x.LearningType, LearningType.Apprenticeship)
                 .Create();
 
             var trainingProgrammeByStandardUId = autoFixture.Build<TrainingProgramme>()
@@ -130,7 +131,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
         }
 
-        //[TestCase(false)]
+       
         [TestCase(true)]
         public async Task HasNewerVersionsIsMappedCorrectly(bool hasNewerVersions)
         {
@@ -407,6 +408,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task LearningType_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            result.LearningType.Should().Be(GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType);
+        }
+
+        [Test]
         public async Task ProviderName_IsMapped()
         {
             //Act
@@ -430,10 +441,14 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             };
 
             //Act
+            //foreach(var update in GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates)
+            //{
+            //    update.OriginatingParty = Party.Provider;
+            //};
+
             var result = await _mapper.Map(_request);
 
-            //Assert
-            Assert.That(result.PendingChanges, Is.EqualTo(PendingChanges.ReadyForApproval));
+            result.PendingChanges.Should().Be(PendingChanges.ReadyForApproval);
         }
 
         [Test]
@@ -1050,7 +1065,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.That(GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType.FormatEnumValue(), Is.EqualTo(result.LearningType));
+            Assert.That(GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType, Is.EqualTo(result.LearningType));
         }
 
         private void WithEmployerVerificationStatus(int? status, string notes)
