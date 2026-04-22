@@ -441,10 +441,10 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             };
 
             //Act
-            //foreach(var update in GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates)
-            //{
-            //    update.OriginatingParty = Party.Provider;
-            //};
+            foreach (var update in GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates)
+            {
+                update.OriginatingParty = Party.Provider;
+            };
 
             var result = await _mapper.Map(_request);
 
@@ -1065,7 +1065,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.That(GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType, Is.EqualTo(result.LearningType));
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType.Should().Be(result.LearningType);
         }
 
         private void WithEmployerVerificationStatus(int? status, string notes)
