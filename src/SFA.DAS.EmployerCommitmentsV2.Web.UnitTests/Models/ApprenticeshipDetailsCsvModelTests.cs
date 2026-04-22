@@ -15,7 +15,7 @@ public class ApprenticeshipDetailsCsvModelTests
     {
         ApprenticeshipDetailsCsvModel result = source;
 
-        result.ApprenticeName.Should().Be($"{source.FirstName} {source.LastName}");
+        result.Name.Should().Be($"{source.FirstName} {source.LastName}");
     }
 
     [Test, AutoData]
@@ -33,7 +33,7 @@ public class ApprenticeshipDetailsCsvModelTests
     {
         ApprenticeshipDetailsCsvModel result = source;
 
-        result.CourseName.Should().Be(source.CourseName);
+        result.TrainingCourseName.Should().Be(source.CourseName);
     }
 
     [Test, AutoData]
@@ -88,7 +88,7 @@ public class ApprenticeshipDetailsCsvModelTests
     {
         ApprenticeshipDetailsCsvModel result = source;
 
-        result.ApprenticeConfirmation.Should().Be(source.ConfirmationStatus.GetDescription());
+        result.LearnerConfirmation.Should().Be(source.ConfirmationStatus.GetDescription());
     }
 
     [Test, AutoData]
@@ -99,7 +99,7 @@ public class ApprenticeshipDetailsCsvModelTests
 
         ApprenticeshipDetailsCsvModel result = source;
 
-        result.ApprenticeConfirmation.Should().Be("N/A");
+        result.LearnerConfirmation.Should().Be("N/A");
     }
 
     [Test, AutoData]
