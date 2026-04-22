@@ -2,7 +2,7 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.WhyStopApprenticeshipViewModel
 
 @{
-    ViewBag.Title = "Why do you want to stop this apprenticeship?";
+    ViewBag.Title = "Why do you want to stop this training?";
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "why-stop-apprenticeship";
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/why-stop-apprenticeship";
@@ -21,7 +21,7 @@
             <div class="govuk-form-group  @(ViewData.ModelState.IsValid ? " " : " govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">
-                            Select an option why you want to stop this apprenticeship
+                        Select an option why you want to stop this training
                     </legend>
                     @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(nameof(WhyStopApprenticeshipViewModel.SelectedStatusChange)))
                     {
@@ -33,7 +33,7 @@
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="SelectedStatusChange-LeftEmployment" name="SelectedStatusChange" type="radio" value="@WhyStopApprenticeshipViewModel.StopStatusReason.LeftEmployment">
                             <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-LeftEmployment">
-                                Apprentice left my employment
+                                Learner left my employment
                             </label>
                         </div>
                         <div class="govuk-radios__item">
@@ -45,25 +45,25 @@
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="SelectedStatusChange-TrainingEnded" name="SelectedStatusChange" type="radio" value="@WhyStopApprenticeshipViewModel.StopStatusReason.TrainingEnded">
                             <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-TrainingEnded">
-                                Apprenticeship training has ended
+                                Learner training has ended
                             </label>
                         </div>
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="SelectedStatusChange-Withdrawn" name="SelectedStatusChange" type="radio" value="@WhyStopApprenticeshipViewModel.StopStatusReason.Withdrawn">
                             <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-Withdrawn">
-                                Apprentice has withdrawn from training
+                                Learner has withdrawn from training
                             </label>
                         </div>
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="SelectedStatusChange-ProviderCorrectsApprenticeRecord" name="SelectedStatusChange" type="radio" value="@WhyStopApprenticeshipViewModel.StopStatusReason.ProviderCorrectsApprenticeRecord">
                             <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-ProviderCorrectsApprenticeRecord">
-                                Training provider request to correct apprenticeship record
+                                Training provider request to correct learner record
                             </label>
                         </div>
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="SelectedStatusChange-NeverStarted" name="SelectedStatusChange" type="radio" value="@WhyStopApprenticeshipViewModel.StopStatusReason.NeverStarted">
                             <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-NeverStarted">
-                                Apprenticeship never started
+                                Learner never started
                             </label>
                         </div>
                     </div>

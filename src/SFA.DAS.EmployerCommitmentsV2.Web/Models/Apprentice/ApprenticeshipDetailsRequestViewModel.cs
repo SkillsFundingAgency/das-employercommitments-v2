@@ -2,6 +2,7 @@
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using LearningType = SFA.DAS.Common.Domain.Types.LearningType;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
@@ -102,6 +103,7 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public DateTime? PaymentFrozenOn { get; set; }
     public DateTime? WithdrawalChangedDate { get; set; }
     public string WithdrawalReason { get; set; }
+    public string LearningType { get; set; }
 
     public ActionRequiredBanner GetActionRequiredBanners()
     {
