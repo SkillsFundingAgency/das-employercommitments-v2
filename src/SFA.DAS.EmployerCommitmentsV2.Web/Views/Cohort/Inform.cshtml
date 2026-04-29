@@ -1,9 +1,10 @@
 @inject ILinkGenerator LinkGenerator
 @using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.InformViewModel
+@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
 
 @{
-    ViewData["Title"] = "Add an apprentice";
+    ViewData["Title"] = "Add a learner or send a learner request";
     ViewBag.GaData.Vpv = "/apprentices/inform";
 
     var routeModel = new Dictionary<string, string>
@@ -15,37 +16,57 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-l">Add an apprentice</h1>
+        <h1 class="govuk-heading-l">Add a learner or send a learner request</h1>
 
-        <p class="govuk-body">Add details of one or more apprentices to your account, and authorise payments to your
-            training provider.</p>
+        <p class="govuk-body">Add a learner yourself, or send a request to your training provider to add learners.</p>
 
         @if (!Model.IsLevyFunded)
         {
             <h2 class="govuk-heading-m">Funding</h2>
             <p class="govuk-body">
-                If you have not reserved funds for this apprenticeship yet, adding a new apprentice will reserve funds for
-                you.
-                If you have reserved funds or have transfer funds available, you can select one whilst adding a new
-                apprentice.
+                You can choose which funding to use. If you don’t have any funding set up, you will automatically reserve new funds.
             </p>
         }
+
+        <h2 class="govuk-heading-m">Permissions</h2>
+        <p class="govuk-body">
+            If you haven’t already, you can give your training provider permission add learners for you, without you needing to send a request
+        </p>
+        <p>You’ll still need to approve requests sent to you</p>
+
+        <p class="govuk-body">
+            View your training provider permissions <a asp-external-subdomain="relationships" asp-external-id="@Model.AccountHashedId" asp-external-controller="employers" class="govuk-link">
+                 (opens in new tab) </a>
+                 If you cannot find the employer, go to <a asp-external-subdomain="relationships" asp-external-id="@Model.AccountHashedId" asp-external-controller="employers" class="govuk-link">Manage your employers</a>.
+        </p>
+
+
+
 
         <h2 class="govuk-heading-m">What you'll need</h2>
 
         <p class="govuk-body">You must:</p>
         <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
             <li>have a <b>training provider</b></li>
-            <li>know the <b>legal name</b> and <b>email address</b> of your apprentice</li>
-            <li>know the <b>course name</b> and <b>start date</b></li>
+            <li>know the name of the <b>learner</b></li>
+            <li>know the <b>course name</b></li>
             <li>have <b>authority to act</b> for the organisation that's named on the contract you have with your
-                training provider (<a href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)"
-                    class="govuk-link">view your organisations</a>)</li>
-            <li>make sure the <b>PAYE scheme</b> that the apprentices will be paid through is added to your account (<a
-                    href="@LinkGenerator.PayeSchemes(Model.AccountHashedId)" class="govuk-link">view your PAYE
-                    schemes</a>)</li>
+                training provider </li>
+            <li>make sure the <b>PAYE scheme</b> that the apprentices will be paid through is added to your account</li>
         </ul>
         
+       <p> <a href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)" class="govuk-link">
+            View your organisations (opens in new tab)
+            </a>
+        </p>
+
+        <p>
+         <a href="@LinkGenerator.PayeSchemes(Model.AccountHashedId)" class="govuk-link">View your PAYE
+            schemes (opens in new tab)
+            </a>
+        </p>
+
+
         <a asp-action="SelectLegalEntity" id="continue-button" asp-all-route-data="routeModel" role="button" draggable="false" class="govuk-button govuk-button--start">
             Start now
             <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19"
@@ -61,5 +82,5 @@
 
 @section Back
 {
-    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new {Model.AccountHashedId})">Back to Apprentices</a>
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new {Model.AccountHashedId})">Back</a>
 }

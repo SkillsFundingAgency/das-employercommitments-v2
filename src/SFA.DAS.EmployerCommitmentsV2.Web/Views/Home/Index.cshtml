@@ -2,28 +2,27 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Home.IndexViewModel
 
 @{
-    ViewData["Title"] = "Apprentices";
+    ViewData["Title"] = "Learners";
     ViewBag.GaData.Vpv = "/unapproved/add";
 }
 
-<h1 class="govuk-heading-xl">Apprentices</h1>
-
+<h1 class="govuk-heading-xl">Learners</h1>
 <hr class="das-section-break das-section-break--l das-section-break--heavy-grey">
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="das-cards">
             <div class="das-card das-card--underline">                
-                <h2 class="govuk-heading-m das-card__heading"><a id="AddApprentice" href="@Url.Action("Inform", "Cohort", new {Model.AccountHashedId})" class="govuk-link">Add an apprentice</a></h2>
-                <p>Add new apprentices or ask your training provider to add them.</p>
+                <h2 class="govuk-heading-m das-card__heading"><a id="AddLearner" href="@Url.Action("Inform", "Cohort", new { Model.AccountHashedId })" class="govuk-link">Add a Learner or send a learner request</a></h2>
+                <p>Choose funding and add a learner, or send your your training provider a learner request.</p>
             </div>
             <div class="das-card das-card--underline">
-                <h2 class="govuk-heading-m das-card__heading"><a id="YourCohorts" href="@Url.Action("Review", "Cohort", new {Model.AccountHashedId})" class="govuk-link">Apprentice requests</a></h2>
-                <p>Review, edit, approve and add more apprentices.</p>
+                <h2 class="govuk-heading-m das-card__heading"><a id="YourCohorts" href="@Url.Action("Review", "Cohort", new { Model.AccountHashedId })" class="govuk-link">Review learner requests</a></h2>
+                <p>Review, edit and approve learner requests sent by training provider.</p>
             </div>
             <div class="das-card">
-                <h2 class="govuk-heading-m das-card__heading"><a id="ManageApprentices" href="@Url.Action("Index","Apprentice",new {Model.AccountHashedId})" class="govuk-link">Manage your apprentices</a></h2>
-                <p>View approved apprentices, update details of existing apprentices, change training providers or stop and pause payments to training providers.</p>
+                <h2 class="govuk-heading-m das-card__heading"><a id="ManageApprentices" href="@Url.Action("Index", "Apprentice", new { Model.AccountHashedId })" class="govuk-link">Manage your Learners</a></h2>
+                <p>View approved learners, update there details, change training providers, and stop or pause payments to training providers.</p>
             </div>
             @if (Model.ShowSetPaymentOrderLink)
             {

@@ -2,7 +2,7 @@
 @using SFA.DAS.CommitmentsV2.Shared.Extensions
 
 @{
-    ViewBag.Title = "Select funding";
+    ViewBag.Title = "Choose funding";
     ViewBag.GaData.Vpv = "/unapproved/select-funding/create/choose-funding-type";
 }
 
@@ -22,7 +22,9 @@
 
         <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.FundingType,  "govuk-form-group--error")">
             <div class="govuk-hint">
-                You can choose from funds you've already set up or reserve new existing funding.
+
+                    <p>    You can choose from funds you’ve already set up or reserve new funding.</p>
+                    <p>You can only have one funding type for each request that you send, but you can have multiple learners up to the funding balance.</p>
             </div>
             <fieldset class="govuk-fieldset">
                 @if (!ViewData.ModelState.IsValid)
@@ -40,7 +42,7 @@
                                 Transfer funds
                             </label>
                             <div class="govuk-hint govuk-radios__hint">
-                                A funding opportunity (pledge) from a levy-paying business
+                                    Use a funding opportunity (pledge) that you’ve already set up from a levy paying business
                             </div>
                         </div>
                     }
@@ -52,7 +54,7 @@
                                 Transfer funds from a connection
                             </label>
                             <div class="govuk-hint govuk-radios__hint">
-                                A levy-paying business that has set up a connection with you in the service
+                                    Use funds from a levy-paying business that you’ve set up a connection with already
                             </div>
                         </div>
                     }
@@ -64,7 +66,7 @@
                                 Reserved funds
                             </label>
                             <div class="govuk-hint govuk-radios__hint">
-                                Funding you've reserved from the government
+                                    Use funding that you or training provider have already reserved from the government
                             </div>
                         </div>
                     }
@@ -76,8 +78,7 @@
                                 I want to reserve new funds
                             </label>
                             <div class="govuk-hint govuk-radios__hint">
-                                You will automatically reserve new funding for an apprentice once you
-                                enter their details
+                                    You will ask you training provider to automatically reserve new funding
                             </div>
                         </div>
                     }
