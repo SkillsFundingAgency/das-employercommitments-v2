@@ -7,4 +7,6 @@ public class FinishedViewModel
     public string LegalEntityName { get; set; }
     public string ProviderName { get; set; }
     public string Message { get; set; }
+    public string FundingSource { get; set; }
+    public string Learners { get; set; }
 }
