@@ -8,6 +8,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Middleware;
 using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 using SFA.DAS.EmployerUrlHelper.DependencyResolution;
+using SFA.DAS.Employer.Shared.UI;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web;
 
@@ -52,7 +53,8 @@ public class Startup
             .AddMemoryCache()
             .AddCache(_environment, _configuration)
             .AddOpenTelemetryRegistration(_configuration)
-            .AddDasDataProtection(_configuration, _environment);
+            .AddDasDataProtection(_configuration, _environment)
+            .AddEmployerUiServiceRegistration(_configuration);
     }
 
     public void Configure(IApplicationBuilder app)
