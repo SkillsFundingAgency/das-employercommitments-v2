@@ -35,8 +35,9 @@
         <p>You’ll still need to approve requests sent to you</p>
 
         <p class="govuk-body">
-            View your training provider permissions <a asp-external-subdomain="relationships" asp-external-id="@Model.AccountHashedId" asp-external-controller="employers" class="govuk-link">
-                 (opens in new tab) </a>
+            <a asp-external-subdomain="relationships" asp-external-relativeroute="accounts/@Model.AccountHashedId/providers" asp-external-id="@Model.AccountHashedId" asp-external-controller="providers" target="_blank" asp- class="govuk-link">
+                View your training provider permissions (opens in new tab)
+            </a>
         </p>
 
 

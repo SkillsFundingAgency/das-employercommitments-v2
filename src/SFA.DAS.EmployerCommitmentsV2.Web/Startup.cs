@@ -2,13 +2,14 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using OpenTelemetry.Logs;
-using SFA.DAS.GovUK.Auth.Extensions;
+using SFA.DAS.Employer.Shared.UI;
+using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Middleware;
 using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 using SFA.DAS.EmployerUrlHelper.DependencyResolution;
-using SFA.DAS.Employer.Shared.UI;
+using SFA.DAS.GovUK.Auth.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web;
 
@@ -54,7 +55,7 @@ public class Startup
             .AddCache(_environment, _configuration)
             .AddOpenTelemetryRegistration(_configuration)
             .AddDasDataProtection(_configuration, _environment)
-            .AddEmployerUiServiceRegistration(_configuration);
+            .AddEmployerUiServiceRegistration(_configuration.GetSection(ConfigurationKeys.EmployerCommitmentsV2));
     }
 
     public void Configure(IApplicationBuilder app)
