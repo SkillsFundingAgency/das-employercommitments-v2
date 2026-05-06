@@ -16,16 +16,20 @@
                 <dt class="govuk-summary-list__key">Reference</dt>
                 <dd class="govuk-summary-list__value">@Model.CohortReference</dd>
             </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Training provider</dt>
-                <dd class="govuk-summary-list__value">@Model.ProviderName</dd>
-            </div>
+            @if (Model.FundingSource is not null)
+            {
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Funding</dt>
                 <dd class="govuk-summary-list__value">@Model.FundingSource</dd>
             </div>
+            }
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Message for training provider</dt>
+                <dt class="govuk-summary-list__key">Training provider</dt>
+                <dd class="govuk-summary-list__value">@Model.ProviderName</dd>
+            </div>
+            
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Names of learners</dt>
                 <dd class="govuk-summary-list__value">@(string.IsNullOrEmpty(Model.Message) ? "No message" : Model.Message)</dd>
             </div>
         </dl>
@@ -40,7 +44,7 @@
 
         <h2 class="govuk-heading-m">Permissions</h2>
         <p class="govuk-body">
-            You can view and update your training provider permissions (opens in new tab) in your account.
+            You can view and update your <a asp-external-subdomain="relationships" asp-external-relativeroute="accounts/@Model.AccountHashedId/providers" asp-external-id="@Model.AccountHashedId" asp-external-controller="providers" target="_blank" asp- class="govuk-link">  training provider permissions (opens in new tab) in your account.</a>
         </p >
 
         <h2 class="govuk-heading-m">Payments</h2>
