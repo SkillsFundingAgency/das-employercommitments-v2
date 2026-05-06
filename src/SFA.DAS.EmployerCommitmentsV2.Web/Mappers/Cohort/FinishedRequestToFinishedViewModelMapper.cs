@@ -20,12 +20,11 @@ public class FinishedRequestToFinishedViewModelMapper(IApprovalsApiClient approv
             LegalEntityName = response.LegalEntityName,
             ProviderName = response.ProviderName,
             Message = response.LatestMessageCreatedByEmployer,
-            FundingSource = GetFundingType(fundingDetails),
-            Learners = GetLearnerNames(response.DraftApprenticeships)
+            FundingSource = GetFundingType(fundingDetails)
         };
     }
 
-    private string GetFundingType(GetSelectFundingOptionsResponse response)
+    public string GetFundingType(GetSelectFundingOptionsResponse response)
     {
         if (response.IsLevyAccount)
         {
@@ -49,10 +48,5 @@ public class FinishedRequestToFinishedViewModelMapper(IApprovalsApiClient approv
         }
 
         return "Reserved funds";
-    }
-
-    private string GetLearnerNames(IReadOnlyCollection<DraftApprenticeshipDto> learners)
-    {
-        return string.Join("& ", learners.Select(l => $"{l.FirstName} {l.LastName}"));
     }
 }
