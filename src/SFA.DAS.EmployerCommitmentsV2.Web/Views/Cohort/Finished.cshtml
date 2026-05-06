@@ -44,13 +44,23 @@
 
         <h2 class="govuk-heading-m">Permissions</h2>
         <p class="govuk-body">
-            You can view and update your <a asp-external-subdomain="relationships" asp-external-relativeroute="accounts/@Model.AccountHashedId/providers" asp-external-id="@Model.AccountHashedId" asp-external-controller="providers" target="_blank" asp- class="govuk-link">  training provider permissions (opens in new tab) in your account.</a>
+            You can view and update your <a asp-external-subdomain="relationships" asp-external-relativeroute="accounts/@Model.AccountHashedId/providers" asp-external-id="@Model.AccountHashedId" asp-external-controller="providers" target="_blank" asp- class="govuk-link">  training provider permissions (opens in new tab)</a>  in your account.
         </p >
 
         <h2 class="govuk-heading-m">Payments</h2>
         <p>You can only authorise payments after both you and your training provider complete and approve all learner details.</p>
 
-        <a id="back-to-learner-link" class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", "Home", new { Model.AccountHashedId })">Back to learners</a>
+        <div class="govuk-inset-text das-inset-text--filled">
+            <h3 class="govuk-heading-m govuk-!-margin-bottom-2">Help us improve this section</h3>
+            <p class="govuk-body">
+                Take a 3 minute survey about adding apprentices so that we can improve the
+                service.
+            </p>
+            <a class="govuk-button" href="https://www.smartsurvey.co.uk/s/apprenticeshipservicefeedback">
+                Take the
+                survey
+            </a>
+        </div>
         
     </div>
 </div>
