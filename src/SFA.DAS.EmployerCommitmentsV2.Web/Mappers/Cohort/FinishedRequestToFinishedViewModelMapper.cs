@@ -24,7 +24,7 @@ public class FinishedRequestToFinishedViewModelMapper(IApprovalsApiClient approv
         };
     }
 
-    public string GetFundingType(GetSelectFundingOptionsResponse response)
+    public static string GetFundingType(GetSelectFundingOptionsResponse response)
     {
         if (response.IsLevyAccount)
         {

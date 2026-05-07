@@ -56,7 +56,7 @@ public class FinishedViewModelMapperTests
     {
         var fixture = new FinishedViewModelMapperTestsFixture();
         var result = await fixture.Map();
-        result.FundingSource.Should().Be(fixture.Mapper.GetFundingType(fixture.selectFundingOptions));
+        result.FundingSource.Should().Be(FinishedRequestToFinishedViewModelMapper.GetFundingType(fixture.selectFundingOptions));
     }
 }
 
