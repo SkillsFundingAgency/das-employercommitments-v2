@@ -16,6 +16,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
 using SFA.DAS.Http;
+using StructureMap.Query;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
@@ -294,7 +295,7 @@ public class CohortController(
             case WhoIsAddingApprentices.Provider:
                 var request = await modelMapper.Map<CreateCohortWithOtherPartyRequest>(cacheModel);
                 var response = await commitmentsApiClient.CreateCohort(request);
-                return RedirectToAction("Finished", new { cacheModel.AccountHashedId, response.CohortReference });
+                return RedirectToAction("Finished", new { cacheModel.AccountHashedId, response.CohortReference, cacheModel.ApprenticeshipSessionKey });
             default:
                 return RedirectToAction("Error", "Error");
         }
@@ -430,16 +431,11 @@ public class CohortController(
     [Route("add/finished")]
     public async Task<IActionResult> Finished(FinishedRequest request)
     {
-        var response = await commitmentsApiClient.GetCohort(request.CohortId);
+        var response = await modelMapper.Map<FinishedViewModel>(request);
+        var cacheModel = await GetAddApprenticeshipCacheModelFromCache(request.ApprenticeshipSessionKey);
+        response.FundingSource = cacheModel.FundingType;
 
-        return View(new FinishedViewModel
-        {
-            AccountHashedId = request.AccountHashedId,
-            CohortReference = request.CohortReference,
-            LegalEntityName = response.LegalEntityName,
-            ProviderName = response.ProviderName,
-            Message = response.LatestMessageCreatedByEmployer
-        });
+        return View(response);
     }
 
     [HttpGet]

@@ -8,5 +8,6 @@ public class FinishedRequest : IAuthorizationContextModel
     public long AccountId { get; set; }
     public string CohortReference { get; set; }
     public long CohortId { get; set; }
-        
+    public Guid? ApprenticeshipSessionKey { get; set; }
+
 }

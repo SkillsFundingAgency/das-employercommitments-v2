@@ -19,34 +19,7 @@ public class FinishedRequestToFinishedViewModelMapper(IApprovalsApiClient approv
             CohortReference = request.CohortReference,
             LegalEntityName = response.LegalEntityName,
             ProviderName = response.ProviderName,
-            Message = response.LatestMessageCreatedByEmployer,
-            FundingSource = GetFundingType(fundingDetails)
+            Message = response.LatestMessageCreatedByEmployer
         };
-    }
-
-    public static string GetFundingType(GetSelectFundingOptionsResponse response)
-    {
-        if (response.IsLevyAccount)
-        {
-            return "Current levy funds";
-        }
-        if (!response.IsLevyAccount && response.HasUnallocatedReservationsAvailable)
-        {
-            return "Reserved funds";
-        }
-        if (response.HasLtmTransfersAvailable)
-        {
-            return "Transfer funds";
-        }
-        if (response.HasDirectTransfersAvailable)
-        {
-            return "Transfer funds from a connection";
-        }
-        if (!response.IsLevyAccount && response.HasAdditionalReservationFundsAvailable)
-        {
-            return "Reserve new funds";
-        }
-
-        return "Reserved funds";
-    }
+    }   
 }
