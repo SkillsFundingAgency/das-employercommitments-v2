@@ -17,7 +17,7 @@ public class FinishedViewModelMapperTests
         var fixture = new FinishedViewModelMapperTestsFixture();
         var result = await fixture.Map();
         result.AccountHashedId.Should().Be(fixture.Source.AccountHashedId);
-    }    
+    }
 
     [Test]
     public async Task LegalEntityNameIsMappedCorrectly()
@@ -50,15 +50,6 @@ public class FinishedViewModelMapperTests
         var result = await fixture.Map();
         result.CohortReference.Should().Be(fixture.Source.CohortReference);
     }
-
-    [Test]
-    public async Task FundingSourceIsMappedCorrectly()
-    {
-        var fixture = new FinishedViewModelMapperTestsFixture();
-        var result = await fixture.Map();
-        result.Should().NotBeNull();
-        //result.FundingSource.Should().Be(FinishedRequestToFinishedViewModelMapper.GetFundingType(fixture.selectFundingOptions));
-    }
 }
 
 public class FinishedViewModelMapperTestsFixture
@@ -81,10 +72,10 @@ public class FinishedViewModelMapperTestsFixture
         selectFundingOptions = _autoFixture.Create<GetSelectFundingOptionsResponse>();
 
         approvalsApiClient = new Mock<IApprovalsApiClient>();
-        approvalsApiClient.Setup(x => x.GetCohortDetails(It.Is<long>(t=>t == Source.AccountId), It.Is<long>(t=>t == Source.CohortId)))
+        approvalsApiClient.Setup(x => x.GetCohortDetails(It.Is<long>(t => t == Source.AccountId), It.Is<long>(t => t == Source.CohortId)))
             .ReturnsAsync(Cohort);
 
-        approvalsApiClient.Setup(x => x.GetSelectFundingOptions(It.Is<long>(t=>t == Source.AccountId)))
+        approvalsApiClient.Setup(x => x.GetSelectFundingOptions(It.Is<long>(t => t == Source.AccountId)))
             .ReturnsAsync(selectFundingOptions);
 
         Mapper = new FinishedRequestToFinishedViewModelMapper(approvalsApiClient.Object);
