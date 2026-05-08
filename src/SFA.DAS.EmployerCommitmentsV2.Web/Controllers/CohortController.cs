@@ -16,7 +16,6 @@ using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.Encoding;
 using SFA.DAS.Http;
-using StructureMap.Query;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Controllers;
 
@@ -52,20 +51,20 @@ public class CohortController(
         {
             case CohortDetailsOptions.Send:
             case CohortDetailsOptions.Approve:
-            {
-                var request = await modelMapper.Map<AcknowledgementRequest>(viewModel);
-                var acknowledgementAction = viewModel.Selection == CohortDetailsOptions.Approve ? "Approved" : "Sent";
-                return RedirectToAction(acknowledgementAction, request);
-            }
+                {
+                    var request = await modelMapper.Map<AcknowledgementRequest>(viewModel);
+                    var acknowledgementAction = viewModel.Selection == CohortDetailsOptions.Approve ? "Approved" : "Sent";
+                    return RedirectToAction(acknowledgementAction, request);
+                }
             case CohortDetailsOptions.ViewEmployerAgreement:
-            {
-                var request = await modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
-                return ViewEmployeeAgreementRedirect(request);
-            }
+                {
+                    var request = await modelMapper.Map<ViewEmployerAgreementRequest>(viewModel);
+                    return ViewEmployeeAgreementRedirect(request);
+                }
             case CohortDetailsOptions.Homepage:
-            {
-                return Redirect(linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
-            }
+                {
+                    return Redirect(linkGenerator.AccountsLink($"accounts/{viewModel.AccountHashedId}/teams"));
+                }
             default:
                 throw new ArgumentOutOfRangeException(nameof(viewModel.Selection));
         }
@@ -292,10 +291,12 @@ public class CohortController(
         {
             case WhoIsAddingApprentices.Employer:
                 return RedirectToAction(RouteNames.CohortApprentice, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
+
             case WhoIsAddingApprentices.Provider:
                 var request = await modelMapper.Map<CreateCohortWithOtherPartyRequest>(cacheModel);
                 var response = await commitmentsApiClient.CreateCohort(request);
                 return RedirectToAction("Finished", new { cacheModel.AccountHashedId, response.CohortReference, cacheModel.ApprenticeshipSessionKey });
+
             default:
                 return RedirectToAction("Error", "Error");
         }
@@ -573,14 +574,14 @@ public class CohortController(
     public async Task<IActionResult> SelectFunding([FromQuery] Guid apprenticeshipSessionKey)
     {
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(apprenticeshipSessionKey);
-        
+
         if (cacheModel.EncodedPledgeApplicationId != null || cacheModel.TransferSenderId != null)
         {
             return RedirectToCohortSelectProvider(cacheModel);
         }
 
         var viewModel = await modelMapper.Map<SelectFundingViewModel>(cacheModel);
-        
+
         if (ShouldRedirectToProvider(viewModel))
         {
             return RedirectToCohortSelectProvider(cacheModel);
@@ -606,16 +607,18 @@ public class CohortController(
         {
             case FundingType.LtmTransfers:
                 return RedirectToAction(RouteNames.CohortSelectAcceptedLevyTransferConnection, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
+
             case FundingType.DirectTransfers:
                 return RedirectToAction(RouteNames.CohortSelectDirectTransferConnection, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
+
             case FundingType.UnallocatedReservations:
-            {
-                var url = linkGenerator.ReservationsLink(
-                    $"accounts/{cacheModel.AccountHashedId}/reservations/{cacheModel.AccountLegalEntityHashedId}/select?" +
-                    $"&beforeProviderSelected=true" +
-                    $"&apprenticeshipSessionKey={cacheModel.ApprenticeshipSessionKey}");
-                return Redirect(url);
-            }
+                {
+                    var url = linkGenerator.ReservationsLink(
+                        $"accounts/{cacheModel.AccountHashedId}/reservations/{cacheModel.AccountLegalEntityHashedId}/select?" +
+                        $"&beforeProviderSelected=true" +
+                        $"&apprenticeshipSessionKey={cacheModel.ApprenticeshipSessionKey}");
+                    return Redirect(url);
+                }
             default:
                 return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
         }
@@ -681,7 +684,6 @@ public class CohortController(
 
         return RedirectToAction(RouteNames.CohortSelectProvider, new { cacheModel.AccountHashedId, cacheModel.ApprenticeshipSessionKey });
     }
-
 
     [HttpGet]
     [Route(RouteNames.CohortAgreementNotSigned)]
@@ -775,7 +777,7 @@ public class CohortController(
             model.StandardPageUrl = fundingBandData?.StandardPageUrl;
         }
     }
-    
+
     private IActionResult RedirectToCohortSelectProvider(AddApprenticeshipCacheModel cacheModel)
     {
         return RedirectToAction(RouteNames.CohortSelectProvider, new
@@ -784,7 +786,7 @@ public class CohortController(
             cacheModel.ApprenticeshipSessionKey
         });
     }
-    
+
     private bool ShouldRedirectToProvider(SelectFundingViewModel viewModel)
     {
         return viewModel.IsLevyAccount && !viewModel.HasDirectTransfersAvailable && !viewModel.HasLtmTransfersAvailable;
