@@ -82,7 +82,7 @@
 
     <div class="govuk-form-group">
         <fieldset class="govuk-fieldset">
-            
+
             <div class="govuk-form-group govuk-!-margin-bottom-0 @Html.AddClassIfPropertyInError(x => x.Uln, "govuk-form-group--error")">
                 @Html.ValidationMessageFor(m => m.Uln, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.Uln) })
                 <dl class="govuk-summary-list govuk-!-margin-bottom-0">
@@ -154,25 +154,29 @@
                         </dd>
                     </div>
                 </dl>
-                <details class="govuk-details govuk-!-margin-top-4" data-module="govuk-details">
-                    <summary class="govuk-details__summary">
-                        <span class="govuk-details__summary-text">
-                            Why do we need an email address?
-                        </span>
-                    </summary>
-                    <div class="govuk-details__text">
-                        Your apprentice will receive an email alert inviting them to the My apprenticeship service. On
-                        the service, your apprentice will be able to:
-                        <ul class="govuk-list govuk-list--bullet">
-                            <li>review and confirm their apprenticeship details</li>
-                            <li>
-                                understand the roles and responsibilities of an apprentice, an employer and a training
-                                provider
-                            </li>
-                            <li>find help and support during their apprenticeship</li>
-                        </ul>
-                    </div>
-                </details>
+
+                @if (Model.LearningType != SFA.DAS.Common.Domain.Types.LearningType.ApprenticeshipUnit)
+                {
+                    <details class="govuk-details govuk-!-margin-top-4" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                Why do we need an email address?
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            Your apprentice will receive an email alert inviting them to the My apprenticeship service. On
+                            the service, your apprentice will be able to:
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>review and confirm their apprenticeship details</li>
+                                <li>
+                                    understand the roles and responsibilities of an apprentice, an employer and a training
+                                    provider
+                                </li>
+                                <li>find help and support during their apprenticeship</li>
+                            </ul>
+                        </div>
+                    </details>
+                }
             </div>
         </fieldset>
     </div>
@@ -210,7 +214,7 @@
             </div>
         </dl>
     </div>
-    
+
     @if (Model.TrainingPrice.HasValue)
     {
         <div class="govuk-form-group govuk-!-margin-bottom-0 @Html.AddClassIfPropertyInError(x => x.TrainingPrice, "govuk-form-group--error")">
@@ -228,7 +232,7 @@
             </dl>
         </div>
     }
-    
+
     @if (Model.EndPointAssessmentPrice.HasValue)
     {
         <div class="govuk-form-group govuk-!-margin-bottom-0 @Html.AddClassIfPropertyInError(x => x.EndPointAssessmentPrice, "govuk-form-group--error")">
@@ -280,11 +284,13 @@
         </div>
     </div>
 
-    <div class="govuk-inset-text">
-        <h2 class="govuk-heading-s">End-point assessments</h2>
-        <p>We'll ask you to confirm the <a class="govuk-link" href="https://www.gov.uk/government/publications/using-the-register-of-apprentice-assessment-organisations" target="_blank" title="Opens in a new window">apprentice assessment organisation</a> for this apprentice. We'll do this before the end of the apprenticeship.</p>
-    </div>
-
+    @if (Model.LearningType != SFA.DAS.Common.Domain.Types.LearningType.ApprenticeshipUnit)
+    {
+        <div class="govuk-inset-text">
+            <h2 class="govuk-heading-s">End-point assessments</h2>
+            <p>We'll ask you to confirm the <a class="govuk-link" href="https://www.gov.uk/government/publications/using-the-register-of-apprentice-assessment-organisations" target="_blank" title="Opens in a new window">apprentice assessment organisation</a> for this apprentice. We'll do this before the end of the apprenticeship.</p>
+        </div>
+    }
     @if (Model.RecognisePriorLearning.HasValue)
     {
         <h2 class="govuk-heading-m">Prior learning details</h2>
