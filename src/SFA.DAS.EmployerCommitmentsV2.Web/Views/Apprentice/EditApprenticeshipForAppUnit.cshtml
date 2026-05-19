@@ -133,31 +133,6 @@
                 <input type="hidden" asp-for="CourseCode" class="govuk-radios__input" value="@Model.CourseCode">
             }
 
-            @if (Model.HasMultipleDeliveryModelOptions)
-            {
-                <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
-                <div class="govuk-form-group">
-                    <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Apprenticeship delivery model</p>
-                    <p class="govuk-body">
-                        @Model.DeliveryModel.ToDescription()
-                        <button type="submit" name="ChangeDeliveryModel" value="Edit" class="das-button--inline-link">
-                            Edit<span class="govuk-visually-hidden"> apprenticeship delivery model</span>
-                        </button>
-                    </p>
-                </div>
-            }
-            else
-            {
-                if (Model.DeliveryModel != DeliveryModel.Regular)
-                {
-                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
-                    <dl class="das-definition-list">
-                        <dt asp-for="DeliveryModel" class="das-definition-list__title">Apprenticeship delivery model</dt>
-                        <dd class="das-definition-list__definition" id="trainingName">@Model.DeliveryModel.ToDescription()</dd>
-                    </dl>
-                }
-            }
-
             @Html.HiddenFor(x => x.DeliveryModel)
 
             <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6" />
