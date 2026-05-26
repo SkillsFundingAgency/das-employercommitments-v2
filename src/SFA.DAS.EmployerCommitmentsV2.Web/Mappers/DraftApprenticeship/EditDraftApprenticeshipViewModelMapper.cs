@@ -69,7 +69,8 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
             CacheKey = source.Request.CacheKey.IsNotNullOrEmpty() ? source.Request.CacheKey : Guid.NewGuid(),
             StandardPageUrl = draftApprenticeship.StandardPageUrl,
             FundingBandMax = draftApprenticeship.ProposedMaxFunding,
-            LearnerDataId = draftApprenticeship.LearnerDataId
+            LearnerDataId = draftApprenticeship.LearnerDataId,
+            LearningType = draftApprenticeship.LearningType
         };
     }
 }
