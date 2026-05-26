@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.EAS.Account.Api.Client;
+using SFA.DAS.Employer.Shared.UI.Models;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerUrlHelper.Configuration;
 using SFA.DAS.Encoding;
@@ -27,6 +28,8 @@ public static class ConfigurationServiceRegistrations
 
         services.AddConfigurationFor<ZenDeskConfiguration>(configuration, ConfigurationKeys.ZenDeskConfiguration);
         services.AddConfigurationFor<ApprovalsApiClientConfiguration>(configuration, ConfigurationKeys.ApprovalsApiClientConfiguration);
+
+        services.AddOptions<EmployerSharedUIConfiguration>().Bind(configuration.GetSection(ConfigurationKeys.EmployerSharedUIConfiguration)).ValidateOnStart();
 
         return services;
     }
