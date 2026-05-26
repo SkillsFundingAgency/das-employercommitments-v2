@@ -3,7 +3,7 @@
 @using SFA.DAS.EmployerUrlHelper.Mvc
 
 @{
-    ViewBag.Title = "Select organisation";
+    ViewBag.Title = "Choose organisation";
     ViewBag.GaData.Vpv = "/unapproved/legalEntity/create/choose-organisation";
 }
 
@@ -23,7 +23,7 @@
 
         <div class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.LegalEntityId,  "govuk-form-group--error")">
             <div class="govuk-hint">
-                Select which organisation is named on the contract with the training provider
+                    Choose the organisation named on the contract with the training provider for these learners
             </div>
             <fieldset class="govuk-fieldset">
                 @if (!ViewData.ModelState.IsValid)
@@ -46,19 +46,6 @@
             </fieldset>
         </div>
 
-        <details id="service-help" class="govuk-details" data-module="govuk-details">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                    What is a contract for services?
-                </span>
-            </summary>
-            <div class="govuk-details__text">
-                <p> A contract for services is a formal agreement between a buyer and a supplier.</p>
-                <p>In this case, the contract is between the organisation that's buying apprenticeship training for their apprentices and the training provider that's training the apprentices.</p>
-                <p>If you're an employer-provider, for example, you won't need a contract for services as your organisation is both the buyer and the supplier.</p>
-            </div>
-        </details>
-
         @Html.Hidden("TransferConnectionCode", Model.TransferConnectionCode)
         @Html.Hidden("CohortRef", Model.CohortRef)
         @Html.HiddenFor(x => x.EncodedPledgeApplicationId)
@@ -78,7 +65,7 @@
     }
     else
     {
-        <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new {Model.AccountHashedId})">Back to Apprentices</a>
+        <a id="back-link" class="govuk-back-link" href="@Url.Action("Index", "Home", new {Model.AccountHashedId})">Back</a>
     }
 
 }
