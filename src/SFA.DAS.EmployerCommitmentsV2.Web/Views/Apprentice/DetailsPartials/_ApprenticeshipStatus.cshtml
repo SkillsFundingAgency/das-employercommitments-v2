@@ -53,11 +53,14 @@
         <td id="stopDate" class="govuk-table__cell">
             @if (Model.StopDate.HasValue)
             {
-                @Model.StopDate.Value.ToGdsFormatLongMonthWithoutDay()
+                @(Model.IsIlrStopped ? Model.StopDate.Value.ToGdsFormat() : Model.StopDate.Value.ToGdsFormatLongMonthWithoutDay())
             }
         </td>
         <td id="editStopDateLink" class="govuk-table__cell govuk-table__cell--numeric">
-            <a id="edit-stopped-link" class="govuk-link" href="@Url.Action("EditStopDate", new EditStopDateRequest {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Edit</a>
+            @if (Model.CanEditStopDate)
+            {
+                <a id="edit-stopped-link" class="govuk-link" href="@Url.Action("EditStopDate", new EditStopDateRequest {AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId})">Edit</a>
+            }
         </td>
     </tr>
 

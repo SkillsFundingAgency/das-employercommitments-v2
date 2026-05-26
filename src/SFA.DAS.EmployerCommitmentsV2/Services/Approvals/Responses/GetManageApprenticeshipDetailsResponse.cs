@@ -49,6 +49,7 @@ public class GetManageApprenticeshipDetailsResponse
         public string ProviderReference { get; set; }
         public ApprenticeshipStatus Status { get; set; }
         public DateTime? StopDate { get; set; }
+        public int? WithdrawnReasonCode { get; set; }
         public DateTime? PauseDate { get; set; }
         public DateTime? CompletionDate { get; set; }
         public string EndpointAssessorName { get; set; }

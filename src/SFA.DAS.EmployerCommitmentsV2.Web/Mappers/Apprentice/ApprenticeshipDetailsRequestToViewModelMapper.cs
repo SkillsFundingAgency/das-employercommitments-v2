@@ -75,6 +75,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 ActualStartDate = response.Apprenticeship.ActualStartDate,
                 EndDate = response.Apprenticeship.EndDate,
                 StopDate = response.Apprenticeship.StopDate,
+                WithdrawnReasonCode = response.Apprenticeship.WithdrawnReasonCode,
                 PauseDate = response.Apprenticeship.PauseDate,
                 CompletionDate = response.Apprenticeship.CompletionDate,
                 TrainingName = currentTrainingProgramme.Name,

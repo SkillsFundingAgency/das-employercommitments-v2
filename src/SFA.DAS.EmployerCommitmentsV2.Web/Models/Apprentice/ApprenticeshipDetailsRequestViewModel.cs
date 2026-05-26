@@ -17,6 +17,8 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public DateTime? ActualStartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public DateTime? StopDate { get; set; }
+    public int? WithdrawnReasonCode { get; set; }
+    public bool IsIlrStopped => WithdrawnReasonCode.HasValue;
     public DateTime? PauseDate { get; set; }
     public DateTime? CompletionDate { get; set; }
     public ProgrammeType? TrainingType { get; set; }
@@ -33,7 +35,9 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
 
     public bool CanEditStatus => (ApprenticeshipStatus == ApprenticeshipStatus.Live ||
                                   ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart ||
-                                  ApprenticeshipStatus == ApprenticeshipStatus.Paused);
+                                  ApprenticeshipStatus == ApprenticeshipStatus.Paused) &&
+                                 !IsIlrStopped;
+    public bool CanEditStopDate => ApprenticeshipStatus == ApprenticeshipStatus.Stopped && !IsIlrStopped;
 
     public string EmployerReference { get; set; }
     public string CohortReference { get; set; }
