@@ -33,4 +33,5 @@ public interface IApprovalsApiClient
     Task<ValidateEditApprenticeshipResponse> EditApprenticeship(long accountId, long apprenticeshipId, ValidateEditApprenticeshipRequest request, CancellationToken cancellationToken = default);
     Task<ConfirmEditApprenticeshipResponse> ConfirmEditApprenticeship(long accountId, long apprenticeshipId, ConfirmEditApprenticeshipRequest request, CancellationToken cancellationToken = default);
     Task<GetAssignAllowEmployerAddResponse> GetAssignAllowEmployerAdd(string accountHashedId, Guid reservationId);
+    Task<GetChangeHistoryResponse> GetChangeHistory(long apprenticeshipId, CancellationToken cancellationToken = default);
 }
