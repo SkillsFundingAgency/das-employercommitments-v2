@@ -4,7 +4,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 public class ChangeHistoryListViewModel
 {
-    public List<ChangeHistoryViewModel> ChangeHistoryViews { get; set; }
+    public List<ChangeHistoryViewModel> ChangeHistory { get; set; }
 
     public string Name { get; set; }
 
@@ -18,6 +18,8 @@ public class ChangeHistoryViewModel
     public string Description { get; set; }
 
     public LearningChangeType ChangeType { get; set; }
+
+    public Guid Id { get; set; }
 }
 
 public enum LearningChangeType : byte

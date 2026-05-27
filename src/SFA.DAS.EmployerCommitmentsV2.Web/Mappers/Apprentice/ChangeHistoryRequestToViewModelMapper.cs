@@ -16,11 +16,12 @@ public class ChangeHistoryRequestToViewModelMapper(IApprovalsApiClient approvals
         return new ChangeHistoryListViewModel
         {
             ApprenticeshipHashedId = source.ApprenticeshipHashedId,
-            ChangeHistoryViews = [.. changeHistory.ChangeHistory.Select(x => new ChangeHistoryViewModel
+            ChangeHistory = [.. changeHistory.ChangeHistory.Select(x => new ChangeHistoryViewModel
              {
                  Description = x.Description,
                  AppliedDate = x.AppliedDate,
-                 ChangeType = (LearningChangeType)x.ChangeType
+                 ChangeType = (LearningChangeType)x.ChangeType,
+                 Id = x.Id
              })],
             Name = changeHistory.ChangeHistory.FirstOrDefault().LearnerName
         };
