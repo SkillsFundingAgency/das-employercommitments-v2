@@ -147,6 +147,12 @@ public class EditDraftApprenticeshipViewModelMapperTests
     }
 
     [Test]
+    public void LearningTypeIsMappedCorrectly()
+    {
+        _result.LearningType.Should().Be(_draftApprenticeshipResponse.LearningType);
+    }
+
+    [Test]
     public void CostIsMappedCorrectly()
     {
         _result.Cost.Should().Be(_draftApprenticeshipResponse.Cost);

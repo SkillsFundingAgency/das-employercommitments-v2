@@ -9,6 +9,7 @@ using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Middleware;
 using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 using SFA.DAS.EmployerUrlHelper.DependencyResolution;
+using SFA.DAS.GovUK.Auth.Extensions;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web;
 

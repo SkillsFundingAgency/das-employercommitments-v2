@@ -11,7 +11,7 @@
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
 
-        <h1 class="govuk-heading-l">Confirm training provider</h1>
+        <h1 class="govuk-heading-l">@Model.ProviderName</h1>
         
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
@@ -46,7 +46,7 @@
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                         <h1 class="govuk-fieldset__heading">
-                            Is this the main provider of the apprenticeship training?
+                            Is this the main training provider?
                         </h1>
                     </legend>
                     @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(nameof(ConfirmProviderViewModel.UseThisProvider)))
