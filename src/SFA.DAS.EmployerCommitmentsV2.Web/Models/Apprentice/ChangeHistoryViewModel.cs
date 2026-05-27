@@ -22,16 +22,16 @@ public class ChangeHistoryViewModel
 
 public enum LearningChangeType : byte
 {
-    [Description("Change auto approved")]
+    [Description("Auto approved")]
     AutoApproved = 0,
 
-    [Description("Change rejected")]
+    [Description("Rejected")]
     Rejected = 1,
 
-    [Description("Change employer approved")]
+    [Description("Approved")]
     EmployerApproved = 2,
 
-    [Description("Change employer rejected")]
+    [Description("Rejected")]
     EmployerRejected = 3,
 
     [Description("Manual update")]
