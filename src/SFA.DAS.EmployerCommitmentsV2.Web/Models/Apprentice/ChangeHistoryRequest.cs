@@ -6,4 +6,7 @@ public class ChangeHistoryRequest : IAuthorizationContextModel
 {
     [FromRoute]
     public string ApprenticeshipHashedId { get; set; }
+
+    [FromRoute]
+    public string AccountHashedId { get; set; }
 }

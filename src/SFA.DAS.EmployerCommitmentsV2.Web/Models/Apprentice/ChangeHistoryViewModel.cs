@@ -9,6 +9,8 @@ public class ChangeHistoryListViewModel
     public string Name { get; set; }
 
     public string ApprenticeshipHashedId { get; set; }
+
+    public string AccountHashedId  { get; set; }
 }
 
 public class ChangeHistoryViewModel

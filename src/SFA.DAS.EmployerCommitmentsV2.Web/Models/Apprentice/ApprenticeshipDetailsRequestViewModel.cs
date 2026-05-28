@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Apprenticeships.Types;
+﻿using System.Diagnostics;
+using SFA.DAS.Apprenticeships.Types;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
@@ -104,6 +105,7 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public DateTime? WithdrawalChangedDate { get; set; }
     public string WithdrawalReason { get; set; }
     public LearningType? LearningType { get; set; }
+    public bool HasChangeHistory { get; set; }
 
     public ActionRequiredBanner GetActionRequiredBanners()
     {

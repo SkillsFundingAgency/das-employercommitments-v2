@@ -16,6 +16,7 @@ public class ChangeHistoryRequestToViewModelMapper(IApprovalsApiClient approvals
         return new ChangeHistoryListViewModel
         {
             ApprenticeshipHashedId = source.ApprenticeshipHashedId,
+            AccountHashedId = source.AccountHashedId,
             ChangeHistory = [.. changeHistory.ChangeHistory.Select(x => new ChangeHistoryViewModel
              {
                  Description = x.Description,

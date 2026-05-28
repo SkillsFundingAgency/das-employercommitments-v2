@@ -70,5 +70,7 @@
 </table>
 
 @section back {
-    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", "Apprentice", new { Model.ApprenticeshipHashedId })">Back</a>
+    
+    <a id="back-link" class="govuk-back-link" asp-controller="Apprentice" asp-action="ApprenticeDetail" asp-route-accountHashedId="@Model.AccountHashedId"
+          asp-route-apprenticeshipHashedId="@Model.ApprenticeshipHashedId">Back</a>
 }
