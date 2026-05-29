@@ -4,7 +4,6 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.Common.Domain.Types;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
@@ -1254,6 +1253,14 @@ public class ApprenticeController(
             viewModel.AccountHashedId,
             viewModel.ApprenticeshipHashedId
         });
+    }
+
+    [Route("{apprenticeshipHashedId}/changehistory")]
+    [HttpGet]
+    public async Task<IActionResult> ChangeHistory(ChangeHistoryRequest request)
+    {
+        var viewModel = await modelMapper.Map<ChangeHistoryListViewModel>(request);
+        return View(viewModel);
     }
 
     private async Task<Guid> StoreEditApprenticeshipRequestViewModelInCache(EditApprenticeshipRequestViewModel model, Guid? key)

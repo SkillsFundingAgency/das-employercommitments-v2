@@ -137,7 +137,8 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 WithdrawalChangedDate = response.LearnerStatusDetails.WithdrawalChangedDate,
                 WithdrawalReason = response.LearnerStatusDetails.WithdrawalReason,
                 EmploymentStatus = MapEmploymentStatus(response.Apprenticeship.EmployerVerificationStatus, response.Apprenticeship.EmployerVerificationNotes),
-                LearningType = response.Apprenticeship.LearningType
+                LearningType = response.Apprenticeship.LearningType,
+                HasChangeHistory = response.Apprenticeship.HasChangeHistory
             };
 
             return result;
