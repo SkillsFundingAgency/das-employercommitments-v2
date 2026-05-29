@@ -19,7 +19,7 @@
 
         <h1 class="govuk-heading-xl" id="learnerName"><span class="das-breakable">@Model.ApprenticeName</span></h1>
 
-        if(@Model.HasChangeHistory)
+        @if(Model.HasChangeHistory)
         {
         <p>
             <a class="govuk-link" asp-controller="Apprentice" asp-action="ChangeHistory" asp-route-accountHashedId="@Model.AccountHashedId" 
