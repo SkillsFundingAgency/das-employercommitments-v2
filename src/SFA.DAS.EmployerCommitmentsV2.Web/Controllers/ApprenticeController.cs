@@ -1257,8 +1257,9 @@ public class ApprenticeController(
 
     [Route("{apprenticeshipHashedId}/changehistory")]
     [HttpGet]
-    public async Task<IActionResult> ChangeHistory(ChangeHistoryRequest request)
+    public async Task<IActionResult> ChangeHistory(string apprenticeshipHashedId, ChangeHistoryRequest request)
     {
+        request.ApprenticeshipHashedId = apprenticeshipHashedId;
         var viewModel = await modelMapper.Map<ChangeHistoryListViewModel>(request);
         return View(viewModel);
     }

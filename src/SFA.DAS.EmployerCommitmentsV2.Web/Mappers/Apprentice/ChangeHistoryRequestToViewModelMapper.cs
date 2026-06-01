@@ -24,7 +24,7 @@ public class ChangeHistoryRequestToViewModelMapper(IApprovalsApiClient approvals
                  ChangeType = (LearningChangeType)x.ChangeType,
                  Id = x.Id
              })],
-            Name = changeHistory.ChangeHistory.FirstOrDefault().LearnerName
+            Name = changeHistory.ChangeHistory.FirstOrDefault()?.LearnerName
         };
     }
 }

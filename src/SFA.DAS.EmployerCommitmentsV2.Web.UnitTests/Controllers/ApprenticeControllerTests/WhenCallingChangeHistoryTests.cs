@@ -38,7 +38,7 @@ public class WhenCallingChangeHistoryTestsFixture : ApprenticeControllerTestFixt
 
     public async Task<IActionResult> GetChangeHistory()
     {
-        return await Controller.ChangeHistory(_request);
+        return await Controller.ChangeHistory(_request.ApprenticeshipHashedId, _request);
     }
 
     public void VerifyViewModel(ViewResult viewResult)
