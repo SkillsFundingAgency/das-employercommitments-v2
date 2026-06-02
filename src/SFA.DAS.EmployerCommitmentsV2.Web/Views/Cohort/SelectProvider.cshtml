@@ -6,7 +6,7 @@
 
 @inject IHttpContextAccessor ContextAccessor;
 @{
-    ViewData["Title"] = "Apprenticeships";
+    ViewData["Title"] = "Trainings";
     ViewBag.Title = "Add training provider details";
     ViewBag.GaData.Vpv = "/unapproved/add/select-provider";
     ViewBag.GaData.Org = Model.LegalEntityName;
@@ -21,10 +21,8 @@
             <partial name="_SelectProviderHiddenPartial" model="@Model"/>
             @Html.AntiForgeryToken()
             <div class="govuk-form-group">
-                <h1 class="govuk-heading-l">Select your training provider</h1>
-                <p class="govuk-body">
-                    Before you can add your apprentice, you need to add the training provider for this apprenticeship.
-                </p>
+                <h1 class="govuk-heading-l">Choose your main training provider</h1>
+                
                 <div class=" @Html.AddClassIfPropertyInError(x => x.ProviderId, "govuk-form-group--error")">
                     <span id="provider-hint" class="govuk-hint">Start typing your training provider’s name or UKPRN, and
                         select from the suggestions</span>
@@ -51,7 +49,7 @@
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
-                        Help with training provider
+                        Help with finding a training provider
                     </span>
                 </summary>
                 <div class="govuk-details__text">

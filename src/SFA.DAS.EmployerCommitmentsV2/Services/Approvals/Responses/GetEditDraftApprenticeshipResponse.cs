@@ -1,4 +1,7 @@
-﻿using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SFA.DAS.Common.Domain.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
@@ -49,4 +52,6 @@ public class GetEditDraftApprenticeshipResponse
     public string StandardPageUrl { get; set; }
     public int? ProposedMaxFunding { get; set; }
     public long? LearnerDataId { get; set; }
+    [JsonConverter(typeof(StringEnumConverter))]
+    public LearningType? LearningType { get; set; }
 }
