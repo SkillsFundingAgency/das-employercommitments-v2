@@ -434,7 +434,10 @@ public class CohortController(
     {
         var response = await modelMapper.Map<FinishedViewModel>(request);
         var cacheModel = await GetAddApprenticeshipCacheModelFromCache(request.ApprenticeshipSessionKey);
-        response.FundingSource = cacheModel.FundingType.GetEnumDescription();
+        if (cacheModel.FundingType is not null)
+        {
+            response.FundingSource = cacheModel.FundingType.GetEnumDescription();
+        }
         return View(response);
     }
 

@@ -58,6 +58,35 @@ public class WhenCallingFinished
         result.Model.Should().BeEquivalentTo(viewModel);
     }
 
+    [Test, MoqAutoData]
+    public async Task ThenReturnsViewWithNoLearningType(
+        FinishedViewModel viewModel,
+        FinishedRequest request,
+        AddApprenticeshipCacheModel cacheModel,
+        [Frozen] Mock<IModelMapper> mockMapper,
+        [Frozen] Mock<ICacheStorageService> cacheStorageService,
+        [Greedy] CohortController controller)
+    {
+        cacheModel.ApprenticeshipSessionKey = (Guid)request.ApprenticeshipSessionKey;
+        cacheModel.FundingType = null; 
+        viewModel.FundingSource = null;
+        cacheStorageService
+           .Setup(x => x.RetrieveFromCache<AddApprenticeshipCacheModel>(cacheModel.ApprenticeshipSessionKey))
+           .ReturnsAsync(cacheModel);
+
+        mockMapper
+            .Setup(mapper => mapper.Map<FinishedViewModel>(request))
+            .ReturnsAsync(viewModel);
+
+        var result = await controller.Finished(request) as ViewResult;
+        var model  =  result.Model as FinishedViewModel;
+        model.FundingSource.Should().BeNull();
+        result.Should().NotBeNull();
+        result.ViewName.Should().BeNull();
+        result.Model.Should().BeEquivalentTo(viewModel);
+    }
+
+
     [TestCase(FundingType.DirectTransfers, "Transfer funds from a connection")]
     [TestCase(FundingType.UnallocatedReservations, "Reserved funds")]
     [TestCase(FundingType.AdditionalReservations, "New reserved funds")]
