@@ -1,17 +1,14 @@
 ﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
-public class ChangeHistoryRequestToViewModelMapper(IApprovalsApiClient approvalsApiClient,
-        IEncodingService encodingService) : IMapper<ChangeHistoryRequest, ChangeHistoryListViewModel>
+public class ChangeHistoryRequestToViewModelMapper(IApprovalsApiClient approvalsApiClient) : IMapper<ChangeHistoryRequest, ChangeHistoryListViewModel>
 {
     public async Task<ChangeHistoryListViewModel> Map(ChangeHistoryRequest source)
     {
-        var apprenticeshipId = encodingService.Decode(source.ApprenticeshipHashedId, EncodingType.ApprenticeshipId);
-        var changeHistory = await approvalsApiClient.GetChangeHistory(apprenticeshipId);
+        var changeHistory = await approvalsApiClient.GetChangeHistory(source.ApprenticeshipId);
 
         return new ChangeHistoryListViewModel
         {

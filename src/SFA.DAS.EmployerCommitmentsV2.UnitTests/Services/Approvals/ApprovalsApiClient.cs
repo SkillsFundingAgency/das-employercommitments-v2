@@ -136,7 +136,7 @@ public class ApprovalsApiClientTests
     public async Task When_Calling_GetChangeHistory_Then_The_Data_Is_Returned(long id, GetChangeHistoryResponse response)
     {
         var outerApiClient = new Mock<IOuterApiClient>();
-        var expectedUrl = $"changehistory/{id}";
+        var expectedUrl = $"change-history/{id}";
         outerApiClient.Setup(x => x.Get<GetChangeHistoryResponse>(expectedUrl)).ReturnsAsync(response);
         var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
 

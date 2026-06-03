@@ -14,7 +14,6 @@ public class ChangeHistoryRequestToViewModelMapperTests
     private ChangeHistoryRequest _request;
 
     private GetChangeHistoryResponse _getChangeHistoryResponse;
-    private ChangeHistoryViewModel _historyViewModel;
 
     private Mock<IApprovalsApiClient> _mockApprovalsApiClient;
     private Mock<IEncodingService> _encodingService;
@@ -33,8 +32,6 @@ public class ChangeHistoryRequestToViewModelMapperTests
             .With(x => x.ChangeHistory)
             .Create();
 
-        _historyViewModel = _fixture.Create<ChangeHistoryViewModel>();
-
         _getChangeHistoryResponse = _fixture.Create<GetChangeHistoryResponse>();
 
         _mockApprovalsApiClient = new Mock<IApprovalsApiClient>();
@@ -47,8 +44,7 @@ public class ChangeHistoryRequestToViewModelMapperTests
             .Setup(c => c.Decode(It.Is<string>(t => t == _request.ApprenticeshipHashedId), It.Is<EncodingType>(e => e == EncodingType.ApprenticeshipId)))
             .Returns(apprenticeShipId);
 
-        _mapper = new ChangeHistoryRequestToViewModelMapper(_mockApprovalsApiClient.Object,
-           _encodingService.Object);
+        _mapper = new ChangeHistoryRequestToViewModelMapper(_mockApprovalsApiClient.Object);
     }
 
     [Test]

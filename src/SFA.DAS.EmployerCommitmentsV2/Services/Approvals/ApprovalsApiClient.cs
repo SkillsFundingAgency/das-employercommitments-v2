@@ -160,6 +160,6 @@ public class ApprovalsApiClient(IOuterApiClient client) : IApprovalsApiClient
 
     public Task<GetChangeHistoryResponse> GetChangeHistory(long apprenticeshipId, CancellationToken cancellationToken = default)
     {
-        return client.Get<GetChangeHistoryResponse>($"changehistory/{apprenticeshipId}");
+        return client.Get<GetChangeHistoryResponse>($"change-history/{apprenticeshipId}");
     }
 }

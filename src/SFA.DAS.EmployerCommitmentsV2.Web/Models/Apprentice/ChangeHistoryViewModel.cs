@@ -11,6 +11,8 @@ public class ChangeHistoryListViewModel
     public string ApprenticeshipHashedId { get; set; }
 
     public string AccountHashedId  { get; set; }
+
+    public DateTime ChangeHistoryAvailableFrom { get; set; }
 }
 
 public class ChangeHistoryViewModel

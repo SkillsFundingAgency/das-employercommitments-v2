@@ -33,6 +33,8 @@
     </div>
 </details>
 
+<p>Change history is available from @Model.ChangeHistoryAvailableFrom.ToGdsFormat()</p>
+
 <table class="govuk-table das-table--condensed das-table--responsive das-table--double-arrows">
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
@@ -71,6 +73,6 @@
 
 @section back {
     
-    <a id="back-link" class="govuk-back-link" asp-controller="Apprentice" asp-action="ApprenticeDetail" asp-route-accountHashedId="@Model.AccountHashedId"
+    <a id="back-link" class="govuk-back-link" asp-route="@RouteNames.ApprenticeDetail" asp-route-accountHashedId="@Model.AccountHashedId"
           asp-route-apprenticeshipHashedId="@Model.ApprenticeshipHashedId">Back</a>
 }
