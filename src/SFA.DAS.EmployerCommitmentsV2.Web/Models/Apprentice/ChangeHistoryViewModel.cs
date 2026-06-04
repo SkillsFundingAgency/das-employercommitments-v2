@@ -12,7 +12,7 @@ public class ChangeHistoryListViewModel
 
     public string AccountHashedId  { get; set; }
 
-    public DateTime ChangeHistoryAvailableFrom { get; set; }
+    public DateTime ChangeHistoryAvailableFrom { get; set; } = DateTime.UtcNow;
 }
 
 public class ChangeHistoryViewModel
