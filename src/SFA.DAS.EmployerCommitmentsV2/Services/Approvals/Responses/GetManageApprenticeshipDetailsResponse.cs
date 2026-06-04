@@ -16,10 +16,6 @@ public class GetManageApprenticeshipDetailsResponse
     public IReadOnlyCollection<GetChangeOfProviderLinkResponse.ChangeOfProviderLink> ChangeOfProviderChain { get; set; }
     public IReadOnlyCollection<GetApprenticeshipOverlappingTrainingDateResponse.ApprenticeshipOverlappingTrainingDate> OverlappingTrainingDateRequest { get; set; }
     public bool HasMultipleDeliveryModelOptions { get; set; }
-    public PendingPriceChangeDetails PendingPriceChange { get; set; }
-    public PendingStartDateChangeDetails PendingStartDateChange { get; set; }
-    public PaymentsStatusDetails PaymentsStatus { get; set; }
-    public LearnerStatusDetails LearnerStatusDetails { get; set; }
 
     public class GetApprenticeshipResponse
     {
@@ -49,6 +45,7 @@ public class GetManageApprenticeshipDetailsResponse
         public string ProviderReference { get; set; }
         public ApprenticeshipStatus Status { get; set; }
         public DateTime? StopDate { get; set; }
+        public int? WithdrawnReasonCode { get; set; }
         public DateTime? PauseDate { get; set; }
         public DateTime? CompletionDate { get; set; }
         public string EndpointAssessorName { get; set; }
@@ -196,36 +193,4 @@ public class GetManageApprenticeshipDetailsResponse
 
         public IReadOnlyCollection<ApprenticeshipOverlappingTrainingDate> ApprenticeshipOverlappingTrainingDates { get; set; }
     }
-
-    public class PendingPriceChangeDetails
-    {
-        public decimal Cost { get; set; }
-        public decimal? TrainingPrice { get; set; }
-        public decimal? EndPointAssessmentPrice { get; set; }
-        public DateTime? ProviderApprovedDate { get; set; }
-        public DateTime? EmployerApprovedDate { get; set; }
-    }
-
-    public class PendingStartDateChangeDetails
-    {
-        public DateTime PendingActualStartDate { get; set; }
-        public DateTime PendingPlannedEndDate { get; set; }
-        public string Initiator { get; set; }
-        public DateTime? ProviderApprovedDate { get; set; }
-        public DateTime? EmployerApprovedDate { get; set; }
-    }
-
-    public class PaymentsStatusDetails
-    {
-        public bool PaymentsFrozen { get; set; }
-        public string ReasonFrozen { get; set; }
-        public DateTime? FrozenOn { get; set; }
-    }
-}
-
-public class LearnerStatusDetails
-{
-    public LearnerStatus LearnerStatus { get; set; }
-    public DateTime? WithdrawalChangedDate { get; set; }
-    public string WithdrawalReason { get; set; }
 }

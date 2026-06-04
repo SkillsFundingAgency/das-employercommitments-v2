@@ -35,6 +35,8 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
                                   ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart ||
                                   ApprenticeshipStatus == ApprenticeshipStatus.Paused);
 
+    public int? WithdrawnReasonCode { get; set; }
+    public bool CanEditStopDate => ApprenticeshipStatus == ApprenticeshipStatus.Stopped && WithdrawnReasonCode == null;
     public string EmployerReference { get; set; }
     public string CohortReference { get; set; }
     public string EmploymentStatus { get; set; }
@@ -82,27 +84,8 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public int? TrainingTotalHours { get; set; }
     public int? DurationReducedByHours { get; set; }
     public bool? IsDurationReducedByRpl { get; set; }
-
     public bool HasPendingOverlappingTrainingDateRequest { get; set; }
-
     public bool HasMultipleDeliveryModelOptions { get; set; }
-    public string PaymentStatus { get; set; }
-    public PendingPriceChange PendingPriceChange { get; set; }
-    public bool HasPendingPriceChange => PendingPriceChange != null;
-    public PendingStartDateChange PendingStartDateChange { get; set; }
-    public bool HasPendingStartDateChange => PendingStartDateChange != null;
-    public bool HasPendingProviderInitiatedPriceChange => PendingPriceChange?.ProviderApprovedDate != null;
-    public bool HasPendingProviderInitiatedStartDateChange => PendingStartDateChange != null;
-    public bool HasWithheldPayment => PaymentStatus == "Withheld";
-    public string PriceChangeUrl { get; set; }
-    public string PendingPriceChangeUrl { get; set; }
-    public string PendingStartDateChangeUrl { get; set; }
-    public string PaymentStatusChangeUrl { get; set; }
-    public ApprenticeDetailsBanners ShowBannersFlags { get; set; }
-    public LearnerStatus LearnerStatus { get; set; }
-    public DateTime? PaymentFrozenOn { get; set; }
-    public DateTime? WithdrawalChangedDate { get; set; }
-    public string WithdrawalReason { get; set; }
     public LearningType? LearningType { get; set; }
 
     public ActionRequiredBanner GetActionRequiredBanners()

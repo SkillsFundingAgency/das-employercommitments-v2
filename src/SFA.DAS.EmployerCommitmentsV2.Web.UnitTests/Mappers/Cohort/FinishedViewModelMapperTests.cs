@@ -72,10 +72,10 @@ public class FinishedViewModelMapperTestsFixture
         selectFundingOptions = _autoFixture.Create<GetSelectFundingOptionsResponse>();
 
         approvalsApiClient = new Mock<IApprovalsApiClient>();
-        approvalsApiClient.Setup(x => x.GetCohortDetails(It.Is<long>(t => t == Source.AccountId), It.Is<long>(t => t == Source.CohortId)))
+        approvalsApiClient.Setup(x => x.GetCohortDetails(It.Is<long>(t => t == Source.AccountId), It.Is<long>(t => t == Source.CohortId), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Cohort);
 
-        approvalsApiClient.Setup(x => x.GetSelectFundingOptions(It.Is<long>(t => t == Source.AccountId)))
+        approvalsApiClient.Setup(x => x.GetSelectFundingOptions(It.Is<long>(t => t == Source.AccountId), It.IsAny<CancellationToken>()))
             .ReturnsAsync(selectFundingOptions);
 
         Mapper = new FinishedRequestToFinishedViewModelMapper(approvalsApiClient.Object);

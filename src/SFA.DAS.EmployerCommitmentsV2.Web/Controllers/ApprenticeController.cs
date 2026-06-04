@@ -704,10 +704,9 @@ public class ApprenticeController(
     [HttpGet]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
-    public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, ApprenticeDetailsBanners banners = 0)
+    public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request)
     {
         var viewModel = await modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
-        viewModel.ShowBannersFlags = banners;
         return View("details", viewModel);
     }
 

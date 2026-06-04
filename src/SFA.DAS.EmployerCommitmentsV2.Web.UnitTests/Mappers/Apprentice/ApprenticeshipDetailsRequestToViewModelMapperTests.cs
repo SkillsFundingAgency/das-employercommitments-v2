@@ -369,44 +369,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.That(statusText, Is.EqualTo(result.ApprenticeshipStatus.GetDescription()));
         }
 
-        [TestCase(LearnerStatus.WaitingToStart, "Waiting to start")]
-        [TestCase(LearnerStatus.InLearning, "In learning")]
-        [TestCase(LearnerStatus.BreakInLearning, "Break in learning")]
-        [TestCase(LearnerStatus.Withdrawn, "Withdrawn")]
-        [TestCase(LearnerStatus.Completed, "Completed")]
-        public async Task LearnerStatus_IsMapped(LearnerStatus status, string statusText)
-        {
-            //Arrange
-            GetManageApprenticeshipDetailsResponse.LearnerStatusDetails = new LearnerStatusDetails { LearnerStatus = status };
-
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            var learnerStatus = result.LearnerStatus.GetDescription();
-            learnerStatus.Should().Be(statusText);
-        }
-
-        [Test]
-        public async Task WithdrawalChangedDate_IsMapped()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            result.WithdrawalChangedDate.Should().Be(GetManageApprenticeshipDetailsResponse.LearnerStatusDetails.WithdrawalChangedDate);
-        }
-
-        [Test]
-        public async Task WithdrawalReason_IsMapped()
-        {
-            //Act
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            result.WithdrawalReason.Should().Be(GetManageApprenticeshipDetailsResponse.LearnerStatusDetails.WithdrawalReason);
-        }
-
         [Test]
         public async Task LearningType_IsMapped()
         {
@@ -1005,57 +967,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             //Assert
             Assert.That(expected, Is.EqualTo(result.EnableEdit));
-        }
-
-        [Test]
-        public async Task And_PriceChangeDetailsIsNull_Then_PriceChangeDetailsNotReturned()
-        {
-            GetManageApprenticeshipDetailsResponse.PendingPriceChange = null;
-
-            var result = await _mapper.Map(_request);
-
-            result.PendingPriceChange.Should().BeNull();
-        }
-
-        [Test]
-        public async Task And_PriceChangeDetailsArePopulated_Then_PriceChangeDetailsReturned()
-        {
-            var result = await _mapper.Map(_request);
-
-            Assert.IsNotNull(result.PendingPriceChange);
-            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.Cost, result.PendingPriceChange.Cost);
-            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EndPointAssessmentPrice, result.PendingPriceChange.EndPointAssessmentPrice);
-            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.TrainingPrice, result.PendingPriceChange.TrainingPrice);
-            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.ProviderApprovedDate, result.PendingPriceChange.ProviderApprovedDate);
-            Assert.AreEqual(GetManageApprenticeshipDetailsResponse.PendingPriceChange.EmployerApprovedDate, result.PendingPriceChange.EmployerApprovedDate);
-        }
-
-        [TestCase(false, true, "Inactive")]
-        [TestCase(true, false, "Withheld")]
-        [TestCase(false, false, "Active")]
-        [TestCase(true, true, "Withheld")]
-        public async Task ThenPaymentStatusIsMappedCorrectly(bool paymentsFrozen, bool waitingToStart, string expectedStatus)
-        {
-            //Act
-            GetManageApprenticeshipDetailsResponse.LearnerStatusDetails = waitingToStart ? new LearnerStatusDetails { LearnerStatus = LearnerStatus.WaitingToStart } : new LearnerStatusDetails { LearnerStatus = LearnerStatus.InLearning };
-            GetManageApprenticeshipDetailsResponse.PaymentsStatus.PaymentsFrozen = paymentsFrozen;
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            result.PaymentStatus.Should().Be(expectedStatus);
-        }
-
-        [TestCase(true, "/unfreeze")]
-        [TestCase(false, "")]
-        public async Task PaymentStatusChangeUrl_IsMapped(bool paymentsFrozen, string expectedUrlSegment)
-        {
-            //Act
-            GetManageApprenticeshipDetailsResponse.PaymentsStatus.PaymentsFrozen = paymentsFrozen;
-            var result = await _mapper.Map(_request);
-
-            //Assert
-            result.PaymentStatusChangeUrl.Should()
-                .Be($"https://apprenticeshipdetails.{MockUrlBuilderEnvironment}-eas.apprenticeships.education.gov.uk/employer/{_request.AccountHashedId}/PaymentsFreeze/{_request.ApprenticeshipHashedId}{expectedUrlSegment}");
         }
 
         [Test]
