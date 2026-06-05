@@ -4,7 +4,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 public class ChangeHistoryListViewModel
 {
-    public List<ChangeHistoryViewModel> ChangeHistory { get; set; }
+    public List<ChangeHistoryViewModel> ChangeHistory { get; set; } = [];
 
     public string Name { get; set; }
 
