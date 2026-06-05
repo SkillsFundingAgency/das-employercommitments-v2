@@ -116,6 +116,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             GetManageApprenticeshipDetailsResponse = autoFixture.Build<GetManageApprenticeshipDetailsResponse>()
                .With(x => x.HasMultipleDeliveryModelOptions, false)
+               .With(x => x.Apprenticeship, _apprenticeshipResponse)
                .With(x => x.ApprenticeshipUpdates)
                .With(x => x.ChangeOfPartyRequests)
                .With(x => x.PriceEpisodes, new List<PriceEpisode> { new() { Cost = 1000, TrainingPrice = 900, EndPointAssessmentPrice = 100, FromDate = DateTime.Now.AddMonths(-1) } })
@@ -132,17 +133,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
        
-        [TestCase(true)]
-        public async Task HasNewerVersionsIsMappedCorrectly(bool hasNewerVersions)
+        [Test]
+        public async Task HasNewerVersionsIsMappedCorrectly()
         {
-            if (!hasNewerVersions)
-            {
-                _newerTrainingProgrammeVersionsResponse.NewerVersions = new List<TrainingProgramme>();
-            }
-
             var result = await _mapper.Map(_request);
 
-            Assert.That(hasNewerVersions, Is.EqualTo(result.HasNewerVersions));
+            result.HasNewerVersions.Should().BeTrue();
         }
 
         [Test]
