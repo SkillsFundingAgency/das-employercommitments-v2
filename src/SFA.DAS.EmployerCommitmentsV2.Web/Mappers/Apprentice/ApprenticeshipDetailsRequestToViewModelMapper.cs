@@ -127,7 +127,8 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 HasMultipleDeliveryModelOptions = response.HasMultipleDeliveryModelOptions,
                 EmploymentStatus = MapEmploymentStatus(response.Apprenticeship.EmployerVerificationStatus, response.Apprenticeship.EmployerVerificationNotes),
                 LearningType = response.Apprenticeship.LearningType,
-                WithdrawnReasonCode = response.Apprenticeship.WithdrawnReasonCode
+                WithdrawnReasonCode = response.Apprenticeship.WithdrawnReasonCode,
+                FreezeStatus = response.PaymentsStatus?.FreezeStatus ?? false
             };
 
             return result;

@@ -35,8 +35,8 @@ public class ApprenticeController(
     IApprovalsApiClient outerApi)
     : Controller
 {
-    private const string ApprenticePausedMessage = "Apprenticeship paused";
-    private const string ApprenticeResumeMessage = "Apprenticeship resumed";
+    private const string PaymentsFrozenMessage = "Payments paused";
+    private const string PaymentsUnfrozenMessage = "Payments resumed";
     private const string ApprenticeStoppedMessage = "Apprenticeship stopped";
     private const string ApprenticeUpdated = "You have updated apprentice details";
     private const string ApprenticeEditStopDate = "New stop date confirmed";
@@ -128,19 +128,11 @@ public class ApprenticeController(
     {
         switch (viewModel.SelectedStatusChange)
         {
-            case ChangeStatusType.Pause:
-                return RedirectToAction(nameof(PauseApprenticeship),
-                    new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
-
             case ChangeStatusType.Stop:
                 var redirectToActionName = viewModel.CurrentStatus == ApprenticeshipStatus.WaitingToStart
                     ? nameof(HasTheApprenticeBeenMadeRedundant)
                     : nameof(WhyStopApprenticeship);
                 return RedirectToAction(redirectToActionName,
-                    new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
-
-            case ChangeStatusType.Resume:
-                return RedirectToAction(nameof(ResumeApprenticeship),
                     new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
             default:
@@ -647,25 +639,25 @@ public class ApprenticeController(
         return View(viewModel);
     }
 
-    [Route("{apprenticeshipHashedId}/details/pause")]
+    [Route("{apprenticeshipHashedId}/payments")]
     [HttpGet]
-    public async Task<IActionResult> PauseApprenticeship(PauseRequest request)
+    public async Task<IActionResult> ChangePayments(ChangePaymentsRequest request)
     {
-        var viewModel = await modelMapper.Map<PauseRequestViewModel>(request);
+        var viewModel = await modelMapper.Map<ChangePaymentsRequestViewModel>(request);
         return View(viewModel);
     }
 
-    [Route("{apprenticeshipHashedId}/details/pause")]
+    [Route("{apprenticeshipHashedId}/payments")]
     [HttpPost]
-    public async Task<IActionResult> PauseApprenticeship(PauseRequestViewModel viewModel)
+    public async Task<IActionResult> ChangePayments(ChangePaymentsRequestViewModel viewModel)
     {
-        if (viewModel.PauseConfirmed.HasValue && viewModel.PauseConfirmed.Value)
+        if (viewModel.ChangeConfirmed.HasValue && viewModel.ChangeConfirmed.Value)
         {
-            var pauseRequest = await modelMapper.Map<PauseApprenticeshipRequest>(viewModel);
-
-            await commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
-
-            TempData.AddFlashMessage(ApprenticePausedMessage, TempDataDictionaryExtensions.FlashMessageLevel.Success);
+            var apimRequest = await modelMapper.Map<ChangePaymentsApimRequest>(viewModel);
+            await outerApi.ChangePayments(viewModel.AccountId, viewModel.ApprenticeshipId, apimRequest, CancellationToken.None);
+            TempData.AddFlashMessage(
+                viewModel.FreezeStatus ? PaymentsUnfrozenMessage : PaymentsFrozenMessage,
+                TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
@@ -674,31 +666,6 @@ public class ApprenticeController(
                 AccountHashedId = viewModel.AccountHashedId,
                 ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
             });
-    }
-
-    [Route("{apprenticeshipHashedId}/details/resume")]
-    [HttpGet]
-    public async Task<IActionResult> ResumeApprenticeship(ResumeRequest request)
-    {
-        var viewModel = await modelMapper.Map<ResumeRequestViewModel>(request);
-        return View(viewModel);
-    }
-
-    [Route("{apprenticeshipHashedId}/details/resume")]
-    [HttpPost]
-    public async Task<IActionResult> ResumeApprenticeship(ResumeRequestViewModel viewModel)
-    {
-        if (viewModel.ResumeConfirmed.HasValue && viewModel.ResumeConfirmed.Value)
-        {
-            var resumeRequest = await modelMapper.Map<ResumeApprenticeshipRequest>(viewModel);
-
-            await commitmentsApiClient.ResumeApprenticeship(resumeRequest, CancellationToken.None);
-
-            TempData.AddFlashMessage(ApprenticeResumeMessage, TempDataDictionaryExtensions.FlashMessageLevel.Success);
-        }
-
-        return RedirectToAction(nameof(ApprenticeshipDetails),
-            new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
     }
 
     [HttpGet]

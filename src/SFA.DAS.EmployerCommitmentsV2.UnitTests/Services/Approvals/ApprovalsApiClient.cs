@@ -7,6 +7,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Services.Approvals;
@@ -128,6 +129,32 @@ public class ApprovalsApiClientTests
         var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
 
         var actual = await approvalsApiClient.GetAgreementNotSigned(accountId);
+
+        actual.Should().BeSameAs(response);
+    }
+
+    [Test, AutoData]
+    public async Task When_Calling_ChangePayments_Then_PatchIsCalled(long accountId, long apprenticeshipId, ChangePaymentsApimRequest request)
+    {
+        var outerApiClient = new Mock<IOuterApiClient>();
+        var expectedUrl = $"employer/{accountId}/apprentices/{apprenticeshipId}/payments";
+        outerApiClient.Setup(x => x.Patch<object>(expectedUrl, request)).ReturnsAsync(default(object));
+        var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
+
+        await approvalsApiClient.ChangePayments(accountId, apprenticeshipId, request);
+
+        outerApiClient.Verify(x => x.Patch<object>(expectedUrl, request), Times.Once);
+    }
+
+    [Test, AutoData]
+    public async Task When_Calling_GetChangePayments_Then_The_Data_Is_Returned(long accountId, long apprenticeshipId, GetChangePaymentsResponse response)
+    {
+        var outerApiClient = new Mock<IOuterApiClient>();
+        var expectedUrl = $"employer/{accountId}/apprentices/{apprenticeshipId}/payments";
+        outerApiClient.Setup(x => x.Get<GetChangePaymentsResponse>(expectedUrl)).ReturnsAsync(response);
+        var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
+
+        var actual = await approvalsApiClient.GetChangePayments(accountId, apprenticeshipId);
 
         actual.Should().BeSameAs(response);
     }

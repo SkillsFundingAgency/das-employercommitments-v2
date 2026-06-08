@@ -1,4 +1,4 @@
-﻿using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -23,7 +23,5 @@ public class ChangeStatusRequestViewModel : IAuthorizationContextModel
 public enum ChangeStatusType
 {
     Stop,
-    Pause,
-    GoBack,
-    Resume
+    GoBack
 }

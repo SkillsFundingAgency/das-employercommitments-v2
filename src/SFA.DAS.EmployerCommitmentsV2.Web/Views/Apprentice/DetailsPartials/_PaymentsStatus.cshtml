@@ -1,0 +1,17 @@
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+<tr>
+    <th scope="row" class="govuk-table__header das-table-cell-width-45">Payments</th>
+    <td class="govuk-table__cell das-table-cell-width-40">
+        <strong class="govuk-tag @(Model.FreezeStatus ? "govuk-tag--yellow" : "govuk-tag--green")">
+            @(Model.FreezeStatus ? "Paused" : "Active")
+        </strong>
+    </td>
+    <td class="govuk-table__cell das-table-cell-width-15 govuk-table__cell--numeric">
+        @if (Model.CanChangePayments)
+        {
+            <a id="change-payments-link" href="@Url.Action("ChangePayments", new ChangePaymentsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link">Change</a>
+        }
+    </td>
+</tr>

@@ -16,6 +16,14 @@ public class GetManageApprenticeshipDetailsResponse
     public IReadOnlyCollection<GetChangeOfProviderLinkResponse.ChangeOfProviderLink> ChangeOfProviderChain { get; set; }
     public IReadOnlyCollection<GetApprenticeshipOverlappingTrainingDateResponse.ApprenticeshipOverlappingTrainingDate> OverlappingTrainingDateRequest { get; set; }
     public bool HasMultipleDeliveryModelOptions { get; set; }
+    public PaymentsStatusResponse PaymentsStatus { get; set; }
+
+    public class PaymentsStatusResponse
+    {
+        public bool FreezeStatus { get; set; }
+        public string ReasonFrozen { get; set; }
+        public DateTime? PaymentFreezeDate { get; set; }
+    }
 
     public class GetApprenticeshipResponse
     {

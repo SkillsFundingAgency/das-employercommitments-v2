@@ -7,7 +7,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Validators;
 public class ChangeStatusRequestViewModelValidatorTests : ValidatorTestBase<ChangeStatusRequestViewModel, ChangeStatusRequestViewModelValidator>
 {
     [TestCase(ChangeStatusType.Stop)]
-    [TestCase(ChangeStatusType.Pause)]
+    [TestCase(ChangeStatusType.Stop)]
     [TestCase(ChangeStatusType.GoBack)]
     public void Validate_ChangeStatusType_ShouldBeValidated(ChangeStatusType status)
     {

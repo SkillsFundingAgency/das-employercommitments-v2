@@ -156,4 +156,14 @@ public class ApprovalsApiClient(IOuterApiClient client) : IApprovalsApiClient
     {
         return client.Get<GetAssignAllowEmployerAddResponse>($"employer/{accountHashedId}/unapproved/add/assign/allow-employer-add?reservationId={reservationId}");
     }
+
+    public async Task ChangePayments(long accountId, long apprenticeshipId, ChangePaymentsApimRequest request, CancellationToken cancellationToken = default)
+    {
+        await client.Patch<object>($"employer/{accountId}/apprentices/{apprenticeshipId}/payments", request);
+    }
+
+    public Task<GetChangePaymentsResponse> GetChangePayments(long accountId, long apprenticeshipId, CancellationToken cancellationToken = default)
+    {
+        return client.Get<GetChangePaymentsResponse>($"employer/{accountId}/apprentices/{apprenticeshipId}/payments");
+    }
 }
