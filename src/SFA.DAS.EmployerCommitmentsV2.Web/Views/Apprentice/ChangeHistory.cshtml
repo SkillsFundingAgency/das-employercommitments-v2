@@ -71,6 +71,11 @@
     </tbody>
 </table>
 
+<p>
+    <a id="view-learner-details-link" class="govuk-link" asp-route="@RouteNames.ApprenticeDetail" asp-route-accountHashedId="@Model.AccountHashedId"
+       asp-route-apprenticeshipHashedId="@Model.ApprenticeshipHashedId">View learner details</a>
+</p>
+
 @section back {
     
     <a id="back-link" class="govuk-back-link" asp-route="@RouteNames.ApprenticeDetail" asp-route-accountHashedId="@Model.AccountHashedId"
