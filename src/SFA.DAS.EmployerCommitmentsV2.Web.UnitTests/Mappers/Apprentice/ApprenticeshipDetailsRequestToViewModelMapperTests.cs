@@ -975,6 +975,32 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType.Should().Be(result.LearningType);
         }
 
+        [Test]
+        public async Task WithdrawnReasonCode_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            result.WithdrawnReasonCode.Should().Be(GetManageApprenticeshipDetailsResponse.Apprenticeship.WithdrawnReasonCode);
+        }
+
+        [TestCase(ApprenticeshipStatus.Stopped, null, true)]
+        [TestCase(ApprenticeshipStatus.Stopped, 1, false)]
+        [TestCase(ApprenticeshipStatus.Live, null, false)]
+        public async Task CanEditStopDate_IsSetIfWithdrawnReason(ApprenticeshipStatus status, int? withdrawnReasonCode, bool expected)
+        {
+            // Arrange
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.WithdrawnReasonCode = withdrawnReasonCode;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = status;
+
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            result.CanEditStopDate.Should().Be(expected);
+        }
+
         private void WithEmployerVerificationStatus(int? status, string notes)
         {
             GetManageApprenticeshipDetailsResponse.Apprenticeship.EmployerVerificationStatus = status;
