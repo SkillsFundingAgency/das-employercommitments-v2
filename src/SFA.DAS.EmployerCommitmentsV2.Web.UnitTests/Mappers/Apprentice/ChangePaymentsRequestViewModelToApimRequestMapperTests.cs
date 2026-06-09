@@ -22,33 +22,36 @@ public class ChangePaymentsRequestViewModelToApimRequestMapperTests
     }
 
     [Test]
-    public async Task Map_WhenPausing_SendsFreezePaymentsWithReason()
+    public async Task Map_WhenPausing_SendsPaymentFreezeDateAndReason()
     {
+        var pauseDate = new DateTime(2026, 1, 12);
         var viewModel = new ChangePaymentsRequestViewModel
         {
             FreezeStatus = false,
+            PauseDate = pauseDate,
             FreezePaymentsReason = 2
         };
 
         var result = await _mapper.Map(viewModel);
 
-        result.FreezePayments.Should().BeTrue();
+        result.PaymentFreezeDate.Should().Be(pauseDate);
         result.FreezePaymentsReason.Should().Be(2);
         result.UserInfo.UserDisplayName.Should().Be("Test User");
     }
 
     [Test]
-    public async Task Map_WhenResuming_SendsUnfreezeWithoutReason()
+    public async Task Map_WhenResuming_SendsClearedPaymentFields()
     {
         var viewModel = new ChangePaymentsRequestViewModel
         {
             FreezeStatus = true,
+            PauseDate = new DateTime(2026, 1, 5),
             FreezePaymentsReason = 2
         };
 
         var result = await _mapper.Map(viewModel);
 
-        result.FreezePayments.Should().BeFalse();
-        result.FreezePaymentsReason.Should().Be(2);
+        result.PaymentFreezeDate.Should().BeNull();
+        result.FreezePaymentsReason.Should().BeNull();
     }
 }

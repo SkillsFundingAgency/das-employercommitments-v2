@@ -10,10 +10,12 @@ public class ChangePaymentsRequestViewModelToApimRequestMapper(IAuthenticationSe
 {
     public Task<ChangePaymentsApimRequest> Map(ChangePaymentsRequestViewModel source)
     {
+        var isPausing = !source.FreezeStatus;
+
         return Task.FromResult(new ChangePaymentsApimRequest
         {
-            FreezePayments = !source.FreezeStatus,
-            FreezePaymentsReason = source.FreezePaymentsReason,
+            PaymentFreezeDate = isPausing ? source.PauseDate : null,
+            FreezePaymentsReason = isPausing ? source.FreezePaymentsReason : null,
             UserInfo = new ApimUserInfo
             {
                 UserDisplayName = authenticationService.UserName,
