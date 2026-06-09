@@ -13,8 +13,8 @@ public class ChangePaymentsRequestViewModelValidator : AbstractValidator<ChangeP
                 : "Select if you would like to pause payments");
 
         RuleFor(r => r.FreezePaymentsReason)
-            .NotNull()
-            .When(r => !r.FreezeStatus && r.ChangeConfirmed == true)
+            .Must(r => r is >= 1 and <= 4)
+            .When(r => !r.FreezeStatus && r.ChangeConfirmed != false)
             .WithMessage("Select a reason for pausing payments");
     }
 }

@@ -36,6 +36,32 @@ public class ChangePaymentsRequestViewModelValidatorTests : ValidatorTestBase<Ch
     }
 
     [Test]
+    public void Validate_WhenPauseWithoutConfirmationOrReason_ThenInvalidForReason()
+    {
+        var model = new ChangePaymentsRequestViewModel
+        {
+            FreezeStatus = false,
+            ChangeConfirmed = null,
+            FreezePaymentsReason = null
+        };
+
+        AssertValidationResult(request => request.FreezePaymentsReason, model, false, "Select a reason for pausing payments");
+    }
+
+    [Test]
+    public void Validate_WhenPauseDeclined_ThenValidWithoutReason()
+    {
+        var model = new ChangePaymentsRequestViewModel
+        {
+            FreezeStatus = false,
+            ChangeConfirmed = false,
+            FreezePaymentsReason = null
+        };
+
+        AssertValidationResult(request => request.FreezePaymentsReason, model, true);
+    }
+
+    [Test]
     public void Validate_WhenPauseConfirmedWithReason_ThenValid()
     {
         var model = new ChangePaymentsRequestViewModel

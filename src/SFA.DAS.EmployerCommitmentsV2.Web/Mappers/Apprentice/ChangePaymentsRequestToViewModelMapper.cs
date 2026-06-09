@@ -20,7 +20,6 @@ public class ChangePaymentsRequestToViewModelMapper(
             AccountHashedId = source.AccountHashedId,
             ApprenticeshipHashedId = source.ApprenticeshipHashedId,
             ApprenticeshipId = source.ApprenticeshipId,
-            AccountId = source.AccountId,
             ApprenticeName = $"{details.FirstName} {details.LastName}",
             ULN = details.Uln,
             Course = details.CourseName,

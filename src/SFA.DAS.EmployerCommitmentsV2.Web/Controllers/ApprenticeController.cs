@@ -639,8 +639,9 @@ public class ApprenticeController(
         return View(viewModel);
     }
 
-    [Route("{apprenticeshipHashedId}/payments")]
+    [Route("{apprenticeshipHashedId}/payments", Name = RouteNames.ChangePayments)]
     [HttpGet]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> ChangePayments(ChangePaymentsRequest request)
     {
         var viewModel = await modelMapper.Map<ChangePaymentsRequestViewModel>(request);

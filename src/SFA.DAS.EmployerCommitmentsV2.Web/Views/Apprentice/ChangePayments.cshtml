@@ -6,6 +6,7 @@
     ViewBag.Title = Model.FreezeStatus ? "Resume payments to training provider" : "Pause payments to your training provider";
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "change-payments";
+    ViewBag.ValidationOrder = $"{nameof(ChangePaymentsRequestViewModel.FreezePaymentsReason)},{nameof(ChangePaymentsRequestViewModel.ChangeConfirmed)}";
 }
 
 <div class="govuk-grid-row">
@@ -14,10 +15,6 @@
         <form method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="FreezeStatus" />
-            <input type="hidden" asp-for="AccountHashedId" />
-            <input type="hidden" asp-for="ApprenticeshipHashedId" />
-            <input type="hidden" asp-for="ApprenticeshipId" />
-            <input type="hidden" asp-for="AccountId" />
             <input type="hidden" asp-for="ApprenticeName" />
             <input type="hidden" asp-for="ULN" />
             <input type="hidden" asp-for="Course" />
@@ -94,15 +91,19 @@
                     <label class="govuk-label" for="FreezePaymentsReason">
                         Reason for pausing payments
                     </label>
+                    @{
+                        var freezePaymentsReasonErrorId = $"error-message-{nameof(ChangePaymentsRequestViewModel.FreezePaymentsReason)}";
+                    }
                     @if (!ViewData.ModelState.IsValid && ViewData.ModelState[nameof(ChangePaymentsRequestViewModel.FreezePaymentsReason)]?.Errors.Count > 0)
                     {
-                        <span id="error-message-@nameof(ChangePaymentsRequestViewModel.FreezePaymentsReason)" class="govuk-error-message">
+                        <span id="@freezePaymentsReasonErrorId" class="govuk-error-message">
                             <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(ChangePaymentsRequestViewModel.FreezePaymentsReason)].Errors.First().ErrorMessage
                         </span>
                     }
                     <select class="govuk-select @Html.AddClassIfPropertyInError(x => x.FreezePaymentsReason, "govuk-select--error")"
                             id="FreezePaymentsReason"
-                            name="FreezePaymentsReason">
+                            name="FreezePaymentsReason"
+                            aria-describedby="@(!ViewData.ModelState.IsValid && ViewData.ModelState[nameof(ChangePaymentsRequestViewModel.FreezePaymentsReason)]?.Errors.Count > 0 ? freezePaymentsReasonErrorId : null)">
                         <option value="">Please select...</option>
                         @foreach (var reason in FreezePaymentsReasonOption.All)
                         {
