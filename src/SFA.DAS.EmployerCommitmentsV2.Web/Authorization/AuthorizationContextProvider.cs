@@ -81,7 +81,7 @@ public class AuthorizationContextProvider : IAuthorizationContextProvider
 
     private long? GetAccountLegalEntityHashedId()
     {
-        return 01917810; //GetAndDecodeValueIfExists(RouteValueKeys.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId);
+        return GetAndDecodeValueIfExists(RouteValueKeys.AccountLegalEntityHashedId, EncodingType.PublicAccountLegalEntityId);
     }
 
     private long? GetDraftApprenticeshipId()
