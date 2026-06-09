@@ -20,7 +20,7 @@
     "SFA.DAS.EmployerCommitmentsV2.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "MNDGLK/unapproved/inform",
+      "launchUrl": "MNDGLK/reservations/manage",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "APPSETTING_EnvironmentName": "LOCAL",
