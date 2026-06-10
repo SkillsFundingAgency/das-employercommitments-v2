@@ -49,7 +49,7 @@ public class FinishedViewModelMapperTests
         var fixture = new FinishedViewModelMapperTestsFixture();
         var result = await fixture.Map();
         result.CohortReference.Should().Be(fixture.Source.CohortReference);
-    }
+    }   
 }
 
 public class FinishedViewModelMapperTestsFixture
@@ -79,13 +79,7 @@ public class FinishedViewModelMapperTestsFixture
             .ReturnsAsync(selectFundingOptions);
 
         Mapper = new FinishedRequestToFinishedViewModelMapper(approvalsApiClient.Object);
-    }
-
-    public FinishedViewModelMapperTestsFixture SetCohortWithParty(Party party)
-    {
-        Cohort.WithParty = party;
-        return this;
-    }
+    }    
 
     public Task<FinishedViewModel> Map()
     {
