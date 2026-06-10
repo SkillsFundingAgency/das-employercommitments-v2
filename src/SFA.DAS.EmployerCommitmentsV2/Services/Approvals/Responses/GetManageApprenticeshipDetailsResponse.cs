@@ -2,7 +2,6 @@
 using Newtonsoft.Json.Converters;
 using SFA.DAS.Apprenticeships.Types;
 using SFA.DAS.CommitmentsV2.Types;
-using SFA.DAS.Common.Domain.Types;
 using LearningType = SFA.DAS.Common.Domain.Types.LearningType;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;

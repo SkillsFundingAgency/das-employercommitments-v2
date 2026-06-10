@@ -2,7 +2,7 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.EditStopDateViewModel
 
 @{
-    ViewBag.Title = "When did this apprenticeship training stop?";
+    ViewBag.Title = "When did this training stop?";
     ViewBag.PageId = "edit-stopdate";
     ViewBag.Section = "apprentices";
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/edit-stopdate";
@@ -13,7 +13,7 @@
         <partial name="_ValidationSummary" />
 
         <h1 class="govuk-heading-xl">
-            When did this apprenticeship training stop?
+            When did this training stop?
         </h1>
 
         <form method="post">
@@ -25,7 +25,7 @@
                 <fieldset class="govuk-fieldset">
 
                     <p>
-                        The earliest date you can enter is this apprenticeship's start date of @Model.ApprenticeshipStartDate.ToGdsFormatWithoutDay().  Any outstanding payments will be made for activity up to this date.
+                        The earliest date you can enter is this learner's start date of @Model.ApprenticeshipStartDate.ToGdsFormatWithoutDay().  Any outstanding payments will be made for activity up to this date.
                     </p>
 
                     <span class="govuk-hint" id="hint-text">

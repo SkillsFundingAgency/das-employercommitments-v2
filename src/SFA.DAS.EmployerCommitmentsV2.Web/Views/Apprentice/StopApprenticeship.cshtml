@@ -3,7 +3,7 @@
  
 
 @{
-    ViewData["Title"] = "When did this apprenticeship training stop?";
+    ViewData["Title"] = "When did this training stop?";
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/stop-apprenticeship";
     ViewBag.ZenDeskLabel = "Status-stop-when";
 }
@@ -12,10 +12,10 @@
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
         <h1 class="govuk-heading-xl">
-            When did this apprenticeship training stop?
+            When did this training stop?
         </h1>
         <p class="govuk-body">
-            The earliest date you can enter is this apprenticeship's start date of @(Model.StartDate.ToString("MMMM yyyy")). 
+            The earliest date you can enter is this learner's start date of @(Model.StartDate.ToString("MMMM yyyy")). 
             Any outstanding payments will be made for activity up to this date.
         </p>
         <form method="post">

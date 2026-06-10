@@ -136,7 +136,8 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 LearnerStatus = response.LearnerStatusDetails.LearnerStatus,
                 WithdrawalChangedDate = response.LearnerStatusDetails.WithdrawalChangedDate,
                 WithdrawalReason = response.LearnerStatusDetails.WithdrawalReason,
-                EmploymentStatus = MapEmploymentStatus(response.Apprenticeship.EmployerVerificationStatus, response.Apprenticeship.EmployerVerificationNotes)
+                EmploymentStatus = MapEmploymentStatus(response.Apprenticeship.EmployerVerificationStatus, response.Apprenticeship.EmployerVerificationNotes),
+                LearningType = response.Apprenticeship.LearningType
             };
 
             return result;
@@ -244,6 +245,11 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
         if (status == 0)
         {
             return string.Empty;
+        }
+
+        if (status == 3)
+        {
+            return "Not employed";
         }
 
         return notes switch

@@ -8,11 +8,11 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 public class ApprenticeshipDetailsCsvModel
 {
-    [Name("Apprentice name")]
-    public string ApprenticeName { get ; private set ; }
-    [Name("Apprenticeship training course")]
-    public string CourseName { get; private set; }
-    [Name("Apprenticeship delivery model")]
+    [Name("Name")]
+    public string Name { get ; private set ; }
+    [Name("Training course")]
+    public string TrainingCourseName { get; private set; }
+    [Name("Training delivery model")]
     public string DeliveryModel { get; private set; }
     [Name("Planned start date")]
     public string PlannedStartDate { get; private set; }
@@ -32,8 +32,8 @@ public class ApprenticeshipDetailsCsvModel
     public string TotalAgreedPrice { get; private set; }
     [Name("Your reference")]
     public string EmployerRef { get; private set; }
-    [Name("Apprentice confirmation")]
-    public string ApprenticeConfirmation { get; private set; }
+    [Name("Learner confirmation")]
+    public string LearnerConfirmation { get; private set; }
     [Name("Status")]
     public string Status { get ; private set ; }
     [Name("Alerts")]
@@ -43,9 +43,9 @@ public class ApprenticeshipDetailsCsvModel
     {
         return new ApprenticeshipDetailsCsvModel
         {
-            ApprenticeName = $"{model.FirstName} {model.LastName}",
+            Name = $"{model.FirstName} {model.LastName}",
             Provider = model.ProviderName,
-            CourseName = model.CourseName,
+            TrainingCourseName = model.CourseName,
             PlannedStartDate = model.StartDate.ToGdsFormatWithoutDay(),
             PlannedEndDate = model.EndDate.ToGdsFormatWithoutDay(),
             PausedDate = model.PauseDate != DateTime.MinValue ?  model.PauseDate.ToGdsFormatWithoutDay() : "",
@@ -54,7 +54,7 @@ public class ApprenticeshipDetailsCsvModel
             Uln = model.Uln,
             DateOfBirth = model.DateOfBirth.ToGdsFormat(),
             TotalAgreedPrice = $"{model.TotalAgreedPrice.Value as object:n0}",
-            ApprenticeConfirmation = model.ConfirmationStatus.ToDisplayString(),
+            LearnerConfirmation = model.ConfirmationStatus.ToDisplayString(),
             Status = model.ApprenticeshipStatus.GetDescription(),
             Alerts = GenerateAlerts(model.Alerts),
             DeliveryModel = model.DeliveryModel.ToDescription(),

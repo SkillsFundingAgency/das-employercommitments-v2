@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using LearningType = SFA.DAS.Common.Domain.Types.LearningType;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 
@@ -147,6 +148,7 @@ public class BaseDraftApprenticeshipViewModel
     public int? FundingBandMax { get; set; }
     public string StandardPageUrl { get; set; }
     public long? LearnerDataId { get; set; }
+    public LearningType? LearningType { get; set; }
 
 
     public BaseDraftApprenticeshipViewModel CloneBaseValues() => this.ExplicitClone();

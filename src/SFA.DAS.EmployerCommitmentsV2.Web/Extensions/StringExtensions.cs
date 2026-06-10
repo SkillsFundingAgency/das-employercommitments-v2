@@ -16,4 +16,13 @@ public static class StringExtensions
     {
         return (T)Enum.Parse(typeof(T), value);
     }
+
+    public static string FormatEnumValue(this Enum value)
+    {
+        var field = value.GetType().GetField(value.ToString());
+        var displayAttribute = System.Text.RegularExpressions.Regex.Replace(field.Name, "(?<!^)([A-Z])", " $1",
+            System.Text.RegularExpressions.RegexOptions.None,
+        TimeSpan.FromMilliseconds(100)).ToLower();
+        return char.ToUpper(displayAttribute[0]) + displayAttribute.Substring(1);
+    }
 }

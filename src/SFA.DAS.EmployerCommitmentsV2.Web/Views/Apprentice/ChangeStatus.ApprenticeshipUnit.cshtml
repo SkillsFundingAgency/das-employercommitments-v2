@@ -1,0 +1,69 @@
+﻿@using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ChangeStatusRequestViewModel
+
+@{
+    ViewBag.Title = "Which status change would you like to make?";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageId = "change-apprentice-status";
+    ViewBag.GaData.Vpv = "/accounts/apprentices/manage/change-apprentice-status";
+    ViewBag.ZenDeskLabel = "Status-which-change";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_ValidationSummary" />
+        <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
+
+        <h2 class="govuk-heading-s"> Stop a training course for this learner to:</h2>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>change your training provider during the lifetime of a course</li>
+            <li>cancel all future payments</li>
+        </ul>        
+
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" arai-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">                
+                You do not need to stop a training course after the training has ended. If you do, this will prevent the completion payment due to the training provider. Contact the training provider.
+            </strong>
+        </div>
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="CurrentStatus" />
+            <div class="govuk-form-group  @(ViewData.ModelState.IsValid ? " " : " govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(nameof(ChangeStatusRequestViewModel.SelectedStatusChange)))
+                    {
+                        <span id="error-message-@nameof(ChangeStatusRequestViewModel.SelectedStatusChange)" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(ChangeStatusRequestViewModel.SelectedStatusChange)].Errors.First().ErrorMessage
+                        </span>
+                    }
+                    <h1 class="govuk-heading-m">Approve these details?</h1>
+                    <div class="govuk-radios">                       
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="SelectedStatusChange-Stop" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.Stop">
+                            <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-Stop">
+                                Stop the training course
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="SelectedStatusChange-GoBack" name="SelectedStatusChange" type="radio" value="@ChangeStatusType.GoBack">
+                            <label class="govuk-label govuk-radios__label" for="SelectedStatusChange-GoBack">
+                                Go to learner details
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <button id="continue-button" type="submit" class="govuk-button">Save and continue</button>
+        </form>
+
+    </div>
+</div>
+
+@section back {
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">Back</a>
+}

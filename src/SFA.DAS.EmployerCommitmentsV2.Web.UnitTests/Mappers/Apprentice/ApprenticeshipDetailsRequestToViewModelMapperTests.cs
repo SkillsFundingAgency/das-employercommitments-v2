@@ -8,6 +8,7 @@ using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
@@ -58,6 +59,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .With(x => x.StandardUId, "ST0001_1.0")
                 .With(x => x.Version, "1.0")
                 .With(x => x.DateOfBirth, autoFixture.Create<DateTime>())
+                .With(x => x.LearningType, LearningType.Apprenticeship)
                 .Create();
 
             var trainingProgrammeByStandardUId = autoFixture.Build<TrainingProgramme>()
@@ -108,7 +110,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .Returns((string value, EncodingType encodingType) => long.Parse(Regex.Replace(value, "[A-Za-z ]", "")));
 
             _apprenticeshipDetailsResponse = autoFixture.Build<GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse>()
-                .With(x=>x.LearningType, LearningType.Apprenticeship).Create();
+                .With(x => x.LearningType, LearningType.Apprenticeship).Create();
 
             _approvalsApiClient = new Mock<IApprovalsApiClient>();
 
@@ -128,8 +130,8 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             _mapper = new ApprenticeshipDetailsRequestToViewModelMapper(_mockCommitmentsApiClient.Object, _mockEncodingService.Object, _approvalsApiClient.Object, Mock.Of<ILogger<ApprenticeshipDetailsRequestToViewModelMapper>>(), GetMockUrlBuilder());
         }
-        
-        //[TestCase(false)]
+
+       
         [TestCase(true)]
         public async Task HasNewerVersionsIsMappedCorrectly(bool hasNewerVersions)
         {
@@ -406,6 +408,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
+        public async Task LearningType_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            result.LearningType.Should().Be(GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType);
+        }
+
+        [Test]
         public async Task ProviderName_IsMapped()
         {
             //Act
@@ -419,11 +431,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [NonParallelizable]
         public async Task PendingChanges_IsMapped()
         {
+            //Arrange
+            GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates = new List<ApprenticeshipUpdate>
+            {
+                new()
+                {
+                    OriginatingParty = Party.Provider
+                }
+            };
+
             //Act
+            foreach (var update in GetManageApprenticeshipDetailsResponse.ApprenticeshipUpdates)
+            {
+                update.OriginatingParty = Party.Provider;
+            };
+
             var result = await _mapper.Map(_request);
 
-            //Assert
-            Assert.That(result.PendingChanges, Is.EqualTo(PendingChanges.ReadyForApproval));
+            result.PendingChanges.Should().Be(PendingChanges.ReadyForApproval);
         }
 
         [Test]
@@ -596,7 +621,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task ThenEmploymentStatusIsNotVerified_WhenStatusFailed()
+        public async Task ThenEmploymentStatusIsNotEmployed_WhenStatusFailed()
         {
             //Arrange
             WithEmployerVerificationStatus(3, null);
@@ -605,7 +630,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            result.EmploymentStatus.Should().Be("Not Verified");
+            result.EmploymentStatus.Should().Be("Not employed");
         }
 
         [Test]
@@ -1031,6 +1056,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             //Assert
             result.PaymentStatusChangeUrl.Should()
                 .Be($"https://apprenticeshipdetails.{MockUrlBuilderEnvironment}-eas.apprenticeships.education.gov.uk/employer/{_request.AccountHashedId}/PaymentsFreeze/{_request.ApprenticeshipHashedId}{expectedUrlSegment}");
+        }
+
+        [Test]
+        public async Task LearnerType_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType.Should().Be(result.LearningType);
         }
 
         private void WithEmployerVerificationStatus(int? status, string notes)

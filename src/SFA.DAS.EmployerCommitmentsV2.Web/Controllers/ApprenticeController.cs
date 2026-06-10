@@ -4,6 +4,7 @@ using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 using SFA.DAS.CommitmentsV2.Api.Types.Validation;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.Common.Domain.Types;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
@@ -111,7 +112,14 @@ public class ApprenticeController(
     public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
     {
         var viewModel = await modelMapper.Map<ChangeStatusRequestViewModel>(request);
-        return View(viewModel);
+
+        var viewName = "ChangeStatus.Apprenticeship";
+        if (viewModel.LearningType == LearningType.ApprenticeshipUnit)
+        {
+            viewName = "ChangeStatus.ApprenticeshipUnit";
+        }
+
+        return View(viewName, viewModel);
     }
 
     [Route("{apprenticeshipHashedId}/details/changestatus")]
