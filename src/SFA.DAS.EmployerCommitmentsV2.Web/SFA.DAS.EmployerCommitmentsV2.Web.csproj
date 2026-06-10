@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<LangVersion>latestmajor</LangVersion>
 		<TargetFramework>net10.0</TargetFramework>
@@ -40,7 +40,7 @@
 		<PackageReference Include="SFA.DAS.InputValidation" Version="17.1.100" />
 		<PackageReference Include="SFA.DAS.Validation.Mvc" Version="6.0.31" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
-		<PackageReference Include="System.Text.Json" Version="9.0.0" />
+		<PackageReference Include="System.Text.Json" Version="10.0.9" />
 		<PackageReference Include="WebEssentials.AspNetCore.CdnTagHelpers" Version="1.0.21" />
 		<PackageReference Include="StackExchange.Redis" Version="2.8.24" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
