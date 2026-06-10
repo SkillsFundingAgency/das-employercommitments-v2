@@ -557,13 +557,31 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         }
 
         [Test]
-        public async Task CanChangePayments_IsFalseWhenApprenticeshipIsNotLive()
+        public async Task CanChangePayments_IsFalseWhenApprenticeshipIsNotLiveAndNotFrozen()
         {
             GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = ApprenticeshipStatus.Paused;
+            GetManageApprenticeshipDetailsResponse.PaymentsStatus = new GetManageApprenticeshipDetailsResponse.PaymentsStatusResponse
+            {
+                FreezeStatus = false
+            };
 
             var result = await _mapper.Map(_request);
 
             result.CanChangePayments.Should().BeFalse();
+        }
+
+        [Test]
+        public async Task CanChangePayments_IsTrueWhenApprenticeshipIsStoppedAndFrozen()
+        {
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = ApprenticeshipStatus.Stopped;
+            GetManageApprenticeshipDetailsResponse.PaymentsStatus = new GetManageApprenticeshipDetailsResponse.PaymentsStatusResponse
+            {
+                FreezeStatus = true
+            };
+
+            var result = await _mapper.Map(_request);
+
+            result.CanChangePayments.Should().BeTrue();
         }
 
         [Test]

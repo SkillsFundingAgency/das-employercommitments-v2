@@ -35,8 +35,6 @@ public class ApprenticeController(
     IApprovalsApiClient outerApi)
     : Controller
 {
-    private const string PaymentsFrozenMessage = "Payments paused";
-    private const string PaymentsUnfrozenMessage = "Payments resumed";
     private const string ApprenticeStoppedMessage = "Apprenticeship stopped";
     private const string ApprenticeUpdated = "You have updated apprentice details";
     private const string ApprenticeEditStopDate = "New stop date confirmed";
@@ -641,7 +639,6 @@ public class ApprenticeController(
 
     [Route("{apprenticeshipHashedId}/payments", Name = RouteNames.ChangePayments)]
     [HttpGet]
-    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     public async Task<IActionResult> ChangePayments(ChangePaymentsRequest request)
     {
         var viewModel = await modelMapper.Map<ChangePaymentsRequestViewModel>(request);
@@ -652,13 +649,25 @@ public class ApprenticeController(
     [HttpPost]
     public async Task<IActionResult> ChangePayments(ChangePaymentsRequestViewModel viewModel)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(viewModel);
+        }
+
         if (viewModel.ChangeConfirmed.HasValue && viewModel.ChangeConfirmed.Value)
         {
             var apimRequest = await modelMapper.Map<ChangePaymentsApimRequest>(viewModel);
             await outerApi.ChangePayments(viewModel.AccountId, viewModel.ApprenticeshipId, apimRequest, CancellationToken.None);
-            TempData.AddFlashMessage(
-                viewModel.FreezeStatus ? PaymentsUnfrozenMessage : PaymentsFrozenMessage,
-                TempDataDictionaryExtensions.FlashMessageLevel.Success);
+
+            var confirmationRoute = viewModel.FreezeStatus
+                ? RouteNames.PaymentsResumedConfirmation
+                : RouteNames.PaymentsPausedConfirmation;
+
+            return RedirectToRoute(confirmationRoute, new
+            {
+                viewModel.AccountHashedId,
+                viewModel.ApprenticeshipHashedId
+            });
         }
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
@@ -667,6 +676,28 @@ public class ApprenticeController(
                 AccountHashedId = viewModel.AccountHashedId,
                 ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
             });
+    }
+
+    [Route("{apprenticeshipHashedId}/payments/paused", Name = RouteNames.PaymentsPausedConfirmation)]
+    [HttpGet]
+    public IActionResult PaymentsPausedConfirmation(ChangePaymentsConfirmationRequest request)
+    {
+        return View(new ChangePaymentsConfirmationViewModel
+        {
+            AccountHashedId = request.AccountHashedId,
+            ApprenticeshipHashedId = request.ApprenticeshipHashedId
+        });
+    }
+
+    [Route("{apprenticeshipHashedId}/payments/resumed", Name = RouteNames.PaymentsResumedConfirmation)]
+    [HttpGet]
+    public IActionResult PaymentsResumedConfirmation(ChangePaymentsConfirmationRequest request)
+    {
+        return View(new ChangePaymentsConfirmationViewModel
+        {
+            AccountHashedId = request.AccountHashedId,
+            ApprenticeshipHashedId = request.ApprenticeshipHashedId
+        });
     }
 
     [HttpGet]

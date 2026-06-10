@@ -35,7 +35,7 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
 
     public bool FreezeStatus { get; set; }
 
-    public bool CanChangePayments => ApprenticeshipStatus == ApprenticeshipStatus.Live;
+    public bool CanChangePayments => FreezeStatus || ApprenticeshipStatus == ApprenticeshipStatus.Live;
 
     public int? WithdrawnReasonCode { get; set; }
     public bool CanEditStopDate => ApprenticeshipStatus == ApprenticeshipStatus.Stopped && WithdrawnReasonCode == null;
