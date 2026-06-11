@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
 
 public static class StringExtensions
@@ -24,5 +26,17 @@ public static class StringExtensions
             System.Text.RegularExpressions.RegexOptions.None,
         TimeSpan.FromMilliseconds(100)).ToLower();
         return char.ToUpper(displayAttribute[0]) + displayAttribute.Substring(1);
+    }
+
+    public static string GetEnumDescription(this Enum value)
+    {
+        var fi = value.GetType().GetField(value.ToString());
+        var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+        if (attributes != null && attributes.Length > 0)
+        {
+            return attributes[0].Description;
+        }
+
+        return value.ToString();
     }
 }
