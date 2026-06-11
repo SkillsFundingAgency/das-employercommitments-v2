@@ -527,18 +527,18 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             Assert.That(expectedTriageOption, Is.EqualTo(result.EnableEdit));
         }
 
-        [TestCase(ApprenticeshipStatus.Live)]
-        [TestCase(ApprenticeshipStatus.Paused)]
-        [TestCase(ApprenticeshipStatus.WaitingToStart)]
-        [TestCase(ApprenticeshipStatus.Stopped)]
-        [TestCase(ApprenticeshipStatus.Completed)]
-        public async Task CanEditStatus_IsAlwaysFalse(ApprenticeshipStatus status)
+        [TestCase(ApprenticeshipStatus.Live, true)]
+        [TestCase(ApprenticeshipStatus.Paused, true)]
+        [TestCase(ApprenticeshipStatus.WaitingToStart, true)]
+        [TestCase(ApprenticeshipStatus.Stopped, false)]
+        [TestCase(ApprenticeshipStatus.Completed, false)]
+        public async Task CanEditStatus_IsMapped(ApprenticeshipStatus status, bool expectedCanEditStatus)
         {
             GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = status;
 
             var result = await _mapper.Map(_request);
 
-            Assert.That(result.CanEditStatus, Is.False);
+            Assert.That(result.CanEditStatus, Is.EqualTo(expectedCanEditStatus));
         }
 
         [Test]

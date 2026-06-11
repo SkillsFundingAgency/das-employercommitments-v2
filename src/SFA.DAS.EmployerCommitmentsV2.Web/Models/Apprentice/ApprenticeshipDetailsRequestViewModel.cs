@@ -31,7 +31,9 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public string ProviderName { get; set; }
     public PendingChanges PendingChanges { get; set; }
 
-    public bool CanEditStatus => false;
+    public bool CanEditStatus => ApprenticeshipStatus == ApprenticeshipStatus.Live
+                                 || ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart
+                                 || ApprenticeshipStatus == ApprenticeshipStatus.Paused;
 
     public bool FreezeStatus { get; set; }
 
