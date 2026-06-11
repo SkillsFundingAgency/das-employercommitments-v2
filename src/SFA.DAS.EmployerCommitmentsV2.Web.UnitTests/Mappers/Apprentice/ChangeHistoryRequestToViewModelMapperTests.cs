@@ -56,6 +56,14 @@ public class ChangeHistoryRequestToViewModelMapperTests
     }
 
     [Test]
+    public async Task Then_AvailableFromIsMapped()
+    {
+        var viewModel = await _mapper.Map(_request);
+
+        viewModel.AvailableFrom.Should().Be(_getChangeHistoryResponse.ChangeHistory.OrderBy(t => t.Created).FirstOrDefault().Created);
+    }
+
+    [Test]
     public async Task Then_ViewModelIsMapped()
     {
         var viewModel = await _mapper.Map(_request);
