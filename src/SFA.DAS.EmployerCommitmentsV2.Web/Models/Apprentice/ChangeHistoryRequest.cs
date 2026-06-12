@@ -1,0 +1,13 @@
+﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
+
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+
+public class ChangeHistoryRequest : IAuthorizationContextModel
+{
+    [FromRoute]
+    public string ApprenticeshipHashedId { get; set; }
+
+    public long ApprenticeshipId { get; set; }
+
+    public string AccountHashedId { get; set; }
+}
