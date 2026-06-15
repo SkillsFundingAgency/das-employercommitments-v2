@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.CommitmentsV2.Shared.Extensions;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort;
 
@@ -49,7 +50,7 @@ public class CohortDraftApprenticeshipViewModel
     public DateTime? EmploymentEndDate { get; set; }
     public bool IsEditable { get; set; }
     public string HasRplDisplay { get; set; }
-
+    public LearningType? LearningType { get; set; }
     private string ToGdsFormatDateRange()
     {
         if (ActualStartDate.HasValue && EndDate.HasValue)

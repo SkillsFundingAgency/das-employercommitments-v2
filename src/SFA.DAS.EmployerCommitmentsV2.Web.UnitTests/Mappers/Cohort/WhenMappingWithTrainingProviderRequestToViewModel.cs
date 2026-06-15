@@ -189,12 +189,12 @@ public class WhenMappingWithTrainingProviderRequestToViewModelFixture
 
     public void Verify_When_More_Than_One_Training_Provider_Title_IsMapped()
     {
-        Assert.That(_withTrainingProviderViewModel.Title, Is.EqualTo("Apprentice details with training providers"));
+        Assert.That(_withTrainingProviderViewModel.Title, Is.EqualTo("Learner requests with training providers"));
     }
 
     public void Verify_When_One_Training_Provider_Title_IsMapped()
     {
-        Assert.That(_withTrainingProviderViewModel.Title, Is.EqualTo("Apprentice details with training provider"));
+        Assert.That(_withTrainingProviderViewModel.Title, Is.EqualTo("Learner requests with training provider"));
     }
 
     public void SetOnlyOneTrainingProvider()

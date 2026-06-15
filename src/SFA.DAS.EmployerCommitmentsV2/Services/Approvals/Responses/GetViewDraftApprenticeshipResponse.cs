@@ -1,4 +1,7 @@
-﻿using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
+﻿using System.Text.Json.Serialization;
+using Newtonsoft.Json.Converters;
+using SFA.DAS.Common.Domain.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
@@ -42,4 +45,6 @@ public class GetViewDraftApprenticeshipResponse
     public int? DurationReducedByHours { get; set; }
     public bool? IsDurationReducedByRpl { get; set; }
     public int? TrainingTotalHours { get; set; }
+    [JsonConverter(typeof(StringEnumConverter))]
+    public LearningType? LearningType { get; set; }
 }

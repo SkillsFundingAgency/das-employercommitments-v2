@@ -2,7 +2,7 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort.ConfirmDeleteViewModel
 
 @{
-    ViewBag.Title = "Confirm deletion";
+    ViewBag.Title = "Confirm group deletion";
     ViewBag.GaData.Vpv = "/unapproved/delete";
     ViewBag.GaData.Org = Model.LegalEntityName;
 }
@@ -10,7 +10,13 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_ValidationSummary" />
-        <h1 class="govuk-heading-xl">Confirm deletion</h1>
+        <h1 class="govuk-heading-xl">Confirm group deletion</h1>
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                You cannot undo this action. This group and all learners in it will be deleted.
+            </strong>
+        </div>
         <form method="post">
             <dl class="govuk-summary-list govuk-!-margin-bottom-7">
                 <div class="govuk-summary-list__row">
@@ -31,7 +37,7 @@
                 </div>
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
-                        Number of apprentices
+                        Number of learners
                     </dt>
                     <dd class="govuk-summary-list__value">
                         @Model.DraftApprenticeshipsCount
@@ -39,7 +45,7 @@
                 </div>
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
-                        Apprenticeships
+                        Training course
                     </dt>
                     <dd class="govuk-summary-list__value">
                         @foreach (var course in Model.Courses)
@@ -54,11 +60,6 @@
             <div
                 class="govuk-form-group  @Html.AddClassIfPropertyInError(x => x.ConfirmDeletion, "govuk-form-group--error")">
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                        <h2 class="govuk-fieldset__heading govuk-!-margin-bottom-3">
-                            Are you sure you want to delete all apprentice details?
-                        </h2>
-                    </legend>
                     <div class="govuk-radios">
                         @Html.ValidationMessageFor(m => m.ConfirmDeletion, null, new
                             {
@@ -69,14 +70,14 @@
                             <input class="govuk-radios__input" id="confirm-yes" name="ConfirmDeletion" type="radio"
                                 value="true">
                             <label class="govuk-label govuk-radios__label" for="confirm-yes">
-                                Yes, delete all apprentice details
+                                Yes, delete the record for @Model.CohortReference
                             </label>
                         </div>
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="confirm-no" name="ConfirmDeletion" type="radio"
                                 value="false">
                             <label class="govuk-label govuk-radios__label" for="confirm-no">
-                                No, don't delete all apprentice details
+                                No, don't delete
                             </label>
                         </div>
                     </div>

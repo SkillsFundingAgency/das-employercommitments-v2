@@ -1,9 +1,10 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.Common.Domain.Types
 @using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship.ViewDraftApprenticeshipViewModel
 
 @{
-    ViewData["Title"] = "View apprentice details";
+    ViewData["Title"] = "View learner details";
     ViewBag.GaData.Vpv = "/unapproved/cohort/apprentices/apprentice";
     ViewBag.GaData.Org = Model.LegalEntityName;
 }
@@ -11,7 +12,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <h1 class="govuk-heading-xl">View apprentice details</h1>
+        <h1 class="govuk-heading-xl">View learner details</h1>
 
         <h2 class="govuk-heading-m">Personal details</h2>
 
@@ -40,14 +41,17 @@
                     @Model.LastName
                 </dd>
             </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Email address
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @DisplayOptionalField(Model.Email)
-                </dd>
-            </div>
+            @if (Model.LearningType != LearningType.ApprenticeshipUnit)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Email address
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @DisplayOptionalField(Model.Email)
+                    </dd>
+                </div>
+            }
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     Date of birth
@@ -151,7 +155,7 @@
             }
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    Total agreed apprenticeship price
+                    Total agreed training price (excluding VAT)
                 </dt>
                 <dd class="govuk-summary-list__value">
                     @DisplayCost(Model.Cost)
@@ -258,7 +262,7 @@
     }
 }
 
-@Html.ActionLink("Return to group of apprentices", "Details", "Cohort", new { @Model.AccountHashedId, @Model.CohortReference }, new { @class = "govuk-link", id = "return-link" })
+@Html.ActionLink("Return to group", "Details", "Cohort", new { @Model.AccountHashedId, @Model.CohortReference }, new { @class = "govuk-link", id = "return-link" })
 
 @section Back
 {
