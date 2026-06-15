@@ -79,6 +79,7 @@ public class GetManageApprenticeshipDetailsResponse
         public string EmployerVerificationNotes { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public LearningType? LearningType { get; set; }
+        public bool HasChangeHistory { get; set; }
     }
 
     public class GetPriceEpisodeResponse
