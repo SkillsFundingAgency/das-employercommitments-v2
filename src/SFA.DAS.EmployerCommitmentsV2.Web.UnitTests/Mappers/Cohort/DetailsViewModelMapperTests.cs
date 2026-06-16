@@ -976,7 +976,7 @@ public class DetailsViewModelMapperTestsFixture
         return draftApprenticeships;
     }
 
-    private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode, int? cost, DateTime? startDate = null, DateTime? originalStartDate = null, DeliveryModel dm = DeliveryModel.Regular)
+    private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode, int? cost, DateTime? startDate = null, DateTime? originalStartDate = null, DeliveryModel dm = DeliveryModel.Regular, LearningType learningType = LearningType.Apprenticeship)
     {
         startDate = startDate ?? DefaultStartDate;
 
@@ -987,6 +987,7 @@ public class DetailsViewModelMapperTestsFixture
         draftApprenticeship.OriginalStartDate = originalStartDate;
         draftApprenticeship.DeliveryModel = dm;
         draftApprenticeship.ActualStartDate = startDate;
+        draftApprenticeship.LearningType = learningType;
     }
 
     public DetailsViewModelMapperTestsFixture SetIsAgreementSigned(bool isAgreementSigned)

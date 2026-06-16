@@ -125,16 +125,13 @@ else
                 @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.LastName) })
                 <input asp-for="LastName" class="govuk-input" />
             </div>
-            @if (Model.LearningType != SFA.DAS.Common.Domain.Types.LearningType.ApprenticeshipUnit)
+            @if (Model.IsContinuation && Model.EmailAddressConfirmed == true)
             {
-                @if (Model.IsContinuation && Model.EmailAddressConfirmed == true)
-                {
-                    <dl class="das-definition-list">
-                        @Html.HiddenFor(x => x.Email)
-                        <dt class="das-definition-list__title">Email Address</dt>
-                        <dd class="das-definition-list__definition govuk-!-margin-bottom-4">@Model.Email</dd>
-                    </dl>
-                }
+                <dl class="das-definition-list">
+                    @Html.HiddenFor(x => x.Email)
+                    <dt class="das-definition-list__title">Email Address</dt>
+                    <dd class="das-definition-list__definition govuk-!-margin-bottom-4">@Model.Email</dd>
+                </dl>
             }
             else if (Model.IsContinuation && (string.IsNullOrEmpty(Model.Email))) { }
             else
