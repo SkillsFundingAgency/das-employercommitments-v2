@@ -128,7 +128,8 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 EmploymentStatus = MapEmploymentStatus(response.Apprenticeship.EmployerVerificationStatus, response.Apprenticeship.EmployerVerificationNotes),
                 LearningType = response.Apprenticeship.LearningType,
                 WithdrawnReasonCode = response.Apprenticeship.WithdrawnReasonCode,
-                FreezeStatus = response.PaymentsStatus?.FreezeStatus ?? false
+                FreezeStatus = response.PaymentsStatus?.FreezeStatus ?? false,
+                HasChangeHistory = response.Apprenticeship.HasChangeHistory
             };
 
             return result;

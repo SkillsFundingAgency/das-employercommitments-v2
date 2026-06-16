@@ -19,6 +19,14 @@
 
         <h1 class="govuk-heading-xl" id="learnerName"><span class="das-breakable">@Model.ApprenticeName</span></h1>
 
+        @if(Model.HasChangeHistory)
+        {
+        <p>
+            <a class="govuk-link" asp-controller="Apprentice" asp-action="ChangeHistory" asp-route-accountHashedId="@Model.AccountHashedId" 
+               asp-route-apprenticeshipHashedId="@Model.HashedApprenticeshipId">View change history for this learner.</a>
+        </p>    
+        }
+
         @{
             if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped && Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
             {

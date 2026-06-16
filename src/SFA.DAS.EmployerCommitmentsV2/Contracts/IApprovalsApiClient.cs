@@ -35,4 +35,5 @@ public interface IApprovalsApiClient
     Task<GetAssignAllowEmployerAddResponse> GetAssignAllowEmployerAdd(string accountHashedId, Guid reservationId);
     Task<GetChangePaymentsResponse> GetChangePayments(long accountId, long apprenticeshipId, CancellationToken cancellationToken = default);
     Task ChangePayments(long accountId, long apprenticeshipId, ChangePaymentsApimRequest request, CancellationToken cancellationToken = default);
+    Task<GetChangeHistoryResponse> GetChangeHistory(long apprenticeshipId, CancellationToken cancellationToken = default);
 }
