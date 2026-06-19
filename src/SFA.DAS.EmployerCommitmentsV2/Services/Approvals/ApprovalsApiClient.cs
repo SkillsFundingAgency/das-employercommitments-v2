@@ -82,7 +82,7 @@ public class ApprovalsApiClient(IOuterApiClient client) : IApprovalsApiClient
 
     public async Task<GetAddFirstDraftApprenticeshipResponse> GetAddFirstDraftApprenticeshipDetails(long accountId, long accountLegalEntityId, long providerId, string courseCode, DateTime? startDate = null, CancellationToken cancellationToken = default)
     {
-        var dateAsString = startDate.HasValue ? startDate.Value.ToString("yyyy-MM-dd") : null;   
+        var dateAsString = startDate.HasValue ? startDate.Value.ToString("yyyy-MM-dd") : null;
         return await client.Get<GetAddFirstDraftApprenticeshipResponse>($"employer/{accountId}/unapproved/add/apprenticeship?accountLegalEntityId={accountLegalEntityId}&providerId={providerId}&courseCode={courseCode}&StartDate={dateAsString}");
     }
 
@@ -112,6 +112,7 @@ public class ApprovalsApiClient(IOuterApiClient client) : IApprovalsApiClient
     {
         return client.Get<GetSelectProviderDetailsResponse>($"{accountId}/unapproved/add/select-provider?accountLegalEntityId={accountLegalEntityId}");
     }
+
     public Task<GetSelectFundingOptionsResponse> GetSelectFundingOptions(long accountId, CancellationToken cancellationToken = default)
     {
         return client.Get<GetSelectFundingOptionsResponse>($"{accountId}/unapproved/add/select-funding");
@@ -155,5 +156,10 @@ public class ApprovalsApiClient(IOuterApiClient client) : IApprovalsApiClient
     public Task<GetAssignAllowEmployerAddResponse> GetAssignAllowEmployerAdd(string accountHashedId, Guid reservationId)
     {
         return client.Get<GetAssignAllowEmployerAddResponse>($"employer/{accountHashedId}/unapproved/add/assign/allow-employer-add?reservationId={reservationId}");
+    }
+
+    public Task<GetChangeHistoryResponse> GetChangeHistory(long apprenticeshipId, CancellationToken cancellationToken = default)
+    {
+        return client.Get<GetChangeHistoryResponse>($"change-history/{apprenticeshipId}");
     }
 }

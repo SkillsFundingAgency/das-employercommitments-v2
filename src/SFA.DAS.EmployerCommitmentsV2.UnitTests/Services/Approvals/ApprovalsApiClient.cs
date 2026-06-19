@@ -132,4 +132,16 @@ public class ApprovalsApiClientTests
         actual.Should().BeSameAs(response);
     }
 
+    [Test, AutoData]
+    public async Task When_Calling_GetChangeHistory_Then_The_Data_Is_Returned(long id, GetChangeHistoryResponse response)
+    {
+        var outerApiClient = new Mock<IOuterApiClient>();
+        var expectedUrl = $"change-history/{id}";
+        outerApiClient.Setup(x => x.Get<GetChangeHistoryResponse>(expectedUrl)).ReturnsAsync(response);
+        var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
+
+        var actual = await approvalsApiClient.GetChangeHistory(id);
+
+        actual.Should().BeEquivalentTo(response);
+    }
 }

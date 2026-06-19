@@ -1,0 +1,83 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ChangeHistoryListViewModel
+
+@{
+   
+    ViewBag.GaData.Vpv = "/apprentices";
+}
+
+<h1 class="govuk-heading-xl">Change history for @Model.Name</h1>
+
+<details class="govuk-details" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">
+            Why are some changes auto approved ?
+        </span>
+    </summary>
+    <div class="govuk-details__text">
+        <p>Some changes are now being automatically approved to reduce delays and help keep learner records up to date. These are: </p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                name changes
+            </li>
+            <li>
+                planned end date changes
+            </li>
+            <li>status changes</li>
+            <li>price decrease</li>
+            <li>delivery model changes</li>
+            <li>version changes</li>
+        </ul>
+    </div>
+</details>
+
+<p>Change history is available from @Model.AvailableFrom.ToGdsFormat()</p>
+
+<table class="govuk-table das-table--condensed das-table--responsive das-table--double-arrows">
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">
+                Date of changes
+            </th>
+            <th scope="col" class="govuk-table__header">
+                Change made
+            </th>
+            <th scope="col" class="govuk-table__header">
+                Decision
+            </th>
+        </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+        @foreach (var changeHistory in Model.ChangeHistory)
+        {
+            <tr class="govuk-table__row">
+            
+                <td class="govuk-table__cell" data-label="Date of changes">
+                    @changeHistory.AppliedDate.ToGdsFormat()
+
+                </td>
+                <td class="govuk-table__cell" data-label="Change made ">
+                    @changeHistory.Description
+                </td>
+                <td class="govuk-table__cell " data-label="Decision">
+                   
+                    <strong class="govuk-tag @changeHistory.ChangeType.GetDisplayClass()">@changeHistory.ChangeType.GetEnumDescription()</strong>
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a id="view-learner-details-link" class="govuk-link" asp-route="@RouteNames.ApprenticeDetail" asp-route-accountHashedId="@Model.AccountHashedId"
+       asp-route-apprenticeshipHashedId="@Model.ApprenticeshipHashedId">View learner details</a>
+</p>
+
+@section back {
+    
+    <a id="back-link" class="govuk-back-link" asp-route="@RouteNames.ApprenticeDetail" asp-route-accountHashedId="@Model.AccountHashedId"
+          asp-route-apprenticeshipHashedId="@Model.ApprenticeshipHashedId">Back</a>
+}
