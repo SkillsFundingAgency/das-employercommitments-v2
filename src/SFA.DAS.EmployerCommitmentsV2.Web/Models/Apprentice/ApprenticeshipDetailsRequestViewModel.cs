@@ -32,10 +32,16 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public string ProviderName { get; set; }
     public PendingChanges PendingChanges { get; set; }
 
-    public bool CanEditStatus => (ApprenticeshipStatus == ApprenticeshipStatus.Live ||
-                                  ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart ||
-                                  ApprenticeshipStatus == ApprenticeshipStatus.Paused);
+    public bool CanEditStatus => ApprenticeshipStatus == ApprenticeshipStatus.Live
+                                 || ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart
+                                 || ApprenticeshipStatus == ApprenticeshipStatus.Paused;
 
+    public bool FreezeStatus { get; set; }
+
+    public bool CanChangePayments => FreezeStatus || ApprenticeshipStatus == ApprenticeshipStatus.Live;
+
+    public int? WithdrawnReasonCode { get; set; }
+    public bool CanEditStopDate => ApprenticeshipStatus == ApprenticeshipStatus.Stopped && WithdrawnReasonCode == null;
     public string EmployerReference { get; set; }
     public string CohortReference { get; set; }
     public string EmploymentStatus { get; set; }
@@ -83,27 +89,8 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public int? TrainingTotalHours { get; set; }
     public int? DurationReducedByHours { get; set; }
     public bool? IsDurationReducedByRpl { get; set; }
-
     public bool HasPendingOverlappingTrainingDateRequest { get; set; }
-
     public bool HasMultipleDeliveryModelOptions { get; set; }
-    public string PaymentStatus { get; set; }
-    public PendingPriceChange PendingPriceChange { get; set; }
-    public bool HasPendingPriceChange => PendingPriceChange != null;
-    public PendingStartDateChange PendingStartDateChange { get; set; }
-    public bool HasPendingStartDateChange => PendingStartDateChange != null;
-    public bool HasPendingProviderInitiatedPriceChange => PendingPriceChange?.ProviderApprovedDate != null;
-    public bool HasPendingProviderInitiatedStartDateChange => PendingStartDateChange != null;
-    public bool HasWithheldPayment => PaymentStatus == "Withheld";
-    public string PriceChangeUrl { get; set; }
-    public string PendingPriceChangeUrl { get; set; }
-    public string PendingStartDateChangeUrl { get; set; }
-    public string PaymentStatusChangeUrl { get; set; }
-    public ApprenticeDetailsBanners ShowBannersFlags { get; set; }
-    public LearnerStatus LearnerStatus { get; set; }
-    public DateTime? PaymentFrozenOn { get; set; }
-    public DateTime? WithdrawalChangedDate { get; set; }
-    public string WithdrawalReason { get; set; }
     public LearningType? LearningType { get; set; }
     public bool HasChangeHistory { get; set; }
 
@@ -186,46 +173,4 @@ public class TrainingProviderHistory
     public DateTime ToDate { get; set; }
     public string HashedApprenticeshipId { get; set; }
     public bool ShowLink { get; set; }
-}
-
-public class PendingPriceChange
-{
-    public decimal Cost { get; set; }
-    public decimal? TrainingPrice { get; set; }
-    public decimal? EndPointAssessmentPrice { get; set; }
-    public DateTime? ProviderApprovedDate { get; set; }
-    public DateTime? EmployerApprovedDate { get; set; }
-}
-
-public class PendingStartDateChange
-{
-    public DateTime PendingActualStartDate { get; set; }
-    public DateTime PendingEndDate { get; set; }
-    public string Initiator { get; set; }
-    public DateTime? ProviderApprovedDate { get; set; }
-    public DateTime? EmployerApprovedDate { get; set; }
-}
-
-public enum InitiatedBy
-{
-    Provider,
-    Employer
-}
-
-public static class PendingPriceChangeExtensions
-{
-    public static InitiatedBy GetPriceChangeInitiatedBy(this PendingPriceChange pendingPriceChange)
-    {
-        if (pendingPriceChange.ProviderApprovedDate.HasValue && !pendingPriceChange.EmployerApprovedDate.HasValue)
-        {
-            return InitiatedBy.Provider;
-        }
-
-        if (!pendingPriceChange.ProviderApprovedDate.HasValue && pendingPriceChange.EmployerApprovedDate.HasValue)
-        {
-            return InitiatedBy.Employer;
-        }
-
-        throw new ArgumentOutOfRangeException("Could not resolve PriceChange Initiator, expected at least one approval date to be populated");
-    }
 }

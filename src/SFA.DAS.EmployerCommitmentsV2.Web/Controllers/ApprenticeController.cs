@@ -34,8 +34,6 @@ public class ApprenticeController(
     IApprovalsApiClient outerApi)
     : Controller
 {
-    private const string ApprenticePausedMessage = "Apprenticeship paused";
-    private const string ApprenticeResumeMessage = "Apprenticeship resumed";
     private const string ApprenticeStoppedMessage = "Apprenticeship stopped";
     private const string ApprenticeUpdated = "You have updated apprentice details";
     private const string ApprenticeEditStopDate = "New stop date confirmed";
@@ -127,19 +125,11 @@ public class ApprenticeController(
     {
         switch (viewModel.SelectedStatusChange)
         {
-            case ChangeStatusType.Pause:
-                return RedirectToAction(nameof(PauseApprenticeship),
-                    new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
-
             case ChangeStatusType.Stop:
                 var redirectToActionName = viewModel.CurrentStatus == ApprenticeshipStatus.WaitingToStart
                     ? nameof(HasTheApprenticeBeenMadeRedundant)
                     : nameof(WhyStopApprenticeship);
                 return RedirectToAction(redirectToActionName,
-                    new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
-
-            case ChangeStatusType.Resume:
-                return RedirectToAction(nameof(ResumeApprenticeship),
                     new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
 
             default:
@@ -646,25 +636,37 @@ public class ApprenticeController(
         return View(viewModel);
     }
 
-    [Route("{apprenticeshipHashedId}/details/pause")]
+    [Route("{apprenticeshipHashedId}/payments", Name = RouteNames.ChangePayments)]
     [HttpGet]
-    public async Task<IActionResult> PauseApprenticeship(PauseRequest request)
+    public async Task<IActionResult> ChangePayments(ChangePaymentsRequest request)
     {
-        var viewModel = await modelMapper.Map<PauseRequestViewModel>(request);
+        var viewModel = await modelMapper.Map<ChangePaymentsRequestViewModel>(request);
         return View(viewModel);
     }
 
-    [Route("{apprenticeshipHashedId}/details/pause")]
+    [Route("{apprenticeshipHashedId}/payments")]
     [HttpPost]
-    public async Task<IActionResult> PauseApprenticeship(PauseRequestViewModel viewModel)
+    public async Task<IActionResult> ChangePayments(ChangePaymentsRequestViewModel viewModel)
     {
-        if (viewModel.PauseConfirmed.HasValue && viewModel.PauseConfirmed.Value)
+        if (!ModelState.IsValid)
         {
-            var pauseRequest = await modelMapper.Map<PauseApprenticeshipRequest>(viewModel);
+            return View(viewModel);
+        }
 
-            await commitmentsApiClient.PauseApprenticeship(pauseRequest, CancellationToken.None);
+        if (viewModel.ChangeConfirmed.HasValue && viewModel.ChangeConfirmed.Value)
+        {
+            var apimRequest = await modelMapper.Map<ChangePaymentsApimRequest>(viewModel);
+            await outerApi.ChangePayments(viewModel.AccountId, viewModel.ApprenticeshipId, apimRequest, CancellationToken.None);
 
-            TempData.AddFlashMessage(ApprenticePausedMessage, TempDataDictionaryExtensions.FlashMessageLevel.Success);
+            var confirmationRoute = viewModel.FreezeStatus
+                ? RouteNames.PaymentsResumedConfirmation
+                : RouteNames.PaymentsPausedConfirmation;
+
+            return RedirectToRoute(confirmationRoute, new
+            {
+                viewModel.AccountHashedId,
+                viewModel.ApprenticeshipHashedId
+            });
         }
 
         return RedirectToAction(nameof(ApprenticeshipDetails),
@@ -675,38 +677,34 @@ public class ApprenticeController(
             });
     }
 
-    [Route("{apprenticeshipHashedId}/details/resume")]
+    [Route("{apprenticeshipHashedId}/payments/paused", Name = RouteNames.PaymentsPausedConfirmation)]
     [HttpGet]
-    public async Task<IActionResult> ResumeApprenticeship(ResumeRequest request)
+    public IActionResult PaymentsPausedConfirmation(ChangePaymentsConfirmationRequest request)
     {
-        var viewModel = await modelMapper.Map<ResumeRequestViewModel>(request);
-        return View(viewModel);
+        return View(new ChangePaymentsConfirmationViewModel
+        {
+            AccountHashedId = request.AccountHashedId,
+            ApprenticeshipHashedId = request.ApprenticeshipHashedId
+        });
     }
 
-    [Route("{apprenticeshipHashedId}/details/resume")]
-    [HttpPost]
-    public async Task<IActionResult> ResumeApprenticeship(ResumeRequestViewModel viewModel)
+    [Route("{apprenticeshipHashedId}/payments/resumed", Name = RouteNames.PaymentsResumedConfirmation)]
+    [HttpGet]
+    public IActionResult PaymentsResumedConfirmation(ChangePaymentsConfirmationRequest request)
     {
-        if (viewModel.ResumeConfirmed.HasValue && viewModel.ResumeConfirmed.Value)
+        return View(new ChangePaymentsConfirmationViewModel
         {
-            var resumeRequest = await modelMapper.Map<ResumeApprenticeshipRequest>(viewModel);
-
-            await commitmentsApiClient.ResumeApprenticeship(resumeRequest, CancellationToken.None);
-
-            TempData.AddFlashMessage(ApprenticeResumeMessage, TempDataDictionaryExtensions.FlashMessageLevel.Success);
-        }
-
-        return RedirectToAction(nameof(ApprenticeshipDetails),
-            new { viewModel.AccountHashedId, viewModel.ApprenticeshipHashedId });
+            AccountHashedId = request.AccountHashedId,
+            ApprenticeshipHashedId = request.ApprenticeshipHashedId
+        });
     }
 
     [HttpGet]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/details", Name = RouteNames.ApprenticeDetail)]
-    public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request, ApprenticeDetailsBanners banners = 0)
+    public async Task<IActionResult> ApprenticeshipDetails(ApprenticeshipDetailsRequest request)
     {
         var viewModel = await modelMapper.Map<ApprenticeshipDetailsRequestViewModel>(request);
-        viewModel.ShowBannersFlags = banners;
         return View("details", viewModel);
     }
 
