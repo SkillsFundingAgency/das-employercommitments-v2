@@ -12,10 +12,10 @@
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/apprentice-details";
 }
 
+<partial name="DetailsPartials/_Banners" />
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
-        <partial name="DetailsPartials/_Banners" />
 
         <h1 class="govuk-heading-xl" id="learnerName"><span class="das-breakable">@Model.ApprenticeName</span></h1>
 
@@ -245,67 +245,26 @@
                         endDate = Model.EndDate.Value.ToGdsFormatWithoutDay();
                     }
                 }
-                @if (!Model.HasPendingStartDateChange)
-                {
-                    @* Start Date *@
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header">@startDateLabel</th>
-                        <td id="start-date" class="govuk-table__cell" colspan="2">@startDate</td>
-                        <td class="govuk-table__cell"></td>
-                    </tr>
-                    @* Planned End Date *@
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header">Planned training end date</th>
-                        <td id="end-date" class="govuk-table__cell" colspan="2">@endDate</td>
-                        @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
-                        {
-                            <td class="govuk-table__cell">
-                                @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
-                                {
-                                    <a id="edit-end-date-link" class="govuk-link" href="@Url.Action("EditEndDate", new EditEndDateRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit<span class="govuk-visually-hidden"> end date</span></a>
-                                }
-                            </td>
-                        }
-                    </tr>
-                }
-                else
-                {
-                    @* Pending Start Date Change*@
-                    <tr>
-                        <td colspan="3">
-                            <div id="change-of-start-date" class="" style="border-left: 5px solid #1d70b8; padding:10px;">
-                                <table class="govuk-table">
-                                    <thead class="govuk-table__head">
-                                        <tr class="govuk-table__row">
-                                            <th scope="col" class="govuk-table__header app-custom-class govuk-!-width-one-third">
-                                                <strong class="govuk-tag govuk-tag--yellow">Pending request</strong>
-                                            </th>
-                                            <th scope="col" class="govuk-table__header app-custom-class govuk-!-width-one-third">Current</th>
-                                            <th scope="col" class="govuk-table__header app-custom-class govuk-!-width-one-third">Requested </th>
-                                            <td class="govuk-table__cell"></td>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="govuk-table__body">
-                                        <tr class="govuk-table__row">
-                                            <th scope="row" class="govuk-table__header">Training start date</th>
-                                            <td class="govuk-table__cell">@startDate</td>
-                                            <td class="govuk-table__cell">@Model.PendingStartDateChange.PendingActualStartDate.ToGdsFormat()</td>
-                                        </tr>
-                                        <tr class="govuk-table__row">
-                                            <th scope="row" class="govuk-table__header">Planned training end date</th>
-                                            <td class="govuk-table__cell">@endDate</td>
-                                            <td class="govuk-table__cell">@Model.PendingStartDateChange.PendingEndDate.ToGdsFormat()</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <a class="govuk-link" href="@Model.PendingStartDateChangeUrl">
-                                    Review request<span class="govuk-visually-hidden">for change of start date</span>
-                                </a>
-                            </div>
+                @* Start Date *@
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">@startDateLabel</th>
+                    <td id="start-date" class="govuk-table__cell" colspan="2">@startDate</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                @* Planned End Date *@
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Planned training end date</th>
+                    <td id="end-date" class="govuk-table__cell" colspan="2">@endDate</td>
+                    @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
+                    {
+                        <td class="govuk-table__cell">
+                            @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
+                            {
+                                <a id="edit-end-date-link" class="govuk-link" href="@Url.Action("EditEndDate", new EditEndDateRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit<span class="govuk-visually-hidden"> end date</span></a>
+                            }
                         </td>
-                    </tr>
-                }
-
+                    }
+                </tr>
 
                 @if (Model.DeliveryModel.Equals(DeliveryModel.PortableFlexiJob))
                 {
@@ -324,31 +283,27 @@
                         <td class="govuk-table__cell"></td>
                     </tr>
                 }
-                @if (!Model.HasPendingPriceChange)
+                @if (Model.TrainingPrice.HasValue)
                 {
-                    @if (Model.TrainingPrice.HasValue)
-                    {
-                        <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table__header">Training price (TNP1)</th>
-                            <td id="apprentice-trainingprice" class="govuk-table__cell">@Model.TrainingPrice.Value.ToGdsCostFormat()</td>
-                            <td class="govuk-table__cell"></td>
-                        </tr>
-                    }
-
-                    @if (Model.EndPointAssessmentPrice.HasValue)
-                    {
-                        <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table__header">End-point assessment price (TNP2)</th>
-                            <td id="apprentice-epaoprice" class="govuk-table__cell">@Model.EndPointAssessmentPrice.Value.ToGdsCostFormat()</td>
-                            <td class="govuk-table__cell"></td>
-                        </tr>
-                    }
-
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header">Total agreed training price</th>
-                        <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost()</td>
+                        <th scope="row" class="govuk-table__header">Training price (TNP1)</th>
+                        <td id="apprentice-trainingprice" class="govuk-table__cell">@Model.TrainingPrice.Value.ToGdsCostFormat()</td>
+                        <td class="govuk-table__cell"></td>
                     </tr>
                 }
+
+                @if (Model.EndPointAssessmentPrice.HasValue)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">End-point assessment price (TNP2)</th>
+                        <td id="apprentice-epaoprice" class="govuk-table__cell">@Model.EndPointAssessmentPrice.Value.ToGdsCostFormat()</td>
+                        <td class="govuk-table__cell"></td>
+                    </tr>
+                }
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Total agreed training price</th>
+                    <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost()</td>
+                </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Reference </th>
                     <td id="employer-reference" class="govuk-table__cell" colspan="2">@Model.EmployerReference</td>
@@ -356,44 +311,6 @@
                 </tr>
             </tbody>
         </table>
-
-        @if (Model.HasPendingPriceChange)
-        {
-            <div class="govuk-inset-text das-inset-text--highlight">
-                <div class="govuk-grid-row govuk-!-margin-bottom-2">
-                    <div class="govuk-grid-column-two-thirds">
-                        <h2 class="govuk-heading-m">Price change requested</h2>
-                        <strong class="govuk-tag govuk-tag">Pending</strong>
-                    </div>
-                </div>
-
-                <table class="govuk-table">
-                    <tbody class="govuk-table__body">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header"></th>
-                            <th class="govuk-table__header">Current</th>
-                            <th class="govuk-table__header">Requested</th>
-                        </tr>
-                        <tr class="govuk-table__row" id="pendingPriceChangeTrainingPriceRow">
-                            <th scope="row" class="govuk-table__header">Total price</th>
-                            <td class="govuk-table__cell" id="priceChangeCurrentTotalPrice">@Model.Cost.FormatCost()</td>
-                            <td class="govuk-table__cell" id="priceChangeRequestedTotalPrice">@Model.PendingPriceChange.Cost.FormatCost()</td>
-                        </tr>
-                    </tbody>
-                </table>
-                @if (Model.PendingPriceChange.GetPriceChangeInitiatedBy() == InitiatedBy.Provider)
-                {
-                    <a id="linkViewPendingPrice" href="@Model.PendingPriceChangeUrl" class="govuk-link">Review price change</a>
-                }
-                else
-                {
-                    <a id="linkViewPendingPrice" href="@Model.PendingPriceChangeUrl" class="govuk-link">View change request</a>
-                }
-            </div>
-            <br />
-
-            <br />
-        }
 
         @if (Model.RecognisePriorLearning != null)
         {

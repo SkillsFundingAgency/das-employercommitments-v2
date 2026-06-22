@@ -93,7 +93,6 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 EndpointAssessorName = response.Apprenticeship.EndpointAssessorName,
                 MadeRedundant = response.Apprenticeship.MadeRedundant,
                 HasPendingChangeOfProviderRequest = pendingChangeOfProviderRequest != null,
-                PaymentFrozenOn = response.PaymentsStatus.FrozenOn,
                 PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty,
                 HasContinuation = response.Apprenticeship.HasContinuation,
                 TrainingProviderHistory = response.ChangeOfProviderChain
@@ -126,18 +125,9 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 IsDurationReducedByRpl = response.Apprenticeship.IsDurationReducedByRpl,
                 HasPendingOverlappingTrainingDateRequest = hasPendingoverlappingTrainingDateRequest,
                 HasMultipleDeliveryModelOptions = response.HasMultipleDeliveryModelOptions,
-                PendingPriceChange = Map(response.PendingPriceChange),
-                PriceChangeUrl = _urlBuilder.ApprenticeshipsLink("CreatePriceChange", source.AccountHashedId, source.ApprenticeshipHashedId),
-                PendingPriceChangeUrl = response.PendingPriceChange != null ? _urlBuilder.ApprenticeshipsLink("ViewPendingPriceChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
-                PendingStartDateChange = Map(response.PendingStartDateChange),
-                PendingStartDateChangeUrl = response.PendingStartDateChange != null ? _urlBuilder.ApprenticeshipsLink("ViewPendingStartDateChange", source.AccountHashedId, source.ApprenticeshipHashedId) : null,
-                PaymentStatus = response.PaymentsStatus.PaymentsFrozen ? "Withheld" : response.LearnerStatusDetails.LearnerStatus == LearnerStatus.WaitingToStart ? "Inactive" : "Active",
-                PaymentStatusChangeUrl = _urlBuilder.ApprenticeshipsLink(response.PaymentsStatus.PaymentsFrozen ? "PaymentsUnfreeze" : "PaymentsFreeze", source.AccountHashedId, source.ApprenticeshipHashedId),
-                LearnerStatus = response.LearnerStatusDetails.LearnerStatus,
-                WithdrawalChangedDate = response.LearnerStatusDetails.WithdrawalChangedDate,
-                WithdrawalReason = response.LearnerStatusDetails.WithdrawalReason,
                 EmploymentStatus = MapEmploymentStatus(response.Apprenticeship.EmployerVerificationStatus, response.Apprenticeship.EmployerVerificationNotes),
                 LearningType = response.Apprenticeship.LearningType,
+                WithdrawnReasonCode = response.Apprenticeship.WithdrawnReasonCode,
                 HasChangeHistory = response.Apprenticeship.HasChangeHistory
             };
 
@@ -148,40 +138,6 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
             _logger.LogError(e, $"Error mapping for accountId {source.AccountHashedId}  and apprenticeship {source.ApprenticeshipHashedId} to ApprenticeshipDetailsRequestViewModel");
             throw;
         }
-    }
-
-    private static PendingPriceChange Map(GetManageApprenticeshipDetailsResponse.PendingPriceChangeDetails priceChangeDetails)
-    {
-        if (priceChangeDetails == null)
-        {
-            return null;
-        }
-
-        return new PendingPriceChange
-        {
-            Cost = priceChangeDetails.Cost,
-            EndPointAssessmentPrice = priceChangeDetails.EndPointAssessmentPrice,
-            TrainingPrice = priceChangeDetails.TrainingPrice,
-            ProviderApprovedDate = priceChangeDetails.ProviderApprovedDate,
-            EmployerApprovedDate = priceChangeDetails.EmployerApprovedDate
-        };
-    }
-
-    private static PendingStartDateChange Map(GetManageApprenticeshipDetailsResponse.PendingStartDateChangeDetails startDateChangeDetails)
-    {
-        if (startDateChangeDetails == null)
-        {
-            return null;
-        }
-
-        return new PendingStartDateChange
-        {
-            Initiator = startDateChangeDetails.Initiator,
-            EmployerApprovedDate = startDateChangeDetails.EmployerApprovedDate,
-            PendingActualStartDate = startDateChangeDetails.PendingActualStartDate,
-            PendingEndDate = startDateChangeDetails.PendingPlannedEndDate,
-            ProviderApprovedDate = startDateChangeDetails.ProviderApprovedDate
-        };
     }
 
     private async Task<TrainingProgramme> GetTrainingProgramme(string courseCode, string standardUId)
