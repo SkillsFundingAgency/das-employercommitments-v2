@@ -66,6 +66,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
                 .With(x => x.CourseCode, _apprenticeshipResponse.CourseCode)
                 .With(x => x.StandardUId, "ST0001_1.0")
                 .With(x => x.Version, "1.0")
+                .With(x => x.ProgrammeType, ProgrammeType.Standard)
                 .Create();
 
             _getTrainingProgrammeByStandardUId = new GetTrainingProgrammeResponse
@@ -528,16 +529,56 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
         [TestCase(ApprenticeshipStatus.WaitingToStart, true)]
         [TestCase(ApprenticeshipStatus.Stopped, false)]
         [TestCase(ApprenticeshipStatus.Completed, false)]
-        public async Task CanEditStaus_IsMapped(ApprenticeshipStatus status, bool expectedAllowEditApprentice)
+        public async Task CanEditStatus_IsMapped(ApprenticeshipStatus status, bool expectedCanEditStatus)
         {
-            //Arrange
             GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = status;
 
-            //Act
             var result = await _mapper.Map(_request);
 
-            //Assert
-            Assert.That(expectedAllowEditApprentice, Is.EqualTo(result.CanEditStatus));
+            Assert.That(result.CanEditStatus, Is.EqualTo(expectedCanEditStatus));
+        }
+
+        [Test]
+        public async Task FreezeStatus_IsMappedFromPaymentsStatus()
+        {
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = ApprenticeshipStatus.Live;
+            GetManageApprenticeshipDetailsResponse.PaymentsStatus = new GetManageApprenticeshipDetailsResponse.PaymentsStatusResponse
+            {
+                FreezeStatus = true
+            };
+
+            var result = await _mapper.Map(_request);
+
+            result.FreezeStatus.Should().BeTrue();
+            result.CanChangePayments.Should().BeTrue();
+        }
+
+        [Test]
+        public async Task CanChangePayments_IsFalseWhenApprenticeshipIsNotLiveAndNotFrozen()
+        {
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = ApprenticeshipStatus.Paused;
+            GetManageApprenticeshipDetailsResponse.PaymentsStatus = new GetManageApprenticeshipDetailsResponse.PaymentsStatusResponse
+            {
+                FreezeStatus = false
+            };
+
+            var result = await _mapper.Map(_request);
+
+            result.CanChangePayments.Should().BeFalse();
+        }
+
+        [Test]
+        public async Task CanChangePayments_IsTrueWhenApprenticeshipIsStoppedAndFrozen()
+        {
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = ApprenticeshipStatus.Stopped;
+            GetManageApprenticeshipDetailsResponse.PaymentsStatus = new GetManageApprenticeshipDetailsResponse.PaymentsStatusResponse
+            {
+                FreezeStatus = true
+            };
+
+            var result = await _mapper.Map(_request);
+
+            result.CanChangePayments.Should().BeTrue();
         }
 
         [Test]

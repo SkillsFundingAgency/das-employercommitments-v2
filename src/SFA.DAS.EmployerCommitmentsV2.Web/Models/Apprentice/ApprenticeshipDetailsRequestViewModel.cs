@@ -32,9 +32,13 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public string ProviderName { get; set; }
     public PendingChanges PendingChanges { get; set; }
 
-    public bool CanEditStatus => (ApprenticeshipStatus == ApprenticeshipStatus.Live ||
-                                  ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart ||
-                                  ApprenticeshipStatus == ApprenticeshipStatus.Paused);
+    public bool CanEditStatus => ApprenticeshipStatus == ApprenticeshipStatus.Live
+                                 || ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart
+                                 || ApprenticeshipStatus == ApprenticeshipStatus.Paused;
+
+    public bool FreezeStatus { get; set; }
+
+    public bool CanChangePayments => FreezeStatus || ApprenticeshipStatus == ApprenticeshipStatus.Live;
 
     public int? WithdrawnReasonCode { get; set; }
     public bool CanEditStopDate => ApprenticeshipStatus == ApprenticeshipStatus.Stopped && WithdrawnReasonCode == null;

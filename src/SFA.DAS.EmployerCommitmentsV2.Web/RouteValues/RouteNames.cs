@@ -26,6 +26,9 @@ public static class RouteNames
     public const string WhenToApplyStopApprentice = "WhenToApplyStopApprentice";
     public const string ChangeVersion = "change-version";
     public const string ChangeOption = "change-option";
+    public const string ChangePayments = "change-payments";
+    public const string PaymentsPausedConfirmation = "payments-paused-confirmation";
+    public const string PaymentsResumedConfirmation = "payments-resumed-confirmation";
     public const string EditApprenticeship = "edit-apprenticeship";
     public const string WhyStopApprenticeship = "why-stop-apprenticeship";
     public const string ApprenticeshipNeverStarted = "apprenticeship-never-started";

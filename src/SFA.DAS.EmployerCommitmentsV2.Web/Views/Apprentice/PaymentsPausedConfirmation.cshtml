@@ -1,0 +1,22 @@
+@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ChangePaymentsConfirmationViewModel
+@{
+    ViewData["Title"] = "Payments paused - Apprenticeship service - GOV.UK";
+    ViewBag.GaData.Vpv = "/accounts/apprentices/manage/payments-paused";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">Payments paused</h1>
+        </div>
+
+        <h2 class="govuk-heading-m">What happens next</h2>
+
+        <p class="govuk-body">
+            We will notify the training provider to tell them payments have been paused. This will not change the learner's status. You can resume payments at any time.
+        </p>
+
+        <a class="govuk-link" id="view-learner-details-link" href="@Url.RouteUrl(RouteNames.ApprenticeDetail, new { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">View learner details</a>
+    </div>
+</div>
