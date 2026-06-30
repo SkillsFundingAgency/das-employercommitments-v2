@@ -92,6 +92,11 @@ public class OuterApiClient : IOuterApiClient
         return PutOrPost<TResponse>(url, data, HttpMethod.Put);
     }
 
+    public Task<TResponse> Patch<TResponse>(string url, object data)
+    {
+        return PutOrPost<TResponse>(url, data, HttpMethod.Patch);
+    }
+
     private async Task<TResponse> PutOrPost<TResponse>(string url, object data, HttpMethod method)
     {
         var stringContent = data != null

@@ -22,16 +22,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
         [TestCase(ApprenticeshipStatus.Stopped)]
         [TestCase(ApprenticeshipStatus.Completed)]
         [TestCase(ApprenticeshipStatus.Live)]
-        [TestCase(ApprenticeshipStatus.Live, ApprenticeDetailsBanners.ChangeOfPriceApproved)]
-        [TestCase(ApprenticeshipStatus.Live, ApprenticeDetailsBanners.ChangeOfPriceApproved | ApprenticeDetailsBanners.ChangeOfPriceCancelled)]
-        public async Task ThenTheCorrectViewIsReturned(ApprenticeshipStatus apprenticeshipStatus, ApprenticeDetailsBanners banners = 0)
+        public async Task ThenTheCorrectViewIsReturned(ApprenticeshipStatus apprenticeshipStatus)
         {
             _fixture = new WhenCallingApprenticeshipDetailsTestsFixture(apprenticeshipStatus);
 
-            var result = await _fixture.ApprenticeshipDetails(banners);
+            var result = await _fixture.ApprenticeshipDetails();
 
             _fixture.VerifyViewModel(result as ViewResult);
-            _fixture.VerifyBanners(result as ViewResult, banners);
         }
 
         [Test]
@@ -64,9 +61,9 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
                 .ReturnsAsync(_viewModel);
         }
 
-        public async Task<IActionResult> ApprenticeshipDetails(ApprenticeDetailsBanners banners = 0)
+        public async Task<IActionResult> ApprenticeshipDetails()
         {
-            return await Controller.ApprenticeshipDetails(_request, banners);
+            return await Controller.ApprenticeshipDetails(_request);
         }
 
         public void VerifyViewModel(ViewResult viewResult)
@@ -86,14 +83,6 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeCont
             Assert.That(Controller.TempData.Values.Contains(ApprenticeStoppedMessage), Is.False);
             Assert.That(Controller.TempData.ContainsKey(FlashMessage), Is.False);
             Assert.That(Controller.TempData.ContainsKey(FlashMessageLevel), Is.False);
-        }
-
-        public void VerifyBanners(ViewResult viewResult, ApprenticeDetailsBanners expectedBanners)
-        {
-            var viewModel = viewResult.Model as ApprenticeshipDetailsRequestViewModel;
-
-            viewModel.Should().BeAssignableTo<ApprenticeshipDetailsRequestViewModel>();
-            viewModel.ShowBannersFlags.Should().Be(expectedBanners);
         }
     }
 }

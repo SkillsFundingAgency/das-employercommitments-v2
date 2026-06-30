@@ -28,20 +28,18 @@ public class WhenPostingChangeStatus : ApprenticeControllerTestBase
     }
 
     [Test, MoqAutoData]
-    public void AndPauseIsSelected_ThenRedirectToPauseApprenticeshipAction(ChangeStatusRequestViewModel viewModel)
+    public void AndStopIsSelectedForLiveApprentice_ThenRedirectToWhyStopApprenticeshipAction(ChangeStatusRequestViewModel viewModel)
     {
-        //Arrange
-        viewModel.SelectedStatusChange = ChangeStatusType.Pause;
+        viewModel.SelectedStatusChange = ChangeStatusType.Stop;
+        viewModel.CurrentStatus = CommitmentsV2.Types.ApprenticeshipStatus.Live;
 
-        //Act
         var response = Controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
-        //Assert
-        Assert.That(response.ActionName, Is.EqualTo("PauseApprenticeship"));           
+        Assert.That(response.ActionName, Is.EqualTo("WhyStopApprenticeship"));
     }
 
     [Test, MoqAutoData]
-    public void AndGoBackIsSelected_ThenRedirectToPauseApprenticeshipAction(ChangeStatusRequestViewModel viewModel)
+    public void AndGoBackIsSelected_ThenRedirectToWhyStopApprenticeshipAction(ChangeStatusRequestViewModel viewModel)
     {
         //Arrange
         viewModel.SelectedStatusChange = ChangeStatusType.GoBack;
@@ -82,15 +80,15 @@ public class WhenPostingChangeStatus : ApprenticeControllerTestBase
     }
 
     [Test, MoqAutoData]
-    public void AndPauseIsSelected_ThenRedirectToResumeApprenticeshipAction(ChangeStatusRequestViewModel viewModel)
+    public void AndPauseIsSelected_ThenRedirectToApprenticeshipDetailsAction(ChangeStatusRequestViewModel viewModel)
     {
         //Arrange
-        viewModel.SelectedStatusChange = ChangeStatusType.Resume;
+        viewModel.SelectedStatusChange = ChangeStatusType.GoBack;
 
         //Act
         var response = Controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
         //Assert
-        Assert.That(response.ActionName, Is.EqualTo("ResumeApprenticeship"));         
+        Assert.That(response.ActionName, Is.EqualTo("ApprenticeshipDetails"));         
     }
 }
