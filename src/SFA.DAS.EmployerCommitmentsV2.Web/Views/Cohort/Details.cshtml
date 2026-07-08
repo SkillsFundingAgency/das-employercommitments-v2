@@ -51,7 +51,7 @@
                 </div>
                 <div class="govuk-notification-banner__content">
                     <p class="govuk-notification-banner__heading">
-                        You can't approve this apprentice request until:
+                        You can't approve this request until:
                     </p>
                     <ul>
                         @if (!Model.IsAgreementSigned)
@@ -61,15 +61,15 @@
                         }
                         @if (Model.HasOverlappingUln)
                         {
-                            <li>there are no overlapping training dates for your apprentices</li>
+                            <li>there are no overlapping training dates for your learners</li>
                         }
                         @if (Model.HasEmailOverlaps)
                         {
-                            <li>each apprentice has a unique email address</li>
+                            <li>each learner has a unique email address</li>
                         }
                         @if (!Model.IsCompleteForEmployer)
                         {
-                            <li>all apprentice records are complete</li>
+                            <li>all learner records are complete</li>
                         }
                     </ul>
                 </div>
@@ -91,7 +91,7 @@
 
         @if(!string.IsNullOrWhiteSpace(Model.Message))
         {
-            <h2 class="govuk-heading-s">Message:</h2>
+            <h2 class="govuk-heading-s">Message from @Model.ProviderName:</h2>
             <div class="govuk-inset-text">
                 @Model.Message
             </div>
@@ -112,7 +112,7 @@
                 if (draftApprenticeship.HasOverlappingUln && !course.ErrorHasOverlappingUlnDisplayed)
                 {
                     <div class="govuk-inset-text das-inset-text--highlight">
-                        <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Apprenticeship can't have overlapping training dates
+                        <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Learner can't have overlapping training dates
                         </h3>
                         <p>
                             You must update training dates to be able to approve
@@ -125,7 +125,7 @@
                     <div class="govuk-inset-text das-inset-text--highlight">
                         <h3 class="govuk-heading-s govuk-!-margin-bottom-2">@course.EmailOverlaps.DisplayEmailOverlapsMessage</h3>
                         <p>
-                            You must enter a unique email address for each apprentice.
+                            You must enter a unique email address for each learner.
                         </p>
                     </div>
                     course.ErrorEmailOverlapsDisplayed = true;
@@ -133,9 +133,9 @@
                 if (!draftApprenticeship.IsComplete && !course.ErrorIsCompletedDisplayed)
                 {
                     <div class="govuk-inset-text das-inset-text--highlight">
-                        <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Apprentice record incomplete</h3>
+                        <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Learner record incomplete</h3>
                         <p>
-                            You must complete the apprentice record to be able to approve.
+                            You must complete the learner record to be able to approve.
                         </p>
                     </div>
                     course.ErrorIsCompletedDisplayed = true;
@@ -169,7 +169,10 @@
                         <th asp-show="@course.IsPortableFlexiJob" scope="col" class="govuk-table__header">Total training
                             price</th>
                         <th scope="col" class="govuk-table__header">Total Price</th>
-                        <th scope="col" class="govuk-table__header">Recognition of prior learning</th>
+                        @if (course.LearningType != LearningType.ApprenticeshipUnit)
+                        {
+                            <th scope="col" class="govuk-table__header">Recognition of prior learning</th>
+                        }
                         <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Action</span></th>
                     </tr>
                 </thead>
@@ -222,10 +225,13 @@
                                     @draftApprenticeship.DisplayCost
                                 }
                             </td>
-                            <td class="govuk-table__cell"
-                                data-label="Recognition of prior learning">
-                                @draftApprenticeship.HasRplDisplay
-                            </td>
+                            @if (course.LearningType != LearningType.ApprenticeshipUnit)
+                            {
+                                <td class="govuk-table__cell"
+                                    data-label="Recognition of prior learning">
+                                    @draftApprenticeship.HasRplDisplay
+                                </td>
+                            }
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <a class="govuk-link edit-apprentice das-!-display-block govuk-!-margin-bottom-1"
                                     href="@Url.RouteUrl("Details", new { @draftApprenticeship.DraftApprenticeshipHashedId, @Model.CohortReference, @Model.AccountHashedId })">
@@ -250,8 +256,7 @@
         <table class="govuk-table">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header das-table-cell-width-80" scope="row">Total apprenticeship training
-                        price <br>(excluding VAT)</th>
+                    <th class="govuk-table__header das-table-cell-width-80" scope="row">Total agreed training price <br>(excluding VAT)</th>
                     <td class="govuk-table__cell govuk-table__header--numeric das-table-cell-width-10">
                         <strong>@Model.DisplayTotalCost</strong>
                     </td>
@@ -266,7 +271,7 @@
                 @if (Model.ShowAddAnotherApprenticeOption)
                 {
                     <a href="@Url.ReservationsLink($"accounts/{Model.AccountHashedId}/reservations/{Model.AccountLegalEntityHashedId}/select?cohortReference={Model.CohortReference}&transferSenderId={Model.TransferSenderHashedId}&encodedPledgeApplicationId={Model.EncodedPledgeApplicationId}")"
-                        class="govuk-link add-apprentice">Add another apprentice</a>
+                        class="govuk-link add-apprentice">Add another learner</a>
                 }
                 <a asp-action="ConfirmDelete" asp-route-AccountHashedId="@Model.AccountHashedId"
                     asp-route-CohortReference="@Model.CohortReference" class="govuk-link das-float-right">Delete this
@@ -283,7 +288,7 @@
                             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                             <strong class="govuk-warning-text__text">
                                 <span class="govuk-visually-hidden">Warning</span>
-                                One or more of your apprenticeships have age eligibility criteria.
+                                One or more of your learners have age eligibility criteria.
                                 Check the date of birth is correct or go to the funding rules to check who is eligible.
                             </strong>
                         </div>
@@ -378,7 +383,7 @@
                             </fieldset>
                         </div>
                         <div class="govuk-button-group">
-                            <button type="submit" id="continue-button" class="govuk-button">Submit</button>
+                            <button type="submit" id="continue-button" class="govuk-button">Save and submit</button>
                             <a href="@Url.RouteUrl("Review", new { Model.AccountHashedId })"
                                 class="govuk-link govuk-link--no-visited-state">Save and exit</a>
                         </div>

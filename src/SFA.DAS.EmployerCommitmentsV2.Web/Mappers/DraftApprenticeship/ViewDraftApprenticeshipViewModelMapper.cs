@@ -53,7 +53,8 @@ public class ViewDraftApprenticeshipViewModelMapper : IMapper<ViewDraftApprentic
             DurationReducedByHours = draftApprenticeship.DurationReducedByHours,
             DurationReducedBy = draftApprenticeship.DurationReducedBy,
             PriceReducedBy = draftApprenticeship.PriceReducedBy,
-            ActualStartDate = draftApprenticeship.ActualStartDate
+            ActualStartDate = draftApprenticeship.ActualStartDate,
+            LearningType = draftApprenticeship.LearningType
         };
 
         return result;

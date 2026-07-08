@@ -1,4 +1,6 @@
-﻿using SFA.DAS.CommitmentsV2.Types;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
@@ -71,4 +73,6 @@ public class DraftApprenticeshipDto
     public bool? EmailAddressConfirmed { get; set; }
     public int? DurationReducedByHours { get; set; }
     public long? LearnerDataId { get; set; }
+    [JsonConverter(typeof(StringEnumConverter))]
+    public LearningType? LearningType { get; set; }
 }

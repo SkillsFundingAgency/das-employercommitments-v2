@@ -26,7 +26,7 @@ public class DetailsViewModelMapper(
         var emailOverlaps = cohort.ApprenticeshipEmailOverlaps;
 
         var courses = await GroupCourses(draftApprenticeships, emailOverlaps, cohort);
-        var viewOrApprove = cohort.WithParty == Party.Employer ? "Approve" : "View";
+        var viewOrApprove = cohort.WithParty == Party.Employer ? "Check and approve" : "View";
         var isAgreementSigned = await IsAgreementSigned(cohort.AccountLegalEntityId, cohort);
 
         return new DetailsViewModel
@@ -43,8 +43,8 @@ public class DetailsViewModelMapper(
             Message = cohort.LatestMessageCreatedByProvider,
             Courses = courses,
             PageTitle = draftApprenticeships.Count == 1
-                ? $"{viewOrApprove} apprentice details"
-                : $"{viewOrApprove} {draftApprenticeships.Count} apprentices' details",
+                ? $"{viewOrApprove} learner details"
+                : $"{viewOrApprove} {draftApprenticeships.Count} learners' details",
             IsApprovedByProvider = cohort.IsApprovedByProvider,
             IsAgreementSigned = isAgreementSigned,
             IsCompleteForEmployer = cohort.IsCompleteForEmployer,
@@ -74,10 +74,11 @@ public class DetailsViewModelMapper(
     private async Task<IReadOnlyCollection<DetailsViewCourseGroupingModel>> GroupCourses(IEnumerable<DraftApprenticeshipDto> draftApprenticeships, IEnumerable<SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses.ApprenticeshipEmailOverlap> emailOverlaps, GetCohortDetailsResponse cohortResponse)
     {
         var groupedByCourse = draftApprenticeships
-            .GroupBy(a => new { a.CourseCode, a.CourseName, a.DeliveryModel })
+            .GroupBy(a => new { a.CourseCode, a.LearningType, a.CourseName, a.DeliveryModel })
             .Select(course => new DetailsViewCourseGroupingModel
             {
                 CourseCode = course.Key.CourseCode,
+                LearningType = course.Key.LearningType,
                 CourseName = course.Key.CourseName,
                 DeliveryModel = course.Key.DeliveryModel,
                 DraftApprenticeships = course

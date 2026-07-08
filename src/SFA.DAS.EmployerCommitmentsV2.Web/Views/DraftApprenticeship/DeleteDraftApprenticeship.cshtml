@@ -2,7 +2,7 @@
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship
 
 @{
-    ViewData["Title"] = "Delete the apprentice @Model.FullName?";
+    ViewData["Title"] = "Are you sure you want to delete the record for @Model.FullName?";
     var backButtonUrl = (Model.Origin == DeleteDraftApprenticeshipOrigin.CohortDetails)
     ? Url.Action("Details", "Cohort", new { Model.AccountHashedId, Model.CohortReference })
     : Url.Action("Details", new { Model.AccountHashedId, Model.CohortReference, Model.DraftApprenticeshipHashedId });
@@ -28,7 +28,7 @@
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                         <h1 class="govuk-fieldset__heading">
-                            Delete the apprentice @Model.FullName?
+                            Are you sure you want to delete the record for @Model.FullName?
                         </h1>
                     </legend>
                     @if (Model.IsLastApprenticeshipInCohort)
@@ -36,9 +36,7 @@
                         <div class="govuk-warning-text">
                             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                             <strong class="govuk-warning-text__text">
-                                <span class="govuk-warning-text__assistive">Warning</span>
-                                Deleting this apprentice will completely remove all the details associated with them,
-                                including their reference.
+                                You cannot undo this action. All details you have entered for @Model.FullName will be lost.
                             </strong>
                         </div>
                     }
@@ -57,7 +55,7 @@
                             <input asp-for="ConfirmDelete" value="true" type="radio" class="govuk-radios__input"
                                 id="confirmDelete-true" />
                             <label class="govuk-label govuk-radios__label" for="confirmDelete-true">
-                                Yes, delete
+                                Yes, delete the record for @Model.FullName
                             </label>
 
                         </div>
@@ -77,7 +75,7 @@
             </div>
 
             <button class="govuk-button" type="submit" id="continue-button" data-module="govuk-button">
-                Save and continue
+                Continue
             </button>
         </form>
 

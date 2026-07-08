@@ -44,28 +44,28 @@ public static class CohortSummaryExtension
 
             CohortsInDraft = new ApprenticeshipRequestsTabViewModel(
                 cohortsInDraftCount,
-                cohortsInDraftCount == 1 ? "Draft" : "Drafts",
+                cohortsInDraftCount == 1 ? "draft" : "drafts",
                 urlHelper.Action("Draft", "Cohort", new { accountHashedId }),
                 CohortStatus.Draft.ToString(),
                 selectedStatus == CohortStatus.Draft),
 
             CohortsInReview = new ApprenticeshipRequestsTabViewModel(
                 cohortsInReviewCount,
-                $"apprentice request{(cohortsInReviewCount == 1 ? "" : "s")} ready for review",
+                $"request{(cohortsInReviewCount == 1 ? "" : "s")} to review",
                 urlHelper.Action("Review", "Cohort", new { accountHashedId }),
                 CohortStatus.Review.ToString(),
                 selectedStatus == CohortStatus.Review),
 
             CohortsWithTrainingProvider = new ApprenticeshipRequestsTabViewModel(
                 cohortsWithProviderCount,
-                "With training providers",
+                "with training providers",
                 urlHelper.Action("WithTrainingProvider", "Cohort", new { accountHashedId }),
                 CohortStatus.WithProvider.ToString(),
                 selectedStatus == CohortStatus.WithProvider),
 
             CohortsWithTransferSender = new ApprenticeshipRequestsTabViewModel(
                 cohortsWithTransferSenderCount,
-                "With transfer sending employers",
+                "with transfer-sending employers",
                 urlHelper.Action("WithTransferSender", "Cohort", new { accountHashedId }),
                 CohortStatus.WithTransferSender.ToString(),
                 selectedStatus == CohortStatus.WithTransferSender)
