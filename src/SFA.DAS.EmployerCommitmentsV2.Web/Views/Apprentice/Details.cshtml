@@ -57,7 +57,10 @@
         <table id="app-status" class="govuk-table govuk-!-margin-bottom-8">
             <tbody>
                 <partial name="DetailsPartials/_ApprenticeshipStatus" />
-                <partial name="DetailsPartials/_PaymentsStatus" />
+                @if (Model.LearningType != SFA.DAS.Common.Domain.Types.LearningType.ApprenticeshipUnit)
+                {
+                    <partial name="DetailsPartials/_PaymentsStatus" />
+                }
 
                 <tr>
                     <th scope="row" class="govuk-table__header">Training provider</th>
