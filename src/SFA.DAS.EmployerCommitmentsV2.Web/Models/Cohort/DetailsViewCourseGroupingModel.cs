@@ -18,4 +18,5 @@ public class DetailsViewCourseGroupingModel
     public bool ErrorHasOverlappingUlnDisplayed { get; set; }
     public bool ErrorEmailOverlapsDisplayed { get; set; }
     public bool ErrorFundingBandExcessDisplayed { get; set; }
+    public LearningType? LearningType { get; set; }
 }

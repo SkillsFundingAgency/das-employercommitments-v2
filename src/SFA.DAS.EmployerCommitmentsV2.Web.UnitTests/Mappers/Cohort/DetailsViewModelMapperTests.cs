@@ -117,7 +117,7 @@ public class DetailsViewModelMapperTests
         foreach (var course in result.Courses)
         {
             var expectedCount = fixture.CohortDetails.DraftApprenticeships
-                .Count(a => a.CourseCode == course.CourseCode && a.CourseName == course.CourseName && course.DeliveryModel == a.DeliveryModel);
+                .Count(a => a.CourseCode == course.CourseCode && a.LearningType == course.LearningType && a.CourseName == course.CourseName && course.DeliveryModel == a.DeliveryModel);
 
             Assert.That(course.Count, Is.EqualTo(expectedCount));
         }
@@ -179,14 +179,14 @@ public class DetailsViewModelMapperTests
         var result = await fixture.Map();
 
         var expectedSequence = fixture.CohortDetails.DraftApprenticeships
-            .Select(c => new { c.CourseName, c.CourseCode, c.DeliveryModel })
+            .Select(c => new { c.CourseName, c.CourseCode, c.LearningType, c.DeliveryModel })
             .Distinct()
-            .OrderBy(c => c.CourseName).ThenBy(c => c.CourseCode).ThenBy(c => c.DeliveryModel)
+            .OrderBy(c => c.CourseName).ThenBy(c => c.CourseCode).ThenBy(c=>c.LearningType).ThenBy(c => c.DeliveryModel)
             .ToList();
 
         var actualSequence = result.Courses
-            .Select(c => new { c.CourseName, c.CourseCode, c.DeliveryModel })
-            .OrderBy(c => c.CourseName).ThenBy(c => c.CourseCode).ThenBy(c => c.DeliveryModel)
+            .Select(c => new { c.CourseName, c.CourseCode, c.LearningType, c.DeliveryModel })
+            .OrderBy(c => c.CourseName).ThenBy(c => c.CourseCode).ThenBy(c=>c.LearningType).ThenBy(c => c.DeliveryModel)
             .ToList();
 
         DetailsViewModelMapperTestsFixture.AssertSequenceOrder(expectedSequence, actualSequence, (e, a) => e.CourseName == a.CourseName && e.CourseCode == a.CourseCode && e.DeliveryModel == a.DeliveryModel);
@@ -201,7 +201,7 @@ public class DetailsViewModelMapperTests
         foreach (var course in result.Courses)
         {
             var expectedSequence = fixture.CohortDetails.DraftApprenticeships
-                .Where(a => a.CourseName == course.CourseName && a.CourseCode == course.CourseCode && a.DeliveryModel == course.DeliveryModel)
+                .Where(a => a.CourseName == course.CourseName && a.CourseCode == course.CourseCode && a.LearningType == course.LearningType && a.DeliveryModel == course.DeliveryModel)
                 .Select(a => $"{a.FirstName} {a.LastName}")
                 .OrderBy(a => a)
                 .ToList();
@@ -340,15 +340,15 @@ public class DetailsViewModelMapperTests
         Assert.That(excessModel, Is.Null);
     }
 
-    [TestCase(0, "Approve 0 apprentices' details", Party.Employer)]
-    [TestCase(1, "Approve apprentice details", Party.Employer)]
-    [TestCase(2, "Approve 2 apprentices' details", Party.Employer)]
-    [TestCase(0, "View 0 apprentices' details", Party.Provider)]
-    [TestCase(1, "View apprentice details", Party.Provider)]
-    [TestCase(2, "View 2 apprentices' details", Party.Provider)]
-    [TestCase(0, "View 0 apprentices' details", Party.TransferSender)]
-    [TestCase(1, "View apprentice details", Party.TransferSender)]
-    [TestCase(2, "View 2 apprentices' details", Party.TransferSender)]
+    [TestCase(0, "Check and approve 0 learners' details", Party.Employer)]
+    [TestCase(1, "Check and approve learner details", Party.Employer)]
+    [TestCase(2, "Check and approve 2 learners' details", Party.Employer)]
+    [TestCase(0, "View 0 learners' details", Party.Provider)]
+    [TestCase(1, "View learner details", Party.Provider)]
+    [TestCase(2, "View 2 learners' details", Party.Provider)]
+    [TestCase(0, "View 0 learners' details", Party.TransferSender)]
+    [TestCase(1, "View learner details", Party.TransferSender)]
+    [TestCase(2, "View 2 learners' details", Party.TransferSender)]
     public async Task PageTitleIsSetCorrectlyForTheNumberOfApprenticeships(int numberOfApprenticeships, string expectedPageTitle, Party withParty)
     {
         var fixture = new DetailsViewModelMapperTestsFixture().CreateThisNumberOfApprenticeships(numberOfApprenticeships);
@@ -976,7 +976,7 @@ public class DetailsViewModelMapperTestsFixture
         return draftApprenticeships;
     }
 
-    private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode, int? cost, DateTime? startDate = null, DateTime? originalStartDate = null, DeliveryModel dm = DeliveryModel.Regular)
+    private void SetCourseDetails(DraftApprenticeshipDto draftApprenticeship, string courseName, string courseCode, int? cost, DateTime? startDate = null, DateTime? originalStartDate = null, DeliveryModel dm = DeliveryModel.Regular, LearningType learningType = LearningType.Apprenticeship)
     {
         startDate = startDate ?? DefaultStartDate;
 
@@ -987,6 +987,7 @@ public class DetailsViewModelMapperTestsFixture
         draftApprenticeship.OriginalStartDate = originalStartDate;
         draftApprenticeship.DeliveryModel = dm;
         draftApprenticeship.ActualStartDate = startDate;
+        draftApprenticeship.LearningType = learningType;
     }
 
     public DetailsViewModelMapperTestsFixture SetIsAgreementSigned(bool isAgreementSigned)

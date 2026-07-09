@@ -1,4 +1,5 @@
-﻿using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
+﻿using SFA.DAS.Common.Domain.Types;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.DraftApprenticeship;
 
@@ -31,4 +32,5 @@ public class ViewDraftApprenticeshipViewModel : IDraftApprenticeshipViewModel
     public DateTime? ActualStartDate { get; set; }
     public int? DurationReducedByHours { get; set; }
     public int? TrainingTotalHours { get; set; }
+    public LearningType? LearningType { get; set; }
 }

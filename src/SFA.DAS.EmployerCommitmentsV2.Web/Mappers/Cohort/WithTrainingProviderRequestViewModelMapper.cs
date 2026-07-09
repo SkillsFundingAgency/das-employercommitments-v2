@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Cohort;
 
 public class WithTrainingProviderRequestViewModelMapper : IMapper<CohortsByAccountRequest, WithTrainingProviderViewModel>
 {
-    public const string Title = "Apprentice details with training provider";
+    public const string Title = "Learner requests with training provider";
     private readonly IEncodingService _encodingService;
     private readonly ICommitmentsApiClient _commitmentsApiClient;
     private readonly IUrlHelper _urlHelper;

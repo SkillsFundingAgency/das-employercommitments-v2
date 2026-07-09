@@ -88,7 +88,7 @@ public class GetCohortCardLinkViewModelExtensionsTests
         {
             result.CohortsInDraft.Should().NotBeNull();
             result.CohortsInDraft.Count.Should().Be(5);
-            result.CohortsInDraft.Description.Should().Be("Drafts");
+            result.CohortsInDraft.Description.Should().Be("drafts");
             UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "Draft")));
         }
 
@@ -96,7 +96,7 @@ public class GetCohortCardLinkViewModelExtensionsTests
         {
             result.CohortsInDraft.Should().NotBeNull();
             result.CohortsInReview.Count.Should().Be(4);
-            result.CohortsInReview.Description.Should().Be("apprentice requests ready for review");
+            result.CohortsInReview.Description.Should().Be("requests to review");
             UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "Review")));
         }
 
@@ -104,7 +104,7 @@ public class GetCohortCardLinkViewModelExtensionsTests
         {
             result.CohortsInDraft.Should().NotBeNull();
             result.CohortsInReview.Count.Should().Be(1);
-            result.CohortsInReview.Description.Should().Be("apprentice request ready for review");
+            result.CohortsInReview.Description.Should().Be("request to review");
             UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "Review")));
         }
 
@@ -112,7 +112,7 @@ public class GetCohortCardLinkViewModelExtensionsTests
         {
             result.CohortsInDraft.Should().NotBeNull();
             result.CohortsWithTrainingProvider.Count.Should().Be(3);
-            result.CohortsWithTrainingProvider.Description.Should().Be("With training providers");
+            result.CohortsWithTrainingProvider.Description.Should().Be("with training providers");
             UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "WithTrainingProvider")));
         }
 
@@ -120,7 +120,7 @@ public class GetCohortCardLinkViewModelExtensionsTests
         {
             result.CohortsInDraft.Should().NotBeNull();
             result.CohortsWithTransferSender.Count.Should().Be(2);
-            result.CohortsWithTransferSender.Description.Should().Be("With transfer sending employers");
+            result.CohortsWithTransferSender.Description.Should().Be("with transfer-sending employers");
             UrlHelper.Verify(x => x.Action(It.Is<UrlActionContext>(p => p.Controller == "Cohort" && p.Action == "WithTransferSender")));
         }
 

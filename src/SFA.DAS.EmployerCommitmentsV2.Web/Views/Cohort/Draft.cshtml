@@ -18,8 +18,8 @@
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th scope="col" class="govuk-table__header das-table-cell-width-25">Training provider</th>
-                            <th scope="col" class="govuk-table__header das-table-cell-width-25">Reference</th>
-                            <th scope="col" class="govuk-table__header das-table-cell-width-25 govuk-table__header--numeric">Number of apprentices</th>
+                            <th scope="col" class="govuk-table__header das-table-cell-width-25">Cohort reference</th>
+                            <th scope="col" class="govuk-table__header das-table-cell-width-25 govuk-table__header--numeric">Number of learners</th>
                             <th scope="col" class="govuk-table__header govuk-table__header--numeric das-table-cell-width-25"></th>
                         </tr>
                     </thead>
@@ -30,8 +30,8 @@
 
                             <tr class="govuk-table__row">
                                 <td class="govuk-table__cell" data-label="Training provider">@cohort.ProviderName</td>
-                                <td class="govuk-table__cell" data-label="Reference">@cohort.CohortReference</td>
-                                <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of apprentices">@cohort.NumberOfApprentices</td>
+                                <td class="govuk-table__cell" data-label="Cohort reference">@cohort.CohortReference</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Number of learners">@cohort.NumberOfApprentices</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" data-label="">
                                     <a class="govuk-link cohort-details-link" href="@Url.RouteUrl(RouteNames.CohortDetails, new { Model.AccountHashedId, cohort.CohortReference })">Details<span class="govuk-visually-hidden"> Cohort @cohort.CohortReference</span></a>
                                 </td>
@@ -43,7 +43,7 @@
             }
             else
             {
-                <p class="govuk-body govuk-!-font-weight-bold">You currently have 0 draft apprentice requests</p>
+                <p class="govuk-body govuk-!-font-weight-bold">You currently have no draft learner requests.</p>
             }
 
         </div>
