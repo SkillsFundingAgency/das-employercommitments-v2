@@ -172,4 +172,14 @@ public class ApprovalsApiClient(IOuterApiClient client) : IApprovalsApiClient
     {
         return client.Get<GetChangeHistoryResponse>($"change-history/{apprenticeshipId}");
     }
+
+    public Task<GetAllChangeHistoryResponse> GetChangeHistoryForEmployer(long accountId, CancellationToken cancellationToken = default)
+    {
+        return client.Get<GetAllChangeHistoryResponse>($"/employer/{accountId}/apprentices/change-history");
+    }
+
+    public Task<GetApprenticeshipsResponse> GetApprenticeships(GetApprenticeshipsRequest request, CancellationToken cancellationToken = default)
+    {
+        return client.Get<GetApprenticeshipsResponse>(request.GetUrl);
+    }
 }

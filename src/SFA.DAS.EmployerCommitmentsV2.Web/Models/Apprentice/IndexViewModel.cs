@@ -8,6 +8,7 @@ public class IndexViewModel
     public IEnumerable<ApprenticeshipDetailsViewModel> Apprenticeships { get; set; }
     public string SortedByHeaderClassName { get; set; }
     public ApprenticesFilterModel FilterModel { get; set; }
+    public bool HasChangeHistory { get; set; }
     public bool ShowPageLinks  => FilterModel.TotalNumberOfApprenticeshipsFound > Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage;
     public void SortedByHeader()
     {

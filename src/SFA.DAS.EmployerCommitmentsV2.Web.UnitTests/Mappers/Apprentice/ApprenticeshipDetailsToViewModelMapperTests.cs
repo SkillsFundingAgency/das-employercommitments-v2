@@ -1,6 +1,6 @@
 using FluentAssertions;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 using SFA.DAS.Encoding;
 using SFA.DAS.Testing.AutoFixture;
@@ -85,7 +85,6 @@ public class ApprenticeshipDetailsToViewModelMapperTests
         result.Status.Should().Be(source.ApprenticeshipStatus);
     }
 
-
     [Test, MoqAutoData]
     public async Task Then_Maps_ConfirmationStatus(
         GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source,
@@ -95,7 +94,6 @@ public class ApprenticeshipDetailsToViewModelMapperTests
 
         result.ConfirmationStatus.Should().Be(source.ConfirmationStatus);
     }
-
 
     [Test, MoqAutoData]
     public async Task Then_Maps_Alerts(

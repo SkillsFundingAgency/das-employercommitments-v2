@@ -1,7 +1,7 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
-using SFA.DAS.CommitmentsV2.Api.Types.Requests;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
 
@@ -9,12 +9,12 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
 public class IndexViewModelMapper : IMapper<IndexRequest, IndexViewModel>
 {
-    private readonly ICommitmentsApiClient _client;
+    private readonly IApprovalsApiClient _client;
     private readonly IModelMapper _modelMapper;
     private readonly IEncodingService _encodingService;
 
     public IndexViewModelMapper(
-        ICommitmentsApiClient client,
+        IApprovalsApiClient client,
         IModelMapper modelMapper,
         IEncodingService encodingService)
     {
@@ -27,21 +27,22 @@ public class IndexViewModelMapper : IMapper<IndexRequest, IndexViewModel>
     {
         var decodedAccountId = _encodingService.Decode(source.AccountHashedId, EncodingType.AccountId);
 
-        var response = await _client.GetApprenticeships(new GetApprenticeshipsRequest
-        {
-            AccountId = decodedAccountId,
-            PageNumber = source.PageNumber,
-            PageItemCount = Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage,
-            SortField = source.SortField,
-            ReverseSort = source.ReverseSort,
-            SearchTerm = source.SearchTerm,
-            ProviderName = source.SelectedProvider,
-            CourseName = source.SelectedCourse,
-            Status = source.SelectedStatus,
-            EndDate = source.SelectedEndDate,
-            Alert = source.SelectedAlert,
-            ApprenticeConfirmationStatus = source.SelectedApprenticeConfirmation
-        });
+        var response = await _client.GetApprenticeships(new
+            GetApprenticeshipsRequest(
+            decodedAccountId,
+            source.PageNumber,
+            Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage,
+            source.SortField,
+            source.ReverseSort,
+            source.SearchTerm,
+            null, source.SelectedProvider,
+            source.SelectedCourse,
+            source.SelectedStatus,
+            null,
+            source.SelectedEndDate, null, null, null,
+            source.SelectedAlert,
+            source.SelectedApprenticeConfirmation,
+            null));
 
         var statusFilters = new[]
         {
@@ -82,16 +83,13 @@ public class IndexViewModelMapper : IMapper<IndexRequest, IndexViewModel>
 
         if (response.TotalApprenticeships >= Constants.ApprenticesSearch.NumberOfApprenticesRequiredForSearch)
         {
-            var filters = await _client.GetApprenticeshipsFilterValues(
-                new GetApprenticeshipFiltersRequest { EmployerAccountId = decodedAccountId });
-
-            filterModel.ProviderFilters = filters.ProviderNames;
-            filterModel.CourseFilters = filters.CourseNames;
-            filterModel.EndDateFilters = filters.EndDates;
+            filterModel.ProviderFilters = response.ApprenticeshipFiltersValue.ProviderNames;
+            filterModel.CourseFilters = response.ApprenticeshipFiltersValue.CourseNames;
+            filterModel.EndDateFilters = response.ApprenticeshipFiltersValue.EndDates;
         }
 
         var apprenticeships = new List<ApprenticeshipDetailsViewModel>();
-        
+
         foreach (var apprenticeshipDetailsResponse in response.Apprenticeships)
         {
             var apprenticeship = await _modelMapper.Map<ApprenticeshipDetailsViewModel>(apprenticeshipDetailsResponse);
@@ -102,7 +100,8 @@ public class IndexViewModelMapper : IMapper<IndexRequest, IndexViewModel>
         {
             AccountHashedId = source.AccountHashedId,
             Apprenticeships = apprenticeships,
-            FilterModel = filterModel
+            FilterModel = filterModel,
+            HasChangeHistory = response.HasChangeHistory
         };
     }
 }
