@@ -535,7 +535,34 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
             var result = await _mapper.Map(_request);
 
-            Assert.That(result.CanEditStatus, Is.EqualTo(expectedCanEditStatus));
+            result.CanEditStatus.Should().Be(expectedCanEditStatus);
+        }
+
+        [TestCase(ApprenticeshipStatus.Live)]
+        [TestCase(ApprenticeshipStatus.Paused)]
+        [TestCase(ApprenticeshipStatus.WaitingToStart)]
+        [TestCase(ApprenticeshipStatus.Stopped)]
+        [TestCase(ApprenticeshipStatus.Completed)]
+        public async Task CanEditStatus_IsFalse_For_ApprenticeshipUnit(ApprenticeshipStatus status)
+        {
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = status;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType = LearningType.ApprenticeshipUnit;
+
+            var result = await _mapper.Map(_request);
+
+            result.CanEditStatus.Should().BeFalse();
+        }
+
+        [TestCase(LearningType.Apprenticeship)]
+        [TestCase(LearningType.FoundationApprenticeship)]
+        public async Task CanEditStatus_IsTrue_For_NonApprenticeshipUnit_When_Live(LearningType learningType)
+        {
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = ApprenticeshipStatus.Live;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType = learningType;
+
+            var result = await _mapper.Map(_request);
+
+            result.CanEditStatus.Should().BeTrue();
         }
 
         [Test]
@@ -766,7 +793,24 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             var result = await _mapper.Map(_request);
 
             //Assert
-            Assert.That(expected, Is.EqualTo(result.ShowChangeTrainingProviderLink));
+            result.ShowChangeTrainingProviderLink.Should().Be(expected);
+        }
+
+        [TestCase(ApprenticeshipStatus.Stopped)]
+        [TestCase(ApprenticeshipStatus.Paused)]
+        [TestCase(ApprenticeshipStatus.Live)]
+        [TestCase(ApprenticeshipStatus.WaitingToStart)]
+        [TestCase(ApprenticeshipStatus.Completed)]
+        public async Task ShowChangeTrainingProviderLink_IsFalse_For_ApprenticeshipUnit(ApprenticeshipStatus apprenticeshipStatus)
+        {
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Status = apprenticeshipStatus;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.ContinuedById = null;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.DeliveryModel = DeliveryModel.Regular;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType = LearningType.ApprenticeshipUnit;
+
+            var result = await _mapper.Map(_request);
+
+            result.ShowChangeTrainingProviderLink.Should().BeFalse();
         }
 
         [TestCase(DeliveryModel.PortableFlexiJob, false)]
