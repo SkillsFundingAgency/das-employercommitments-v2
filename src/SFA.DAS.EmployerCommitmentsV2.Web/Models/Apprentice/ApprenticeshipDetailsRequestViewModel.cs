@@ -32,9 +32,10 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public string ProviderName { get; set; }
     public PendingChanges PendingChanges { get; set; }
 
-    public bool CanEditStatus => ApprenticeshipStatus == ApprenticeshipStatus.Live
-                                 || ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart
-                                 || ApprenticeshipStatus == ApprenticeshipStatus.Paused;
+    public bool CanEditStatus => LearningType != SFA.DAS.Common.Domain.Types.LearningType.ApprenticeshipUnit
+                                 && (ApprenticeshipStatus == ApprenticeshipStatus.Live
+                                     || ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart
+                                     || ApprenticeshipStatus == ApprenticeshipStatus.Paused);
 
     public bool FreezeStatus { get; set; }
 
@@ -54,13 +55,13 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public Party? PendingChangeOfProviderRequestWithParty { get; set; }
     public bool HasContinuation { get; set; }
 
-    public bool ShowChangeTrainingProviderLink => ((ApprenticeshipStatus == ApprenticeshipStatus.Stopped ||
-                                                    ApprenticeshipStatus == ApprenticeshipStatus.Paused ||
-                                                    ApprenticeshipStatus == ApprenticeshipStatus.Live ||
-                                                    ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart) &&
-                                                   !HasContinuation &&
-                                                   DeliveryModel != CommitmentsV2.Types.DeliveryModel.PortableFlexiJob
-        );
+    public bool ShowChangeTrainingProviderLink => LearningType != SFA.DAS.Common.Domain.Types.LearningType.ApprenticeshipUnit
+                                                  && (ApprenticeshipStatus == ApprenticeshipStatus.Stopped
+                                                      || ApprenticeshipStatus == ApprenticeshipStatus.Paused
+                                                      || ApprenticeshipStatus == ApprenticeshipStatus.Live
+                                                      || ApprenticeshipStatus == ApprenticeshipStatus.WaitingToStart)
+                                                  && !HasContinuation
+                                                  && DeliveryModel != CommitmentsV2.Types.DeliveryModel.PortableFlexiJob;
 
     public List<TrainingProviderHistory> TrainingProviderHistory { get; set; }
     public ConfirmationStatus? ConfirmationStatus { get; set; }

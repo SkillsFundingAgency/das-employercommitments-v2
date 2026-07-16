@@ -1,4 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using FluentAssertions;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
@@ -35,60 +36,48 @@ public class WhenPostingChangeStatus : ApprenticeControllerTestBase
 
         var response = Controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
-        Assert.That(response.ActionName, Is.EqualTo("WhyStopApprenticeship"));
+        response.ActionName.Should().Be("WhyStopApprenticeship");
     }
 
     [Test, MoqAutoData]
     public void AndGoBackIsSelected_ThenRedirectToWhyStopApprenticeshipAction(ChangeStatusRequestViewModel viewModel)
     {
-        //Arrange
         viewModel.SelectedStatusChange = ChangeStatusType.GoBack;
 
-        //Act
         var response = Controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
-        //Assert
-        Assert.That(response.ActionName, Is.EqualTo("ApprenticeshipDetails"));
+        response.ActionName.Should().Be("ApprenticeshipDetails");
     }
 
     [Test, MoqAutoData]
     public void AndStopIsSelected_ThenRedirectToV1WhenToApplyStopAction(ChangeStatusRequestViewModel viewModel)
     {
-        //Arrange
         viewModel.SelectedStatusChange = ChangeStatusType.Stop;
         viewModel.CurrentStatus = CommitmentsV2.Types.ApprenticeshipStatus.Live;
 
-        //Act
         var response = Controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
-        //Assert
-        Assert.That(response.ActionName, Is.EqualTo("WhyStopApprenticeship"));           
+        response.ActionName.Should().Be("WhyStopApprenticeship");
     }
 
     [Test, MoqAutoData]
     public void AndStopIsSelected_ThenRedirectToV1WhenToHasTheApprenticeBeenMadeRedundant(ChangeStatusRequestViewModel viewModel)
     {
-        //Arrange
         viewModel.SelectedStatusChange = ChangeStatusType.Stop;
         viewModel.CurrentStatus = CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart;
 
-        //Act
         var response = Controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
-        //Assert
-        Assert.That(response.ActionName, Is.EqualTo("HasTheApprenticeBeenMadeRedundant"));
+        response.ActionName.Should().Be("HasTheApprenticeBeenMadeRedundant");
     }
 
     [Test, MoqAutoData]
     public void AndPauseIsSelected_ThenRedirectToApprenticeshipDetailsAction(ChangeStatusRequestViewModel viewModel)
     {
-        //Arrange
         viewModel.SelectedStatusChange = ChangeStatusType.GoBack;
 
-        //Act
         var response = Controller.ChangeStatus(viewModel) as RedirectToActionResult;
 
-        //Assert
-        Assert.That(response.ActionName, Is.EqualTo("ApprenticeshipDetails"));         
+        response.ActionName.Should().Be("ApprenticeshipDetails");
     }
 }
