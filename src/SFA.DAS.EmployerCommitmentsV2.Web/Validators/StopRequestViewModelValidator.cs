@@ -11,14 +11,14 @@ public class StopRequestViewModelValidator : AbstractValidator<StopRequestViewMo
     {
         _currentDateTime = currentDateTime;
         RuleFor(r => r.StopDate).Must((r, StopDate) => r.StopMonth.HasValue && r.StopYear.HasValue)
-            .WithMessage("Enter the stop date for this apprenticeship")
+            .WithMessage("Enter the stop date for this training")
             .Unless(r => r.StopYear.HasValue || r.StopMonth.HasValue);
 
         RuleFor(r => r.StopDate).Must(y => y.Year.HasValue)
-            .WithMessage("Enter the stop date for this apprenticeship")
+            .WithMessage("Enter the stop date for this training")
             .When(r => r.StopMonth.HasValue);
 
-        RuleFor(r => r.StopDate).Must(y => y.Month.HasValue).WithMessage("Enter the stop date for this apprenticeship")
+        RuleFor(r => r.StopDate).Must(y => y.Month.HasValue).WithMessage("Enter the stop date for this training")
             .When(r => r.StopYear.HasValue);
 
         RuleFor(x => x.StopDate)
@@ -27,7 +27,7 @@ public class StopRequestViewModelValidator : AbstractValidator<StopRequestViewMo
 
         RuleFor(r => r.StopDate)
             .Must((r, StopDate) => StopDate.IsEqualToOrAfterMonthYearOfDateTime(r.StartDate))
-            .WithMessage(r => $"The stop date cannot be before the apprenticeship started")
+            .WithMessage(r => $"The stop date cannot be before the training started")
             .When(r => r.StopDate.IsValid);
 
         RuleFor(r => r.StopDate)

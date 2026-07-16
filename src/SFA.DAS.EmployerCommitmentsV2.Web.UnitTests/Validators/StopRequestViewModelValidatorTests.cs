@@ -9,12 +9,12 @@ public class StopRequestViewModelValidatorTests : ValidatorTestBase<StopRequestV
 {
     private readonly DateTime _startDate = new DateTime(2020, 12, 10);
 
-    private const string NoDateEnteredError = "Enter the stop date for this apprenticeship";
-    private const string YearNotEnteredError = "Enter the stop date for this apprenticeship";
-    private const string MonthNotEnteredError = "Enter the stop date for this apprenticeship";
+    private const string NoDateEnteredError = "Enter the stop date for this training";
+    private const string YearNotEnteredError = "Enter the stop date for this training";
+    private const string MonthNotEnteredError = "Enter the stop date for this training";
     private const string NotARealDateError = "The stop date must be a real date";
     private const string StopDateIsInFutureError = "The stop date cannot be in the future";
-    private readonly string StopDateBeforeStartDateError = "The stop date cannot be before the apprenticeship started";
+    private readonly string StopDateBeforeStartDateError = "The stop date cannot be before the training started";
 
     protected override StopRequestViewModelValidator ValidatorInitialize()
     {
