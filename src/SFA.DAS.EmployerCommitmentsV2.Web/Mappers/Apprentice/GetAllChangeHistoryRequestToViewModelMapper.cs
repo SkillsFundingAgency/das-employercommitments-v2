@@ -13,7 +13,7 @@ public class GetAllChangeHistoryRequestToViewModelMapper(IApprovalsApiClient app
         return new GetAllChangeHistoryListViewModel
         {
             AccountHashedId = source.AccountHashedId,
-            ChangeHistory = changeHistory.ChangeHistory.ConvertAll(x => new GetAllChangeHistoryViewModel
+            ChangeHistory = changeHistory?.ChangeHistory?.ConvertAll(x => new GetAllChangeHistoryViewModel
             {
                 Description = x.Description,
                 AppliedDate = x.AppliedDate,
@@ -22,7 +22,7 @@ public class GetAllChangeHistoryRequestToViewModelMapper(IApprovalsApiClient app
                 LearnerName = x.LearnerName,
                 ProviderName = x.ProviderName
             }),
-            AvailableFrom = changeHistory.ChangeHistory.OrderBy(t => t.Created).FirstOrDefault()?.Created ?? DateTime.UtcNow
+            AvailableFrom = changeHistory?.ChangeHistory?.OrderBy(t => t.Created).FirstOrDefault()?.Created ?? DateTime.UtcNow
         };
     }
 }

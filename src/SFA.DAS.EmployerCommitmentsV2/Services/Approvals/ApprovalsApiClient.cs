@@ -175,7 +175,7 @@ public class ApprovalsApiClient(IOuterApiClient client) : IApprovalsApiClient
 
     public Task<GetAllChangeHistoryResponse> GetChangeHistoryForEmployer(long accountId, CancellationToken cancellationToken = default)
     {
-        return client.Get<GetAllChangeHistoryResponse>($"/employer/{accountId}/apprentices/change-history");
+        return client.Get<GetAllChangeHistoryResponse>($"employer/{accountId}/apprentices/change-history");
     }
 
     public Task<GetApprenticeshipsResponse> GetApprenticeships(GetApprenticeshipsRequest request, CancellationToken cancellationToken = default)
