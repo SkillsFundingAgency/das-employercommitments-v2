@@ -41,10 +41,7 @@ public class GetApprenticeshipsRequest(long? accountId, int pageNumber, int page
 
     private static Dictionary<string, string> CreateFilterQuery(GetApprenticeshipsRequest request)
     {
-        var queryParameters = new Dictionary<string, string>();
-
-        if (request.AccountId.HasValue)
-            queryParameters.Add("accountId", request.AccountId.Value.ToString());
+        var queryParameters = new Dictionary<string, string>();       
 
         if (!string.IsNullOrEmpty(request.SearchTerm))
             queryParameters.Add("searchTerm", request.SearchTerm);
