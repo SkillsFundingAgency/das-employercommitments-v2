@@ -37,7 +37,7 @@ public class GetApprenticeshipsRequest(long? accountId, int pageNumber, int page
 
     public ConfirmationStatus? ApprenticeConfirmationStatus { get; set; } = apprenticeConfirmationStatus;
     public DeliveryModel? DeliveryModel { get; set; } = deliveryModel;
-    public string GetUrl => QueryHelpers.AddQueryString($"/employer/{AccountId}/apprentices", CreateFilterQuery(this));
+    public string GetUrl => QueryHelpers.AddQueryString($"employer/{AccountId}/apprentices", CreateFilterQuery(this));
 
     private static Dictionary<string, string> CreateFilterQuery(GetApprenticeshipsRequest request)
     {
