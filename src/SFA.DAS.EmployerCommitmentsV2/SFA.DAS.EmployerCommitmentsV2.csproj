@@ -21,8 +21,8 @@
 		<PackageReference Include="SFA.DAS.Validation.Mvc" Version="6.0.31" />
 		<PackageReference Include="Microsoft.Data.OData" Version="5.8.4" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
-		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.6" />
-		<PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.6" />
+		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.10" />
+		<PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.10" />
 
 	</ItemGroup>
 
