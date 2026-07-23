@@ -15,6 +15,13 @@
     <h1 class="govuk-heading-xl">Manage your learners</h1>
 }
 
+@if (Model.HasChangeHistory)
+{
+    <p>
+        <a class="govuk-link" asp-controller="Apprentice" asp-action="GetAllChangeHistory" asp-route-accountHashedId="@Model.AccountHashedId">Change history for all learners</a>
+    </p>
+}
+
 @if (Model.FilterModel.TotalNumberOfApprenticeships == 0)
 {
     <div class="govuk-inset-text das-inset-text--filled das-inset-text--highlight">

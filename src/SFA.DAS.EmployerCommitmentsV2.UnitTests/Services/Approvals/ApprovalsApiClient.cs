@@ -22,13 +22,13 @@ public class ApprovalsApiClientTests
         var expectedUrl = $"AccountUsers/{userId}/accounts?email={HttpUtility.UrlEncode(email)}";
         outerApiClient.Setup(x => x.Get<GetUserAccountsResponse>(expectedUrl)).ReturnsAsync(response);
         var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
-        
+
         var actual = await approvalsApiClient.GetEmployerUserAccounts(email, userId);
-        
+
         actual.Should().BeEquivalentTo(response);
     }
-    [Test, AutoData]
 
+    [Test, AutoData]
     public async Task When_Calling_GetAccountLegalEntity_Then_The_Data_Is_Returned(long id, GetAccountLegalEntityResponse response)
     {
         var outerApiClient = new Mock<IOuterApiClient>();
@@ -53,7 +53,6 @@ public class ApprovalsApiClientTests
 
         actual.Should().BeSameAs(response);
     }
-
 
     [Test, AutoData]
     public async Task When_Calling_GetSelectFundingOptions_Then_The_Data_Is_Returned(long accountId, GetSelectFundingOptionsResponse response)
@@ -169,6 +168,30 @@ public class ApprovalsApiClientTests
 
         var actual = await approvalsApiClient.GetChangeHistory(id);
 
+        actual.Should().BeEquivalentTo(response);
+    }
+
+    [Test, AutoData]
+    public async Task When_Calling_GetChangeHistoryForEmployer_Then_The_Data_Is_Returned(long id, GetAllChangeHistoryResponse response)
+    {
+        var outerApiClient = new Mock<IOuterApiClient>();
+        var expectedUrl = $"employer/{id}/apprentices/change-history";
+        outerApiClient.Setup(x => x.Get<GetAllChangeHistoryResponse>(expectedUrl)).ReturnsAsync(response);
+        var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
+
+        var actual = await approvalsApiClient.GetChangeHistoryForEmployer(id);
+
+        actual.Should().BeEquivalentTo(response);
+    }
+
+    [Test, AutoData]
+    public async Task When_Calling_GetApprenticeships_Then_The_Data_Is_Returned(GetApprenticeshipsRequest request, GetApprenticeshipsResponse response)
+    {
+        var outerApiClient = new Mock<IOuterApiClient>();
+        outerApiClient.Setup(x => x.Get<GetApprenticeshipsResponse>(request.GetUrl)).ReturnsAsync(response);
+        var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
+
+        var actual = await approvalsApiClient.GetApprenticeships(request);
         actual.Should().BeEquivalentTo(response);
     }
 }
