@@ -2,6 +2,7 @@
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipApprovalRequestViewModel
+@inject ILinkGenerator LinkGenerator
 
 @{
     ViewBag.Title = "Review changes";
@@ -12,8 +13,32 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <partial name="_ValidationSummary" />
-
+        @if (Model.ApprovalRequestStatus == CocApprovalResultStatus.Superseded || Model.ApprovalRequestStatus == CocApprovalResultStatus.Cancelled)
+        {
+            <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary" id="validationSummary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">
+                    There is a problem
+                </h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list" id="validationSummaryErrorList">
+                        <li class="govuk-!-margin-bottom-2">
+                            <a href="#">
+                                The change no longer exists.
+                            </a>
+                        </li>
+                        <li class="govuk-!-margin-bottom-2">
+                            <a href="#">
+                                This could be because a new change has been made since or the change has been withdrawn.
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        }
+        else
+        {
+            <partial name="_ValidationSummary" />
+        }
         <h1 class="govuk-heading-xl"> @ViewBag.Title</h1>
         <form method="POST">
 
@@ -111,11 +136,18 @@
                         </button>
                     </div>
                 }
+                else if (Model.ApprovalRequestStatus == CocApprovalResultStatus.Superseded || Model.ApprovalRequestStatus == CocApprovalResultStatus.Cancelled)
+                {
+                    <a href="@LinkGenerator.EmployerHome(Model.AccountHashedId)" class="govuk-link">Go to homepage</a>
+                    <br />
+                    <br />
+                    <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ChangeHistory", new BaseChangeHistoryRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })" id="cancel-button">View change history for this learner</a>
+                }
                 else
                 {
                     <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })" id="cancel-button">View learner details</a>
                 }
-            </form>
+        </form>
     </div>
 </div>
 
