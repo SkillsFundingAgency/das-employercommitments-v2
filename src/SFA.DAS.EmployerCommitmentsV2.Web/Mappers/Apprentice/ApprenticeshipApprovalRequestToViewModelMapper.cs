@@ -25,7 +25,8 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
             ULN = approvalRequest.ULN,
             CourseName = approvalRequest.CourseName,
             ProviderName = approvalRequest.ProviderName,
-            UKPRN = approvalRequest.UKPRN
+            UKPRN = approvalRequest.UKPRN,
+            IsSupersededOrCancelled = approvalRequest.ApprovalRequestStatus is CocApprovalResultStatus.Superseded or CocApprovalResultStatus.Cancelled
         };
     }
 
