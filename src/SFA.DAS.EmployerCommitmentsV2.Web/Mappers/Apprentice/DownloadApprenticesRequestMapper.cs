@@ -39,7 +39,9 @@ public class DownloadApprenticesRequestMapper : IMapper<DownloadRequest, Downloa
             CourseName = request.SelectedCourse,
             Status = request.SelectedStatus,
             EndDate = request.SelectedEndDate,
-            Alert = request.SelectedAlert,
+            Alert = request.SelectedAlert.HasValue
+                ? (SFA.DAS.CommitmentsV2.Types.Alerts)(int)request.SelectedAlert.Value
+                : null,
             ApprenticeConfirmationStatus = request.SelectedApprenticeConfirmation,
             PageNumber = 0
         };
