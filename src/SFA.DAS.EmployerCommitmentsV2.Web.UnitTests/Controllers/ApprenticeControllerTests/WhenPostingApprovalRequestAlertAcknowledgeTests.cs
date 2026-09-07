@@ -40,7 +40,7 @@ public class WhenPostingApprovalRequestAlertAcknowledgeTests : ApprenticeControl
 
         //Assert
         ApprovalsApiClient.Verify(p =>
-            p.UpdateApprovalRequestAlertAcknowledge(It.Is<long>(t => t == _viewModel.ApprenticeshipId), It.IsAny<UpdateApprovalRequestAlertAcknowledgeRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+            p.UpdateApprovalRequestAlertAcknowledge(It.Is<long>(t => t == _viewModel.AccountId), It.Is<long>(t => t == _viewModel.ApprenticeshipId), It.IsAny<UpdateApprovalRequestAlertAcknowledgeRequest>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Test]
@@ -50,6 +50,6 @@ public class WhenPostingApprovalRequestAlertAcknowledgeTests : ApprenticeControl
         var result = await Controller.ViewApprovalRequestAlerts(_viewModel) as RedirectToActionResult;
 
         //Assert
-        Assert.That(result.ActionName, Is.EqualTo(nameof(Index)));
+        Assert.That(result.ActionName, Is.EqualTo("ApprenticeshipDetails"));
     }
 }

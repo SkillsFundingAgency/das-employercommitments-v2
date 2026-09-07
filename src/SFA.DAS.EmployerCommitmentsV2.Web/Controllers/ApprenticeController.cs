@@ -1272,6 +1272,7 @@ public class ApprenticeController(
     }
 
     [Route("{apprenticeshipHashedId}/view-alerts")]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [HttpGet]
     public async Task<IActionResult> ViewApprovalRequestAlerts(ApprenticeshipApprovalRequestAlertsRequest request)
     {
@@ -1280,6 +1281,7 @@ public class ApprenticeController(
     }
 
     [HttpPost]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [Route("{apprenticeshipHashedId}/view-alerts")]
     public async Task<IActionResult> ViewApprovalRequestAlerts(
        ApprenticeshipApprovalRequestAlertsViewModel viewModel)
@@ -1291,12 +1293,13 @@ public class ApprenticeController(
 
         var request = await modelMapper.Map<UpdateApprovalRequestAlertAcknowledgeRequest>(viewModel);
 
-        await outerApi.UpdateApprovalRequestAlertAcknowledge(viewModel.ApprenticeshipId, request);
-
-        return RedirectToAction(nameof(Index), new
-        {
-            viewModel.AccountHashedId
-        });
+        await outerApi.UpdateApprovalRequestAlertAcknowledge(viewModel.AccountId, viewModel.ApprenticeshipId, request);
+        return RedirectToAction(nameof(ApprenticeshipDetails),
+                    new ApprenticeshipDetailsRequest
+                    {
+                        AccountHashedId = viewModel.AccountHashedId,
+                        ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+                    });
     }
 
     private async Task<Guid> StoreEditApprenticeshipRequestViewModelInCache(EditApprenticeshipRequestViewModel model, Guid? key)

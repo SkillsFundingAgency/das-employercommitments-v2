@@ -22,17 +22,7 @@ public class ApprenticeshipApprovalRequestAlertsViewModelToUpdateApprovalRequest
         foreach (var item in request.ApprovalRequestAlerts)
         {
             var actual = viewModel.ApprovalRequests.Single(t => t.Id == item.ApprovalRequestId);
-
-            if (actual.Seen.HasValue && actual.Seen.Value)
-            {
-                item.EmployerAcknowledgedAt.Should().Be(DateTime.UtcNow.Date);
-                item.EmployerAcknowledgedBy.Should().Be(mockService.UserName);
-            }
-            else
-            {
-                item.EmployerAcknowledgedAt.Should().BeNull();
-                item.EmployerAcknowledgedBy.Should().BeNull();
-            }
+            item.Acknowledged.Should().Be(actual.Seen.HasValue && actual.Seen.Value);
             item.ApprovalRequestId.Should().Be(actual.Id);
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+﻿using SFA.DAS.CommitmentsV2.Types;
+
+namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
 public class UpdateApprovalRequestAlertAcknowledgeRequest : ApimSaveDataRequest
 {
@@ -8,6 +10,6 @@ public class UpdateApprovalRequestAlertAcknowledgeRequest : ApimSaveDataRequest
 public class UpdateApprovalRequestAlertAcknowledge
 {
     public Guid ApprovalRequestId { get; set; }
-    public DateTime? EmployerAcknowledgedAt { get; set; }
-    public string EmployerAcknowledgedBy { get; set; }
+    public bool Acknowledged { get; set; }
+    public ApimUserInfo UserInfo { get; set; }
 }

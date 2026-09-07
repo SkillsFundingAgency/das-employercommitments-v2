@@ -11,7 +11,7 @@ public class ApprenticeshipApprovalRequestAlertsToViewModelMapper(IApprovalsApiC
 {
     public async Task<ApprenticeshipApprovalRequestAlertsViewModel> Map(ApprenticeshipApprovalRequestAlertsRequest source)
     {
-        var approvalRequest = await approvalsApiClient.GetApprenticeshipApprovalRequestAlerts(new GetApprovalRequestAlertRequest(source.ApprenticeshipId));
+        var approvalRequest = await approvalsApiClient.GetApprenticeshipApprovalRequestAlerts(new GetApprovalRequestAlertRequest(source.AccountId,source.ApprenticeshipId));
 
         return new ApprenticeshipApprovalRequestAlertsViewModel
         {

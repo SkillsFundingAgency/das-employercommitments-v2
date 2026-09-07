@@ -9,6 +9,8 @@ public class ApprenticeshipApprovalRequestAlertsRequest : IAuthorizationContextM
 
     public long ApprenticeshipId { get; set; }
 
+    public long AccountId { get; set; }
+
     [FromRoute]
     public string AccountHashedId { get; set; }
 }

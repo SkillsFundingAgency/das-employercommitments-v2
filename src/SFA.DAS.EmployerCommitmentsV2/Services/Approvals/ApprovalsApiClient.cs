@@ -188,8 +188,8 @@ public class ApprovalsApiClient(IOuterApiClient client) : IApprovalsApiClient
         return client.Get<GetApprenticeshipApprovalRequestAlertsResponse>(request.GetUrl);
     }
 
-    public async Task UpdateApprovalRequestAlertAcknowledge(long apprenticeshipId, UpdateApprovalRequestAlertAcknowledgeRequest request, CancellationToken cancellationToken = default)
+    public async Task UpdateApprovalRequestAlertAcknowledge(long accountId, long apprenticeshipId, UpdateApprovalRequestAlertAcknowledgeRequest request, CancellationToken cancellationToken = default)
     {
-        await client.Put<object>($"approvalrequest/apprenticeships/{apprenticeshipId}/alerts-acknowledged", request);
+        await client.Put<object>($"employer/{accountId}/apprentices/{apprenticeshipId}/alerts-acknowledged", request);
     }
 }

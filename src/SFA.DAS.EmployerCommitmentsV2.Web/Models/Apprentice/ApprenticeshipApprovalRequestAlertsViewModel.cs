@@ -5,6 +5,7 @@ public class ApprenticeshipApprovalRequestAlertsViewModel
     public string ApprenticeName { get; set; }
     public string ApprenticeshipHashedId { get; set; }
     public long ApprenticeshipId { get; set; }
+    public long AccountId { get; set; }
     public string AccountHashedId { get; set; }
     public List<ApprovalRequestAlertViewModel> ApprovalRequests { get; set; }
 }

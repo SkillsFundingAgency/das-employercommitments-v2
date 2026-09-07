@@ -14,8 +14,13 @@ public class ApprenticeshipApprovalRequestAlertsViewModelToUpdateApprovalRequest
             ApprovalRequestAlerts = [.. source.ApprovalRequests.Select(r => new UpdateApprovalRequestAlertAcknowledge
             {
                 ApprovalRequestId = r.Id,
-                EmployerAcknowledgedAt = r.Seen.HasValue && r.Seen.Value ? DateTime.UtcNow.Date : null,
-                EmployerAcknowledgedBy = r.Seen.HasValue && r.Seen.Value ? authenticationService.UserName : null
+                Acknowledged = r.Seen.HasValue && r.Seen.Value,
+                UserInfo= new ApimUserInfo
+                {
+                    UserId = authenticationService.UserId,
+                    UserDisplayName = authenticationService.UserName,
+                    UserEmail = authenticationService.UserEmail
+                }
             })]
         });
     }
