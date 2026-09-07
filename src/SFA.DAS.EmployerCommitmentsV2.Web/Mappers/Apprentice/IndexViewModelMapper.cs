@@ -60,6 +60,8 @@ public class IndexViewModelMapper : IMapper<IndexRequest, IndexViewModel>
             AlertType.Alerts.ChangesPending,
             AlertType.Alerts.ChangesRequested,
             AlertType.Alerts.ConfirmDates,
+            AlertType.Alerts.IlrChangeInvalid,
+            AlertType.Alerts.ChangesDeclined,
             AlertType.Alerts.ViewChanges
         };
 
