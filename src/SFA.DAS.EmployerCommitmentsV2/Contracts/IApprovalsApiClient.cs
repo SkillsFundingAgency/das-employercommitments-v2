@@ -73,4 +73,5 @@ public interface IApprovalsApiClient
 
     Task<GetApprenticeshipApprovalResponse> GetApprenticeshipApprovalRequest(long accountId, long apprenticeshipId, Guid approvalRequestId, CancellationToken cancellationToken = default);
 
+    Task ProcessCocApproval(long accountId, long apprenticeshipId, Guid approvalRequestId, ProcessApprenticeshipApprovalRequest request, CancellationToken cancellationToken = default);
 }

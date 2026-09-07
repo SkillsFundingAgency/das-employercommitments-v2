@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
@@ -14,7 +16,7 @@ public class WhenCallingApprenticeshipApprovalRequest
     [Test]
     public async Task ThenVerifyMapperWasCalled()
     {
-        await _fixture.GetAllChangeHistory();
+        await _fixture.GetApprovalRequest();
 
         _fixture.VerifyMapperWasCalled();
     }
@@ -22,23 +24,15 @@ public class WhenCallingApprenticeshipApprovalRequest
     [Test]
     public async Task ThenReturnsViewModel()
     {
-        var result = await _fixture.GetAllChangeHistory();
+        var result = await _fixture.GetApprovalRequest();
 
         _fixture.VerifyViewModel(result as ViewResult);
     }
 
     [Test]
-    public async Task ThenDisplaysMessageIfChangeHasBeenCompleted()
-    {
-        var result = await _fixture.SetApprovalRequestStatus(CocApprovalResultStatus.Complete).GetAllChangeHistory();
-
-        _fixture.VerifyModelStateError(result as ViewResult);
-    }
-
-    [Test]
     public async Task ThenReturnsViewModelIfChangeIsPending()
     {
-        var result = await _fixture.SetApprovalRequestStatus(CocApprovalResultStatus.Pending).GetAllChangeHistory();
+        var result = await _fixture.SetApprovalRequestStatus(CocApprovalResultStatus.Pending).GetApprovalRequest();
 
         _fixture.VerifyViewModel(result as ViewResult);
     }
@@ -48,6 +42,7 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
 {
     private readonly ApprenticeshipApprovalRequest _request;
     private readonly ApprenticeshipApprovalRequestViewModel _viewModel;
+    private Mock<IAuthenticationService> _authenticationService;
 
     public WhenCallingApprenticeshipApprovalRequestFixture()
     {
@@ -57,19 +52,16 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
         _viewModel = fixture.Create<ApprenticeshipApprovalRequestViewModel>();
 
         MockMapper.Setup(m => m.Map<ApprenticeshipApprovalRequestViewModel>(_request)).ReturnsAsync(_viewModel);
+        ApprovalsApiClientMock.Setup(x => x.ProcessCocApproval(_viewModel.AccountId, _viewModel.ApprenticeshipId, _viewModel.ApprovalRequestId, 
+            It.IsAny<ProcessApprenticeshipApprovalRequest>(), It.IsAny<CancellationToken>())).Verifiable();
+        _authenticationService = new Mock<IAuthenticationService>();
     }
 
-    public async Task<IActionResult> GetAllChangeHistory()
+    public async Task<IActionResult> GetApprovalRequest()
     {
         var result = await Controller.GetApprenticeshipApprovalRequest(_request);
 
         return result as ViewResult;
-    }
-
-    public WhenCallingApprenticeshipApprovalRequestFixture SetApprovalRequestStatus(CocApprovalResultStatus status)
-    {
-        _viewModel.ApprovalRequestStatus = status;
-        return this;
     }
 
     public void VerifyMapperWasCalled()
@@ -88,5 +80,10 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
     {
         viewResult.Should().NotBeNull();
         viewResult.ViewData.ModelState.Should().ContainSingle(m => m.Key == "ApprovalRequestStatus" && m.Value.Errors.Any(e => e.ErrorMessage == "This change has already been approved."));
+    }
+    public WhenCallingApprenticeshipApprovalRequestFixture SetApprovalRequestStatus(CocApprovalResultStatus status)
+    {
+        _viewModel.ApprovalRequestStatus = status;
+        return this;
     }
 }

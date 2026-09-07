@@ -187,4 +187,9 @@ public class ApprovalsApiClient(IOuterApiClient client) : IApprovalsApiClient
     {
         return client.Get<GetApprenticeshipApprovalResponse>($"employers/{accountId}/apprenticeships/{apprenticeshipId}/approvals/{approvalRequestId}");
     }
+
+    public async Task ProcessCocApproval(long accountId, long apprenticeshipId, Guid approvalRequestId, ProcessApprenticeshipApprovalRequest request, CancellationToken cancellationToken = default)
+    {
+        await client.Post<object>($"employers/{accountId}/apprenticeships/{apprenticeshipId}/approvals/{approvalRequestId}/", request);
+    }
 }
