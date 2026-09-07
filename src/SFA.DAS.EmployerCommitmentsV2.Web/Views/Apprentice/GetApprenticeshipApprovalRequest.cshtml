@@ -1,5 +1,6 @@
 ﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipApprovalRequestViewModel
 
 @{
@@ -41,14 +42,13 @@
             </div>
             <p>@Model.ProviderName have submitted changes to review</p>
 
-            @if (false)
+            @if (Model.ExceedsFundingCap)
             {
                 <div class="govuk-inset-text">
                     <p class="govuk-body govuk-!-font-weight-bold">The training is above the funding band maximum</p>
                     <p class="govuk-body">
-                        The new agreed training price is above the £XX,XXX maximum value of teh funding band for this training.
-                        You will need to pay the additional cost directly to the training provider. 
-                        This can't be funded from your account.
+                        The new agreed training price is above the @Model.DisplayFundingCapPrice maximum value of the funding band for this training.
+                        You'll need to pay the difference directly to the training provider. 
                     </p>
                 </div>
             }
@@ -78,42 +78,44 @@
                     </table>
                 </div>
             </div>
-
-            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApproveChanges,  "govuk-form-group--error")">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        <h1 class="govuk-fieldset__heading">
-                            Do you want to approve these changes?
-                        </h1>
-                    </legend>
-                    <p>
-                        These changes will take affect from the 31 August 2026
-                    </p>
-                    <div class="govuk-radios">
-                        @Html.ValidationMessageFor(m => m.ApproveChanges, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ApproveChanges) })
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="ApproveChanges" name="ApproveChanges" type="radio" value="true">
-                            <label class="govuk-label govuk-radios__label" for="ApproveChanges">
-                                Yes, approve these changes
-                            </label>
-                        </div>
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="ApproveChanges-no" name="ApproveChanges" type="radio" value="false">
-                            <label class="govuk-label govuk-radios__label" for="ApproveChanges-no">
-                                No, decline changes and send messages to training provider
-                            </label>
-                        </div>
+                @if (Model.ApprovalRequestStatus == CocApprovalResultStatus.Pending)
+                {
+                    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApproveChanges,  "govuk-form-group--error")">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                <h1 class="govuk-fieldset__heading">
+                                    Do you want to approve these changes?
+                                </h1>
+                            </legend>
+                            <div class="govuk-radios">
+                                @Html.ValidationMessageFor(m => m.ApproveChanges, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ApproveChanges) })
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="ApproveChanges" name="ApproveChanges" type="radio" value="true">
+                                    <label class="govuk-label govuk-radios__label" for="ApproveChanges">
+                                        Yes, approve these changes
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="ApproveChanges-no" name="ApproveChanges" type="radio" value="false">
+                                    <label class="govuk-label govuk-radios__label" for="ApproveChanges-no">
+                                        No, decline changes and send messages to training provider
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
                     </div>
-                </fieldset>
-            </div>
 
-            <div class="govuk-button-group">
-                <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button">
-                    Continue
-                </button>
-                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest{ AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.ApprenticeshipHashedId })" id="cancel-button">Cancel and return</a>
-            </div>
-        </form>
+                    <div class="govuk-button-group">
+                        <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button">
+                            Continue
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })" id="cancel-button">View learner details</a>
+                }
+            </form>
     </div>
 </div>
 
