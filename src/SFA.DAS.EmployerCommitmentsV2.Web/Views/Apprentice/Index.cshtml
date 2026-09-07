@@ -326,12 +326,32 @@ else
                         </strong>
                     </td>
                     <td class="govuk-table__cell" data-label="Alerts">
+                        <ul class="govuk-list govuk-!-margin-bottom-0">
+                            @foreach (var alert in apprenticeship.Alerts)
+                            {
+                                <li>
+                                @if(alert == "Ilr pending changes")
+                                {
+                                    <a class="govuk-link" href="@Url.Action("GetApprenticeshipApprovalRequest", 
+                                        new { AccountHashedId = Model.AccountHashedId, 
+                                              ApprenticeshipHashedId = apprenticeship.EncodedApprenticeshipId,
+                                              ApprovalRequestId = apprenticeship.PendingApprovalRequestId })">
+                                        Review changes
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="govuk-link"
+                                            href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = apprenticeship.EncodedApprenticeshipId })">
+                                        @alert
+                                    </a>
+                                }
+                                </li>
+                            }
+                        </ul>
                         @for (var i = 0; i < apprenticeship.Alerts.Count(); i++)
                         {
-                            <a class="govuk-link"
-                               href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = apprenticeship.EncodedApprenticeshipId })">
-                                @apprenticeship.Alerts.ElementAt(i)
-                            </a>
+
                             @if (i < apprenticeship.Alerts.Count() - 1)
                             {
                                 <br />

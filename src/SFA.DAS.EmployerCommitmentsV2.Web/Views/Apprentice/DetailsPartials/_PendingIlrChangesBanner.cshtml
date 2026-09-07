@@ -1,0 +1,32 @@
+﻿@using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+@if (Model.PendingApprovalRequestId != null)
+{
+    <div class="govuk-notification-banner" role="region" aria-labelledby="invalid-ilr-changes-banner-title"
+         data-module="govuk-notification-banner">
+        <div class="govuk-notification-banner__header">
+            <h2 class="govuk-notification-banner__title" id="invalid-ilr-changes-banner-title">
+                Important
+            </h2>
+        </div>
+        <div class="govuk-notification-banner__content">
+            <h3 class="govuk-notification-banner__heading">
+                Changes to review
+            </h3>
+            <p class="govuk-body">
+                Review changes made by your training provider.
+            </p>
+            <p class="govuk-body">
+                <a class="govuk-link" href="@Url.Action("GetApprenticeshipApprovalRequest", 
+                    new { AccountHashedId = Model.AccountHashedId, 
+                            ApprenticeshipHashedId = Model.HashedApprenticeshipId,
+                            ApprovalRequestId = Model.PendingApprovalRequestId })">
+                    Review and approve changes
+                </a>
+            </p>
+        </div>
+    </div>
+}
