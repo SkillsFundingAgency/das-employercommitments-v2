@@ -1,4 +1,5 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client;
+﻿using FluentAssertions;
+using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
@@ -80,21 +81,16 @@ public class WhenPostingConfirmDeleteDetails
         public void VerifyRedirectsToReviewPage(IActionResult result)
         {
             var redirect = (RedirectToActionResult)result;
-            Assert.Multiple(() =>
-            {
-                Assert.That(redirect.ActionName, Is.EqualTo($"Review"));
-                Assert.That(redirect.RouteValues["AccountHashedId"], Is.EqualTo(ConfirmDeleteViewModel.AccountHashedId));
-            });
+            redirect.ActionName.Should().Be("Review");
+            redirect.RouteValues["AccountHashedId"].Should().Be(ConfirmDeleteViewModel.AccountHashedId);
         }
+
         public void VerifyRedirectsToCohortDetailsPage(IActionResult result)
         {
             var redirect = (RedirectToActionResult)result;
-            Assert.Multiple(() =>
-            {
-                Assert.That(redirect.ActionName?.ToLower(), Is.EqualTo("cohortdetails"));
-                Assert.That(redirect.RouteValues["CohortReference"], Is.EqualTo(ConfirmDeleteViewModel.CohortReference));
-                Assert.That(redirect.RouteValues["AccountHashedId"], Is.EqualTo(ConfirmDeleteViewModel.AccountHashedId));
-            });
+            redirect.ActionName.Should().Be(nameof(CohortController.Details));
+            redirect.RouteValues["CohortReference"].Should().Be(ConfirmDeleteViewModel.CohortReference);
+            redirect.RouteValues["AccountHashedId"].Should().Be(ConfirmDeleteViewModel.AccountHashedId);
         }
     }
 }

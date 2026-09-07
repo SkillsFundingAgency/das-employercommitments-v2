@@ -115,7 +115,7 @@ public class CohortController(
             return RedirectToAction(RouteNames.CohortReview, new { viewModel.CohortReference, viewModel.AccountHashedId });
         }
 
-        return RedirectToAction(RouteNames.CohortDetails, new { viewModel.CohortReference, viewModel.AccountHashedId });
+        return RedirectToAction(nameof(Details), new { viewModel.CohortReference, viewModel.AccountHashedId });
     }
 
     [HttpGet]
@@ -424,7 +424,7 @@ public class CohortController(
             return RedirectToAction("SelectOption", "DraftApprenticeship", new { model.AccountHashedId, newCohort.CohortReference, draftApprenticeshipHashedId });
         }
 
-        return RedirectToAction(RouteNames.CohortDetails, new { model.AccountHashedId, newCohort.CohortReference });
+        return RedirectToAction(nameof(Details), new { model.AccountHashedId, newCohort.CohortReference });
     }
 
     [Authorize(Policy = nameof(PolicyNames.AccessCohort))]
