@@ -330,7 +330,7 @@ else
                             @foreach (var alert in apprenticeship.Alerts)
                             {
                                 <li>
-                                @if(alert == "Ilr pending changes")
+                                @if(alert == "ILR changes pending")
                                 {
                                     <a class="govuk-link" href="@Url.Action("GetApprenticeshipApprovalRequest", 
                                         new { AccountHashedId = Model.AccountHashedId, 

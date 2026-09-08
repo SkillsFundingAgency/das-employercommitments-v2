@@ -28,6 +28,6 @@ public enum Alerts
     [Description("Changes declined")]
     ChangesDeclined = 6,
 
-    [Description("Ilr changes pending")]
+    [Description("ILR changes pending")]
     IlrChangesPending = 7
 }
