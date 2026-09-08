@@ -44,6 +44,22 @@ public class WhenCallingApprenticeshipApprovalRequest
 
         _fixture.VerifyViewModel(result as ViewResult);
     }
+
+    [Test]
+    public async Task ThenPostsTheApproval()
+    {
+        var result = await _fixture.PostApprovalRequest(true);
+
+        result.VerifyReturnsRedirectToActionResult().ActionName.Should().Be("ApprenticeshipApprovalRequestConfirmed");
+    }
+
+    [Test]
+    public async Task ThenPostsTheDecline()
+    {
+        var result = await _fixture.PostApprovalRequest(false);
+
+        result.VerifyReturnsRedirectToActionResult().ActionName.Should().Be("GetApprenticeshipApprovalRequest");
+    }
 }
 
 public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControllerTestFixtureBase
@@ -93,5 +109,13 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
     {
         _viewModel.ApprovalRequestStatus = status;
         return this;
+    }
+
+    public async Task<IActionResult> PostApprovalRequest(bool applyApproval)
+    {
+        _viewModel.ApproveChanges = applyApproval;
+        var result = await Controller.PostApprenticeshipApprovalRequest(_authenticationService.Object, _viewModel);
+
+        return result;
     }
 }
