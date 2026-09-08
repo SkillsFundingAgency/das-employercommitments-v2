@@ -30,6 +30,14 @@ public class WhenCallingApprenticeshipApprovalRequest
     }
 
     [Test]
+    public async Task ThenDisplaysMessageIfChangeHasBeenCompleted()
+    {
+        var result = await _fixture.SetApprovalRequestStatus(CocApprovalResultStatus.Complete).GetApprovalRequest();
+
+        _fixture.VerifyModelStateError(result as ViewResult);
+    }
+
+    [Test]
     public async Task ThenReturnsViewModelIfChangeIsPending()
     {
         var result = await _fixture.SetApprovalRequestStatus(CocApprovalResultStatus.Pending).GetApprovalRequest();
