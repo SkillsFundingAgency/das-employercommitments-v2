@@ -1,0 +1,28 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipApprovalRequestViewModel
+
+@{
+    ViewBag.Title = "Confirm changes";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageID = "confirm-coc-changes";
+    ViewBag.GaData.Vpv = "/accounts/apprentices/manage/confirm-coc-changes";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-!-margin-bottom-4 govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">
+                Changes approved for @Model.Name
+            </h1>
+            <div class="govuk-panel__body">
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>
+    It can take upto 5 minutes for these changes to appear in your account
+</p>
+<a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })" id="cancel-button">View learner details</a>
