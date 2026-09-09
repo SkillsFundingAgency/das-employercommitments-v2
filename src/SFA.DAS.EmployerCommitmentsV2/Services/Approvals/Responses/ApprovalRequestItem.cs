@@ -8,7 +8,6 @@ public class ApprovalRequestItem
     public byte LearningType { get; set; }
     public byte? Status { get; set; }
     public List<ApprovalFieldRequest> Items { get; set; }
-    public bool? EmployerSeenAlert { get; set; }
 }
 
 public class ApprovalFieldRequest

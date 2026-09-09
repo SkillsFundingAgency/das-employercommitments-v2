@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+﻿using SFA.DAS.EmployerCommitmentsV2.Enums;
+
+namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 public class ApprenticeshipApprovalRequestAlertsViewModel
 {
@@ -15,7 +17,7 @@ public class ApprovalRequestAlertViewModel
     public Guid Id { get; set; }
     public long ApprenticeshipId { get; set; }
     public byte? Status { get; set; }
-    public DateTime? EmployerAcknowlededAt { get; set; }
+    public DateTime? EmployerAcknowledgedAt { get; set; }
     public bool? Seen { get; set; }
     public List<ApprovalFieldRequestAlertViewModel> ApprovalRequestFieldItems { get; set; }
 }
@@ -27,13 +29,4 @@ public class ApprovalFieldRequestAlertViewModel
     public string New { get; set; }
     public CocApprovalItemStatus? Status { get; set; }
     public DateTime Created { get; set; }
-}
-
-public enum CocApprovalItemStatus : byte
-{
-    AutoApproved = 1,
-    AutoRejected = 2,
-    Pending = 3,
-    EmployerApproved = 4,
-    EmployerRejected = 5
 }

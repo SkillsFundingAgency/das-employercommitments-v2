@@ -1263,7 +1263,6 @@ public class ApprenticeController(
         return View(viewModel);
     }
 
-
     [Route("change-history")]
     [HttpGet]
     public async Task<IActionResult> GetAllChangeHistory(GetAllChangeHistoryRequest request)
@@ -1286,7 +1285,6 @@ public class ApprenticeController(
     [HttpPost]
     public async Task<IActionResult> PostApprenticeshipApprovalRequest([FromServices] IAuthenticationService authenticationService, ApprenticeshipApprovalRequestViewModel viewModel)
     {
-
         var request = new ProcessApprenticeshipApprovalRequest { ApplyChanges = viewModel.ApproveChanges.Value, AccountId = viewModel.AccountId, UserInfo = authenticationService.UserInfo };
 
         if (viewModel.ApproveChanges == true)
@@ -1311,7 +1309,7 @@ public class ApprenticeController(
             {
                 AccountHashedId = viewModel.AccountHashedId,
                 ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId,
-                ApprovalRequestId = viewModel.ApprovalRequestId 
+                ApprovalRequestId = viewModel.ApprovalRequestId
             });
     }
 
@@ -1339,11 +1337,6 @@ public class ApprenticeController(
     public async Task<IActionResult> ViewApprovalRequestAlerts(
        ApprenticeshipApprovalRequestAlertsViewModel viewModel)
     {
-        if (!ModelState.IsValid)
-        {
-            return View(viewModel);
-        }
-
         var request = await modelMapper.Map<UpdateApprovalRequestAlertAcknowledgeRequest>(viewModel);
 
         await outerApi.UpdateApprovalRequestAlertAcknowledge(viewModel.AccountId, viewModel.ApprenticeshipId, request);
