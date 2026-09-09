@@ -11,13 +11,13 @@ namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Services.Approvals.Responses;
 public class GetApprenticeshipsResponseAlertsDeserializationTests
 {
     [Test]
-    public void Deserialize_ThenMapsIlrChangeInvalidFromApimName()
+    public void Deserialize_ThenMapsIlrChangeInvalidAndChangesDeclinedFromApimNames()
     {
         const string json = """
             {
               "apprenticeships": [
                 {
-                  "alerts": [ "IlrChangeInvalid" ]
+                  "alerts": [ "IlrChangeInvalid", "ChangesDeclined" ]
                 }
               ]
             }
@@ -26,7 +26,7 @@ public class GetApprenticeshipsResponseAlertsDeserializationTests
         var result = JsonConvert.DeserializeObject<GetApprenticeshipsResponse>(json, CamelCaseSettings());
 
         result.Apprenticeships.Should().ContainSingle();
-        result.Apprenticeships.Single().Alerts.Should().Equal(Alerts.IlrChangeInvalid);
+        result.Apprenticeships.Single().Alerts.Should().Equal(Alerts.IlrChangeInvalid, Alerts.ChangesDeclined);
     }
 
     private static JsonSerializerSettings CamelCaseSettings()
