@@ -1,0 +1,156 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipApprovalRequestViewModel
+@inject ILinkGenerator LinkGenerator
+
+@{
+    ViewBag.Title = "Review changes";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageID = "review-coc-changes";
+    ViewBag.GaData.Vpv = "/accounts/apprentices/manage/review-coc-changes";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @if (Model.IsSupersededOrCancelled)
+        {
+            <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary" id="validationSummary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">
+                    There is a problem
+                </h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list" id="validationSummaryErrorList">
+                        <li class="govuk-!-margin-bottom-2">
+                            <a href="#">
+                                The change no longer exists.
+                            </a>
+                        </li>
+                        <li class="govuk-!-margin-bottom-2">
+                            <a href="#">
+                                This could be because a new change has been made since or the change has been withdrawn.
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        }
+        else
+        {
+            <partial name="_ValidationSummary" />
+        }
+        <h1 class="govuk-heading-xl"> @ViewBag.Title</h1>
+        <form method="POST">
+
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.AccountHashedId)
+            @Html.HiddenFor(x => x.ApprenticeshipHashedId)
+            @Html.HiddenFor(x => x.ApprovalRequestId)
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <dl class="govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key"> Name </dt>
+                            <dd class="govuk-summary-list__value"> @Model.Name</dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key"> Unique learner number </dt>
+                            <dd class="govuk-summary-list__value"> @Model.ULN</dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key"> Training course </dt>
+                            <dd class="govuk-summary-list__value"> @Model.CourseName</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+            <p>@Model.ProviderName have submitted changes to review</p>
+
+            @if (Model.ExceedsFundingCap)
+            {
+                <div class="govuk-inset-text">
+                    <p class="govuk-body govuk-!-font-weight-bold">The training is above the funding band maximum</p>
+                    <p class="govuk-body">
+                        The new agreed training price is above the @Model.DisplayFundingCapPrice maximum value of the funding band for this training.
+                        You'll need to pay the difference directly to the training provider. 
+                    </p>
+                </div>
+            }
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header">Name<span class="govuk-visually-hidden">Field</span></th>
+                                <th scope="col" class="govuk-table__header ">Previous</th>
+                                <th scope="col" class="govuk-table__header ">Changed to</th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <th scope="row" class="govuk-table__header">@item.FieldName</th>
+                                    <td class="govuk-table__cell">@item.OldValue</td>
+                                    <td class="govuk-table__cell">@item.NewValue</td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+                @if (Model.ApprovalRequestStatus == CocApprovalResultStatus.Pending)
+                {
+                    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApproveChanges,  "govuk-form-group--error")">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                <h1 class="govuk-fieldset__heading">
+                                    Do you want to approve these changes?
+                                </h1>
+                            </legend>
+                            <div class="govuk-radios">
+                                @Html.ValidationMessageFor(m => m.ApproveChanges, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ApproveChanges) })
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="ApproveChanges" name="ApproveChanges" type="radio" value="true">
+                                    <label class="govuk-label govuk-radios__label" for="ApproveChanges">
+                                        Yes, approve these changes
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="ApproveChanges-no" name="ApproveChanges" type="radio" value="false">
+                                    <label class="govuk-label govuk-radios__label" for="ApproveChanges-no">
+                                        No, decline changes and send messages to training provider
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="govuk-button-group">
+                        <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button">
+                            Continue
+                        </button>
+                    </div>
+                }
+                else if (Model.IsSupersededOrCancelled)
+                {
+                    <a href="@LinkGenerator.EmployerHome(Model.AccountHashedId)" class="govuk-link">Go to homepage</a>
+                    <br />
+                    <br />
+                    <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ChangeHistory", new BaseChangeHistoryRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })" id="cancel-button">View change history for this learner</a>
+                }
+                else
+                {
+                    <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })" id="cancel-button">View learner details</a>
+                }
+        </form>
+    </div>
+</div>
+
+@section back {
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", new { AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">Back</a>
+}
