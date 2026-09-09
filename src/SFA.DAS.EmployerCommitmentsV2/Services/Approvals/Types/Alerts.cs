@@ -26,5 +26,8 @@ public enum Alerts
     IlrChangeInvalid = 5,
 
     [Description("Changes declined")]
-    ChangesDeclined = 6
+    ChangesDeclined = 6,
+
+    [Description("ILR changes pending")]
+    IlrChangesPending = 7
 }

@@ -15,4 +15,5 @@ public class ApprenticeshipDetailsViewModel
     public ApprenticeshipStatus Status { get; set; }
     public IEnumerable<string> Alerts { get; set; }
     public DateTime? ActualStartDate { get; set; }
+    public Guid? PendingApprovalRequestId { get; set; }
 }

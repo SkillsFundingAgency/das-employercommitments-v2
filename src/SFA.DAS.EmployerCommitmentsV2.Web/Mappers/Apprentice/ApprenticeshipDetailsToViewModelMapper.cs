@@ -23,7 +23,8 @@ public class ApprenticeshipDetailsToViewModelMapper(IEncodingService encodingSer
             ConfirmationStatus = source.ConfirmationStatus,
             EmploymentStatus = MapEmploymentStatus(source.EmployerVerificationStatus, source.EmployerVerificationNotes),
             Alerts = source.Alerts.Select(x => x.GetDescription()) ,
-            ActualStartDate = source.ActualStartDate
+            ActualStartDate = source.ActualStartDate,
+            PendingApprovalRequestId = source.PendingApprovalRequestId
         };
 
         return Task.FromResult(result);
