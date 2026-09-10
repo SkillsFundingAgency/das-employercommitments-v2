@@ -1273,7 +1273,6 @@ public class ApprenticeController(
         return View(viewModel);
     }
 
-
     [Route("{apprenticeshipHashedId}/approvals/{approvalRequestId}")]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [HttpGet]
@@ -1290,6 +1289,49 @@ public class ApprenticeController(
             ModelState.AddModelError(nameof(ApprenticeshipApprovalRequestViewModel.ChangeApprovalAllowed), "This change no longer exists");
         }
 
+        return View(viewModel);
+    }
+
+    [Route("{apprenticeshipHashedId}/approvals/{approvalRequestId}")]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
+    [HttpPost]
+    public async Task<IActionResult> PostApprenticeshipApprovalRequest([FromServices] IAuthenticationService authenticationService, ApprenticeshipApprovalRequestViewModel viewModel)
+    {
+
+        var request = new ProcessApprenticeshipApprovalRequest { ApplyChanges = viewModel.ApproveChanges.Value, AccountId = viewModel.AccountId, UserInfo = authenticationService.UserInfo };
+
+        if (viewModel.ApproveChanges == true)
+        {
+            await outerApi.ProcessCocApproval(viewModel.AccountId, viewModel.ApprenticeshipId, viewModel.ApprovalRequestId, request, CancellationToken.None);
+
+            return RedirectToAction(nameof(ApprenticeshipApprovalRequestConfirmed),
+                new BaseApprenticeshipApprovalRequest
+                {
+                    AccountHashedId = viewModel.AccountHashedId,
+                    ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId,
+                    ApprovalRequestId = viewModel.ApprovalRequestId
+                });
+        }
+        else if (viewModel.ApproveChanges == false)
+        {
+            await outerApi.ProcessCocApproval(viewModel.AccountId, viewModel.ApprenticeshipId, viewModel.ApprovalRequestId, request, CancellationToken.None);
+            TempData.AddFlashMessage("Changes declined", TempDataDictionaryExtensions.FlashMessageLevel.Success);
+        }
+        return RedirectToAction(nameof(GetApprenticeshipApprovalRequest),
+            new BaseApprenticeshipApprovalRequest
+            {
+                AccountHashedId = viewModel.AccountHashedId,
+                ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId,
+                ApprovalRequestId = viewModel.ApprovalRequestId 
+            });
+    }
+
+    [Route("{apprenticeshipHashedId}/approvals/{approvalRequestId}/confirmed")]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
+    [HttpGet]
+    public async Task<IActionResult> ApprenticeshipApprovalRequestConfirmed(ApprenticeshipApprovalRequest request)
+    {
+        var viewModel = await modelMapper.Map<ApprenticeshipApprovalRequestViewModel>(request);
         return View(viewModel);
     }
 

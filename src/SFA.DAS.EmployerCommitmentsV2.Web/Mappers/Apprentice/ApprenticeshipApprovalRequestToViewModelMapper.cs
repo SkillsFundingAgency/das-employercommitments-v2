@@ -19,14 +19,17 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
             AccountHashedId = source.AccountHashedId,
             ApprovalRequestId = source.ApprovalRequestId,
             ApprovalRequestStatus = approvalRequest.ApprovalRequestStatus,
+            ExceedsFundingCap = approvalRequest.ExceedsFundingCap,
+            DisplayFundingCapPrice = ToCurrency(approvalRequest.FundingCap),
             ChangeApprovalAllowed = IsChangeApprovalAllowed(approvalRequest.ApprenticeshipStatus),
 
             Items = ConvertToDisplayItems(approvalRequest.Items),
-
             Name = approvalRequest.Name,
             ULN = approvalRequest.ULN,
             CourseName = approvalRequest.CourseName,
             ProviderName = approvalRequest.ProviderName,
+            UKPRN = approvalRequest.UKPRN,
+            IsSupersededOrCancelled = approvalRequest.ApprovalRequestStatus is CocApprovalResultStatus.Superseded or CocApprovalResultStatus.Cancelled
         };
     }
 
@@ -68,6 +71,11 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
         }
 
         return displayItems;
+    }
+
+    public static string ToCurrency(int? input)
+    {
+        return ToCurrency(input?.ToString());
     }
 
     private bool IsChangeApprovalAllowed(ApprenticeshipStatus currentStatus) =>
