@@ -1,4 +1,4 @@
-﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+﻿﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipApprovalRequestViewModel
@@ -135,6 +135,10 @@
                             Continue
                         </button>
                     </div>
+                }
+                else if (Model.ApprovalRequestStatus == CocApprovalResultStatus.Complete)
+                {
+                     <a href="@LinkGenerator.EmployerHome(Model.AccountHashedId)" class="govuk-link">Go to homepage</a>
                 }
                 else if (Model.IsSupersededOrCancelled)
                 {
