@@ -32,7 +32,7 @@ public class WhenCallingApprenticeshipApprovalRequest
     [Test]
     public async Task ThenDisplaysMessageIfStatusIsNotLivePauseOrWaitingToStart()
     {
-        var result = await _fixture.SetChangeApprovalAllowed(false).GetAllChangeHistory();
+        var result = await _fixture.SetChangeApprovalAllowed(false).GetApprovalRequest();
 
         _fixture.VerifyChangeApprovalAllowedModelStateError(result as ViewResult);
     }
@@ -40,7 +40,7 @@ public class WhenCallingApprenticeshipApprovalRequest
     [Test]
     public async Task ThenReturnsViewModelIfStatusIsLivePauseOrWaitingToStart()
     {
-        var result = await _fixture.SetChangeApprovalAllowed(true).GetAllChangeHistory();
+        var result = await _fixture.SetChangeApprovalAllowed(true).GetApprovalRequest();
 
         _fixture.VerifyViewModel(result as ViewResult);
     }
@@ -132,11 +132,6 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
     {
         viewResult.Should().NotBeNull();
         viewResult.ViewData.ModelState.Should().ContainSingle(m => m.Key == "ApprovalRequestStatus" && m.Value.Errors.Any(e => e.ErrorMessage == "This change has already been approved."));
-    }
-    public WhenCallingApprenticeshipApprovalRequestFixture SetApprovalRequestStatus(CocApprovalResultStatus status)
-    {
-        _viewModel.ApprovalRequestStatus = status;
-        return this;
     }
 
     public async Task<IActionResult> PostApprovalRequest(bool applyApproval)
