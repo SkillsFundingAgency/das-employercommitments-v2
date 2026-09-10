@@ -49,8 +49,10 @@
         <table id="app-status" class="govuk-table govuk-!-margin-bottom-8">
             <tbody>
                 <partial name="DetailsPartials/_ApprenticeshipStatus" />
-
+                @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Live)
+                {
                 <partial name="DetailsPartials/_PaymentsStatus" />
+                }
 
                 <tr>
                     <th scope="row" class="govuk-table__header">Training provider</th>
