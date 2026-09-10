@@ -155,13 +155,13 @@
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header das-table-cell-width-45">Training course </th>
-                    <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.TrainingName </td>
+                    <td id="training-name-app-unit" class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.TrainingName </td>
                 </tr>
                 @if (!Model.DeliveryModel.Equals(DeliveryModel.Regular) || Model.HasMultipleDeliveryModelOptions)
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header das-table-cell-width-45">Training delivery model</th>
-                        <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.DeliveryModel.ToDescription()</td>
+                        <td id="delivery-model-app-unit" class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.DeliveryModel.ToDescription()</td>
                     </tr>
                 }                
 
@@ -202,32 +202,32 @@
 
                 @{
                     // Start and End Date
-                    var startDateLabel = "Training start date";
-                    var startDate = string.Empty;
+                    var appUnitStartDateLabel = "Training start date";
+                    var appUnitStartDate = string.Empty;
                     if (Model.StartDate.HasValue)
                     {
-                        startDate = Model.StartDate.Value.ToGdsFormatWithoutDay();
+                        appUnitStartDate = Model.StartDate.Value.ToGdsFormatWithoutDay();
                     }
 
-                    var endDate = string.Empty;
+                    var appUnitEndDate = string.Empty;
                     if (Model.EndDate.HasValue)
                     {
-                        endDate = Model.EndDate.Value.ToGdsFormatWithoutDay();
+                        appUnitEndDate = Model.EndDate.Value.ToGdsFormatWithoutDay();
                     }
                 }
                 @* Start Date *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@startDateLabel</th>
-                    <td id="start-date-app-unit-app-unit" class="govuk-table__cell" colspan="2">@startDate</td>
+                    <th scope="row" class="govuk-table__header">@appUnitStartDateLabel</th>
+                    <td id="start-date-app-unit" class="govuk-table__cell" colspan="2">@appUnitStartDate</td>
                     <td class="govuk-table__cell"></td>
                 </tr>
                 @* Planned End Date *@
                 @{
-                    var endDateLabel = "Training end date";
+                    var appUnitEndDateLabel = "Training end date";
                 }
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@endDateLabel</th>
-                    <td id="end-date-app-unit" class="govuk-table__cell" colspan="2">@endDate</td>
+                    <th scope="row" class="govuk-table__header">@appUnitEndDateLabel</th>
+                    <td id="end-date-app-unit" class="govuk-table__cell" colspan="2">@appUnitEndDate</td>
                     @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
                     {
                         <td class="govuk-table__cell">

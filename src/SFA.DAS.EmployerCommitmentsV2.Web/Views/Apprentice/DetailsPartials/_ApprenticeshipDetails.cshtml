@@ -134,16 +134,13 @@
                         <th scope="row" class="govuk-table__header">Email address</th>
 
                         <td class="govuk-table__cell">
-                            <table>
-                                
-                                <tr>
-                                    <th></th>
+                            <table>                                
+                                <tr>                                   
                                     <td id="email-address">@Model.Email</td>
                                 </tr>
                                 @if (Model.CanResendInvitation && Model.LearningType != SFA.DAS.Common.Domain.Types.LearningType.ApprenticeshipUnit)
                                 {
-                                    <tr>
-                                        <th></th>
+                                    <tr>                                        
                                         <td>
 
                                             <a id="resend-email-invitation-link" href="@Url.Action("ResendEmailInvitation", new ResendEmailInvitationRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link">Resend invitation email</a>
