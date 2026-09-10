@@ -1,0 +1,260 @@
+﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
+@using SFA.DAS.CommitmentsV2.Types
+@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+<partial name="DetailsPartials/_Banners" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-xl" id="learnerName"><span class="das-breakable">View details for @Model.ApprenticeName</span></h1>
+
+        @if (Model.HasChangeHistory)
+        {
+            <p>
+                <a class="govuk-link" asp-controller="Apprentice" asp-action="ChangeHistory" asp-route-accountHashedId="@Model.AccountHashedId"
+                   asp-route-apprenticeshipHashedId="@Model.HashedApprenticeshipId">View change history for this learner.</a>
+            </p>
+        }
+
+        @{
+            if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped && Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
+            {
+                <p class="govuk-body">
+                    Edit details if there's a change in learner or training circumstances.
+                </p>
+            }
+        }
+        @if (Model.ConfirmationStatus == ConfirmationStatus.Overdue)
+        {
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        Help with your learner’s overdue confirmation
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p>If your learner has not confirmed their training details within the 14 day deadline, you should:</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>
+                            contact the learner to complete their training confirmation
+                        </li>
+                    </ul>
+                </div>
+            </details>
+        }
+
+        <table id="app-status" class="govuk-table govuk-!-margin-bottom-8">
+            <tbody>
+                <partial name="DetailsPartials/_ApprenticeshipStatus" />
+
+                <tr>
+                    <th scope="row" class="govuk-table__header">Training provider</th>
+                    <td class="govuk-table__cell">@Model.ProviderName</td>
+                    @if (Model.ShowChangeTrainingProviderLink)
+                    {
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <a id="change-training-provider-link" class="govuk-link" href="@Url.Action("ChangeProviderInform", new ChangeProviderInformRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change<span class="govuk-visually-hidden"> training provider</span></a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="govuk-table__cell"></td>
+                    }
+                </tr>
+                <tr>
+                    <th scope="row" class="govuk-table__header">Cohort reference</th>
+                    <td id="cohort-reference" class="govuk-table__cell">@Model.CohortReference</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                @if (!string.IsNullOrEmpty(Model.EmploymentStatus))
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Employment status</th>
+                        <td id="employment-status" class="govuk-table__cell">@Model.EmploymentStatus</td>
+                        <td class="govuk-table__cell"></td>
+                    </tr>
+                }
+                @if (Model.TrainingProviderHistory != null && Model.TrainingProviderHistory.Count > 1)
+                {
+                    <tr>
+                        <th scope="row" class="govuk-table__header">Training provider history</th>
+                        <td id="training-provider-history" class="govuk-table__cell">
+                            @foreach (var trainingProvider in Model.TrainingProviderHistory)
+                            {
+                                <p class="govuk-body">
+                                    @if (trainingProvider.ShowLink)
+                                    {
+                                        <a href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = trainingProvider.HashedApprenticeshipId })">@trainingProvider.ProviderName</a>
+
+                                        <br>
+                                    }
+                                    else
+                                    {
+                                        <span>@trainingProvider.ProviderName</span>
+
+                                        <br />
+                                    }
+                                    <span class="govuk-body-s">@trainingProvider.FromDate.ToString("MMM yyyy") to @trainingProvider.ToDate.ToString("MMM yyyy")</span>
+                                </p>
+                            }
+                        </td>
+                        <td class="govuk-table__cell"></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="govuk-grid-row govuk-!-margin-bottom-2">
+            <div class="govuk-grid-column-two-thirds">
+                <h2 class="govuk-heading-m">Learner details</h2>
+            </div>
+            <div class="govuk-grid-column-one-third das-!-text-align-right--from-tablet">
+                @if (Model.EnableEdit)
+                {
+                    <a id="edit-apprentice-link" href="@Url.Action("EditApprenticeship", new { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link govuk-body">Edit<span class="govuk-visually-hidden"> apprentice details</span></a>
+                }
+            </div>
+        </div>
+        <table class="govuk-table govuk-!-margin-bottom-8">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header  das-table-cell-width-45">Name</th>
+                    <td id="apprentice-name" class="govuk-table__cell das-table-cell-width-55">@Model.ApprenticeName</td>
+                </tr>
+                @if (!string.IsNullOrEmpty(Model.Email) || Model.EmailShouldBePresent)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Email address</th>
+
+                        <td class="govuk-table__cell">
+                            <table>
+                                <tr>
+                                    <td id="email-address">@Model.Email</td>
+                                </tr>                                
+                            </table>
+                        </td>
+                    </tr>
+                }
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Unique learner number</th>
+                    <td id="uln" class="govuk-table__cell">@Model.ULN</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Date of birth</th>
+                    <td id="date-of-birth" class="govuk-table__cell">
+                        @if (Model.DateOfBirth.HasValue)
+                        {
+                            @Model.DateOfBirth.Value.ToGdsFormat()
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="govuk-heading-m">
+            Training details
+        </h2>
+        <table class="govuk-table  govuk-!-margin-bottom-8">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header das-table-cell-width-45">Training course </th>
+                    <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.TrainingName </td>
+                </tr>
+                @if (!Model.DeliveryModel.Equals(DeliveryModel.Regular) || Model.HasMultipleDeliveryModelOptions)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header das-table-cell-width-45">Training delivery model</th>
+                        <td class="govuk-table__cell das-table-cell-width-55" colspan="2">@Model.DeliveryModel.ToDescription()</td>
+                    </tr>
+                }                
+
+                @if (!string.IsNullOrEmpty(Model.Version))
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header"> Version </th>
+                        <td id="version" class="govuk-table__cell" colspan="2">@Model.Version </td>
+                        @if (Model.EnableEdit && Model.HasNewerVersions)
+                        {
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <a id="change-training-provider-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion, new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change<span class="govuk-visually-hidden"> version</span></a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="govuk-table__cell"></td>
+                        }
+                    </tr>
+                }
+                @if (Model.TrainingType == ProgrammeType.Standard && Model.ShowOptions)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header"> Option </th>
+                        <td id="option" class="govuk-table__cell" colspan="2">@(!string.IsNullOrEmpty(Model.Option) ? Model.Option : "To be confirmed")</td>
+                        @if (Model.EnableEdit && !Model.OnlySingleOption)
+                        {
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <a id="change-option-link" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeOption, new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change<span class="govuk-visually-hidden"> option</span></a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="govuk-table__cell"></td>
+                        }
+                    </tr>
+                }
+
+                @{
+                    // Start and End Date
+                    var startDateLabel = "Training start date";
+                    var startDate = string.Empty;
+                    if (Model.StartDate.HasValue)
+                    {
+                        startDate = Model.StartDate.Value.ToGdsFormatWithoutDay();
+                    }
+
+                    var endDate = string.Empty;
+                    if (Model.EndDate.HasValue)
+                    {
+                        endDate = Model.EndDate.Value.ToGdsFormatWithoutDay();
+                    }
+                }
+                @* Start Date *@
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">@startDateLabel</th>
+                    <td id="start-date" class="govuk-table__cell" colspan="2">@startDate</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+                @* Planned End Date *@
+                @{
+                    var endDateLabel = "Training end date";
+                }
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">@endDateLabel</th>
+                    <td id="end-date" class="govuk-table__cell" colspan="2">@endDate</td>
+                    @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
+                    {
+                        <td class="govuk-table__cell">
+                            @if (Model.ApprenticeshipStatus == ApprenticeshipStatus.Completed)
+                            {
+                                <a id="edit-end-date-link" class="govuk-link" href="@Url.Action("EditEndDate", new EditEndDateRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Edit<span class="govuk-visually-hidden"> end date</span></a>
+                            }
+                        </td>
+                    }
+                </tr>
+
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Total agreed training price</th>
+                    <td id="apprentice-cost" class="govuk-table__cell" colspan="2">@Model.Cost.FormatCost()</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Reference </th>
+                    <td id="employer-reference" class="govuk-table__cell" colspan="2">@Model.EmployerReference</td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
