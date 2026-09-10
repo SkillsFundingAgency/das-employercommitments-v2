@@ -20,7 +20,7 @@
     "SFA.DAS.EmployerCommitmentsV2.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "MRLPWP/apprentices",
+      "launchUrl": "MNDGLK/unapproved/inform",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "APPSETTING_EnvironmentName": "LOCAL",
