@@ -135,12 +135,12 @@
 
                         <td class="govuk-table__cell">
                             <table>                                
-                                <tr>                                   
-                                    <td id="email-address">@Model.Email</td>
+                                <tr>   
+                                    <th class="govuk-visually-hidden"></th><td id="email-address">@Model.Email</td>
                                 </tr>
                                 @if (Model.CanResendInvitation && Model.LearningType != SFA.DAS.Common.Domain.Types.LearningType.ApprenticeshipUnit)
                                 {
-                                    <tr>                                        
+                                    <tr> <th class="govuk-visually-hidden"></th>                                       
                                         <td>
 
                                             <a id="resend-email-invitation-link" href="@Url.Action("ResendEmailInvitation", new ResendEmailInvitationRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })" class="govuk-link">Resend invitation email</a>
@@ -314,10 +314,8 @@
             </tbody>
         </table>
 
-        @if (Model.RecognisePriorLearning != null)
-        {
-            @if (Model.RecognisePriorLearning == true)
-            {
+        @if (Model.RecognisePriorLearning != null && Model.RecognisePriorLearning == true)
+        {            
                 <div class="govuk-grid-row govuk-!-margin-bottom-2">
                     <div class="govuk-grid-column-two-thirds">
                         <h2 class="govuk-heading-m">Prior learning details</h2>
@@ -353,7 +351,6 @@
 
                     </tbody>
                 </table>
-            }
         }
 
     </div>
