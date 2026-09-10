@@ -9,12 +9,12 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <h1 class="govuk-heading-xl" id="learnerName"><span class="das-breakable">View details for @Model.ApprenticeName</span></h1>
+        <h1 class="govuk-heading-xl" id="learnerName-app-unit"><span class="das-breakable">View details for @Model.ApprenticeName</span></h1>
 
         @if (Model.HasChangeHistory)
         {
             <p>
-                <a class="govuk-link" asp-controller="Apprentice" asp-action="ChangeHistory" asp-route-accountHashedId="@Model.AccountHashedId"
+                <a class="govuk-link" id="change-history-link-app-unit" asp-controller="Apprentice" asp-action="ChangeHistory" asp-route-accountHashedId="@Model.AccountHashedId"
                    asp-route-apprenticeshipHashedId="@Model.HashedApprenticeshipId">View change history for this learner.</a>
             </p>
         }
@@ -22,14 +22,14 @@
         @{
             if (Model.ApprenticeshipStatus != ApprenticeshipStatus.Stopped && Model.ApprenticeshipStatus != ApprenticeshipStatus.Completed)
             {
-                <p class="govuk-body">
+                <p id="learner-circumstances-info" class="govuk-body">
                     Edit details if there's a change in learner or training circumstances.
                 </p>
             }
         }
         @if (Model.ConfirmationStatus == ConfirmationStatus.Overdue)
         {
-            <details class="govuk-details" data-module="govuk-details">
+            <details id="overdue-confirmation-details" class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
                         Help with your learner’s overdue confirmation
@@ -84,7 +84,7 @@
                         <td id="training-provider-history-app-unit" class="govuk-table__cell">
                             @foreach (var trainingProvider in Model.TrainingProviderHistory)
                             {
-                                <p class="govuk-body">
+                                <p id="training-provider-@trainingProvider.HashedApprenticeshipId" class="govuk-body">
                                     @if (trainingProvider.ShowLink)
                                     {
                                         <a href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = trainingProvider.HashedApprenticeshipId })">@trainingProvider.ProviderName</a>
@@ -109,7 +109,7 @@
 
         <div class="govuk-grid-row govuk-!-margin-bottom-2">
             <div class="govuk-grid-column-two-thirds">
-                <h2 class="govuk-heading-m">Learner details</h2>
+                <h2 id="learner-details-app-unit" class="govuk-heading-m">Learner details</h2>
             </div>
             <div class="govuk-grid-column-one-third das-!-text-align-right--from-tablet">
                 @if (Model.EnableEdit)
