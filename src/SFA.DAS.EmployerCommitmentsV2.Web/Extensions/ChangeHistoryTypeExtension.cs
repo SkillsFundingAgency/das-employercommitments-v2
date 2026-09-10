@@ -9,7 +9,7 @@ public static class ChangeHistoryTypeExtension
         return changeType switch
         {
             LearningChangeType.AutoApproved => "govuk-tag--grey",
-            LearningChangeType.Rejected or LearningChangeType.EmployerRejected => "govuk-tag--red",
+            LearningChangeType.Rejected or LearningChangeType.EmployerRejected or LearningChangeType.AutoRejected => "govuk-tag--red",
             LearningChangeType.EmployerApproved or LearningChangeType.ManualUpdate => "govuk-tag--green",
             _ => string.Empty,
         };
