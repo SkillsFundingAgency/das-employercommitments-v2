@@ -1,6 +1,7 @@
 ﻿﻿@using SFA.DAS.CommitmentsV2.Shared.Extensions
 @using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice
 @using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+@using SFA.DAS.EmployerCommitmentsV2.Web.Controllers
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipApprovalRequestViewModel
 @inject ILinkGenerator LinkGenerator
 
@@ -73,7 +74,7 @@
                     <p class="govuk-body govuk-!-font-weight-bold">The training is above the funding band maximum</p>
                     <p class="govuk-body">
                         The new agreed training price is above the @Model.DisplayFundingCapPrice maximum value of the funding band for this training.
-                        You'll need to pay the difference directly to the training provider. 
+                        You'll need to pay the difference directly to the training provider.
                     </p>
                 </div>
             }
@@ -103,58 +104,62 @@
                     </table>
                 </div>
             </div>
-                @if (Model.ApprovalRequestStatus == CocApprovalResultStatus.Pending)
-                {
-                    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApproveChanges,  "govuk-form-group--error")">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                                <h1 class="govuk-fieldset__heading">
-                                    Do you want to approve these changes?
-                                </h1>
-                            </legend>
-                            <div class="govuk-radios">
-                                @Html.ValidationMessageFor(m => m.ApproveChanges, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ApproveChanges) })
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="ApproveChanges" name="ApproveChanges" type="radio" value="true">
-                                    <label class="govuk-label govuk-radios__label" for="ApproveChanges">
-                                        Yes, approve these changes
-                                    </label>
-                                </div>
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="ApproveChanges-no" name="ApproveChanges" type="radio" value="false">
-                                    <label class="govuk-label govuk-radios__label" for="ApproveChanges-no">
-                                        No, decline changes and send messages to training provider
-                                    </label>
-                                </div>
+            @if (!Model.ChangeApprovalAllowed)
+            {
+                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action(nameof(ApprenticeController.ChangeHistory), new ChangeHistoryRequest { ApprenticeshipHashedId = Model.ApprenticeshipHashedId, AccountHashedId = Model.AccountHashedId })" id="view-change-history-link">View change history for this learner</a>
+            }
+            else if (Model.ApprovalRequestStatus == CocApprovalResultStatus.Pending)
+            {
+                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApproveChanges, "govuk-form-group--error")">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                            <h1 class="govuk-fieldset__heading">
+                                Do you want to approve these changes?
+                            </h1>
+                        </legend>
+                        <div class="govuk-radios">
+                            @Html.ValidationMessageFor(m => m.ApproveChanges, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ApproveChanges) })
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="ApproveChanges" name="ApproveChanges" type="radio" value="true">
+                                <label class="govuk-label govuk-radios__label" for="ApproveChanges">
+                                    Yes, approve these changes
+                                </label>
                             </div>
-                        </fieldset>
-                    </div>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="ApproveChanges-no" name="ApproveChanges" type="radio" value="false">
+                                <label class="govuk-label govuk-radios__label" for="ApproveChanges-no">
+                                    No, decline changes and send messages to training provider
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
 
-                    <div class="govuk-button-group">
-                        <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button">
-                            Continue
-                        </button>
-                    </div>
-                }
-                else if (Model.ApprovalRequestStatus == CocApprovalResultStatus.Complete)
-                {
-                     <a href="@LinkGenerator.EmployerHome(Model.AccountHashedId)" class="govuk-link">Go to homepage</a>
-                }
-                else if (Model.IsSupersededOrCancelled)
-                {
-                    <a href="@LinkGenerator.EmployerHome(Model.AccountHashedId)" class="govuk-link">Go to homepage</a>
-                    <br />
-                    <br />
-                    <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ChangeHistory", new BaseChangeHistoryRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })" id="cancel-button">View change history for this learner</a>
-                }
-                else
-                {
-                    <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })" id="cancel-button">View learner details</a>
-                }
+                <div class="govuk-button-group">
+                    <button class="govuk-button" data-module="govuk-button" type="submit" id="continue-button">
+                        Continue
+                    </button>
+                </div>
+            }
+            else if (Model.ApprovalRequestStatus == CocApprovalResultStatus.Complete)
+            {
+                <a href="@LinkGenerator.EmployerHome(Model.AccountHashedId)" class="govuk-link">Go to homepage</a>
+            }
+            else if (Model.IsSupersededOrCancelled)
+            {
+                <a href="@LinkGenerator.EmployerHome(Model.AccountHashedId)" class="govuk-link">Go to homepage</a>
+                <br />
+                <br />
+                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ChangeHistory", new BaseChangeHistoryRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })" id="cancel-button">View change history for this learner</a>
+            }
+            else
+            {
+                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ApprenticeshipDetails", new ApprenticeshipDetailsRequest { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })" id="cancel-button">View learner details</a>
+            }
         </form>
     </div>
 </div>
 
 @section back {
-    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", new { AccountHashedId = Model.AccountHashedId ,ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">Back</a>
+    <a id="back-link" class="govuk-back-link" href="@Url.Action("ApprenticeshipDetails", new { AccountHashedId = Model.AccountHashedId, ApprenticeshipHashedId = Model.ApprenticeshipHashedId })">Back</a>
 }

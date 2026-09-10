@@ -22,6 +22,8 @@ public class ApprenticeshipApprovalRequestViewModel : IAuthorizationContextModel
     public bool ExceedsFundingCap { get; set; }
     public string DisplayFundingCapPrice { get; set; }
     public bool IsSupersededOrCancelled { get; set; }
+    public bool ChangeApprovalAllowed { get; set; }
+
 
     public class ChangeItem
     {
