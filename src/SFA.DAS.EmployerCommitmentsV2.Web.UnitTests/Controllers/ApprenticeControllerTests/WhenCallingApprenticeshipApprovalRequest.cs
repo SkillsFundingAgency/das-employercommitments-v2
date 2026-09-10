@@ -103,7 +103,7 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
     public void VerifyModelStateError(ViewResult viewResult)
     {
         viewResult.Should().NotBeNull();
-        viewResult.ViewData.ModelState.Should().ContainSingle(m => m.Key == "ApprovalRequestStatus" && m.Value.Errors.Any(e => e.ErrorMessage == "This change has already been approved."));
+        viewResult.ViewData.ModelState.Should().ContainSingle(m => m.Key == Constants.ApprenticeshipConstants.ApprovalRequestStatus && m.Value.Errors.Any(e => e.ErrorMessage == Constants.ApprenticeshipConstants.AlreadyApprovedOrDeclinedMessage ));
     }
     public WhenCallingApprenticeshipApprovalRequestFixture SetApprovalRequestStatus(CocApprovalResultStatus status)
     {

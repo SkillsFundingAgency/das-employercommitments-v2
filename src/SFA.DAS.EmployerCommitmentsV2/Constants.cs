@@ -13,4 +13,10 @@ public static class Constants
     {
         public const int MaxNumberOfEmployerAccountsAllowedOnClaim = 50;
     }
+
+    public static class ApprenticeshipConstants
+    {
+        public const string AlreadyApprovedOrDeclinedMessage = "You cannot approve or decline this change because it has already been approved or declined.";
+        public const string ApprovalRequestStatus = "ApprovalRequestStatus";
+    }
 }

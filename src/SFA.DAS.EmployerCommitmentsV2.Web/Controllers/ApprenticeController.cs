@@ -43,7 +43,7 @@ public class ApprenticeController(
     private const string AlertDetailsWhenApproved = "An alert has been sent to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service.";
     private const string ChangesRejectedMessage = "Changes rejected";
     private const string ChangesUndoneMessage = "Changes undone";
-    private const string ApprenticeEndDateConfirmed = "Current planned end date confirmed ";
+    private const string ApprenticeEndDateConfirmed = "Current planned end date confirmed ";    
 
     [Route("", Name = RouteNames.ApprenticesIndex)]
     public async Task<IActionResult> Index(IndexRequest request)
@@ -1281,7 +1281,7 @@ public class ApprenticeController(
         var viewModel = await modelMapper.Map<ApprenticeshipApprovalRequestViewModel>(request);
 
         if(viewModel.ApprovalRequestStatus == CocApprovalResultStatus.Complete) {
-            ModelState.AddModelError("ApprovalRequestStatus", "This change has already been approved.");
+            ModelState.AddModelError(Constants.ApprenticeshipConstants.ApprovalRequestStatus, Constants.ApprenticeshipConstants.AlreadyApprovedOrDeclinedMessage);
         }
 
         return View(viewModel);
