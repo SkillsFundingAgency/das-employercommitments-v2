@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Html;
 using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using AlertType = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterModelTests;
 
@@ -92,7 +93,7 @@ public class WhenGettingFiltersUsedMessage
 
 
     [Test, AutoData]
-    public void And_No_Search_And_SelectedStatus_Then_SelectedStatus(Alerts selectedAlert)
+    public void And_No_Search_And_SelectedStatus_Then_SelectedStatus(AlertType.Alerts selectedAlert)
     {
         var filterModel = new ApprenticesFilterModel
         {

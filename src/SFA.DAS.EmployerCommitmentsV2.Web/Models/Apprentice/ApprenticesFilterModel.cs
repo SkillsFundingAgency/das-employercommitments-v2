@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Html;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using AlertType = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
@@ -13,7 +14,7 @@ public class ApprenticesFilterModel
     public string SelectedCourse { get; set; }
     public ApprenticeshipStatus? SelectedStatus { get; set; }
     public DateTime? SelectedEndDate { get; set; }
-    public Alerts? SelectedAlert { get; set; }
+    public AlertType.Alerts? SelectedAlert { get; set; }
     public ConfirmationStatus? SelectedApprenticeConfirmation { get; set; }
 
     public string SortField { get; set; }
@@ -23,7 +24,7 @@ public class ApprenticesFilterModel
     public IEnumerable<string> CourseFilters { get; set; } = new List<string>();
     public IEnumerable<ApprenticeshipStatus> StatusFilters { get; set; } = new List<ApprenticeshipStatus>();
     public IEnumerable<DateTime> EndDateFilters { get; set; } = new List<DateTime>();
-    public IEnumerable<Alerts> AlertFilters { get; set; } = new List<Alerts>();
+    public IEnumerable<AlertType.Alerts> AlertFilters { get; set; } = new List<AlertType.Alerts>();
     public IEnumerable<ConfirmationStatus> ApprenticeConfirmationFilters =>
         Enum.GetValues(typeof(ConfirmationStatus)).Cast<ConfirmationStatus>().ToList();
 

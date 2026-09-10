@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using AlertType = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterModelTests;
 
@@ -66,7 +67,7 @@ public class WhenGettingSearchOrFiltersApplied
     {
         var filterModel = new ApprenticesFilterModel
         {
-            SelectedAlert = Alerts.IlrDataMismatch
+            SelectedAlert = AlertType.Alerts.IlrDataMismatch
         };
 
         filterModel.SearchOrFiltersApplied.Should().BeTrue();

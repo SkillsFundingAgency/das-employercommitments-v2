@@ -1,4 +1,3 @@
-using SFA.DAS.Apprenticeships.Types;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.CommitmentsV2.Types;
@@ -129,7 +128,8 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 LearningType = response.Apprenticeship.LearningType,
                 WithdrawnReasonCode = response.Apprenticeship.WithdrawnReasonCode,
                 FreezeStatus = response.PaymentsStatus?.FreezeStatus ?? false,
-                HasChangeHistory = response.Apprenticeship.HasChangeHistory
+                HasChangeHistory = response.Apprenticeship.HasChangeHistory,
+                HasAutoApprovedRequests = response.Apprenticeship.HasAutoApprovedRequests
             };
 
             return result;

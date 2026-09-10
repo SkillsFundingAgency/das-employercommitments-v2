@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using SFA.DAS.CommitmentsV2.Types;
+using AlertType = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 
-public class GetApprenticeshipsRequest(long? accountId, int pageNumber, int pageItemCount, string sortField, bool reverseSort, string searchTerm, string employerName, string providerName, string courseName, ApprenticeshipStatus? status, DateTime? startDate, DateTime? endDate, int? accountLegalEntityId, DateTime? startDateRangeFrom, DateTime? startDateRangeTo, Alerts? alert, ConfirmationStatus? apprenticeConfirmationStatus, DeliveryModel? deliveryModel)
+public class GetApprenticeshipsRequest(long? accountId, int pageNumber, int pageItemCount, string sortField, bool reverseSort, string searchTerm, string employerName, string providerName, string courseName, ApprenticeshipStatus? status, DateTime? startDate, DateTime? endDate, int? accountLegalEntityId, DateTime? startDateRangeFrom, DateTime? startDateRangeTo, AlertType.Alerts? alert, ConfirmationStatus? apprenticeConfirmationStatus, DeliveryModel? deliveryModel)
 {
     public long? AccountId { get; set; } = accountId;
 
@@ -33,7 +34,7 @@ public class GetApprenticeshipsRequest(long? accountId, int pageNumber, int page
 
     public DateTime? StartDateRangeTo { get; set; } = startDateRangeTo;
 
-    public Alerts? Alert { get; set; } = alert;
+    public AlertType.Alerts? Alert { get; set; } = alert;
 
     public ConfirmationStatus? ApprenticeConfirmationStatus { get; set; } = apprenticeConfirmationStatus;
     public DeliveryModel? DeliveryModel { get; set; } = deliveryModel;

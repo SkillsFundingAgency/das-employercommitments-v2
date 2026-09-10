@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using AlertType = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterModelTests;
 
@@ -15,7 +16,7 @@ public class WhenGettingPageLinks
             SelectedProvider = "asdsad",
             SelectedCourse = "iknjso",
             SelectedStatus = ApprenticeshipStatus.WaitingToStart,
-            SelectedAlert = Alerts.ChangesForReview,
+            SelectedAlert = AlertType.Alerts.ChangesForReview,
             SelectedEndDate = DateTime.Today,
             TotalNumberOfApprenticeshipsFound = Constants.ApprenticesSearch.NumberOfApprenticesPerSearchPage * 3,
             SortField = "gsd",
