@@ -2,7 +2,7 @@
 @model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.WhatIsTheNewPriceViewModel
 
 @{    
-    ViewBag.Title = $"What is the agreed price of completing the training with {Model.ProviderName}? ";
+    ViewBag.Title = $"What is the agreed price of the training with {Model.ProviderName}? ";
     ViewBag.GaData.Vpv = "/accounts/apprentices/manage/what-is-new-price";
 }
 
@@ -11,11 +11,11 @@
         <partial name="_ValidationSummary" />
 
         <h1 class="govuk-heading-xl">
-            What is the agreed price of completing the training with @Model.ProviderName?
+            What is the agreed price of the training with @Model.ProviderName?
         </h1>
 
         <p class="govuk-body">
-            This is the price you agreed with @Model.ProviderName to complete the remainder of the apprenticeship training and assessment.
+            This is the price you agreed with @Model.ProviderName to complete the remainder of the training and assessment.
         </p>
 
         <form method="post">
