@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using AlertType = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+using AlertType = SFA.DAS.EmployerCommitmentsV2.Enums;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Models.ApprenticeFilterModelTests;
 
