@@ -68,10 +68,10 @@ public class ApprenticesipApprovalRequestToViewModelMapperTests
     }
 
     [TestCase(CocApprovalResultStatus.Superseded, true)]
-    [TestCase(CocApprovalResultStatus.Cancelled, true)]
+    [TestCase(CocApprovalResultStatus.Cancelled, false)]
     [TestCase(CocApprovalResultStatus.Pending, false)]
     [TestCase(CocApprovalResultStatus.Complete, false)]
-    public async Task Then_Maps_IsSupersededOrCancelled_Correctly(CocApprovalResultStatus status, bool expected)
+    public async Task Then_Maps_IsSuperseded_Correctly(CocApprovalResultStatus status, bool expected)
     {
         var fixture = new Fixture();
 
@@ -89,6 +89,6 @@ public class ApprenticesipApprovalRequestToViewModelMapperTests
 
         var result = await mapper.Map(source);
 
-        result.IsSupersededOrCancelled.Should().Be(expected);
+        result.IsSuperseded.Should().Be(expected);
     }
 }
