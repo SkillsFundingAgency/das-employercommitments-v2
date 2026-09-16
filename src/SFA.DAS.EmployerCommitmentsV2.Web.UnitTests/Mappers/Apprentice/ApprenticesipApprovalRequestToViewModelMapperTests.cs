@@ -91,4 +91,29 @@ public class ApprenticesipApprovalRequestToViewModelMapperTests
 
         result.IsSuperseded.Should().Be(expected);
     }
+
+    [TestCase(CocApprovalResultStatus.Superseded, false)]
+    [TestCase(CocApprovalResultStatus.Cancelled, true)]
+    [TestCase(CocApprovalResultStatus.Pending, false)]
+    [TestCase(CocApprovalResultStatus.Complete, true)]
+    public async Task Then_Maps_IsCancelledOrCompleted_Correctly(CocApprovalResultStatus status, bool expected)
+    {
+        var fixture = new Fixture();
+
+        var source = fixture.Create<ApprenticeshipApprovalRequest>();
+        var apiResponse = fixture.Build<GetApprenticeshipApprovalResponse>()
+            .With(x => x.ApprovalRequestId, source.ApprovalRequestId)
+            .With(x => x.ApprenticeshipId, source.ApprenticeshipId)
+            .With(x => x.AccountId, source.AccountId)
+            .With(x => x.ApprovalRequestStatus, status).Create();
+
+        var mockApprovalsApiClient = new Mock<IApprovalsApiClient>();
+        mockApprovalsApiClient.Setup(s => s.GetApprenticeshipApprovalRequest(source.AccountId, source.ApprenticeshipId, source.ApprovalRequestId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(apiResponse);
+        var mapper = new ApprenticeshipApprovalRequestToViewModelMapper(mockApprovalsApiClient.Object);
+
+        var result = await mapper.Map(source);
+
+        result.IsCompletedOrCancelled.Should().Be(expected);
+    }
 }
