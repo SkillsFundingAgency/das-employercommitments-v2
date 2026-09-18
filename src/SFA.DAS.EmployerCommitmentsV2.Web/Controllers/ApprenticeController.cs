@@ -1284,6 +1284,11 @@ public class ApprenticeController(
             ModelState.AddModelError(Constants.ApprenticeshipConstants.ApprovalRequestStatus, Constants.ApprenticeshipConstants.AlreadyApprovedOrDeclinedMessage);
         }
 
+        if (!viewModel.ChangeApprovalAllowed)
+        {
+            ModelState.AddModelError(nameof(ApprenticeshipApprovalRequestViewModel.ChangeApprovalAllowed), "This change no longer exists");
+        }
+
         return View(viewModel);
     }
 
