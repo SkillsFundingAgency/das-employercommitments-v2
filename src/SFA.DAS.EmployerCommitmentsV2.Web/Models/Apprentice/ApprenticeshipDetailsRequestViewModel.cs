@@ -94,6 +94,7 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public bool HasMultipleDeliveryModelOptions { get; set; }
     public LearningType? LearningType { get; set; }
     public bool HasChangeHistory { get; set; }
+    public bool HasAutoApprovedRequests { get; set; }
 
     public ActionRequiredBanner GetActionRequiredBanners()
     {

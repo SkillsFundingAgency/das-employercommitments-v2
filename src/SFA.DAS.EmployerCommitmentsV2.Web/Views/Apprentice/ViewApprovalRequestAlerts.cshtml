@@ -1,0 +1,142 @@
+﻿@using SFA.DAS.EmployerCommitmentsV2.Web.RouteValues
+@using SFA.DAS.CommitmentsV2.Shared.Extensions
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipApprovalRequestAlertsViewModel
+
+<div class="govuk-grid-row">
+    <partial name="_ValidationSummary" />
+    <form method="post">
+        <h1 class="govuk-heading-xl" id="learnerName"><span class="das-breakable">Changes for @Model.ApprenticeName</span></h1>
+
+        <input type="hidden" asp-for="ApprenticeshipId" />
+        <input type="hidden" asp-for="ApprenticeshipHashedId" />
+        <input type="hidden" asp-for="AccountHashedId" />
+        <input type="hidden" asp-for="ApprenticeName" />
+        <input type="hidden" asp-for="AccountId" />
+
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    Why are some changes auto approved?
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                <p>Some changes are now being automatically approved to reduce delays and help keep learner records up to date. These are:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>
+                        name changes
+                    </li>
+                    <li>
+                        planned end date changes
+                    </li>
+                    <li>
+                        status changes
+                    </li>
+                    <li>
+                        delivery model changes
+                    </li>
+                    <li>
+                        version changes
+                    </li>
+                </ul>
+            </div>
+        </details>
+
+        @foreach (var item in Model.ApprovalRequests.Select((request, index) => new { request, index }))
+        {
+            var i = item.index;
+            var approvalRequest = Model.ApprovalRequests[i];
+
+            <table class="govuk-table das-table--condensed das-table--responsive das-table--double-arrows">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">
+                            Date of change
+                        </th>
+                        <th scope="col" class="govuk-table__header">
+                            Change made
+                        </th>
+                        <th scope="col" class="govuk-table__header">
+                            Previous
+                        </th>
+                        <th scope="col" class="govuk-table__header">
+                            Current
+                        </th>
+                        <th scope="col" class="govuk-table__header">
+                            Decision
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @foreach (var approvalField in approvalRequest.ApprovalRequestFieldItems)
+                    {
+                        <tr class="govuk-table__row">
+
+                            <td class="govuk-table__cell" data-label="Date of change">
+                                @approvalField.Created.ToGdsFormat()
+
+                            </td>
+                            <td class="govuk-table__cell" data-label="Change made">
+                                @approvalField.Field
+                            </td>
+                            <td class="govuk-table__cell" data-label="Previous">
+                                @approvalField.Old
+                            </td>
+                            <td class="govuk-table__cell" data-label="Current">
+                                @approvalField.New
+                            </td>
+                            <td class="govuk-table__cell " data-label="Decision">
+
+                                <strong class="govuk-tag govuk-tag--grey">@approvalField.Status.GetEnumDescription()</strong>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <input type="hidden" asp-for="@Model.ApprovalRequests[i].Id" />
+
+            <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.ApprovalRequests[@i].Seen, "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset">
+                    @if (!ViewData.ModelState.IsValid && ViewData.ModelState[$"ApprovalRequests[{i}].Seen"]?.Errors.Count > 0)
+                    {
+                        <span id="error-message-ApprovalRequests[@i].Seen" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[$"ApprovalRequests[{i}].Seen"].Errors.First().ErrorMessage
+                        </span>
+                    }
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        <h2 class="govuk-fieldset__heading">
+                            Do you want to delete this alert?
+                        </h2>
+                    </legend>
+                    <div id="contact-hint" class="govuk-hint">
+                        You will still see the changes in your change history but the alert will disappear.
+                    </div>
+                    <div class="govuk-radios">
+                        @Html.ValidationMessageFor(m => m.ApprovalRequests.ToList()[i].Seen, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ApprovalRequests[i].Seen) })
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="ApprovalRequests[@i].Seen_Yes" asp-for="ApprovalRequests[@i].Seen" name="ApprovalRequests[@i].Seen" type="radio" value="true">
+                            <label class="govuk-label govuk-radios__label" for="ApprovalRequests[@i].Seen_Yes">
+                                Yes, delete this alert
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="ApprovalRequests[@i].Seen_No" asp-for="ApprovalRequests[@i].Seen" name="ApprovalRequests[@i].Seen" type="radio" value="false">
+                            <label class="govuk-label govuk-radios__label" for="ApprovalRequests[@i].Seen_No">
+                                No, keep the alert
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        }
+
+        <button class="govuk-button" type="submit" id="continue-button"> Continue </button>
+    </form>
+</div>
+
+@section back {
+
+    <a id="back-link" class="govuk-back-link" asp-route="@RouteNames.ApprenticeDetail" asp-route-accountHashedId="@Model.AccountHashedId"
+       asp-route-apprenticeshipHashedId="@Model.ApprenticeshipHashedId">Back</a>
+}

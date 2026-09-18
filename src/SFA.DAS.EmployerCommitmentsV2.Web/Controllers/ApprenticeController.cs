@@ -1264,7 +1264,6 @@ public class ApprenticeController(
         return View(viewModel);
     }
 
-
     [Route("change-history")]
     [HttpGet]
     public async Task<IActionResult> GetAllChangeHistory(GetAllChangeHistoryRequest request)
@@ -1292,7 +1291,6 @@ public class ApprenticeController(
     [HttpPost]
     public async Task<IActionResult> PostApprenticeshipApprovalRequest([FromServices] IAuthenticationService authenticationService, ApprenticeshipApprovalRequestViewModel viewModel)
     {
-
         var request = new ProcessApprenticeshipApprovalRequest { ApplyChanges = viewModel.ApproveChanges.Value, AccountId = viewModel.AccountId, UserInfo = authenticationService.UserInfo };
 
         if (viewModel.ApproveChanges == true)
@@ -1317,7 +1315,7 @@ public class ApprenticeController(
             {
                 AccountHashedId = viewModel.AccountHashedId,
                 ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId,
-                ApprovalRequestId = viewModel.ApprovalRequestId 
+                ApprovalRequestId = viewModel.ApprovalRequestId
             });
     }
 
@@ -1328,6 +1326,32 @@ public class ApprenticeController(
     {
         var viewModel = await modelMapper.Map<ApprenticeshipApprovalRequestViewModel>(request);
         return View(viewModel);
+    }
+
+    [Route("{apprenticeshipHashedId}/view-alerts")]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
+    [HttpGet]
+    public async Task<IActionResult> ViewApprovalRequestAlerts(ApprenticeshipApprovalRequestAlertsRequest request)
+    {
+        var viewModel = await modelMapper.Map<ApprenticeshipApprovalRequestAlertsViewModel>(request);
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
+    [Route("{apprenticeshipHashedId}/view-alerts")]
+    public async Task<IActionResult> ViewApprovalRequestAlerts(
+       ApprenticeshipApprovalRequestAlertsViewModel viewModel)
+    {
+        var request = await modelMapper.Map<UpdateApprovalRequestAlertAcknowledgeRequest>(viewModel);
+
+        await outerApi.UpdateApprovalRequestAlertAcknowledge(viewModel.AccountId, viewModel.ApprenticeshipId, request);
+        return RedirectToAction(nameof(ApprenticeshipDetails),
+                    new ApprenticeshipDetailsRequest
+                    {
+                        AccountHashedId = viewModel.AccountHashedId,
+                        ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
+                    });
     }
 
     private async Task<Guid> StoreEditApprenticeshipRequestViewModelInCache(EditApprenticeshipRequestViewModel model, Guid? key)
