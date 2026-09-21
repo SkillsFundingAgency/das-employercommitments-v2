@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Controllers.ApprenticeControllerTests;
@@ -24,6 +25,22 @@ public class WhenCallingApprenticeshipApprovalRequest
     public async Task ThenReturnsViewModel()
     {
         var result = await _fixture.GetApprovalRequest();
+
+        _fixture.VerifyViewModel(result as ViewResult);
+    }
+
+    [Test]
+    public async Task ThenDisplaysMessageIfChangeHasBeenCompleted()
+    {
+        var result = await _fixture.SetApprovalRequestStatus(CocApprovalResultStatus.Complete).GetApprovalRequest();
+
+        _fixture.VerifyModelStateError(result as ViewResult);
+    }
+
+    [Test]
+    public async Task ThenReturnsViewModelIfChangeIsPending()
+    {
+        var result = await _fixture.SetApprovalRequestStatus(CocApprovalResultStatus.Pending).GetApprovalRequest();
 
         _fixture.VerifyViewModel(result as ViewResult);
     }
@@ -59,7 +76,8 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
         _viewModel = fixture.Create<ApprenticeshipApprovalRequestViewModel>();
 
         MockMapper.Setup(m => m.Map<ApprenticeshipApprovalRequestViewModel>(_request)).ReturnsAsync(_viewModel);
-        ApprovalsApiClientMock.Setup(x => x.ProcessCocApproval(_viewModel.AccountId, _viewModel.ApprenticeshipId, _viewModel.ApprovalRequestId, It.IsAny<ProcessApprenticeshipApprovalRequest>(), It.IsAny<CancellationToken>())).Verifiable();
+        ApprovalsApiClientMock.Setup(x => x.ProcessCocApproval(_viewModel.AccountId, _viewModel.ApprenticeshipId, _viewModel.ApprovalRequestId, 
+            It.IsAny<ProcessApprenticeshipApprovalRequest>(), It.IsAny<CancellationToken>())).Verifiable();
         _authenticationService = new Mock<IAuthenticationService>();
     }
 
@@ -69,17 +87,6 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
 
         return result as ViewResult;
     }
-
-    public async Task<IActionResult> PostApprovalRequest(bool applyApproval)
-    {
-        _viewModel.ApproveChanges = applyApproval;
-        var result = await Controller.PostApprenticeshipApprovalRequest(_authenticationService.Object, _viewModel);
-
-        return result ;
-    }
-
-
-
 
     public void VerifyMapperWasCalled()
     {
@@ -91,5 +98,24 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
         var viewModel = viewResult.Model as ApprenticeshipApprovalRequestViewModel;
 
         viewModel.Should().Be(_viewModel);
+    }
+
+    public void VerifyModelStateError(ViewResult viewResult)
+    {
+        viewResult.Should().NotBeNull();
+        viewResult.ViewData.ModelState.Should().ContainSingle(m => m.Key == Constants.ApprenticeshipConstants.ApprovalRequestStatus && m.Value.Errors.Any(e => e.ErrorMessage == Constants.ApprenticeshipConstants.AlreadyApprovedOrDeclinedMessage ));
+    }
+    public WhenCallingApprenticeshipApprovalRequestFixture SetApprovalRequestStatus(CocApprovalResultStatus status)
+    {
+        _viewModel.ApprovalRequestStatus = status;
+        return this;
+    }
+
+    public async Task<IActionResult> PostApprovalRequest(bool applyApproval)
+    {
+        _viewModel.ApproveChanges = applyApproval;
+        var result = await Controller.PostApprenticeshipApprovalRequest(_authenticationService.Object, _viewModel);
+
+        return result;
     }
 }
