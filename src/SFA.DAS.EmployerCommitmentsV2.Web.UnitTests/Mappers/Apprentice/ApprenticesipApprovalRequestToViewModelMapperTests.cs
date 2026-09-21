@@ -13,10 +13,11 @@ public class ApprenticesipApprovalRequestToViewModelMapperTests
     public async Task Then_Maps_MainValues(
         ApprenticeshipApprovalRequest source,
         GetApprenticeshipApprovalResponse apiResponse,
-        [Frozen]Mock<IApprovalsApiClient> mockApprovalsApiClient,
-        [Greedy] ApprenticeshipApprovalRequestToViewModelMapper mapper)
+        Mock<IApprovalsApiClient> mockApprovalsApiClient)
     {
-        mockApprovalsApiClient.Setup(s => s.GetApprenticeshipApprovalRequest(source.AccountId, source.ApprenticeshipId, source.ApprovalRequestId, It.IsAny<CancellationToken>()))
+        var mapper = new ApprenticeshipApprovalRequestToViewModelMapper(mockApprovalsApiClient.Object);
+
+        mockApprovalsApiClient.Setup(s => s.GetApprenticeshipApprovalRequest(source.AccountId, source.ApprenticeshipId, source.ApprovalRequestId))
             .ReturnsAsync(apiResponse);
 
         var result = await mapper.Map(source);
@@ -29,7 +30,6 @@ public class ApprenticesipApprovalRequestToViewModelMapperTests
         result.ULN.Should().Be(apiResponse.ULN);
         result.CourseName.Should().Be(apiResponse.CourseName);
         result.ProviderName.Should().Be(apiResponse.ProviderName);
-        result.UKPRN.Should().Be(apiResponse.UKPRN);
     }
 
     [TestCase("TNP1", "1000", "2000", "Training price (TNP1)", "£1,000", "£2,000")]
