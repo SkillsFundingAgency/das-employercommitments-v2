@@ -1,16 +1,20 @@
 ﻿using SFA.DAS.CommitmentsV2.Types;
 using Alerts = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types.Alerts;
 
+using AlertType = SFA.DAS.EmployerCommitmentsV2.Enums;
+
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 public class IndexRequest
 {
     private int _pageNumber = 1;
+
     public int PageNumber
     {
         get => _pageNumber;
         set => _pageNumber = value > 0 ? value : 1;
     }
+
     public string AccountHashedId { get; set; }
     public string SortField { get; set; }
     public bool ReverseSort { get; set; }
@@ -20,6 +24,6 @@ public class IndexRequest
     public DateTime? SelectedEndDate { get; set; }
     public ApprenticeshipStatus? SelectedStatus { get; set; }
     public bool FromSearch { get; set; }
-    public Alerts? SelectedAlert { get; set; }
+    public AlertType.Alerts? SelectedAlert { get; set; }
     public ConfirmationStatus? SelectedApprenticeConfirmation { get; set; }
 }

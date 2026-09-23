@@ -1,0 +1,28 @@
+﻿﻿
+@model SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice.ApprenticeshipDetailsRequestViewModel
+
+
+@if (Model.HasAutoApprovedRequests)
+{
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+            <div class="govuk-notification-banner__header">
+                <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                    Important
+                </h2>
+            </div>
+            <div class="govuk-notification-banner__content">
+
+                <p class="govuk-notification-banner__heading">
+                    View Changes
+                </p>
+                <p>
+                    Your training provider updated some details.
+                </p><p>
+                <a id="review-changes-banner-link" class="govuk-notification-banner__link" href="@Url.Action("ViewApprovalRequestAlerts", new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">View changes</a>
+            </p>
+
+        </div>
+    </div>
+</div>
+}

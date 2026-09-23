@@ -4,7 +4,7 @@ using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 using SFA.DAS.Encoding;
-using Alerts = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types.Alerts;
+using AlertType = SFA.DAS.EmployerCommitmentsV2.Enums;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
@@ -56,10 +56,11 @@ public class IndexViewModelMapper : IMapper<IndexRequest, IndexViewModel>
 
         var alertFilters = new[]
         {
-            Alerts.ChangesForReview ,
-            Alerts.ChangesPending,
-            Alerts.ChangesRequested,
-            Alerts.ConfirmDates
+            AlertType.Alerts.ChangesForReview ,
+            AlertType.Alerts.ChangesPending,
+            AlertType.Alerts.ChangesRequested,
+            AlertType.Alerts.ConfirmDates,
+            AlertType.Alerts.ViewChanges
         };
 
         var filterModel = new ApprenticesFilterModel
