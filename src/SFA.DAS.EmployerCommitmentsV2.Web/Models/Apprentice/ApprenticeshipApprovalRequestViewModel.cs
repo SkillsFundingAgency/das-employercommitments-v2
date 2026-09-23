@@ -1,5 +1,4 @@
-﻿
-using SFA.DAS.EmployerCommitmentsV2.Contracts;
+﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
@@ -21,7 +20,8 @@ public class ApprenticeshipApprovalRequestViewModel : IAuthorizationContextModel
     public bool? ApproveChanges { get; set; }
     public bool ExceedsFundingCap { get; set; }
     public string DisplayFundingCapPrice { get; set; }
-    public bool IsSupersededOrCancelled { get; set; }
+    public bool IsSuperseded { get; set; }
+    public bool IsCompletedOrCancelled { get; set; }
 
     public class ChangeItem
     {
