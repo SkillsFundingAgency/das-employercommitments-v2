@@ -9,7 +9,6 @@ using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
-using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
@@ -43,7 +42,7 @@ public class ApprenticeController(
     private const string AlertDetailsWhenApproved = "An alert has been sent to the apprentice for them to re-confirm their apprenticeship details on the My apprenticeship service.";
     private const string ChangesRejectedMessage = "Changes rejected";
     private const string ChangesUndoneMessage = "Changes undone";
-    private const string ApprenticeEndDateConfirmed = "Current planned end date confirmed ";    
+    private const string ApprenticeEndDateConfirmed = "Current planned end date confirmed ";
 
     [Route("", Name = RouteNames.ApprenticesIndex)]
     public async Task<IActionResult> Index(IndexRequest request)
@@ -1264,7 +1263,6 @@ public class ApprenticeController(
         return View(viewModel);
     }
 
-
     [Route("change-history")]
     [HttpGet]
     public async Task<IActionResult> GetAllChangeHistory(GetAllChangeHistoryRequest request)
@@ -1280,7 +1278,8 @@ public class ApprenticeController(
     {
         var viewModel = await modelMapper.Map<ApprenticeshipApprovalRequestViewModel>(request);
 
-        if(viewModel.ApprovalRequestStatus == CocApprovalResultStatus.Complete) {
+        if (viewModel.IsCompletedOrCancelled)
+        {
             ModelState.AddModelError(Constants.ApprenticeshipConstants.ApprovalRequestStatus, Constants.ApprenticeshipConstants.AlreadyApprovedOrDeclinedMessage);
         }
 
@@ -1292,7 +1291,6 @@ public class ApprenticeController(
     [HttpPost]
     public async Task<IActionResult> PostApprenticeshipApprovalRequest([FromServices] IAuthenticationService authenticationService, ApprenticeshipApprovalRequestViewModel viewModel)
     {
-
         var request = new ProcessApprenticeshipApprovalRequest { ApplyChanges = viewModel.ApproveChanges.Value, AccountId = viewModel.AccountId, UserInfo = authenticationService.UserInfo };
 
         if (viewModel.ApproveChanges == true)
@@ -1317,7 +1315,7 @@ public class ApprenticeController(
             {
                 AccountHashedId = viewModel.AccountHashedId,
                 ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId,
-                ApprovalRequestId = viewModel.ApprovalRequestId 
+                ApprovalRequestId = viewModel.ApprovalRequestId
             });
     }
 
