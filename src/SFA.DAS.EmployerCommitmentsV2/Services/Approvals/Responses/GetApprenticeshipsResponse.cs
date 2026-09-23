@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.CommitmentsV2.Types;
+using Alerts = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types.Alerts;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
