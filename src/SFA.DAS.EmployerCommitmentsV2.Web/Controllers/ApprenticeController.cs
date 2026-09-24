@@ -46,7 +46,7 @@ public class ApprenticeController(
 
     [Route("", Name = RouteNames.ApprenticesIndex)]
     public async Task<IActionResult> Index(IndexRequest request)
-    {
+    {        
         IndexRequest savedRequest = null;
 
         if (request.FromSearch)
