@@ -1,5 +1,4 @@
-﻿
-using SFA.DAS.EmployerCommitmentsV2.Contracts;
+﻿using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;

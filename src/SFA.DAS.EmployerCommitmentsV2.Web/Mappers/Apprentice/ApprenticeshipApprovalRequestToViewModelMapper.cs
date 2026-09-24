@@ -29,7 +29,8 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
             CourseName = approvalRequest.CourseName,
             ProviderName = approvalRequest.ProviderName,
             UKPRN = approvalRequest.UKPRN,
-            IsSupersededOrCancelled = approvalRequest.ApprovalRequestStatus is CocApprovalResultStatus.Superseded or CocApprovalResultStatus.Cancelled
+            IsSuperseded = approvalRequest.ApprovalRequestStatus is CocApprovalResultStatus.Superseded,
+            IsCompletedOrCancelled = approvalRequest.ApprovalRequestStatus is CocApprovalResultStatus.Complete or CocApprovalResultStatus.Cancelled
         };
     }
 
@@ -38,7 +39,7 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
         var displayItems = new List<ApprenticeshipApprovalRequestViewModel.ChangeItem>();
         foreach (var item in items)
         {
-            if(item.FieldName == "TNP1")
+            if (item.FieldName == "TNP1")
             {
                 displayItems.Add(new ApprenticeshipApprovalRequestViewModel.ChangeItem
                 {
@@ -57,7 +58,6 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
                     NewValue = ToCurrency(item.NewValue),
                     EffectiveFromDate = item.EffectiveFromDate
                 });
-
             }
             else
             {
