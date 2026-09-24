@@ -129,7 +129,8 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 LearningType = response.Apprenticeship.LearningType,
                 WithdrawnReasonCode = response.Apprenticeship.WithdrawnReasonCode,
                 FreezeStatus = response.PaymentsStatus?.FreezeStatus ?? false,
-                HasChangeHistory = response.Apprenticeship.HasChangeHistory
+                HasChangeHistory = response.Apprenticeship.HasChangeHistory,
+                PendingApprovalRequestId = response.Apprenticeship.PendingApprovalRequestId
             };
 
             return result;
