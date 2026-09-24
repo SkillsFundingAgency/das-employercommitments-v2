@@ -1,8 +1,11 @@
-﻿namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
+﻿using SFA.DAS.CommitmentsV2.Types;
+
+namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
 public class GetApprenticeshipApprovalResponse
 {
     public long ApprenticeshipId { get; set; }
+    public ApprenticeshipStatus ApprenticeshipStatus { get; set; }
     public Guid ApprovalRequestId { get; set; }
     public CocApprovalResultStatus? ApprovalRequestStatus { get; set; }
     public virtual ICollection<ChangeItem> Items { get; set; }

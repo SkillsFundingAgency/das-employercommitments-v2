@@ -1,8 +1,9 @@
-﻿using System.Globalization;
-using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
+using System.Globalization;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
@@ -20,14 +21,14 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
             ApprovalRequestStatus = approvalRequest.ApprovalRequestStatus,
             ExceedsFundingCap = approvalRequest.ExceedsFundingCap,
             DisplayFundingCapPrice = ToCurrency(approvalRequest.FundingCap),
+            ChangeApprovalAllowed = IsChangeApprovalAllowed(approvalRequest.ApprenticeshipStatus),
+
             Items = ConvertToDisplayItems(approvalRequest.Items),
             Name = approvalRequest.Name,
             ULN = approvalRequest.ULN,
             CourseName = approvalRequest.CourseName,
             ProviderName = approvalRequest.ProviderName,
             UKPRN = approvalRequest.UKPRN,
-            IsSuperseded = approvalRequest.ApprovalRequestStatus is CocApprovalResultStatus.Superseded,
-            IsCompletedOrCancelled = approvalRequest.ApprovalRequestStatus is CocApprovalResultStatus.Complete or CocApprovalResultStatus.Cancelled
         };
     }
 
@@ -74,6 +75,11 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
     {
         return ToCurrency(input?.ToString());
     }
+
+    private bool IsChangeApprovalAllowed(ApprenticeshipStatus currentStatus) =>
+        currentStatus == ApprenticeshipStatus.Live
+        || currentStatus == ApprenticeshipStatus.Paused
+        || currentStatus == ApprenticeshipStatus.WaitingToStart;
 
     public static string ToCurrency(string input)
     {

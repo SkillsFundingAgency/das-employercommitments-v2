@@ -80,6 +80,4 @@ public class WhenGettingSearchOrFiltersApplied
 
         filterModel.SearchOrFiltersApplied.Should().BeFalse();
     }
-
-       
 }

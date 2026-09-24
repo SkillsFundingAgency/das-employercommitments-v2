@@ -30,13 +30,28 @@ public class WhenCallingApprenticeshipApprovalRequest
     }
 
     [Test]
-    [TestCase(CocApprovalResultStatus.Complete)]
+    public async Task ThenDisplaysMessageIfStatusIsNotLivePauseOrWaitingToStart()
+    {
+        var result = await _fixture.SetChangeApprovalAllowed(false).GetApprovalRequest();
+
+        _fixture.VerifyChangeApprovalAllowedModelStateError(result as ViewResult);
+    }
+
+    [Test]
+    public async Task ThenReturnsViewModelIfStatusIsLivePauseOrWaitingToStart()
+    {
+        var result = await _fixture.SetChangeApprovalAllowed(true).GetApprovalRequest();
+
+        _fixture.VerifyViewModel(result as ViewResult);
+    }
+
+    [TestCase (CocApprovalResultStatus.Complete)]
     [TestCase(CocApprovalResultStatus.Cancelled)]
-    public async Task ThenDisplaysMessageIfChangeHasBeenCompletedOrCancelled(CocApprovalResultStatus status)
+    public async Task ThenDisplaysMessageIfChangeHasBeenCompleted(CocApprovalResultStatus status)
     {
         var result = await _fixture.SetApprovalRequestStatus(status).GetApprovalRequest();
 
-        _fixture.VerifyModelStateError(result as ViewResult);
+        _fixture.VerifyApprovalRequestStatusModelStateError(result as ViewResult);
     }
 
     [Test]
@@ -90,6 +105,18 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
         return result as ViewResult;
     }
 
+    public WhenCallingApprenticeshipApprovalRequestFixture SetApprovalRequestStatus(CocApprovalResultStatus status)
+    {
+        _viewModel.ApprovalRequestStatus = status;
+        return this;
+    }
+
+    public WhenCallingApprenticeshipApprovalRequestFixture SetChangeApprovalAllowed(bool changeApprovalAllowed)
+    {
+        _viewModel.ChangeApprovalAllowed = changeApprovalAllowed;
+        return this;
+    }
+
     public void VerifyMapperWasCalled()
     {
         MockMapper.Verify(m => m.Map<ApprenticeshipApprovalRequestViewModel>(_request));
@@ -102,16 +129,10 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
         viewModel.Should().Be(_viewModel);
     }
 
-    public void VerifyModelStateError(ViewResult viewResult)
+    public void VerifyApprovalRequestStatusModelStateError(ViewResult viewResult)
     {
         viewResult.Should().NotBeNull();
         viewResult.ViewData.ModelState.Should().ContainSingle(m => m.Key == Constants.ApprenticeshipConstants.ApprovalRequestStatus && m.Value.Errors.Any(e => e.ErrorMessage == Constants.ApprenticeshipConstants.AlreadyApprovedOrDeclinedMessage ));
-    }
-    public WhenCallingApprenticeshipApprovalRequestFixture SetApprovalRequestStatus(CocApprovalResultStatus status)
-    {
-        _viewModel.ApprovalRequestStatus = status;
-        _viewModel.IsCompletedOrCancelled = true;
-        return this;
     }
 
     public async Task<IActionResult> PostApprovalRequest(bool applyApproval)
@@ -120,5 +141,11 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
         var result = await Controller.PostApprenticeshipApprovalRequest(_authenticationService.Object, _viewModel);
 
         return result;
+    }
+
+    public void VerifyChangeApprovalAllowedModelStateError(ViewResult viewResult)
+    {
+        viewResult.Should().NotBeNull();
+        viewResult.ViewData.ModelState.Should().ContainSingle(m => m.Key == "ChangeApprovalAllowed" && m.Value.Errors.Any(e => e.ErrorMessage == "This change no longer exists"));
     }
 }
