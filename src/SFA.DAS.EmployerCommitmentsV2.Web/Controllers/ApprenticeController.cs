@@ -9,6 +9,7 @@ using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
+using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Authorization;
 using SFA.DAS.EmployerCommitmentsV2.Web.Cookies;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
@@ -1278,7 +1279,7 @@ public class ApprenticeController(
     {
         var viewModel = await modelMapper.Map<ApprenticeshipApprovalRequestViewModel>(request);
 
-        if (viewModel.IsCompletedOrCancelled)
+        if (viewModel.ApprovalRequestStatus == CocApprovalResultStatus.Complete || viewModel.ApprovalRequestStatus == CocApprovalResultStatus.Cancelled)
         {
             ModelState.AddModelError(Constants.ApprenticeshipConstants.ApprovalRequestStatus, Constants.ApprenticeshipConstants.AlreadyApprovedOrDeclinedMessage);
         }

@@ -45,8 +45,9 @@ public class WhenCallingApprenticeshipApprovalRequest
         _fixture.VerifyViewModel(result as ViewResult);
     }
 
-    [Test]
-    public async Task ThenDisplaysMessageIfChangeHasBeenCompleted()
+    [TestCase (CocApprovalResultStatus.Complete)]
+    [TestCase(CocApprovalResultStatus.Cancelled)]
+    public async Task ThenDisplaysMessageIfChangeHasBeenCompleted(CocApprovalResultStatus status)
     {
         var result = await _fixture.SetApprovalRequestStatus(status).GetApprovalRequest();
 
@@ -132,12 +133,6 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
     {
         viewResult.Should().NotBeNull();
         viewResult.ViewData.ModelState.Should().ContainSingle(m => m.Key == Constants.ApprenticeshipConstants.ApprovalRequestStatus && m.Value.Errors.Any(e => e.ErrorMessage == Constants.ApprenticeshipConstants.AlreadyApprovedOrDeclinedMessage ));
-    }
-    public WhenCallingApprenticeshipApprovalRequestFixture SetApprovalRequestStatus(CocApprovalResultStatus status)
-    {
-        _viewModel.ApprovalRequestStatus = status;
-        _viewModel.IsCompletedOrCancelled = true;
-        return this;
     }
 
     public async Task<IActionResult> PostApprovalRequest(bool applyApproval)
