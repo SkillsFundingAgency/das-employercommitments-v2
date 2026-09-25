@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.CommitmentsV2.Types;
+using Alerts = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types.Alerts;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
@@ -48,5 +49,6 @@ public class GetApprenticeshipsResponse
         public string TrainingCourseVersion { get; set; }
         public int? EmployerVerificationStatus { get; set; }
         public string EmployerVerificationNotes { get; set; }
+        public Guid? PendingApprovalRequestId { get; set; }
     }
 }

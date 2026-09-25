@@ -46,7 +46,7 @@ public class ApprenticeController(
 
     [Route("", Name = RouteNames.ApprenticesIndex)]
     public async Task<IActionResult> Index(IndexRequest request)
-    {
+    {        
         IndexRequest savedRequest = null;
 
         if (request.FromSearch)
@@ -1263,7 +1263,6 @@ public class ApprenticeController(
         return View(viewModel);
     }
 
-
     [Route("change-history")]
     [HttpGet]
     public async Task<IActionResult> GetAllChangeHistory(GetAllChangeHistoryRequest request)
@@ -1278,6 +1277,12 @@ public class ApprenticeController(
     public async Task<IActionResult> GetApprenticeshipApprovalRequest(ApprenticeshipApprovalRequest request)
     {
         var viewModel = await modelMapper.Map<ApprenticeshipApprovalRequestViewModel>(request);
+
+        if (viewModel.IsCompletedOrCancelled)
+        {
+            ModelState.AddModelError(Constants.ApprenticeshipConstants.ApprovalRequestStatus, Constants.ApprenticeshipConstants.AlreadyApprovedOrDeclinedMessage);
+        }
+
         return View(viewModel);
     }
 
@@ -1286,7 +1291,6 @@ public class ApprenticeController(
     [HttpPost]
     public async Task<IActionResult> PostApprenticeshipApprovalRequest([FromServices] IAuthenticationService authenticationService, ApprenticeshipApprovalRequestViewModel viewModel)
     {
-
         var request = new ProcessApprenticeshipApprovalRequest { ApplyChanges = viewModel.ApproveChanges.Value, AccountId = viewModel.AccountId, UserInfo = authenticationService.UserInfo };
 
         if (viewModel.ApproveChanges == true)
@@ -1311,7 +1315,7 @@ public class ApprenticeController(
             {
                 AccountHashedId = viewModel.AccountHashedId,
                 ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId,
-                ApprovalRequestId = viewModel.ApprovalRequestId 
+                ApprovalRequestId = viewModel.ApprovalRequestId
             });
     }
 
