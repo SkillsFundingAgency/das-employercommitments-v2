@@ -5,6 +5,8 @@ using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types;
+using SFA.DAS.EmployerCommitmentsV2.Enums;
+using Alerts = SFA.DAS.EmployerCommitmentsV2.Enums.Alerts;
 
 namespace SFA.DAS.EmployerCommitmentsV2.UnitTests.Services.Approvals.Responses;
 
