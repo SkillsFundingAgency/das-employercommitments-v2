@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using SFA.DAS.CommitmentsV2.Types;
-using Alerts = SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Types.Alerts;
+using Alerts = SFA.DAS.EmployerCommitmentsV2.Enums;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 
@@ -33,7 +33,7 @@ public class GetApprenticeshipsResponse
         public DateTime DateOfBirth { get; set; }
         public PaymentStatus PaymentStatus { get; set; }
         public ApprenticeshipStatus ApprenticeshipStatus { get; set; }
-        public IEnumerable<Alerts> Alerts { get; set; }
+        public IEnumerable<Alerts.Alerts> Alerts { get; set; }
         public decimal? TotalAgreedPrice { get; set; }
         public string EmployerRef { get; set; }
         public string ProviderRef { get; set; }
