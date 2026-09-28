@@ -199,4 +199,14 @@ public class ApprenticeshipDetailsToViewModelMapperTests
 
         result.EmploymentStatus.Should().Be("Not Verified");
     }
+
+    [Test, MoqAutoData]
+    public async Task Then_Maps_PendingApprovalRequestId_Corectly(
+    GetApprenticeshipsResponse.ApprenticeshipDetailsResponse source,
+    ApprenticeshipDetailsToViewModelMapper mapper)
+    {
+        var result = await mapper.Map(source);
+
+        result.PendingApprovalRequestId.Should().Be(source.PendingApprovalRequestId);
+    }
 }

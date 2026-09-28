@@ -129,6 +129,7 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
                 WithdrawnReasonCode = response.Apprenticeship.WithdrawnReasonCode,
                 FreezeStatus = response.PaymentsStatus?.FreezeStatus ?? false,
                 HasChangeHistory = response.Apprenticeship.HasChangeHistory,
+                PendingApprovalRequestId = response.Apprenticeship.PendingApprovalRequestId,
                 HasAutoApprovedRequests = response.Apprenticeship.HasAutoApprovedRequests
             };
 

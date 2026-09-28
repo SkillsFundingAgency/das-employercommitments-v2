@@ -30,9 +30,11 @@ public class WhenCallingApprenticeshipApprovalRequest
     }
 
     [Test]
-    public async Task ThenDisplaysMessageIfChangeHasBeenCompleted()
+    [TestCase(CocApprovalResultStatus.Complete)]
+    [TestCase(CocApprovalResultStatus.Cancelled)]
+    public async Task ThenDisplaysMessageIfChangeHasBeenCompletedOrCancelled(CocApprovalResultStatus status)
     {
-        var result = await _fixture.SetApprovalRequestStatus(CocApprovalResultStatus.Complete).GetApprovalRequest();
+        var result = await _fixture.SetApprovalRequestStatus(status).GetApprovalRequest();
 
         _fixture.VerifyModelStateError(result as ViewResult);
     }
@@ -108,6 +110,7 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
     public WhenCallingApprenticeshipApprovalRequestFixture SetApprovalRequestStatus(CocApprovalResultStatus status)
     {
         _viewModel.ApprovalRequestStatus = status;
+        _viewModel.IsCompletedOrCancelled = true;
         return this;
     }
 

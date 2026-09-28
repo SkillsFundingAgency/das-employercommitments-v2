@@ -1087,6 +1087,16 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
             result.CanEditStopDate.Should().Be(expected);
         }
 
+        [Test]
+        public async Task PendingApprovalRequestId_IsMapped()
+        {
+            //Act
+            var result = await _mapper.Map(_request);
+
+            //Assert
+            result.PendingApprovalRequestId.Should().Be(GetManageApprenticeshipDetailsResponse.Apprenticeship.PendingApprovalRequestId);
+        }
+
         private void WithEmployerVerificationStatus(int? status, string notes)
         {
             GetManageApprenticeshipDetailsResponse.Apprenticeship.EmployerVerificationStatus = status;
