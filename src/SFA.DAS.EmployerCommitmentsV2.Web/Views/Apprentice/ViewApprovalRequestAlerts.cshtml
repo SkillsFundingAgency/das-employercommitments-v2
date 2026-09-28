@@ -119,6 +119,9 @@
                             <label class="govuk-label govuk-radios__label" for="ApprovalRequests[@i].Seen_Yes">
                                 Yes, delete this alert
                             </label>
+                            <div id="signIn-item-hint" class="govuk-hint govuk-radios__hint">
+                                If you do not delete all alerts for this learner, you will still see an alert on your Manage your learners page.
+                            </div>
                         </div>
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="ApprovalRequests[@i].Seen_No" asp-for="ApprovalRequests[@i].Seen" name="ApprovalRequests[@i].Seen" type="radio" value="false">

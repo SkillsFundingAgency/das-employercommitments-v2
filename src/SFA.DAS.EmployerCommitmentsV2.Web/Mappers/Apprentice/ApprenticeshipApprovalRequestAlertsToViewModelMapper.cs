@@ -1,10 +1,10 @@
 ﻿using System.Globalization;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
+using SFA.DAS.EmployerCommitmentsV2.Enums;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Requests;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using SFA.DAS.EmployerCommitmentsV2.Enums;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
@@ -12,7 +12,7 @@ public class ApprenticeshipApprovalRequestAlertsToViewModelMapper(IApprovalsApiC
 {
     public async Task<ApprenticeshipApprovalRequestAlertsViewModel> Map(ApprenticeshipApprovalRequestAlertsRequest source)
     {
-        var approvalRequest = await approvalsApiClient.GetApprenticeshipApprovalRequestAlerts(new GetApprovalRequestAlertRequest(source.AccountId,source.ApprenticeshipId));
+        var approvalRequest = await approvalsApiClient.GetApprenticeshipApprovalRequestAlerts(new GetApprovalRequestAlertRequest(source.AccountId, source.ApprenticeshipId));
 
         return new ApprenticeshipApprovalRequestAlertsViewModel
         {
@@ -59,7 +59,7 @@ public class ApprenticeshipApprovalRequestAlertsToViewModelMapper(IApprovalsApiC
             {
                 displayItems.Add(new ApprovalFieldRequestAlertViewModel
                 {
-                    Field = item.Field,
+                    Field = GetFormattedFieldName(item.Field),
                     Old = item.Old,
                     New = item.New,
                     Created = item.Created,
@@ -84,5 +84,14 @@ public class ApprenticeshipApprovalRequestAlertsToViewModelMapper(IApprovalsApiC
         }
 
         return "#error#";
+    }
+
+    public static string GetFormattedFieldName(string input)
+    {
+        return input switch
+        {
+            "Firstname" => "First name",
+            _ => input,
+        };
     }
 }
