@@ -192,4 +192,14 @@ public class ApprovalsApiClient(IOuterApiClient client) : IApprovalsApiClient
     {
         await client.Post<object>($"employers/{accountId}/apprenticeships/{apprenticeshipId}/approvals/{approvalRequestId}/", request);
     }
+
+    public Task<GetApprenticeshipApprovalRequestAlertsResponse> GetApprenticeshipApprovalRequestAlerts(GetApprovalRequestAlertRequest request, CancellationToken cancellationToken = default)
+    {
+        return client.Get<GetApprenticeshipApprovalRequestAlertsResponse>(request.GetUrl);
+    }
+
+    public async Task UpdateApprovalRequestAlertAcknowledge(long accountId, long apprenticeshipId, UpdateApprovalRequestAlertAcknowledgeRequest request, CancellationToken cancellationToken = default)
+    {
+        await client.Put<object>($"employer/{accountId}/apprentices/{apprenticeshipId}/alerts-acknowledged", request);
+    }
 }
