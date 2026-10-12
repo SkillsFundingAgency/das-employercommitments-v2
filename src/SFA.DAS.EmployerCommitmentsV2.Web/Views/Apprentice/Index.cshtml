@@ -339,6 +339,17 @@ else
                                         Review changes
                                     </a>
                                 }
+                                        @if (alert == "View changes")
+                                        {
+                                            <a class="govuk-link" href="@Url.Action("ViewApprovalRequestAlerts",
+                                                                                        new
+                                                                                       {
+                                                                                           AccountHashedId = Model.AccountHashedId,
+                                                                                           ApprenticeshipHashedId = apprenticeship.EncodedApprenticeshipId
+                                                                                       })">
+                                                View changes
+                                            </a>
+                                        }
                                 else
                                 {
                                     <a class="govuk-link"

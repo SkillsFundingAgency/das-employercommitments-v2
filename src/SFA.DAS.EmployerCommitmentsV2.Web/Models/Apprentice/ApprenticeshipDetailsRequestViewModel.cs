@@ -95,6 +95,7 @@ public class ApprenticeshipDetailsRequestViewModel : IAuthorizationContextModel
     public LearningType? LearningType { get; set; }
     public bool HasChangeHistory { get; set; }
     public Guid? PendingApprovalRequestId { get; set; }
+    public bool HasAutoApprovedRequests { get; set; }
 
     public ActionRequiredBanner GetActionRequiredBanners()
     {
