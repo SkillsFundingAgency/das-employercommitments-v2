@@ -108,7 +108,6 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
             return episodes?
                 .Where(episode => episode != null && !string.IsNullOrWhiteSpace(episode.EffectiveFrom))
                 .OrderBy(episode => episode.EffectiveFrom, StringComparer.Ordinal)
-                .ThenBy(episode => episode.Cost)
                 .LastOrDefault();
         }
         catch (JsonException)

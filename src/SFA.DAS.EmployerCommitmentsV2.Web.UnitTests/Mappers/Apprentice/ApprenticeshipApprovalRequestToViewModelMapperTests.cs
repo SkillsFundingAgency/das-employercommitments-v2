@@ -148,27 +148,6 @@ public class ApprenticeshipApprovalRequestToViewModelMapperTests
     }
 
     [Test]
-    public async Task Then_Maps_Prices_With_The_Same_Date_To_The_Higher_Cost()
-    {
-        var schedule = """
-            [{"effectiveFrom":"2026-08-01","cost":1500,"trainingPrice":1000,"assessmentPrice":500},{"effectiveFrom":"2026-08-01","cost":2200,"trainingPrice":null,"assessmentPrice":null}]
-            """;
-
-        var result = await MapItems(new GetApprenticeshipApprovalResponse.ChangeItem
-        {
-            FieldName = "Prices",
-            OldValue = schedule,
-            NewValue = schedule
-        });
-
-        var price = result.Should().ContainSingle().Subject;
-        price.FieldName.Should().Be("Total cost");
-        price.OldValue.Should().Be("£2,200");
-        price.NewValue.Should().Be("£2,200");
-        price.NewValueHint.Should().Be("From 1 August 2026");
-    }
-
-    [Test]
     public async Task Then_Unreadable_Prices_Show_As_An_Error()
     {
         var result = await MapItems(new GetApprenticeshipApprovalResponse.ChangeItem
