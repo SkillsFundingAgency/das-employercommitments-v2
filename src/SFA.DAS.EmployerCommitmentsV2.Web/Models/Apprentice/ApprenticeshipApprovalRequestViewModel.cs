@@ -28,6 +28,7 @@ public class ApprenticeshipApprovalRequestViewModel : IAuthorizationContextModel
         public string FieldName { get; set; }
         public string OldValue { get; set; }
         public string NewValue { get; set; }
+        public string NewValueHint { get; set; }
         public DateTime? EffectiveFromDate { get; set; }
     }
 }
