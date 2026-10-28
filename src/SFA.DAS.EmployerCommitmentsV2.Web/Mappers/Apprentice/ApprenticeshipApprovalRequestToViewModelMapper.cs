@@ -1,14 +1,20 @@
-﻿using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+﻿using System.Globalization;
+using System.Text.Json;
+using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
 using SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
-using System.Globalization;
-using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Mappers.Apprentice;
 
 public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient approvalsApiClient) : IMapper<ApprenticeshipApprovalRequest, ApprenticeshipApprovalRequestViewModel>
 {
+    private static readonly JsonSerializerOptions PriceJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     public async Task<ApprenticeshipApprovalRequestViewModel> Map(ApprenticeshipApprovalRequest source)
     {
         var approvalRequest = await approvalsApiClient.GetApprenticeshipApprovalRequest(source.AccountId, source.ApprenticeshipId, source.ApprovalRequestId);
@@ -57,6 +63,10 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
                     EffectiveFromDate = item.EffectiveFromDate
                 });
             }
+            else if (item.FieldName == "Prices")
+            {
+                displayItems.Add(ToTotalCost(item));
+            }
             else
             {
                 displayItems.Add(new ApprenticeshipApprovalRequestViewModel.ChangeItem
@@ -69,6 +79,66 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
         }
 
         return displayItems;
+    }
+
+    private static ApprenticeshipApprovalRequestViewModel.ChangeItem ToTotalCost(GetApprenticeshipApprovalResponse.ChangeItem item)
+    {
+        var previous = LatestEpisode(item.OldValue);
+        var changedTo = LatestEpisode(item.NewValue);
+
+        return new ApprenticeshipApprovalRequestViewModel.ChangeItem
+        {
+            FieldName = "Total cost",
+            OldValue = previous == null ? "#error#" : ToPrice(previous.Cost),
+            NewValue = changedTo == null ? "#error#" : ToPrice(changedTo.Cost),
+            NewValueHint = changedTo == null ? null : FormatEffectiveFrom(changedTo.EffectiveFrom)
+        };
+    }
+
+    private static PriceScheduleEpisode LatestEpisode(string schedule)
+    {
+        if (string.IsNullOrWhiteSpace(schedule))
+        {
+            return null;
+        }
+
+        try
+        {
+            var episodes = JsonSerializer.Deserialize<List<PriceScheduleEpisode>>(schedule, PriceJsonOptions);
+            return episodes?
+                .Where(episode => episode != null && !string.IsNullOrWhiteSpace(episode.EffectiveFrom))
+                .OrderBy(episode => episode.EffectiveFrom, StringComparer.Ordinal)
+                .LastOrDefault();
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+    }
+
+    private static string FormatEffectiveFrom(string effectiveFrom)
+    {
+        if (!DateTime.TryParseExact(effectiveFrom, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+        {
+            return null;
+        }
+
+        return "From " + date.ToString("d MMMM yyyy", CultureInfo.GetCultureInfo("en-GB"));
+    }
+
+    private static string ToPrice(decimal value)
+    {
+        var culture = CultureInfo.GetCultureInfo("en-GB");
+        var rounded = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
+        return rounded == decimal.Truncate(rounded)
+            ? rounded.ToString("C0", culture)
+            : rounded.ToString("C2", culture);
+    }
+
+    private sealed class PriceScheduleEpisode
+    {
+        public string EffectiveFrom { get; set; }
+        public decimal Cost { get; set; }
     }
 
     public static string ToCurrency(int? input)
