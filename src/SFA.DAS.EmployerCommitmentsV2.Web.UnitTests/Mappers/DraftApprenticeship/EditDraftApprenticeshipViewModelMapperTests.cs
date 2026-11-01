@@ -69,6 +69,20 @@ public class EditDraftApprenticeshipViewModelMapperTests
     }
 
     [Test]
+    public async Task OwningEmployerCanSeeTheStoredApprenticeshipUnitVersion()
+    {
+        _cohort.WithParty = Party.Employer;
+        _draftApprenticeshipResponse.CourseCode = "ZSC00001";
+        _draftApprenticeshipResponse.LearningType = SFA.DAS.Common.Domain.Types.LearningType.ApprenticeshipUnit;
+        _draftApprenticeshipResponse.TrainingCourseVersion = "1.1";
+
+        var result = (EditDraftApprenticeshipViewModel)await _mapper.Map(_source);
+
+        result.LearningType.Should().Be(SFA.DAS.Common.Domain.Types.LearningType.ApprenticeshipUnit);
+        result.TrainingCourseVersion.Should().Be("1.1");
+    }
+
+    [Test]
     public void DraftApprenticeshipIdIsMappedCorrectly()
     {
         _result.DraftApprenticeshipId.Should().Be(_source.Request.DraftApprenticeshipId);

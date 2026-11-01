@@ -170,16 +170,7 @@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header"> Version </th>
                         <td id="version-app-unit" class="govuk-table__cell" colspan="2">@Model.Version </td>
-                        @if (Model.EnableEdit && Model.HasNewerVersions)
-                        {
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <a id="change-training-provider-link-app-unit" class="govuk-link" href="@Url.RouteUrl(RouteNames.ChangeVersion, new { Model.AccountHashedId, ApprenticeshipHashedId = Model.HashedApprenticeshipId })">Change<span class="govuk-visually-hidden"> version</span></a>
-                            </td>
-                        }
-                        else
-                        {
-                            <td class="govuk-table__cell"></td>
-                        }
+
                     </tr>
                 }
                 @if (Model.TrainingType == ProgrammeType.Standard && Model.ShowOptions)

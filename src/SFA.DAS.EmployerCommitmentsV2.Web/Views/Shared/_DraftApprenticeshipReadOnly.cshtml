@@ -42,6 +42,14 @@
             </dd>
         </div>
 
+        @if (Model.LearningType == SFA.DAS.Common.Domain.Types.LearningType.ApprenticeshipUnit && !string.IsNullOrEmpty(Model.TrainingCourseVersion))
+        {
+            <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+                <dt class="govuk-summary-list__key">Version</dt>
+                <dd class="govuk-summary-list__value" id="version-value">@Model.TrainingCourseVersion</dd>
+            </div>
+        }
+
         @if (Model.HasMultipleDeliveryModelOptions == true || Model.HasChangedDeliveryModel || Model.DeliveryModel != DeliveryModel.Regular)
         {
             <div class="govuk-summary-list__row">
