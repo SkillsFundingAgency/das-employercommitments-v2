@@ -9,9 +9,9 @@ public class ApprenticeshipApprovalRequestViewModel : IAuthorizationContextModel
     public long ApprenticeshipId { get; set; }
     public string AccountHashedId { get; set; }
     public long AccountId { get; set; }
-    public Guid ApprovalRequestId { get; set; }
     public CocApprovalResultStatus? ApprovalRequestStatus { get; set; }
-    public virtual ICollection<ChangeItem> Items { get; set; }
+    public virtual ICollection<ChangeItem> Items { get; set; } = new List<ChangeItem>();
+    public bool HasPendingChanges => Items != null && Items.Count > 0;
     public string Name { get; set; }
     public string ULN { get; set; }
     public string CourseName { get; set; }

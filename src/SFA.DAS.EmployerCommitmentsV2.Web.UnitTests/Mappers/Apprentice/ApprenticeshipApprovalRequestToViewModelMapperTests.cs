@@ -19,14 +19,13 @@ public class ApprenticeshipApprovalRequestToViewModelMapperTests
     {
         var mapper = new ApprenticeshipApprovalRequestToViewModelMapper(mockApprovalsApiClient.Object);
 
-        mockApprovalsApiClient.Setup(s => s.GetApprenticeshipApprovalRequest(source.AccountId, source.ApprenticeshipId, source.ApprovalRequestId))
+        mockApprovalsApiClient.Setup(s => s.GetApprenticeshipApprovalRequest(source.AccountId, source.ApprenticeshipId))
             .ReturnsAsync(apiResponse);
 
         var result = await mapper.Map(source);
 
         result.ApprenticeshipHashedId.Should().Be(source.ApprenticeshipHashedId);
         result.AccountHashedId.Should().Be(source.AccountHashedId);
-        result.ApprovalRequestId.Should().Be(source.ApprovalRequestId);
         result.ApprovalRequestStatus.Should().Be(apiResponse.ApprovalRequestStatus);
         result.Name.Should().Be(apiResponse.Name);
         result.ULN.Should().Be(apiResponse.ULN);
@@ -47,7 +46,6 @@ public class ApprenticeshipApprovalRequestToViewModelMapperTests
 
         var source = fixture.Create<ApprenticeshipApprovalRequest>();
         var apiResponse = fixture.Build<GetApprenticeshipApprovalResponse>()
-            .With(x => x.ApprovalRequestId, source.ApprovalRequestId)
             .With(x => x.ApprenticeshipId, source.ApprenticeshipId)
             .With(x => x.ApprenticeshipStatus, apprenticeshipStatus)
             .With(x => x.AccountId, source.AccountId)
@@ -62,7 +60,7 @@ public class ApprenticeshipApprovalRequestToViewModelMapperTests
         }).Create();
 
         var mockApprovalsApiClient = new Mock<IApprovalsApiClient>();
-        mockApprovalsApiClient.Setup(s => s.GetApprenticeshipApprovalRequest(source.AccountId, source.ApprenticeshipId, source.ApprovalRequestId, It.IsAny<CancellationToken>()))
+        mockApprovalsApiClient.Setup(s => s.GetApprenticeshipApprovalRequest(source.AccountId, source.ApprenticeshipId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(apiResponse);
         var mapper = new ApprenticeshipApprovalRequestToViewModelMapper(mockApprovalsApiClient.Object);
 
@@ -83,7 +81,6 @@ public class ApprenticeshipApprovalRequestToViewModelMapperTests
 
         var source = fixture.Create<ApprenticeshipApprovalRequest>();
         var apiResponse = fixture.Build<GetApprenticeshipApprovalResponse>()
-            .With(x => x.ApprovalRequestId, source.ApprovalRequestId)
             .With(x => x.ApprenticeshipId, source.ApprenticeshipId)
             .With(x => x.AccountId, source.AccountId)
             .With(x => x.Items, new List<GetApprenticeshipApprovalResponse.ChangeItem>
@@ -97,7 +94,7 @@ public class ApprenticeshipApprovalRequestToViewModelMapperTests
         }).Create();
 
         var mockApprovalsApiClient = new Mock<IApprovalsApiClient>();
-        mockApprovalsApiClient.Setup(s => s.GetApprenticeshipApprovalRequest(source.AccountId, source.ApprenticeshipId, source.ApprovalRequestId, It.IsAny<CancellationToken>()))
+        mockApprovalsApiClient.Setup(s => s.GetApprenticeshipApprovalRequest(source.AccountId, source.ApprenticeshipId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(apiResponse);
         var mapper = new ApprenticeshipApprovalRequestToViewModelMapper(mockApprovalsApiClient.Object);
 
@@ -170,7 +167,6 @@ public class ApprenticeshipApprovalRequestToViewModelMapperTests
         var fixture = new Fixture();
         var source = fixture.Create<ApprenticeshipApprovalRequest>();
         var apiResponse = fixture.Build<GetApprenticeshipApprovalResponse>()
-            .With(x => x.ApprovalRequestId, source.ApprovalRequestId)
             .With(x => x.ApprenticeshipId, source.ApprenticeshipId)
             .With(x => x.AccountId, source.AccountId)
             .With(x => x.Items, items.ToList())
@@ -178,7 +174,7 @@ public class ApprenticeshipApprovalRequestToViewModelMapperTests
 
         var mockApprovalsApiClient = new Mock<IApprovalsApiClient>();
         mockApprovalsApiClient
-            .Setup(s => s.GetApprenticeshipApprovalRequest(source.AccountId, source.ApprenticeshipId, source.ApprovalRequestId, It.IsAny<CancellationToken>()))
+            .Setup(s => s.GetApprenticeshipApprovalRequest(source.AccountId, source.ApprenticeshipId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(apiResponse);
 
         var mapper = new ApprenticeshipApprovalRequestToViewModelMapper(mockApprovalsApiClient.Object);

@@ -17,13 +17,12 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
 
     public async Task<ApprenticeshipApprovalRequestViewModel> Map(ApprenticeshipApprovalRequest source)
     {
-        var approvalRequest = await approvalsApiClient.GetApprenticeshipApprovalRequest(source.AccountId, source.ApprenticeshipId, source.ApprovalRequestId);
+        var approvalRequest = await approvalsApiClient.GetApprenticeshipApprovalRequest(source.AccountId, source.ApprenticeshipId);
 
         return new ApprenticeshipApprovalRequestViewModel
         {
             ApprenticeshipHashedId = source.ApprenticeshipHashedId,
             AccountHashedId = source.AccountHashedId,
-            ApprovalRequestId = source.ApprovalRequestId,
             ApprovalRequestStatus = approvalRequest.ApprovalRequestStatus,
             ExceedsFundingCap = approvalRequest.ExceedsFundingCap,
             DisplayFundingCapPrice = ToCurrency(approvalRequest.FundingCap),
@@ -41,6 +40,11 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
     private ICollection<ApprenticeshipApprovalRequestViewModel.ChangeItem> ConvertToDisplayItems(ICollection<GetApprenticeshipApprovalResponse.ChangeItem> items)
     {
         var displayItems = new List<ApprenticeshipApprovalRequestViewModel.ChangeItem>();
+        if (items == null)
+        {
+            return displayItems;
+        }
+
         foreach (var item in items)
         {
             if (item.FieldName == "TNP1")
