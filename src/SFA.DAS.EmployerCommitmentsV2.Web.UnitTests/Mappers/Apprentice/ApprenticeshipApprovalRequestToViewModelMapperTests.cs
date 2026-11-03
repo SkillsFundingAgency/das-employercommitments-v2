@@ -132,9 +132,9 @@ public class ApprenticeshipApprovalRequestToViewModelMapperTests
         result.Should().HaveCount(2);
 
         var endDate = result.First();
-        endDate.FieldName.Should().Be("PlannedEndDate");
-        endDate.OldValue.Should().Be("2026-06-01");
-        endDate.NewValue.Should().Be("2026-12-01");
+        endDate.FieldName.Should().Be("Planned end date");
+        endDate.OldValue.Should().Be("1 Jun 2026");
+        endDate.NewValue.Should().Be("1 Dec 2026");
         endDate.NewValueHint.Should().BeNull();
 
         var price = result.Last();

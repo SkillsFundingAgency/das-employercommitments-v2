@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Text.Json;
 using SFA.DAS.CommitmentsV2.Shared.Interfaces;
+using SFA.DAS.CommitmentsV2.Shared.Extensions;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Contracts;
 using SFA.DAS.EmployerCommitmentsV2.Services.Approvals.Responses;
@@ -71,6 +72,10 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
             {
                 displayItems.Add(ToTotalCost(item));
             }
+            else if (item.FieldName is "PlannedEndDate" or "StartDate" or "PlannedStartDate")
+            {
+                displayItems.Add(ToDateChangeItem(item));
+            }
             else
             {
                 displayItems.Add(new ApprenticeshipApprovalRequestViewModel.ChangeItem
@@ -83,6 +88,28 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
         }
 
         return displayItems;
+    }
+
+    private static ApprenticeshipApprovalRequestViewModel.ChangeItem ToDateChangeItem(GetApprenticeshipApprovalResponse.ChangeItem item)
+    {
+        return new ApprenticeshipApprovalRequestViewModel.ChangeItem
+        {
+            FieldName = item.FieldName switch
+            {
+                "PlannedEndDate" => "Planned end date",
+                "StartDate" or "PlannedStartDate" => "Start date",
+                _ => item.FieldName
+            },
+            OldValue = FormatDate(item.OldValue),
+            NewValue = FormatDate(item.NewValue)
+        };
+    }
+
+    private static string FormatDate(string value)
+    {
+        return DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date)
+            ? date.ToGdsFormat()
+            : value;
     }
 
     private static ApprenticeshipApprovalRequestViewModel.ChangeItem ToTotalCost(GetApprenticeshipApprovalResponse.ChangeItem item)
