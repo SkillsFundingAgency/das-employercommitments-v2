@@ -32,7 +32,7 @@ public class WhenCallingApprenticeshipApprovalRequest
     [Test]
     public async Task ThenDisplaysMessageIfStatusIsNotLivePauseOrWaitingToStart()
     {
-        var result = await _fixture.SetChangeApprovalAllowed(false).GetApprovalRequest();
+        var result = await _fixture.SetNoPendingChanges().SetChangeApprovalAllowed(false).GetApprovalRequest();
 
         _fixture.VerifyChangeApprovalAllowedModelStateError(result as ViewResult);
     }
@@ -114,6 +114,12 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
     public WhenCallingApprenticeshipApprovalRequestFixture SetChangeApprovalAllowed(bool changeApprovalAllowed)
     {
         _viewModel.ChangeApprovalAllowed = changeApprovalAllowed;
+        return this;
+    }
+
+    public WhenCallingApprenticeshipApprovalRequestFixture SetNoPendingChanges()
+    {
+        _viewModel.Items = [];
         return this;
     }
 
