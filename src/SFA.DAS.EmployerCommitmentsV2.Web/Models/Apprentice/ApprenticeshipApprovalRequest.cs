@@ -12,5 +12,4 @@ public class BaseApprenticeshipApprovalRequest : IAuthorizationContextModel
 {
     public string ApprenticeshipHashedId { get; set; }
     public string AccountHashedId { get; set; }
-    public Guid ApprovalRequestId { get; set; }
 }
