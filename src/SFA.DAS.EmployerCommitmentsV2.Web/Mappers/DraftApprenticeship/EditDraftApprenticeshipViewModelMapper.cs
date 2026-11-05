@@ -41,6 +41,7 @@ public class EditDraftApprenticeshipViewModelMapper : IMapper<EditDraftApprentic
             DeliveryModel = (DeliveryModel)draftApprenticeship.DeliveryModel,
             CourseCode = draftApprenticeship.CourseCode,
             StandardUId = draftApprenticeship.StandardUId,
+            TrainingCourseVersion = draftApprenticeship.TrainingCourseVersion,
             Cost = draftApprenticeship.Cost,
             TrainingPrice = draftApprenticeship.TrainingPrice,
             EndPointAssessmentPrice = draftApprenticeship.EndPointAssessmentPrice,
