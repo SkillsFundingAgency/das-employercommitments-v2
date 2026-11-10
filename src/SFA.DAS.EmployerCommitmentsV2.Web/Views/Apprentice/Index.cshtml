@@ -111,7 +111,7 @@ else
                         <div class="govuk-grid-row">
                             <div class="govuk-grid-column-one-third">
                                 <div class="govuk-form-group">
-                                    <label class="govuk-label" for="selectedStatus">Status</label>
+                                    <label class="govuk-label" for="selectedStatus">Learner status</label>
                                     <select class="govuk-select govuk-!-width-full" id="selectedStatus" name="selectedStatus">
                                         <option label="All" aria-label="All statuses" value="">All</option>
                                         @foreach (var status in Model.FilterModel.StatusFilters)
@@ -285,7 +285,7 @@ else
                         Employment status
                     </th>
                     <th scope="col" class="govuk-table__header">
-                        Status
+                        Learner<br>status
                     </th>
                     <th scope="col" class="govuk-table__header">
                         Alerts
@@ -320,7 +320,7 @@ else
                     <td class="govuk-table__cell" data-label="Employment status">
                         @apprenticeship.EmploymentStatus
                     </td>
-                    <td class="govuk-table__cell" data-label="Status">
+                    <td class="govuk-table__cell" data-label="Learner status">
                         <strong class="govuk-tag @apprenticeship.Status.GetDisplayClass()">
                             @apprenticeship.Status.GetDescription()
                         </strong>
