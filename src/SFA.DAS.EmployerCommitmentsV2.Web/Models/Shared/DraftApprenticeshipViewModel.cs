@@ -92,6 +92,7 @@ public class BaseDraftApprenticeshipViewModel
     public string CourseCode { get; set; }
     public string CourseName { get; set; }
     public string StandardUId { get; set; }
+    public string TrainingCourseVersion { get; set; }
     public string CourseOption { get; set; }
 
     [Display(Name = "Planned training start date")]
