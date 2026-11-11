@@ -1304,7 +1304,7 @@ public class ApprenticeController(
     {
         var viewModel = await modelMapper.Map<ApprenticeshipApprovalRequestViewModel>(request);
 
-        if (viewModel.HasPendingChanges && !viewModel.ChangeApprovalAllowed)
+        if (!viewModel.HasPendingChanges && !viewModel.ChangeApprovalAllowed)
         {
             ModelState.AddModelError(nameof(ApprenticeshipApprovalRequestViewModel.ChangeApprovalAllowed), "This change no longer exists");
         }
