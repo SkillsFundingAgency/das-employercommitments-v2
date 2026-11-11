@@ -375,39 +375,17 @@ else
     }
 }
 
-@if (Model.ShowPageLinks)
+@await Html.PartialAsync("_PaginationNav", new PaginationNavViewModel
 {
-    <nav role="navigation" aria-label="Pagination">
-        @if (Model.FilterModel.TotalNumberOfApprenticeshipsWithAlertsFound > 0)
-        {
-            <div class="das-pagination__summary">
-                Showing @Model.FilterModel.PagedRecordsFrom to @Model.FilterModel.PagedRecordsTo of @Model.FilterModel.TotalNumberOfApprenticeshipsFound
-                apprentice records, @Model.FilterModel.TotalNumberOfApprenticeshipsWithAlertsFound with alerts
-            </div>
-        }
-        else
-        {
-            <div class="das-pagination__summary">
-                Showing @Model.FilterModel.PagedRecordsFrom to @Model.FilterModel.PagedRecordsTo of @Model.FilterModel.TotalNumberOfApprenticeshipsFound
-                apprentice records
-            </div>
-        }
-        <ul class="das-pagination">
-            @foreach (var pageLink in Model.FilterModel.PageLinks)
-            {
-                <li class="das-pagination__item">
-                    <a class="das-pagination__link @(pageLink.IsCurrent.HasValue && pageLink.IsCurrent.Value ? "current":"")"
-                       asp-route="@RouteNames.ApprenticesIndex" 
-                       asp-all-route-data="@pageLink.RouteData"
-                       aria-current="@pageLink.IsCurrent"
-                       aria-label="@pageLink.AriaLabel">
-                        @pageLink.Label
-                    </a>
-                </li>
-            }
-        </ul>
-    </nav>
-}
+    RouteName = RouteNames.ApprenticesIndex,
+    ShowPageLinks = Model.ShowPageLinks,
+    PageLinks = Model.FilterModel.PageLinks,
+    PagedRecordsFrom = Model.FilterModel.PagedRecordsFrom,
+    PagedRecordsTo = Model.FilterModel.PagedRecordsTo,
+    TotalCount = Model.FilterModel.TotalNumberOfApprenticeshipsFound,
+    SummaryLabel = " apprentice records",
+    SummarySuffix = Model.FilterModel.TotalNumberOfApprenticeshipsWithAlertsFound > 0 ? ", " + Model.FilterModel.TotalNumberOfApprenticeshipsWithAlertsFound + " with alerts" : null
+})
 
 
 @section back {

@@ -1,0 +1,26 @@
+﻿@model PaginationNavViewModel
+@if (Model.ShowPageLinks)
+{
+    <nav role="navigation" aria-label="Pagination">
+        @if (Model.ShowSummary)
+        {
+            <div class="das-pagination__summary">
+                Showing @Model.PagedRecordsFrom to @Model.PagedRecordsTo of @Model.TotalCount@(Model.SummaryLabel)@(Model.SummarySuffix)
+            </div>
+        }
+        <ul class="das-pagination">
+            @foreach (var pageLink in Model.PageLinks)
+            {
+                <li class="das-pagination__item">
+                    <a class="das-pagination__link @(pageLink.IsCurrent.HasValue && pageLink.IsCurrent.Value ? "current" : "")"
+                       asp-route="@Model.RouteName"
+                       asp-all-route-data="@pageLink.RouteData"
+                       aria-current="@pageLink.IsCurrent"
+                       aria-label="@pageLink.AriaLabel">
+                        @pageLink.Label
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
