@@ -34,8 +34,8 @@ public class ApprenticeshipDetailsCsvModel
     public string EmployerRef { get; private set; }
     [Name("Learner confirmation")]
     public string LearnerConfirmation { get; private set; }
-    [Name("Status")]
-    public string Status { get ; private set ; }
+    [Name("Learner status")]
+    public string LearnerStatus { get ; private set ; }
     [Name("Alerts")]
     public string Alerts { get ; private set ; }
 
@@ -55,7 +55,7 @@ public class ApprenticeshipDetailsCsvModel
             DateOfBirth = model.DateOfBirth.ToGdsFormat(),
             TotalAgreedPrice = $"{model.TotalAgreedPrice.Value as object:n0}",
             LearnerConfirmation = model.ConfirmationStatus.ToDisplayString(),
-            Status = model.ApprenticeshipStatus.GetDescription(),
+            LearnerStatus = model.ApprenticeshipStatus.GetDescription(),
             Alerts = GenerateAlerts(model.Alerts),
             DeliveryModel = model.DeliveryModel.ToDescription(),
         };
