@@ -34,12 +34,13 @@ public class ApprenticeshipApprovalRequestToViewModelMapperTests
     }
 
     [TestCase("TNP1", "1000", "2000", ApprenticeshipStatus.Live, true)]
-    [TestCase("TNP1", "1000", "2000", ApprenticeshipStatus.Stopped, false)]
+    [TestCase("TNP1", "1000", "2000", ApprenticeshipStatus.Stopped, true)]
+    [TestCase("TNP1", "1000", "2000", ApprenticeshipStatus.Completed, true)]
     [TestCase("TNP1", "kkk", "2000", ApprenticeshipStatus.Paused, true)]
     [TestCase("TNP2", "9000", "2120", ApprenticeshipStatus.WaitingToStart, true)]
     [TestCase("TNP2", "9000", "2120", ApprenticeshipStatus.Unknown, false)]
     [TestCase("FirstName", "James", "Nick", ApprenticeshipStatus.Live, true)]
-    [TestCase("LastName", "Jameson", "Carr", ApprenticeshipStatus.Stopped, false)]
+    [TestCase("LastName", "Jameson", "Carr", ApprenticeshipStatus.Stopped, true)]
     public async Task Then_Maps_ApprenticeshipStatus(string field, string oldValue, string newValue, ApprenticeshipStatus apprenticeshipStatus, bool priceChangeApprovalAllowed)
     {
         var fixture = new Fixture();
