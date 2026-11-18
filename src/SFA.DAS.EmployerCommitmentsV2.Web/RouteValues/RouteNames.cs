@@ -4,6 +4,7 @@ public static class RouteNames
 {
     public const string SignOut = "sign-out";
     public const string ApprenticesIndex = "apprentices-index";
+    public const string ApprenticesChangeHistory = "apprentices-change-history";
     public const string ApprenticesDownload = "apprentices-download";
     public const string ApprenticeDetail = "apprentice-details";
     public const string ApprenticeEditEndDate = "apprentice-edit-enddate";
