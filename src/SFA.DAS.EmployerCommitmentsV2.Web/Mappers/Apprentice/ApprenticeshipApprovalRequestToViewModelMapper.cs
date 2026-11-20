@@ -180,7 +180,9 @@ public class ApprenticeshipApprovalRequestToViewModelMapper(IApprovalsApiClient 
     private bool IsChangeApprovalAllowed(ApprenticeshipStatus currentStatus) =>
         currentStatus == ApprenticeshipStatus.Live
         || currentStatus == ApprenticeshipStatus.Paused
-        || currentStatus == ApprenticeshipStatus.WaitingToStart;
+        || currentStatus == ApprenticeshipStatus.WaitingToStart
+        || currentStatus == ApprenticeshipStatus.Stopped
+        || currentStatus == ApprenticeshipStatus.Completed;
 
     public static string ToCurrency(string input)
     {
