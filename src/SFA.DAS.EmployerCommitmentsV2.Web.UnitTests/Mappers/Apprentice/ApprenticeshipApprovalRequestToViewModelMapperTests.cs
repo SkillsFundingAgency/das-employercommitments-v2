@@ -35,6 +35,7 @@ public class ApprenticeshipApprovalRequestToViewModelMapperTests
 
     [TestCase("TNP1", "1000", "2000", ApprenticeshipStatus.Live, true)]
     [TestCase("TNP1", "1000", "2000", ApprenticeshipStatus.Stopped, true)]
+    [TestCase("TNP1", "1000", "2000", ApprenticeshipStatus.Completed, true)]
     [TestCase("TNP1", "kkk", "2000", ApprenticeshipStatus.Paused, true)]
     [TestCase("TNP2", "9000", "2120", ApprenticeshipStatus.WaitingToStart, true)]
     [TestCase("TNP2", "9000", "2120", ApprenticeshipStatus.Unknown, false)]
