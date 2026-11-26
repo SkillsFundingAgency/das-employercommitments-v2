@@ -44,6 +44,20 @@ namespace SFA.DAS.EmployerCommitmentsV2.Web.UnitTests.Mappers.Apprentice
 
         private GetManageApprenticeshipDetailsResponse.GetApprenticeshipResponse _apprenticeshipDetailsResponse;
 
+        [Test]
+        public async Task ApprenticeshipUnitVersionDoesNotUseStandardVersionLookup()
+        {
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.LearningType = LearningType.ApprenticeshipUnit;
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.StandardUId = "AU0001_1.0";
+            GetManageApprenticeshipDetailsResponse.Apprenticeship.Version = "1.0";
+
+            var result = await _mapper.Map(_request);
+
+            result.Version.Should().Be("1.0");
+            result.HasNewerVersions.Should().BeFalse();
+            _mockCommitmentsApiClient.Verify(x => x.GetTrainingProgrammeVersionByStandardUId("AU0001_1.0", It.IsAny<CancellationToken>()), Times.Never);
+        }
+
         [SetUp]
         public void SetUp()
         {
