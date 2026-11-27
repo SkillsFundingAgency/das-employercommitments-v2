@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Html;
 using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Models.Shared;
 using AlertType = SFA.DAS.EmployerCommitmentsV2.Enums;
-
 namespace SFA.DAS.EmployerCommitmentsV2.Web.Models.Apprentice;
 
 public class ApprenticesFilterModel
@@ -53,60 +53,7 @@ public class ApprenticesFilterModel
     public int TotalNumberOfApprenticeshipsFound { get; set; }
     public int TotalNumberOfApprenticeshipsWithAlertsFound { get; set; }
         
-    public IEnumerable<PageLink> PageLinks {
-        get
-        {
-            var links = new List<PageLink>();
-            var totalPages = (int)Math.Ceiling((double)TotalNumberOfApprenticeshipsFound / PageSize);
-            var totalPageLinks = totalPages < 5 ? totalPages : 5;
-
-            //previous link
-            if (totalPages > 1 && PageNumber > 1)
-            {
-                links.Add(new PageLink
-                {
-                    Label = "Previous",
-                    AriaLabel = "Previous page",
-                    RouteData = BuildPagedRouteData(PageNumber - 1)
-                });
-            }
-
-            //numbered links
-            var pageNumberSeed = 1;
-            if (totalPages > 5 && PageNumber > 3)
-            {
-                pageNumberSeed = PageNumber - 2;
-
-                if (PageNumber > totalPages - 2)
-                    pageNumberSeed = totalPages - 4;
-            }
-
-            for (var i = 0; i < totalPageLinks; i++)
-            {
-                var link = new PageLink
-                {
-                    Label = (pageNumberSeed + i).ToString(),
-                    AriaLabel = $"Page {pageNumberSeed + i}",
-                    IsCurrent = pageNumberSeed + i == PageNumber? true : (bool?)null,
-                    RouteData = BuildPagedRouteData(pageNumberSeed + i)
-                };
-                links.Add(link);
-            }
-
-            //next link
-            if (totalPages > 1 && PageNumber < totalPages)
-            {
-                links.Add(new PageLink
-                {
-                    Label = "Next",
-                    AriaLabel = "Next page",
-                    RouteData = BuildPagedRouteData(PageNumber + 1)
-                });
-            }
-
-            return links;
-        }
-    }
+    public IEnumerable<PageLink> PageLinks => PaginationHelper.BuildPageLinks(PageNumber, PaginationHelper.GetTotalPages(TotalNumberOfApprenticeshipsFound, PageSize), BuildPagedRouteData);
 
     public Dictionary<string, string> RouteData => BuildRouteData();
 
@@ -179,12 +126,5 @@ public class ApprenticesFilterModel
         routeData.Add(nameof(SortField), sortField);
 
         return routeData;
-    }
-    public class PageLink
-    {
-        public string Label { get; set; }
-        public string AriaLabel { get; set; }
-        public bool? IsCurrent { get; set; }
-        public Dictionary<string, string> RouteData { get; set; }
     }
 }

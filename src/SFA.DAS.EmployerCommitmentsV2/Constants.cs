@@ -8,6 +8,11 @@ public static class Constants
         public const int NumberOfApprenticesRequiredForSearch = 10;
         public const int NumberOfApprenticesPerDownloadPage = 200;
     }
+
+    public static class ChangeHistory
+    {
+        public const int NumberOfChangesPerPage = 50;
+    }
     
     public static class WebConstants
     {

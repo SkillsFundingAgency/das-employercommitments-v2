@@ -8,4 +8,6 @@ public class GetAllChangeHistoryRequest : IAuthorizationContextModel
     public string AccountHashedId { get; set; }
 
     public long AccountId { get; set; }
+
+    public int PageNumber { get; set; } = 1;
 }
