@@ -45,15 +45,6 @@ public class WhenCallingApprenticeshipApprovalRequest
         _fixture.VerifyViewModel(result as ViewResult);
     }
 
-    [TestCase (CocApprovalResultStatus.Complete)]
-    [TestCase(CocApprovalResultStatus.Cancelled)]
-    public async Task ThenDisplaysMessageIfChangeHasBeenCompleted(CocApprovalResultStatus status)
-    {
-        var result = await _fixture.SetApprovalRequestStatus(status).GetApprovalRequest();
-
-        _fixture.VerifyApprovalRequestStatusModelStateError(result as ViewResult);
-    }
-
     [Test]
     public async Task ThenReturnsViewModelIfChangeIsPending()
     {
@@ -91,9 +82,18 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
 
         _request = fixture.Create<ApprenticeshipApprovalRequest>();
         _viewModel = fixture.Create<ApprenticeshipApprovalRequestViewModel>();
+        _viewModel.Items =
+        [
+            new ApprenticeshipApprovalRequestViewModel.ChangeItem
+            {
+                FieldName = "Total cost",
+                OldValue = "£1,000",
+                NewValue = "£2,000"
+            }
+        ];
 
         MockMapper.Setup(m => m.Map<ApprenticeshipApprovalRequestViewModel>(_request)).ReturnsAsync(_viewModel);
-        ApprovalsApiClientMock.Setup(x => x.ProcessCocApproval(_viewModel.AccountId, _viewModel.ApprenticeshipId, _viewModel.ApprovalRequestId, 
+        ApprovalsApiClientMock.Setup(x => x.ProcessCocApproval(_viewModel.AccountId, _viewModel.ApprenticeshipId,
             It.IsAny<ProcessApprenticeshipApprovalRequest>(), It.IsAny<CancellationToken>())).Verifiable();
         _authenticationService = new Mock<IAuthenticationService>();
     }
@@ -127,12 +127,6 @@ public class WhenCallingApprenticeshipApprovalRequestFixture : ApprenticeControl
         var viewModel = viewResult.Model as ApprenticeshipApprovalRequestViewModel;
 
         viewModel.Should().Be(_viewModel);
-    }
-
-    public void VerifyApprovalRequestStatusModelStateError(ViewResult viewResult)
-    {
-        viewResult.Should().NotBeNull();
-        viewResult.ViewData.ModelState.Should().ContainSingle(m => m.Key == Constants.ApprenticeshipConstants.ApprovalRequestStatus && m.Value.Errors.Any(e => e.ErrorMessage == Constants.ApprenticeshipConstants.AlreadyApprovedOrDeclinedMessage ));
     }
 
     public async Task<IActionResult> PostApprovalRequest(bool applyApproval)

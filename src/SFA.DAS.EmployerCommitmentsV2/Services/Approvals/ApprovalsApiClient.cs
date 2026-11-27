@@ -183,14 +183,14 @@ public class ApprovalsApiClient(IOuterApiClient client) : IApprovalsApiClient
         return client.Get<GetApprenticeshipsResponse>(request.GetUrl);
     }
 
-    public Task<GetApprenticeshipApprovalResponse> GetApprenticeshipApprovalRequest(long accountId, long apprenticeshipId, Guid approvalRequestId, CancellationToken cancellationToken = default)
+    public Task<GetApprenticeshipApprovalResponse> GetApprenticeshipApprovalRequest(long accountId, long apprenticeshipId, CancellationToken cancellationToken = default)
     {
-        return client.Get<GetApprenticeshipApprovalResponse>($"employers/{accountId}/apprenticeships/{apprenticeshipId}/approvals/{approvalRequestId}");
+        return client.Get<GetApprenticeshipApprovalResponse>($"employers/{accountId}/apprenticeships/{apprenticeshipId}/approvals");
     }
 
-    public async Task ProcessCocApproval(long accountId, long apprenticeshipId, Guid approvalRequestId, ProcessApprenticeshipApprovalRequest request, CancellationToken cancellationToken = default)
+    public async Task ProcessCocApproval(long accountId, long apprenticeshipId, ProcessApprenticeshipApprovalRequest request, CancellationToken cancellationToken = default)
     {
-        await client.Post<object>($"employers/{accountId}/apprenticeships/{apprenticeshipId}/approvals/{approvalRequestId}/", request);
+        await client.Post<object>($"employers/{accountId}/apprenticeships/{apprenticeshipId}/approvals", request);
     }
 
     public Task<GetApprenticeshipApprovalRequestAlertsResponse> GetApprenticeshipApprovalRequestAlerts(GetApprovalRequestAlertRequest request, CancellationToken cancellationToken = default)

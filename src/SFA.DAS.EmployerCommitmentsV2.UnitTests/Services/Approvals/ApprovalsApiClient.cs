@@ -196,14 +196,14 @@ public class ApprovalsApiClientTests
     }
 
     [Test, AutoData]
-    public async Task When_Calling_GetApprenticeshipApproval_Then_The_Data_Is_Returned(long accountId, long apprenticeshipId, Guid approvalRequestId, GetApprenticeshipApprovalResponse response)
+    public async Task When_Calling_GetApprenticeshipApproval_Then_The_Data_Is_Returned(long accountId, long apprenticeshipId, GetApprenticeshipApprovalResponse response)
     {
         var outerApiClient = new Mock<IOuterApiClient>();
-        var expectedUrl = $"employers/{accountId}/apprenticeships/{apprenticeshipId}/approvals/{approvalRequestId}";
+        var expectedUrl = $"employers/{accountId}/apprenticeships/{apprenticeshipId}/approvals";
         outerApiClient.Setup(x => x.Get<GetApprenticeshipApprovalResponse>(expectedUrl)).ReturnsAsync(response);
         var approvalsApiClient = new ApprovalsApiClient(outerApiClient.Object);
 
-        var actual = await approvalsApiClient.GetApprenticeshipApprovalRequest(accountId, apprenticeshipId, approvalRequestId);
+        var actual = await approvalsApiClient.GetApprenticeshipApprovalRequest(accountId, apprenticeshipId);
 
         actual.Should().BeEquivalentTo(response);
     }

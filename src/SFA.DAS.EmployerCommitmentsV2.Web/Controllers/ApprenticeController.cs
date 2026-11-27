@@ -44,6 +44,7 @@ public class ApprenticeController(
     private const string ChangesRejectedMessage = "Changes rejected";
     private const string ChangesUndoneMessage = "Changes undone";
     private const string ApprenticeEndDateConfirmed = "Current planned end date confirmed ";
+    private const string ApprenticeshipApprovalConfirmedNameTempDataKey = "ApprenticeshipApprovalConfirmedName";
 
     [Route("", Name = RouteNames.ApprenticesIndex)]
     public async Task<IActionResult> Index(IndexRequest request)
@@ -1272,19 +1273,38 @@ public class ApprenticeController(
         return View(viewModel);
     }
 
-    [Route("{apprenticeshipHashedId}/approvals/{approvalRequestId}")]
+    [Route("{apprenticeshipHashedId}/approvals/{approvalRequestId:guid}")]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
+    [HttpGet]
+    public IActionResult GetApprenticeshipApprovalRequestLegacy(string accountHashedId, string apprenticeshipHashedId, Guid approvalRequestId)
+    {
+        return RedirectToAction(nameof(GetApprenticeshipApprovalRequest), new BaseApprenticeshipApprovalRequest
+        {
+            AccountHashedId = accountHashedId,
+            ApprenticeshipHashedId = apprenticeshipHashedId
+        });
+    }
+
+    [Route("{apprenticeshipHashedId}/approvals/{approvalRequestId:guid}/confirmed")]
+    [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
+    [HttpGet]
+    public IActionResult ApprenticeshipApprovalRequestConfirmedLegacy(string accountHashedId, string apprenticeshipHashedId, Guid approvalRequestId)
+    {
+        return RedirectToAction(nameof(ApprenticeshipApprovalRequestConfirmed), new BaseApprenticeshipApprovalRequest
+        {
+            AccountHashedId = accountHashedId,
+            ApprenticeshipHashedId = apprenticeshipHashedId
+        });
+    }
+
+    [Route("{apprenticeshipHashedId}/approvals")]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [HttpGet]
     public async Task<IActionResult> GetApprenticeshipApprovalRequest(ApprenticeshipApprovalRequest request)
     {
         var viewModel = await modelMapper.Map<ApprenticeshipApprovalRequestViewModel>(request);
 
-        if (viewModel.ApprovalRequestStatus == CocApprovalResultStatus.Complete || viewModel.ApprovalRequestStatus == CocApprovalResultStatus.Cancelled)
-        {
-            ModelState.AddModelError(Constants.ApprenticeshipConstants.ApprovalRequestStatus, Constants.ApprenticeshipConstants.AlreadyApprovedOrDeclinedMessage);
-        }
-
-        if (!viewModel.ChangeApprovalAllowed)
+        if (viewModel.HasPendingChanges && !viewModel.ChangeApprovalAllowed)
         {
             ModelState.AddModelError(nameof(ApprenticeshipApprovalRequestViewModel.ChangeApprovalAllowed), "This change no longer exists");
         }
@@ -1292,7 +1312,7 @@ public class ApprenticeController(
         return View(viewModel);
     }
 
-    [Route("{apprenticeshipHashedId}/approvals/{approvalRequestId}")]
+    [Route("{apprenticeshipHashedId}/approvals")]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [HttpPost]
     public async Task<IActionResult> PostApprenticeshipApprovalRequest([FromServices] IAuthenticationService authenticationService, ApprenticeshipApprovalRequestViewModel viewModel)
@@ -1301,37 +1321,43 @@ public class ApprenticeController(
 
         if (viewModel.ApproveChanges == true)
         {
-            await outerApi.ProcessCocApproval(viewModel.AccountId, viewModel.ApprenticeshipId, viewModel.ApprovalRequestId, request, CancellationToken.None);
+            await outerApi.ProcessCocApproval(viewModel.AccountId, viewModel.ApprenticeshipId, request, CancellationToken.None);
+            TempData[ApprenticeshipApprovalConfirmedNameTempDataKey] = viewModel.Name;
 
             return RedirectToAction(nameof(ApprenticeshipApprovalRequestConfirmed),
                 new BaseApprenticeshipApprovalRequest
                 {
                     AccountHashedId = viewModel.AccountHashedId,
-                    ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId,
-                    ApprovalRequestId = viewModel.ApprovalRequestId
+                    ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
                 });
         }
-        else if (viewModel.ApproveChanges == false)
+
+        if (viewModel.ApproveChanges == false)
         {
-            await outerApi.ProcessCocApproval(viewModel.AccountId, viewModel.ApprenticeshipId, viewModel.ApprovalRequestId, request, CancellationToken.None);
+            await outerApi.ProcessCocApproval(viewModel.AccountId, viewModel.ApprenticeshipId, request, CancellationToken.None);
             TempData.AddFlashMessage("Changes declined", TempDataDictionaryExtensions.FlashMessageLevel.Success);
         }
+
         return RedirectToAction(nameof(GetApprenticeshipApprovalRequest),
             new BaseApprenticeshipApprovalRequest
             {
                 AccountHashedId = viewModel.AccountHashedId,
-                ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId,
-                ApprovalRequestId = viewModel.ApprovalRequestId
+                ApprenticeshipHashedId = viewModel.ApprenticeshipHashedId
             });
     }
 
-    [Route("{apprenticeshipHashedId}/approvals/{approvalRequestId}/confirmed")]
+    [Route("{apprenticeshipHashedId}/approvals/confirmed")]
     [Authorize(Policy = nameof(PolicyNames.AccessApprenticeship))]
     [HttpGet]
-    public async Task<IActionResult> ApprenticeshipApprovalRequestConfirmed(ApprenticeshipApprovalRequest request)
+    public IActionResult ApprenticeshipApprovalRequestConfirmed(BaseApprenticeshipApprovalRequest request)
     {
-        var viewModel = await modelMapper.Map<ApprenticeshipApprovalRequestViewModel>(request);
-        return View(viewModel);
+        var name = TempData[ApprenticeshipApprovalConfirmedNameTempDataKey] as string;
+        return View(new ApprenticeshipApprovalRequestViewModel
+        {
+            AccountHashedId = request.AccountHashedId,
+            ApprenticeshipHashedId = request.ApprenticeshipHashedId,
+            Name = name
+        });
     }
 
     [Route("{apprenticeshipHashedId}/view-alerts")]

@@ -43,7 +43,8 @@ public class ApprenticeshipDetailsRequestToViewModelMapper : IMapper<Apprentices
 
             var response = await _approvalsApiClient.GetManageApprenticeshipDetails(accountId, apprenticeshipId, cancellationToken: CancellationToken.None);
 
-            var currentTrainingProgramme = await GetTrainingProgramme(response.Apprenticeship.CourseCode, response.Apprenticeship.StandardUId);
+            var currentTrainingProgramme = await GetTrainingProgramme(response.Apprenticeship.CourseCode,
+                response.Apprenticeship.LearningType == LearningType.ApprenticeshipUnit ? null : response.Apprenticeship.StandardUId);
 
             var pendingChange = GetPendingChanges(response.ApprenticeshipUpdates);
 
