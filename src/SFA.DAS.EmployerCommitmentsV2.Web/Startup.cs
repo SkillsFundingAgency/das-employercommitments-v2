@@ -1,11 +1,11 @@
 ﻿using AspNetCore.IServiceCollection.AddIUrlHelper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using OpenTelemetry.Logs;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerCommitmentsV2.Configuration;
 using SFA.DAS.EmployerCommitmentsV2.Web.AppStart;
 using SFA.DAS.EmployerCommitmentsV2.Web.Extensions;
+using SFA.DAS.EmployerCommitmentsV2.Web.Logging;
 using SFA.DAS.EmployerCommitmentsV2.Web.Middleware;
 using SFA.DAS.EmployerCommitmentsV2.Web.ServiceRegistrations;
 using SFA.DAS.EmployerUrlHelper.DependencyResolution;
@@ -29,11 +29,7 @@ public class Startup
         services.AddSingleton(_configuration);
         services.AddHttpClient();
 
-        services.AddLogging(builder =>
-        {
-            builder.AddFilter<OpenTelemetryLoggerProvider>(string.Empty, LogLevel.Information);
-            builder.AddFilter<OpenTelemetryLoggerProvider>("Microsoft", LogLevel.Information);
-        });
+        services.AddLogging(OpenTelemetryLogFilters.Apply);
 
         services.AddConfigurationOptions(_configuration);
         services.AddEncodingServices(_configuration);
