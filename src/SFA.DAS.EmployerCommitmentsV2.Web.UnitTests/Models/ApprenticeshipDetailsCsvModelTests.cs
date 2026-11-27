@@ -108,7 +108,7 @@ public class ApprenticeshipDetailsCsvModelTests
     {
         ApprenticeshipDetailsCsvModel result = source;
 
-        result.Status.Should().Be(source.ApprenticeshipStatus.GetDescription());
+        result.LearnerStatus.Should().Be(source.ApprenticeshipStatus.GetDescription());
     }
         
     [Test, AutoData]
