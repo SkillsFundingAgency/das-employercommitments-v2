@@ -1,0 +1,84 @@
+@inject ILinkGenerator LinkGenerator
+@using SFA.DAS.EmployerCommitmentsV2.Web.Extensions
+@using SFA.DAS.EmployerCommitmentsV2.Web.Models.Cohort
+@model HowToAddLearnersViewModel
+
+@{
+    var routeModel = new Dictionary<string, string>
+    {
+        {nameof(Model.AccountHashedId), Model.AccountHashedId },
+        {"apprenticeshipSessionKey", Model.ApprenticeshipSessionKey.ToString() },
+    };
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">How to add learners</h1>
+
+        <h2 class="govuk-heading-m">Give your training provider permission to add learners</h2>
+        <p class="govuk-body">If you give your training provider permission they can:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>add learners on your behalf without you sending a request</li>
+            <li>add learners directly from the Individualised Learner Record (ILR)</li>
+            <li>add multiple learners in one go</li>
+        </ul>
+        <p class="govuk-body">You'll still need to approve learner details before they're added to your account.</p>
+
+        <p class="govuk-body">
+            <a asp-external-subdomain="relationships"
+               asp-external-relativeroute="accounts/@Model.AccountHashedId/providers"
+               asp-external-id="@Model.AccountHashedId"
+               asp-external-controller="providers"
+               target="_blank"
+               class="govuk-link">
+                Manage your training provider's permissions (opens in new tab).
+            </a>
+        </p>
+
+        <h2 class="govuk-heading-m">Other ways to add learners</h2>
+        <p class="govuk-body">You can:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>send a request to your training provider</li>
+            <li>add learners yourself</li>
+        </ul>
+
+        <h3 class="govuk-heading-s">What you'll need</h3>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>Your training provider's name</li>
+            <li>The learner's name</li>
+            <li>The apprenticeship course name</li>
+            <li>Authority to act for the organisation named on the contract with your training provider</li>
+            <li>The PAYE scheme in your account</li>
+        </ul>
+
+        <p class="govuk-body">Before you start, you can:</p>
+        <ul class="govuk-list">
+            <li>
+                <a href="@LinkGenerator.YourOrganisationsAndAgreements(Model.AccountHashedId)" class="govuk-link">
+                    view your organisations (opens in new tab)
+                </a>
+            </li>
+            <li>
+                <a href="@LinkGenerator.PayeSchemes(Model.AccountHashedId)" class="govuk-link">
+                    view your PAYE schemes (opens in new tab)
+                </a>
+            </li>
+        </ul>
+
+        <a asp-action="@Model.ContinueAction"
+           id="continue-button"
+           asp-all-route-data="routeModel"
+           role="button"
+           draggable="false"
+           class="govuk-button govuk-button--start">
+            Start now
+            <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19"
+                 viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+            </svg>
+        </a>
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <partial name="_AddApprenticeUsefulLinks" for="@Model.IsLevyFunded" />
+    </div>
+</div>
